@@ -551,6 +551,7 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
+      if(!m_IsAllocated) { return; }
       size_t typeSize = sizeof(T);
       ::memset(m_Array, 0, m_Size * typeSize);
     }
@@ -560,6 +561,7 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithValue(T initValue, size_t offset = 0)
     {
+      if(!m_IsAllocated) { return; }
       for (size_t i = offset; i < m_Size; i++)
       {
         m_Array[i] = initValue;
@@ -859,6 +861,7 @@ class DataArray : public IDataArray
      */
     void initializeTuple(size_t i, double p)
     {
+      if(!m_IsAllocated) { return; }
 #ifndef NDEBUG
       if (m_Size > 0) { BOOST_ASSERT(i * m_NumComponents < m_Size);}
 #endif
@@ -968,6 +971,8 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(unsigned int)) { return "unsigned int"; }
 #endif
 
+      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
+      if (typeid(value) == typeid(uint64_t)) { return "uint64_t";}
 
 #if (CMP_SIZEOF_LONG == 4)
       if (typeid(value) == typeid(long int)) { return "long int"; }
@@ -979,8 +984,7 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(unsigned long int)) { return "unsigned long int"; }
 #endif
 
-      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
-      if (typeid(value) == typeid(uint64_t)) { return "uint64_t"; }
+
 #if (CMP_SIZEOF_LONG_LONG == 8)
       if (typeid(value) == typeid(long long int)) { return "long long int"; }
       if (typeid(value) == typeid(signed long long int)) { return "signed long long int"; }

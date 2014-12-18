@@ -172,7 +172,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       // Check to make sure the AttributeArray we have is of the proper type, size and number of components
       if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, NumComp, filter) )
       {
-        if(filter)
+//        if(filter)
 //        {
 //          filter->setErrorCondition(err);
 //          ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but this DataArray is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);

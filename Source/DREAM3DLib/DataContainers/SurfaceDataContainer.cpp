@@ -271,7 +271,7 @@ void SurfaceDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QStrin
     out << "The EdgeDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
     out << "The Topology types will be missing from the Xdmf which will cause issues when\n";
     out << "trying to load the file\n";
-    out << " ********************************************************************************** ->\n";
+    out << " ********************************************************************************** -->\n";
   }
   else
   {
@@ -289,7 +289,7 @@ void SurfaceDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QStrin
     out << "The EdgeDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
     out << "The Geometry types will be missing from the Xdmf which will cause issues when\n";
     out << "trying to load the file\n";
-    out << " ********************************************************************************** ->\n";
+    out << " ********************************************************************************** -->\n";
   }
   else
   {

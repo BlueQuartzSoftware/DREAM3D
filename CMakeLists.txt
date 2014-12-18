@@ -25,6 +25,12 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0048 OLD)
   # CMake 3.0 introduces some OS X RPath policies
   cmake_policy(SET CMP0042 OLD)
+
+  # CMake 3.1 introduces if() policies on dereferencing variables in quotes
+  if(${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0.2") 
+    cmake_policy(SET CMP0054 NEW)
+  endif()
+
 endif()
 
 
@@ -316,7 +322,7 @@ if( CMAKE_BUILD_TYPE MATCHES Debug )
 ENDif( CMAKE_BUILD_TYPE MATCHES Debug )
 
 if(NOT MSVC)
-  ADD_DEFINITIONS(-Wall)
+ # ADD_DEFINITIONS(-Wall)
 endif()
 
 # On linux we need to set this because some of the libraries are Static

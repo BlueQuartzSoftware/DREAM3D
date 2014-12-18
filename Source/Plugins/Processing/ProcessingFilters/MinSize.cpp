@@ -85,7 +85,6 @@ void MinSize::setupFilterParameters()
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
-
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));

@@ -198,7 +198,7 @@ void VertexDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString
     out << "The VertexDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
     out << "The Topology and Geometry types will be missing from the Xdmf which will cause issues when\n";
     out << "trying to load the file\n";
-    out << " ********************************************************************************** ->\n";
+    out << " ********************************************************************************** -->\n";
   }
   else
   {

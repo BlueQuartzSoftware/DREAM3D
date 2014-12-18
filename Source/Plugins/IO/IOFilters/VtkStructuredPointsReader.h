@@ -33,15 +33,17 @@
 
 #include <string.h> // needed for the ::memcpy function below
 
+#include <istream>
+
 #include <QtCore/QString>
 #include <QtCore/QtEndian>
-#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
+
 
 /**
  * @brief The VtkStructuredPointsReader class
@@ -62,15 +64,19 @@ class  VtkStructuredPointsReader : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, ReadCellData)
     Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
+
     DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(bool, ReadPointData)
     Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
+
     DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
@@ -145,7 +151,7 @@ class  VtkStructuredPointsReader : public AbstractFilter
      * @brief readData
      * @param instream
      */
-    virtual void readData(QFile &instream);
+    virtual void readData(std::istream &instream);
 
     /**
      *
@@ -162,7 +168,24 @@ class  VtkStructuredPointsReader : public AbstractFilter
       */
     size_t parseByteSize(QString text);
 
+    /**
+     * @brief VtkStructuredPointsReader::readLine
+     * @param in
+     * @param result
+     * @return
+     */
+    int readLine(std::istream &in, char* result, size_t length);
+    int readString(std::istream &in, char* result, size_t length);
+    char* lowerCase(char *str, const size_t len);
+    int readDataTypeSection(std::istream &in, int numPts, const std::string &nextKeyWord);
+    int readScalarData(std::istream &in, int count);
+    int readVectorData(std::istream &in, int count);
+    int ReadScalarData(std::istream &in, int numPts);
+    int ReadVectorData(std::istream &in, int numPts);
+    int DecodeString(char *resname, const char* name);
+
   private:
+    AttributeMatrix::Pointer m_CurrentAttrMat;
 
     VtkStructuredPointsReader(const VtkStructuredPointsReader&); // Copy Constructor Not Implemented
     void operator=(const VtkStructuredPointsReader&); // Operator '=' Not Implemented
