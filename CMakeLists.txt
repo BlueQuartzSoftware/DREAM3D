@@ -27,7 +27,9 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0042 OLD)
 
   # CMake 3.1 introduces if() policies on dereferencing variables in quotes
-  cmake_policy(SET CMP0054 NEW)
+  if(${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0.2") 
+    cmake_policy(SET CMP0054 NEW)
+  endif()
 
 endif()
 
