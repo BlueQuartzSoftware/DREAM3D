@@ -413,6 +413,65 @@ void TestEraseElements()
 }
 
 
+template<typename T>
+QString TypeToString(T v)
+{
+
+  if(typeid(v) == typeid(long)) { return QString("long"); }
+  if(typeid(v) == typeid(long int)) { return QString("long int"); }
+  if(typeid(v) == typeid(unsigned long int)) { return QString("unsigned long int"); }
+  if(typeid(v) == typeid(unsigned long)) { return QString("unsigned long"); }
+
+
+
+  if(typeid(v) == typeid(long long int)) { return QString("long long int"); }
+  if(typeid(v) == typeid(long long)) { return QString("long long"); }
+  if(typeid(v) == typeid(unsigned long long int)) { return QString("unsigned long long int"); }
+  if(typeid(v) == typeid(unsigned long long)) { return QString("unsigned long long"); }
+
+  return QString("NULL");
+}
+
+#define TEST_TYPE_STRING(type)\
+{\
+DataArray<type>::Pointer p_##type = DataArray<type>::CreateArray(1, "Test", false);\
+QString s_##type = p_##type->getTypeAsString();\
+qDebug() << #type << s_##type;\
+type value;\
+qDebug() << TypeToString<type>(value);\
+}\
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestTypeStrings()
+{
+  TEST_TYPE_STRING(qint8)
+  TEST_TYPE_STRING(quint8)
+  TEST_TYPE_STRING(qint16)
+  TEST_TYPE_STRING(quint16)
+  TEST_TYPE_STRING(qint32)
+  TEST_TYPE_STRING(quint32)
+  TEST_TYPE_STRING(qint64)
+  TEST_TYPE_STRING(quint64)
+
+
+  TEST_TYPE_STRING(int8_t)
+  TEST_TYPE_STRING(uint8_t)
+  TEST_TYPE_STRING(int16_t)
+  TEST_TYPE_STRING(uint16_t)
+  TEST_TYPE_STRING(int32_t)
+  TEST_TYPE_STRING(uint32_t)
+  TEST_TYPE_STRING(int64_t)
+  TEST_TYPE_STRING(uint64_t)
+  TEST_TYPE_STRING(float)
+  TEST_TYPE_STRING(double)
+long long int myint = 50;
+   std::cout << "myint has type: " << typeid(myint).name() << '\n';
+
+  qDebug() << typeid(int64_t).name() << " " << typeid(qint64).name() << " " << typeid(signed long long int).name()<< " " << typeid(long long int).name()<< " " << typeid(long long).name();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -884,6 +943,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
 
+      DREAM3D_REGISTER_TEST( TestTypeStrings() )
       DREAM3D_REGISTER_TEST( TestArrayCreation() )
       DREAM3D_REGISTER_TEST( TestDataArray() )
       DREAM3D_REGISTER_TEST( TestEraseElements() )
@@ -891,6 +951,7 @@ int main(int argc, char** argv)
       DREAM3D_REGISTER_TEST( TestDeepCopyArray() )
       DREAM3D_REGISTER_TEST( TestNeighborList() )
       DREAM3D_REGISTER_TEST( TestReorderCopy() )
+
 
     #if REMOVE_TEST_FILES
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )

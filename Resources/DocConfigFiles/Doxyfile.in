@@ -3,7 +3,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME      = "@DOX_PDF_FILENAME@"
-OUTPUT_DIRECTORY  = @DOX_OUTPUT_DIR@
+OUTPUT_DIRECTORY  = "@DOX_OUTPUT_DIR@"
 
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
