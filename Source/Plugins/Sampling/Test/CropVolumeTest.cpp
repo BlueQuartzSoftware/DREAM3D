@@ -51,8 +51,8 @@
 
 // Macro to create an empty data array
 #define CREATE_DATA_ARRAY(name, type, attrMat, tDims, cDims, err)\
-  DataArray<type>::Pointer _##type##Array = DataArray<type>::CreateArray(tDims, cDims, name, true);\
-  err = attrMat->addAttributeArray(name, _##type##Array);\
+  DataArray<type>::Pointer name##Array = DataArray<type>::CreateArray(tDims, cDims, name, true);\
+  err = attrMat->addAttributeArray(name, name##Array);\
   DREAM3D_REQUIRE(err >= 0);
 
 
@@ -81,7 +81,45 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   tDims.push_back(30);
   tDims.push_back(20);
   QVector<size_t> cDims(1, 1);
-  CREATE_DATA_ARRAY("Confidence Index", float, am1, tDims, cDims, err)
+
+  DataArray<float>::Pointer ConfidenceIndexArray = DataArray<float>::CreateArray(tDims, cDims, "Confidence Index", true);
+  err = am1->addAttributeArray("Confidence Index", ConfidenceIndexArray);
+  DREAM3D_REQUIRE(err >= 0);
+
+  DataArray<float>::Pointer FeatureIdsArray = DataArray<float>::CreateArray(tDims, cDims, "FeatureIds", true);
+  err = am1->addAttributeArray("FeatureIds", FeatureIdsArray);
+  DREAM3D_REQUIRE(err >= 0);
+
+  int64_t XP = tDims[0];
+  int64_t YP = tDims[1];
+  int64_t ZP = tDims[2];
+
+  int64_t col, row, plane;
+  int64_t index;
+  QList<QString> voxelArrayNames = am1->getAttributeArrayNameList();
+  for (int64_t i = 0; i < ZP; i++)
+  {
+    plane = i * XP * YP;
+    for (int64_t j = 0; j < YP; j++)
+    {
+      row = j * XP;
+      for (int64_t k = 0; k < XP; k++)
+      {
+        col = k;
+        index = plane + row + col;
+        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        {
+          IDataArray::Pointer p = am1->getAttributeArray(*iter);
+          p->initializeTuple(index, i+j+k);
+        }
+      }
+    }
+  }
+
+  foreach (QString da, am1->getAttributeArrayNameList())
+  {
+    DREAM3D_REQUIRE_EQUAL(am1->getAttributeArray(da)->getSize(), XP*YP*ZP);
+  }
 
   dc1->addAttributeMatrix(am1->getName(), am1);
 
@@ -97,11 +135,11 @@ int TestCropVolume()
 {
   DataContainerArray::Pointer dca = CreateDataContainerArrayTestStructure();
 
-//  CropVolume::Pointer cropFilter = CropVolume::New();
-//  cropFilter->setDataContainerArray(dca);
-//  cropFilter->setXMax(20);
-//  cropFilter->setXMin(10);
-//  cropFilter->setYMax(28);
+  CropVolume::Pointer crop = CropVolume::New();
+  crop->setDataContainerArray(dca);
+  crop->setXMax(20);
+  crop->setXMin(10);
+  crop->setYMax(28);
 
   return 0;
 }
