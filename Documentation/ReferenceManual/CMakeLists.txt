@@ -20,33 +20,33 @@ set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 #-------------------------------------------------------------------------------
 # Create the initial list of Files for DOxygen to process
 set(DOCUMENTATION_SOURCE_FILES
-  ${PROJECT_SOURCE_DIR}/Index.dox
-  ${PROJECT_SOURCE_DIR}/Acknowledgements.md
-  ${PROJECT_SOURCE_DIR}/DataStructure.md
-  ${PROJECT_SOURCE_DIR}/UserInterface.md
-  ${PROJECT_SOURCE_DIR}/CreatingPipeline.md
-  ${PROJECT_SOURCE_DIR}/ImportExportPipelines.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox
-  ${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/DownloadingExampleData.md
-  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md
-  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox
+  \"${PROJECT_SOURCE_DIR}/Index.dox\"
+  \"${PROJECT_SOURCE_DIR}/Acknowledgements.md\"
+  \"${PROJECT_SOURCE_DIR}/DataStructure.md\"
+  \"${PROJECT_SOURCE_DIR}/UserInterface.md\"
+  \"${PROJECT_SOURCE_DIR}/CreatingPipeline.md\"
+  \"${PROJECT_SOURCE_DIR}/ImportExportPipelines.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/DownloadingExampleData.md\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox\"
 )
 
 set(DOXYGEN_IMAGE_DIRS
-  ${PROJECT_SOURCE_DIR}/Images
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images
-  ${PROJECT_SOURCE_DIR}/Tutorials/Images
-  ${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages
-  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images
+  \"${PROJECT_SOURCE_DIR}/Images\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/Images\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images\"
 )
 
 #-------------------------------------------------------------------------------
@@ -76,10 +76,10 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   foreach(filterPath ${filter_path_list})
     get_filename_component(filter  ${filterPath} NAME_WE)
     get_filename_component(group_path ${filterPath} PATH)
-    list(APPEND DOXYGEN_IMAGE_DIRS ${group_path})
+    list(APPEND DOXYGEN_IMAGE_DIRS "\"${group_path}\"")
     string(TOLOWER ${filter} filter_Lower)
     file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filter_Lower}\n\n")
-    list(APPEND DOCUMENTATION_SOURCE_FILES ${filterPath})
+    list(APPEND DOCUMENTATION_SOURCE_FILES "\"${filterPath}\"")
   endforeach()
   list(REMOVE_DUPLICATES DOXYGEN_IMAGE_DIRS)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
@@ -90,7 +90,7 @@ file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 set(DOCUMENTATION_SOURCE_FILES
     "${DOCUMENTATION_SOURCE_FILES}"
   #  "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md"
-     ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox
+     "\"${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox\""
 )
 
 
@@ -126,7 +126,7 @@ if(DOX_GENERATE_LATEX)
 endif()
 
 set(DOCUMENTATION_SOURCE_FILES
-        ${PROJECT_SOURCE_DIR}/Index.dox
+        \"${PROJECT_SOURCE_DIR}/Index.dox\"
         ${DOCUMENTATION_SOURCE_FILES})
 
 
