@@ -36,25 +36,38 @@
 
 #include <QtCore/QCoreApplication>
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "DREAM3DLib/DataContainers/DataContainerArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "Plugins/Sampling/SamplingFilters/CropVolume.h"
-
-#include "TestFileLocations.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 #include "GenerateFeatureIds.h"
 
-// Macro to create an empty data array
-#define CREATE_DATA_ARRAY(name, type, attrMat, tDims, cDims, err)\
-  DataArray<type>::Pointer name##Array = DataArray<type>::CreateArray(tDims, cDims, name, true);\
-  err = attrMat->addAttributeArray(name, name##Array);\
-  DREAM3D_REQUIRE(err >= 0);
+static const int originalXMax = 40;
+static const int originalYMax = 30;
+static const int originalZMax = 20;
 
+static const double originalXRes = 0.25;
+static const double originalYRes = 0.25;
+static const double originalZRes = 0.25;
+
+static const int originalXOrigin = 0;
+static const int originalYOrigin = 0;
+static const int originalZOrigin = 0;
+
+static const int XMax = 25;
+static const int YMax = 18;
+static const int ZMax = 7;
+
+static const int XMin = 9;
+static const int YMin = 5;
+static const int ZMin = 2;
 
 // -----------------------------------------------------------------------------
 //
@@ -65,21 +78,21 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
   VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New("Data Container");
-  dc1->setDimensions(40, 30, 20);
-  dc1->setOrigin(0, 0, 0);
-  dc1->setResolution(0.25, 0.25, 0.25);
+  dc1->setDimensions(originalXMax, originalYMax, originalZMax);
+  dc1->setOrigin(originalXOrigin, originalYOrigin, originalZOrigin);
+  dc1->setResolution(originalXRes, originalYRes, originalZRes);
 
   QVector<size_t> amDims;
-  amDims.push_back(40);
-  amDims.push_back(30);
-  amDims.push_back(20);
+  amDims.push_back(originalXMax);
+  amDims.push_back(originalYMax);
+  amDims.push_back(originalZMax);
   AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, "Attribute Matrix", DREAM3D::AttributeMatrixType::Cell);
   am1->getNumTuples();
 
   QVector<size_t> tDims;
-  tDims.push_back(40);
-  tDims.push_back(30);
-  tDims.push_back(20);
+  tDims.push_back(originalXMax);
+  tDims.push_back(originalYMax);
+  tDims.push_back(originalZMax);
   QVector<size_t> cDims(1, 1);
 
   DataArray<float>::Pointer ConfidenceIndexArray = DataArray<float>::CreateArray(tDims, cDims, "Confidence Index", true);
@@ -133,15 +146,73 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
 // -----------------------------------------------------------------------------
 int TestCropVolume()
 {
-  DataContainerArray::Pointer dca = CreateDataContainerArrayTestStructure();
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  int err = 0;
 
-  CropVolume::Pointer crop = CropVolume::New();
-  crop->setDataContainerArray(dca);
-  crop->setXMax(20);
-  crop->setXMin(10);
-  crop->setYMax(28);
+  // Now instantiate the CropVolume Filter from the FilterManager
+  QString filtName = "CropVolume";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL != filterFactory.get() )
+  {
+    // If we get this far, the Factory is good so creating the filter should not fail unless something has
+    // horribly gone wrong in which case the system is going to come down quickly after this.
+    DataContainerArray::Pointer dca = CreateDataContainerArrayTestStructure();
+
+    AbstractFilter::Pointer cropVolume = filterFactory->create();
+    cropVolume->setDataContainerArray(dca);
+
+    QVariant var;
+    var.setValue(XMax);
+    bool propWasSet = cropVolume->setProperty("XMax", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    var.setValue(YMax);
+    propWasSet = cropVolume->setProperty("YMax", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    var.setValue(ZMax);
+    propWasSet = cropVolume->setProperty("ZMax", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    var.setValue(XMin);
+    propWasSet = cropVolume->setProperty("XMin", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    var.setValue(YMin);
+    propWasSet = cropVolume->setProperty("YMin", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    var.setValue(ZMin);
+    propWasSet = cropVolume->setProperty("ZMin", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    var.setValue(false);
+    propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    pipeline->pushBack(cropVolume);
+  }
+  else
+  {
+    QString ss = QObject::tr("CropVolumeTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+    DREAM3D_REQUIRE_EQUAL(0, 1)
+  }
 
   return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void loadFilterPlugins()
+{
+  // Register all the filters including trying to load those from Plugins
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
+
+  // Send progress messages from PipelineBuilder to this object for display
+  QMetaObjectUtilities::RegisterMetaTypes();
 }
 
 // -----------------------------------------------------------------------------
@@ -157,6 +228,8 @@ int main(int argc, char** argv)
   QCoreApplication::setApplicationName("CropVolumeTest");
 
   int err = EXIT_SUCCESS;
+
+  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
 
   DREAM3D_REGISTER_TEST( TestCropVolume() )
 
