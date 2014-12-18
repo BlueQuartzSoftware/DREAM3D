@@ -41,7 +41,7 @@
 #define vtkErrorMacro(msg)\
   std::cout  msg
 
-#define kBufferSize 102
+#define kBufferSize 1024
 
 // -----------------------------------------------------------------------------
 //
@@ -147,7 +147,7 @@ void VtkStructuredPointsReader::dataCheck()
   }
 
 
-  // Frist shot Sanity Checks.
+  // First shot Sanity Checks.
   if(!getReadCellData() && !getReadPointData())
   {
     QString ss = QObject::tr("One or BOTH of Read Point Data and Read Cell Data must be checked.");
@@ -176,6 +176,9 @@ void VtkStructuredPointsReader::dataCheck()
   if(getErrorCondition() < 0 && NULL == volDc) { return; }
 
   tDims.resize(3);
+  tDims[0] = 0;
+  tDims[1] = 0;
+  tDims[2] = 0;
   AttributeMatrix::Pointer cellAttrMat = volDc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
@@ -193,13 +196,13 @@ void VtkStructuredPointsReader::dataCheck()
     getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
   }
 
-  // If there was no Cell Data, remove that attribute array
+  // If there was no Cell Data, remove that dataContainer
   if(cellAttrMat->getNumAttributeArrays() == 0)
   {
     getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
   }
 
-  // If there were no Point Arrays then remove that attribute array
+  // If there were no Point Arrays then remove that dataContainer
   if(pointAttrMat->getNumAttributeArrays() == 0)
   {
     getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
@@ -504,12 +507,13 @@ int VtkStructuredPointsReader::readFile()
   // But we need the 'extents' which is one less in all directions (unless dim=1)
   QVector<size_t> dims(3,0);
   QList<QByteArray> tokens = buf.split(' ');
-  dims[0] = tokens[1].toInt(&ok, 10);
-  dims[1] = tokens[2].toInt(&ok, 10);
-  dims[2] = tokens[3].toInt(&ok, 10);
-  vertAm->setTupleDimensions(dims);
+  dims[0] = tokens[1].toInt(&ok, 10)+1;
+  dims[1] = tokens[2].toInt(&ok, 10)+1;
+  dims[2] = tokens[3].toInt(&ok, 10)+1;
+  QVector<size_t> tDims(1, dims[0]*dims[1]*dims[2]);
+  vertAm->setTupleDimensions(tDims);
 
-  QVector<size_t> tDims(3, 0);
+  tDims.resize(3);
   tDims[0] = dims[0]-1;
   tDims[1] = dims[1]-1;
   tDims[2] = dims[2]-1;
@@ -543,7 +547,7 @@ int VtkStructuredPointsReader::readFile()
   QString word = QString(tokens[0]);
   int npts = 0, ncells = 0;
   int numPts=0;
-
+  if (word.startsWith("POINT_DATA") ) word = "CELL_DATA";
   if ( word.startsWith("CELL_DATA") )
   {
     //vtkWarningMacro(<<"No geometry defined in data file!");
@@ -579,33 +583,36 @@ int VtkStructuredPointsReader::readFile()
   if(vm != NULL)
   {
     AttributeMatrix::Pointer attrMat = vm->getAttributeMatrix(getVertexAttributeMatrixName());
-    size_t numPoints = attrMat->getNumTuples();
-    //only calculate coordinates if not in preflight
-    if(getInPreflight() == true)
+    if(attrMat->getNumAttributeArrays() != 0)
     {
-      VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-      vm->setVertices(vertices);
-    }
-    else
-    {
-      VertexArray::Pointer vertices = VertexArray::CreateArray(numPoints, DREAM3D::VertexData::SurfaceMeshNodes);
-      VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
-      size_t count = 0;
-      for(size_t k = 0; k < dims[2]; k++)
+      size_t numPoints = attrMat->getNumTuples();
+      //only calculate coordinates if not in preflight
+      if(getInPreflight() == true)
       {
-        for(size_t j = 0; j < dims[1]; j++)
+        VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+        vm->setVertices(vertices);
+      }
+      else
+      {
+        VertexArray::Pointer vertices = VertexArray::CreateArray(numPoints, DREAM3D::VertexData::SurfaceMeshNodes);
+        VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
+        size_t count = 0;
+        for(size_t k = 0; k < dims[2]; k++)
         {
-          for(size_t i = 0; i < dims[0]; i++)
+          for(size_t j = 0; j < dims[1]; j++)
           {
-            vertex[count].pos[0] = float(i) * resolution[0];
-            vertex[count].pos[1] = float(j) * resolution[1];
-            vertex[count].pos[2] = float(k) * resolution[2];
-            count++;
+            for(size_t i = 0; i < dims[0]; i++)
+            {
+              vertex[count].pos[0] = float(i) * resolution[0];
+              vertex[count].pos[1] = float(j) * resolution[1];
+              vertex[count].pos[2] = float(k) * resolution[2];
+              count++;
+            }
           }
         }
-      }
-      vm->setVertices(vertices);
-    } 
+        vm->setVertices(vertices);
+      } 
+    }
   }
   in.close();
 
