@@ -74,6 +74,13 @@ static const numPackage croppedZ = numPackage(2, 7);
 static float originalRes[3] = {0.25, 0.25, 0.25};
 static float originalOrigin[3] = {0, 0, 0};
 
+static const double originalXRes = 0.25;
+static const double originalYRes = 0.25;
+static const double originalZRes = 0.25;
+
+static const int originalXOrigin = 0;
+static const int originalYOrigin = 0;
+static const int originalZOrigin = 0;
 
 // -----------------------------------------------------------------------------
 //
@@ -83,6 +90,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   int err = 0;
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
+<<<<<<< HEAD
   //VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New("Data Container");
   VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
   dc1->setDimensions(originalX.getMax(), originalY.getMax(), originalZ.getMax());
@@ -95,13 +103,11 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   amDims.push_back(originalZ.getMax());
   AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
 
-  AttributeMatrix::Pointer am2 = AttributeMatrix::New(amDims, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::AttributeMatrixType::CellFeature);
-
-
   QVector<size_t> tDims;
   tDims.push_back(originalX.getMax());
   tDims.push_back(originalY.getMax());
   tDims.push_back(originalZ.getMax());
+
   QVector<size_t> cDims(1, 1);
 
   DataArray<int32_t>::Pointer ConfidenceIndexArray = DataArray<int32_t>::CreateArray(tDims, cDims, "Confidence Index", true);
@@ -471,6 +477,19 @@ int TestCropVolume()
   }
 
   return EXIT_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void loadFilterPlugins()
+{
+  // Register all the filters including trying to load those from Plugins
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
+
+  // Send progress messages from PipelineBuilder to this object for display
+  QMetaObjectUtilities::RegisterMetaTypes();
 }
 
 // -----------------------------------------------------------------------------
