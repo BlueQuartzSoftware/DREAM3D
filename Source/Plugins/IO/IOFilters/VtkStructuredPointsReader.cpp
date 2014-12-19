@@ -98,8 +98,8 @@ void VtkStructuredPointsReader::setupFilterParameters()
 void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
   setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
-  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName() ) );
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
@@ -115,8 +115,8 @@ int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+	  DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
       DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
       DREAM3D_FILTER_WRITE_PARAMETER(ReadPointData)
@@ -312,9 +312,9 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
 
   numRead = 0;
   // Now start reading the data in chunks if needed.
-  size_t chunkSize = DEFAULT_BLOCKSIZE;
+  size_t chunkSize = 8192;
   // Sanity check the chunk size to make sure it is not any larger than the chunk of data we are about to read
-  if(numBytesToRead < DEFAULT_BLOCKSIZE)
+  if (numBytesToRead < 8192)
   {
     chunkSize = numBytesToRead;
   }
@@ -341,28 +341,29 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
     {
       break;
     }
+	if (in.good()) {
+		//  std::cout << "all data read successfully." << in.gcount() << std::endl;
+	}
+
+	if ((in.rdstate() & std::ifstream::failbit) != 0)
+	{
+		std::cout << "FAIL. " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		return -12020;
+	}
+	if ((in.rdstate() & std::ifstream::eofbit) != 0)
+	{
+		std::cout << "EOF " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		return -12021;
+	}
+	if ((in.rdstate() & std::ifstream::badbit) != 0)
+	{
+		std::cout << "BAD " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		return -12021;
+	}
 
   }
 
-  if (in.good()) {
-    //  std::cout << "all data read successfully." << in.gcount() << std::endl;
-  }
-
-  if ((in.rdstate() & std::ifstream::failbit ) != 0)
-  {
-    std::cout << "FAIL. " << in.gcount() << " could be read. Needed " << numBytesToRead << std::endl;
-    return -12020;
-  }
-  if ((in.rdstate() & std::ifstream::eofbit ) != 0)
-  {
-    std::cout <<"EOF " << in.gcount() << " could be read. Needed " << numBytesToRead << std::endl;
-    return -12021;
-  }
-  if ((in.rdstate() & std::ifstream::badbit ) != 0)
-  {
-    std::cout <<"BAD " << in.gcount() << " could be read. Needed " << numBytesToRead << std::endl;
-    return -12021;
-  }
+  
   return 0;
 }
 
