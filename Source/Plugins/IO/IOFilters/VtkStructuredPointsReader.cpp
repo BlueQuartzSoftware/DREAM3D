@@ -78,13 +78,13 @@ void VtkStructuredPointsReader::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
   QStringList linkedProps;
-  linkedProps << "VolumeDataContainerName" << "VertexAttributeMatrixName";
+  linkedProps << "VertexDataContainerName" << "VertexAttributeMatrixName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Read Point Data", "ReadPointData", getReadPointData(), linkedProps, false));
   linkedProps.clear();
   linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadCellData(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
@@ -98,7 +98,7 @@ void VtkStructuredPointsReader::setupFilterParameters()
 void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
+  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
   setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
@@ -115,7 +115,7 @@ int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+	  DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
       DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
@@ -162,7 +162,7 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  VolumeDataContainer* verDc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkStructuredPointsReader>(this, getVolumeDataContainerName());
+  VolumeDataContainer* verDc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkStructuredPointsReader>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0 && NULL == verDc) { return; }
 
   QVector<size_t> tDims(1, 0);
@@ -312,9 +312,9 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
 
   numRead = 0;
   // Now start reading the data in chunks if needed.
-  size_t chunkSize = DEFAULT_BLOCKSIZE;
+  size_t chunkSize = 8192;
   // Sanity check the chunk size to make sure it is not any larger than the chunk of data we are about to read
-  if(numBytesToRead < DEFAULT_BLOCKSIZE)
+  if (numBytesToRead < 8192)
   {
     chunkSize = numBytesToRead;
   }
@@ -341,28 +341,29 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
     {
       break;
     }
+	if (in.good()) {
+		//  std::cout << "all data read successfully." << in.gcount() << std::endl;
+	}
+
+	if ((in.rdstate() & std::ifstream::failbit) != 0)
+	{
+		std::cout << "FAIL. " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		return -12020;
+	}
+	if ((in.rdstate() & std::ifstream::eofbit) != 0)
+	{
+		std::cout << "EOF " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		return -12021;
+	}
+	if ((in.rdstate() & std::ifstream::badbit) != 0)
+	{
+		std::cout << "BAD " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		return -12021;
+	}
 
   }
 
-  if (in.good()) {
-    //  std::cout << "all data read successfully." << in.gcount() << std::endl;
-  }
-
-  if ((in.rdstate() & std::ifstream::failbit ) != 0)
-  {
-    std::cout << "FAIL. " << in.gcount() << " could be read. Needed " << numBytesToRead << std::endl;
-    return -12020;
-  }
-  if ((in.rdstate() & std::ifstream::eofbit ) != 0)
-  {
-    std::cout <<"EOF " << in.gcount() << " could be read. Needed " << numBytesToRead << std::endl;
-    return -12021;
-  }
-  if ((in.rdstate() & std::ifstream::badbit ) != 0)
-  {
-    std::cout <<"BAD " << in.gcount() << " could be read. Needed " << numBytesToRead << std::endl;
-    return -12021;
-  }
+  
   return 0;
 }
 
@@ -486,7 +487,7 @@ int VtkStructuredPointsReader::readFile()
   VolumeDataContainer* volDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
   AttributeMatrix::Pointer volAm = volDc->getAttributeMatrix(getCellAttributeMatrixName());
 
-  VolumeDataContainer* vertDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  VolumeDataContainer* vertDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
   AttributeMatrix::Pointer vertAm = vertDc->getAttributeMatrix(getVertexAttributeMatrixName());
 
   std::ifstream in(getInputFile().toLatin1().constData(), std::ios_base::in);
@@ -601,7 +602,7 @@ int VtkStructuredPointsReader::readFile()
   }
   else if ( word.startsWith("POINT_DATA") )
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
     npts = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumTuples() != npts)
