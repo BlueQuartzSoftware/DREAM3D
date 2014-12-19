@@ -312,9 +312,9 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
 
   numRead = 0;
   // Now start reading the data in chunks if needed.
-  size_t chunkSize = 8192;
+  size_t chunkSize = DEFAULT_BLOCKSIZE;
   // Sanity check the chunk size to make sure it is not any larger than the chunk of data we are about to read
-  if (numBytesToRead < 8192)
+  if (numBytesToRead < DEFAULT_BLOCKSIZE)
   {
     chunkSize = numBytesToRead;
   }
@@ -347,17 +347,17 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
 
 	if ((in.rdstate() & std::ifstream::failbit) != 0)
 	{
-		std::cout << "FAIL. " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		std::cout << "FAIL. " << in.gcount() << " could be read. Needed " << chunkSize << " total bytes read=" << master_counter << std::endl;
 		return -12020;
 	}
 	if ((in.rdstate() & std::ifstream::eofbit) != 0)
 	{
-		std::cout << "EOF " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		std::cout << "EOF " << in.gcount() << " could be read. Needed " << chunkSize << " total bytes read=" << master_counter << std::endl;
 		return -12021;
 	}
 	if ((in.rdstate() & std::ifstream::badbit) != 0)
 	{
-		std::cout << "BAD " << in.gcount() << " could be read. Needed " << chunkSize << std::endl;
+		std::cout << "BAD " << in.gcount() << " could be read. Needed " << chunkSize << " total bytes read=" << master_counter << std::endl;
 		return -12021;
 	}
 
@@ -490,7 +490,7 @@ int VtkStructuredPointsReader::readFile()
   VolumeDataContainer* vertDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
   AttributeMatrix::Pointer vertAm = vertDc->getAttributeMatrix(getVertexAttributeMatrixName());
 
-  std::ifstream in(getInputFile().toLatin1().constData(), std::ios_base::in);
+  std::ifstream in(getInputFile().toLatin1().constData(), std::ios_base::in | std::ios_base::binary);
 
   if (!in.is_open())
   {
