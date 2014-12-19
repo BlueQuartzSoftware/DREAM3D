@@ -162,7 +162,7 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  VolumeDataContainer* verDc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkStructuredPointsReader>(this, getVolumeDataContainerName());
+  VolumeDataContainer* verDc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkStructuredPointsReader>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0 && NULL == verDc) { return; }
 
   QVector<size_t> tDims(1, 0);
@@ -189,7 +189,7 @@ void VtkStructuredPointsReader::dataCheck()
   // now check to see what the user wanted
   if(!getReadPointData())
   {
-    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
   }
   if(!getReadCellData())
   {
@@ -205,7 +205,7 @@ void VtkStructuredPointsReader::dataCheck()
   // If there were no Point Arrays then remove that dataContainer
   if(pointAttrMat->getNumAttributeArrays() == 0)
   {
-    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
   }
 
 }
@@ -486,7 +486,7 @@ int VtkStructuredPointsReader::readFile()
   VolumeDataContainer* volDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
   AttributeMatrix::Pointer volAm = volDc->getAttributeMatrix(getCellAttributeMatrixName());
 
-  VolumeDataContainer* vertDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  VolumeDataContainer* vertDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
   AttributeMatrix::Pointer vertAm = vertDc->getAttributeMatrix(getVertexAttributeMatrixName());
 
   std::ifstream in(getInputFile().toLatin1().constData(), std::ios_base::in);
@@ -601,7 +601,7 @@ int VtkStructuredPointsReader::readFile()
   }
   else if ( word.startsWith("POINT_DATA") )
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
     npts = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumTuples() != npts)
@@ -762,7 +762,7 @@ int VtkStructuredPointsReader::readDataTypeSection(std::istream &in, int numValu
         }
         else if(nextKeyWord.compare("point_data") == 0)
         {
-          VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+          VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
           m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
           int npts = QString(line).toInt(&ok);
           this->readDataTypeSection(in, npts, "cell_data");
