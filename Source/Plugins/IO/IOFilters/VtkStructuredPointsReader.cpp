@@ -78,13 +78,13 @@ void VtkStructuredPointsReader::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
   QStringList linkedProps;
-  linkedProps << "VolumeDataContainerName" << "VertexAttributeMatrixName";
+  linkedProps << "VertexDataContainerName" << "VertexAttributeMatrixName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Read Point Data", "ReadPointData", getReadPointData(), linkedProps, false));
   linkedProps.clear();
   linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadCellData(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
@@ -99,7 +99,7 @@ void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersRea
 {
   reader->openFilterGroup(this, index);
   setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
+  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName() ) );
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
@@ -116,7 +116,7 @@ int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWri
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
       DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+      DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
       DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
       DREAM3D_FILTER_WRITE_PARAMETER(ReadPointData)
