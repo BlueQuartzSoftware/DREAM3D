@@ -144,7 +144,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
      * @brief This function returns all the Data Arrays Path objects that all the
      * DataContainers have in common with each other.
      */
-    void findCommonDataArrayPaths();
+    QVector<DataArrayPath> findCommonDataArrayPaths();
 
     /**
      * @brief writeH5Data Write this bundle out to an HDF5 File

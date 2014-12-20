@@ -115,9 +115,12 @@ void TestDataBundleCommonPaths()
   DataContainerBundle::Pointer bundle = DataContainerBundle::New("Bundle 1");
   bundle->addDataContainer(dc0);
   bundle->addDataContainer(dc1);
-  bundle->addDataContainer(dc0);
+  bundle->addDataContainer(dc2);
 
-  bundle->findCommonDataArrayPaths();
+  QVector<DataArrayPath> paths = bundle->findCommonDataArrayPaths();
+
+  int count = paths.count();
+  DREAM3D_REQUIRE_EQUAL(count, 2)
 
 }
 

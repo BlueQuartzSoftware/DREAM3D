@@ -65,7 +65,7 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 DataContainerBundle::DataContainerBundle() :
-m_MetaDataAMName(DREAM3D::StringConstants::MetaData)
+  m_MetaDataAMName(DREAM3D::StringConstants::MetaData)
 {
 
 }
@@ -176,6 +176,54 @@ void DataContainerBundle::clear()
   return m_DataContainers.clear();
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> DataContainerBundle::findCommonDataArrayPaths()
+{
+  QVector<DataArrayPath> commonPaths;
+  if(m_DataContainers.count() == 0) { return commonPaths; }
+
+  // Get the first DataContainer
+  DataContainer::Pointer dc0 = m_DataContainers[0];
+  if(NULL == dc0.get()) { return commonPaths; }
+  QVector<DataArrayPath> dc0Paths = dc0->getAllDataArrayPaths();
+
+  if(m_DataContainers.count() == 1) { return commonPaths; }
+
+  int count = m_DataContainers.count();
+  // We already have the first DataContainer, so start at the 2nd
+  for (int dcIdx = 1; dcIdx < count; ++dcIdx)
+  {
+    DataContainer::Pointer dcX = m_DataContainers[dcIdx];
+    QVector<DataArrayPath> paths = dcX->getAllDataArrayPaths();
+
+    int numPaths = dc0Paths.count();
+    // Loop over the paths from the first data container from back to front,
+    // removing the path if it does not exist.
+    for(int i = numPaths - 1; i >= 0; i--)
+    {
+      DataArrayPath dc0Path = dc0Paths[i];
+      bool match = false;
+      foreach(DataArrayPath path, paths)
+      {
+        //qDebug() << "Comparing " << dc0Path.serialize() << " TO " << path.serialize();
+        if(path.sameAttributeMatrix(dc0Path) &&  path.sameDataArray(dc0Path) ) { match = true; }
+      }
+
+      if(!match)
+      {
+        dc0Paths.remove(i);
+      }
+    }
+  }
+
+  commonPaths = dc0Paths;
+  return commonPaths;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -225,13 +273,3 @@ int DataContainerBundle::readH5Data(hid_t groupId)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
- void DataContainerBundle::findCommonDataArrayPaths()
- {
-    // Get the first DataContainer
-    DataContainer::Pointer dc0 = m_DataContainers[0];
-
-
- }

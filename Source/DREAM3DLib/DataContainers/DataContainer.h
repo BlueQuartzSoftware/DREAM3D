@@ -168,6 +168,12 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
 
 
     /**
+     * @brief getAllDataArrayPaths
+     * @return
+     */
+    virtual QVector<DataArrayPath> getAllDataArrayPaths();
+
+    /**
      * @brief This method will check for the existance of a named AttributeMatrix. If that AttributeMatrix with the
      * given name does exist, the attributeMatrix will be checked for validity and if it passes the attribute matrix
      * will be returned. if any of the tests fail a Shared Pointer wrapping a NULL value will be returned.
