@@ -2192,7 +2192,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   // Write the total number of features
   dStream << static_cast<qint32>(numFeatures - m_FirstPrecipitateFeature);
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getAttributeArrayNameList();
+  QList<QString> headers = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getAttributeArrayNames();
 
   std::vector<IDataArray::Pointer> data;
 

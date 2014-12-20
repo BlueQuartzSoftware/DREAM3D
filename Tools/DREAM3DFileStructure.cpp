@@ -70,7 +70,7 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
     // Create the real DataContainer Object and push it into the DataContainerArray object
     DataContainer::Pointer dataContainer = DataContainer::New();
     dataContainer->setName(dcProxy.name);
-    dcArray->pushBack(dataContainer);
+    dcArray->addDataContainer(dataContainer);
 
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel

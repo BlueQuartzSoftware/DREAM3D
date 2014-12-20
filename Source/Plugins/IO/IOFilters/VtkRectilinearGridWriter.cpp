@@ -216,7 +216,7 @@ int VtkRectilinearGridWriter::write(const QString& file)
   fprintf(f, "CELL_DATA %d\n", (int)totalPoints);
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_SelectedAttributeMatrixPath);
-  QList<QString> arrayNames = am->getAttributeArrayNameList();
+  QList<QString> arrayNames = am->getAttributeArrayNames();
   foreach(const QString arrayName, arrayNames)
   {
     IDataArray::Pointer iDataPtr = am->getAttributeArray(arrayName);

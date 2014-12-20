@@ -72,7 +72,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
 
   if(NULL == dca) { return; }
 
-  QList<DataContainer::Pointer> containers = dca->getDataContainerArray();
+  QList<DataContainer::Pointer> containers = dca->getDataContainers();
   for(int i = 0; i < containers.size(); i++) // Loop on each Data Container
   {
     DataContainer::Pointer container = containers.at(i);
@@ -88,7 +88,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
       AttributeMatrix::Pointer attrMat = iter.value();
       AttributeMatrixProxy amProxy(amName, Qt::Checked, attrMat->getType());
 
-      QList<QString> attrArrayNames = attrMat->getAttributeArrayNameList();
+      QList<QString> attrArrayNames = attrMat->getAttributeArrayNames();
       QListIterator<QString> attrArrayNamesIter(attrArrayNames);
       while(attrArrayNamesIter.hasNext())
       {
@@ -252,7 +252,7 @@ void DataContainerArrayProxy::print(const QString header)
 //    if (dcProxy.flag == state)
 //    {
 //        DataContainer::Pointer ptr = dca->removeDataContainer(dcProxy.name); // Remove it out
-//        
+//
 //      continue; // Continue to the next DataContainer
 //    }
 //    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;

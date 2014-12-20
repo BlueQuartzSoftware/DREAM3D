@@ -164,7 +164,7 @@ void CropVolume::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   VolumeDataContainer* destCellDataContainer = srcCellDataContainer;
 
-  IDataArray::Pointer da1 = cellAttrMat->getAttributeArray(cellAttrMat->getAttributeArrayNameList()[0]);
+  IDataArray::Pointer da1 = cellAttrMat->getAttributeArray(cellAttrMat->getAttributeArrayNames()[0]);
 
   if (m_SaveAsNewDataContainer == true)
   {
@@ -390,7 +390,7 @@ void CropVolume::execute()
   int64_t colold, rowold, planeold;
   int64_t index;
   int64_t index_old;
-  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
   for (int64_t i = 0; i < ZP; i++)
   {
     QString ss = QObject::tr("Cropping Volume - Slice %1 of %2 Complete").arg(i).arg(ZP);

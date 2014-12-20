@@ -223,7 +223,7 @@ void NeighborCICorrelation::execute()
 
     }
     QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
     if(getCancel()) { break; }
 

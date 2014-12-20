@@ -74,28 +74,6 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @brief
      */
     virtual void addDataContainer(DataContainer::Pointer f);
-    virtual void pushFront(DataContainer::Pointer f);
-    virtual void popFront();
-    virtual void pushBack(DataContainer::Pointer f);
-    virtual void popBack();
-    virtual void insert(size_t index, DataContainer::Pointer f);
-    virtual void erase(size_t index);
-    virtual void clear();
-    virtual size_t size();
-    virtual bool empty();
-
-    /**
-     * @brief contains Returns if a DataContainer with the give name is in the array
-     * @param name The name of the DataContiner to find
-     * @return
-     */
-    bool contains(const QString& name);
-
-    /**
-     * @brief
-     */
-    virtual DataContainer::Pointer removeDataContainer(const QString& name);
-    virtual DataContainer::Pointer getDataContainer(const QString& name);
 
     /**
      * @brief getDataContainer
@@ -105,11 +83,54 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     virtual DataContainer::Pointer getDataContainer(const DataArrayPath& path);
 
     /**
-     * @brief getAttributeMatrix
-     * @param path
+     * @brief getDataContainer
+     * @param name
      * @return
      */
-    virtual AttributeMatrix::Pointer getAttributeMatrix(const DataArrayPath& path);
+    virtual DataContainer::Pointer getDataContainer(const QString& name);
+
+    /**
+     * @brief getDataContainers
+     * @return
+     */
+    QList<DataContainer::Pointer>& getDataContainers();
+
+    /**
+     * @brief Returns if a DataContainer with the give name is in the array
+     * @param name The name of the DataContiner to find
+     * @return
+     */
+    virtual bool doesDataContainerExist(const QString& name);
+
+    /**
+     * @brief
+     */
+    virtual DataContainer::Pointer removeDataContainer(const QString& name);
+
+    /**
+     * @brief renameDataContainer
+     * @param oldName
+     * @param newName
+     * @return
+     */
+    bool renameDataContainer(const QString& oldName, const QString& newName);
+
+    /**
+     * @brief Removes all DataContainers from this DataContainerArray
+     */
+    virtual void clearDataContainers();
+
+    /**
+     * @brief getDataContainerNames
+     * @return
+     */
+    QList<QString> getDataContainerNames();
+
+    /**
+     * @brief Returns the number of DataContainers
+     * @return
+     */
+    virtual int getNumDataContainers();
 
     /**
      * @brief duplicateDataContainer
@@ -117,17 +138,30 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @param newName
      */
     virtual void duplicateDataContainer(const QString& name, const QString& newName);
-    QList<QString> getDataContainerNames();
-    QList<DataContainer::Pointer>& getDataContainerArray();
-    bool renameDataContainer(const QString& oldName, const QString& newName);
 
 
+    //////////////////////  AttributeMatrix Functions //////////////////////////
+    /**
+     * @brief getAttributeMatrix
+     * @param path
+     * @return
+     */
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const DataArrayPath& path);
+
+    /**
+     * @brief printDataContainerNames
+     * @param out
+     */
     virtual void printDataContainerNames(QTextStream& out);
 
     /**
     * @brief Reads desired the DataContainers from HDF5 file
-    * @return
-    */
+     * @param preflight
+     * @param dcaGid
+     * @param dcaProxy
+     * @param obs
+     * @return
+     */
     virtual int readDataContainersFromHDF5(bool preflight,
                                            hid_t dcaGid,
                                            DataContainerArrayProxy& dcaProxy,
@@ -188,8 +222,6 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      */
     void removeDataContainerFromBundles(const QString &name);
 
-
-
     /**
      * @brief getDataContainerAs
      * @param name
@@ -228,7 +260,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       else if(NULL != dc && createIfNotExists == true)
       {
         typename DataContainerType::Pointer dataContainer = DataContainerType::New(name); // Create a new Data Container
-        pushBack(dataContainer); // Put the new DataContainer into the array
+        addDataContainer(dataContainer); // Put the new DataContainer into the array
         return dataContainer.get(); // Return the wrapped pointer
       }
       // The DataContainer we asked for was present and NON Null so return that.
@@ -244,7 +276,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     DataContainerType* createNonPrereqDataContainer(Filter* filter, const QString& dataContainerName)
     {
       Q_ASSERT(dataContainerName.isEmpty() == false);
-      if(contains(dataContainerName) == true)
+      if(doesDataContainerExist(dataContainerName) == true)
       {
         if (filter)
         {
@@ -255,7 +287,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         }
       }
       typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
-      pushBack(dataContainer);
+      addDataContainer(dataContainer);
       return dataContainer.get();
     }
 

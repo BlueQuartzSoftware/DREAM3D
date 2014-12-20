@@ -308,7 +308,7 @@ void TestDataContainerWriter()
   // A DataContainer that mimics some real data
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   m->setName(DREAM3D::Defaults::VolumeDataContainerName);
-  dca->pushBack(m);
+  dca->addDataContainer(m);
 
   m->setDimensions(nx, ny, nz);
   AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(tupleDims, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
@@ -484,12 +484,12 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   int err = attrMat->addAttributeArray("Test", p);
   DREAM3D_REQUIRED(err, >=, 0)
 
-      // Now get it back out as the specific type that we put it in as
-      typename T::Pointer t = attrMat->getArray<T>("Test");
+  // Now get it back out as the specific type that we put it in as
+  typename T::Pointer t = attrMat->getAttributeArrayAs<T>("Test");
   DREAM3D_TEST_POINTER(t.get(), !=, NULL)
 
-      // get the array as an IDataArray
-      IDataArray::Pointer ida = attrMat->getAttributeArray("Test");
+  // get the array as an IDataArray
+  IDataArray::Pointer ida = attrMat->getAttributeArray("Test");
   DREAM3D_TEST_POINTER(ida.get(), !=, NULL);
 
   QVector<size_t> dims(1, 1);
@@ -501,7 +501,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_TEST_POINTER(ida.get(), !=, NULL);
 
   // Now try and get the array again. we should fail
-  t = attrMat->getArray<T>( "Test" );
+  t = attrMat->getAttributeArrayAs<T>( "Test" );
   DREAM3D_TEST_POINTER(t.get(), ==, NULL);
   // Try to get it as an IDataArray. We should fail
   ida = attrMat->getAttributeArray("Test");
@@ -782,7 +782,7 @@ void TestArrayCreation()
   nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
+  nameList = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNames();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   nameList = m->getCellEnsembleArrayNameList();

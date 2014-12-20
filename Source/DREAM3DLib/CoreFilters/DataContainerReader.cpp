@@ -151,7 +151,7 @@ void DataContainerReader::dataCheck()
     // something has gone wrong and errors were logged alread so just return
     return;
   }
-  QList<DataContainer::Pointer>& tempContainers = tempDCA->getDataContainerArray();
+  QList<DataContainer::Pointer>& tempContainers = tempDCA->getDataContainers();
   QListIterator<DataContainer::Pointer> iter(tempContainers);
   while(iter.hasNext())
   {
@@ -159,7 +159,7 @@ void DataContainerReader::dataCheck()
 
     if(getOverwriteExistingDataContainers() == true )
     {
-      if(dca->contains(container->getName()) == true)
+      if(dca->doesDataContainerExist(container->getName()) == true)
       {
         dca->removeDataContainer(container->getName());
       }
@@ -167,7 +167,7 @@ void DataContainerReader::dataCheck()
     }
     else
     {
-      if(dca->contains(container->getName()) == true)
+      if(dca->doesDataContainerExist(container->getName()) == true)
       {
         ss = QObject::tr("The input file has a DataContainer with a name that alread exists in the current DataContainerArray structure. '%1'").arg(container->getName());
         setErrorCondition(-390);

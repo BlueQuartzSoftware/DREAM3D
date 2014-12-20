@@ -46,29 +46,6 @@ DataContainerArray::DataContainerArray() :
 DataContainerArray::~DataContainerArray()
 {
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerArray::pushFront(DataContainer::Pointer f)
-{
-  m_Array.push_front(f);
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerArray::popFront()
-{
-  QString dcName = m_Array.front()->getName();
-  removeDataContainerFromBundles(dcName);
-  m_Array.pop_front();
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerArray::pushBack(DataContainer::Pointer f)
-{
-  m_Array.push_back(f);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -78,16 +55,25 @@ void DataContainerArray::addDataContainer(DataContainer::Pointer f)
   m_Array.push_back(f);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerArray::getNumDataContainers()
+{
+  return m_Array.size();
+}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArray::popBack()
+void DataContainerArray::clearDataContainers()
 {
-  QString dcName = m_Array.back()->getName();
-  removeDataContainerFromBundles(dcName);
-  m_Array.pop_back();
+  m_Array.clear();
 }
+
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -122,13 +108,7 @@ void DataContainerArray::clear()
   m_Array.clear();
   m_DataContainerBundles.clear();
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-size_t DataContainerArray::size()
-{
-  return m_Array.size();
-}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -136,6 +116,7 @@ bool DataContainerArray::empty()
 {
   return m_Array.isEmpty();
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -259,7 +240,7 @@ void DataContainerArray::duplicateDataContainer(const QString& name, const QStri
 
   DataContainer::Pointer new_f = f->deepCopy();
   new_f->setName(newName);
-  pushBack(new_f);
+  addDataContainer(new_f);
 }
 
 // -----------------------------------------------------------------------------
@@ -278,7 +259,7 @@ QList<QString> DataContainerArray::getDataContainerNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<DataContainer::Pointer>& DataContainerArray::getDataContainerArray()
+QList<DataContainer::Pointer>& DataContainerArray::getDataContainers()
 {
   return m_Array;
 }
@@ -312,7 +293,7 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
     if(dcProxy.flag == Qt::Unchecked) { continue; }
-    if (this->contains(dcProxy.name) == true )
+    if (this->doesDataContainerExist(dcProxy.name) == true )
     {
       if(NULL != obs)
       {
@@ -335,25 +316,25 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
     {
       VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
       dc->setName(dcProxy.name);
-      this->pushBack(dc);
+      this->addDataContainer(dc);
     }
     if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
     {
       SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
       dc->setName(dcProxy.name);
-      this->pushBack(dc);
+      this->addDataContainer(dc);
     }
     if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
     {
       EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
       dc->setName(dcProxy.name);
-      this->pushBack(dc);
+      this->addDataContainer(dc);
     }
     if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
     {
       VertexDataContainer::Pointer dc = VertexDataContainer::New();
       dc->setName(dcProxy.name);
-      this->pushBack(dc);
+      this->addDataContainer(dc);
     }
 
     // Now open the DataContainer Group in the HDF5 file
@@ -395,7 +376,7 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainerArray::contains(const QString& name)
+bool DataContainerArray::doesDataContainerExist(const QString& name)
 {
   for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
   {

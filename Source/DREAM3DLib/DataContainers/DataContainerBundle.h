@@ -53,7 +53,12 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
 
     virtual ~DataContainerBundle();
 
-    static Pointer                                        New(const QString &name)
+    /**
+     * @brief Creates a new DataContainerBundle
+     * @param name The Name of the Bundle
+     * @return
+     */
+    static Pointer New(const QString &name)
     {
       Pointer sharedPtr (new DataContainerBundle);
       sharedPtr->setName(name);
@@ -84,26 +89,60 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
      */
     DREAM3D_INSTANCE_PROPERTY(QStringList, MetaDataArrays)
 
+    /**
+     * @brief Sets All the DataContainers for this bundle
+     * @param containers
+     */
     void setDataContainers(QVector<DataContainer::Pointer> &containers);
     QVector<QString> getDataContainerNames();
 
 
-
+    /**
+     * @brief addDataContainer Adds a Data Container to the bundle
+     * @param dc
+     */
     void addDataContainer(DataContainer::Pointer dc);
 
+    /**
+     * @brief removeDataContainer Removes a Data Container from the bundle by pointer
+     * @param dc
+     */
     void removeDataContainer(DataContainer::Pointer dc);
+
+    /**
+     * @brief Removes a DataContainer by name from the bundle
+     * @param name
+     */
     void removeDataContainer(const QString &name);
+
+    /**
+     * @brief Removes a Data Container by index
+     * @param i
+     */
     void removeDataContainer(qint32 i);
 
-
+    /**
+     * @brief Returns the DataContainer at a given index
+     * @param index
+     * @return
+     */
     DataContainer::Pointer getDataContainer(qint32 index);
 
+    /**
+     * @brief Returns the number of DataContainers held in the bundle
+     * @return
+     */
     qint32 count();
 
+    /**
+     * @brief Removes all references to the DataContainers stored in the class. Count will = 0
+     * after this operation
+     */
     void clear();
 
     /**
-     * @brief findCommonDataArrayPaths
+     * @brief This function returns all the Data Arrays Path objects that all the
+     * DataContainers have in common with each other.
      */
     void findCommonDataArrayPaths();
 

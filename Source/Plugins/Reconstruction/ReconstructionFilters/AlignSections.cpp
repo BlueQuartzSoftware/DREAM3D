@@ -233,7 +233,7 @@ void AlignSections::execute()
     }
   }
 
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
   DimType progIncrement = dims[2] / 100;
   DimType prog = 1;
   int progressInt = 0;

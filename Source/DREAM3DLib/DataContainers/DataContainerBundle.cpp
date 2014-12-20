@@ -230,5 +230,8 @@ int DataContainerBundle::readH5Data(hid_t groupId)
 // -----------------------------------------------------------------------------
  void DataContainerBundle::findCommonDataArrayPaths()
  {
+    // Get the first DataContainer
+    DataContainer::Pointer dc0 = m_DataContainers[0];
+
 
  }

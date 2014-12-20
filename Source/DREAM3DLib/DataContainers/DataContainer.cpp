@@ -209,7 +209,7 @@ void DataContainer::clearAttributeMatrices()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> DataContainer::getAttributeMatrixNameList()
+QList<QString> DataContainer::getAttributeMatrixNames()
 {
   QList<QString> keys;
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = m_AttributeMatrices.begin(); iter != m_AttributeMatrices.end(); ++iter)

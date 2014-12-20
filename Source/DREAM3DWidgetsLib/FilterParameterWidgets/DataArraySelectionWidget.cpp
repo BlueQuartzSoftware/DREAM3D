@@ -174,7 +174,7 @@ void DataArraySelectionWidget::populateComboBoxes()
   //qDebug() << "Current ComboBox Value: " << curDcName << "::" << curAmName << "::" << curDaName;
 
   // Check to see if we have any DataContainers to actually populate drop downs with.
-  if(dca->getDataContainerArray().size() == 0)
+  if(dca->getDataContainers().size() == 0)
   {
     dataContainerList->clear();
     attributeMatrixList->clear();

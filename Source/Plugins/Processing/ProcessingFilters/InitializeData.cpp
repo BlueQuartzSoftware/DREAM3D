@@ -224,7 +224,7 @@ void InitializeData::execute()
 
   int index;
   QString attrMatName = m_CellAttributeMatrixName.getAttributeMatrixName();
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
   for (int k = m_ZMin; k < m_ZMax + 1; k++)
   {
     for (int j = m_YMin; j < m_YMax + 1; j++)
