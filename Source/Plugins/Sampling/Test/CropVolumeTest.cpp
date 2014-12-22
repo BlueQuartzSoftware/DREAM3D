@@ -74,13 +74,6 @@ static const numPackage croppedZ = numPackage(2, 7);
 static float originalRes[3] = {0.25, 0.25, 0.25};
 static float originalOrigin[3] = {0, 0, 0};
 
-static const double originalXRes = 0.25;
-static const double originalYRes = 0.25;
-static const double originalZRes = 0.25;
-
-static const int originalXOrigin = 0;
-static const int originalYOrigin = 0;
-static const int originalZOrigin = 0;
 
 // -----------------------------------------------------------------------------
 //
@@ -90,7 +83,6 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   int err = 0;
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-<<<<<<< HEAD
   //VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New("Data Container");
   VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
   dc1->setDimensions(originalX.getMax(), originalY.getMax(), originalZ.getMax());
@@ -124,7 +116,9 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
 
   int64_t col, row, plane;
   int64_t index;
-  QList<QString> voxelArrayNames = am1->getAttributeArrayNameList();
+
+  QList<QString> voxelArrayNames = am1->getAttributeArrayNames();
+  int64_t val = 1;
 
   for (int64_t i = 0; i < ZP; i++)
   {
@@ -139,19 +133,19 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = am1->getAttributeArray(*iter);
-          p->initializeTuple(index, i+j+k);
+          p->initializeTuple(index, val);
+          val++;
         }
       }
     }
   }
 
-  foreach (QString da, am1->getAttributeArrayNameList())
+  foreach (QString da, am1->getAttributeArrayNames())
   {
     DREAM3D_REQUIRE_EQUAL(am1->getAttributeArray(da)->getSize(), XP*YP*ZP);
   }
 
   dc1->addAttributeMatrix(am1->getName(), am1);
-  dc1->addAttributeMatrix(am2->getName(), am2);
 
   dca->addDataContainer(dc1);
 
@@ -461,7 +455,6 @@ int TestCropVolume()
         //    var.setValue(true);
         //    propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
         //    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
 
     preflightTests(cropVolume);
 
