@@ -284,6 +284,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
           QString ss = "The DataContainer Object with the specific name " + dataContainerName + " already exists.";
           PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
           filter->broadcastPipelineMessage(em);
+          return (getPrereqDataContainer<DataContainerType, Filter>(filter, dataContainerName));
         }
       }
       typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
