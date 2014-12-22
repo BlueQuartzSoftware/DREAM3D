@@ -264,7 +264,7 @@ function(BuildQtAppBundle)
                 DESTINATION "bin"
                 COMPONENT ${QAB_COMPONENT})
         set(lib_suffix "")
-        set(build_type "@CMAKE_BUILD_TYPE@")
+        set(build_type "${CMAKE_BUILD_TYPE}")
         if("${build_type}" STREQUAL "Debug")
             set(lib_suffix "_debug")
         endif()
