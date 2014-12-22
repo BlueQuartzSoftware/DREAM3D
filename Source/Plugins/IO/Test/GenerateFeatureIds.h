@@ -193,7 +193,7 @@ class CreateVolumeDataContainer : public AbstractFilter
       int64_t ny = UnitTest::FeatureIdsTest::YSize;
       int64_t nz = UnitTest::FeatureIdsTest::ZSize;
       m->setDimensions(nx, ny, nz);
-      getDataContainerArray()->pushBack(m);
+      getDataContainerArray()->addDataContainer(m);
       QVector<size_t> tDims(3, 0);
       tDims[0] = nx;
       tDims[1] = ny;

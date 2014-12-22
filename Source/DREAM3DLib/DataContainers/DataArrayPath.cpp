@@ -67,7 +67,7 @@ class DataArrayPathPrivate {
 //
 // -----------------------------------------------------------------------------
 DataArrayPathPrivate::DataArrayPathPrivate(DataArrayPath* ptr) :
-q_ptr(ptr)
+  q_ptr(ptr)
 {
 
 }
@@ -77,7 +77,7 @@ q_ptr(ptr)
 //
 // -----------------------------------------------------------------------------
 DataArrayPath::DataArrayPath() :
-d_ptr(new DataArrayPathPrivate(this))
+  d_ptr(new DataArrayPathPrivate(this))
 {
 
 }
@@ -97,7 +97,7 @@ DataArrayPath::DataArrayPath(const QString& dcName, const QString& amName, const
 //
 // -----------------------------------------------------------------------------
 DataArrayPath::DataArrayPath(const QString& path) :
-d_ptr(new DataArrayPathPrivate(this))
+  d_ptr(new DataArrayPathPrivate(this))
 {
   QStringList tokens = path.split(DREAM3D::PathSep);
 
@@ -110,7 +110,7 @@ d_ptr(new DataArrayPathPrivate(this))
 //
 // -----------------------------------------------------------------------------
 DataArrayPath::DataArrayPath(const DataArrayPath& rhs) :
-d_ptr(new DataArrayPathPrivate(this))
+  d_ptr(new DataArrayPathPrivate(this))
 {
   d_ptr->m_DataContainerName = rhs.getDataContainerName();
   d_ptr->m_AttributeMatrixName = rhs.getAttributeMatrixName();
@@ -144,9 +144,22 @@ void DataArrayPath::operator=(const DataArrayPath& rhs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool DataArrayPath::operator==(const DataArrayPath& rhs)
+{
+    if( d_ptr->m_DataContainerName == rhs.getDataContainerName()
+        && d_ptr->m_AttributeMatrixName == rhs.getAttributeMatrixName()
+        && d_ptr->m_DataArrayName == rhs.getDataArrayName() )
+        {return true;}
+
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString DataArrayPath::serialize(QString delimiter) const
 {
-    QString s = d_ptr->m_DataContainerName + delimiter + d_ptr->m_AttributeMatrixName + delimiter + d_ptr->m_DataArrayName;
+  QString s = d_ptr->m_DataContainerName + delimiter + d_ptr->m_AttributeMatrixName + delimiter + d_ptr->m_DataArrayName;
   return s;
 }
 

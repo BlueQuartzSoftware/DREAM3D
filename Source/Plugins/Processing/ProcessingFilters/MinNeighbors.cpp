@@ -296,7 +296,7 @@ void MinNeighbors::assign_badpoints()
       }
     }
     QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
     for (int64_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];

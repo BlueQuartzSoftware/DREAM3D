@@ -281,10 +281,9 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-Int32ArrayType::Pointer binData(IDataArray::Pointer correlatedData, int64_t numBins)
+Int32ArrayType::Pointer binData(typename DataArray<T>::Pointer featureArray, int64_t numBins)
 {
-  DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(correlatedData.get());
-  if (NULL == featureArray)
+  if (NULL == featureArray.get())
   {
     return Int32ArrayType::NullPointer();
   }
@@ -350,47 +349,47 @@ void FitCorrelatedFeatureData::execute()
   Int32ArrayType::Pointer binArray = Int32ArrayType::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    binArray = binData<int8_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<int8_t>(boost::dynamic_pointer_cast<Int8ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    binArray = binData<uint8_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<uint8_t>(boost::dynamic_pointer_cast<UInt8ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    binArray = binData<int16_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<int16_t>(boost::dynamic_pointer_cast<Int16ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    binArray = binData<uint16_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<uint16_t>(boost::dynamic_pointer_cast<UInt16ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    binArray = binData<int32_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<int32_t>(boost::dynamic_pointer_cast<Int32ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    binArray = binData<uint32_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<uint32_t>(boost::dynamic_pointer_cast<UInt32ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    binArray = binData<int64_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<int64_t>(boost::dynamic_pointer_cast<Int64ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    binArray = binData<uint64_t>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<uint64_t>(boost::dynamic_pointer_cast<UInt64ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("float") == 0)
   {
-    binArray = binData<float>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<float>(boost::dynamic_pointer_cast<FloatArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("double") == 0)
   {
-    binArray = binData<double>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<double>(boost::dynamic_pointer_cast<DoubleArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
   else if (dType.compare("bool") == 0)
   {
-    binArray = binData<bool>(correlatedData, m_NumberOfCorrelatedBins);
+    binArray = binData<bool>(boost::dynamic_pointer_cast<BoolArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
 
   // fit the data

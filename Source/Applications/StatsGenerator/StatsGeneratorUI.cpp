@@ -648,7 +648,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   int nPhases = phaseTabs->count() + 1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::StatsGenerator);
-  dca->pushBack(m);
+  dca->addDataContainer(m);
   QVector<size_t> tDims(1, nPhases);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
   m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
@@ -817,7 +817,7 @@ int StatsGeneratorUI::openFile(QString h5file)
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::StatsGenerator);
-  dca->pushBack(m);
+  dca->addDataContainer(m);
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
   m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);

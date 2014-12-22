@@ -125,6 +125,107 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     static void ReadAttributeMatrixStructure(hid_t containerId, DataContainerProxy& dcProxy, QString h5InternalPath);
 
     /**
+     * @brief setType
+     * @param value
+     */
+    void setType(uint32_t value);
+
+    /**
+     * @brief getType
+     * @return
+     */
+    uint32_t getType();
+
+
+    /**
+    * @param name
+    */
+    DREAM3D_INSTANCE_PROPERTY(QString, Name)
+
+
+    /**
+    * @brief Adds/overwrites the data for a named array
+    * @param name The name that the array will be known by
+    * @param data The IDataArray::Pointer that will hold the data
+    * @return error code if the addition did not work
+    */
+    virtual int addAttributeArray(const QString& name, IDataArray::Pointer data);
+
+    /**
+     * @brief Returns the array for a given named array or the equivelant to a
+     * null pointer if the name does not exist.
+     * @param name The name of the data array
+     */
+    virtual IDataArray::Pointer getAttributeArray(const QString& name);
+
+
+    /**
+    * @brief returns a IDataArray based object that is stored in the attribute matrix by a
+    * given name.
+    * @param name The name of the array
+    */
+    template<class ArrayType>
+    typename ArrayType::Pointer getAttributeArrayAs(const QString& name)
+    {
+      IDataArray::Pointer iDataArray = getAttributeArray(name);
+      return boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+    }
+
+
+    /**
+     * @brief Returns bool of whether a named array exists
+     * @param name The name of the data array
+     */
+    virtual bool doesAttributeArrayExist(const QString& name);
+
+
+    /**
+    * @brief Removes the named data array from the Data Container and returns it to the calling
+    * method.
+    * @param name The name of the array
+    * @return
+    */
+    virtual IDataArray::Pointer removeAttributeArray(const QString& name);
+
+    /**
+    * @brief Renames a cell data array from the Data Container
+    * @param name The name of the array
+    */
+    virtual RenameErrorCodes renameAttributeArray(const QString& oldname, const QString& newname, bool overwrite = false);
+
+
+    /**
+     * @brief Removes all the Cell Arrays
+     */
+    virtual void clearAttributeArrays();
+
+    /**
+    * @brief Returns a list that contains the names of all the arrays currently stored in the
+    * Cell (Formerly Cell) group
+    * @return
+    */
+    virtual QList<QString> getAttributeArrayNames();
+
+    /**
+    * @brief Returns the total number of arrays that are stored in the Cell group
+    * @return
+    */
+    virtual int getNumAttributeArrays();
+
+
+    /**
+    * @brief Resizes an array from the Attribute Matrix
+    * @param size The new size of the array
+    */
+    void resizeAttributeArrays(QVector<size_t> tDims);
+
+    /**
+     * @brief Returns bool of whether a named array exists
+     * @param name The name of the data array
+     */
+    virtual bool validateAttributeArraySizes();
+
+    /**
      * @brief getPrereqArray
      * @param filter An instance of an AbstractFilter that is calling this function. Can be NULL in which case
      * no error message will be returned if there is an error.
@@ -172,12 +273,6 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       // Check to make sure the AttributeArray we have is of the proper type, size and number of components
       if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, NumComp, filter) )
       {
-//        if(filter)
-//        {
-//          filter->setErrorCondition(err);
-//          ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but this DataArray is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);
-//          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
-//        }
         return attributeArray;
       }
       IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
@@ -376,70 +471,6 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       return true;
     }
 
-
-    void setType(uint32_t value);
-    uint32_t getType();
-
-    DREAM3D_INSTANCE_PROPERTY(QString, Name)
-
-    /**
-     * @brief Returns bool of whether a named array exists
-     * @param name The name of the data array
-     */
-    virtual bool doesAttributeArrayExist(const QString& name);
-
-    /**
-     * @brief Returns bool of whether a named array exists
-     * @param name The name of the data array
-     */
-    virtual bool validateAttributeArraySizes();
-
-    /**
-    * @brief Adds/overwrites the data for a named array
-    * @param name The name that the array will be known by
-    * @param data The IDataArray::Pointer that will hold the data
-    * @return error code if the addition did not work
-    */
-    virtual int addAttributeArray(const QString& name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    virtual IDataArray::Pointer getAttributeArray(const QString& name);
-
-    /**
-    * @brief returns a IDataArray based object that is stored in the attribute matrix by a
-    * given name.
-    * @param name The name of the array
-    */
-    template<class ArrayType>
-    typename ArrayType::Pointer getArray(const QString& name)
-    {
-      IDataArray::Pointer iDataArray = getAttributeArray(name);
-      return boost::dynamic_pointer_cast< ArrayType >(iDataArray);
-    }
-    /**
-    * @brief Removes the named data array from the Data Container and returns it to the calling
-    * method.
-    * @param name The name of the array
-    * @return
-    */
-    virtual IDataArray::Pointer removeAttributeArray(const QString& name);
-
-    /**
-    * @brief Renames a cell data array from the Data Container
-    * @param name The name of the array
-    */
-    virtual RenameErrorCodes renameAttributeArray(const QString& oldname, const QString& newname, bool overwrite = false);
-
-    /**
-    * @brief Resizes an array from the Attribute Matrix
-    * @param size The new size of the array
-    */
-    void resizeAttributeArrays(QVector<size_t> tDims);
-
     /**
     * @brief Removes inactive objects from the Attribute Matrix and renumbers the active objects to preserve a compact matrix
       (only valid for feature or ensemble type matrices)
@@ -447,27 +478,18 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     */
     bool removeInactiveObjects(QVector<bool> activeObjects, Int32ArrayType::Pointer Ids);
 
+    /**
+     * @brief Sets the Tuple Dimensions for the Attribute Matrix
+     * @param tupleDims
+     */
     void setTupleDimensions(QVector<size_t> tupleDims);
 
+    /**
+     * @brief Returns the Tuple Dimensions of the AttributeMatrix
+     * @return
+     */
     QVector<size_t> getTupleDimensions();
 
-    /**
-     * @brief Removes all the Cell Arrays
-     */
-    virtual void clearAttributeArrays();
-
-    /**
-    * @brief Returns a list that contains the names of all the arrays currently stored in the
-    * Cell (Formerly Cell) group
-    * @return
-    */
-    virtual QList<QString> getAttributeArrayNameList();
-
-    /**
-    * @brief Returns the total number of arrays that are stored in the Cell group
-    * @return
-    */
-    virtual int getNumAttributeArrays();
 
     /**
     * @brief Returns the number of Tuples that the feature data has. For example if there are 32 features
@@ -482,15 +504,68 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     */
     virtual AttributeMatrix::Pointer deepCopy();
 
+    /**
+     * @brief writeAttributeArraysToHDF5
+     * @param parentId
+     * @return
+     */
     virtual int writeAttributeArraysToHDF5(hid_t parentId);
+
+    /**
+     * @brief addAttributeArrayFromHDF5Path
+     * @param gid
+     * @param name
+     * @param preflight
+     * @return
+     */
     virtual int addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool preflight);
+
+    /**
+     * @brief readAttributeArraysFromHDF5
+     * @param amGid
+     * @param preflight
+     * @param attrMatProxy
+     * @return
+     */
     virtual int readAttributeArraysFromHDF5(hid_t amGid, bool preflight, AttributeMatrixProxy& attrMatProxy);
+
+    /**
+     * @brief generateXdmfText
+     * @param centering
+     * @param dataContainerName
+     * @param hdfFileName
+     * @param gridType
+     * @return
+     */
     virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType = 0);
 
   protected:
     AttributeMatrix(QVector<size_t> tDims, const QString& name, unsigned int attrType);
 
+    /**
+     * @brief writeXdmfAttributeData
+     * @param array
+     * @param centering
+     * @param dataContainerName
+     * @param hdfFileName
+     * @param gridType
+     * @return
+     */
     virtual QString writeXdmfAttributeData(IDataArray::Pointer array, const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType = 0);
+
+    /**
+     * @brief writeXdmfAttributeDataHelper
+     * @param numComp
+     * @param attrType
+     * @param dataContainerName
+     * @param array
+     * @param centering
+     * @param precision
+     * @param xdmfTypeName
+     * @param hdfFileName
+     * @param gridType
+     * @return
+     */
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString& attrType, const QString& dataContainerName, IDataArray::Pointer array, const QString& centering, int precision, const QString& xdmfTypeName, const QString& hdfFileName, const uint8_t gridType = 0);
 
   private:

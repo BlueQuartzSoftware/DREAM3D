@@ -294,7 +294,7 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
 
     if(RemoveList.size() > 0)
     {
-      QList<QString> headers = getAttributeArrayNameList();
+      QList<QString> headers = getAttributeArrayNames();
       for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
       {
         IDataArray::Pointer p = getAttributeArray(*iter);
@@ -362,7 +362,7 @@ void AttributeMatrix::clearAttributeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> AttributeMatrix::getAttributeArrayNameList()
+QList<QString> AttributeMatrix::getAttributeArrayNames()
 {
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_AttributeArrays.begin(); iter != m_AttributeArrays.end(); ++iter)

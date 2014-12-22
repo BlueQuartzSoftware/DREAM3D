@@ -80,17 +80,24 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     DataArrayPath(const DataArrayPath& rhs);
 
-    /**
-     * @brief operator =
-     */
-    void operator=(const DataArrayPath&);
-
     virtual ~DataArrayPath();
-
 
     DREAM3D_PIMPL_PROPERTY_DECL(QString, DataContainerName)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, AttributeMatrixName)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, DataArrayName)
+
+
+    /**
+     * @brief operator =
+     */
+    void operator=(const DataArrayPath& rhs);
+
+    /**
+     * @brief operator ==
+     * @param rhs
+     * @return
+     */
+    bool operator==(const DataArrayPath& rhs);
 
     /**
      * @brief serialize Returns the path using the '|' charater by default. This can be over ridden by the programmer
@@ -99,8 +106,16 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     QString serialize(QString delimiter = "|") const;
 
+    /**
+     * @brief getAsStringList
+     * @return
+     */
     QStringList getAsStringList();
 
+    /**
+     * @brief getAsVector
+     * @return
+     */
     QVector<QString> getAsVector();
 
     /**
@@ -140,12 +155,19 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     bool sameDataContainer(const DataArrayPath& other) const;
 
-    /**
+     /**
      * @brief checks that two paths share the same attribute matrix
      * @param other The other path
      * @return true if the two paths share the same attribute matrix, false otherwise
      */
     bool sameAttributeMatrix(const DataArrayPath& other) const;
+
+    /**
+     * @brief checks that two paths share the same data container and attribute matrix
+     * @param other The other path
+     * @return true if the two paths share the same data container and attribute matrix, false otherwise
+     */
+    bool sameAttributeMatrixPath(const DataArrayPath& other) const;
 
     /**
      * @brief checks that two paths share the same data array
@@ -154,12 +176,9 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     bool sameDataArray(const DataArrayPath& other) const;
 
-    /**
-     * @brief checks that two paths share the same data container and attribute matrix
-     * @param other The other path
-     * @return true if the two paths share the same data container and attribute matrix, false otherwise
-     */
-    bool sameAttributeMatrixPath(const DataArrayPath& other) const;
+
+  protected:
+
 
 
   private:

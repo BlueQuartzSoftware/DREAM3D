@@ -184,7 +184,7 @@ void FeatureDataCSVWriter::execute()
   // Write the total number of features
   outFile << cellFeatureAttrMat->getNumTuples() - 1 << "\n";
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = cellFeatureAttrMat->getAttributeArrayNameList();
+  QList<QString> headers = cellFeatureAttrMat->getAttributeArrayNames();
 
   std::vector<IDataArray::Pointer> data;
 

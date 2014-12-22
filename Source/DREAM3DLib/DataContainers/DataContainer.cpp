@@ -157,8 +157,8 @@ AttributeMatrix::Pointer DataContainer::removeAttributeMatrix(const QString& nam
   it =  m_AttributeMatrices.find(name);
   if ( it == m_AttributeMatrices.end() )
   {
-      // DO NOT return a NullPointer for any reason other than "Attribute Matrix was not found"
-      return AttributeMatrix::NullPointer();
+    // DO NOT return a NullPointer for any reason other than "Attribute Matrix was not found"
+    return AttributeMatrix::NullPointer();
   }
   AttributeMatrix::Pointer p = it.value();
   m_AttributeMatrices.erase(it);
@@ -209,7 +209,7 @@ void DataContainer::clearAttributeMatrices()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> DataContainer::getAttributeMatrixNameList()
+QList<QString> DataContainer::getAttributeMatrixNames()
 {
   QList<QString> keys;
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = m_AttributeMatrices.begin(); iter != m_AttributeMatrices.end(); ++iter)
@@ -343,4 +343,27 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
   BOOST_ASSERT(false);
   return -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> DataContainer::getAllDataArrayPaths()
+{
+
+  QVector<DataArrayPath> paths;
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = m_AttributeMatrices.begin(); iter != m_AttributeMatrices.end(); ++iter)
+  {
+    AttributeMatrix::Pointer am = iter.value();
+    QString amName = am->getName();
+    QList<QString> aaNames = am->getAttributeArrayNames();
+
+    foreach(QString aaName, aaNames)
+    {
+      DataArrayPath dap(getName(), amName, aaName);
+      paths.push_back(dap);
+    }
+  }
+
+  return paths;
 }

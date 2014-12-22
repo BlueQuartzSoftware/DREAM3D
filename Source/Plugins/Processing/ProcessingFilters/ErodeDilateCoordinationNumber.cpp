@@ -194,7 +194,7 @@ void ErodeDilateCoordinationNumber::execute()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
   QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
   QVector<int > n(numfeatures + 1, 0);
 

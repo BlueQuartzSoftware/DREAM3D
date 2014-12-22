@@ -258,7 +258,7 @@ void DataContainerWriter::execute()
 
   unsigned int dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   QList<QString> dcNames = getDataContainerArray()->getDataContainerNames();
-  for(size_t iter = 0; iter < getDataContainerArray()->size(); iter++)
+  for(size_t iter = 0; iter < getDataContainerArray()->getNumDataContainers(); iter++)
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcNames[iter]);
     err = H5Utilities::createGroupsFromPath(dcNames[iter].toLatin1().data(), dcaGid);

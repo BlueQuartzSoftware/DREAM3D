@@ -167,7 +167,7 @@ void  AddBadData::add_noise()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getGBEuclideanDistancesArrayPath().getDataContainerName());
 
   QString attMatName = getGBEuclideanDistancesArrayPath().getAttributeMatrixName();
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(attMatName)->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attMatName)->getAttributeArrayNames();
 
   float random = 0.0;
   int64_t totalPoints = m->getTotalPoints();

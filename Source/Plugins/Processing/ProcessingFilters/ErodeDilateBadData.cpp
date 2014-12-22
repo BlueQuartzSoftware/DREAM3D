@@ -285,7 +285,7 @@ void ErodeDilateBadData::execute()
       }
     }
     QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
     for (size_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];

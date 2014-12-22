@@ -82,17 +82,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual ~AbstractFilter();
 
-    template<typename T>
-    static typename T::Pointer DynamicPointerCast(AbstractFilter::Pointer p)
-    {
-      return boost::dynamic_pointer_cast<T>(p);
-    }
-
-
     // ------------------------------
     // These should be implemented by the subclass
     // ------------------------------
-
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();

@@ -477,7 +477,7 @@ void RotateSampleRefFrame::execute()
   // This could technically be parallelized also where each thred takes an array to adjust. Except
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.
   QString attrMatName = getCellAttributeMatrixPath().getAttributeMatrixName();
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
   // resize attribute matrix
   QVector<size_t> tDims(3);

@@ -2725,7 +2725,7 @@ void PackPrimaryPhases::write_goal_attributes()
   // Write the total number of features
   dStream << totalFeatures - firstPrimaryFeature;
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getAttributeArrayNameList();
+  QList<QString> headers = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getAttributeArrayNames();
 
   QVector<IDataArray::Pointer> data;
 

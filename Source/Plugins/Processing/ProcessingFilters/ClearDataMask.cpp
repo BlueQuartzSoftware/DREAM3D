@@ -141,7 +141,7 @@ void ClearDataMask::execute()
 
   //get list of array names
   QString attrMatName = m_MaskArrayPath.getAttributeMatrixName();
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
   //convert to list of pointers
   std::vector<IDataArray::Pointer> arrayList;

@@ -219,7 +219,7 @@ void RegularizeZSpacing::execute()
   tDims[2] = m_ZP;
   AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
 
-  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     //QString name = *iter;
