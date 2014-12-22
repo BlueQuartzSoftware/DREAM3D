@@ -179,6 +179,7 @@ int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 void VertexDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
   // Always start the grid
+  out << "  <!-- *************** START OF " << getName() << " *************** -->" << "\n";
   out << "  <Grid Name=\"" << getName() << "\" GridType=\"Uniform\">" << "\n";
 
 #if 0
@@ -224,8 +225,7 @@ void VertexDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString
 void VertexDataContainer::writeXdmfMeshStructureFooter(QTextStream& xdmf)
 {
   xdmf << "  </Grid>" << "\n";
-  xdmf << "    <!-- *************** END OF " << getName() << " *************** -->" << "\n";
-  xdmf << "\n";
+  xdmf << "  <!-- *************** END OF " << getName() << " *************** -->" << "\n";
 }
 
 // -----------------------------------------------------------------------------

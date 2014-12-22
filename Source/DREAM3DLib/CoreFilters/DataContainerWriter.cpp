@@ -222,7 +222,7 @@ void DataContainerWriter::execute()
   QH5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
   QH5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::DREAM3DVersion, DREAM3DLib::Version::Complete() );
   QFile xdmfFile;
-  QTextStream out(&xdmfFile);
+  QTextStream xdmfOut(&xdmfFile);
   if (m_WriteXdmfFile == true)
   {
     QFileInfo ofFi(m_OutputFile);
@@ -238,7 +238,7 @@ void DataContainerWriter::execute()
     xdmfFile.setFileName(name);
     if (xdmfFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-      writeXdmfHeader(out);
+      writeXdmfHeader(xdmfOut);
     }
   }
 
@@ -298,7 +298,7 @@ void DataContainerWriter::execute()
     {
       QString hdfFileName = QH5Utilities::fileNameFromFileId(m_FileId);
 
-      err = dc->writeXdmf(out, hdfFileName);
+      err = dc->writeXdmf(xdmfOut, hdfFileName);
       if (err < 0)
       {
         notifyErrorMessage(getHumanLabel(), "Error Writing Xdmf File", -805);
@@ -320,7 +320,7 @@ void DataContainerWriter::execute()
   // Write the XDMF File
   if (m_WriteXdmfFile == true)
   {
-    writeXdmfFooter(out);
+    writeXdmfFooter(xdmfOut);
   }
 
   H5Gclose(dcaGid);

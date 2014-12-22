@@ -535,7 +535,7 @@ QString AttributeMatrix::generateXdmfText(const QString& centering, const QStrin
   {
     IDataArray::Pointer d = iter.value();
     block = writeXdmfAttributeData(d, centering, dataContainerName, hdfFileName, gridType);
-    out << block << "\n";
+    out << block;
   }
   return xdmfText;
 }
@@ -571,7 +571,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
     out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
     out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->getName() << "\n";
     out << "      </DataItem>" << "\n";
-    out << "    </Attribute>" << "\n" << "\n";
+    out << "    </Attribute>" << "\n";
   }
   else if(numComp == 2 || numComp == 6)
 //  else if(numComp == 2)
@@ -613,7 +613,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
     out << "        " << hdfFileName << ":/DataContainers/" << dataContainerName << "/" << getName() << "/" << array->getName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
-    out << "    </Attribute>" << "\n" << "\n";
+    out << "    </Attribute>" << "\n";
   }
   return buf;
 }
@@ -646,7 +646,7 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
 
   QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName, gridType);
 
-  out << block << "\n";
+  out << block;
 
   return xdmfText;
 }
