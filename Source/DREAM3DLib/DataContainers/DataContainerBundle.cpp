@@ -39,6 +39,9 @@
 
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 namespace Detail
 {
   class H5GroupAutoCloser
@@ -180,7 +183,7 @@ void DataContainerBundle::clear()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<DataArrayPath> DataContainerBundle::findCommonDataArrayPaths()
+QVector<DataArrayPath> DataContainerBundle::findCommonDataArrayPaths(bool filterMetaData)
 {
   QVector<DataArrayPath> commonPaths;
   if(m_DataContainers.count() == 0) { return commonPaths; }
@@ -210,6 +213,7 @@ QVector<DataArrayPath> DataContainerBundle::findCommonDataArrayPaths()
       {
         //qDebug() << "Comparing " << dc0Path.serialize() << " TO " << path.serialize();
         if(path.sameAttributeMatrix(dc0Path) &&  path.sameDataArray(dc0Path) ) { match = true; }
+        if(filterMetaData == true && (path.getAttributeMatrixName() == DREAM3D::StringConstants::MetaData) ) { match = false; }
       }
 
       if(!match)
