@@ -159,7 +159,7 @@ void CropVolume::dataCheck()
   // Bail if the source data container cannot be found
   if (NULL == srcCellDataContainer)
   {
-    QString ss = QObject::tr("The Data Container '%1' could not be found").arg(getCellAttributeMatrixPath().getDataContainerName());
+    QString ss = QObject::tr("The prerequisite DataContainer '%1' does not exist").arg(getCellAttributeMatrixPath().getDataContainerName());
     setErrorCondition(-5548);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -170,7 +170,7 @@ void CropVolume::dataCheck()
   // Bail if the source attribute matrix cannot be found
   if (NULL == srcCellAttrMat)
   {
-    QString ss = QObject::tr("The Attribute Matrix '%1' could not be found").arg(getCellAttributeMatrixPath().getAttributeMatrixName());
+    QString ss = QObject::tr("The prerequisite AttributeMatrix '%1' does not exist").arg(getCellAttributeMatrixPath().getAttributeMatrixName());
     setErrorCondition(-5549);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
