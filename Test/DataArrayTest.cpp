@@ -437,7 +437,7 @@ QString TypeToString(T v)
 DataArray<type>::Pointer p_##type = DataArray<type>::CreateArray(1, "Test", false);\
 QString s_##type = p_##type->getTypeAsString();\
 qDebug() << #type << s_##type;\
-type value;\
+type value = (type)(1);\
 qDebug() << TypeToString<type>(value);\
 }\
 
