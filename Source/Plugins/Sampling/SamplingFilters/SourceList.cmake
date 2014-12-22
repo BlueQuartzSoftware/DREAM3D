@@ -18,6 +18,7 @@ set(_PublicFilters
   RegularizeZSpacing
   RotateSampleRefFrame
   CropVolume
+  CropSurfaceMesh
 )
 
 #--------------

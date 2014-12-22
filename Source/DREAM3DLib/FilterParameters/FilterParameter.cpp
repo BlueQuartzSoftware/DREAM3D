@@ -461,7 +461,6 @@ VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString&
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

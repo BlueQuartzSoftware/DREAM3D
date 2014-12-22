@@ -166,7 +166,7 @@ void VtkStructuredPointsReader::dataCheck()
   if(getErrorCondition() < 0 && NULL == verDc) { return; }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer pointAttrMat = verDc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
+  AttributeMatrix::Pointer pointAttrMat = verDc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
 
@@ -568,6 +568,7 @@ int VtkStructuredPointsReader::readFile()
   resolution[2] = tokens[3].toFloat(&ok);
 
   volDc->setResolution(resolution);
+  vertDc->setResolution(resolution);
 
 
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the Origin values
@@ -578,6 +579,7 @@ int VtkStructuredPointsReader::readFile()
   origin[2] = tokens[3].toFloat(&ok);
 
   volDc->setOrigin(origin);
+  vertDc->setOrigin(origin);
 
   // Read the first key word which should be POINT_DATA or CELL_DATA
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the first type of data we are going to read
