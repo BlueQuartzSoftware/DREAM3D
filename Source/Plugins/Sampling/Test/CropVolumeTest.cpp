@@ -49,10 +49,10 @@
 
 #include "GenerateFeatureIds.h"
 
-class numPackage
+class NumPackage
 {
   public:
-    numPackage(int min, int max) {m_Min = min; m_Max = max;}
+    NumPackage(int min, int max) {m_Min = min; m_Max = max;}
 
     DREAM3D_FILTER_PARAMETER(int, Min)
     Q_PROPERTY(int Min READ getMin WRITE setMin)
@@ -60,16 +60,16 @@ class numPackage
     DREAM3D_FILTER_PARAMETER(int, Max)
     Q_PROPERTY(int Max READ getMax WRITE setMax)
 
-    numPackage() {}
+    NumPackage() {}
 };
 
-static const numPackage originalX = numPackage(0, 40);
-static const numPackage originalY = numPackage(0, 30);
-static const numPackage originalZ = numPackage(0, 20);
+static const NumPackage originalX = NumPackage(0, 40);
+static const NumPackage originalY = NumPackage(0, 30);
+static const NumPackage originalZ = NumPackage(0, 20);
 
-static const numPackage croppedX = numPackage(9, 25);
-static const numPackage croppedY = numPackage(5, 18);
-static const numPackage croppedZ = numPackage(2, 7);
+static const NumPackage croppedX = NumPackage(6, 15);
+static const NumPackage croppedY = NumPackage(5, 18);
+static const NumPackage croppedZ = NumPackage(1, 8);
 
 static float originalRes[3] = {0.25, 0.25, 0.25};
 static float originalOrigin[3] = {0, 0, 0};
@@ -118,23 +118,21 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   int64_t index;
 
   QList<QString> voxelArrayNames = am1->getAttributeArrayNames();
-  int64_t val = 1;
 
-  for (int64_t i = 0; i < ZP; i++)
+  for (int64_t z = 0; z < ZP; z++)
   {
-    plane = i * XP * YP;
-    for (int64_t j = 0; j < YP; j++)
+    plane = z * XP * YP;
+    for (int64_t y = 0; y < YP; y++)
     {
-      row = j * XP;
-      for (int64_t k = 0; k < XP; k++)
+      row = y * XP;
+      for (int64_t x = 0; x < XP; x++)
       {
-        col = k;
+        col = x;
         index = plane + row + col;
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = am1->getAttributeArray(*iter);
-          p->initializeTuple(index, val);
-          val++;
+          p->initializeTuple(index, x+y+z);
         }
       }
     }
@@ -166,33 +164,27 @@ void resetTest(AbstractFilter::Pointer cropVolume)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void checkCrop(typename DataArray<T>::Pointer ptr, numPackage X, numPackage Y, numPackage Z, int numComponents)
+void checkCrop(typename DataArray<T>::Pointer ptr, NumPackage X, NumPackage Y, NumPackage Z, int numComponents)
 {
-  int originalVal = X.getMin();
-
   DataArray<T> &p = *(ptr.get());
-  int Xloop = (X.getMax() - X.getMin()) + 1;
-  int Yloop = (Y.getMax() - Y.getMin()) + 1;
-  int Zloop = (Z.getMax() - Z.getMin()) + 1;
+  int XP = (X.getMax() - X.getMin()) + 1;
+  int YP = (Y.getMax() - Y.getMin()) + 1;
+  int ZP = (Z.getMax() - Z.getMin()) + 1;
 
-  DREAM3D_REQUIRE_EQUAL(ptr->getSize(), Xloop*Yloop*Zloop)
+  DREAM3D_REQUIRE_EQUAL(ptr->getSize(), XP*YP*ZP)
 
-  for (int64_t i = 0; i < Zloop; i++)
+  for (int64_t z = Z.getMin(); z < Z.getMax(); z++)
   {
-    int64_t plane = (i * Xloop * Yloop);
-    for (int64_t j = 0; j < Yloop; j++)
+    int64_t plane = ((z-Z.getMin()) * XP * YP);
+    for (int64_t y = Y.getMin(); y < Y.getMax(); y++)
     {
-      int64_t row = (j * Xloop);
-      for (int64_t k = 0; k < Xloop; k++)
+      int64_t row = ((y-Y.getMin()) * XP);
+      for (int64_t x = X.getMin(); x < X.getMax(); x++)
       {
-        int64_t col = k;
+        int64_t col = x-X.getMin();
         int64_t index = plane + row + col;
-        for (int64_t m = 0; m < numComponents; m++)
-        {
-          int64_t value = p[index];
-          DREAM3D_REQUIRE_EQUAL( p[index], originalVal )
-          originalVal++;
-        }
+        int64_t value = p[index];
+        DREAM3D_REQUIRE_EQUAL( value, x+y+z )
       }
     }
   }
