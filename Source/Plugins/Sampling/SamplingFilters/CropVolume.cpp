@@ -411,7 +411,7 @@ void CropVolume::execute()
   if (dims[2] <= m_ZMax)
   {
 
-    QString ss = QObject::tr("A Maximum value of has been entered for the Max Z which is larger than the input volume Z Dimension of "
+    QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max Z which is larger than the input volume Z Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_ZMax).arg(dims[2]);
     setErrorCondition(-952);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());

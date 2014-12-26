@@ -113,26 +113,33 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   int64_t XP = tDims[0];
   int64_t YP = tDims[1];
   int64_t ZP = tDims[2];
+  int64_t numComponents = 1;
 
   int64_t col, row, plane;
   int64_t index;
 
   QList<QString> voxelArrayNames = am1->getAttributeArrayNames();
 
-  for (int64_t z = 0; z < ZP; z++)
+  for (int8_t z = 0; z < ZP; z++)
   {
     plane = z * XP * YP;
-    for (int64_t y = 0; y < YP; y++)
+    for (int8_t y = 0; y < YP; y++)
     {
       row = y * XP;
-      for (int64_t x = 0; x < XP; x++)
+      for (int8_t x = 0; x < XP; x++)
       {
         col = x;
         index = plane + row + col;
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          IDataArray::Pointer p = am1->getAttributeArray(*iter);
-          p->initializeTuple(index, x+y+z);
+          for (int8_t c = 0; c < numComponents; c++)
+          {
+            IDataArray::Pointer p = am1->getAttributeArray(*iter);
+            int16_t val16 = ((int16_t)x << 8) | y;
+            int16_t val16_2 = ((int16_t)z << 8) | c;
+            int32_t val32 = ((int32_t)val16 << 16) | val16_2;
+            p->initializeTuple(index, val32);
+          }
         }
       }
     }
@@ -183,8 +190,14 @@ void checkCrop(typename DataArray<T>::Pointer ptr, NumPackage X, NumPackage Y, N
       {
         int64_t col = x-X.getMin();
         int64_t index = plane + row + col;
-        int64_t value = p[index];
-        DREAM3D_REQUIRE_EQUAL( value, x+y+z )
+        for (int64_t c = 0; c < numComponents; c++)
+        {
+          int64_t value = p[index];
+          int16_t val16 = ((int16_t)x << 8) | y;
+          int16_t val16_2 = ((int16_t)z << 8) | c;
+          int32_t val32 = ((int32_t)val16 << 16) | val16_2;
+          DREAM3D_REQUIRE_EQUAL( value, val32 )
+        }
       }
     }
   }
