@@ -403,11 +403,11 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
       ss <<"Your test required the following\n            '";\
       ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
       ss << "            " << #L << " = ";\
-      if(NULL != L) { ss << reinterpret_cast<void*>(L); }\
+      if(L) { ss << reinterpret_cast<void*>(L); }\
       else { ss << "Left side was NULL"; }\
       ss << "\n";\
       ss << "            " << #R << " = ";\
-      if(NULL != R) { ss << reinterpret_cast<void*>(R);}\
+      if(R) { ss << reinterpret_cast<void*>(R);}\
       else { ss << "Right Side was NULL";}\
       ss << "\n";\
       DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
