@@ -194,7 +194,7 @@ void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dc
             notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
             continue;
         }
-        // Check to see if the DataContainer is checked, if it is NOT checked then we remove the entire DataContainer from
+        // Check to see if the DataContainer is checked, if it is checked then we remove the entire DataContainer from
         // the DataContainerArray
         if (dcProxy.flag == state)
         {

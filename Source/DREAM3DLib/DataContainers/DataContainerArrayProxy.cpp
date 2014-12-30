@@ -157,6 +157,8 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
 // -----------------------------------------------------------------------------
 QVector<DataArrayPath> DataContainerArrayProxy::getCheckedDataArrayPaths()
 {
+  Q_ASSERT_X(false, "", "");
+  //FIXME: THIS IS COMPLETELY BROKEN. If a data container is not checked, we are going to skip it.  AND THIS IS BAD.
   QVector<DataArrayPath> pathList;
   QListIterator<DataContainerProxy> dcIter(list);
 

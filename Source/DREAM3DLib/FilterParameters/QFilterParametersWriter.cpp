@@ -735,7 +735,7 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
         dIter.next();
 
         const DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
+        //if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
 
         QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
         flat << path;
