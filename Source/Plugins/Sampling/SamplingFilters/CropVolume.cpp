@@ -174,7 +174,6 @@ void CropVolume::dataCheck()
   }
   VolumeDataContainer* destCellDataContainer = srcCellDataContainer;
 
-
   if (m_SaveAsNewDataContainer == true)
   {
     float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
