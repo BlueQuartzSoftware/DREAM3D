@@ -468,12 +468,12 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 {
   // This should fail because there is no attribute matrix
   AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
-  DREAM3D_TEST_POINTER(NULL, ==, attrMatrix.get())
+  DREAM3D_REQUIRE_NULL_POINTER(attrMatrix.get())
 
   // Now add an AttributeMatrix to the DataContainer
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer attrMat = m->createAndAddAttributeMatrix(tDims, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
-  DREAM3D_TEST_POINTER(NULL, !=, attrMat.get())
+  DREAM3D_REQUIRE_VALID_POINTER(attrMat.get())
 
   // Now create an Array and add it to the Attribute Matrix
   typename T::Pointer p = T::CreateArray(5, "Test");
@@ -486,31 +486,29 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 
   // Now get it back out as the specific type that we put it in as
   typename T::Pointer t = attrMat->getAttributeArrayAs<T>("Test");
-  DREAM3D_TEST_POINTER(NULL, !=, t.get())
+  DREAM3D_REQUIRE_VALID_POINTER(t.get())
 
   // get the array as an IDataArray
   IDataArray::Pointer ida = attrMat->getAttributeArray("Test");
-  DREAM3D_TEST_POINTER(NULL, !=, ida.get());
+  DREAM3D_REQUIRE_VALID_POINTER(ida.get());
 
   QVector<size_t> dims(1, 1);
   t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, dims);
-  DREAM3D_TEST_POINTER(NULL, !=, ida.get());
+  DREAM3D_REQUIRE_VALID_POINTER(ida.get());
 
   // Remove the AttributeArray from the AttributeMatrix
   ida = attrMat->removeAttributeArray( "Test" );
-  DREAM3D_TEST_POINTER(NULL, !=, ida.get());
+  DREAM3D_REQUIRE_VALID_POINTER(ida.get());
 
   // Now try and get the array again. we should fail
   t = attrMat->getAttributeArrayAs<T>( "Test" );
-  DREAM3D_TEST_POINTER(NULL, ==, t.get());
+  DREAM3D_REQUIRE_NULL_POINTER(t.get());
   // Try to get it as an IDataArray. We should fail
   ida = attrMat->getAttributeArray("Test");
-  DREAM3D_TEST_POINTER(NULL, ==, ida.get());
-
+  DREAM3D_REQUIRE_NULL_POINTER(ida.get());
 
   t = attrMat->getPrereqArray<T, AbstractFilter>(NULL, "Test", -723, dims);
-  DREAM3D_TEST_POINTER(NULL, ==, t.get());
-
+  DREAM3D_REQUIRE_NULL_POINTER(t.get());
 
   // Remove the AttributeMatrix to setup for the next test.
   m->removeAttributeMatrix(getCellAttributeMatrixName());

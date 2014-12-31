@@ -414,6 +414,31 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
     }\
   }
 
+#define DREAM3D_REQUIRE_VALID_POINTER(L)\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    if ( L == NULL ) \
+    {\
+      ss <<"Your test requires\n            '";\
+      ss << #L << "' != NULL' but this condition was not met.\n";\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
+  }
+
+#define DREAM3D_REQUIRE_NULL_POINTER(L)\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    if ( L != NULL ) \
+    {\
+      ss <<"Your test requires\n            '";\
+      ss << #L << " == NULL' but this condition was not met.\n";\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
+  }
 
 // -----------------------------------------------------------------------------
 // Private Macros. The Normal developer should NOT be using these.
