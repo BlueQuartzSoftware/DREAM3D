@@ -767,7 +767,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
   {
     QString dcName = dcaNames.at(i);
     hid_t dcGid = QH5Utilities::openHDF5Object(dcaGid, dcName);
-    sentinel.addGroupId(&dcGid);
+    HDF5ScopedGroupSentinel sentinal_dc(&dcGid, false);
     DataContainerProxy dcProxy;
     dcProxy.name = dcName;
     // Loop over the attribute Matrices
@@ -781,7 +781,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
     {
       QString amName = amNames.at(j);
       hid_t amGid = QH5Utilities::openHDF5Object(dcGid, amName);
-      sentinel.addGroupId(&amGid);
+      HDF5ScopedGroupSentinel sentinal_am(&amGid, false);
       AttributeMatrixProxy amProxy(amName, true);
       QString data; // Output will be read into this object
       err = QH5Lite::readStringDataset(amGid, "Arrays", data);
@@ -789,7 +789,6 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
       {
         return defValue;
       }
-      H5Gclose(amGid);
       QStringList arrayNames = data.split('\n');
       QString path = DREAM3D::StringConstants::DataContainerGroupName + "/" + dcProxy.name + "/" + amProxy.name;
       for(int k = 0; k < arrayNames.size(); k++)
@@ -799,9 +798,6 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
       }
       dcProxy.attributeMatricies.insert(amName, amProxy);
     }
-
-    H5Gclose(dcGid);
-
     // Add this DataContainerProxy to the DataContainerArrayProxy
     dcaProxy.list.push_back(dcProxy);
 

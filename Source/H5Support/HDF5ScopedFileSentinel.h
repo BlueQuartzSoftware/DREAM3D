@@ -84,6 +84,21 @@ class H5Support_EXPORT HDF5ScopedGroupSentinel
 };
 
 
+class H5Support_EXPORT HDF5ScopedObjectSentinel
+{
+  public:
+    HDF5ScopedObjectSentinel(hid_t* gid, bool turnOffErrors);
+    virtual ~HDF5ScopedObjectSentinel();
+    void addGroupId(hid_t* gid);
+
+  private:
+    bool m_TurnOffErrors;
+    std::vector<hid_t*> m_Groups;
+
+    herr_t (*_oldHDF_error_func)(hid_t, void*);
+    void* _oldHDF_error_client_data;
+};
+
 
 
 
