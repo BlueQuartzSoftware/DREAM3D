@@ -196,9 +196,9 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
   boxDims[1] = 100;
   boxDims[2] = 100;
   std::vector<float> boxRes(3);
-  boxRes[0] = 0.1;
-  boxRes[1] = 0.1;
-  boxRes[2] = 0.1;
+  boxRes[0] = 0.1f;
+  boxRes[1] = 0.1f;
+  boxRes[2] = 0.1f;
 
   // Generate the RDF Frequencies
   std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(minDist, maxDist, numBins, boxDims, boxRes);
