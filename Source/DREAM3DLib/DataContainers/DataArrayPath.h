@@ -82,6 +82,9 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
 
     virtual ~DataArrayPath();
 
+
+    static QVector<DataArrayPath> ConvertToQVector(QStringList &paths);
+
     DREAM3D_PIMPL_PROPERTY_DECL(QString, DataContainerName)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, AttributeMatrixName)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, DataArrayName)

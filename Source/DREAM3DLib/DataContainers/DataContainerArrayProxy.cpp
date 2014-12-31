@@ -119,7 +119,7 @@ void DataContainerArrayProxy::operator=(const DataContainerArrayProxy& rhs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList DataContainerArrayProxy::flattenHeirarchy()
+QStringList DataContainerArrayProxy::flattenHeirarchy(Qt::CheckState dcFlag, Qt::CheckState amFlag, Qt::CheckState daFlag)
 {
   QStringList strList;
   QListIterator<DataContainerProxy> dcIter(list);
@@ -127,14 +127,14 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    if(dcProxy.flag != dcFlag) { continue; } // Skip to the next DataContainer if we are not reading this one.
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
     {
       amIter.next();
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      if(amProxy.flag != amFlag) { continue; } // Skip to the next AttributeMatrix if not reading this one
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
       while(dIter.hasNext()) // DataArray Level
@@ -142,7 +142,7 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
         dIter.next();
 
         const DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
+        if(daProxy.flag != daFlag) { continue; } // Skip to the next DataArray if not reading this one
 
         QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
         strList << path;
@@ -151,46 +151,6 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
   }
   return strList;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVector<DataArrayPath> DataContainerArrayProxy::getCheckedDataArrayPaths()
-{
-  Q_ASSERT_X(false, "", "");
-  //FIXME: THIS IS COMPLETELY BROKEN. If a data container is not checked, we are going to skip it.  AND THIS IS BAD.
-  QVector<DataArrayPath> pathList;
-  QListIterator<DataContainerProxy> dcIter(list);
-
-  while (dcIter.hasNext()) // DataContainerLevel
-  {
-    const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
-    QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
-    while(amIter.hasNext()) // AttributeMatrixLevel
-    {
-      amIter.next();
-
-      const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
-
-      QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
-      while(dIter.hasNext()) // DataArray Level
-      {
-        dIter.next();
-
-        const DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
-
-        QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
-        DataArrayPath dPath(path);
-        pathList.push_back(dPath);
-      }
-    }
-  }
-  return pathList;
-}
-
 
 // -----------------------------------------------------------------------------
 //
