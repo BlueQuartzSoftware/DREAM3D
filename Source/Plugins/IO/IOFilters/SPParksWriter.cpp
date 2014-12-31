@@ -215,7 +215,7 @@ int SPParksWriter::writeFile()
 
 
   int increment = totalpoints * .01;
-	size_t count = 0;
+  size_t count = 0;
   QString buf;
   QTextStream ss(&buf);
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
@@ -230,7 +230,7 @@ int SPParksWriter::writeFile()
       if (currentMillis - millis > 1000)
       {
         buf.clear();
-				ss << getMessagePrefix() << " " << static_cast<int>((float)(k) / (float)(totalpoints) * 100) << " % Completed ";
+        ss << getMessagePrefix() << " " << static_cast<int>((float)(k) / (float)(totalpoints) * 100) << " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
@@ -238,7 +238,7 @@ int SPParksWriter::writeFile()
         millis = QDateTime::currentMSecsSinceEpoch();
       }
     }
-		count++;
+    count++;
     outfile << k + 1 << " " << m_FeatureIds[k] << "\n";
   }
   outfile.close();

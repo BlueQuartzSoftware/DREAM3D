@@ -188,7 +188,10 @@ void DataContainerWriter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   int err = 0;
 
@@ -483,26 +486,34 @@ AbstractFilter::Pointer DataContainerWriter::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getCompiledLibraryName()
-{ return Core::CoreBaseName;  }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{
+  return DREAM3D::FilterGroups::IOFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{
+  return DREAM3D::FilterSubGroups::OutputFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getHumanLabel()
-{ return "Write DREAM3D Data File"; }
+{
+  return "Write DREAM3D Data File";
+}
 

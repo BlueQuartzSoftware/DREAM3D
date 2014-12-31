@@ -107,7 +107,7 @@ InitializeSyntheticVolumeWidget::~InitializeSyntheticVolumeWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolumeWidget::setFilter(AbstractFilter *value)
+void InitializeSyntheticVolumeWidget::setFilter(AbstractFilter* value)
 {
   m_Filter = dynamic_cast<InitializeSyntheticVolume*>(value);
 }
@@ -376,7 +376,7 @@ void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter*
   }
 
   InitializeSyntheticVolume* filt = qobject_cast<InitializeSyntheticVolume*>(filter);
-  if(NULL == filt) Q_ASSERT_X(NULL != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
+  if(NULL == filt) { Q_ASSERT_X(NULL != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__); }
 }
 
 

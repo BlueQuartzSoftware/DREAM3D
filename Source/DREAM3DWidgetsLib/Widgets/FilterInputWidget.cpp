@@ -95,7 +95,7 @@ QString FilterInputWidget::getLabelStyleSheet()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool FilterInputWidget::eventFilter(QObject *o, QEvent *e)
+bool FilterInputWidget::eventFilter(QObject* o, QEvent* e)
 {
   if ( e->type() == QEvent::Resize && qobject_cast<QLabel*>(o) && brandingLabel == o)
   {

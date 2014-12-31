@@ -49,24 +49,42 @@
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
 typedef struct { float a; float b; float c; float d; } FloatVec4_t;
-typedef struct { float v11; float v12; float v13; float v14; float v15; float v16;
-                            float v22; float v23; float v24; float v25; float v26;
-                                       float v33; float v34; float v35; float v36;
-                                                  float v44; float v45; float v46;
-                                                             float v55; float v56;
-                                                                        float v66; } FloatVec21_t;
 typedef struct
 {
-    qint32 PaddingDigits;
-    quint32 Ordering;
-    qint32 StartIndex;
-    qint32 EndIndex;
-    QString InputPath;
-    QString FilePrefix;
-    QString FileSuffix;
-    QString FileExtension;
+  float v11;
+  float v12;
+  float v13;
+  float v14;
+  float v15;
+  float v16;
+  float v22;
+  float v23;
+  float v24;
+  float v25;
+  float v26;
+  float v33;
+  float v34;
+  float v35;
+  float v36;
+  float v44;
+  float v45;
+  float v46;
+  float v55;
+  float v56;
+  float v66;
+} FloatVec21_t;
+typedef struct
+{
+  qint32 PaddingDigits;
+  quint32 Ordering;
+  qint32 StartIndex;
+  qint32 EndIndex;
+  QString InputPath;
+  QString FilePrefix;
+  QString FileSuffix;
+  QString FileExtension;
 }
- FileListInfo_t;
+FileListInfo_t;
 
 
 //typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;

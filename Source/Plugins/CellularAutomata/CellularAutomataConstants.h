@@ -9,7 +9,8 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace CellularAutomata {
+namespace CellularAutomata
+{
   const QString CellularAutomataPluginFile("CellularAutomataPlugin");
   const QString CellularAutomataPluginDisplayName("CellularAutomataPlugin");
   const QString CellularAutomataBaseName("CellularAutomataPlugin");
@@ -22,7 +23,7 @@ namespace CellularAutomata {
 namespace FilterParameterWidgetType
 {
 
-/*  const QString SomeCustomWidget("SomeCustomWidget"); */
+  /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
 #endif

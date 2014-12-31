@@ -70,7 +70,10 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
   isValid(false)
 {
 
-  if(NULL == dca) { return; }
+  if(NULL == dca)
+  {
+    return;
+  }
 
   QList<DataContainer::Pointer> containers = dca->getDataContainers();
   for(int i = 0; i < containers.size(); i++) // Loop on each Data Container
@@ -127,14 +130,20 @@ QStringList DataContainerArrayProxy::flattenHeirarchy(Qt::CheckState dcFlag, Qt:
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag != dcFlag) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    if(dcProxy.flag != dcFlag)
+    {
+      continue;    // Skip to the next DataContainer if we are not reading this one.
+    }
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
     {
       amIter.next();
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.flag != amFlag) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      if(amProxy.flag != amFlag)
+      {
+        continue;    // Skip to the next AttributeMatrix if not reading this one
+      }
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
       while(dIter.hasNext()) // DataArray Level
@@ -142,7 +151,10 @@ QStringList DataContainerArrayProxy::flattenHeirarchy(Qt::CheckState dcFlag, Qt:
         dIter.next();
 
         const DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.flag != daFlag) { continue; } // Skip to the next DataArray if not reading this one
+        if(daProxy.flag != daFlag)
+        {
+          continue;    // Skip to the next DataArray if not reading this one
+        }
 
         QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
         strList << path;
@@ -293,23 +305,41 @@ void DataContainerArrayProxy::reverseFlags()
   while (dcIter.hasNext()) // DataContainerLevel
   {
     DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag == Qt::Checked) { dcProxy.flag = Qt::Unchecked; }
-    else if(dcProxy.flag == Qt::Unchecked) { dcProxy.flag = Qt::Checked; }
+    if(dcProxy.flag == Qt::Checked)
+    {
+      dcProxy.flag = Qt::Unchecked;
+    }
+    else if(dcProxy.flag == Qt::Unchecked)
+    {
+      dcProxy.flag = Qt::Checked;
+    }
 
     QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
     {
       amIter.next();
       AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.flag == Qt::Checked) { amProxy.flag = Qt::Unchecked; }
-      else if(amProxy.flag == Qt::Unchecked) { amProxy.flag = Qt::Checked; }
+      if(amProxy.flag == Qt::Checked)
+      {
+        amProxy.flag = Qt::Unchecked;
+      }
+      else if(amProxy.flag == Qt::Unchecked)
+      {
+        amProxy.flag = Qt::Checked;
+      }
       QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
       while(dIter.hasNext()) // DataArray Level
       {
         dIter.next();
         DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.flag == Qt::Checked) { daProxy.flag = Qt::Unchecked; }
-        else if(daProxy.flag == Qt::Unchecked) { daProxy.flag = Qt::Checked; }
+        if(daProxy.flag == Qt::Checked)
+        {
+          daProxy.flag = Qt::Unchecked;
+        }
+        else if(daProxy.flag == Qt::Unchecked)
+        {
+          daProxy.flag = Qt::Checked;
+        }
       }
     }
   }
@@ -357,7 +387,10 @@ bool DataContainerArrayProxy::contains(const QString& name)
   while(iter.hasNext())
   {
     const DataContainerProxy dc = iter.next();
-    if(dc.name.compare(name) == 0) { return true;}
+    if(dc.name.compare(name) == 0)
+    {
+      return true;
+    }
   }
   return false;
 }
@@ -371,7 +404,10 @@ DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString
   while(iter.hasNext())
   {
     DataContainerProxy& dc = iter.next();
-    if(dc.name.compare(name) == 0) { return dc;}
+    if(dc.name.compare(name) == 0)
+    {
+      return dc;
+    }
   }
   DataContainerProxy proxy;
   list.push_back(proxy);

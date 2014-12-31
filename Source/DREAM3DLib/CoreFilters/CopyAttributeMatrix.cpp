@@ -159,7 +159,10 @@ void CopyAttributeMatrix::execute()
   setErrorCondition(0);
 
   dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -184,26 +187,34 @@ AbstractFilter::Pointer CopyAttributeMatrix::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getHumanLabel()
-{ return "Copy Attribute Matrix"; }
+{
+  return "Copy Attribute Matrix";
+}
 

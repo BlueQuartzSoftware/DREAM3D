@@ -54,8 +54,8 @@ class DREAM3DLib_EXPORT RdfData
     DREAM3D_INSTANCE_PROPERTY(float, MaxDistance)
     DREAM3D_INSTANCE_STRING_PROPERTY(DistributionType)
 
-    protected:
-      RdfData();
+  protected:
+    RdfData();
 
   private:
     RdfData(const RdfData&); // Copy Constructor Not Implemented

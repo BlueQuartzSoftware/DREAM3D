@@ -42,10 +42,10 @@
 #include "itkFFTNormalizedCorrelationImageFilter.h"
 #include "itkMinimumMaximumImageCalculator.h"
 
- /**
- * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
- * for us like figuring out if we can use this private implementation with the data array that is assigned.
- */
+/**
+* @brief This is a private implementation for the filter that handles the actual algorithm implementation details
+* for us like figuring out if we can use this private implementation with the data array that is assigned.
+*/
 template<typename PixelType>
 class AlignSectionsPhaseCorrelationPrivate
 {
@@ -71,18 +71,18 @@ class AlignSectionsPhaseCorrelationPrivate
       //get volume dimensions
       size_t udims[3] = {0, 0, 0};
       m->getDimensions(udims);
-      #if (CMP_SIZEOF_SIZE_T == 4)
-        typedef int32_t DimType;
-      #else
-        typedef int64_t DimType;
-      #endif
+#if (CMP_SIZEOF_SIZE_T == 4)
+      typedef int32_t DimType;
+#else
+      typedef int64_t DimType;
+#endif
       DimType dims[3] =
       {
         static_cast<DimType>(udims[0]),
         static_cast<DimType>(udims[1]),
         static_cast<DimType>(udims[2]),
       };
-      int voxelsPerSlice = dims[0]*dims[1];
+      int voxelsPerSlice = dims[0] * dims[1];
 
       //convert array to correct type
       typename DataArrayType::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArrayType>(inputArray);
@@ -99,7 +99,7 @@ class AlignSectionsPhaseCorrelationPrivate
       //wrap input  as itk image
       size_t numVoxels = inputArrayPtr->getNumberOfTuples();
       typename ImageType::Pointer inputImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
-      
+
       //open output file if needed
       std::ofstream outFile;
       if (filter->getWriteAlignmentShifts() == true)
@@ -117,13 +117,13 @@ class AlignSectionsPhaseCorrelationPrivate
         //extract slices
         int sliceNum = static_cast<int>( (dims[2] - 1) - iter );
         SliceType::Pointer fixedImage = ItkBridgeType::ExtractSlice(inputImage, ImageProcessing::ZSlice, sliceNum);
-        SliceType::Pointer movingImage = ItkBridgeType::ExtractSlice(inputImage, ImageProcessing::ZSlice, sliceNum+1);
+        SliceType::Pointer movingImage = ItkBridgeType::ExtractSlice(inputImage, ImageProcessing::ZSlice, sliceNum + 1);
 
         //fft correlation
         CorrelationType::Pointer correlation = CorrelationType::New();
         correlation->SetFixedImage(fixedImage);
         correlation->SetMovingImage(movingImage);
-        correlation->SetRequiredNumberOfOverlappingPixels(0.1*voxelsPerSlice);
+        correlation->SetRequiredNumberOfOverlappingPixels(0.1 * voxelsPerSlice);
 
         //find peak
         MinMaxType::Pointer minmax = MinMaxType::New();
@@ -134,7 +134,7 @@ class AlignSectionsPhaseCorrelationPrivate
         {
           minmax->Compute();
         }
-        catch( itk::ExceptionObject & err )
+        catch( itk::ExceptionObject& err )
         {
           filter->setErrorCondition(-5);
           QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -143,8 +143,8 @@ class AlignSectionsPhaseCorrelationPrivate
 
         //convert from max location to shift
         FloatSliceType::IndexType maximumLocation = minmax->GetIndexOfMaximum();
-        int sliceXShift = maximumLocation[0]-dims[0]+1;
-        int sliceYShift = maximumLocation[1]-dims[1]+1;
+        int sliceXShift = maximumLocation[0] - dims[0] + 1;
+        int sliceYShift = maximumLocation[1] - dims[1] + 1;
 
         //save shift
         xshifts[iter] = xshifts[iter - 1] + sliceXShift;
@@ -153,7 +153,7 @@ class AlignSectionsPhaseCorrelationPrivate
         {
           outFile << sliceNum << " " << sliceNum + 1 << " " << sliceXShift << " " << sliceYShift << " " << xshifts[iter] << " " << yshifts[iter] << "\n";
         }
-      }      
+      }
     }
   private:
     AlignSectionsPhaseCorrelationPrivate(const AlignSectionsPhaseCorrelationPrivate&); // Copy Constructor Not Implemented
@@ -163,7 +163,7 @@ class AlignSectionsPhaseCorrelationPrivate
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsPhaseCorrelation::AlignSectionsPhaseCorrelation() :  
+AlignSectionsPhaseCorrelation::AlignSectionsPhaseCorrelation() :
   AlignSections(),
   m_SelectedCellArrayPath("", "", ""),
   m_SelectedCellArray(NULL)

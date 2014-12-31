@@ -75,7 +75,10 @@ H5FilterParametersReader::Pointer H5FilterParametersReader::OpenDREAM3DFileForRe
 {
   fid = -1;
   fid = QH5Utilities::openFile(filePath);
-  if(fid < 0) { return H5FilterParametersReader::NullPointer(); }
+  if(fid < 0)
+  {
+    return H5FilterParametersReader::NullPointer();
+  }
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::StringConstants::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
@@ -96,7 +99,10 @@ FilterPipeline::Pointer H5FilterParametersReader::ReadPipelineFromFile(QString f
 {
   hid_t fid = -1;
   fid = QH5Utilities::openFile(filePath);
-  if(fid < 0) { return FilterPipeline::NullPointer(); }
+  if(fid < 0)
+  {
+    return FilterPipeline::NullPointer();
+  }
 
   HDF5ScopedFileSentinel sentinel(&fid, true);
 
@@ -192,9 +198,13 @@ QString H5FilterParametersReader::readString(const QString name, QString value)
   int err = 0;
   err = QH5Lite::readStringDataset(m_CurrentGroupId, name, value);
   if (err == 0)
-  { return value; }
+  {
+    return value;
+  }
   else
-  { return defaultStr; }
+  {
+    return defaultStr;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -327,8 +337,14 @@ QVector<int8_t> H5FilterParametersReader::readArray(const QString name, QVector<
   int vectorSize = 0;
   int8_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -347,8 +363,14 @@ QVector<int16_t> H5FilterParametersReader::readArray(const QString name, QVector
   int vectorSize = 0;
   int16_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -367,8 +389,14 @@ QVector<int32_t> H5FilterParametersReader::readArray(const QString name, QVector
   int vectorSize = 0;
   int32_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -388,8 +416,14 @@ QVector<int64_t> H5FilterParametersReader::readArray(const QString name, QVector
   int vectorSize = 0;
   int64_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -408,8 +442,14 @@ QVector<uint8_t> H5FilterParametersReader::readArray(const QString name, QVector
   int vectorSize = 0;
   uint8_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -428,8 +468,14 @@ QVector<uint16_t> H5FilterParametersReader::readArray(const QString name, QVecto
   int vectorSize = 0;
   uint16_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -448,8 +494,14 @@ QVector<uint32_t> H5FilterParametersReader::readArray(const QString name, QVecto
   int vectorSize = 0;
   uint32_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -468,8 +520,14 @@ QVector<uint64_t> H5FilterParametersReader::readArray(const QString name, QVecto
   int vectorSize = 0;
   uint64_t scalar = 0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -488,8 +546,14 @@ QVector<float> H5FilterParametersReader::readArray(const QString name, QVector<f
   int vectorSize = 0;
   float scalar = 0.0f;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -508,8 +572,14 @@ QVector<double> H5FilterParametersReader::readArray(const QString name, QVector<
   int vectorSize = 0;
   double scalar = 0.0;
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  if (err < 0) { return value; }
-  else { value.clear();}
+  if (err < 0)
+  {
+    return value;
+  }
+  else
+  {
+    value.clear();
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -529,7 +599,10 @@ IntVec3_t H5FilterParametersReader::readIntVec3(const QString name, IntVec3_t de
   int err = 0;
   IntVec3_t v;
   err = QH5Lite::readPointerDataset<int32_t>(m_CurrentGroupId, name, reinterpret_cast<int32_t*>(&v) );
-  if (err < 0) { return defaultValue; }
+  if (err < 0)
+  {
+    return defaultValue;
+  }
 
   return v;
 }
@@ -542,7 +615,10 @@ FloatVec3_t H5FilterParametersReader::readFloatVec3(const QString name, FloatVec
   int err = 0;
   FloatVec3_t v;
   err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
-  if (err < 0) { return defaultValue; }
+  if (err < 0)
+  {
+    return defaultValue;
+  }
   return v;
 }
 
@@ -554,7 +630,10 @@ FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec
   int err = 0;
   FloatVec4_t v;
   err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
-  if (err < 0) { return defaultValue; }
+  if (err < 0)
+  {
+    return defaultValue;
+  }
   return v;
 }
 
@@ -566,7 +645,10 @@ FloatVec21_t H5FilterParametersReader::readFloatVec21(const QString name, FloatV
   int err = 0;
   FloatVec21_t v;
   err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
-  if (err < 0) { return defaultValue; }
+  if (err < 0)
+  {
+    return defaultValue;
+  }
   return v;
 }
 
@@ -579,7 +661,10 @@ FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, Fi
   FileListInfo_t v;
 
   hid_t gid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
-  if(gid < 0) { return defaultValue; }
+  if(gid < 0)
+  {
+    return defaultValue;
+  }
 
   int err = QH5Lite::readScalarDataset<qint32>(gid, "EndIndex", v.EndIndex );
   if(err < 0) {}
@@ -627,10 +712,16 @@ ComparisonInputs H5FilterParametersReader::readComparisonInputs(const QString na
   QString strData = "";
   bool ok = false;
   // See if the data set actually exists, if it does NOT just return what the user passed in as a default value
-  if(false == QH5Lite::datasetExists(m_CurrentGroupId, name) ) { return defValue; }
+  if(false == QH5Lite::datasetExists(m_CurrentGroupId, name) )
+  {
+    return defValue;
+  }
 
   herr_t err = QH5Lite::readStringDataset(m_CurrentGroupId, name, strData);
-  if(err < 0) { return defValue; } // If the data set does not exist no point in going any further
+  if(err < 0)
+  {
+    return defValue;    // If the data set does not exist no point in going any further
+  }
 
   // Now read the the attribute that says how many arrays are in the data set.
   err = QH5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumInputs", size);
@@ -686,10 +777,10 @@ AxisAngleInput_t H5FilterParametersReader::readAxisAngle(const QString name, Axi
   err = QH5Lite::readPointerAttribute<float>(m_CurrentGroupId, name, ss, reinterpret_cast<float*>(&v) );
   if(err < 0)
   {
-      v.angle = std::numeric_limits<float>::quiet_NaN();
-      v.h = std::numeric_limits<float>::quiet_NaN();
-      v.k = std::numeric_limits<float>::quiet_NaN();
-      v.l = std::numeric_limits<float>::quiet_NaN();
+    v.angle = std::numeric_limits<float>::quiet_NaN();
+    v.h = std::numeric_limits<float>::quiet_NaN();
+    v.k = std::numeric_limits<float>::quiet_NaN();
+    v.l = std::numeric_limits<float>::quiet_NaN();
   }
   return v;
 }
@@ -722,10 +813,16 @@ QSet<QString> H5FilterParametersReader::readArraySelections(const QString name, 
   QString strData = "";
 
   // See if the data set actually exists, if it does NOT just return what the user passed in as a default value
-  if(false == QH5Lite::datasetExists(m_CurrentGroupId, name) ) { return v; }
+  if(false == QH5Lite::datasetExists(m_CurrentGroupId, name) )
+  {
+    return v;
+  }
 
   herr_t err = QH5Lite::readStringDataset(m_CurrentGroupId, name, strData);
-  if(err < 0) { return v; } // If the data set does not exist no point in going any further
+  if(err < 0)
+  {
+    return v;    // If the data set does not exist no point in going any further
+  }
 
   // Now read the the attribute that says how many arrays are in the data set.
   err = QH5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumArrays", size);
@@ -755,7 +852,10 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
   // Open the top level group that holds all the values for this filter parameter
   hid_t dcaGid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
   HDF5ScopedGroupSentinel sentinel(&dcaGid, true);
-  if(dcaGid < 0) { return defValue; }
+  if(dcaGid < 0)
+  {
+    return defValue;
+  }
   QList<QString> dcaNames;
   int err = QH5Utilities::getGroupObjects(dcaGid, H5Utilities::H5Support_GROUP, dcaNames);
   if (err < 0)

@@ -59,7 +59,7 @@ class RecrystalizeVolumeImpl
       for(std::vector<size_t>::iterator iter = begin; iter != end; ++iter)
       {
         if(0 != m_currentIDs[*iter])
-          goodNeighbors.push_back(*iter);
+        { goodNeighbors.push_back(*iter); }
       }
 
       if(0 == goodNeighbors.size())
@@ -89,7 +89,7 @@ class RecrystalizeVolumeImpl
           else
           {
             ++(*m_unrecrystalizedCount);
-            m_workingIDs[index] = 0;            
+            m_workingIDs[index] = 0;
           }
         }
         else
@@ -103,9 +103,9 @@ class RecrystalizeVolumeImpl
         //if neighbors are recrystallized, choose one at random to join
         boost::uniform_int<> distribution(0, goodNeighbors.size() - 1);//range is inclusive
         boost::variate_generator<boost::mt19937&, boost::uniform_int<> > indexGen(generator, distribution);
-        m_workingIDs[index] = m_currentIDs[goodNeighbors[indexGen()]]; 
+        m_workingIDs[index] = m_currentIDs[goodNeighbors[indexGen()]];
         m_updateTime[index] = *m_time;
-      }        
+      }
     }
 
     void computeVonNeuman(size_t start, size_t end, boost::mt19937& generator) const
@@ -265,13 +265,13 @@ class RecrystalizeVolumeImpl
     uint32_t* m_updateTime;
     int m_neighborhood;
 
-  #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     tbb::atomic<size_t>* m_unrecrystalizedCount;
     tbb::atomic<int32_t>* m_grainCount;
-  #elif
+#elif
     size_t* m_unrecrystalizedCount;
     int32_t* m_grainCount;
-  #endif
+#endif
     uint32_t* m_time;
     float m_nucleationRate;
 };
@@ -596,7 +596,7 @@ void RecrystalizeVolume::execute()
     unrecrstallizedCount = 0;
 
     //perform time step
-  #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     bool doParallel = true;
     if (doParallel == true)
     {
@@ -604,7 +604,7 @@ void RecrystalizeVolume::execute()
                         RecrystalizeVolumeImpl(&lattice, currentIDs->getPointer(0), workingIDs->getPointer(0), recrstTime->getPointer(0), m_Neighborhood, &unrecrstallizedCount, &timeStep, &grainCount, pNuc), tbb::auto_partitioner());
     }
     else
-  #endif
+#endif
     {
       RecrystalizeVolumeImpl serial(&lattice, currentIDs->getPointer(0), workingIDs->getPointer(0), recrstTime->getPointer(0), m_Neighborhood, &unrecrstallizedCount, &timeStep, &grainCount, pNuc);
       serial.compute(0, numCells);
@@ -642,7 +642,7 @@ void RecrystalizeVolume::execute()
   FloatArrayType::Pointer history = FloatArrayType::CreateArray(numCells, cDims, getRecrystallizationHistoryArrayName());
   float* pHistory = history->getPointer(0);
   for(size_t i = 0; i < recrystallizationHistory.size(); i++)
-    pHistory[i] = recrystallizationHistory[i];
+  { pHistory[i] = recrystallizationHistory[i]; }
   cellEnsembleAttrMat->addAttributeArray(getRecrystallizationHistoryArrayName(), history);
 
   //assemble linear pairs to fit avrami equation parameters
@@ -657,7 +657,7 @@ void RecrystalizeVolume::execute()
 
   //perform regression
   double slope, intercept;
-  if(DREAM3DMath::linearRegression<float>(slope, intercept,x, y))
+  if(DREAM3DMath::linearRegression<float>(slope, intercept, x, y))
   {
     m_Avrami[0] = exp(intercept);//k
     m_Avrami[1] = slope;//n

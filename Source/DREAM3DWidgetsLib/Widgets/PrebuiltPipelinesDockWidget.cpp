@@ -99,7 +99,7 @@ void PrebuiltPipelinesDockWidget::setupGui()
               opacity: 255;\
               background-color: #FFFFFF;\
               }");
-filterLibraryTree->setStyleSheet(css);
+  filterLibraryTree->setStyleSheet(css);
 
 }
 
@@ -321,7 +321,8 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
 
   for (int i = 0; i < filterCount; ++i)
   {
-    if (rowColor == 0) { rowColor = 1; color = odd; } else { rowColor = 0; color = even; }
+    if (rowColor == 0) { rowColor = 1; color = odd; }
+    else { rowColor = 0; color = even; }
     QString gName = QString::number(i);
     prefs.beginGroup(gName);
     QString item = prefs.value("Filter_Name", "").toString();
@@ -334,13 +335,13 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
       if(NULL != filter.get())
       {
         AbstractFilter::Pointer filter = factory->create();
-        ss << "<tr bgcolor=\"" << color << "\"><td>" << i<< "</td><td>" << filter->getGroupName() << "</td><td>" << item << "</td></tr>\n";
+        ss << "<tr bgcolor=\"" << color << "\"><td>" << i << "</td><td>" << filter->getGroupName() << "</td><td>" << item << "</td></tr>\n";
       }
     }
     else
     {
       color = red;
-      ss << "<tr bgcolor=\"" << color << "\"><td>" << i<< "</td><td>" << unknownFilter << "</td><td>" << item << "</td></tr>\n";
+      ss << "<tr bgcolor=\"" << color << "\"><td>" << i << "</td><td>" << unknownFilter << "</td><td>" << item << "</td></tr>\n";
       unknownFilters = true;
     }
   }

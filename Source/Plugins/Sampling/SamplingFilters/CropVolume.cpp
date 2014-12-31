@@ -130,19 +130,19 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(XMin)
-      DREAM3D_FILTER_WRITE_PARAMETER(YMin)
-      DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
-      DREAM3D_FILTER_WRITE_PARAMETER(XMax)
-      DREAM3D_FILTER_WRITE_PARAMETER(YMax)
-      DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
-      DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-      DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(XMin)
+  DREAM3D_FILTER_WRITE_PARAMETER(YMin)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
+  DREAM3D_FILTER_WRITE_PARAMETER(XMax)
+  DREAM3D_FILTER_WRITE_PARAMETER(YMax)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
+  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
+  DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

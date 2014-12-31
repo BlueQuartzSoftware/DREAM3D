@@ -330,16 +330,16 @@ int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* 
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NearestNeighborsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(QPEuclideanDistancesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(TJEuclideanDistancesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(DoBoundaries)
-      DREAM3D_FILTER_WRITE_PARAMETER(DoTripleLines)
-      DREAM3D_FILTER_WRITE_PARAMETER(DoQuadPoints)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveNearestNeighbors)
-      DREAM3D_FILTER_WRITE_PARAMETER(CalcOnlyManhattanDist)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(QPEuclideanDistancesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(TJEuclideanDistancesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(DoBoundaries)
+  DREAM3D_FILTER_WRITE_PARAMETER(DoTripleLines)
+  DREAM3D_FILTER_WRITE_PARAMETER(DoQuadPoints)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveNearestNeighbors)
+  DREAM3D_FILTER_WRITE_PARAMETER(CalcOnlyManhattanDist)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -393,7 +393,8 @@ void FindEuclideanDistMap::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  if(getErrorCondition() < 0) {
+  if(getErrorCondition() < 0)
+  {
     emit preflightExecuted();
     setInPreflight(false);
     return;

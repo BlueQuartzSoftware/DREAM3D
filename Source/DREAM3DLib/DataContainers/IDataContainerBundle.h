@@ -54,7 +54,7 @@ class DREAM3DLib_EXPORT IDataContainerBundle : public QObject
 
     virtual ~IDataContainerBundle() {}
 
-    virtual void setName(const QString &getDataContainer) = 0;
+    virtual void setName(const QString& getDataContainer) = 0;
     virtual QString getName() const = 0;
 
     virtual QVector<QString> getDataContainerNames() = 0;
@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT IDataContainerBundle : public QObject
     virtual void addDataContainer(DataContainer::Pointer dc) = 0;
 
     virtual void removeDataContainer(DataContainer::Pointer dc) = 0;
-    virtual void removeDataContainer(const QString &name) = 0;
+    virtual void removeDataContainer(const QString& name) = 0;
     virtual void removeDataContainer(qint32 i) = 0;
 
     virtual DataContainer::Pointer getDataContainer(qint32 index) = 0;

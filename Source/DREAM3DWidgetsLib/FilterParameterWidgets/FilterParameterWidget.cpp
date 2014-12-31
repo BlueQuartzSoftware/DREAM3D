@@ -11,10 +11,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterParameterWidget::FilterParameterWidget(QWidget *parent) :
-QWidget(parent),
-m_Filter(NULL),
-m_FilterParameter(NULL)
+FilterParameterWidget::FilterParameterWidget(QWidget* parent) :
+  QWidget(parent),
+  m_Filter(NULL),
+  m_FilterParameter(NULL)
 {
 
 }
@@ -22,10 +22,10 @@ m_FilterParameter(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterParameterWidget::FilterParameterWidget(FilterParameter *parameter, AbstractFilter *filter, QWidget *parent) :
-QWidget(parent),
-m_Filter(filter),
-m_FilterParameter(parameter)
+FilterParameterWidget::FilterParameterWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+  QWidget(parent),
+  m_Filter(filter),
+  m_FilterParameter(parameter)
 {
 
 }

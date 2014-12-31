@@ -55,13 +55,13 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 typedef struct
 {
-    float m_Volumes;
-    float m_EquivalentDiameters;
-    float m_AxisLengths[3];
-    float m_AxisEulerAngles[3];
-    float m_Omega3s;
-    int m_FeaturePhases;
-    int m_Neighborhoods;
+  float m_Volumes;
+  float m_EquivalentDiameters;
+  float m_AxisLengths[3];
+  float m_AxisEulerAngles[3];
+  float m_Omega3s;
+  int m_FeaturePhases;
+  int m_Neighborhoods;
 } Feature;
 
 /**
@@ -216,7 +216,7 @@ class PackPrimaryPhases : public AbstractFilter
     float check_neighborhooderror(int gadd, int gremove);
 
     float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr);
-    void update_availablepoints(std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv);
+    void update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv);
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_features();

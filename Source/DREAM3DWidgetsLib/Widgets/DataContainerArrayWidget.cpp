@@ -153,7 +153,7 @@ void DataContainerArrayWidget::updateModelFromProxy(DataContainerArrayProxy& pro
     Q_ASSERT_X(model, "Model was not a QStandardItemModel in QColumnView", "");
     return;
   }
- // model->clear();
+// model->clear();
 
   QStandardItem* rootItem = model->invisibleRootItem();
 

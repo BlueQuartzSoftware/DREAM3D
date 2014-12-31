@@ -198,17 +198,17 @@ void AbaqusSurfaceMeshWriter::execute()
   err = writeNodes(f);
   if(err < 0)
   {
-  setErrorCondition(-8001);
+    setErrorCondition(-8001);
   }
   err = writeTriangles(f);
   if(err < 0)
   {
-  setErrorCondition(-8002);
+    setErrorCondition(-8002);
   }
   err = writeFeatures(f);
   if(err < 0)
   {
-  setErrorCondition(-8003);
+    setErrorCondition(-8003);
   }
 
   setErrorCondition(0);

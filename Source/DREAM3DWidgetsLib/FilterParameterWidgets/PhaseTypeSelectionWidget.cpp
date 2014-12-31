@@ -184,7 +184,7 @@ void PhaseTypeSelectionWidget::populateComboBoxes()
 
   // If EVERYTHING is empty, then try the default value
   if(filtDcName.isEmpty() && filtAmName.isEmpty()
-     && curDcName.isEmpty() && curAmName.isEmpty() )
+      && curDcName.isEmpty() && curAmName.isEmpty() )
   {
     DataArrayPath daPath = getFilterParameter()->getDefaultValue().value<DataArrayPath>();
     dcName = daPath.getDataContainerName();
@@ -378,7 +378,8 @@ void PhaseTypeSelectionWidget::updatePhaseComboBoxes()
 
   UInt32Vector_t vectorWrapper = getFilter()->property(phaseDataProp.toLatin1().constData()).value<UInt32Vector_t>();
   QVector<quint32> dataFromFilter = vectorWrapper.d;
-  if(phaseCount < 0 && dataFromFilter.size() < 10) { // there was an issue getting the phase Count from the Filter.
+  if(phaseCount < 0 && dataFromFilter.size() < 10)   // there was an issue getting the phase Count from the Filter.
+  {
     phaseCount = dataFromFilter.size(); // So lets just use the count from the actual phase data
   }
 
@@ -403,8 +404,8 @@ void PhaseTypeSelectionWidget::updatePhaseComboBoxes()
     }
 
     QListWidgetItem* item = new QListWidgetItem(phaseListWidget);
-   phaseListWidget->addItem(item);
-   phaseListWidget->setItemWidget(item, cb);
+    phaseListWidget->addItem(item);
+    phaseListWidget->setItemWidget(item, cb);
 
     if (i < dataFromFilter.size())
     {
@@ -431,13 +432,13 @@ void PhaseTypeSelectionWidget::phaseTypeComboBoxChanged(int index)
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::resetPhaseComboBoxes()
 {
-    int count = phaseListWidget->count();
+  int count = phaseListWidget->count();
 
-    for (int i = 0; i < count; ++i)
-    {
-      QComboBox* cb = qobject_cast<QComboBox*>(phaseListWidget->itemWidget(phaseListWidget->item(i)));
-      if (cb) { cb->setCurrentIndex(-1); }
-    }
+  for (int i = 0; i < count; ++i)
+  {
+    QComboBox* cb = qobject_cast<QComboBox*>(phaseListWidget->itemWidget(phaseListWidget->item(i)));
+    if (cb) { cb->setCurrentIndex(-1); }
+  }
 }
 
 
@@ -486,7 +487,7 @@ void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   QVariant var;
 
   // QVector<uint32_t> phaseTypes(count, DREAM3D::PhaseType::UnknownPhaseType);
-  QVector<uint32_t> phaseTypes(count+1, DREAM3D::PhaseType::UnknownPhaseType);
+  QVector<uint32_t> phaseTypes(count + 1, DREAM3D::PhaseType::UnknownPhaseType);
   bool ok = false;
   phaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
   for (int i = 0; i < count; ++i)
@@ -494,7 +495,7 @@ void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
     QComboBox* cb = qobject_cast<QComboBox*>(phaseListWidget->itemWidget(phaseListWidget->item(i)));
     unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
     //phaseTypes[i+1] = sType;
-    phaseTypes[i+1] = sType;
+    phaseTypes[i + 1] = sType;
   }
 
   UInt32Vector_t data;

@@ -67,7 +67,7 @@ void FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(AbstractFilte
                        " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
   QMessageBox::StandardButton reply;
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
-    Q_UNUSED(reply);
+  Q_UNUSED(reply);
 }
 
 

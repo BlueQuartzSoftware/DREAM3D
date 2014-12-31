@@ -84,8 +84,8 @@ int CopyDataContainer::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedDataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -119,10 +119,10 @@ void CopyDataContainer::dataCheck()
   DataContainerArray::Pointer dca = getDataContainerArray();
   if (NULL == dca.get() )
   {
-      setErrorCondition(-11003);
-      QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+    setErrorCondition(-11003);
+    QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   DataContainer::Pointer dc = dca->getDataContainer(getSelectedDataContainerName());
@@ -159,7 +159,10 @@ void CopyDataContainer::execute()
   setErrorCondition(0);
 
   dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -184,26 +187,34 @@ AbstractFilter::Pointer CopyDataContainer::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getHumanLabel()
-{ return "Copy Data Container"; }
+{
+  return "Copy Data Container";
+}
 

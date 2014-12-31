@@ -191,8 +191,8 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
   QFileInfo fi(filePath);
   if (fi.suffix().isEmpty())
   {
-      filePath.append(".txt");
-      fi.setFile(filePath);
+    filePath.append(".txt");
+    fi.setFile(filePath);
   }
   pipelineViewWidget->savePipeline(filePath, fi.baseName());
   m_OpenDialogLastDirectory = fi.path();
@@ -506,7 +506,8 @@ void DREAM3D_UI::setupGui()
   setupPipelineContextMenu();
 
 
-  if(favoritesDockWidget) {
+  if(favoritesDockWidget)
+  {
     favoritesDockWidget->configureFilterLibraryTree();
   }
 

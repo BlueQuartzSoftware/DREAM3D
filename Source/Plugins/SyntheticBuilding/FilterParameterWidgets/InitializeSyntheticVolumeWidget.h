@@ -69,7 +69,7 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
      */
     virtual void setupGui();
 
-    void setFilter(AbstractFilter *value);
+    void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
 
   public slots:

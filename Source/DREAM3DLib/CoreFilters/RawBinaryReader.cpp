@@ -87,8 +87,14 @@ namespace Detail
 // -----------------------------------------------------------------------------
 int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, size_t fileSize, int skipHeaderBytes)
 {
-  if (fileSize - skipHeaderBytes < allocatedBytes) { return -1; }
-  else if (fileSize - skipHeaderBytes > allocatedBytes) { return 1; }
+  if (fileSize - skipHeaderBytes < allocatedBytes)
+  {
+    return -1;
+  }
+  else if (fileSize - skipHeaderBytes > allocatedBytes)
+  {
+    return 1;
+  }
   // File Size and Allocated Size are equal so we  are good to go
   return 0;
 }
@@ -281,20 +287,20 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
-      DREAM3D_FILTER_WRITE_PARAMETER(Dimensionality)
-      DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents)
-      DREAM3D_FILTER_WRITE_PARAMETER(Endian)
-      DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
-      DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-      DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(OverRideOriginResolution)
-      DREAM3D_FILTER_WRITE_PARAMETER(SkipHeaderBytes)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(AddToExistingAttributeMatrix)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensionality)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents)
+  DREAM3D_FILTER_WRITE_PARAMETER(Endian)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OverRideOriginResolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(SkipHeaderBytes)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AddToExistingAttributeMatrix)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -353,22 +359,34 @@ void RawBinaryReader::dataCheck(bool preflight)
   if (getAddToExistingAttributeMatrix() )
   {
     m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
 
     attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -10000);
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
   }
   else
   {
     m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
 
     QVector<size_t> tDims(3, 0);
     tDims[0] = m_Dimensions.x;
     tDims[1] = m_Dimensions.y;
     tDims[2] =  m_Dimensions.z;
     attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
   }
 
   if (true == preflight)
@@ -476,7 +494,10 @@ void RawBinaryReader::execute()
   setErrorCondition(err);
 
   dataCheck(false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   setErrorCondition(0);
@@ -508,7 +529,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt8)
@@ -519,7 +540,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int16)
@@ -530,7 +551,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt16)
@@ -541,7 +562,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int32)
@@ -552,7 +573,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt32)
@@ -563,7 +584,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int64)
@@ -574,7 +595,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt64)
@@ -585,7 +606,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Float)
@@ -597,7 +618,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Double)
@@ -608,7 +629,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
 
@@ -670,26 +691,34 @@ AbstractFilter::Pointer RawBinaryReader::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getCompiledLibraryName()
-{ return Core::CoreBaseName;  }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{
+  return DREAM3D::FilterGroups::IOFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{
+  return DREAM3D::FilterSubGroups::InputFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getHumanLabel()
-{ return "Raw Binary Reader"; }
+{
+  return "Raw Binary Reader";
+}
 

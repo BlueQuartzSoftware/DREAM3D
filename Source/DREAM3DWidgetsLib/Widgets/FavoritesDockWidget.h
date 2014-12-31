@@ -89,7 +89,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
        @param dirName Path of directory to remove.
        @return true on success; false on error.
     */
-    static bool removeDir(const QString &dirName);
+    static bool removeDir(const QString& dirName);
 
     /**
      * @brief getFilterLibraryTreeWidget

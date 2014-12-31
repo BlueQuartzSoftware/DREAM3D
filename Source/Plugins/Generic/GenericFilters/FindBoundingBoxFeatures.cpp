@@ -201,7 +201,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
   {
     for (size_t i = 1; i < size; i++)
     {
-      if(m_Phases[i] > numPhases) numPhases = m_Phases[i];
+      if(m_Phases[i] > numPhases) { numPhases = m_Phases[i]; }
     }
   }
   for(int iter = 1; iter <= numPhases; iter++)

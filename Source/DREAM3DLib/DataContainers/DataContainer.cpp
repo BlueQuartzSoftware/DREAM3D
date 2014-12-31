@@ -73,15 +73,24 @@ void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContain
   QH5Utilities::getGroupObjects(dcArrayGroupId, H5Utilities::H5Support_GROUP, dataContainers);
   foreach(QString dataContainerName, dataContainers)
   {
-    if(__SHOW_DEBUG_MSG__) { std::cout << "Data Container:" << dataContainerName.toStdString() << std::endl; }
+    if(__SHOW_DEBUG_MSG__)
+    {
+      std::cout << "Data Container:" << dataContainerName.toStdString() << std::endl;
+    }
     hid_t containerGid = H5Gopen(dcArrayGroupId, dataContainerName.toAscii().constData(), H5P_DEFAULT);
-    if (containerGid < 0) { continue; }
+    if (containerGid < 0)
+    {
+      continue;
+    }
     HDF5ScopedGroupSentinel sentinel(&containerGid, false);
     DataContainerProxy dcProxy(dataContainerName);
     dcProxy.name = dataContainerName;
     dcProxy.flag = Qt::Checked;
     herr_t err = QH5Lite::readScalarAttribute(dcArrayGroupId, dataContainerName, DREAM3D::StringConstants::DataContainerType, dcProxy.dcType);
-    if(err < 0) { std::cout << "Error Reading the DataContainer Type for DataContainer " << dataContainerName.toStdString() << std::endl; }
+    if(err < 0)
+    {
+      std::cout << "Error Reading the DataContainer Type for DataContainer " << dataContainerName.toStdString() << std::endl;
+    }
 
     QString h5Path = h5InternalPath + "/" + dataContainerName;
     // Read the Attribute Matricies for this Data Container
@@ -277,7 +286,10 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, co
   QString amName;
   for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
   {
-    if(iter.value().flag == Qt::Unchecked) { continue; }
+    if(iter.value().flag == Qt::Unchecked)
+    {
+      continue;
+    }
     amName = iter.key();
     amType = DREAM3D::AttributeMatrixType::Unknown;
     err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::StringConstants::AttributeMatrixType, amType);

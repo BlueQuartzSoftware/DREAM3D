@@ -310,7 +310,7 @@ void LoadAdditiveMonitoringData::execute()
     float minY = 100000000.0;
     float maxX = 0.0;
     float maxY = 0.0;
-    size_t xSlot=0, ySlot = 0;
+    size_t xSlot = 0, ySlot = 0;
 
     size_t count = 2;
     QByteArray buf;
@@ -327,16 +327,16 @@ void LoadAdditiveMonitoringData::execute()
       y = tokens[1].trimmed().toFloat(&ok);
       current = tokens[2].trimmed().toFloat(&ok);
       speed = tokens[3].trimmed().toFloat(&ok);
-      if(x < minX) minX = x;
-      if(x > maxX) maxX = x;
-      if(y < minY) minY = y;
-      if(y > maxY) maxY = y;
+      if(x < minX) { minX = x; }
+      if(x > maxX) { maxX = x; }
+      if(y < minY) { minY = y; }
+      if(y > maxY) { maxY = y; }
       count++;
     }
     in.close();
 
-    size_t numXpoints = ((maxX-m_Origin.x)/m_Resolution.x) + 1;
-    size_t numYpoints = ((maxY-m_Origin.y)/m_Resolution.y) + 1;
+    size_t numXpoints = ((maxX - m_Origin.x) / m_Resolution.x) + 1;
+    size_t numYpoints = ((maxY - m_Origin.y) / m_Resolution.y) + 1;
     //size_t totalPoints = numXpoints*numYpoints*size_t(fileList.size());
 
 
@@ -365,10 +365,10 @@ void LoadAdditiveMonitoringData::execute()
       current = tokens[2].trimmed().toFloat(&ok);
       speed = tokens[3].trimmed().toFloat(&ok);
 
-      xSlot = x/m_Resolution.x;
-      ySlot = y/m_Resolution.y;
+      xSlot = x / m_Resolution.x;
+      ySlot = y / m_Resolution.y;
 
-      offset = (zSlot*numXpoints*numYpoints)+(ySlot*numXpoints)+xSlot;
+      offset = (zSlot * numXpoints * numYpoints) + (ySlot * numXpoints) + xSlot;
 
       m_Current[offset] = current;
       m_Speed[offset] = speed;

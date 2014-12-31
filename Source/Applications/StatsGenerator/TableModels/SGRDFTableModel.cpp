@@ -310,7 +310,7 @@ QAbstractItemDelegate* SGRDFTableModel::getItemDelegate()
   setData(weightIndex, QVariant(weight), Qt::EditRole);\
   QModelIndex sigmaIndex = index(rowCount() - 1, SGRDFTableModel::Sigma);\
   setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
-
+   
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

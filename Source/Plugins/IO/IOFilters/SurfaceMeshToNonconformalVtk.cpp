@@ -261,7 +261,7 @@ void SurfaceMeshToNonconformalVtk::execute()
         DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
         DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
-        if(totalWritten != 3){}
+        if(totalWritten != 3) {}
       }
       else
       {

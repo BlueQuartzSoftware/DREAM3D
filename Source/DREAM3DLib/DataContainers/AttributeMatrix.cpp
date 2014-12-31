@@ -86,16 +86,25 @@ void AttributeMatrix::ReadAttributeMatrixStructure(hid_t containerId, DataContai
   QH5Utilities::getGroupObjects(containerId, H5Utilities::H5Support_GROUP, attributeMatrixNames);
   foreach(QString attributeMatrixName, attributeMatrixNames)
   {
-    if(__SHOW_DEBUG_MSG__) { std::cout << "    AttributeMatrix: " << attributeMatrixName.toStdString()  << std::endl; }
+    if(__SHOW_DEBUG_MSG__)
+    {
+      std::cout << "    AttributeMatrix: " << attributeMatrixName.toStdString()  << std::endl;
+    }
     hid_t attrMatGid = H5Gopen(containerId, attributeMatrixName.toAscii().constData(), H5P_DEFAULT);
-    if (attrMatGid < 0) { continue; }
+    if (attrMatGid < 0)
+    {
+      continue;
+    }
     HDF5ScopedGroupSentinel sentinel(&attrMatGid, true);
 
     AttributeMatrixProxy amProxy(attributeMatrixName);
     amProxy.name = attributeMatrixName;
     amProxy.flag = Qt::Checked;
     herr_t err = QH5Lite::readScalarAttribute(containerId, attributeMatrixName, DREAM3D::StringConstants::AttributeMatrixType, amProxy.amType);
-    if(err < 0) { std::cout << "Error Reading the AttributeMatrix Type for AttributeMatrix " << attributeMatrixName.toStdString() << std::endl; }
+    if(err < 0)
+    {
+      std::cout << "Error Reading the AttributeMatrix Type for AttributeMatrix " << attributeMatrixName.toStdString() << std::endl;
+    }
 
     QString h5Path = h5InternalPath + "/" + attributeMatrixName;
 
@@ -196,7 +205,7 @@ IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
   it =  m_AttributeArrays.find(name);
   if ( it == m_AttributeArrays.end() )
   {
-      // DO NOT return a NullPointer for any reason other than "Data Array was not found"
+    // DO NOT return a NullPointer for any reason other than "Data Array was not found"
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
@@ -210,25 +219,25 @@ IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
 RenameErrorCodes AttributeMatrix::renameAttributeArray(const QString& oldname, const QString& newname, bool overwrite)
 {
   QMap<QString, IDataArray::Pointer>::iterator itOld;
-    QMap<QString, IDataArray::Pointer>::iterator itNew;
+  QMap<QString, IDataArray::Pointer>::iterator itNew;
 
-    itNew = m_AttributeArrays.find(newname);
-    // If new name doesn't exist or we want to overwrite one that does exist...
-    if (itNew == m_AttributeArrays.end() || overwrite == true)
+  itNew = m_AttributeArrays.find(newname);
+  // If new name doesn't exist or we want to overwrite one that does exist...
+  if (itNew == m_AttributeArrays.end() || overwrite == true)
+  {
+    itOld =  m_AttributeArrays.find(oldname);
+    // If old name doesn't exist...
+    if (itOld == m_AttributeArrays.end())
     {
-        itOld =  m_AttributeArrays.find(oldname);
-        // If old name doesn't exist...
-        if (itOld == m_AttributeArrays.end())
-        {
-            return OLD_DOES_NOT_EXIST;
-        }
-        IDataArray::Pointer p = itOld.value();
-        p->setName(newname);
-        removeAttributeArray(oldname);
-        addAttributeArray(newname, p);
-        return SUCCESS;
+      return OLD_DOES_NOT_EXIST;
     }
-    return NEW_EXISTS;
+    IDataArray::Pointer p = itOld.value();
+    p->setName(newname);
+    removeAttributeArray(oldname);
+    addAttributeArray(newname, p);
+    return SUCCESS;
+  }
+  return NEW_EXISTS;
 }
 
 // -----------------------------------------------------------------------------
@@ -270,7 +279,10 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
   if(m_Type == DREAM3D::AttributeMatrixType::VertexFeature || m_Type == DREAM3D::AttributeMatrixType::VertexEnsemble ||
       m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
       m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
-      m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble) { acceptableMatrix = true; }
+      m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble)
+  {
+    acceptableMatrix = true;
+  }
   size_t totalTuples = getNumTuples();
   if( static_cast<size_t>(activeObjects.size()) == totalTuples && acceptableMatrix == true)
   {
@@ -391,10 +403,10 @@ AttributeMatrix::Pointer AttributeMatrix::deepCopy()
   {
     IDataArray::Pointer d = iter.value();
     IDataArray::Pointer new_d = d->deepCopy();
-      if (new_d.get() == NULL)
-      {
-          return AttributeMatrix::NullPointer();
-      }
+    if (new_d.get() == NULL)
+    {
+      return AttributeMatrix::NullPointer();
+    }
     newAttrMat->addAttributeArray(new_d->getName(), new_d);
   }
 
@@ -432,12 +444,18 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   if(classType.startsWith("DataArray") == true)
   {
     dPtr = H5DataArrayReader::ReadIDataArray(gid, name, preflight);
-    if(preflight == true) { dPtr->resize(getNumTuples()); }
+    if(preflight == true)
+    {
+      dPtr->resize(getNumTuples());
+    }
   }
   else if(classType.compare("StringDataArray") == 0)
   {
     dPtr = H5DataArrayReader::ReadStringDataArray(gid, name, preflight);
-    if(preflight == true) { dPtr->resize(getNumTuples()); }
+    if(preflight == true)
+    {
+      dPtr->resize(getNumTuples());
+    }
   }
   else if(classType.compare("vector") == 0)
   {
@@ -446,7 +464,10 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if(classType.compare("NeighborList<T>") == 0)
   {
     dPtr = H5DataArrayReader::ReadNeighborListData(gid, name, preflight);
-    if(preflight == true) { dPtr->resize(getNumTuples()); }
+    if(preflight == true)
+    {
+      dPtr->resize(getNumTuples());
+    }
   }
   else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
   {
@@ -454,7 +475,10 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
     statsData->setName(DREAM3D::EnsembleData::Statistics);
     statsData->readH5Data(gid);
     dPtr = statsData;
-    if(preflight == true) { dPtr->resize(getNumTuples()); }
+    if(preflight == true)
+    {
+      dPtr->resize(getNumTuples());
+    }
   }
 
   if (NULL != dPtr.get())
@@ -476,7 +500,10 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
   for (QMap<QString, DataArrayProxy>::iterator iter = dasToRead.begin(); iter != dasToRead.end(); ++iter)
   {
     //qDebug() << "Reading the " << iter->name << " Array from the " << m_Name << " Attribute Matrix \n";
-    if(iter->flag == DREAM3D::Unchecked) { continue; }
+    if(iter->flag == DREAM3D::Unchecked)
+    {
+      continue;
+    }
     QH5Lite::readStringAttribute(amGid, iter->name, DREAM3D::HDF5::ObjectType, classType);
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
@@ -499,10 +526,10 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
     }
     else if(classType.compare("Statistics") == 0)
     {
-        StatsDataArray::Pointer statsData = StatsDataArray::New();
-        statsData->setName(iter->name);
-        statsData->readH5Data(amGid);
-        dPtr = statsData;
+      StatsDataArray::Pointer statsData = StatsDataArray::New();
+      statsData->setName(iter->name);
+      statsData->readH5Data(amGid);
+      dPtr = statsData;
     }
 //    else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
 //    {
@@ -636,13 +663,28 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
   }
   int numComp = array->getNumberOfComponents();
   QString attrType = "";
-  if(numComp == 1) { attrType = "Scalar"; }
+  if(numComp == 1)
+  {
+    attrType = "Scalar";
+  }
   //we are assuming a component of 2 is for scalars on either side of a single object (ie faceIds)
-  if(numComp == 2) { attrType = "Scalar"; }
-  if(numComp == 3) { attrType = "Vector"; }
-  if(numComp == 6) { attrType = "Vector"; }
+  if(numComp == 2)
+  {
+    attrType = "Scalar";
+  }
+  if(numComp == 3)
+  {
+    attrType = "Vector";
+  }
+  if(numComp == 6)
+  {
+    attrType = "Vector";
+  }
 //  if(numComp == 6) { attrType = "Tensor6"; }
-  if(numComp == 9) { attrType = "Tensor"; }
+  if(numComp == 9)
+  {
+    attrType = "Tensor";
+  }
 
   QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName, gridType);
 

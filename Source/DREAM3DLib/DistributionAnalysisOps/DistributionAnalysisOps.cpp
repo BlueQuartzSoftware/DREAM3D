@@ -63,8 +63,14 @@ void DistributionAnalysisOps::determineMaxAndMinValues(std::vector<float>& data,
   for (std::vector<float>::size_type i = 0; i < data.size(); i++)
   {
     value = data[i];
-    if(value > max) { max = value; }
-    if(value < min) { min = value; }
+    if(value > max)
+    {
+      max = value;
+    }
+    if(value < min)
+    {
+      min = value;
+    }
   }
 }
 

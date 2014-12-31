@@ -56,7 +56,7 @@ FindFeatureClustering::FindFeatureClustering() :
   m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_NewEnsembleArrayArrayName("RDF"),
-  m_MaxMinArrayName(getNewEnsembleArrayArrayName()+"MaxMinDistances"),
+  m_MaxMinArrayName(getNewEnsembleArrayArrayName() + "MaxMinDistances"),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
@@ -197,7 +197,7 @@ void FindFeatureClustering::dataCheck()
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  }
+}
 
 
 // -----------------------------------------------------------------------------
@@ -278,7 +278,7 @@ void FindFeatureClustering::find_clustering()
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
   totalvol = sizex * sizey * sizez;
-  totalpoints = dims[0]*dims[1]*dims[2];
+  totalpoints = dims[0] * dims[1] * dims[2];
 
 
   //initialize boxdims and boxres vectors
@@ -296,7 +296,7 @@ void FindFeatureClustering::find_clustering()
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
-      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
+    if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
   }
 
 
@@ -341,7 +341,7 @@ void FindFeatureClustering::find_clustering()
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
-    for (size_t j=0; j < clusteringlist[i].size(); j++)
+    for (size_t j = 0; j < clusteringlist[i].size(); j++)
     {
       if (m_FeaturePhases[i] == m_PhaseNumber)
       {
@@ -354,12 +354,12 @@ void FindFeatureClustering::find_clustering()
 
   float stepsize = (max - min) / m_NumberOfBins;
 
-  m_MaxMinArray[(m_PhaseNumber*2)] = max;
-  m_MaxMinArray[(m_PhaseNumber*2)+1] = min;
+  m_MaxMinArray[(m_PhaseNumber * 2)] = max;
+  m_MaxMinArray[(m_PhaseNumber * 2) + 1] = min;
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
-    for (size_t j=0; j < clusteringlist[i].size(); j++)
+    for (size_t j = 0; j < clusteringlist[i].size(); j++)
     {
       if (m_FeaturePhases[i] == m_PhaseNumber)
       {
@@ -380,25 +380,25 @@ void FindFeatureClustering::find_clustering()
 
 
 //Generate random distribution based on same box size and same stepsize
-float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
-int32_t current_num_bins = ceil((max_box_distance - min)/(stepsize));
+  float max_box_distance = sqrtf((sizex * sizex) + (sizey * sizey) + (sizez * sizez));
+  int32_t current_num_bins = ceil((max_box_distance - min) / (stepsize));
 
-randomRDF.resize(current_num_bins+1);
+  randomRDF.resize(current_num_bins + 1);
 //Call this function to generate the random distribution, which is normalized by the total number of distances
-randomRDF = RadialDistributionFunction::GenerateRandomDistribution(min, max, m_NumberOfBins, boxdims, boxres);
+  randomRDF = RadialDistributionFunction::GenerateRandomDistribution(min, max, m_NumberOfBins, boxdims, boxres);
 
 //Scale the random distribution by the number of distances in this particular instance
-normFactor = totalPPTfeatures*(totalPPTfeatures-1);
-for (size_t i=0; i < randomRDF.size(); i++)
-{
-    randomRDF[i] = randomRDF[i]*normFactor;
-}
+  normFactor = totalPPTfeatures * (totalPPTfeatures - 1);
+  for (size_t i = 0; i < randomRDF.size(); i++)
+  {
+    randomRDF[i] = randomRDF[i] * normFactor;
+  }
 
 
   for (size_t i = 0; i < m_NumberOfBins; i++)
   {
-      oldcount[i] = m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
-      m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i] = oldcount[i]/randomRDF[i+1];
+    oldcount[i] = m_NewEnsembleArray[(m_NumberOfBins * m_PhaseNumber) + i];
+    m_NewEnsembleArray[(m_NumberOfBins * m_PhaseNumber) + i] = oldcount[i] / randomRDF[i + 1];
   }
 
 

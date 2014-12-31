@@ -73,7 +73,7 @@ class FindUniqueIdsImpl
           size_t node1 = m_NodesInBin[i][j];
           if(m_UniqueIds[node1] == node1)
           {
-            for(int k = j+1; k < m_NodesInBin[i].size(); k++)
+            for(int k = j + 1; k < m_NodesInBin[i].size(); k++)
             {
               size_t node2 = m_NodesInBin[i][k];
               if(m_Vertex[node1].pos[0] == m_Vertex[node2].pos[0] && m_Vertex[node1].pos[1] == m_Vertex[node2].pos[1] && m_Vertex[node1].pos[2] == m_Vertex[node2].pos[2])
@@ -93,7 +93,7 @@ class FindUniqueIdsImpl
     }
 #endif
   private:
-    VertexArray::Vert_t* m_Vertex; 
+    VertexArray::Vert_t* m_Vertex;
     QVector<QVector<size_t> > m_NodesInBin;
     int32_t* m_UniqueIds;
 
@@ -266,9 +266,9 @@ void ReadStlToSurfaceMesh::readFile()
   int32_t triCount;
   fread(h, sizeof(int), 20, f);
   fread(&triCount, sizeof(int), 1, f);
-   
+
   //create the nodes and triangles array for the surface mesh
-  VertexArray::Pointer vertices = VertexArray::CreateArray(triCount*3, DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexArray::Pointer vertices = VertexArray::CreateArray(triCount * 3, DREAM3D::VertexData::SurfaceMeshNodes);
   FaceArray::Pointer triangles = FaceArray::CreateArray(triCount, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
   VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
   FaceArray::Face_t* triangle = triangles.get()->getPointer(0);
@@ -283,44 +283,44 @@ void ReadStlToSurfaceMesh::readFile()
   unsigned short attr;
   for(int t = 0; t < triCount; ++t)
   {
-    for (size_t j=0; j<12; ++j) 
+    for (size_t j = 0; j < 12; ++j)
     {
       fread((void*)&v[j], sizeof(float), 1, f);
     }
     fread((void*)&attr, sizeof(unsigned short), 1, f);
-    if(v[3] < m_minXcoord) m_minXcoord = v[3];
-    if(v[3] > m_maxXcoord) m_maxXcoord = v[3];
-    if(v[4] < m_minYcoord) m_minYcoord = v[4];
-    if(v[4] > m_maxYcoord) m_maxYcoord = v[4];
-    if(v[5] < m_minZcoord) m_minZcoord = v[5];
-    if(v[5] > m_maxZcoord) m_maxZcoord = v[5];
-    if(v[6] < m_minXcoord) m_minXcoord = v[6];
-    if(v[6] > m_maxXcoord) m_maxXcoord = v[6];
-    if(v[7] < m_minYcoord) m_minYcoord = v[7];
-    if(v[7] > m_maxYcoord) m_maxYcoord = v[7];
-    if(v[8] < m_minZcoord) m_minZcoord = v[8];
-    if(v[8] > m_maxZcoord) m_maxZcoord = v[8];
-    if(v[9] < m_minXcoord) m_minXcoord = v[9];
-    if(v[9] > m_maxXcoord) m_maxXcoord = v[9];
-    if(v[10] < m_minYcoord) m_minYcoord = v[10];
-    if(v[10] > m_maxYcoord) m_maxYcoord = v[10];
-    if(v[11] < m_minZcoord) m_minZcoord = v[11];
-    if(v[11] > m_maxZcoord) m_maxZcoord = v[11];
-    m_SurfaceMeshTriangleNormals[3*t + 0] = v[0];
-    m_SurfaceMeshTriangleNormals[3*t + 1] = v[1];
-    m_SurfaceMeshTriangleNormals[3*t + 2] = v[2];
-    vertex[3*t + 0].pos[0] = v[3];
-    vertex[3*t + 0].pos[1] = v[4];
-    vertex[3*t + 0].pos[2] = v[5];
-    vertex[3*t + 1].pos[0] = v[6];
-    vertex[3*t + 1].pos[1] = v[7];
-    vertex[3*t + 1].pos[2] = v[8];
-    vertex[3*t + 2].pos[0] = v[9];
-    vertex[3*t + 2].pos[1] = v[10];
-    vertex[3*t + 2].pos[2] = v[11];
-    triangle[t].verts[0] = 3*t + 0;
-    triangle[t].verts[1] = 3*t + 1;
-    triangle[t].verts[2] = 3*t + 2;
+    if(v[3] < m_minXcoord) { m_minXcoord = v[3]; }
+    if(v[3] > m_maxXcoord) { m_maxXcoord = v[3]; }
+    if(v[4] < m_minYcoord) { m_minYcoord = v[4]; }
+    if(v[4] > m_maxYcoord) { m_maxYcoord = v[4]; }
+    if(v[5] < m_minZcoord) { m_minZcoord = v[5]; }
+    if(v[5] > m_maxZcoord) { m_maxZcoord = v[5]; }
+    if(v[6] < m_minXcoord) { m_minXcoord = v[6]; }
+    if(v[6] > m_maxXcoord) { m_maxXcoord = v[6]; }
+    if(v[7] < m_minYcoord) { m_minYcoord = v[7]; }
+    if(v[7] > m_maxYcoord) { m_maxYcoord = v[7]; }
+    if(v[8] < m_minZcoord) { m_minZcoord = v[8]; }
+    if(v[8] > m_maxZcoord) { m_maxZcoord = v[8]; }
+    if(v[9] < m_minXcoord) { m_minXcoord = v[9]; }
+    if(v[9] > m_maxXcoord) { m_maxXcoord = v[9]; }
+    if(v[10] < m_minYcoord) { m_minYcoord = v[10]; }
+    if(v[10] > m_maxYcoord) { m_maxYcoord = v[10]; }
+    if(v[11] < m_minZcoord) { m_minZcoord = v[11]; }
+    if(v[11] > m_maxZcoord) { m_maxZcoord = v[11]; }
+    m_SurfaceMeshTriangleNormals[3 * t + 0] = v[0];
+    m_SurfaceMeshTriangleNormals[3 * t + 1] = v[1];
+    m_SurfaceMeshTriangleNormals[3 * t + 2] = v[2];
+    vertex[3 * t + 0].pos[0] = v[3];
+    vertex[3 * t + 0].pos[1] = v[4];
+    vertex[3 * t + 0].pos[2] = v[5];
+    vertex[3 * t + 1].pos[0] = v[6];
+    vertex[3 * t + 1].pos[1] = v[7];
+    vertex[3 * t + 1].pos[2] = v[8];
+    vertex[3 * t + 2].pos[0] = v[9];
+    vertex[3 * t + 2].pos[1] = v[10];
+    vertex[3 * t + 2].pos[2] = v[11];
+    triangle[t].verts[0] = 3 * t + 0;
+    triangle[t].verts[1] = 3 * t + 1;
+    triangle[t].verts[2] = 3 * t + 2;
   }
 
   sm->setFaces(triangles);
@@ -345,23 +345,23 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   int nTriangles = facesPtr->getNumberOfTuples();
   FaceArray::Face_t* triangle = facesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  float stepX = (m_maxXcoord-m_minXcoord)/100.0;
-  float stepY = (m_maxYcoord-m_minYcoord)/100.0;
-  float stepZ = (m_maxZcoord-m_minZcoord)/100.0;
+  float stepX = (m_maxXcoord - m_minXcoord) / 100.0;
+  float stepY = (m_maxYcoord - m_minYcoord) / 100.0;
+  float stepZ = (m_maxZcoord - m_minZcoord) / 100.0;
 
-  QVector<QVector<size_t> > nodesInBin(100*100*100);
+  QVector<QVector<size_t> > nodesInBin(100 * 100 * 100);
 
   //determine (xyz) bin each node falls in - used to speed up node comparison
   int bin, xBin, yBin, zBin;
   for(size_t i = 0; i < nNodes; i++)
   {
-    xBin = (vertex[i].pos[0]-m_minXcoord)/stepX;
-    yBin = (vertex[i].pos[1]-m_minYcoord)/stepY;
-    zBin = (vertex[i].pos[2]-m_minZcoord)/stepZ;
-    if(xBin == 100) xBin = 99;
-    if(yBin == 100) yBin = 99;
-    if(zBin == 100) zBin = 99;
-    bin = (zBin*10000)+(yBin*100)+xBin;
+    xBin = (vertex[i].pos[0] - m_minXcoord) / stepX;
+    yBin = (vertex[i].pos[1] - m_minYcoord) / stepY;
+    zBin = (vertex[i].pos[2] - m_minZcoord) / stepZ;
+    if(xBin == 100) { xBin = 99; }
+    if(yBin == 100) { yBin = 99; }
+    if(zBin == 100) { zBin = 99; }
+    bin = (zBin * 10000) + (yBin * 100) + xBin;
     nodesInBin[bin].push_back(i);
   }
 
@@ -382,7 +382,7 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, 100*100*100),
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, 100 * 100 * 100),
                       FindUniqueIdsImpl(vertex, nodesInBin, uniqueIds), tbb::auto_partitioner());
 
   }
@@ -390,7 +390,7 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
 #endif
   {
     FindUniqueIdsImpl serial(vertex, nodesInBin, uniqueIds);
-    serial.convert(0, 100*100*100);
+    serial.convert(0, 100 * 100 * 100);
   }
 
   //renumber the unique nodes

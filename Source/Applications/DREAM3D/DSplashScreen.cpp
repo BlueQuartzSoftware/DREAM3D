@@ -225,9 +225,9 @@ void DSplashScreen::finish(QWidget* mainWin)
   if (mainWin)
   {
 #if defined(Q_WS_X11)
-/*! FIXME: This fails to compile on Linux with Qt 4.8.6. Commented out for now.
-    qt_x11_wait_for_window_manager(mainWin);
- */
+    /*! FIXME: This fails to compile on Linux with Qt 4.8.6. Commented out for now.
+        qt_x11_wait_for_window_manager(mainWin);
+     */
 #endif
   }
   close();

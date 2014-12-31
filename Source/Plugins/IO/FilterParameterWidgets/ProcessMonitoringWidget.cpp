@@ -69,7 +69,7 @@ ProcessMonitoringWidget::ProcessMonitoringWidget(FilterParameter* parameter, Abs
   }
   setupUi(this);
   setupGui();
- // checkIOFiles();
+// checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ ProcessMonitoringWidget::~ProcessMonitoringWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ProcessMonitoringWidget::setFilter(AbstractFilter *value)
+void ProcessMonitoringWidget::setFilter(AbstractFilter* value)
 {
   m_Filter = dynamic_cast<LoadAdditiveMonitoringData*>(value);
 }

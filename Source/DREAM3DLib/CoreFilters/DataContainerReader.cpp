@@ -108,8 +108,8 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(OverwriteExistingDataContainers)
-      DataContainerArrayProxy dcaProxy = getInputFileDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
+  DREAM3D_FILTER_WRITE_PARAMETER(OverwriteExistingDataContainers)
+  DataContainerArrayProxy dcaProxy = getInputFileDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
   writer->writeValue("InputFileDataContainerArrayProxy", dcaProxy );
 
 
@@ -314,7 +314,7 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure(const QString &path)
+DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure(const QString& path)
 {
   DataContainerArrayProxy proxy(false);
   QFileInfo fi(path);
@@ -472,7 +472,7 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
   HDF5ScopedGroupSentinel sentinel(&dcbGroupId, false);
 
   QList<QString> groupNames;
-  err = QH5Utilities::getGroupObjects(dcbGroupId,H5Utilities::H5Support_GROUP, groupNames);
+  err = QH5Utilities::getGroupObjects(dcbGroupId, H5Utilities::H5Support_GROUP, groupNames);
   if (err < 0)
   {
     QString ss = QObject::tr("Error getting group objects from HDF5 group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
@@ -553,7 +553,7 @@ AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterPa
 
     DREAM3D_COPY_INSTANCEVAR(InputFile)
 
-        filter->setInputFile(getInputFile());
+    filter->setInputFile(getInputFile());
 #if 0
     filter->setOverwriteExistingDataContainers(getOverwriteExistingDataContainers());
     filter->setDataContainerArrayProxy(getDataContainerArrayProxy());
@@ -566,27 +566,35 @@ AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerReader::getCompiledLibraryName()
-{ return Core::CoreBaseName;  }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{
+  return DREAM3D::FilterGroups::IOFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{
+  return DREAM3D::FilterSubGroups::InputFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerReader::getHumanLabel()
-{ return "Read DREAM3D Data File"; }
+{
+  return "Read DREAM3D Data File";
+}
 
 

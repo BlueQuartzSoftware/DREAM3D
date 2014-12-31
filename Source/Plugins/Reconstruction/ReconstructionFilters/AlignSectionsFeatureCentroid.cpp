@@ -177,7 +177,7 @@ void AlignSectionsFeatureCentroid::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsFeatureCentroid::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

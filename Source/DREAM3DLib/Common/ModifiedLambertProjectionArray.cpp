@@ -196,7 +196,10 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
   // off the end of the array and return an error code.
   for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
-    if (idxs[i] >= static_cast<size_t>(m_ModifiedLambertProjectionArray.size())) { return -100; }
+    if (idxs[i] >= static_cast<size_t>(m_ModifiedLambertProjectionArray.size()))
+    {
+      return -100;
+    }
   }
 
 
@@ -214,7 +217,10 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
     else
     {
       ++idxsIndex;
-      if (idxsIndex == idxs.size() ) { idxsIndex--;}
+      if (idxsIndex == idxs.size() )
+      {
+        idxsIndex--;
+      }
     }
   }
   m_ModifiedLambertProjectionArray = replacement;

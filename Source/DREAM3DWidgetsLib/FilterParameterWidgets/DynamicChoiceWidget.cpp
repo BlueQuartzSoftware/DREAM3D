@@ -67,7 +67,7 @@ DynamicChoiceWidget::~DynamicChoiceWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicChoiceWidget::setFilterParameter(FilterParameter *value)
+void DynamicChoiceWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<DynamicChoiceFilterParameter*>(value);
 }
@@ -128,7 +128,7 @@ void DynamicChoiceWidget::updateComboBox()
 
   if(getFilter())
   {
-  //  QString currentText = value->currentText();
+    //  QString currentText = value->currentText();
 
     // Get the list of choices from the filter
     QString listProp =  m_FilterParameter->getListProperty();

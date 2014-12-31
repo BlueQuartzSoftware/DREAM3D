@@ -91,10 +91,10 @@ class FindPatchMisalignmentsImpl
 
     void convert(size_t start, size_t end) const
     {
-      int xDim = (2*m_CritDim.x)+1;
-      int yDim = (2*m_CritDim.y)+1;
-      int zDim = (2*m_CritDim.z)+1;
-      QVector<size_t> tDims(1, xDim*yDim*zDim);
+      int xDim = (2 * m_CritDim.x) + 1;
+      int yDim = (2 * m_CritDim.y) + 1;
+      int zDim = (2 * m_CritDim.z) + 1;
+      QVector<size_t> tDims(1, xDim * yDim * zDim);
       QVector<size_t> cDims(1, 3);
       FloatArrayType::Pointer cAxisLocsPtr = FloatArrayType::CreateArray(tDims, cDims, "cAxisLocs");
       cAxisLocsPtr->initializeWithValue(0);
@@ -106,9 +106,9 @@ class FindPatchMisalignmentsImpl
       {
         int zStride, yStride;
         int count = 0;
-        xc = ((iter%m_DicDims.x) * m_CritDim.x) + (m_CritDim.x/2);
-        yc = (((iter/m_DicDims.x)%m_DicDims.y) * m_CritDim.y) + (m_CritDim.y/2);
-        zc = ((iter/(m_DicDims.x*m_DicDims.y)) * m_CritDim.z) + (m_CritDim.z/2);
+        xc = ((iter % m_DicDims.x) * m_CritDim.x) + (m_CritDim.x / 2);
+        yc = (((iter / m_DicDims.x) % m_DicDims.y) * m_CritDim.y) + (m_CritDim.y / 2);
+        zc = ((iter / (m_DicDims.x * m_DicDims.y)) * m_CritDim.z) + (m_CritDim.z / 2);
         for(int k = -m_CritDim.z; k <= m_CritDim.z; k++)
         {
           if((zc + k) >= 0 && (zc + k) < m_VolDims.z)
@@ -123,11 +123,11 @@ class FindPatchMisalignmentsImpl
                 {
                   if((xc + i) >= 0 && (xc + i) < m_VolDims.x)
                   {
-                    if(m_CrystalStructures[m_CellPhases[(zStride+yStride+xc+i)]] == Ebsd::CrystalStructure::Hexagonal_High)
+                    if(m_CrystalStructures[m_CellPhases[(zStride + yStride + xc + i)]] == Ebsd::CrystalStructure::Hexagonal_High)
                     {
-                      cAxisLocs[3*count+0] = m_CAxisLocations[3*(zStride+yStride+xc+i)+0];
-                      cAxisLocs[3*count+1] = m_CAxisLocations[3*(zStride+yStride+xc+i)+1];
-                      cAxisLocs[3*count+2] = m_CAxisLocations[3*(zStride+yStride+xc+i)+2];
+                      cAxisLocs[3 * count + 0] = m_CAxisLocations[3 * (zStride + yStride + xc + i) + 0];
+                      cAxisLocs[3 * count + 1] = m_CAxisLocations[3 * (zStride + yStride + xc + i) + 1];
+                      cAxisLocs[3 * count + 2] = m_CAxisLocations[3 * (zStride + yStride + xc + i) + 2];
                       count++;
                     }
                   }
@@ -143,7 +143,7 @@ class FindPatchMisalignmentsImpl
         {
           for(int j = i; j < count; j++)
           {
-            angle = GeometryMath::AngleBetweenVectors(cAxisLocsPtr->getPointer(3*i), cAxisLocsPtr->getPointer(3*j));
+            angle = GeometryMath::AngleBetweenVectors(cAxisLocsPtr->getPointer(3 * i), cAxisLocsPtr->getPointer(3 * j));
             if(angle <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - angle) <= m_CAxisTolerance)
             {
               goodCounts[i]++;
@@ -154,37 +154,37 @@ class FindPatchMisalignmentsImpl
         int goodPointCount = 0;
         for(int i = 0; i < count; i++)
         {
-          if(float(goodCounts[i])/float(count) > m_MinVolFrac) goodPointCount++;
+          if(float(goodCounts[i]) / float(count) > m_MinVolFrac) { goodPointCount++; }
         }
         float avgCAxis[3] = {0.0, 0.0, 0.0};
-        float frac = float(goodPointCount)/float(count);
+        float frac = float(goodPointCount) / float(count);
         m_VolFrac[iter] = frac;
         if(frac > m_MinVolFrac)
         {
           m_InMTR[iter] = true;
           for(int i = 0; i < count; i++)
           {
-            if(float(goodCounts[i])/float(count) >= m_MinVolFrac)
+            if(float(goodCounts[i]) / float(count) >= m_MinVolFrac)
             {
-              if(MatrixMath::DotProduct3x1(avgCAxis, cAxisLocsPtr->getPointer(3*i)) < 0)
+              if(MatrixMath::DotProduct3x1(avgCAxis, cAxisLocsPtr->getPointer(3 * i)) < 0)
               {
-                avgCAxis[0] -= cAxisLocs[3*i];
-                avgCAxis[1] -= cAxisLocs[3*i+1];
-                avgCAxis[2] -= cAxisLocs[3*i+2];
+                avgCAxis[0] -= cAxisLocs[3 * i];
+                avgCAxis[1] -= cAxisLocs[3 * i + 1];
+                avgCAxis[2] -= cAxisLocs[3 * i + 2];
               }
               else
               {
-                avgCAxis[0] += cAxisLocs[3*i];
-                avgCAxis[1] += cAxisLocs[3*i+1];
-                avgCAxis[2] += cAxisLocs[3*i+2];
+                avgCAxis[0] += cAxisLocs[3 * i];
+                avgCAxis[1] += cAxisLocs[3 * i + 1];
+                avgCAxis[2] += cAxisLocs[3 * i + 2];
               }
             }
           }
           MatrixMath::Normalize3x1(avgCAxis);
-          if(avgCAxis[2] < 0) MatrixMath::Multiply3x1withConstant(avgCAxis, -1);
-          m_AvgCAxis[3*iter] = avgCAxis[0];
-          m_AvgCAxis[3*iter+1] = avgCAxis[1];
-          m_AvgCAxis[3*iter+2] = avgCAxis[2];
+          if(avgCAxis[2] < 0) { MatrixMath::Multiply3x1withConstant(avgCAxis, -1); }
+          m_AvgCAxis[3 * iter] = avgCAxis[0];
+          m_AvgCAxis[3 * iter + 1] = avgCAxis[1];
+          m_AvgCAxis[3 * iter + 2] = avgCAxis[2];
         }
       }
     }
@@ -350,7 +350,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
- //typedef DataArray<unsigned int> XTalStructArrayType;
+//typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
                            ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -392,15 +392,15 @@ void IdentifyMicroTextureRegions::execute()
 
   //Find number of original cells in radius of patch
   IntVec3_t critDim;
-  critDim.x = int(m_MinMTRSize/(4.0*xRes));
-  critDim.y = int(m_MinMTRSize/(4.0*yRes));
-  critDim.z = int(m_MinMTRSize/(4.0*zRes));
+  critDim.x = int(m_MinMTRSize / (4.0 * xRes));
+  critDim.y = int(m_MinMTRSize / (4.0 * yRes));
+  critDim.z = int(m_MinMTRSize / (4.0 * zRes));
 
   //Find physical distance of patch steps
   FloatVec3_t critRes;
-  critRes.x = float(critDim.x)*xRes;
-  critRes.y = float(critDim.y)*yRes;
-  critRes.z = float(critDim.z)*zRes;
+  critRes.x = float(critDim.x) * xRes;
+  critRes.y = float(critDim.y) * yRes;
+  critRes.z = float(critDim.z) * zRes;
 
   //Find number of patch steps in each dimension
   int newDimX = int(dcDims[0] / critDim.x);
@@ -513,7 +513,7 @@ void IdentifyMicroTextureRegions::execute()
   }
   for(int64_t iter = 0; iter < numPatchFeatures; ++iter)
   {
-    if(counters[iter] < 4) activeObjects[iter] = false;
+    if(counters[iter] < 4) { activeObjects[iter] = false; }
   }
   tempPath.update("PatchDataContainer(Temp)", "PatchFeatureData", "Active");
   AttributeMatrix::Pointer patchFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(tempPath);
@@ -533,31 +533,31 @@ void IdentifyMicroTextureRegions::execute()
 
   for(int k = 0; k < origDims.z; k++)
   {
-    if(critDim.z > 0) pPlane = (k / critDim.z);
-    else pPlane = 0;
-    if(pPlane >= newDims.z) pPlane = newDims.z-1;
+    if(critDim.z > 0) { pPlane = (k / critDim.z); }
+    else { pPlane = 0; }
+    if(pPlane >= newDims.z) { pPlane = newDims.z - 1; }
     zStride = (k * origDims.x * origDims.y);
     zStrideP = (pPlane * newDims.x * newDims.y);
     for(int j = 0; j < origDims.y; j++)
     {
-      if(critDim.y > 0) pRow = (j / critDim.y);
-      else pRow = 0;
-      if(pRow >= newDims.y) pRow = newDims.y-1;
+      if(critDim.y > 0) { pRow = (j / critDim.y); }
+      else { pRow = 0; }
+      if(pRow >= newDims.y) { pRow = newDims.y - 1; }
       yStride = (j * origDims.x);
       yStrideP = (pRow * newDims.x);
       for(int i = 0; i < origDims.x; i++)
       {
-        if(critDim.x > 0) pCol = (i / critDim.x);
-        else pCol = 0;
-        if(pCol >= newDims.x) pCol = newDims.x-1;
-        point = zStride+yStride+i;
-        patch = zStrideP+yStrideP+pCol;
+        if(critDim.x > 0) { pCol = (i / critDim.x); }
+        else { pCol = 0; }
+        if(pCol >= newDims.x) { pCol = newDims.x - 1; }
+        point = zStride + yStride + i;
+        patch = zStrideP + yStrideP + pCol;
         m_MTRIds[point] = m_PatchIds[patch];
         if(m_PatchIds[patch] > 0)
         {
-          m_CAxisLocations[3*point+0] = m_AvgCAxis[3*patch+0];
-          m_CAxisLocations[3*point+1] = m_AvgCAxis[3*patch+1];
-          m_CAxisLocations[3*point+2] = m_AvgCAxis[3*patch+2];
+          m_CAxisLocations[3 * point + 0] = m_AvgCAxis[3 * patch + 0];
+          m_CAxisLocations[3 * point + 1] = m_AvgCAxis[3 * patch + 1];
+          m_CAxisLocations[3 * point + 2] = m_AvgCAxis[3 * patch + 2];
         }
       }
     }

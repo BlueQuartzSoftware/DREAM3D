@@ -79,7 +79,7 @@ void EstablishShapeTypes::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Phase Types Array Name", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget, getShapeTypesArrayName(), true, ""));
-    ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New(
+  ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New(
                                                          "Shape Types", "ShapeTypeData", FilterParameterWidgetType::ShapeTypeSelectionWidget,
                                                          "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", false);
   parameters.push_back(sType_parameter);
@@ -185,15 +185,16 @@ int EstablishShapeTypes::getPhaseCount()
 
   if (NULL == inputAttrMat.get() ) { return 0; }
 
-  if(__SHOW_DEBUG_MSG__) {
+  if(__SHOW_DEBUG_MSG__)
+  {
     qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
     qDebug() << "Name" << inputAttrMat->getName();
   }
 
   if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
-          || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
+      || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
   {
-   return 0;
+    return 0;
   }
 
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();

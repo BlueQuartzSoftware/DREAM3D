@@ -235,8 +235,14 @@ float HexagonalOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
   n1 = n1min / denom;
   n2 = n2min / denom;
   n3 = n3min / denom;
-  if(denom == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
-  if(wmin == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
+  if(denom == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
+  if(wmin == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
   return wmin;
 }
 
@@ -296,10 +302,16 @@ void HexagonalOps::getMDFFZRod(float& r1, float& r2, float& r3)
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  if(n3 < 0) { n1 = -n1, n2 = -n2, n3 = -n3; }
+  if(n3 < 0)
+  {
+    n1 = -n1, n2 = -n2, n3 = -n3;
+  }
   float newangle = 0;
   float angle = 180.0f * atan2(n2, n1) * DREAM3D::Constants::k_1OverPi;
-  if(angle < 0) { angle = angle + 360.0f; }
+  if(angle < 0)
+  {
+    angle = angle + 360.0f;
+  }
   FZn1 = n1;
   FZn2 = n2;
   FZn3 = n3;
@@ -700,12 +712,30 @@ void HexagonalOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, floa
 //  schmid22 = theta9 * lambda10;
 //  schmid23 = theta9 * lambda7;
 //  schmid24 = theta5 * lambda7;
-  if(schmid1 > schmidfactor) { schmidfactor = schmid1, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda1; }
-  if(schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 2, angleComps[0] = theta2, angleComps[1] = lambda1; }
-  if(schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 3, angleComps[0] = theta3, angleComps[1] = lambda1; }
-  if(schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 4, angleComps[0] = theta1, angleComps[1] = lambda2; }
-  if(schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 5, angleComps[0] = theta2, angleComps[1] = lambda3; }
-  if(schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 6, angleComps[0] = theta3, angleComps[1] = lambda4; }
+  if(schmid1 > schmidfactor)
+  {
+    schmidfactor = schmid1, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda1;
+  }
+  if(schmid2 > schmidfactor)
+  {
+    schmidfactor = schmid2, slipsys = 2, angleComps[0] = theta2, angleComps[1] = lambda1;
+  }
+  if(schmid3 > schmidfactor)
+  {
+    schmidfactor = schmid3, slipsys = 3, angleComps[0] = theta3, angleComps[1] = lambda1;
+  }
+  if(schmid4 > schmidfactor)
+  {
+    schmidfactor = schmid4, slipsys = 4, angleComps[0] = theta1, angleComps[1] = lambda2;
+  }
+  if(schmid5 > schmidfactor)
+  {
+    schmidfactor = schmid5, slipsys = 5, angleComps[0] = theta2, angleComps[1] = lambda3;
+  }
+  if(schmid6 > schmidfactor)
+  {
+    schmidfactor = schmid6, slipsys = 6, angleComps[0] = theta3, angleComps[1] = lambda4;
+  }
   //if(schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 7;
   //if(schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 8;
   //if(schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 9;
@@ -836,7 +866,10 @@ void HexagonalOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F
   QuattoMat(q2, g2);
   MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
-  if(maxSF == true) { maxSchmidFactor = 0; }
+  if(maxSF == true)
+  {
+    maxSchmidFactor = 0;
+  }
   /*  for(int i=0;i<12;i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
@@ -905,7 +938,10 @@ void HexagonalOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float
   QuattoMat(q2, g2);
   MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
-  if(maxSF == true) { maxSchmidFactor = 0; }
+  if(maxSF == true)
+  {
+    maxSchmidFactor = 0;
+  }
   /*  for(int i=0;i<12;i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
@@ -1175,7 +1211,10 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
 // -----------------------------------------------------------------------------
 bool HexagonalOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (30.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) ) { return false; }
+  if( eta < 0 || eta > (30.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) )
+  {
+    return false;
+  }
   return true;
 }
 
@@ -1221,12 +1260,24 @@ DREAM3D::Rgb HexagonalOps::generateIPFColor(double phi1, double phi, double phi2
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0) { continue; }
-    else if(getHasInversion() == true && p[2] < 0) { p[0] = -p[0], p[1] = -p[1], p[2] = -p[2]; }
+    if(getHasInversion() == false && p[2] < 0)
+    {
+      continue;
+    }
+    else if(getHasInversion() == true && p[2] < 0)
+    {
+      p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    }
     chi = acos(p[2]);
     eta = atan2(p[1], p[0]);
-    if(inUnitTriangle(eta, chi) == false) { continue; }
-    else {break;}
+    if(inUnitTriangle(eta, chi) == false)
+    {
+      continue;
+    }
+    else
+    {
+      break;
+    }
   }
 
   float etaMin = 0.0;
@@ -1245,8 +1296,14 @@ DREAM3D::Rgb HexagonalOps::generateIPFColor(double phi1, double phi, double phi2
   _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
-  if (_rgb[1] > max) { max = _rgb[1]; }
-  if (_rgb[2] > max) { max = _rgb[2]; }
+  if (_rgb[1] > max)
+  {
+    max = _rgb[1];
+  }
+  if (_rgb[2] > max)
+  {
+    max = _rgb[2];
+  }
 
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
@@ -1343,8 +1400,14 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
   size_t count = intensity001->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
 
@@ -1352,16 +1415,28 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
   count = intensity011->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
   dPtr = intensity111->getPointer(0);
   count = intensity111->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
   config.minScale = min;

@@ -151,7 +151,7 @@ void ImportImageStack::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, ImportImageStack>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-   bool hasMissingFiles = false;
+  bool hasMissingFiles = false;
   bool orderAscending = false;
 
   if(m_InputFileListInfo.Ordering == 0) { orderAscending = true; }
@@ -357,8 +357,8 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
     DREAM3D_COPY_INSTANCEVAR(CellAttributeMatrixName)
     DREAM3D_COPY_INSTANCEVAR(Resolution)
     DREAM3D_COPY_INSTANCEVAR(Origin)
-    #if 0
-        DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
+#if 0
+    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
     DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
     DREAM3D_COPY_INSTANCEVAR(InputPath)
     DREAM3D_COPY_INSTANCEVAR(FilePrefix)
@@ -366,7 +366,7 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
     DREAM3D_COPY_INSTANCEVAR(FileExtension)
     DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
     DREAM3D_COPY_INSTANCEVAR(RefFrameZDir)
-    #endif
+#endif
     DREAM3D_COPY_INSTANCEVAR(InputFileListInfo)
     DREAM3D_COPY_INSTANCEVAR(ImageStack)
     DREAM3D_COPY_INSTANCEVAR(ImageDataArrayName)

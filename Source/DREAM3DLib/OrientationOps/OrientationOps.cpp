@@ -57,7 +57,7 @@
 namespace Detail
 {
 
-  //const static float m_OnePointThree = 1.33333333333f;
+//const static float m_OnePointThree = 1.33333333333f;
 
   const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACosNeg1 / 2.0f) );
   const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACos1 / 2.0f) );
@@ -140,8 +140,14 @@ float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   n1 = n1min / denom;
   n2 = n2min / denom;
   n3 = n3min / denom;
-  if(denom == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
-  if(wmin == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
+  if(denom == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
+  if(wmin == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
   return wmin;
 }
 
@@ -246,12 +252,30 @@ int OrientationOps::_calcMisoBin(float dim[3], float bins[3], float step[3], flo
   int miso1bin = int((r1 + dim[0]) / step[0]);
   int miso2bin = int((r2 + dim[1]) / step[1]);
   int miso3bin = int((r3 + dim[2]) / step[2]);
-  if(miso1bin >= bins[0]) { miso1bin = static_cast<int>( bins[0] - 1 ); }
-  if(miso2bin >= bins[1]) { miso2bin = static_cast<int>( bins[1] - 1 ); }
-  if(miso3bin >= bins[2]) { miso3bin = static_cast<int>( bins[2] - 1 ); }
-  if(miso1bin < 0) { miso1bin = 0; }
-  if(miso2bin < 0) { miso2bin = 0; }
-  if(miso3bin < 0) { miso3bin = 0; }
+  if(miso1bin >= bins[0])
+  {
+    miso1bin = static_cast<int>( bins[0] - 1 );
+  }
+  if(miso2bin >= bins[1])
+  {
+    miso2bin = static_cast<int>( bins[1] - 1 );
+  }
+  if(miso3bin >= bins[2])
+  {
+    miso3bin = static_cast<int>( bins[2] - 1 );
+  }
+  if(miso1bin < 0)
+  {
+    miso1bin = 0;
+  }
+  if(miso2bin < 0)
+  {
+    miso2bin = 0;
+  }
+  if(miso3bin < 0)
+  {
+    miso3bin = 0;
+  }
   return (static_cast<int>( (bins[0] * bins[1] * miso3bin) + (bins[0] * miso2bin) + miso1bin ));
 }
 
@@ -277,12 +301,30 @@ int OrientationOps::_calcODFBin(float dim[3], float bins[3], float step[3], floa
   g1euler1bin = int((r1 + dim[0]) / step[0]);
   g1euler2bin = int((r2 + dim[1]) / step[1]);
   g1euler3bin = int((r3 + dim[2]) / step[2]);
-  if(g1euler1bin >= bins[0]) { g1euler1bin = static_cast<int>( bins[0] - 1 ); }
-  if(g1euler2bin >= bins[1]) { g1euler2bin = static_cast<int>( bins[1] - 1 ); }
-  if(g1euler3bin >= bins[2]) { g1euler3bin = static_cast<int>( bins[2] - 1 ); }
-  if(g1euler1bin < 0) { g1euler1bin = 0; }
-  if(g1euler2bin < 0) { g1euler2bin = 0; }
-  if(g1euler3bin < 0) { g1euler3bin = 0; }
+  if(g1euler1bin >= bins[0])
+  {
+    g1euler1bin = static_cast<int>( bins[0] - 1 );
+  }
+  if(g1euler2bin >= bins[1])
+  {
+    g1euler2bin = static_cast<int>( bins[1] - 1 );
+  }
+  if(g1euler3bin >= bins[2])
+  {
+    g1euler3bin = static_cast<int>( bins[2] - 1 );
+  }
+  if(g1euler1bin < 0)
+  {
+    g1euler1bin = 0;
+  }
+  if(g1euler2bin < 0)
+  {
+    g1euler2bin = 0;
+  }
+  if(g1euler3bin < 0)
+  {
+    g1euler3bin = 0;
+  }
   g1odfbin = static_cast<int>( (g1euler3bin * bins[0] * bins[1]) + (g1euler2bin * bins[0]) + (g1euler1bin) );
   return g1odfbin;
 }

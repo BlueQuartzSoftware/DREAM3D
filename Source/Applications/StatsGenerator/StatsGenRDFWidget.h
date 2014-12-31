@@ -79,7 +79,7 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
 
     QVector<float> generateODFData();
 
-    void updateRDFPlot(QVector<float> &freqs);
+    void updateRDFPlot(QVector<float>& freqs);
 
     SGRDFTableModel* tableModel();
 

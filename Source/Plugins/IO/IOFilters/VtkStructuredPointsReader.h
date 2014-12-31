@@ -151,7 +151,7 @@ class  VtkStructuredPointsReader : public AbstractFilter
      * @brief readData
      * @param instream
      */
-    virtual void readData(std::istream &instream);
+    virtual void readData(std::istream& instream);
 
     /**
      *
@@ -174,15 +174,15 @@ class  VtkStructuredPointsReader : public AbstractFilter
      * @param result
      * @return
      */
-    int readLine(std::istream &in, char* result, size_t length);
-    int readString(std::istream &in, char* result, size_t length);
-    char* lowerCase(char *str, const size_t len);
-    int readDataTypeSection(std::istream &in, int numPts, const std::string &nextKeyWord);
-    int readScalarData(std::istream &in, int count);
-    int readVectorData(std::istream &in, int count);
-    int ReadScalarData(std::istream &in, int numPts);
-    int ReadVectorData(std::istream &in, int numPts);
-    int DecodeString(char *resname, const char* name);
+    int readLine(std::istream& in, char* result, size_t length);
+    int readString(std::istream& in, char* result, size_t length);
+    char* lowerCase(char* str, const size_t len);
+    int readDataTypeSection(std::istream& in, int numPts, const std::string& nextKeyWord);
+    int readScalarData(std::istream& in, int count);
+    int readVectorData(std::istream& in, int count);
+    int ReadScalarData(std::istream& in, int numPts);
+    int ReadVectorData(std::istream& in, int numPts);
+    int DecodeString(char* resname, const char* name);
 
   private:
     AttributeMatrix::Pointer m_CurrentAttrMat;

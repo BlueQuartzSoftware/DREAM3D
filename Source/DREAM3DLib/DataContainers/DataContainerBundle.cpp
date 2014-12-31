@@ -91,7 +91,7 @@ QString DataContainerBundle::GetMetaDataName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerBundle::setDataContainers(QVector<DataContainer::Pointer> &containers)
+void DataContainerBundle::setDataContainers(QVector<DataContainer::Pointer>& containers)
 {
   m_DataContainers = containers;
 }
@@ -102,7 +102,7 @@ void DataContainerBundle::setDataContainers(QVector<DataContainer::Pointer> &con
 QVector<QString> DataContainerBundle::getDataContainerNames()
 {
   QVector<QString> dcNames;
-  for (qint32 i=0;i<m_DataContainers.size();i++)
+  for (qint32 i = 0; i < m_DataContainers.size(); i++)
   {
     dcNames.push_back(m_DataContainers[i]->getName());
   }
@@ -135,7 +135,7 @@ void DataContainerBundle::removeDataContainer(DataContainer::Pointer dc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerBundle::removeDataContainer(const QString &name)
+void DataContainerBundle::removeDataContainer(const QString& name)
 {
   for(qint32 i = 0; i < m_DataContainers.size(); i++)
   {
@@ -186,14 +186,23 @@ void DataContainerBundle::clear()
 QVector<DataArrayPath> DataContainerBundle::findCommonDataArrayPaths(bool filterMetaData)
 {
   QVector<DataArrayPath> commonPaths;
-  if(m_DataContainers.count() == 0) { return commonPaths; }
+  if(m_DataContainers.count() == 0)
+  {
+    return commonPaths;
+  }
 
   // Get the first DataContainer
   DataContainer::Pointer dc0 = m_DataContainers[0];
-  if(NULL == dc0.get()) { return commonPaths; }
+  if(NULL == dc0.get())
+  {
+    return commonPaths;
+  }
   QVector<DataArrayPath> dc0Paths = dc0->getAllDataArrayPaths();
 
-  if(m_DataContainers.count() == 1) { return commonPaths; }
+  if(m_DataContainers.count() == 1)
+  {
+    return commonPaths;
+  }
 
   int count = m_DataContainers.count();
   // We already have the first DataContainer, so start at the 2nd
@@ -212,8 +221,14 @@ QVector<DataArrayPath> DataContainerBundle::findCommonDataArrayPaths(bool filter
       foreach(DataArrayPath path, paths)
       {
         //qDebug() << "Comparing " << dc0Path.serialize() << " TO " << path.serialize();
-        if(path.sameAttributeMatrix(dc0Path) &&  path.sameDataArray(dc0Path) ) { match = true; }
-        if(filterMetaData == true && (path.getAttributeMatrixName() == DREAM3D::StringConstants::MetaData) ) { match = false; }
+        if(path.sameAttributeMatrix(dc0Path) &&  path.sameDataArray(dc0Path) )
+        {
+          match = true;
+        }
+        if(filterMetaData == true && (path.getAttributeMatrixName() == DREAM3D::StringConstants::MetaData) )
+        {
+          match = false;
+        }
       }
 
       if(!match)
@@ -241,7 +256,7 @@ int DataContainerBundle::writeH5Data(hid_t groupId)
   size_t count = static_cast<size_t>(m_DataContainers.size());
   QStringList dcNameList;
 
-  for (size_t i = 0;i < count; i++)
+  for (size_t i = 0; i < count; i++)
   {
     dcNameList << m_DataContainers.at(i)->getName();
   }

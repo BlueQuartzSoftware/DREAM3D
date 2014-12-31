@@ -250,7 +250,7 @@ void WriteStatsGenOdfAngleFile::execute()
   QString absPath = fi.absolutePath();
   QString fname = fi.fileName();
   int pos = fname.lastIndexOf('.');
-  fname = fname.mid(0, pos-1);
+  fname = fname.mid(0, pos - 1);
   QString suffix = fi.suffix();
 
   for(std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
@@ -320,7 +320,7 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream &out, int32_t lineCount, int64_t totalPoints, int32_t phase)
+int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase)
 {
   bool writeLine = false;
   // write out the total number of lines
@@ -338,9 +338,9 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream &out, int32_t lineCou
 
     if(writeLine == true)
     {
-      float e0 = m_CellEulerAngles[i*3 + 0];
-      float e1 = m_CellEulerAngles[i*3 + 1];
-      float e2 = m_CellEulerAngles[i*3 + 2];
+      float e0 = m_CellEulerAngles[i * 3 + 0];
+      float e1 = m_CellEulerAngles[i * 3 + 1];
+      float e2 = m_CellEulerAngles[i * 3 + 2];
       if(m_ConvertToDegrees == true)
       {
         e0 = e0 * DREAM3D::Constants::k_180OverPi;

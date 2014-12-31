@@ -216,7 +216,10 @@ int QFilterParametersWriter::writeValue(const QString name, const QVector<QStrin
   for(qint32 i = 0; i < size; ++i)
   {
     out << value.at(i);
-    if (i < size - 1) { out << " | "; }
+    if (i < size - 1)
+    {
+      out << " | ";
+    }
   }
   m_Prefs->setValue(name, buf);
   return err;
@@ -340,7 +343,10 @@ void writeArray(QSettings* prefs, const QString name, QVector<T>& value)
   for(qint32 i = 0; i < size; ++i)
   {
     out << value.at(i);
-    if (i < size - 1) { out << ' '; }
+    if (i < size - 1)
+    {
+      out << ' ';
+    }
   }
   prefs->setValue(name, buf);
 }

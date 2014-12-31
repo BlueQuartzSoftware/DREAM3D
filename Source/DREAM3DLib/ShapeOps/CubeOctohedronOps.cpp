@@ -138,8 +138,14 @@ float CubeOctohedronOps::inside(float axis1comp, float axis2comp, float axis3com
 {
   float inside = 0;
   inside = 1 - fabs(axis1comp);
-  if((1 - fabs(axis2comp)) < inside) { inside = (1 - fabs(axis2comp)); }
-  if((1 - fabs(axis3comp)) < inside) { inside = (1 - fabs(axis3comp)); }
+  if((1 - fabs(axis2comp)) < inside)
+  {
+    inside = (1 - fabs(axis2comp));
+  }
+  if((1 - fabs(axis3comp)) < inside)
+  {
+    inside = (1 - fabs(axis3comp));
+  }
   axis1comp = static_cast<float>( axis1comp + 1.0 );
   axis2comp = static_cast<float>( axis2comp + 1.0 );
   axis3comp = static_cast<float>( axis3comp + 1.0 );
@@ -169,13 +175,37 @@ float CubeOctohedronOps::inside(float axis1comp, float axis2comp, float axis3com
   float plane8comp = ((-axis1comp) + (axis2comp) + (-axis3comp) - ((-0.5f * Gvalue) + (2.0f - (0.5f * Gvalue))));
   plane8comp = plane8comp / ((-1) + (1) + (-1) - ((-0.5f * Gvalue) + (2 - (0.5f * Gvalue))));
 
-  if(plane1comp < inside) { inside = plane1comp; }
-  if(plane2comp < inside) { inside = plane2comp; }
-  if(plane3comp < inside) { inside = plane3comp; }
-  if(plane4comp < inside) { inside = plane4comp; }
-  if(plane5comp < inside) { inside = plane5comp; }
-  if(plane6comp < inside) { inside = plane6comp; }
-  if(plane7comp < inside) { inside = plane7comp; }
-  if(plane8comp < inside) { inside = plane8comp; }
+  if(plane1comp < inside)
+  {
+    inside = plane1comp;
+  }
+  if(plane2comp < inside)
+  {
+    inside = plane2comp;
+  }
+  if(plane3comp < inside)
+  {
+    inside = plane3comp;
+  }
+  if(plane4comp < inside)
+  {
+    inside = plane4comp;
+  }
+  if(plane5comp < inside)
+  {
+    inside = plane5comp;
+  }
+  if(plane6comp < inside)
+  {
+    inside = plane6comp;
+  }
+  if(plane7comp < inside)
+  {
+    inside = plane7comp;
+  }
+  if(plane8comp < inside)
+  {
+    inside = plane8comp;
+  }
   return inside;
 }

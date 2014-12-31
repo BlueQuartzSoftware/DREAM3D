@@ -81,15 +81,15 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   std::vector<float> randomCentroids;
   std::vector<std::vector<float> > distancelist;
   int32_t largeNumber = 1000;
-  int32_t numDistances = largeNumber*(largeNumber-1);
+  int32_t numDistances = largeNumber * (largeNumber - 1);
 
   // boxdims are the dimensions of the box in microns
   // boxres is the resoultion of the box in microns
-  int32_t xpoints = boxdims[0]/boxres[0];
-  int32_t ypoints = boxdims[1]/boxres[1];
-  int32_t zpoints = boxdims[2]/boxres[2];
+  int32_t xpoints = boxdims[0] / boxres[0];
+  int32_t ypoints = boxdims[1] / boxres[1];
+  int32_t zpoints = boxdims[2] / boxres[2];
   int32_t bin;
-  int32_t totalpoints = xpoints*ypoints*zpoints;
+  int32_t totalpoints = xpoints * ypoints * zpoints;
 
   float x, y, z;
   float xn, yn, zn;
@@ -100,33 +100,33 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   size_t column, row, plane;
 
 
-  float stepsize = (maxDistance-minDistance)/numBins;
-  float maxBoxDistance = sqrtf((boxdims[0]*boxdims[0]) + (boxdims[1]*boxdims[1]) + (boxdims[2]*boxdims[2]));
-  int32_t current_num_bins = ceil((maxBoxDistance - minDistance)/(stepsize));
+  float stepsize = (maxDistance - minDistance) / numBins;
+  float maxBoxDistance = sqrtf((boxdims[0] * boxdims[0]) + (boxdims[1] * boxdims[1]) + (boxdims[2] * boxdims[2]));
+  int32_t current_num_bins = ceil((maxBoxDistance - minDistance) / (stepsize));
 
-  freq.resize(current_num_bins+1);
+  freq.resize(current_num_bins + 1);
 
 
   DREAM3D_RANDOMNG_NEW();
 
-  randomCentroids.resize(largeNumber*3);
+  randomCentroids.resize(largeNumber * 3);
 
   //Generating all of the random points and storing their coordinates in randomCentroids
   for (int32_t i = 0; i < largeNumber; i++)
   {
-       featureOwnerIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
+    featureOwnerIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
 
-       column = featureOwnerIdx % xpoints;
-       row = int(featureOwnerIdx / xpoints) % ypoints;
-       plane = featureOwnerIdx / (xpoints * ypoints);
+    column = featureOwnerIdx % xpoints;
+    row = int(featureOwnerIdx / xpoints) % ypoints;
+    plane = featureOwnerIdx / (xpoints * ypoints);
 
-       xc = static_cast<float>(column * boxres[0]) ;
-       yc = static_cast<float>(row * boxres[1]);
-       zc = static_cast<float>(plane * boxres[2]);
+    xc = static_cast<float>(column * boxres[0]) ;
+    yc = static_cast<float>(row * boxres[1]);
+    zc = static_cast<float>(plane * boxres[2]);
 
-       randomCentroids[3*i] = xc;
-       randomCentroids[3*i+1] = yc;
-       randomCentroids[3*i+2] = zc;
+    randomCentroids[3 * i] = xc;
+    randomCentroids[3 * i + 1] = yc;
+    randomCentroids[3 * i + 2] = zc;
 
   }
 
@@ -144,16 +144,16 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
     for (int32_t j = i + 1; j < largeNumber; j++)
     {
 
-        xn = randomCentroids[3 * j];
-        yn = randomCentroids[3 * j + 1];
-        zn = randomCentroids[3 * j + 2];
+      xn = randomCentroids[3 * j];
+      yn = randomCentroids[3 * j + 1];
+      zn = randomCentroids[3 * j + 2];
 
-        r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
-        distancelist[i].push_back(r);
-        distancelist[j].push_back(r);
+      distancelist[i].push_back(r);
+      distancelist[j].push_back(r);
 
-     }
+    }
 
   }
 
@@ -162,20 +162,20 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   {
     for (size_t j = 0; j < distancelist[i].size(); j++)
     {
-        bin = (distancelist[i][j] - minDistance) / stepsize;
+      bin = (distancelist[i][j] - minDistance) / stepsize;
 
-        if (distancelist[i][j] < minDistance)
-        {
-            bin = -1;
-        }
-        freq[bin+1]++;
+      if (distancelist[i][j] < minDistance)
+      {
+        bin = -1;
+      }
+      freq[bin + 1]++;
 
     }
   }
 
-  for (int32_t i = 0; i < current_num_bins+1; i++)
+  for (int32_t i = 0; i < current_num_bins + 1; i++)
   {
-      freq[i] = freq[i]/(numDistances);
+    freq[i] = freq[i] / (numDistances);
   }
 
 

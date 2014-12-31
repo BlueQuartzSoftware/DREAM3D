@@ -109,9 +109,9 @@ class FindSaltykovSizes : public AbstractFilter
     FindSaltykovSizes();
     void find_saltykov_sizes();
     int do_saltykov(std::vector<int> nA, float Dmax, int k);
-	int forward_difference(int fx, int f1, int f0, int x1, int x0);
-	template<class T>
-	int round_to_nearest_int(T x);
+    int forward_difference(int fx, int f1, int f0, int x1, int x0);
+    template<class T>
+    int round_to_nearest_int(T x);
 
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)

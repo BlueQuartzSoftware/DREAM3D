@@ -123,21 +123,32 @@ void MakeVolumeDataContainer::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-  if (getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if (getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
   tDims.resize(1);
   tDims[0] = 0;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 ////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFeatureIdsArrayName() );
 ////==>MIKE_GROEBER_FIX m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   AngReader reader;
   AngFields angfeatures;
@@ -165,19 +176,27 @@ void MakeVolumeDataContainer::dataCheck()
   QVector<size_t> dim(1, 3);
   m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   dim[0] = 1;
   m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_CellPhasesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   m_CrystalStructuresPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   dim[0] = 6;
   m_LatticeConstantsPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_LatticeConstantsArrayName, 0.0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {
+    m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), DREAM3D::EnsembleData::MaterialName);
   cellEnsembleAttrMat->addAttributeArray( DREAM3D::EnsembleData::MaterialName, materialNames);
@@ -209,7 +228,10 @@ void MakeVolumeDataContainer::execute()
 
   // Run the data check to get references to all of our data arrays initialized to the values stored in memory
   dataCheck();
-  if (getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
 
   /* Let the GUI know we are done with this filter */
@@ -233,26 +255,34 @@ AbstractFilter::Pointer MakeVolumeDataContainer::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString MakeVolumeDataContainer::getCompiledLibraryName()
-{ return Test::TestBaseName; }
+{
+  return Test::TestBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MakeVolumeDataContainer::getGroupName()
-{ return DREAM3D::FilterGroups::TestFilters; }
+{
+  return DREAM3D::FilterGroups::TestFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MakeVolumeDataContainer::getSubGroupName()
-{ return "Create Stuff"; }
+{
+  return "Create Stuff";
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MakeVolumeDataContainer::getHumanLabel()
-{ return "Make Volume DataContainer"; }
+{
+  return "Make Volume DataContainer";
+}
 

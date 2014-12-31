@@ -795,8 +795,8 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 
   }
 
-    progress.setValue(2);
-    progress.setLabelText("[2/3] Rendering Pole Figure ...");
+  progress.setValue(2);
+  progress.setLabelText("[2/3] Rendering Pole Figure ...");
 
   m_OdfBulkTableModel->removeRows(0, m_OdfBulkTableModel->rowCount());
 

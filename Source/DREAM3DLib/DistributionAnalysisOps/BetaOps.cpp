@@ -89,7 +89,7 @@ int BetaOps::calculateParameters(std::vector<float>& data, FloatArrayType::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float avg = 0;

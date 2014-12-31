@@ -195,7 +195,7 @@ void MatrixMath::Invert3x3(float g[3][3], float outMat[3][3])
 {
   Adjoint3x3(g, outMat);
   float determinant = Determinant3x3(g);
-  float oneOverDeterminant = 1.0/determinant;
+  float oneOverDeterminant = 1.0 / determinant;
   Multiply3x3withConstant(outMat, oneOverDeterminant);
 }
 
@@ -223,20 +223,20 @@ void MatrixMath::Cofactor3x3(float g[3][3], float outMat[3][3])
 
 void MatrixMath::Minors3x3(float g[3][3], float outMat[3][3])
 {
-  outMat[0][0] = g[1][1]*g[2][2] - g[2][1]*g[1][2];
-  outMat[0][1] = g[1][0]*g[2][2] - g[2][0]*g[1][2];
-  outMat[0][2] = g[1][0]*g[2][1] - g[2][0]*g[1][1];
-  outMat[1][0] = g[0][1]*g[2][2] - g[2][1]*g[0][2];
-  outMat[1][1] = g[0][0]*g[2][2] - g[2][0]*g[0][2];
-  outMat[1][2] = g[0][0]*g[2][1] - g[2][0]*g[0][1];
-  outMat[2][0] = g[0][1]*g[1][2] - g[1][1]*g[0][2];
-  outMat[2][1] = g[0][0]*g[1][2] - g[1][0]*g[0][2];
-  outMat[2][2] = g[0][0]*g[1][1] - g[1][0]*g[0][1];
+  outMat[0][0] = g[1][1] * g[2][2] - g[2][1] * g[1][2];
+  outMat[0][1] = g[1][0] * g[2][2] - g[2][0] * g[1][2];
+  outMat[0][2] = g[1][0] * g[2][1] - g[2][0] * g[1][1];
+  outMat[1][0] = g[0][1] * g[2][2] - g[2][1] * g[0][2];
+  outMat[1][1] = g[0][0] * g[2][2] - g[2][0] * g[0][2];
+  outMat[1][2] = g[0][0] * g[2][1] - g[2][0] * g[0][1];
+  outMat[2][0] = g[0][1] * g[1][2] - g[1][1] * g[0][2];
+  outMat[2][1] = g[0][0] * g[1][2] - g[1][0] * g[0][2];
+  outMat[2][2] = g[0][0] * g[1][1] - g[1][0] * g[0][1];
 }
 
 float MatrixMath::Determinant3x3(float g[3][3])
 {
-  return (g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])) - (g[0][1]*(g[1][0]*g[2][2]-g[1][2]*g[2][0])) + (g[0][2]*(g[1][0]*g[2][1]-g[1][1]*g[2][0])); 
+  return (g[0][0] * (g[1][1] * g[2][2] - g[1][2] * g[2][1])) - (g[0][1] * (g[1][0] * g[2][2] - g[1][2] * g[2][0])) + (g[0][2] * (g[1][0] * g[2][1] - g[1][1] * g[2][0]));
 }
 
 void MatrixMath::Transpose3x3(float g[3][3], float outMat[3][3])
@@ -289,32 +289,68 @@ void MatrixMath::Normalize3x3(float g[3][3])
 {
   float denom;
   denom = g[0][0] * g[0][0] + g[1][0] * g[1][0] + g[2][0] * g[2][0];
-  if(denom == 0.0) { return; }
+  if(denom == 0.0)
+  {
+    return;
+  }
   denom = sqrt(denom);
   g[0][0] = g[0][0] / denom;
-  if(g[0][0] > 1) { g[0][0] = 1; }
+  if(g[0][0] > 1)
+  {
+    g[0][0] = 1;
+  }
   g[1][0] = g[1][0] / denom;
-  if(g[1][0] > 1) { g[1][0] = 1; }
+  if(g[1][0] > 1)
+  {
+    g[1][0] = 1;
+  }
   g[2][0] = g[2][0] / denom;
-  if(g[2][0] > 1) { g[2][0] = 1; }
+  if(g[2][0] > 1)
+  {
+    g[2][0] = 1;
+  }
   denom = g[0][1] * g[0][1] + g[1][1] * g[1][1] + g[2][1] * g[2][1];
-  if(denom == 0.0) { return; }
+  if(denom == 0.0)
+  {
+    return;
+  }
   denom = sqrt(denom);
   g[0][1] = g[0][1] / denom;
-  if(g[0][1] > 1) { g[0][1] = 1; }
+  if(g[0][1] > 1)
+  {
+    g[0][1] = 1;
+  }
   g[1][1] = g[1][1] / denom;
-  if(g[1][1] > 1) { g[1][1] = 1; }
+  if(g[1][1] > 1)
+  {
+    g[1][1] = 1;
+  }
   g[2][1] = g[2][1] / denom;
-  if(g[2][1] > 1) { g[2][1] = 1; }
+  if(g[2][1] > 1)
+  {
+    g[2][1] = 1;
+  }
   denom = g[0][2] * g[0][2] + g[1][2] * g[1][2] + g[2][2] * g[2][2];
-  if(denom == 0.0) { return; }
+  if(denom == 0.0)
+  {
+    return;
+  }
   denom = sqrt(denom);
   g[0][2] = g[0][2] / denom;
-  if(g[0][2] > 1) { g[0][2] = 1; }
+  if(g[0][2] > 1)
+  {
+    g[0][2] = 1;
+  }
   g[1][2] = g[1][2] / denom;
-  if(g[1][2] > 1) { g[1][2] = 1; }
+  if(g[1][2] > 1)
+  {
+    g[1][2] = 1;
+  }
   g[2][2] = g[2][2] / denom;
-  if(g[2][2] > 1) { g[2][2] = 1; }
+  if(g[2][2] > 1)
+  {
+    g[2][2] = 1;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -324,14 +360,26 @@ void MatrixMath::Normalize3x1(float g[3])
 {
   float denom;
   denom = g[0] * g[0] + g[1] * g[1] + g[2] * g[2];
-  if(denom == 0.0) { return; }
+  if(denom == 0.0)
+  {
+    return;
+  }
   denom = sqrt(denom);
   g[0] = g[0] / denom;
-  if(g[0] > 1.0f) { g[0] = 1.0f; }
+  if(g[0] > 1.0f)
+  {
+    g[0] = 1.0f;
+  }
   g[1] = g[1] / denom;
-  if(g[1] > 1.0f) { g[1] = 1.0f; }
+  if(g[1] > 1.0f)
+  {
+    g[1] = 1.0f;
+  }
   g[2] = g[2] / denom;
-  if(g[2] > 1.0f) { g[2] = 1.0f; }
+  if(g[2] > 1.0f)
+  {
+    g[2] = 1.0f;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -342,9 +390,18 @@ int MatrixMath::FindIndexOfMaxVal3x1(float g[3])
   float a = fabs(g[0]);
   float b = fabs(g[1]);
   float c = fabs(g[2]);
-  if(a >= b && a >= c) { return 0; }
-  else if(b >= a && b >= c) { return 1; }
-  else { return 2; }
+  if(a >= b && a >= c)
+  {
+    return 0;
+  }
+  else if(b >= a && b >= c)
+  {
+    return 1;
+  }
+  else
+  {
+    return 2;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -415,11 +472,20 @@ void MatrixMath::Normalize3x1(double g[3])
   denom = g[0] * g[0] + g[1] * g[1] + g[2] * g[2];
   denom = sqrt(denom);
   g[0] = g[0] / denom;
-  if(g[0] > 1.0) { g[0] = 1.0; }
+  if(g[0] > 1.0)
+  {
+    g[0] = 1.0;
+  }
   g[1] = g[1] / denom;
-  if(g[1] > 1.0) { g[1] = 1.0; }
+  if(g[1] > 1.0)
+  {
+    g[1] = 1.0;
+  }
   g[2] = g[2] / denom;
-  if(g[2] > 1.0) { g[2] = 1.0; }
+  if(g[2] > 1.0)
+  {
+    g[2] = 1.0;
+  }
 }
 
 // -----------------------------------------------------------------------------

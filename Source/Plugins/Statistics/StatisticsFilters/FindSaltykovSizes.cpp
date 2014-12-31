@@ -180,23 +180,23 @@ void FindSaltykovSizes::find_saltykov_sizes()
   saltykovBinLengths.resize(numberofbins);
 
   std::vector<float> equivalentDiameters;
-  equivalentDiameters.resize(numfeatures-1);
+  equivalentDiameters.resize(numfeatures - 1);
 
   std::vector<float> saltykovEquivalentDiameters;
-  saltykovEquivalentDiameters.resize(numfeatures-1);
+  saltykovEquivalentDiameters.resize(numfeatures - 1);
 
   std::vector<float> temp;
 
   // transfer equivalent diameters to a std::vector
-  for (size_t i = 1; i < numfeatures; i++) { equivalentDiameters[i-1] = m_EquivalentDiameters[i]; }
+  for (size_t i = 1; i < numfeatures; i++) { equivalentDiameters[i - 1] = m_EquivalentDiameters[i]; }
 
   std::sort(equivalentDiameters.begin(), equivalentDiameters.end(), std::less<float>());
 
   // find the min and max
-  for (size_t i = 0; i < numfeatures-1; i++)
+  for (size_t i = 0; i < numfeatures - 1; i++)
   {
     // find the min size
-  if (equivalentDiameters[i] < minEqDia) { minEqDia = equivalentDiameters[i]; }
+    if (equivalentDiameters[i] < minEqDia) { minEqDia = equivalentDiameters[i]; }
     // find the max size
     if (equivalentDiameters[i] > maxEqDia) { maxEqDia = equivalentDiameters[i]; }
   }
@@ -213,94 +213,94 @@ void FindSaltykovSizes::find_saltykov_sizes()
   // the feature eq dia.  But, it is important to note that the Saltykov eq dia
   // is not a direct transformation of the particular eq dia that it is matched
   // up with
-  while (saltykovLength != numfeatures-1)
+  while (saltykovLength != numfeatures - 1)
   {
     // find the bin length
-    binLength = maxEqDia / (numberofbins-1);
+    binLength = maxEqDia / (numberofbins - 1);
 
-  // initialize bin lengths to 0
+    // initialize bin lengths to 0
     for (int i = 0; i < numberofbins; i++) { binLengths[i] = 0; }
 
-  iter = 0;
+    iter = 0;
     for (int i = 0; i < numberofbins; i++)
-  {
-    temp.resize(0);
-    std::copy(
-    std::lower_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength*i),
-    std::upper_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength*(i+1)),
-    std::back_inserter(temp)
-    );
-    binLengths[i] = temp.size();
-    iter++;
-  }
-
-  std::reverse(binLengths.begin(),binLengths.end());
-
-  // for formal Saltykov we start at the largest bin then unfold our
-  // way down to the smallest bin which is why the loop is set up
-  // this way
-  // saltykovLength is the total number of features to be sampled from
-  // the saltykov bins
-  saltykovLength = 0;
-  for (int i = 1; i <= numberofbins; i++)
-  {
-    saltykovBinLengths[i-1] = do_saltykov(binLengths, maxEqDia, i);
-  if (saltykovBinLengths[i-1] < 0) { saltykovBinLengths[i-1] = 0; }
-    saltykovLength += saltykovBinLengths[i-1];
-  }
-
-  std::reverse(saltykovBinLengths.begin(),saltykovBinLengths.end());
-
-  // if the number of features to be sampled from the Saltykov
-  // bins (saltykovLength) is not = the number of features
-  // then the difference between the two is calculated.  then, either
-  // the number of attempts is incremented, the number of bins is increased/decreased
-  // based on the "difference" and the bin arrays are resized accordingly.  This
-  // will approach us to the correct number of features because the increasing
-  // number of bins, increases the number of features eq dia's to be sampled and decreasing
-  // the number of bins does the opposite. However, if the number of maximum attempts
-  // is reached, hardcoded at 10, then a random Saltykov bin is selected to add one sample to.
-  // This is done because it is assumed that after 10 attempts, the solution is oscillating
-  // between one less than and one more than feature so, for convienence, only the one less
-  // than option triggers this fudge addition to reach our desired number of features
-    if (saltykovLength != numfeatures-1)
     {
-    //better minumum formula
-      difference = saltykovLength - (numfeatures-1);
-    if (attempts >= MaxAttempts && difference < 0)
+      temp.resize(0);
+      std::copy(
+        std::lower_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength * i),
+        std::upper_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength * (i + 1)),
+        std::back_inserter(temp)
+      );
+      binLengths[i] = temp.size();
+      iter++;
+    }
+
+    std::reverse(binLengths.begin(), binLengths.end());
+
+    // for formal Saltykov we start at the largest bin then unfold our
+    // way down to the smallest bin which is why the loop is set up
+    // this way
+    // saltykovLength is the total number of features to be sampled from
+    // the saltykov bins
+    saltykovLength = 0;
+    for (int i = 1; i <= numberofbins; i++)
+    {
+      saltykovBinLengths[i - 1] = do_saltykov(binLengths, maxEqDia, i);
+      if (saltykovBinLengths[i - 1] < 0) { saltykovBinLengths[i - 1] = 0; }
+      saltykovLength += saltykovBinLengths[i - 1];
+    }
+
+    std::reverse(saltykovBinLengths.begin(), saltykovBinLengths.end());
+
+    // if the number of features to be sampled from the Saltykov
+    // bins (saltykovLength) is not = the number of features
+    // then the difference between the two is calculated.  then, either
+    // the number of attempts is incremented, the number of bins is increased/decreased
+    // based on the "difference" and the bin arrays are resized accordingly.  This
+    // will approach us to the correct number of features because the increasing
+    // number of bins, increases the number of features eq dia's to be sampled and decreasing
+    // the number of bins does the opposite. However, if the number of maximum attempts
+    // is reached, hardcoded at 10, then a random Saltykov bin is selected to add one sample to.
+    // This is done because it is assumed that after 10 attempts, the solution is oscillating
+    // between one less than and one more than feature so, for convienence, only the one less
+    // than option triggers this fudge addition to reach our desired number of features
+    if (saltykovLength != numfeatures - 1)
+    {
+      //better minumum formula
+      difference = saltykovLength - (numfeatures - 1);
+      if (attempts >= MaxAttempts && difference < 0)
       {
         for (int i = 0; i > difference; i--)
         {
           binToAddTo = rg.genrand_int32() % numberofbins + 1;
-      if (binToAddTo == numberofbins) { binToAddTo--; };
-      // only add to bins that already have values in them
-      if (saltykovBinLengths[binToAddTo] < 1)
-      {
-      saltykovBinLengths[binToAddTo]++;
-        saltykovLength = numfeatures-1;
-      }
-      else { i++; }
+          if (binToAddTo == numberofbins) { binToAddTo--; };
+          // only add to bins that already have values in them
+          if (saltykovBinLengths[binToAddTo] < 1)
+          {
+            saltykovBinLengths[binToAddTo]++;
+            saltykovLength = numfeatures - 1;
+          }
+          else { i++; }
         }
       }
       else
       {
         attempts++;
-    if (numberofbins2 == 20 && numberofbins1 == 0)
-    {
-      numberofbins1 = numberofbins;
-      numberofbins = numberofbins2;
-      saltykovLength1 = saltykovLength;
-    }
-    else
-    {
-      numberofbins2 = numberofbins1;
-      numberofbins1 = numberofbins;
-      saltykovLength2 = saltykovLength1;
-      saltykovLength1 = saltykovLength;
-      numberofbins = forward_difference(numfeatures-1,saltykovLength2,saltykovLength1,numberofbins2,numberofbins1);
-    }
-    // in case the number of bins is less than 1
-    if (numberofbins < 1) { numberofbins = 1; }
+        if (numberofbins2 == 20 && numberofbins1 == 0)
+        {
+          numberofbins1 = numberofbins;
+          numberofbins = numberofbins2;
+          saltykovLength1 = saltykovLength;
+        }
+        else
+        {
+          numberofbins2 = numberofbins1;
+          numberofbins1 = numberofbins;
+          saltykovLength2 = saltykovLength1;
+          saltykovLength1 = saltykovLength;
+          numberofbins = forward_difference(numfeatures - 1, saltykovLength2, saltykovLength1, numberofbins2, numberofbins1);
+        }
+        // in case the number of bins is less than 1
+        if (numberofbins < 1) { numberofbins = 1; }
         binLengths.resize(numberofbins);
         saltykovBinLengths.resize(numberofbins);
       }
@@ -311,40 +311,40 @@ void FindSaltykovSizes::find_saltykov_sizes()
   // = the number of features, else let the loop cycle again with the
   // new number of bins
   saltykovIndex = 0;
-  if (saltykovLength == numfeatures-1)
+  if (saltykovLength == numfeatures - 1)
   {
-  for (int i = 0; i < numberofbins; i++)
-  {
-    for (int j = 0; j < saltykovBinLengths[i]; j++)
+    for (int i = 0; i < numberofbins; i++)
     {
-    // generate a random float between the current bin extents
-    randomLong = rg.genrand_int32();
-    randomFraction = (double(randomLong) / double(RandMaxFloat));
-    saltykovEquivalentDiameters[saltykovIndex] = float(randomFraction) * binLength + float(i)*binLength;
-    saltykovIndex++;
+      for (int j = 0; j < saltykovBinLengths[i]; j++)
+      {
+        // generate a random float between the current bin extents
+        randomLong = rg.genrand_int32();
+        randomFraction = (double(randomLong) / double(RandMaxFloat));
+        saltykovEquivalentDiameters[saltykovIndex] = float(randomFraction) * binLength + float(i) * binLength;
+        saltykovIndex++;
+      }
     }
-  }
 
-  // sort the Saltykov eq dia's into ascending order so they can be matched up with their feature eq dia pair
-  std::sort(saltykovEquivalentDiameters.begin(), saltykovEquivalentDiameters.end(), std::less<float>());
+    // sort the Saltykov eq dia's into ascending order so they can be matched up with their feature eq dia pair
+    std::sort(saltykovEquivalentDiameters.begin(), saltykovEquivalentDiameters.end(), std::less<float>());
 
-  // this nested loop matches the Saltykov eq dia's with the feature eq dia's in asecending order
-  for (size_t i = 1; i < numfeatures; i++)
-  {
-    for (size_t j = 1; j < numfeatures; j++)
+    // this nested loop matches the Saltykov eq dia's with the feature eq dia's in asecending order
+    for (size_t i = 1; i < numfeatures; i++)
     {
-    if (m_EquivalentDiameters[j] == currentmiminum)
-    {
-      m_SaltykovEquivalentDiameters[j] = saltykovEquivalentDiameters[i-1];
+      for (size_t j = 1; j < numfeatures; j++)
+      {
+        if (m_EquivalentDiameters[j] == currentmiminum)
+        {
+          m_SaltykovEquivalentDiameters[j] = saltykovEquivalentDiameters[i - 1];
+        }
+        if (m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
+        {
+          nextminimum = m_EquivalentDiameters[j];
+        }
+      }
+      currentmiminum = nextminimum;
+      nextminimum = maxEqDia;
     }
-    if (m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
-    {
-      nextminimum = m_EquivalentDiameters[j];
-    }
-    }
-    currentmiminum = nextminimum;
-    nextminimum = maxEqDia;
-  }
   }
 }
 
@@ -355,16 +355,16 @@ int FindSaltykovSizes::do_saltykov(std::vector<int> nA, float Dmax, int k)
 {
   // the below is formal Saltykov method of spheres with the formal variable names and 12 Saltykov coefs.  It was decided
   // that any further contributions from the coefs is negligible
-  double saltyCoefs[12] = {1.6461,-0.4561,-0.1162,-0.0415,-0.0173,-0.0079,-0.0038,-0.0018,-0.0010,-0.0003,-0.0002,-0.0002};
+  double saltyCoefs[12] = {1.6461, -0.4561, -0.1162, -0.0415, -0.0173, -0.0079, -0.0038, -0.0018, -0.0010, -0.0003, -0.0002, -0.0002};
   double Dk = Dmax / k;
   int i = 0;
   double temp1 = 0.0, temp2 = 0.0;
   int temp3 = 0;
 
-  while ((i < 12) && ((k-i) > 0))
+  while ((i < 12) && ((k - i) > 0))
   {
-    temp1 = double (nA[k-i-1]);
-    temp2 += saltyCoefs[i+1-1] * temp1;
+    temp1 = double (nA[k - i - 1]);
+    temp2 += saltyCoefs[i + 1 - 1] * temp1;
     i++;
   }
   temp2 /= Dk;
@@ -380,8 +380,8 @@ int FindSaltykovSizes::forward_difference(int fx, int f1, int f0, int x1, int x0
   // this is the forward finite difference method
   float temp1 = 0.0f, temp2 = 0.0f;
   int x = 0;
-  temp1 = float(fx-f0) / float(f1-f0);
-  temp2 = float(x0) + float(x1-x0) * temp1;
+  temp1 = float(fx - f0) / float(f1 - f0);
+  temp2 = float(x0) + float(x1 - x0) * temp1;
   x = round_to_nearest_int(temp2);
   return x;
 }

@@ -103,7 +103,7 @@ int TestCropVolume()
 //  cropFilter->setXMin(10);
 //  cropFilter->setYMax(28);
 
-	return 0;
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

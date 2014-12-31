@@ -140,7 +140,7 @@ void BinaryWatershed::execute()
   {
     distanceMap->Update();
   }
-  catch( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject& err )
   {
     setErrorCondition(-5);
     QString ss = QObject::tr("Failed to execute itk::KMeans filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -157,9 +157,9 @@ void BinaryWatershed::execute()
   seedLabels->SetRegions(region);
   seedLabels->Allocate();
   seedLabels->FillBuffer(0);
-  for(size_t i=0; i<peakLocations.size(); i++)
+  for(size_t i = 0; i < peakLocations.size(); i++)
   {
-    seedLabels->SetPixel(peakLocations[i], i+1);
+    seedLabels->SetPixel(peakLocations[i], i + 1);
   }
 
   //invert distance map as gradient for watershed
@@ -194,7 +194,7 @@ void BinaryWatershed::execute()
   {
     threshold->Update();
   }
-  catch( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject& err )
   {
     setErrorCondition(-5);
     QString ss = QObject::tr("Failed to execute itk::KMeans filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

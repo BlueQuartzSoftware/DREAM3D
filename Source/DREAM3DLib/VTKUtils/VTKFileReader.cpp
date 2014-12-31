@@ -87,16 +87,46 @@ size_t VTKFileReader::parseByteSize(char text[256])
   char cfloat [64] = "float";
   char cdouble [64] = " double";
 
-  if (strcmp(text, cunsigned_char) == 0 ) { return 1;}
-  if (strcmp(text, cchar) == 0 ) { return 1;}
-  if (strcmp(text, cunsigned_short) == 0 ) { return 2;}
-  if (strcmp(text, cshort) == 0 ) { return 2;}
-  if (strcmp(text, cunsigned_int) == 0 ) { return 4;}
-  if (strcmp(text, cint) == 0 ) { return 4;}
-  if (strcmp(text, cunsigned_long) == 0 ) { return 8;}
-  if (strcmp(text, clong) == 0 ) { return 8;}
-  if (strcmp(text, cfloat) == 0 ) { return 4;}
-  if (strcmp(text, cdouble) == 0 ) { return  8;}
+  if (strcmp(text, cunsigned_char) == 0 )
+  {
+    return 1;
+  }
+  if (strcmp(text, cchar) == 0 )
+  {
+    return 1;
+  }
+  if (strcmp(text, cunsigned_short) == 0 )
+  {
+    return 2;
+  }
+  if (strcmp(text, cshort) == 0 )
+  {
+    return 2;
+  }
+  if (strcmp(text, cunsigned_int) == 0 )
+  {
+    return 4;
+  }
+  if (strcmp(text, cint) == 0 )
+  {
+    return 4;
+  }
+  if (strcmp(text, cunsigned_long) == 0 )
+  {
+    return 8;
+  }
+  if (strcmp(text, clong) == 0 )
+  {
+    return 8;
+  }
+  if (strcmp(text, cfloat) == 0 )
+  {
+    return 4;
+  }
+  if (strcmp(text, cdouble) == 0 )
+  {
+    return  8;
+  }
   return 0;
 }
 
@@ -120,15 +150,42 @@ int VTKFileReader::ignoreData(std::ifstream& in, int byteSize, char* text, int x
   {
     err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
   }
-  if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_short) == 0 ) { err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cshort) == 0 ) {err |= skipVolume<short>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_int) == 0 ) { err |= skipVolume<unsigned int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cint) == 0 ) { err |= skipVolume<int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_long) == 0 ) { err |= skipVolume<unsigned long long int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, clong) == 0 ) { err |= skipVolume<long long int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cfloat) == 0 ) { err |= skipVolume<float>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cdouble) == 0 ) { err |= skipVolume<double>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cchar) == 0 )
+  {
+    err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cunsigned_short) == 0 )
+  {
+    err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cshort) == 0 )
+  {
+    err |= skipVolume<short>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cunsigned_int) == 0 )
+  {
+    err |= skipVolume<unsigned int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cint) == 0 )
+  {
+    err |= skipVolume<int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cunsigned_long) == 0 )
+  {
+    err |= skipVolume<unsigned long long int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, clong) == 0 )
+  {
+    err |= skipVolume<long long int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cfloat) == 0 )
+  {
+    err |= skipVolume<float>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cdouble) == 0 )
+  {
+    err |= skipVolume<double>(in, byteSize, xDim, yDim, zDim);
+  }
   return err;
 }
 

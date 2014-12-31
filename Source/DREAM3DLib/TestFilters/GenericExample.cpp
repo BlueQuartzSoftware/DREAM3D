@@ -234,24 +234,24 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->openFilterGroup(this, index);
 
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-      /* Place code that will write the inputs values into a file. reference the
-           AbstractFilterParametersWriter class for the proper API to use. */
-      DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
-      DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
-      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
-      DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
-      DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
-      DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
+  /* Place code that will write the inputs values into a file. reference the
+       AbstractFilterParametersWriter class for the proper API to use. */
+  DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
 
 
 
-      writer->closeFilterGroup();
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -299,7 +299,10 @@ void GenericExample::execute()
 
   // Run the data check to get references to all of our data arrays initialized to the values stored in memory
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   qDebug() << "Feature Ids: " << getFeatureIdsArrayPath().getDataArrayName();
   /* Let the GUI know we are done with this filter */
@@ -323,26 +326,34 @@ AbstractFilter::Pointer GenericExample::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString GenericExample::getCompiledLibraryName()
-{ return Test::TestBaseName; }
+{
+  return Test::TestBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenericExample::getGroupName()
-{ return DREAM3D::FilterGroups::TestFilters; }
+{
+  return DREAM3D::FilterGroups::TestFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenericExample::getSubGroupName()
-{ return "Misc"; }
+{
+  return "Misc";
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenericExample::getHumanLabel()
-{ return "Generic Example"; }
+{
+  return "Generic Example";
+}
 

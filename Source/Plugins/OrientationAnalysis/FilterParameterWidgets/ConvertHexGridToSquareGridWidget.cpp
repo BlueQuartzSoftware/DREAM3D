@@ -85,7 +85,7 @@ ConvertHexGridToSquareGridWidget::~ConvertHexGridToSquareGridWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGridWidget::setFilter(AbstractFilter *value)
+void ConvertHexGridToSquareGridWidget::setFilter(AbstractFilter* value)
 {
   m_Filter = dynamic_cast<ConvertHexGridToSquareGrid*>(value);
 }
@@ -102,7 +102,7 @@ AbstractFilter* ConvertHexGridToSquareGridWidget::getFilter() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGridWidget::setFilterParameter(FilterParameter *value)
+void ConvertHexGridToSquareGridWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
 }

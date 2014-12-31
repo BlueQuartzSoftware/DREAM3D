@@ -313,7 +313,7 @@ class ConvertOrientationsImpl
 // -----------------------------------------------------------------------------
 ConvertOrientations::ConvertOrientations() :
   AbstractFilter(),
-    m_InputType(0),
+  m_InputType(0),
   m_OutputType(1),
   m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
@@ -369,7 +369,7 @@ void ConvertOrientations::setupFilterParameters()
   input->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   input->setChoices(choices);
   QStringList inputLinkedProps;
-  inputLinkedProps<<"CellEulerAnglesArrayPath"<<"CellQuatsArrayPath"<<"CellRodriguesVectorsArrayPath"<<"CellAxisAnglesArrayPath";
+  inputLinkedProps << "CellEulerAnglesArrayPath" << "CellQuatsArrayPath" << "CellRodriguesVectorsArrayPath" << "CellAxisAnglesArrayPath";
   input->setLinkedProperties(inputLinkedProps);
   parameters.push_back(input);
 
@@ -379,7 +379,7 @@ void ConvertOrientations::setupFilterParameters()
   output->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   output->setChoices(choices);
   QStringList outputLinkedProps;
-  outputLinkedProps<<"EulerAnglesArrayName"<<"QuatsArrayName"<<"RodriguesVectorsArrayName"<<"AxisAnglesArrayName";
+  outputLinkedProps << "EulerAnglesArrayName" << "QuatsArrayName" << "RodriguesVectorsArrayName" << "AxisAnglesArrayName";
   output->setLinkedProperties(outputLinkedProps);
   parameters.push_back(output);
 
@@ -424,18 +424,18 @@ int ConvertOrientations::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputType)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputType)
-      DREAM3D_FILTER_WRITE_PARAMETER(EulerAnglesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(RodriguesVectorsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(AxisAnglesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellQuatsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellRodriguesVectorsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAxisAnglesArrayPath)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputType)
+  DREAM3D_FILTER_WRITE_PARAMETER(EulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(RodriguesVectorsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AxisAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellRodriguesVectorsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAxisAnglesArrayPath)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -473,7 +473,7 @@ void ConvertOrientations::dataCheck()
       { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); }
       tempPath.update(getCellEulerAnglesArrayPath().getDataContainerName(), getCellEulerAnglesArrayPath().getAttributeMatrixName(), "" );
     }
-      break;
+    break;
 
     case 1://quats
     {
@@ -483,7 +483,7 @@ void ConvertOrientations::dataCheck()
       { m_CellQuats = m_CellQuatsPtr.lock()->getPointer(0); }
       tempPath.update(getCellQuatsArrayPath().getDataContainerName(), getCellQuatsArrayPath().getAttributeMatrixName(), "" );
     }
-      break;
+    break;
 
     case 2://rods
     {
@@ -493,7 +493,7 @@ void ConvertOrientations::dataCheck()
       { m_CellRodriguesVectors = m_CellRodriguesVectorsPtr.lock()->getPointer(0); }
       tempPath.update(getCellRodriguesVectorsArrayPath().getDataContainerName(), getCellRodriguesVectorsArrayPath().getAttributeMatrixName(), "" );
     }
-      break;
+    break;
 
     case 3://axis angle
     {
@@ -503,7 +503,7 @@ void ConvertOrientations::dataCheck()
       { m_CellAxisAngles = m_CellAxisAnglesPtr.lock()->getPointer(0); }
       tempPath.update(getCellAxisAnglesArrayPath().getDataContainerName(), getCellAxisAnglesArrayPath().getAttributeMatrixName(), "" );
     }
-      break;
+    break;
   }
 
   switch(getOutputType())
@@ -516,7 +516,7 @@ void ConvertOrientations::dataCheck()
       if( NULL != m_EulerAnglesPtr.lock().get() )
       { m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0); }
     }
-      break;
+    break;
 
     case 1://quats
     {
@@ -526,7 +526,7 @@ void ConvertOrientations::dataCheck()
       if( NULL != m_QuatsPtr.lock().get() )
       { m_Quats = m_QuatsPtr.lock()->getPointer(0); }
     }
-      break;
+    break;
 
     case 2://rods
     {
@@ -536,7 +536,7 @@ void ConvertOrientations::dataCheck()
       if( NULL != m_RodriguesVectorsPtr.lock().get() )
       { m_RodriguesVectors = m_RodriguesVectorsPtr.lock()->getPointer(0); }
     }
-      break;
+    break;
 
     case 3://axis angle
     {
@@ -546,7 +546,7 @@ void ConvertOrientations::dataCheck()
       if( NULL != m_AxisAnglesPtr.lock().get() )
       { m_AxisAngles = m_AxisAnglesPtr.lock()->getPointer(0); }
     }
-      break;
+    break;
   }
 
 
@@ -605,25 +605,25 @@ void ConvertOrientations::execute()
     {
       totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
     }
-      break;
+    break;
 
     case 1://quats
     {
       totalPoints = m_CellQuatsPtr.lock()->getNumberOfTuples();
     }
-      break;
+    break;
 
     case 2://rods
     {
       totalPoints = m_CellRodriguesVectorsPtr.lock()->getNumberOfTuples();
     }
-      break;
+    break;
 
     case 3://axis angle
     {
       totalPoints = m_CellAxisAnglesPtr.lock()->getNumberOfTuples();
     }
-      break;
+    break;
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

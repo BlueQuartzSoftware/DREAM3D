@@ -118,13 +118,13 @@ int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParamete
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-      DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
-      DREAM3D_FILTER_WRITE_PARAMETER(Level)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
+  DREAM3D_FILTER_WRITE_PARAMETER(Level)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -142,7 +142,7 @@ void NeighborOrientationCorrelation::dataCheck()
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
- //typedef DataArray<unsigned int> XTalStructArrayType;
+//typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -236,7 +236,7 @@ void NeighborOrientationCorrelation::execute()
       if (i > prog)
       {
         progressInt = ((float)i / totalPoints) * 100.0;
-        QString ss = QObject::tr("|| Level %1 of %2: Processing Data %3%").arg(startLevel-currentLevel).arg(startLevel - m_Level).arg(progressInt);
+        QString ss = QObject::tr("|| Level %1 of %2: Processing Data %3%").arg(startLevel - currentLevel).arg(startLevel - m_Level).arg(progressInt);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
       }
@@ -333,7 +333,7 @@ void NeighborOrientationCorrelation::execute()
       if (i > prog)
       {
         progressInt = ((float)i / totalPoints) * 100.0;
-        QString ss = QObject::tr("|| Level %1 of %2: Copying Data %3%").arg(startLevel-currentLevel).arg(startLevel - m_Level).arg(progressInt);
+        QString ss = QObject::tr("|| Level %1 of %2: Copying Data %3%").arg(startLevel - currentLevel).arg(startLevel - m_Level).arg(progressInt);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
       }

@@ -209,47 +209,47 @@ class DREAM3DLib_EXPORT OrientationMath
     * @param lattive parameters as a, b, c, alpha, beta, gamma
     * @param Output metric tensor
     */
-	static void MetricTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float mt[3][3]);
+    static void MetricTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float mt[3][3]);
 
     /**
     * @brief Converts lattice parameters to metric tensor
     * @param lattive parameters as a, b, c, alpha, beta, gamma
     * @param Output metric tensor
     */
-	static void RootTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float rt[3][3]);
+    static void RootTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float rt[3][3]);
 
     /**
-    * @brief Converts 4 parameter Miller-Bravais lattice coordinates direction to 3 parameter Miller lattice 
-	* coordinates direction
+    * @brief Converts 4 parameter Miller-Bravais lattice coordinates direction to 3 parameter Miller lattice
+    * coordinates direction
     * @param millerBravais Input Vector (UVTW)
     * @param miller Output Vector (UVW)
     */
-	static void MillerBravaisToMillerDirection(int millerBravais[4], int miller[3]);
+    static void MillerBravaisToMillerDirection(int millerBravais[4], int miller[3]);
 
     /**
-    * @brief Converts 3 parameter Miller lattice coordinates direction to 4 parameter Miller-Bravais lattice 
-	* coordinates direction
+    * @brief Converts 3 parameter Miller lattice coordinates direction to 4 parameter Miller-Bravais lattice
+    * coordinates direction
     * @param miller Input Vector (UVW)
     * @param millerBravais Output Vector (UVTW)
     */
-	static void MillerToMillerBravaisDirection(int miller[3], int millerBravais[4]);
-	
+    static void MillerToMillerBravaisDirection(int miller[3], int millerBravais[4]);
+
     /**
-    * @brief Converts 4 parameter Miller-Bravais lattice coordinates plane to 3 parameter Miller lattice 
-	* coordinates plane
+    * @brief Converts 4 parameter Miller-Bravais lattice coordinates plane to 3 parameter Miller lattice
+    * coordinates plane
     * @param millerBravais Input Vector (HKIL)
     * @param miller Output Vector (HKL)
     */
-	static void MillerBravaisToMillerPlane(int millerBravais[4], int miller[3]);
-	
+    static void MillerBravaisToMillerPlane(int millerBravais[4], int miller[3]);
+
     /**
-    * @brief Converts 3 parameter Miller lattice coordinates plane to 4 parameter Miller-Bravais lattice 
-	* coordinates plane
+    * @brief Converts 3 parameter Miller lattice coordinates plane to 4 parameter Miller-Bravais lattice
+    * coordinates plane
     * @param miller Input Vector (HKL)
     * @param millerBravais Output Vector (HKIL)
     */
-	static void MillerToMillerBravaisPlane(int miller[3], int millerBravais[4]);
-    
+    static void MillerToMillerBravaisPlane(int miller[3], int millerBravais[4]);
+
   protected:
     OrientationMath();
 

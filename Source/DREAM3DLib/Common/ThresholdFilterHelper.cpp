@@ -73,7 +73,10 @@ ThresholdFilterHelper::~ThresholdFilterHelper()
 // -----------------------------------------------------------------------------
 int ThresholdFilterHelper::execute(IDataArray* input, IDataArray* output)
 {
-  if (NULL == input) { return -1; }
+  if (NULL == input)
+  {
+    return -1;
+  }
   m_Output->initializeWithZeros();
   QString dType = input->getTypeAsString();
 

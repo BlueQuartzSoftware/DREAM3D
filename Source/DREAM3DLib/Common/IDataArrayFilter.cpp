@@ -55,4 +55,6 @@ IDataArrayFilter::~IDataArrayFilter()
 //
 // -----------------------------------------------------------------------------
 int IDataArrayFilter::execute(IDataArray* input, IDataArray* output)
-{return -1;}
+{
+  return -1;
+}

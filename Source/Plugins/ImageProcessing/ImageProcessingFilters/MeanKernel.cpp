@@ -105,11 +105,11 @@ int MeanKernel::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-      DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+  DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -190,7 +190,7 @@ void MeanKernel::execute()
   {
     meanFilter->Update();
   }
-  catch( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject& err )
   {
     setErrorCondition(-5);
     QString ss = QObject::tr("Failed to execute itk::MeanImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -202,7 +202,7 @@ void MeanKernel::execute()
   {
     rescaleFilter->Update();
   }
-  catch( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject& err )
   {
     setErrorCondition(-5);
     QString ss = QObject::tr("Failed to execute itk::RescaleIntensityImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

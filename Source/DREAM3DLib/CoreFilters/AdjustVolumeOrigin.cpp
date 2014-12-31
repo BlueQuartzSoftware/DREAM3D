@@ -172,13 +172,19 @@ void AdjustVolumeOrigin::dataCheck()
   if (m_ApplyToVoxelVolume == true)
   {
     getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
     SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
     // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
@@ -211,7 +217,10 @@ void AdjustVolumeOrigin::execute()
   setErrorCondition(0);
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Set the Voxel Volume First, since this is easy
   if (m_ApplyToVoxelVolume == true)
@@ -253,9 +262,18 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   size_t count = nodesPtr->getNumberOfTuples();
   for (size_t i = 0; i < count; i++)
   {
-    if (nodes[i].pos[0] < min[0]) { min[0] = nodes[i].pos[0]; }
-    if (nodes[i].pos[1] < min[1]) { min[1] = nodes[i].pos[1]; }
-    if (nodes[i].pos[2] < min[2]) { min[2] = nodes[i].pos[2]; }
+    if (nodes[i].pos[0] < min[0])
+    {
+      min[0] = nodes[i].pos[0];
+    }
+    if (nodes[i].pos[1] < min[1])
+    {
+      min[1] = nodes[i].pos[1];
+    }
+    if (nodes[i].pos[2] < min[2])
+    {
+      min[2] = nodes[i].pos[2];
+    }
   }
 
   float delta[3] = {min[0] - m_Origin.x, min[1] - m_Origin.y, min[2] - m_Origin.z };
@@ -291,26 +309,34 @@ AbstractFilter::Pointer AdjustVolumeOrigin::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString AdjustVolumeOrigin::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AdjustVolumeOrigin::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AdjustVolumeOrigin::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+{
+  return DREAM3D::FilterSubGroups::SpatialFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AdjustVolumeOrigin::getHumanLabel()
-{ return "Change Origin of Volume"; }
+{
+  return "Change Origin of Volume";
+}
 

@@ -53,7 +53,7 @@ AbstractFilter::~AbstractFilter()
   //  if(NULL != m_PreviousFilter.get())
   //  std::cout << "~PipelineFilterWidget() m_PreviousFilter " << this  << "  " << m_PreviousFilter->getNameOfClass().toStdString()
   //            << "  " << m_PreviousFilter.use_count() << std::endl;
-   // m_PreviousFilter = AbstractFilter::NullPointer();
+  // m_PreviousFilter = AbstractFilter::NullPointer();
 
   //  if(NULL != m_NextFilter.get())
   //  std::cout << "~PipelineFilterWidget() m_NextFilter " << this  << "  " << m_NextFilter->getNameOfClass().toStdString()
@@ -216,31 +216,41 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter* filter
 //
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getGroupName()
-{ return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+{
+  return "YOUR CLASS SHOULD IMPLEMENT THIS";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getSubGroupName()
-{ return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+{
+  return "YOUR CLASS SHOULD IMPLEMENT THIS";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getHumanLabel()
-{ return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+{
+  return "YOUR CLASS SHOULD IMPLEMENT THIS";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getBrandingString()
-{ return "DREAM3D Core Filter"; }
+{
+  return "DREAM3D Core Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getCompiledLibraryName()
-{ return "DREAM3DLib"; }
+{
+  return "DREAM3DLib";
+}
 
 // -----------------------------------------------------------------------------
 //

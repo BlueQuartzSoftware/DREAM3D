@@ -103,11 +103,11 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NodesFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(WriteConformalMesh)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteConformalMesh)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

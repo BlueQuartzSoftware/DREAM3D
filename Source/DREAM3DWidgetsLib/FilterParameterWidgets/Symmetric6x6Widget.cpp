@@ -96,7 +96,7 @@ void Symmetric6x6Widget::setCubicSym()
   v25->setEnabled(false);
   v26->setText("0");
   v26->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v35->setText("0");
@@ -137,7 +137,7 @@ void Symmetric6x6Widget::setHexagonalSym()
   vbar66("");
 
   //s12, s33 independant
-  
+
   //all others = 0
   v14->setText("0");
   v14->setEnabled(false);
@@ -152,7 +152,7 @@ void Symmetric6x6Widget::setHexagonalSym()
   v25->setEnabled(false);
   v26->setText("0");
   v26->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v35->setText("0");
@@ -188,7 +188,7 @@ void Symmetric6x6Widget::setTetHighSym()
   v55->setText(v44->text());
 
   //s12, s33, s66 independant
-  
+
   //all others = 0
   v14->setText("0");
   v14->setEnabled(false);
@@ -203,7 +203,7 @@ void Symmetric6x6Widget::setTetHighSym()
   v25->setEnabled(false);
   v26->setText("0");
   v26->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v35->setText("0");
@@ -244,7 +244,7 @@ void Symmetric6x6Widget::setTetLowSym()
   tetragonalv16Changed("");
 
   //s16, s12, s33, s66 independant
-  
+
   //all others = 0
   v14->setText("0");
   v14->setEnabled(false);
@@ -255,7 +255,7 @@ void Symmetric6x6Widget::setTetLowSym()
   v24->setEnabled(false);
   v25->setText("0");
   v25->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v35->setText("0");
@@ -314,7 +314,7 @@ void Symmetric6x6Widget::setTrigHighSym()
   v25->setEnabled(false);
   v26->setText("0");
   v26->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v35->setText("0");
@@ -372,7 +372,7 @@ void Symmetric6x6Widget::setTrigLowSym()
 
   v26->setText("0");
   v26->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v35->setText("0");
@@ -390,7 +390,7 @@ void Symmetric6x6Widget::setOrthorhomicSym()
   //s11, s22, s33 independant
   //s44, s55, s66 independant
   //s12, s13, s23 independant
-  
+
   //all others = 0
   v14->setText("0");
   v14->setEnabled(false);
@@ -405,7 +405,7 @@ void Symmetric6x6Widget::setOrthorhomicSym()
   v25->setEnabled(false);
   v26->setText("0");
   v26->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v35->setText("0");
@@ -440,7 +440,7 @@ void Symmetric6x6Widget::setMonoclinicSym()
   v24->setEnabled(false);
   v26->setText("0");
   v26->setEnabled(false);
-  
+
   v34->setText("0");
   v34->setEnabled(false);
   v36->setText("0");
@@ -749,18 +749,18 @@ void Symmetric6x6Widget::setupGui()
     v14->setText( QString::number(data.v14)  );
     v15->setText( QString::number(data.v15)  );
     v16->setText( QString::number(data.v16)  );
-    
+
     v22->setText( QString::number(data.v22) );
     v23->setText( QString::number(data.v23) );
     v24->setText( QString::number(data.v24) );
     v25->setText( QString::number(data.v25) );
     v26->setText( QString::number(data.v26) );
-    
+
     v33->setText( QString::number(data.v33) );
     v34->setText( QString::number(data.v34) );
     v35->setText( QString::number(data.v35) );
     v36->setText( QString::number(data.v36) );
-    
+
     v44->setText( QString::number(data.v44) );
     v45->setText( QString::number(data.v45) );
     v46->setText( QString::number(data.v46) );
@@ -771,7 +771,7 @@ void Symmetric6x6Widget::setupGui()
     v66->setText( QString::number(data.v66) );
   }
 
-  //connect combobox to symmetry state  
+  //connect combobox to symmetry state
   connect(comboBox, SIGNAL(currentIndexChanged( int )), this, SLOT( changeSym( int ) ) );
   clearSym();
   changeSym(comboBox->currentIndex());

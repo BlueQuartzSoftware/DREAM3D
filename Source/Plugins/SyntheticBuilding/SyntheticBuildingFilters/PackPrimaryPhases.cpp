@@ -101,7 +101,7 @@ class AssignVoxelsGapsImpl
   public:
     AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* featureIds, float* radCur,
                          float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int cur_feature,
-    Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
+                         Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_FeatureIds(featureIds),
       m_ShapeOps(shapeOps),
       curFeature(cur_feature)
@@ -158,9 +158,9 @@ class AssignVoxelsGapsImpl
       float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
       //making a copy because the transpose function used later can't deal with the const nature of ga
-      for(int i=0;i<3;i++)
+      for(int i = 0; i < 3; i++)
       {
-        for(int j=0;j<3;j++)
+        for(int j = 0; j < 3; j++)
         {
           gaCopy[i][j] = ga[i][j];
         }
@@ -382,25 +382,25 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
-      DREAM3D_FILTER_WRITE_PARAMETER(UseMask)
-      DREAM3D_FILTER_WRITE_PARAMETER(HaveFeatures)
-      DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(VtkOutputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(ErrorOutputFile)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseMask)
+  DREAM3D_FILTER_WRITE_PARAMETER(HaveFeatures)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(VtkOutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(ErrorOutputFile)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -575,7 +575,7 @@ void PackPrimaryPhases::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-      dataCheck();
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   if(m_HaveFeatures == false)
@@ -732,15 +732,15 @@ void  PackPrimaryPhases::load_features()
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
     vol = fourThirds * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
-    eqDiam = 2.0f*powf((vol * (0.75f) * (DREAM3D::Constants::k_1OverPi)), (DREAM3D::Constants::k_1Over3));
-    m_Centroids[3* currentFeature + 0] = xC;
-    m_Centroids[3* currentFeature + 1] = yC;
-    m_Centroids[3* currentFeature + 2] = zC;
+    eqDiam = 2.0f * powf((vol * (0.75f) * (DREAM3D::Constants::k_1OverPi)), (DREAM3D::Constants::k_1Over3));
+    m_Centroids[3 * currentFeature + 0] = xC;
+    m_Centroids[3 * currentFeature + 1] = yC;
+    m_Centroids[3 * currentFeature + 2] = zC;
     m_Volumes[currentFeature] = vol;
     m_EquivalentDiameters[currentFeature] = eqDiam;
-    m_AxisLengths[3 * currentFeature + 0] = axisA/axisA;
-    m_AxisLengths[3 * currentFeature + 1] = axisB/axisA;
-    m_AxisLengths[3 * currentFeature + 2] = axisC/axisA;
+    m_AxisLengths[3 * currentFeature + 0] = axisA / axisA;
+    m_AxisLengths[3 * currentFeature + 1] = axisB / axisA;
+    m_AxisLengths[3 * currentFeature + 2] = axisC / axisA;
     m_AxisEulerAngles[3 * currentFeature + 0] = phi1;
     m_AxisEulerAngles[3 * currentFeature + 1] = PHI;
     m_AxisEulerAngles[3 * currentFeature + 2] = phi2;
@@ -837,7 +837,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
                                  "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
-            .arg(i).arg(i).arg(m_PhaseTypes[i]);
+                     .arg(i).arg(i).arg(m_PhaseTypes[i]);
         notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
         return;
@@ -858,8 +858,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   exclusionOwnersPtr->initializeWithValue(0);
 
   //This is the set that we are going to keep updated with the points that are not in an exclusion zone
-  std::map<size_t,size_t> availablePoints;
-  std::map<size_t,size_t> availablePointsInv;
+  std::map<size_t, size_t> availablePoints;
+  std::map<size_t, size_t> availablePointsInv;
 
   // Get a pointer to the Feature Owners that was just initialized in the initialize_packinggrid() method
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
@@ -1256,7 +1256,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
       if(availablePoints.size() > 0)
       {
-        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
         featureOwnersIdx = availablePointsInv[key];
       }
       else
@@ -1406,7 +1406,7 @@ void PackPrimaryPhases::generate_feature(int phase, int Seed, Feature* feature, 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-      StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -1967,7 +1967,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::update_availablepoints(std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv)
+void PackPrimaryPhases::update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv)
 {
   size_t removeSize = pointsToRemove.size();
   size_t addSize = pointsToAdd.size();
@@ -1978,9 +1978,9 @@ void PackPrimaryPhases::update_availablepoints(std::map<size_t,size_t> &availabl
     featureOwnersIdx = pointsToRemove[i];
     key = availablePoints[featureOwnersIdx];
     //  availablePoints.erase(featureOwnersIdx);
-    val = availablePointsInv[availablePointsCount-1];
+    val = availablePointsInv[availablePointsCount - 1];
     //  availablePointsInv.erase(availablePointsCount-1);
-    if(key < availablePointsCount-1)
+    if(key < availablePointsCount - 1)
     {
       availablePointsInv[key] = val;
       availablePoints[val] = key;
@@ -2249,7 +2249,7 @@ void PackPrimaryPhases::assign_voxels()
   {
 //    if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
     if(ellipfuncs[i] >= 0 && (m_UseMask == false || (m_UseMask == true && m_Mask[i] == true))) { m_FeatureIds[i] = newowners[i]; }
-    if(m_UseMask == true && m_Mask[i] == false) m_FeatureIds[i] = 0;
+    if(m_UseMask == true && m_Mask[i] == false) { m_FeatureIds[i] = 0; }
     gnum = m_FeatureIds[i];
     if(gnum >= 0) { activeObjects[gnum] = true; }
     newowners[i] = -1;
@@ -2633,7 +2633,7 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
 
   DREAM3D_RANDOMNG_NEW()
 
-      QVector<int> primaryPhasesLocal;
+  QVector<int> primaryPhasesLocal;
   QVector<double> primaryPhaseFractionsLocal;
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();

@@ -65,9 +65,9 @@
 
 enum RenameErrorCodes
 {
-    OLD_DOES_NOT_EXIST,
-    SUCCESS,
-    NEW_EXISTS
+  OLD_DOES_NOT_EXIST,
+  SUCCESS,
+  NEW_EXISTS
 };
 
 /**

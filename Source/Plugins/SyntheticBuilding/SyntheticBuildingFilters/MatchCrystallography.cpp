@@ -228,7 +228,7 @@ void MatchCrystallography::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -308);
   }
 
- //typedef DataArray<unsigned int> XTalStructArrayType;
+//typedef DataArray<unsigned int> XTalStructArrayType;
   //typedef DataArray<unsigned int> PhaseTypeArrayType;
 
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), dims);

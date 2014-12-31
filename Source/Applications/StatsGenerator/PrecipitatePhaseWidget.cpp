@@ -240,7 +240,7 @@ void PrecipitatePhaseWidget::setupGui()
           this, SLOT(dataWasEdited()));
 
   {
-   // w = m_RdfPlot;
+    // w = m_RdfPlot;
 //    m_RdfPlot->setPlotTitle(QString("Clustering Distributions"));
 //    m_RdfPlot->setXAxisName(QString("Distance between Centroids"));
 //    m_RdfPlot->setYAxisName(QString("Frequency"));

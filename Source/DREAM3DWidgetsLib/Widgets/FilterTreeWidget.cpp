@@ -91,7 +91,7 @@ void FilterTreeWidget::performDrag()
   if(item)
   {
     QMimeData* mimeData = new QMimeData;
-    QString filterClassName = item->data(0, Qt::UserRole+1).toString();
+    QString filterClassName = item->data(0, Qt::UserRole + 1).toString();
     if(filterClassName.isEmpty() == false)
     {
       mimeData->setText(filterClassName);
@@ -109,7 +109,7 @@ void FilterTreeWidget::performDrag()
 void FilterTreeWidget::dragEnterEvent(QDragEnterEvent* event)
 {
   FilterTreeWidget* source =
-      qobject_cast<FilterTreeWidget*>(event->source());
+    qobject_cast<FilterTreeWidget*>(event->source());
   if (source && source != this)
   {
     event->setDropAction(Qt::MoveAction);
@@ -124,7 +124,7 @@ void FilterTreeWidget::dragEnterEvent(QDragEnterEvent* event)
 void FilterTreeWidget::dragMoveEvent(QDragMoveEvent* event)
 {
   FilterTreeWidget* source =
-      qobject_cast<FilterTreeWidget*>(event->source());
+    qobject_cast<FilterTreeWidget*>(event->source());
   if (source && source != this)
   {
     event->setDropAction(Qt::MoveAction);

@@ -376,7 +376,7 @@ void InsertAtoms::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; } 
+  if(getErrorCondition() < 0) { return; }
 
   FloatVec3_t latticeConstants;
   latticeConstants.x = m_LatticeConstants.x / 10000.0;

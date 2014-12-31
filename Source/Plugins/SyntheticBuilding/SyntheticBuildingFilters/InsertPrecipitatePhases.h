@@ -192,7 +192,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     float check_sizedisterror(Precip* precip);
     void update_exclusionZones(int gadd, int gremove, Int32ArrayType::Pointer exlusionZonesPtr);
-    void update_availablepoints(std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv);
+    void update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv);
     void determine_currentRDF(size_t featureNum, int add, bool double_count);
     void determine_randomRDF(size_t gnum, int add, bool double_count, int largeNumber);
     std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume);

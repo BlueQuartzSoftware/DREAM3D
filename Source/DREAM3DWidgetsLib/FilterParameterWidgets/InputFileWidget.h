@@ -85,9 +85,9 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public FilterParameterWidget, p
     /**
     * @brief
     */
-    bool verifyPathExists(QString filePath, QFSDropLabel *lineEdit);
+    bool verifyPathExists(QString filePath, QFSDropLabel* lineEdit);
 
-    void setFilterParameter(FilterParameter *value);
+    void setFilterParameter(FilterParameter* value);
     FilterParameter* getFilterParameter() const;
 
   public slots:

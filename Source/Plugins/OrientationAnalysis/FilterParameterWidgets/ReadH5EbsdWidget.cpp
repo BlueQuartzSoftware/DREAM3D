@@ -101,7 +101,7 @@ ReadH5EbsdWidget::~ReadH5EbsdWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::setFilter(AbstractFilter *value)
+void ReadH5EbsdWidget::setFilter(AbstractFilter* value)
 {
   m_Filter = dynamic_cast<ReadH5Ebsd*>(value);
 }
@@ -118,7 +118,7 @@ AbstractFilter* ReadH5EbsdWidget::getFilter() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::setFilterParameter(FilterParameter *value)
+void ReadH5EbsdWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
 }

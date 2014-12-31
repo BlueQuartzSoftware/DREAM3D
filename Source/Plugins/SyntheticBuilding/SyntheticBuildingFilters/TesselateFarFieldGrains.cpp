@@ -105,8 +105,8 @@ class AssignVoxelsImpl
 
   public:
     AssignVoxelsImpl(DimType* dimensions, float* resolution, int32_t* featureIds, float* radCur,
-                         float* xx, ShapeOps::Pointer ellipsoidOps, float gA[3][3], float* size, int cur_feature,
-    Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
+                     float* xx, ShapeOps::Pointer ellipsoidOps, float gA[3][3], float* size, int cur_feature,
+                     Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_FeatureIds(featureIds),
       m_EllipsoidOps(ellipsoidOps),
       curFeature(cur_feature)
@@ -163,9 +163,9 @@ class AssignVoxelsImpl
       float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
       //making a copy because the transpose function used later can't deal with the const nature of ga
-      for(int i=0;i<3;i++)
+      for(int i = 0; i < 3; i++)
       {
-        for(int j=0;j<3;j++)
+        for(int j = 0; j < 3; j++)
         {
           gaCopy[i][j] = ga[i][j];
         }
@@ -546,7 +546,7 @@ void TesselateFarFieldGrains::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-      dataCheck();
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Loading Features");
@@ -596,7 +596,8 @@ void  TesselateFarFieldGrains::load_features()
                               m_FeatureInputFileListInfo.EndIndex, hasMissingFiles, orderAscending,
                               m_FeatureInputFileListInfo.InputPath, m_FeatureInputFileListInfo.FilePrefix,
                               m_FeatureInputFileListInfo.FileSuffix, m_FeatureInputFileListInfo.FileExtension,
-                              m_FeatureInputFileListInfo.PaddingDigits);  std::ifstream inFile;
+                              m_FeatureInputFileListInfo.PaddingDigits);
+  std::ifstream inFile;
 
   int slabCount = 0;
   size_t currentFeature = 1;
@@ -604,8 +605,8 @@ void  TesselateFarFieldGrains::load_features()
   float xRes, yRes, zRes;
   m->getDimensions(xDim, yDim, zDim);
   m->getResolution(xRes, yRes, zRes);
-  float xShift = xRes*float(xDim/2.0);
-  float yShift = yRes*float(yDim/2.0);
+  float xShift = xRes * float(xDim / 2.0);
+  float yShift = yRes * float(yDim / 2.0);
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
     slabCount++;
@@ -643,19 +644,19 @@ void  TesselateFarFieldGrains::load_features()
     inFile >> keywordStr >> globalZPos;
     inFile >> keywordStr >> numPhases;
 
-    tDims[0] = numPhases+1;
+    tDims[0] = numPhases + 1;
     cellEnsembleAttrMat->setTupleDimensions(tDims);
     updateEnsembleInstancePointers();
     for(int i = 1; i <= numPhases; i++)
     {
       inFile >> phaseName >> crystruct >> aRef >> bRef >> cRef >> alphaRef >> betaRef >> gammaRef;
-      if(crystruct.compare("Cubic") == 0) cStruct = Ebsd::CrystalStructure::Cubic_High;
-      else if(crystruct.compare("Hexagonal") == 0) cStruct = Ebsd::CrystalStructure::Hexagonal_High;
-      else if(crystruct.compare("Tetragonal") == 0) cStruct = Ebsd::CrystalStructure::Tetragonal_High;
-      else if(crystruct.compare("Orthorhombic") == 0) cStruct = Ebsd::CrystalStructure::OrthoRhombic;
-      else if(crystruct.compare("Trigonal") == 0) cStruct = Ebsd::CrystalStructure::Trigonal_High;
-      else if(crystruct.compare("Monoclinic") == 0) cStruct = Ebsd::CrystalStructure::Monoclinic;
-      else if(crystruct.compare("Triclinic") == 0) cStruct = Ebsd::CrystalStructure::Triclinic;
+      if(crystruct.compare("Cubic") == 0) { cStruct = Ebsd::CrystalStructure::Cubic_High; }
+      else if(crystruct.compare("Hexagonal") == 0) { cStruct = Ebsd::CrystalStructure::Hexagonal_High; }
+      else if(crystruct.compare("Tetragonal") == 0) { cStruct = Ebsd::CrystalStructure::Tetragonal_High; }
+      else if(crystruct.compare("Orthorhombic") == 0) { cStruct = Ebsd::CrystalStructure::OrthoRhombic; }
+      else if(crystruct.compare("Trigonal") == 0) { cStruct = Ebsd::CrystalStructure::Trigonal_High; }
+      else if(crystruct.compare("Monoclinic") == 0) { cStruct = Ebsd::CrystalStructure::Monoclinic; }
+      else if(crystruct.compare("Triclinic") == 0) { cStruct = Ebsd::CrystalStructure::Triclinic; }
       m_CrystalStructures[i] = cStruct;
     }
 
@@ -693,13 +694,13 @@ void  TesselateFarFieldGrains::load_features()
       {
         m_SlabId[currentFeature] = slabCount;
 
-        m_Centroids[3* currentFeature + 0] = xC + xShift;
-        m_Centroids[3* currentFeature + 1] = yC + yShift;
-        m_Centroids[3* currentFeature + 2] = zC + (globalZPos-beamCenter);
+        m_Centroids[3 * currentFeature + 0] = xC + xShift;
+        m_Centroids[3 * currentFeature + 1] = yC + yShift;
+        m_Centroids[3 * currentFeature + 2] = zC + (globalZPos - beamCenter);
 
         vol = fourThirds * DREAM3D::Constants::k_Pi * eqRad * eqRad * eqRad;
         m_Volumes[currentFeature] = vol;
-        m_EquivalentDiameters[currentFeature] = eqRad*2.0;
+        m_EquivalentDiameters[currentFeature] = eqRad * 2.0;
         m_AxisLengths[3 * currentFeature + 0] = 1.0;
         m_AxisLengths[3 * currentFeature + 1] = 1.0;
         m_AxisLengths[3 * currentFeature + 2] = 1.0;
@@ -711,9 +712,9 @@ void  TesselateFarFieldGrains::load_features()
         m_FeaturePhases[currentFeature] = phase;
 
         OrientationMath::MattoEuler(mat, phi1, PHI, phi2);
-        m_FeatureEulerAngles[3*currentFeature + 0] = phi1;
-        m_FeatureEulerAngles[3*currentFeature + 1] = PHI;
-        m_FeatureEulerAngles[3*currentFeature + 2] = phi2;
+        m_FeatureEulerAngles[3 * currentFeature + 0] = phi1;
+        m_FeatureEulerAngles[3 * currentFeature + 1] = PHI;
+        m_FeatureEulerAngles[3 * currentFeature + 2] = phi2;
 
         alpha *= DREAM3D::Constants::k_PiOver180;
         beta *= DREAM3D::Constants::k_PiOver180;
@@ -728,15 +729,15 @@ void  TesselateFarFieldGrains::load_features()
         MatrixMath::Add3x3s(epsAdd, epsMult, flst);
         MatrixMath::Multiply3x3withConstant(flst, 0.5);
 
-        m_ElasticStrains[9*currentFeature + 0] = flst[0][0];
-        m_ElasticStrains[9*currentFeature + 1] = flst[0][1];
-        m_ElasticStrains[9*currentFeature + 2] = flst[0][2];
-        m_ElasticStrains[9*currentFeature + 3] = flst[1][0];
-        m_ElasticStrains[9*currentFeature + 4] = flst[1][1];
-        m_ElasticStrains[9*currentFeature + 5] = flst[1][2];
-        m_ElasticStrains[9*currentFeature + 6] = flst[2][0];
-        m_ElasticStrains[9*currentFeature + 7] = flst[2][1];
-        m_ElasticStrains[9*currentFeature + 8] = flst[2][2];
+        m_ElasticStrains[9 * currentFeature + 0] = flst[0][0];
+        m_ElasticStrains[9 * currentFeature + 1] = flst[0][1];
+        m_ElasticStrains[9 * currentFeature + 2] = flst[0][2];
+        m_ElasticStrains[9 * currentFeature + 3] = flst[1][0];
+        m_ElasticStrains[9 * currentFeature + 4] = flst[1][1];
+        m_ElasticStrains[9 * currentFeature + 5] = flst[1][2];
+        m_ElasticStrains[9 * currentFeature + 6] = flst[2][0];
+        m_ElasticStrains[9 * currentFeature + 7] = flst[2][1];
+        m_ElasticStrains[9 * currentFeature + 8] = flst[2][2];
         currentFeature++;
       }
     }
@@ -749,7 +750,7 @@ void  TesselateFarFieldGrains::load_features()
 // -----------------------------------------------------------------------------
 void TesselateFarFieldGrains::merge_twins()
 {
-  
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -868,7 +869,7 @@ void TesselateFarFieldGrains::assign_voxels()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
-        AssignVoxelsImpl(dims, res, m_FeatureIds, radCur, xx, m_EllipsoidOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
+                        AssignVoxelsImpl(dims, res, m_FeatureIds, radCur, xx, m_EllipsoidOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
     }
     else
@@ -887,7 +888,7 @@ void TesselateFarFieldGrains::assign_voxels()
   {
 //    if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
     if(ellipfuncs[i] >= 0 && m_Mask[i] == true) { m_FeatureIds[i] = newowners[i]; }
-    if(m_Mask[i] == false) m_FeatureIds[i] = 0;
+    if(m_Mask[i] == false) { m_FeatureIds[i] = 0; }
     gnum = m_FeatureIds[i];
     if(gnum >= 0) { activeObjects[gnum] = true; }
     newowners[i] = -1;
