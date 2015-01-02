@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/Widgets/AddFavoriteWidget.h"
 
 #include "ui_FavoritesDockWidget.h"
 
@@ -97,6 +98,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      */
     FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
 
+    QTreeWidgetItem* getSelectedParentTreeItem();
 
     void configureFilterLibraryTree();
 

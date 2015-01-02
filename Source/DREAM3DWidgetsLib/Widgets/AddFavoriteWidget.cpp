@@ -37,12 +37,22 @@
 
 #include "AddFavoriteWidget.h"
 
-AddFavoriteWidget::AddFavoriteWidget(QString text, QWidget* parent)
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+
+#include <QtGui/QMessageBox>
+
+AddFavoriteWidget::AddFavoriteWidget(QString prompt, QString parentPath, QWidget* parent)
 {
   setupUi(this);
+  m_ParentPath = parentPath;
+
   addfavoriteOKButton->setEnabled(false);
   BtnClicked = false;
-  label->setText(text);
+  label->setText(prompt);
+  removeExistingFavoriteBtn->setHidden(true);
+  errorMessageDisplay->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
+  errorMessageDisplay->setHidden(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -83,13 +93,99 @@ QString AddFavoriteWidget::getFavoriteName()
 //
 // -----------------------------------------------------------------------------
 void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
-{
-  if (favoriteName->text() == "")
+{ 
+  QString prefPath = m_ParentPath + QDir::separator() + text + ".ini"; // Generate the proper path to the favorite
+
+  QFileInfo fileInfo(prefPath);
+  bool pathExists = fileInfo.exists();
+
+#if 0
+  if ( favoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d\\s]")) )
   {
-    addfavoriteOKButton->setEnabled(false);
+    QString displayText = "The name of the Favorite that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
+    displayText = displayText + "\n\nNo special characters allowed due to file system restrictions";
+    // Display error message
+    int reply = QMessageBox::critical(this, tr("Add New Favorite"), tr(displayText.toLatin1().data()),
+                                      QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
+    if(reply == QMessageBox::Cancel)
+    {
+      done = true;
+      favoriteTitle = "";
+    }
+  }
+  else if (prefFileInfo.exists() == true)
+  {
+    QString displayText = "A favorite with that name already exists.  Please choose a different favorite name.";
+    // Display error message
+    int reply = QMessageBox::critical(this, tr("Add New Favorite"), tr(displayText.toLatin1().data()),
+                                      QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
+    if(reply == QMessageBox::Cancel)
+    {
+      done = true;
+      favoriteTitle = "";
+    }
   }
   else
   {
-    addfavoriteOKButton->setEnabled(true);
+    done = true;
+  }
+#endif
+
+  if (text.isEmpty())
+  {
+    addfavoriteOKButton->setEnabled(false);
+  }
+  else if (pathExists == true)
+  {
+    errorMessageDisplay->setText("A favorite with that name already exists.");
+    errorMessageDisplay->setHidden(false);
+    removeExistingFavoriteBtn->setHidden(false);
+    addfavoriteOKButton->setEnabled(false);
+  }
+  else if ( text.contains(QRegExp("[^a-zA-Z_-\\d\\s]")) )
+  {
+    addfavoriteOKButton->setEnabled(false);
+
+    QString linkText = "<a href=#openWindow>Learn More.</a>";
+    errorMessageDisplay->setText("The name that you chose has illegal characters. " + linkText);
+    errorMessageDisplay->setTextFormat(Qt::RichText);
+    errorMessageDisplay->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    errorMessageDisplay->setHidden(false);
+  }
+  else
+  {
+    revertToDefault();
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFavoriteWidget::revertToDefault()
+{
+  addfavoriteOKButton->setEnabled(true);
+  removeExistingFavoriteBtn->setHidden(true);
+  errorMessageDisplay->setHidden(true);
+  errorMessageDisplay->setTextFormat(Qt::PlainText);
+  errorMessageDisplay->setTextInteractionFlags(Qt::NoTextInteraction);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFavoriteWidget::on_errorMessageDisplay_linkActivated(const QString &link)
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("Naming Restrictions");
+  msgBox.setText("Names can only contain letters, numbers, underscores, and dashes.");
+  msgBox.setInformativeText("No special characters allowed due to file system restrictions.");
+  msgBox.setStandardButtons(QMessageBox::Ok);
+  msgBox.setDefaultButton(QMessageBox::Ok);
+  int ret = msgBox.exec();
+}
+
+
+
+
+
+

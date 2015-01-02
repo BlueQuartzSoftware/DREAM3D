@@ -42,22 +42,32 @@
 
 #include "ui_AddFavoriteWidget.h"
 
+enum ErrorCode
+{
+  ERROR,
+  NO_ERROR
+};
+
 class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::AddFavoriteDialog
 {
     Q_OBJECT
 
   public:
-    AddFavoriteWidget(QString text, QWidget* parent = 0);
+    AddFavoriteWidget(QString text, QString parentPath, QWidget* parent = 0);
     bool getBtnClicked();
     QString getFavoriteName();
+
+    void revertToDefault();
 
   protected slots:
     void on_addfavoriteOKButton_clicked();
     void on_addfavoriteCancelButton_clicked();
     void on_favoriteName_textChanged(const QString& text);
+    void on_errorMessageDisplay_linkActivated(const QString &link);
 
   private:
     bool BtnClicked;
+    QString m_ParentPath;
 };
 
 #endif /* _AddFavoriteWidget_H */
