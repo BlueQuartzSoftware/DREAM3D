@@ -625,6 +625,7 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 {
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
+
   if (verifyPathExists(text, filePath) == true)
   {
     if(getFilter() != NULL)
@@ -641,6 +642,9 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 
       if(filePath->text().isEmpty() == false)
       {
+        // We need to do this now so that the validity of the InputFileDCAProxy will be correct for the if-else statements below
+        m_Filter->setInputFile(text);
+
         DataContainerArrayProxy proxy;
         if (m_Filter->getInputFileDataContainerArrayProxy().isValid == true)
         {

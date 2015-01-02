@@ -93,9 +93,9 @@ void DataContainerReader::setupFilterParameters()
 void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
-  setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
   reader->closeFilterGroup();
 }
 
@@ -614,4 +614,24 @@ void DataContainerReader::setInputFileDataContainerArrayProxy(DataContainerArray
   m_InputFileDataContainerArrayProxy.isValid = true;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainerReader::getInputFile()
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setInputFile(QString filePath)
+{
+  if (m_InputFile != filePath && m_InputFile.isEmpty() == false)
+  {
+    m_InputFileDataContainerArrayProxy.isValid = false;
+  }
+
+  m_InputFile = filePath;
+}
 
