@@ -641,8 +641,16 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 
       if(filePath->text().isEmpty() == false)
       {
+        DataContainerArrayProxy proxy;
+        if (m_Filter->getInputFileDataContainerArrayProxy().isValid == true)
+        {
+          proxy = m_Filter->getInputFileDataContainerArrayProxy();
+        }
+        else
+        {
+          proxy = m_Filter->readDataContainerArrayStructure(filePath->text());
+        }
 
-        DataContainerArrayProxy proxy = m_Filter->readDataContainerArrayStructure(filePath->text());
         updateModelFromProxy(proxy);
       }
     }
