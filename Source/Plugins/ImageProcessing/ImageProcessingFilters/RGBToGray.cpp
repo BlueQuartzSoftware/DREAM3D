@@ -157,8 +157,6 @@ void RGBToGray::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayArrayPath(), false, ""));
   parameters.push_back(FilterParameter::New("Color Weighting", "ColorWeights", FilterParameterWidgetType::FloatVec3Widget, getColorWeights(), false));
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
   parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
   setFilterParameters(parameters);
 }
@@ -221,7 +219,7 @@ void RGBToGray::dataCheck()
   if(getErrorCondition() < 0) { return; }
   IDataArray::Pointer data = am->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
   if(getErrorCondition() < 0) { return; }
-
+  compDims[0] = 1;
   m_NewCellArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, data);
   if( NULL != m_NewCellArrayPtr.lock().get() )
   {
