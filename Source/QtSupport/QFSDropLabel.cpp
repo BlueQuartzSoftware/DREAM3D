@@ -77,7 +77,11 @@ void QFSDropLabel::changeStyleSheet(int style)
   }
   else if(style == FS_DOESNOTEXIST_STYLE)
   {
-    ss << "color: rgb(200, 50, 50);";
+    ss << "color: rgb(200, 50, 50); font: bold;";
+  }
+  else if(style == FS_WARNING_STYLE)
+  {
+    ss << "color: rgb(255, 140, 0); font: bold;";
   }
 
 

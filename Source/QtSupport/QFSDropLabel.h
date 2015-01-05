@@ -38,6 +38,7 @@
 #define FS_STANDARD_STYLE 0
 #define FS_DRAGGING_STYLE 1
 #define FS_DOESNOTEXIST_STYLE 2
+#define FS_WARNING_STYLE 3
 
 /**
 * @class QFSDropLabel QFSDropLabel.h EmMpm/Common/Qt/QFSDropLabel.h

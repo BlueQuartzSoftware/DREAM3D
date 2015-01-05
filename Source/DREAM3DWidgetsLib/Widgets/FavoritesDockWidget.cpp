@@ -52,7 +52,6 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "DREAM3DWidgetsLib/Widgets/AddFavoriteWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 
 
@@ -582,12 +581,8 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FavoritesDockWidget::addFavorite(bool folder)
+QTreeWidgetItem* FavoritesDockWidget::getSelectedParentTreeItem()
 {
-  QString favoriteTitle = displayNewFavoriteDialog();
-
-  if(favoriteTitle.isEmpty() == true) { return; }
-
   QTreeWidgetItem* selection = filterLibraryTree->currentItem();
 
   // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
@@ -603,6 +598,23 @@ void FavoritesDockWidget::addFavorite(bool folder)
   {
     selection = filterLibraryTree->invisibleRootItem();
   }
+
+  return selection;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::addFavorite(bool folder)
+{
+  QString favoriteTitle = displayNewFavoriteDialog();
+
+  if(favoriteTitle.isEmpty() == true)
+  {
+    return;
+  }
+
+  QTreeWidgetItem* selection = getSelectedParentTreeItem();
 
   bool allowEditing = true;
 
@@ -652,36 +664,22 @@ void FavoritesDockWidget::addFavorite(bool folder)
 QString FavoritesDockWidget::displayNewFavoriteDialog()
 {
   QString favoriteTitle;
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", NULL);
-  //addfavoriteDialog->setModal(false);
-  bool done = false;
-  while (done == false)
-  {
+  QTreeWidgetItem* parentItem = getSelectedParentTreeItem();
+  QString parentPath = parentItem->data(0, Qt::UserRole).toString(); // Get the selected item's path
+
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", parentPath, this);
+
+  connect(addfavoriteDialog, SIGNAL(fireRemoveExistingFavorite(QString)), this, SLOT(removeFavorite(QString)));
+
     addfavoriteDialog->exec(); // Show the dialog
     if(addfavoriteDialog->getBtnClicked()) // the user clicked the OK button, now check what they typed
     {
       favoriteTitle = addfavoriteDialog->getFavoriteName();
-      if ( favoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d\\s]")) )
-      {
-        QString displayText = "The name of the Favorite that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
-        displayText = displayText + "\n\nNo special charaters allowed due to file system restrictions";
-        // Display error message
-        int reply = QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
-                                          QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel)
-        {
-          done = true;
-          favoriteTitle = "";
-        }
-      }
-      else { done = true; }
     }
     else
     {
-      done = true; // The user clicked the cancel button
       favoriteTitle = "";
     }
-  }
 
   return favoriteTitle;
 }
@@ -724,6 +722,18 @@ void FavoritesDockWidget::actionUpdateFavorite_triggered()
   QString filePath = item->data(0, Qt::UserRole).toString();
 
   emit pipelineNeedsToBeSaved(filePath, name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::removeFavorite(QString favoritePath)
+{
+  QFileInfo fileInfo(favoritePath);
+  QString fileName = fileInfo.baseName();
+  //QTreeWidgetItem* item = filterLibraryTree->findChild<QTreeWidgetItem*>(fileName);
+  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(fileName, Qt::MatchFixedString);
+  removeFavorite(list.first());
 }
 
 // -----------------------------------------------------------------------------
