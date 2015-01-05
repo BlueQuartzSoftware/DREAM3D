@@ -1,24 +1,32 @@
-Load Additive Monitoring Data {#loadadditivemonitoringdata}
+Read Agilent Ultrasound File {#agilentultrasoundreader}
 ======
+
 ## Group (Subgroup) ##
-IO Filters (Input)
+I/O Filters
+
 
 ## Description ##
-
+    
 
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Input File | Input File |
+| Input File | File Path |
+
 
 ## Required DataContainers ##
 
 
 ## Required Arrays ##
-
+None
 
 ## Created Arrays ##
+
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+
+
 
 
 ## Authors ##

@@ -5,7 +5,6 @@ set(${PLUGIN_NAME}_ParameterWidgets_UIS "")
 
 
 set(${PLUGIN_NAME}_PARAMETER_WIDGETS
-      ProcessMonitoringWidget
 )
 
 # --------------------------------------------------------------------

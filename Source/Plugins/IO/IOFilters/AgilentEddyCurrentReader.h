@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,76 +33,51 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _LoadAdditiveMonitoringData_H_
-#define _LoadAdditiveMonitoringData_H_
 
 
+#ifndef _AgilentEddyCurrentReader_H_
+#define _AgilentEddyCurrentReader_H_
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#endif
-
-
-#include <QtCore/QVector>
+#include <QtCore/QFile>
 #include <QtCore/QString>
-
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "IO/IOFilters/util/GenericDataParser.hpp"
 
-#include "IO/IOConstants.h"
 /**
- * @class LoadAdditiveMonitoringData LoadAdditiveMonitoringData.h LoadAdditiveMonitoringData/LoadAdditiveMonitoringData.h
- * @brief This class is used to convert Hex grid TSL .ang files into Square grid
- * .ang files
- * @author Michael A. Jackson for BlueQuartz Software
- * @author Dr. Michael Groeber, US Air Force Research Laboratories
- * @date July 23, 2012
- * @version 1.2
- *
+ * @class AgilentEddyCurrentReader AgilentEddyCurrentReader.h DREAM3DLib/IO/AgilentEddyCurrentReader.h
+ * @brief
+ * @author mjackson
+ * @date Sep 28, 2011
+ * @version $Revision$
  */
-class LoadAdditiveMonitoringData : public AbstractFilter
+class  AgilentEddyCurrentReader : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(LoadAdditiveMonitoringData)
-    DREAM3D_STATIC_NEW_MACRO(LoadAdditiveMonitoringData)
-    DREAM3D_TYPE_MACRO_SUPER(LoadAdditiveMonitoringData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AgilentEddyCurrentReader)
+    DREAM3D_STATIC_NEW_MACRO(AgilentEddyCurrentReader)
+    DREAM3D_TYPE_MACRO_SUPER(AgilentEddyCurrentReader, AbstractFilter)
 
-    virtual ~LoadAdditiveMonitoringData();
-
+    virtual ~AgilentEddyCurrentReader();
     DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-    DREAM3D_FILTER_PARAMETER(QString, CurrentArrayName)
-    Q_PROPERTY(QString CurrentArrayName READ getCurrentArrayName WRITE setCurrentArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SpeedArrayName)
-    Q_PROPERTY(QString SpeedArrayName READ getSpeedArrayName WRITE setSpeedArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
-
-    DREAM3D_FILTER_PARAMETER(QString, InputPath)
-    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
-    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
-    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
-    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
-    DREAM3D_FILTER_PARAMETER(uint32_t, RefFrameZDir)
-
-    DREAM3D_FILTER_PARAMETER(int, Stack)
-    Q_PROPERTY(int Stack READ getStack WRITE setStack)
+    /* Input Parameters */
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -118,50 +93,32 @@ class LoadAdditiveMonitoringData : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    virtual void preflight();
     virtual void execute();
 
-
-    /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
-    */
-    virtual void preflight();
-
-    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
-    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
-    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
-
   signals:
-
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
 
   protected:
-    LoadAdditiveMonitoringData();
+    AgilentEddyCurrentReader();
+
+    virtual int readHeader(QFile &reader);
+    virtual int readFile(QFile &reader);
 
     void dataCheck();
-    void updateCellInstancePointers();
-
-    void generateFileList();
-
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Current)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Speed)
+    QFile m_InStream;
+    QMap<QString, GenericDataParser::Pointer> m_NamePointerMap;
 
-//    QString int_to_string(int value);
-//    QString float_to_string(float value);
+    size_t m_DataPointCount;
 
-    LoadAdditiveMonitoringData(const LoadAdditiveMonitoringData&); // Copy Constructor Not Implemented
-    void operator=(const LoadAdditiveMonitoringData&); // Operator '=' Not Implemented
+    AgilentEddyCurrentReader(const AgilentEddyCurrentReader&); //Not Implemented
+    void operator=(const AgilentEddyCurrentReader&); //Not Implemented
+
 };
 
-#endif /* LoadAdditiveMonitoringData_H_ */
-
-
-
+#endif //_AgilentEddyCurrentReader_h_

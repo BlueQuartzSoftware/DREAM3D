@@ -395,6 +395,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
       break;
     }
   }
+
 #if 0
   nRows = yChange + 1;
 
@@ -544,10 +545,20 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
    * 2 columns and all the other columns are the same as above.
    */
   float p1 = 0.0f, p = 0.0f, p2 = 0.0f, x = -1.0f, y = -1.0f, iqual = -1.0f, conf = -1.0f, semSignal = -1.0f, fit = -1.0f;
-  int ph = -1;
+  int ph = 0;
   size_t offset = 0;
   size_t featuresRead = 0;
-  featuresRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p, &p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
+//  featuresRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p, &p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
+  QList<QByteArray> tokens = line.trimmed().simplified().split(' ');
+  bool ok = true;
+  p1 = tokens[0].toFloat(&ok);
+  p = tokens[1].toFloat(&ok);
+  p2 = tokens[2].toFloat(&ok);
+  x = tokens[3].toFloat(&ok);
+  y = tokens[4].toFloat(&ok);
+  iqual = tokens[5].toFloat(&ok);
+  conf = tokens[6].toFloat(&ok);
+  ph = tokens[7].toInt(&ok);
 
   offset = i;
 
@@ -559,12 +570,14 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
   m_PhaseData[offset] = ph;
   m_X[offset] = x;
   m_Y[offset] = y;
-  if (featuresRead > 8)
+  if (tokens.size() > 8)
   {
+    semSignal = tokens[8].toFloat(&ok);
     m_SEMSignal[offset] = semSignal;
   }
-  if (featuresRead > 9)
+  if (tokens.size() > 9)
   {
+    fit = tokens[9].toFloat(&ok);
     m_Fit[offset] = fit;
   }
 }

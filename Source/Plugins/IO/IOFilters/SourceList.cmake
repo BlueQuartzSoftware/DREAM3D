@@ -15,6 +15,7 @@ START_FILTER_GROUP(${IO_BINARY_DIR} "${_filterGroupName}" "IO")
 set(_PublicFilters
   AbaqusHexahedronWriter
   AbaqusSurfaceMeshWriter
+  AgilentEddyCurrentReader
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
   DxReader
@@ -25,7 +26,6 @@ set(_PublicFilters
   GBCDTriangleDumper
   INLWriter
   LammpsFileWriter
-  LoadAdditiveMonitoringData
   LosAlamosFFTWriter
   NodesTrianglesToStl
   NodesTrianglesToVtk
@@ -39,7 +39,7 @@ set(_PublicFilters
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
   SurfaceMeshToVtk
-
+  UniWestEddyCurrentReader
   VASPReader
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
@@ -76,6 +76,9 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
+#-------------
+# These are files that need to be compiled into DREAM3DLib but are NOT filters
+ADD_DREAM3D_SUPPORT_HEADER(${IO_SOURCE_DIR} ${_filterGroupName} util/GenericDataParser.hpp)
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.
