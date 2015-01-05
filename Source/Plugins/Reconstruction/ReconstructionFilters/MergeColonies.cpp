@@ -45,9 +45,9 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1

@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 /**
  * @class ImageUtilities ImageUtilities.h /Utilities/ImageUtilities.h

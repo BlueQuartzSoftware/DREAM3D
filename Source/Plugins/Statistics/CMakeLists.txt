@@ -46,6 +46,8 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 # Add in our Plugin Specific FilterParameterWidgets
 include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 
+include(${${PLUGIN_NAME}_SOURCE_DIR}/DistributionAnalysisOps/SourceList.cmake)
+
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 
 #-----------------------------------------------------
@@ -154,6 +156,10 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
   ${${PLUGIN_NAME}_GEN_HDRS}
+
+  #-- Add the Distribution Analysis Ops Classes
+  ${DistributionAnalysisOps_HDRS}
+  ${DistributionAnalysisOps_SRCS}
 )
 
 # --------------------------------------------------------------------
@@ -168,6 +174,7 @@ add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     ${QT_QTCORE_LIBRARY}
                     DREAM3DLib
+                    OrientationLib
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
                     DREAM3DWidgetsLib

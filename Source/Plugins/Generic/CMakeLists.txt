@@ -181,6 +181,7 @@ add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     ${QT_QTCORE_LIBRARY}
                     DREAM3DLib
+                    OrientationLib
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
                     DREAM3DWidgetsLib

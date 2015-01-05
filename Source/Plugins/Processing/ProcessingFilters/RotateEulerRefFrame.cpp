@@ -44,9 +44,9 @@
 #endif
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationMath.h"
 
 
 class RotateEulerRefFrameImpl

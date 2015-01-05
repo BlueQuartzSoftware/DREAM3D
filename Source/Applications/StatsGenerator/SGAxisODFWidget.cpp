@@ -66,7 +66,7 @@
 #include "StatsGenerator/TextureDialog.h"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 
-#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 #include "QtSupport/PoleFigureImageUtilities.h"
 
 #define SHOW_POLE_FIGURES 1

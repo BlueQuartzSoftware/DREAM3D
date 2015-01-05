@@ -37,7 +37,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"

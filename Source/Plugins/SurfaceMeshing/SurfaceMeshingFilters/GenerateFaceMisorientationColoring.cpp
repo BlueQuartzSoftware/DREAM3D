@@ -47,14 +47,14 @@
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/CubicOps.h"
+#include "OrientationLib/OrientationOps/CubicLowOps.h"
+#include "OrientationLib/OrientationOps/HexagonalOps.h"
+#include "OrientationLib/OrientationOps/TrigonalOps.h"
+#include "OrientationLib/OrientationOps/TetragonalOps.h"
+#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/OrientationOps/MonoclinicOps.h"
 
 
 /**

@@ -39,9 +39,9 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
-#include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
-#include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
+#include "Statistics/DistributionAnalysisOps/BetaOps.h"
+#include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
+#include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
 
 // -----------------------------------------------------------------------------
 //

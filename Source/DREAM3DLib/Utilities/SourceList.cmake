@@ -11,7 +11,6 @@
 
 set(DREAM3DLib_Utilities_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorTable.h
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ImageUtilities.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorUtilities.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/TimeUtilities.h
@@ -23,7 +22,6 @@ set(DREAM3DLib_Utilities_HDRS
 
 set(DREAM3DLib_Utilities_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorTable.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ImageUtilities.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorUtilities.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DRandom.cpp
@@ -37,8 +35,6 @@ if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
             DESTINATION include/DREAM3D/Utilities
             COMPONENT Headers   )
 endif()
-
-include(${DREAM3DLib_SOURCE_DIR}/Utilities/IO/SourceList.cmake)
 
 set(DREAM3DLib_Utilities_HDRS ${DREAM3DLib_Utilities_HDRS} ${DREAM3DLib_Utilities_IO_HDRS})
 set(DREAM3DLib_Utilities_SRCS ${DREAM3DLib_Utilities_SRCS} ${DREAM3DLib_Utilities_IO_SRCS})
