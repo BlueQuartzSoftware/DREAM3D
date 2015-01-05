@@ -631,6 +631,7 @@ namespace DREAM3D
     const unsigned int FaceEnsemble = 10; //!<
     const unsigned int CellEnsemble = 11; //!<
     const unsigned int MetaData = 12; //!<
+    const unsigned int Generic = 13; //!<
     const unsigned int Unknown = 999; //!<
   }
 
