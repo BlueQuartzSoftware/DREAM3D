@@ -188,6 +188,36 @@ void UniWestEddyCurrentReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename T>
+void shuffleArray(IDataArray::Pointer inputData, IDataArray::Pointer inputDataCopy, size_t m_DataPointCount, size_t xDim, size_t yDim)
+{
+  DataArray<T>* inArray = DataArray<T>::SafePointerDownCast(inputData.get());
+  DataArray<T>* copyArray = DataArray<T>::SafePointerDownCast(inputDataCopy.get());
+  if (NULL == inArray || copyArray == NULL)
+  {
+    return;
+  }
+
+  T* inPtr = inArray->getPointer(0);
+  T* copyPtr = copyArray->getPointer(0);
+
+  for(size_t i = 0; i < m_DataPointCount; i++)
+  {
+    size_t row = i%yDim;
+    size_t col = i/yDim;
+    size_t newPos = (row*xDim) + col;
+    if(newPos >= m_DataPointCount)
+    {
+      int stop = 0;
+    }
+    copyPtr[newPos] = inPtr[i];
+  }
+ }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void UniWestEddyCurrentReader::execute()
 {
   dataCheck();
@@ -265,6 +295,8 @@ int UniWestEddyCurrentReader::readFile(QFile &reader)
   float x, y;
   float xMin = 100000000000.0;
   float yMin = 100000000000.0;
+  float xMax = -100000000000.0;
+  float yMax = -100000000000.0;
   float xStep = 0.0;
   float yStep = 0.0;
   size_t xDim = 0;
@@ -293,7 +325,7 @@ int UniWestEddyCurrentReader::readFile(QFile &reader)
     tokens = buf.trimmed().simplified().split(',');
   }
 
-  //now begin reading the data
+  //now begin reading the data....assuming the file is orderd with x incrementing fastest....we will correct this later if it is wrong
   for(size_t i = 0; i < m_DataPointCount; i++)
   {
     tokens = reader.readLine().trimmed().simplified().split(',');
@@ -317,29 +349,49 @@ int UniWestEddyCurrentReader::readFile(QFile &reader)
   float* xVal = xPtr->getPointer(0);
   FloatArrayType::Pointer yPtr = getDataContainerArray()->getDataContainer(getVolumeDataContainerName())->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayAs<FloatArrayType>(" Y (mm)");
   float* yVal = yPtr->getPointer(0);
+
+  bool xFastest = true;
   for(size_t i = 0; i < m_DataPointCount; i++)
   {
     x = xVal[i];
     y = yVal[i];
     if(x < xMin) xMin = x;
     if(y < yMin) yMin = y;
-    //logic here assumes x increments fastest in file
-    if(x != lastXcoord)
+    if(x > xMax) xMax = x;
+    if(y > yMax) yMax = y;
+    //logic to determine if x or y increments fastest in file....x assumed to be fastest, so only check y change
+    if(i == 1 && y != lastYcoord) xFastest = false; 
+    if(i > 0 && xFastest == true)
     {
-      lastXcoord = x;
-      xDim++;
+      if(x != lastXcoord)
+      {
+        xDim++;
+      }
+      if(y != lastYcoord)
+      {
+        yDim++;
+        xDim = 1;
+      }
     }
-    if(y != lastYcoord)
+    else if(i > 0 && xFastest == false)
     {
-      lastYcoord = y;
-      yDim++;
-      xDim = 1;
+      if(y != lastYcoord)
+      {
+        yDim++;
+      }
+      if(x != lastXcoord)
+      {
+        xDim++;
+        yDim = 1;
+      }
     }
+    lastXcoord = x;
+    lastYcoord = y;
   }
 
   //logic here assumes the max x and y coordinate is the last data point
-  xStep = (x-xMin)/float(xDim-1);
-  yStep = (y-yMin)/float(yDim-1);
+  xStep = (xMax-xMin)/float(xDim-1);
+  yStep = (yMax-yMin)/float(yDim-1);
 
   m->setDimensions(xDim, yDim, 1);
   m->setResolution(xStep, yStep, ((xStep+yStep)/2.0));
@@ -350,6 +402,70 @@ int UniWestEddyCurrentReader::readFile(QFile &reader)
   tDims[1] = yDim;
   tDims[2] = 1;
   cellAttrMat->resizeAttributeArrays(tDims);
+
+  if(xFastest == false)
+  {
+    //get the attribute matrix the data was added to
+    AttributeMatrix::Pointer attrMat = getDataContainerArray()->getDataContainer(getVolumeDataContainerName())->getAttributeMatrix(getCellAttributeMatrixName());
+
+    // Get all the names of the arrays added
+    QList<QString> headers = attrMat->getAttributeArrayNames();
+
+
+    //loop through the list of arrays...walking all the points for each one and reordering them
+    for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    {
+      IDataArray::Pointer p = attrMat->getAttributeArray(*iter);
+      IDataArray::Pointer pCopy = p->deepCopy();
+      QString dType = p->getTypeAsString();
+      if (dType.compare("int8_t") == 0)
+      {
+        shuffleArray<int8_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("uint8_t") == 0)
+      {
+        shuffleArray<uint8_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("int16_t") == 0)
+      {
+        shuffleArray<int16_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("uint16_t") == 0)
+      {
+        shuffleArray<uint16_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("int32_t") == 0)
+      {
+        shuffleArray<int32_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("uint32_t") == 0)
+      {
+        shuffleArray<uint32_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("int64_t") == 0)
+      {
+        shuffleArray<int64_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("uint64_t") == 0)
+      {
+        shuffleArray<uint64_t>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("float") == 0)
+      {
+        shuffleArray<float>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("double") == 0)
+      {
+        shuffleArray<double>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      else if (dType.compare("bool") == 0)
+      {
+        shuffleArray<bool>(p, pCopy, m_DataPointCount, xDim, yDim);
+      }
+      attrMat->addAttributeArray(p->getName(), pCopy);
+      pCopy->NullPointer();
+    }
+  }
 
   m_InStream.close();
 
