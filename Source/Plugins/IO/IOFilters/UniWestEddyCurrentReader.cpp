@@ -360,7 +360,8 @@ int UniWestEddyCurrentReader::readFile(QFile &reader)
     if(x > xMax) xMax = x;
     if(y > yMax) yMax = y;
     //logic to determine if x or y increments fastest in file....x assumed to be fastest, so only check y change
-    if(i == 1 && y != lastYcoord) xFastest = false; 
+    if(i == 1 && y != lastYcoord) xFastest = false;
+    if(i == 0) xDim++, yDim++;
     if(i > 0 && xFastest == true)
     {
       if(x != lastXcoord)
@@ -463,7 +464,6 @@ int UniWestEddyCurrentReader::readFile(QFile &reader)
         shuffleArray<bool>(p, pCopy, m_DataPointCount, xDim, yDim);
       }
       attrMat->addAttributeArray(p->getName(), pCopy);
-      pCopy->NullPointer();
     }
   }
 
