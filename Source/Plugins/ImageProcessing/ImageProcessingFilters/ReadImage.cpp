@@ -98,7 +98,7 @@ class ReadImagePrivate
           typename ReaderType::Pointer reader = ReaderType::New();
           reader->SetFileName(inputFile.toLocal8Bit().constData());
           reader->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
-          readerObject=reader;
+          readerObject = reader;
         }
         break;
 
@@ -109,7 +109,7 @@ class ReadImagePrivate
           typename ReaderType::Pointer reader = ReaderType::New();
           reader->SetFileName(inputFile.toLocal8Bit().constData());
           reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBPixel<PixelType>*>(outputData), numVoxels, false);
-          readerObject=reader;
+          readerObject = reader;
         }
         break;
 
@@ -120,7 +120,7 @@ class ReadImagePrivate
           typename ReaderType::Pointer reader = ReaderType::New();
           reader->SetFileName(inputFile.toLocal8Bit().constData());
           reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBAPixel<PixelType>*>(outputData), numVoxels, false);
-          readerObject=reader;
+          readerObject = reader;
         }
         break;
         /**
@@ -156,7 +156,7 @@ class ReadImagePrivate
       {
         readerObject->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         filter->setErrorCondition(-5);
         QString ss = QObject::tr("Failed to read image '%1': %2").arg(inputFile).arg(err.GetDescription());

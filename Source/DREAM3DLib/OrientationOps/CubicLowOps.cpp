@@ -269,8 +269,14 @@ float CubicLowOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   n1 = n1min / denom;
   n2 = n2min / denom;
   n3 = n3min / denom;
-  if(denom == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
-  if(wmin == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
+  if(denom == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
+  if(wmin == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
   return wmin;
 
 }
@@ -324,20 +330,38 @@ void CubicLowOps::getMDFFZRod(float& r1, float& r2, float& r3)
     if(n1 > n3)
     {
       FZn1 = n1;
-      if (n2 > n3) { FZn2 = n2, FZn3 = n3; }
-      else { FZn2 = n3, FZn3 = n2; }
+      if (n2 > n3)
+      {
+        FZn2 = n2, FZn3 = n3;
+      }
+      else
+      {
+        FZn2 = n3, FZn3 = n2;
+      }
     }
-    else { FZn1 = n3, FZn2 = n1, FZn3 = n2; }
+    else
+    {
+      FZn1 = n3, FZn2 = n1, FZn3 = n2;
+    }
   }
   else
   {
     if(n2 > n3)
     {
       FZn1 = n2;
-      if (n1 > n3) { FZn2 = n1, FZn3 = n3; }
-      else { FZn2 = n3, FZn3 = n1; }
+      if (n1 > n3)
+      {
+        FZn2 = n1, FZn3 = n3;
+      }
+      else
+      {
+        FZn2 = n3, FZn3 = n1;
+      }
     }
-    else { FZn1 = n3, FZn2 = n2, FZn3 = n1; }
+    else
+    {
+      FZn1 = n3, FZn2 = n2, FZn3 = n1;
+    }
   }
 
   OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
@@ -471,7 +495,7 @@ void CubicLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float dire
   for(int i = 0; i < k_NumSymQuats; i++)
   {
     //compute slip system
-    float slipPlane[3] = {0}; 
+    float slipPlane[3] = {0};
     slipPlane[2] = CubicLowMatSym[i][2][0] * plane[0] + CubicLowMatSym[i][2][1] * plane[1] + CubicLowMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
@@ -704,11 +728,20 @@ bool CubicLowOps::inUnitTriangle(float eta, float chi)
 {
   float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
   float chiMax;
-  if(etaDeg > 45.0) { chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta))); }
-  else { chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta))); }
+  if(etaDeg > 45.0)
+  {
+    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta)));
+  }
+  else
+  {
+    chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
+  }
   DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
-  if( eta < 0.0 || eta > (90.0 * DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax ) { return false; }
+  if( eta < 0.0 || eta > (90.0 * DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax )
+  {
+    return false;
+  }
   return true;
 }
 
@@ -756,20 +789,38 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0) { continue; }
-    else if(getHasInversion() == true && p[2] < 0) { p[0] = -p[0], p[1] = -p[1], p[2] = -p[2]; }
+    if(getHasInversion() == false && p[2] < 0)
+    {
+      continue;
+    }
+    else if(getHasInversion() == true && p[2] < 0)
+    {
+      p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    }
     chi = acos(p[2]);
     eta = atan2(p[1], p[0]);
-    if(inUnitTriangle(eta, chi) == false) { continue; }
-    else {break;}
+    if(inUnitTriangle(eta, chi) == false)
+    {
+      continue;
+    }
+    else
+    {
+      break;
+    }
   }
 
   float etaMin = 0.0;
   float etaMax = 90.0;
   float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
   float chiMax;
-  if(etaDeg > 45.0) { chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta))); }
-  else { chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta))); }
+  if(etaDeg > 45.0)
+  {
+    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta)));
+  }
+  else
+  {
+    chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
+  }
   DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
 
@@ -874,8 +925,14 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
   size_t count = intensity001->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
 
@@ -883,16 +940,28 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
   count = intensity011->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
   dPtr = intensity111->getPointer(0);
   count = intensity111->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
   config.minScale = min;

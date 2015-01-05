@@ -335,16 +335,16 @@ bool SineParamsSegmentFeatures::determineGrouping(int64_t referencepoint, int64_
   float v1;
   float v2;
   float shift;
-  float step = 45.0*DREAM3D::Constants::k_PiOver180;
+  float step = 45.0 * DREAM3D::Constants::k_PiOver180;
   float avgDiff = 0;
   if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {
     for(int i = 0; i < 8; i++)
     {
-      shift = float(i)*step;
-      v1 = m_SineParams[3*referencepoint] * sin(2.0 * (shift + m_SineParams[3*referencepoint+2])) + m_SineParams[3*referencepoint+1];
-      v2 = m_SineParams[3*neighborpoint] * sin(2.0 * (shift + m_SineParams[3*neighborpoint+2])) + m_SineParams[3*neighborpoint+1];
-      avgDiff += fabs(v1-v2);
+      shift = float(i) * step;
+      v1 = m_SineParams[3 * referencepoint] * sin(2.0 * (shift + m_SineParams[3 * referencepoint + 2])) + m_SineParams[3 * referencepoint + 1];
+      v2 = m_SineParams[3 * neighborpoint] * sin(2.0 * (shift + m_SineParams[3 * neighborpoint + 2])) + m_SineParams[3 * neighborpoint + 1];
+      avgDiff += fabs(v1 - v2);
     }
     avgDiff /= 8.0;
     if(avgDiff < 7)

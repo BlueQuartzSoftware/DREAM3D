@@ -110,7 +110,10 @@ void ImageUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConfigura
         value = dataPtr[y * width + x];
         value = (value - min) / (max - min);
         bin = int(value * numColors);
-        if(bin > numColors - 1) { bin = numColors - 1; }
+        if(bin > numColors - 1)
+        {
+          bin = numColors - 1;
+        }
         r = colors[3 * bin];
         g = colors[3 * bin + 1];
         b = colors[3 * bin + 2];

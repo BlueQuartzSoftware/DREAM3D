@@ -181,7 +181,7 @@ void InputCrystalCompliances::execute()
   m_Compliances.v24 /= 100000000000;
   m_Compliances.v25 /= 100000000000;
   m_Compliances.v26 /= 100000000000;
-  
+
   m_Compliances.v33 /= 100000000000;
   m_Compliances.v34 /= 100000000000;
   m_Compliances.v35 /= 100000000000;

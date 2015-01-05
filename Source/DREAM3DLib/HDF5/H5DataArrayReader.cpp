@@ -65,9 +65,9 @@ H5DataArrayReader::~H5DataArrayReader()
 
 namespace Detail
 {
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
   template<typename T>
   IDataArray::Pointer readH5Dataset(hid_t locId,
                                     const QString& datasetPath,
@@ -220,7 +220,8 @@ IDataArray::Pointer H5DataArrayReader::ReadStringDataArray(hid_t gid, const QStr
   }
 
   err = H5Tclose(typeId);
-  if (err < 0 ) {
+  if (err < 0 )
+  {
     return IDataArray::NullPointer();
   }
 
@@ -323,8 +324,14 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
     // Check to see if we are reading a bool array and if so read it and return
     if (classType.compare("DataArray<bool>") == 0)
     {
-      if (metaDataOnly == false) { ptr = Detail::readH5Dataset<bool>(gid, name, tDims, cDims); }
-      else { ptr = DataArray<bool>::CreateArray(tDims, cDims, name, false); }
+      if (metaDataOnly == false)
+      {
+        ptr = Detail::readH5Dataset<bool>(gid, name, tDims, cDims);
+      }
+      else
+      {
+        ptr = DataArray<bool>::CreateArray(tDims, cDims, name, false);
+      }
       err = H5Tclose(typeId);
       return ptr; // <== Note early return here.
     }
@@ -344,43 +351,91 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
         //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<uint8_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint8_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<uint8_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<uint8_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<uint16_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint16_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<uint16_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<uint16_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<uint32_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint32_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<uint32_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<uint32_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<uint64_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint64_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<uint64_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<uint64_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<int8_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int8_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<int8_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<int8_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<int16_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int16_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<int16_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<int16_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<int32_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int32_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<int32_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<int32_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<int64_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int64_t>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<int64_t>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<int64_t>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else
         {
@@ -391,13 +446,25 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
       case H5T_FLOAT:
         if(attr_size == 4)
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<float>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<float>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<float>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<float>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else if(attr_size == 8)
         {
-          if (metaDataOnly == false) { ptr = Detail::readH5Dataset<double>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<double>::CreateArray(tDims, cDims, name, false); }
+          if (metaDataOnly == false)
+          {
+            ptr = Detail::readH5Dataset<double>(gid, name, tDims, cDims);
+          }
+          else
+          {
+            ptr = DataArray<double>::CreateArray(tDims, cDims, name, false);
+          }
         }
         else
         {
@@ -462,49 +529,73 @@ IDataArray::Pointer H5DataArrayReader::ReadNeighborListData(hid_t gid, const QSt
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
           NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
           NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
           NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
           NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
           NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
           NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
           NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
           NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else
@@ -517,13 +608,19 @@ IDataArray::Pointer H5DataArrayReader::ReadNeighborListData(hid_t gid, const QSt
         if(attr_size == 4)
         {
           NeighborList<float>::Pointer ptr = NeighborList<float>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else if(attr_size == 8)
         {
           NeighborList<double>::Pointer ptr = NeighborList<double>::CreateArray(tDims, cDims, name, false);
-          if(false == metaDataOnly) { ptr->readH5Data(gid); }
+          if(false == metaDataOnly)
+          {
+            ptr->readH5Data(gid);
+          }
           iDataArray = ptr;
         }
         else

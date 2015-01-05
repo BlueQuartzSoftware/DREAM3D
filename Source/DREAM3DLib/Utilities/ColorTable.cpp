@@ -81,7 +81,10 @@ void ColorTable::GetColorTable(int numColors, QVector<float>& colors)
     val = float(i) * step;
     int currColorBin = int(val / nodeStep);
     float currFraction = (val / nodeStep) - currColorBin;
-    if(currColorBin > numColorNodes - 1) { currColorBin = numColorNodes - 1; }
+    if(currColorBin > numColorNodes - 1)
+    {
+      currColorBin = numColorNodes - 1;
+    }
     r = color[currColorBin][0] * (1.0 - currFraction) + color[currColorBin + 1][0] * currFraction;
     g = color[currColorBin][1] * (1.0 - currFraction) + color[currColorBin + 1][1] * currFraction;
     b = color[currColorBin][2] * (1.0 - currFraction) + color[currColorBin + 1][2] * currFraction;

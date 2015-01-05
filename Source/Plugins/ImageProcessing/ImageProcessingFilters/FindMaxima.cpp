@@ -87,7 +87,7 @@ class FindMaximaPrivate
       {
         peakLocations = ImageProcessing::LocalMaxima<ImageType>::Find(inputImage, tolerance, true);
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         filter->setErrorCondition(-5);
         QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -96,7 +96,7 @@ class FindMaximaPrivate
 
       //fill output data with false then set peaks to true
       outputImage->FillBuffer(false);
-      for(size_t i=0; i<peakLocations.size(); i++)
+      for(size_t i = 0; i < peakLocations.size(); i++)
       {
         outputImage->SetPixel(peakLocations[i], true);
       }

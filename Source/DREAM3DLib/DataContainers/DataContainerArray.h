@@ -185,7 +185,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     * @param name
     * @return
     */
-    IDataContainerBundle::Pointer getDataContainerBundle(const QString &name);
+    IDataContainerBundle::Pointer getDataContainerBundle(const QString& name);
 
     template<typename T>
     T* getDataContainerBundleAs(const QString& name)
@@ -207,20 +207,20 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @param name
      * @return
      */
-    int removeDataContainerBundle(const QString &name);
+    int removeDataContainerBundle(const QString& name);
 
     /**
      * @brief renameDataContainerBundle
      * @param oldName
      * @param newName
      */
-    bool renameDataContainerBundle(const QString &oldName, const QString newName);
+    bool renameDataContainerBundle(const QString& oldName, const QString newName);
 
     /**
      * @brief removeDataContainerFromBundle
      * @param name
      */
-    void removeDataContainerFromBundles(const QString &name);
+    void removeDataContainerFromBundles(const QString& name);
 
     /**
      * @brief getDataContainerAs

@@ -226,7 +226,10 @@ void FilterPipeline::updatePrevNextFilters()
       next = iter;
       next++;
       //  nextFilt = *next;
-      if(next != m_Pipeline.end()) { (*iter)->setNextFilter(*next); }
+      if(next != m_Pipeline.end())
+      {
+        (*iter)->setNextFilter(*next);
+      }
     }
   }
   int index = 0;

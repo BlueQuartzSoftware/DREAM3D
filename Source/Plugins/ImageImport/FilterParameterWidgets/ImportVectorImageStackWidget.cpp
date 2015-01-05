@@ -82,7 +82,7 @@ ImportVectorImageStackWidget::~ImportVectorImageStackWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackWidget::setFilter(AbstractFilter *value)
+void ImportVectorImageStackWidget::setFilter(AbstractFilter* value)
 {
   m_Filter = dynamic_cast<ImportVectorImageStack*>(value);
 }

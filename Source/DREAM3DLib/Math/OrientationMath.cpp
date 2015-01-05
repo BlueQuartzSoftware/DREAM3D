@@ -49,13 +49,13 @@
 
 
 #define ASSERT(condition, message) \
-    do { \
-        if (! (condition)) { \
-            std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
-                      << " line " << __LINE__ << ": " << message << std::endl; \
-            std::exit(EXIT_FAILURE); \
-        } \
-    } while (false)
+  do { \
+    if (! (condition)) { \
+      std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
+                << " line " << __LINE__ << ": " << message << std::endl; \
+      std::exit(EXIT_FAILURE); \
+    } \
+  } while (false)
 
 
 // Floating-point modulo
@@ -65,44 +65,44 @@ template<typename T>
 class Mod
 {
   public:
-    Mod(){}
-    virtual ~Mod(){}
+    Mod() {}
+    virtual ~Mod() {}
 
     T operator()(T x, T y)
     {
       ASSERT(!std::numeric_limits<T>::is_exact , "Mod: floating-point type expected");
 
       if (0. == y)
-        return x;
+      { return x; }
 
-      double m= x - y * floor(x/y);
+      double m = x - y * floor(x / y);
 
       // handle boundary cases resulted from floating-point cut off:
 
       if (y > 0)              // modulo range: [0..y)
       {
-        if (m>=y)           // Mod(-1e-16             , 360.    ): m= 360.
-          return 0;
+        if (m >= y)         // Mod(-1e-16             , 360.    ): m= 360.
+        { return 0; }
 
-        if (m<0 )
+        if (m < 0 )
         {
-          if (y+m == y)
-            return 0  ; // just in case...
+          if (y + m == y)
+          { return 0  ; } // just in case...
           else
-            return y+m; // Mod(106.81415022205296 , _TWO_PI ): m= -1.421e-14
+          { return y + m; } // Mod(106.81415022205296 , _TWO_PI ): m= -1.421e-14
         }
       }
       else                    // modulo range: (y..0]
       {
-        if (m<=y)           // Mod(1e-16              , -360.   ): m= -360.
-          return 0;
+        if (m <= y)         // Mod(1e-16              , -360.   ): m= -360.
+        { return 0; }
 
-        if (m>0 )
+        if (m > 0 )
         {
-          if (y+m == y)
-            return 0  ; // just in case...
+          if (y + m == y)
+          { return 0  ; } // just in case...
           else
-            return y+m; // Mod(-106.81415022205296, -_TWO_PI): m= 1.421e-14
+          { return y + m; } // Mod(-106.81415022205296, -_TWO_PI): m= 1.421e-14
         }
       }
 
@@ -130,10 +130,10 @@ class Mod
     // wrap [deg] angle to [0..360)
     inline T Wrap360(T fAng)
     {
-      return Mod()(fAng ,360.0);
+      return Mod()(fAng , 360.0);
     }
 
-    private:
+  private:
     Mod(const Mod&); // Copy Constructor Not Implemented
     void operator=(const Mod&); // Operator '=' Not Implemented
 };
@@ -455,7 +455,10 @@ void OrientationMath::QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3)
   ea3 = (sum - diff);
   tmp = (q.z * q.z) + (q.w * q.w);
   tmp = sqrt(tmp);
-  if(tmp > 1.0f) { tmp = 1.0f; }
+  if(tmp > 1.0f)
+  {
+    tmp = 1.0f;
+  }
   ea2 = 2 * acos(tmp);
   ea1 = ea1 + DREAM3D::Constants::k_2Pi;
   ea3 = ea3 + DREAM3D::Constants::k_2Pi;
@@ -693,8 +696,14 @@ float OrientationMath::MatrixMisorientation(float g1[3][3], float g2[3][3])
   deltaG[1][1] = g1[0][1] * g2[0][1] + g1[1][1] * g2[1][1] + g1[2][1] * g2[2][1];
   deltaG[2][2] = g1[0][2] * g2[0][2] + g1[1][2] * g2[1][2] + g1[2][2] * g2[2][2];
   float value = 0.5 * ((deltaG[0][0] + deltaG[1][1] + deltaG[2][2]) - 1.0);
-  if(value > 1.0) { value = 1.0; }
-  if(value < -1.0) { value = -1.0; }
+  if(value > 1.0)
+  {
+    value = 1.0;
+  }
+  if(value < -1.0)
+  {
+    value = -1.0;
+  }
   return acosf(value);
 }
 
@@ -759,15 +768,15 @@ QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, flo
 // -----------------------------------------------------------------------------
 void OrientationMath::MetricTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float mt[3][3])
 {
-  mt[0][0] = a*a;
-  mt[0][1] = a*b*cosf(gamma);
-  mt[0][2] = a*c*cosf(beta);
-  mt[1][0] = a*b*cosf(gamma);
-  mt[1][1] = b*b;
-  mt[1][2] = b*c*cosf(alpha);
-  mt[2][0] = a*c*cosf(beta);
-  mt[2][1] = b*c*cosf(alpha);
-  mt[2][2] = c*c;
+  mt[0][0] = a * a;
+  mt[0][1] = a * b * cosf(gamma);
+  mt[0][2] = a * c * cosf(beta);
+  mt[1][0] = a * b * cosf(gamma);
+  mt[1][1] = b * b;
+  mt[1][2] = b * c * cosf(alpha);
+  mt[2][0] = a * c * cosf(beta);
+  mt[2][1] = b * c * cosf(alpha);
+  mt[2][2] = c * c;
 }
 
 // -----------------------------------------------------------------------------
@@ -775,14 +784,14 @@ void OrientationMath::MetricTensorFromLatticeParameters(float a, float b, float 
 // -----------------------------------------------------------------------------
 void OrientationMath::RootTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float rt[3][3])
 {
-  rt[0][0] = a*sinf(beta)*sinf(gamma);
+  rt[0][0] = a * sinf(beta) * sinf(gamma);
   rt[0][1] = 0.0;
   rt[0][2] = 0.0;
-  rt[1][0] = -a*sinf(beta)*cosf(gamma);
-  rt[1][1] = b*sinf(alpha);
+  rt[1][0] = -a * sinf(beta) * cosf(gamma);
+  rt[1][1] = b * sinf(alpha);
   rt[1][2] = 0.0;
-  rt[2][0] = a*cosf(beta);
-  rt[2][1] = b*cosf(alpha);
+  rt[2][0] = a * cosf(beta);
+  rt[2][1] = b * cosf(alpha);
   rt[2][2] = c;
 }
 

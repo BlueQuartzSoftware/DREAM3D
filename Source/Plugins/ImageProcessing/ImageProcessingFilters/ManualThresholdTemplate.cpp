@@ -100,7 +100,7 @@ class ManualThresholdTemplatePrivate
       {
         thresholdFilter->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         filter->setErrorCondition(-5);
         QString ss = QObject::tr("Failed to execute itk::BinaryThresholdImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

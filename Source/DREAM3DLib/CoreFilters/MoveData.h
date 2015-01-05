@@ -57,29 +57,29 @@
 class DREAM3DLib_EXPORT MoveData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-public:
+  public:
     DREAM3D_SHARED_POINTERS(MoveData)
     DREAM3D_STATIC_NEW_MACRO(MoveData)
     DREAM3D_TYPE_MACRO_SUPER(MoveData, AbstractFilter)
-    
-    
+
+
     virtual ~MoveData();
-    
+
     DREAM3D_FILTER_PARAMETER(int, WhatToMove)
     Q_PROPERTY(int WhatToMove READ getWhatToMove WRITE setWhatToMove)
-    
+
     DREAM3D_FILTER_PARAMETER(QString, DataContainerDestination)
     Q_PROPERTY(QString DataContainerDestination READ getDataContainerDestination WRITE setDataContainerDestination)
-    
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixSource)
     Q_PROPERTY(DataArrayPath AttributeMatrixSource READ getAttributeMatrixSource WRITE setAttributeMatrixSource)
- 
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixDestination)
     Q_PROPERTY(DataArrayPath AttributeMatrixDestination READ getAttributeMatrixDestination WRITE setAttributeMatrixDestination)
-    
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, DataArraySource)
     Q_PROPERTY(DataArrayPath DataArraySource READ getDataArraySource WRITE setDataArraySource)
-    
+
     /**
      * @brief This returns the group that the filter belonds to. You can select
      * a different group if you want. The string returned here will be displayed
@@ -89,51 +89,51 @@ public:
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
-    
+
     /**
      * @brief This returns a string that is displayed in the GUI. It should be readable
      * and understandable by humans.
      */
     virtual const QString getHumanLabel();
-    
+
     /**
      * @brief This method will instantiate all the end user settable options/parameters
      * for this filter
      */
     virtual void setupFilterParameters();
-    
+
     /**
      * @brief This method will write the options to a file
      * @param writer The writer that is used to write the options to a file
      */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
      * @brief This method will read the options from a file
      * @param reader The reader that is used to read the options from a file
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-    
+
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
-    
+
     /**
      * @brief This function runs some sanity checks on the DataContainer and inputs
      * in an attempt to ensure the filter can process the inputs.
      */
     virtual void preflight();
-    
-signals:
+
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
-    
-protected:
+
+  protected:
     MoveData();
-    
+
     /**
      * @brief Checks for the appropriate parameter values and availability of
      * arrays in the data container
@@ -143,8 +143,8 @@ protected:
      * @param ensembles The number of ensembles
      */
     void dataCheck();
-    
-    
+
+
     MoveData(const MoveData&); // Copy Constructor Not Implemented
     void operator=(const MoveData&); // Operator '=' Not Implemented
 };

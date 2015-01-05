@@ -158,31 +158,43 @@ void CropVolume::dataCheck()
   // Bail if the source data container cannot be found
   if (NULL == srcCellDataContainer)
   {
-      return;
+    QString ss = QObject::tr("The prerequisite DataContainer '%1' does not exist").arg(getCellAttributeMatrixPath().getDataContainerName());
+    setErrorCondition(-5540);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  if(NULL == cellAttrMat.get())
+  {
+    QString ss = QObject::tr("The prerequisite AttributeMatrix '%1' does not exist").arg(getCellAttributeMatrixPath().getAttributeMatrixName());
+    setErrorCondition(-5541);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
   VolumeDataContainer* destCellDataContainer = srcCellDataContainer;
-
-  IDataArray::Pointer da1 = cellAttrMat->getAttributeArray(cellAttrMat->getAttributeArrayNames()[0]);
 
   if (m_SaveAsNewDataContainer == true)
   {
-      float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
-      size_t dx = 0, dy = 0, dz = 0;
-      srcCellDataContainer->getOrigin(ox, oy, oz);
-      srcCellDataContainer->getResolution(rx, ry, rz);
-      srcCellDataContainer->getDimensions(dx, dy, dz);
+    float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
+    size_t dx = 0, dy = 0, dz = 0;
+    srcCellDataContainer->getOrigin(ox, oy, oz);
+    srcCellDataContainer->getResolution(rx, ry, rz);
+    srcCellDataContainer->getDimensions(dx, dy, dz);
 
-      destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    if(NULL == destCellDataContainer || getErrorCondition() < 0)
+    {
+      return;
+    }
 
-      destCellDataContainer->setOrigin(ox, oy, oz);
-      destCellDataContainer->setResolution(rx, ry, rz);
-      destCellDataContainer->setDimensions(dx, dy, dz);
+    destCellDataContainer->setOrigin(ox, oy, oz);
+    destCellDataContainer->setResolution(rx, ry, rz);
+    destCellDataContainer->setDimensions(dx, dy, dz);
 
-      AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy();
-      destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
-      cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+    AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy();
+    destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
+    cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   }
 
   if(NULL == destCellDataContainer || NULL == cellAttrMat || getErrorCondition() < 0)
@@ -229,21 +241,21 @@ void CropVolume::dataCheck()
 
   if (getXMax() > (static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1))
   {
-      QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -5556);
-      setErrorCondition(-5556);
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5556);
+    setErrorCondition(-5556);
   }
   if (getYMax() > (static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1))
   {
-      QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -5557);
-      setErrorCondition(-5557);
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5557);
+    setErrorCondition(-5557);
   }
   if (getZMax() > (static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1))
   {
-      QString ss = QObject::tr("The Z Max you entered of %1 is greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -5558);
-      setErrorCondition(-5558);
+    QString ss = QObject::tr("The Z Max you entered of %1 is greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5558);
+    setErrorCondition(-5558);
   }
 
   QVector<size_t> tDims(3, 0);
@@ -265,21 +277,17 @@ void CropVolume::dataCheck()
 
   cellAttrMat->setTupleDimensions(tDims);
 
-  if(getErrorCondition() < 0 || NULL == cellAttrMat) { return; }
-
-
-
   if(m_RenumberFeatures == true)
   {
-      QVector<size_t> dims(1, 1);
-      m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    QVector<size_t> dims(1, 1);
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-      AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-      if(getErrorCondition() < 0) { return; }
-      QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
-      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
+    if(getErrorCondition() < 0) { return; }
+    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
 }
 
@@ -301,39 +309,39 @@ void CropVolume::preflight()
 // -----------------------------------------------------------------------------
 void CropVolume::execute()
 {
-    int err = 0;
-    setErrorCondition(err);
+  int err = 0;
+  setErrorCondition(err);
 
-    /* Normally, filters call dataCheck during the execute to reuse code.  Unfortunately, this cannot happen for this filter, because calling dataCheck
+  /* Normally, filters call dataCheck during the execute to reuse code.  Unfortunately, this cannot happen for this filter, because calling dataCheck
        would destroy an Attribute Matrix that we need during the execute.  Do not uncomment the code, and be careful when reusing code from either of
         these functions.  Make sure you understand how this works before you reuse any code. */
-    //dataCheck();
-    //if(getErrorCondition() < 0) { return; }
+  //dataCheck();
+  //if(getErrorCondition() < 0) { return; }
 
-    VolumeDataContainer* srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
-    AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-    VolumeDataContainer* destCellDataContainer = srcCellDataContainer;
+  VolumeDataContainer* srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  VolumeDataContainer* destCellDataContainer = srcCellDataContainer;
 
-    if (m_SaveAsNewDataContainer == true)
-    {
-        float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
-        srcCellDataContainer->getOrigin(ox, oy, oz);
-        srcCellDataContainer->getResolution(rx, ry, rz);
+  if (m_SaveAsNewDataContainer == true)
+  {
+    float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
+    srcCellDataContainer->getOrigin(ox, oy, oz);
+    srcCellDataContainer->getResolution(rx, ry, rz);
 
-        destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
 
-        destCellDataContainer->setOrigin(ox, oy, oz);
-        destCellDataContainer->setResolution(rx, ry, rz);
+    destCellDataContainer->setOrigin(ox, oy, oz);
+    destCellDataContainer->setResolution(rx, ry, rz);
 
-        AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy();
-        destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
-        cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-    }
+    AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy();
+    destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
+    cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  }
 
-    if(NULL == destCellDataContainer || NULL == cellAttrMat || getErrorCondition() < 0)
-    {
-      return;
-    }
+  if(NULL == destCellDataContainer || NULL == cellAttrMat || getErrorCondition() < 0)
+  {
+    return;
+  }
 
 
   // No matter where the AM is (same DC or new DC), we have the correct DC and AM pointers...now it's time to crop
@@ -451,18 +459,18 @@ void CropVolume::execute()
     // Find the unique set of feature ids
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-        int32_t currentFeatureId = m_FeatureIds[i];
-        if (currentFeatureId < totalFeatures)
-        {
-            activeObjects[currentFeatureId] = true;
-        }
-        else
-        {
-            setErrorCondition(-601);
-            QString ss = QObject::tr("The total number of features from %1 is %2, but a value of %3 was found in Data Array %4.").arg(cellFeatureAttrMat->getName()).arg(totalFeatures).arg(currentFeatureId).arg(getFeatureIdsArrayPath().serialize("/"));
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
+      int32_t currentFeatureId = m_FeatureIds[i];
+      if (currentFeatureId < totalFeatures)
+      {
+        activeObjects[currentFeatureId] = true;
+      }
+      else
+      {
+        setErrorCondition(-601);
+        QString ss = QObject::tr("The total number of features from %1 is %2, but a value of %3 was found in Data Array %4.").arg(cellFeatureAttrMat->getName()).arg(totalFeatures).arg(currentFeatureId).arg(getFeatureIdsArrayPath().serialize("/"));
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
     }
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }

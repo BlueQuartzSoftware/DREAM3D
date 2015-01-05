@@ -52,7 +52,8 @@ QDebug operator<<(QDebug out, const DataArrayPath& v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class DataArrayPathPrivate {
+class DataArrayPathPrivate
+{
     Q_DISABLE_COPY(DataArrayPathPrivate)
     Q_DECLARE_PUBLIC(DataArrayPath)
     DataArrayPath* const q_ptr;
@@ -101,9 +102,18 @@ DataArrayPath::DataArrayPath(const QString& path) :
 {
   QStringList tokens = path.split(DREAM3D::PathSep);
 
-  if(tokens.size() > 0) { d_ptr->m_DataContainerName = tokens.at(0); }
-  if(tokens.size() > 1) { d_ptr->m_AttributeMatrixName = tokens.at(1); }
-  if(tokens.size() > 2) { d_ptr->m_DataArrayName = tokens.at(2); }
+  if(tokens.size() > 0)
+  {
+    d_ptr->m_DataContainerName = tokens.at(0);
+  }
+  if(tokens.size() > 1)
+  {
+    d_ptr->m_AttributeMatrixName = tokens.at(1);
+  }
+  if(tokens.size() > 2)
+  {
+    d_ptr->m_DataArrayName = tokens.at(2);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -122,6 +132,21 @@ DataArrayPath::DataArrayPath(const DataArrayPath& rhs) :
 // -----------------------------------------------------------------------------
 DataArrayPath::~DataArrayPath()
 {
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> DataArrayPath::ConvertToQVector(QStringList& paths)
+{
+  QVector<DataArrayPath> vPaths;
+  foreach(const QString sPath, paths)
+  {
+    DataArrayPath p(sPath);
+    vPaths.push_back(p);
+  }
+  return vPaths;
 }
 
 // -----------------------------------------------------------------------------
@@ -146,10 +171,12 @@ void DataArrayPath::operator=(const DataArrayPath& rhs)
 // -----------------------------------------------------------------------------
 bool DataArrayPath::operator==(const DataArrayPath& rhs)
 {
-    if( d_ptr->m_DataContainerName == rhs.getDataContainerName()
-        && d_ptr->m_AttributeMatrixName == rhs.getAttributeMatrixName()
-        && d_ptr->m_DataArrayName == rhs.getDataArrayName() )
-        {return true;}
+  if( d_ptr->m_DataContainerName == rhs.getDataContainerName()
+      && d_ptr->m_AttributeMatrixName == rhs.getAttributeMatrixName()
+      && d_ptr->m_DataArrayName == rhs.getDataArrayName() )
+  {
+    return true;
+  }
 
   return false;
 }
@@ -192,7 +219,9 @@ QVector<QString> DataArrayPath::getAsVector()
 bool DataArrayPath::isEmpty() const
 {
   if (d_ptr->m_DataContainerName.isEmpty() && d_ptr->m_AttributeMatrixName.isEmpty() && d_ptr->m_DataArrayName.isEmpty() )
-  { return true; }
+  {
+    return true;
+  }
   return false;
 }
 
@@ -202,7 +231,9 @@ bool DataArrayPath::isEmpty() const
 bool DataArrayPath::isValid() const
 {
   if (d_ptr->m_DataContainerName.isEmpty() == false && d_ptr->m_AttributeMatrixName.isEmpty() == false && d_ptr->m_DataArrayName.isEmpty() == false )
-  { return true; }
+  {
+    return true;
+  }
   return false;
 }
 
@@ -232,7 +263,7 @@ void DataArrayPath::update(const QString& dcName, const QString& amName, const Q
 bool DataArrayPath::sameDataContainer(const DataArrayPath& other) const
 {
   if(0 == d_ptr->m_DataContainerName.compare(other.d_ptr->m_DataContainerName))
-    return true;
+  { return true; }
   return false;
 }
 
@@ -242,7 +273,7 @@ bool DataArrayPath::sameDataContainer(const DataArrayPath& other) const
 bool DataArrayPath::sameAttributeMatrix(const DataArrayPath& other) const
 {
   if(0 == d_ptr->m_AttributeMatrixName.compare(other.d_ptr->m_AttributeMatrixName))
-    return true;
+  { return true; }
   return false;
 }
 
@@ -252,7 +283,7 @@ bool DataArrayPath::sameAttributeMatrix(const DataArrayPath& other) const
 bool DataArrayPath::sameDataArray(const DataArrayPath& other) const
 {
   if(0 == d_ptr->m_DataArrayName.compare(other.d_ptr->m_DataArrayName))
-    return true;
+  { return true; }
   return false;
 }
 

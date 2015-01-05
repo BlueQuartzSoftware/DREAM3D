@@ -68,7 +68,7 @@ OutputPathWidget::~OutputPathWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OutputPathWidget::setFilterParameter(FilterParameter *value)
+void OutputPathWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
 }

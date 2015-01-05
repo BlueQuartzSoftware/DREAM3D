@@ -83,7 +83,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
      * @param list
      */
     void setLeafActionList(QList<QAction*> list);
-    
+
     /**
      * @brief setDefaultActionList
      * @param list

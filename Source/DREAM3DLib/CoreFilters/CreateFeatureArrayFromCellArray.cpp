@@ -108,7 +108,9 @@ void CreateFeatureArrayFromCellArray::dataCheck()
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   if(m_SelectedCellArrayPath.isEmpty() == true)
   {
@@ -177,7 +179,10 @@ void CreateFeatureArrayFromCellArray::execute()
   setErrorCondition(0);
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedCellArrayPath.getDataContainerName());
   int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName().getAttributeMatrixName())->getNumTuples();
@@ -268,26 +273,34 @@ AbstractFilter::Pointer CreateFeatureArrayFromCellArray::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString CreateFeatureArrayFromCellArray::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CreateFeatureArrayFromCellArray::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CreateFeatureArrayFromCellArray::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CreateFeatureArrayFromCellArray::getHumanLabel()
-{ return "Create Feature Array From Cell Array"; }
+{
+  return "Create Feature Array From Cell Array";
+}
 

@@ -87,29 +87,18 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
 
     /**
      * @brief flattenHeirarchy
+     * @param dcFlag
+     * @param amFlag
+     * @param daFlag
      * @return
      */
-    QStringList flattenHeirarchy();
-
-    /**
-     * @brief getCheckedDataArrayPaths
-     * @return
-     */
-    QVector<DataArrayPath> getCheckedDataArrayPaths();
+    QStringList flattenHeirarchy(Qt::CheckState dcFlag = Qt::Checked, Qt::CheckState amFlag = Qt::Checked, Qt::CheckState daFlag = Qt::Checked);
 
     /**
      * @brief Print the Heirarchy and attributes of the Proxy
      * @param out
      */
     void print(const QString header = QString(""));
-
-    /**
-     * @brief removeSelectionsFromDataContainerArray This function will attempt to remove those DataContainers, AttributeMatrix and
-     * DataArray items that are flagged as selected by the user/programmer.
-     * @param dca, state
-     */
-    /* This function has been moved to DREAM3DLib/CoreFilters/RemoveArrays */
-    //void removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state = Qt::Unchecked);
 
     /**
      * @brief setAllFlags

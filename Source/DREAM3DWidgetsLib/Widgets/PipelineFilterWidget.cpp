@@ -229,7 +229,7 @@ void PipelineFilterWidget::layoutWidgets()
   m_CurrentStructureWidget = new DataContainerArrayWidget(m_Filter.get(), this);
   QString curStructName = QString::fromUtf8("advancedInputsScrollWidget_CurrStructWidget");
   m_CurrentStructureWidget->setObjectName(curStructName);
-  m_CurrentStructureWidget->setGeometry(QRect(0,0,250,267));
+  m_CurrentStructureWidget->setGeometry(QRect(0, 0, 250, 267));
   //  m_CurrStrucVerticalLayout = new QVBoxLayout(m_CurrentStructureWidget);
   //  curStructName = QString::fromUtf8("verticalLayout3");
   //  m_CurrStrucVerticalLayout->setObjectName(curStructName);

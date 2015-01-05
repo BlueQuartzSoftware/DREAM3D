@@ -197,16 +197,16 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
-      DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
-      DREAM3D_FILTER_WRITE_PARAMETER(LambertSize)
-      DREAM3D_FILTER_WRITE_PARAMETER(ImageLayout)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
+  DREAM3D_FILTER_WRITE_PARAMETER(LambertSize)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageLayout)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

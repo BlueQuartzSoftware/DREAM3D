@@ -92,7 +92,7 @@ class GenerateMisorientationColorsImpl
         cellQuat = m_Quats[i];
 
         if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High &&
-           m_CrystalStructures[phase] != Ebsd::CrystalStructure::Hexagonal_High)
+            m_CrystalStructures[phase] != Ebsd::CrystalStructure::Hexagonal_High)
         {
           uint32_t idx = m_CrystalStructures[phase];
           if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure)

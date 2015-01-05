@@ -146,8 +146,15 @@ void DREAM3DRandom::init_by_array(unsigned long init_key[], int key_length)
     mt[i] &= 0xffffffffUL; /* for WORDSIZE > 32 machines */
     i++;
     j++;
-    if (i >= MERSENNNE_TWISTER_N) { mt[0] = mt[MERSENNNE_TWISTER_N - 1]; i = 1; }
-    if (j >= key_length) { j = 0; }
+    if (i >= MERSENNNE_TWISTER_N)
+    {
+      mt[0] = mt[MERSENNNE_TWISTER_N - 1];
+      i = 1;
+    }
+    if (j >= key_length)
+    {
+      j = 0;
+    }
   }
   for (k = MERSENNNE_TWISTER_N - 1; k; k--)
   {
@@ -155,7 +162,11 @@ void DREAM3DRandom::init_by_array(unsigned long init_key[], int key_length)
             - i; /* non linear */
     mt[i] &= 0xffffffffUL; /* for WORDSIZE > 32 machines */
     i++;
-    if (i >= MERSENNNE_TWISTER_N) { mt[0] = mt[MERSENNNE_TWISTER_N - 1]; i = 1; }
+    if (i >= MERSENNNE_TWISTER_N)
+    {
+      mt[0] = mt[MERSENNNE_TWISTER_N - 1];
+      i = 1;
+    }
   }
 
   mt[0] = 0x80000000UL; /* MSB is 1; assuring non-zero initial array */
@@ -174,7 +185,9 @@ unsigned long DREAM3DRandom::genrand_int32()
     int kk;
 
     if (mti == MERSENNNE_TWISTER_N + 1) /* if init_genrand() has not been called, */
-    { init_genrand(5489UL); } /* a default initial seed is used */
+    {
+      init_genrand(5489UL);    /* a default initial seed is used */
+    }
 
     for (kk = 0; kk < MERSENNNE_TWISTER_N - MERSENNNE_TWISTER_M; kk++)
     {
@@ -253,13 +266,22 @@ double DREAM3DRandom::genrand_beta(double aa, double bb)
   static long qsame;
 
   qsame = olda == aa && oldb == bb;
-  if(qsame) { goto S20; }
+  if(qsame)
+  {
+    goto S20;
+  }
   olda = aa;
   oldb = bb;
 S20:
 
-  if(aa > 1.0 && bb > 1.0) { goto S100; }
-  if(qsame) { goto S30; }
+  if(aa > 1.0 && bb > 1.0)
+  {
+    goto S100;
+  }
+  if(qsame)
+  {
+    goto S30;
+  }
   a = aa;
   b = bb;
   if(a > b)
@@ -275,7 +297,10 @@ S30:
 S40:
   u1 = genrand_res53();
   v = beta * log(u1 / (1.0 - u1));
-  if(!(v > expmax)) { goto S50; }
+  if(!(v > expmax))
+  {
+    goto S50;
+  }
   w = infnty;
   goto S60;
 S50:
@@ -284,12 +309,24 @@ S60:
   z = powf(static_cast<float>(u1), 2.0f) * static_cast<float>(u2);
   r = gamma * v - 1.3862944;
   s = a + r - w;
-  if(s + 2.609438 >= 5.0 * z) { goto S70; }
+  if(s + 2.609438 >= 5.0 * z)
+  {
+    goto S70;
+  }
   t = log(z);
-  if(s > t) { goto S70; }
-  if(r + alpha * log(alpha / (b + w)) < t) { goto S40; }
+  if(s > t)
+  {
+    goto S70;
+  }
+  if(r + alpha * log(alpha / (b + w)) < t)
+  {
+    goto S40;
+  }
 S70:
-  if(!(aa == a)) { goto S80; }
+  if(!(aa == a))
+  {
+    goto S80;
+  }
   genbet = w / (b + w);
   goto S90;
 S80:
@@ -297,7 +334,10 @@ S80:
 S90:
   goto S230;
 S100:
-  if(qsame) { goto S110; }
+  if(qsame)
+  {
+    goto S110;
+  }
   a = aa;
   b = bb;
   if(b > a)
@@ -315,16 +355,28 @@ S110:
 S120:
   u1 = genrand_res53();
   u2 = genrand_res53();
-  if(u1 >= 0.5) { goto S130; }
+  if(u1 >= 0.5)
+  {
+    goto S130;
+  }
   y = u1 * u2;
   z = u1 * y;
-  if(0.25 * u2 + z - y >= k1) { goto S120; }
+  if(0.25 * u2 + z - y >= k1)
+  {
+    goto S120;
+  }
   goto S170;
 S130:
   z = powf(static_cast<float>(u1), 2.0f) * static_cast<float>(u2);
-  if(!(z <= 0.25)) { goto S160; }
+  if(!(z <= 0.25))
+  {
+    goto S160;
+  }
   v = beta * log(u1 / (1.0 - u1));
-  if(!(v > expmax)) { goto S140; }
+  if(!(v > expmax))
+  {
+    goto S140;
+  }
   w = infnty;
   goto S150;
 S140:
@@ -332,18 +384,30 @@ S140:
 S150:
   goto S200;
 S160:
-  if(z >= k2) { goto S120; }
+  if(z >= k2)
+  {
+    goto S120;
+  }
 S170:
   v = beta * log(u1 / (1.0 - u1));
-  if(!(v > expmax)) { goto S180; }
+  if(!(v > expmax))
+  {
+    goto S180;
+  }
   w = infnty;
   goto S190;
 S180:
   w = a * exp(v);
 S190:
-  if(alpha * (log(alpha / (b + w)) + v) - 1.3862944 < log(z)) { goto S120; }
+  if(alpha * (log(alpha / (b + w)) + v) - 1.3862944 < log(z))
+  {
+    goto S120;
+  }
 S200:
-  if(!(a == aa)) { goto S210; }
+  if(!(a == aa))
+  {
+    goto S210;
+  }
   genbet = w / (b + w);
   goto S220;
 S210:
@@ -374,14 +438,22 @@ double DREAM3DRandom::genrand_norm(double m, double s)
 
   u = genrand_res53();
   if (u < 0.5)
-  { t = sqrt(-2.0 * log(u)); }
+  {
+    t = sqrt(-2.0 * log(u));
+  }
   else
-  { t = sqrt(-2.0 * log(1.0 - u)); }
+  {
+    t = sqrt(-2.0 * log(1.0 - u));
+  }
   p   = p0 + t * (p1 + t * (p2 + t * (p3 + t * p4)));
   q   = q0 + t * (q1 + t * (q2 + t * (q3 + t * q4)));
   if (u < 0.5)
-  { z = (p / q) - t; }
+  {
+    z = (p / q) - t;
+  }
   else
-  { z = t - (p / q); }
+  {
+    z = t - (p / q);
+  }
   return (m + s * z);
 }

@@ -101,11 +101,11 @@ int MultiOtsuThreshold::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-      DREAM3D_FILTER_WRITE_PARAMETER(Levels)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+  DREAM3D_FILTER_WRITE_PARAMETER(Levels)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -197,7 +197,7 @@ void MultiOtsuThreshold::execute()
       {
         otsuThresholder->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         setErrorCondition(-5);
         QString ss = QObject::tr("Failed to execute itk::OtsuMultipleThresholdsImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -222,7 +222,7 @@ void MultiOtsuThreshold::execute()
     {
       otsuThresholder->Update();
     }
-    catch( itk::ExceptionObject & err )
+    catch( itk::ExceptionObject& err )
     {
       setErrorCondition(-5);
       QString ss = QObject::tr("Failed to execute itk::OtsuMultipleThresholdsImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

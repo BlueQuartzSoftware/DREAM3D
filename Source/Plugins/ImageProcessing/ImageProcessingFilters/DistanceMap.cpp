@@ -105,7 +105,7 @@ class FindMaximaPrivate
       {
         threshold->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         filter->setErrorCondition(-5);
         QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

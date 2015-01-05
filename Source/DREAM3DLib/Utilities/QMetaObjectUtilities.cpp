@@ -48,12 +48,28 @@ QDataStream& operator<<( QDataStream& out, const IntVec3_t& v)
   out << v.x << v.y << v.z;
   return out;
 }
-QDataStream& operator>>( QDataStream& in, IntVec3_t& v) { in >> v.x >> v.y >> v.z; return in; }
+QDataStream& operator>>( QDataStream& in, IntVec3_t& v)
+{
+  in >> v.x >> v.y >> v.z;
+  return in;
+}
 
-QDataStream& operator<<( QDataStream& out, const FloatVec3_t& v) { out << v.x << v.y << v.z; return out; }
-QDataStream& operator>>( QDataStream& in, FloatVec3_t& v) { in >> v.x >> v.y >> v.z; return in; }
+QDataStream& operator<<( QDataStream& out, const FloatVec3_t& v)
+{
+  out << v.x << v.y << v.z;
+  return out;
+}
+QDataStream& operator>>( QDataStream& in, FloatVec3_t& v)
+{
+  in >> v.x >> v.y >> v.z;
+  return in;
+}
 
-QDataStream& operator<<( QDataStream& out, const DataArrayPath& v) { out << v.getDataContainerName() << "|" << v.getAttributeMatrixName() << "|" << v.getDataArrayName(); return out; }
+QDataStream& operator<<( QDataStream& out, const DataArrayPath& v)
+{
+  out << v.getDataContainerName() << "|" << v.getAttributeMatrixName() << "|" << v.getDataArrayName();
+  return out;
+}
 //QDataStream& operator>>( QDataStream& in, DataArrayPath& v) { in >> v.getDataContainerName() >> "|" >> v.getAttributeMatrixName() >> "|" >> v.getDataArrayName(); return in;}
 
 

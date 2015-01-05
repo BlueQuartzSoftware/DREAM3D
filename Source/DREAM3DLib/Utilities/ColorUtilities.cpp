@@ -102,17 +102,29 @@ DREAM3D::Rgb ColorUtilities::convertHSVtoRgb(float h, float s, float v)
   b = b + (v - c);
 
   if(r > 1.0f)
-  { r = 1.0f; }
+  {
+    r = 1.0f;
+  }
   if(g > 1.0f)
-  { g = 1.0f; }
+  {
+    g = 1.0f;
+  }
   if(b > 1.0f)
-  { b = 1.0f; }
+  {
+    b = 1.0f;
+  }
   if(r < 0.0f)
-  { r = 0.0f; }
+  {
+    r = 0.0f;
+  }
   if(g < 0.0f)
-  { g = 0.0f; }
+  {
+    g = 0.0f;
+  }
   if(b < 0.0f)
-  { b = 0.0f; }
+  {
+    b = 0.0f;
+  }
 
   return RgbColor::dRgb(r * 255, g * 255, b * 255, 0);
 }

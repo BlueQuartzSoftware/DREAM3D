@@ -131,7 +131,10 @@ void ArraySelectionExample::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   /* Place all your code to execute your filter here. */
 
@@ -159,26 +162,34 @@ AbstractFilter::Pointer ArraySelectionExample::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString ArraySelectionExample::getCompiledLibraryName()
-{ return Test::TestBaseName; }
+{
+  return Test::TestBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ArraySelectionExample::getGroupName()
-{ return DREAM3D::FilterGroups::TestFilters; }
+{
+  return DREAM3D::FilterGroups::TestFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ArraySelectionExample::getSubGroupName()
-{ return "Misc"; }
+{
+  return "Misc";
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ArraySelectionExample::getHumanLabel()
-{ return "DataContainerArrayProxy Example"; }
+{
+  return "DataContainerArrayProxy Example";
+}
 

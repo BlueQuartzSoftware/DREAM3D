@@ -56,7 +56,10 @@ float GeometryMath::CosThetaBetweenVectors(float a[3], float b[3])
 {
   float norm1 = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
   float norm2 = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
-  if(norm1 == 0 || norm2 == 0) { return 1.0; }
+  if(norm1 == 0 || norm2 == 0)
+  {
+    return 1.0;
+  }
   return (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) / (norm1 * norm2);
 }
 
@@ -77,8 +80,14 @@ float GeometryMath::AngleBetweenVectors(float a[3], float b[3])
 // -----------------------------------------------------------------------------
 bool GeometryMath::PointInBox(const VertexArray::Vert_t& p, const VertexArray::Vert_t& ll, const VertexArray::Vert_t& ur)
 {
-  if((ll.pos[0] <= p.pos[0]) && (p.pos[0] <= ur.pos[0]) && (ll.pos[1] <= p.pos[1]) && (p.pos[1] <= ur.pos[1]) && (ll.pos[2] <= p.pos[2]) && (p.pos[2] <= ur.pos[2])) { return true; }
-  else { return false; }
+  if((ll.pos[0] <= p.pos[0]) && (p.pos[0] <= ur.pos[0]) && (ll.pos[1] <= p.pos[1]) && (p.pos[1] <= ur.pos[1]) && (ll.pos[2] <= p.pos[2]) && (p.pos[2] <= ur.pos[2]))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -89,12 +98,30 @@ bool GeometryMath::RayIntersectsBox(const VertexArray::Vert_t& p,
                                     const VertexArray::Vert_t& ll,
                                     const VertexArray::Vert_t& ur)
 {
-  if((ll.pos[0] > p.pos[0]) && (ll.pos[0] > q.pos[0])) { return false; }
-  else if((ur.pos[0] < p.pos[0]) && (ur.pos[0] < q.pos[0])) { return false; }
-  else if((ll.pos[1] > p.pos[1]) && (ll.pos[1] > q.pos[1])) { return false; }
-  else if((ur.pos[1] < p.pos[1]) && (ur.pos[1] < q.pos[1])) { return false; }
-  else if((ll.pos[2] > p.pos[2]) && (ll.pos[2] > q.pos[2])) { return false; }
-  else if((ur.pos[2] < p.pos[2]) && (ur.pos[2] < q.pos[2])) { return false; }
+  if((ll.pos[0] > p.pos[0]) && (ll.pos[0] > q.pos[0]))
+  {
+    return false;
+  }
+  else if((ur.pos[0] < p.pos[0]) && (ur.pos[0] < q.pos[0]))
+  {
+    return false;
+  }
+  else if((ll.pos[1] > p.pos[1]) && (ll.pos[1] > q.pos[1]))
+  {
+    return false;
+  }
+  else if((ur.pos[1] < p.pos[1]) && (ur.pos[1] < q.pos[1]))
+  {
+    return false;
+  }
+  else if((ll.pos[2] > p.pos[2]) && (ll.pos[2] > q.pos[2]))
+  {
+    return false;
+  }
+  else if((ur.pos[2] < p.pos[2]) && (ur.pos[2] < q.pos[2]))
+  {
+    return false;
+  }
   return true;
 }
 
@@ -257,8 +284,8 @@ void GeometryMath::GenerateRandomRay(float length, float ray[3])
 
   DREAM3D_RANDOMNG_NEW();
 
- // unsigned long long int m_Seed = QDateTime::currentMSecsSinceEpoch();
- // DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+// unsigned long long int m_Seed = QDateTime::currentMSecsSinceEpoch();
+// DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
   ray[2] = (2.0 * rg.genrand_real1()) - 1.0;
   t = (DREAM3D::Constants::k_2Pi * rg.genrand_real1());
@@ -286,12 +313,30 @@ void GeometryMath::FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexA
   int numVerts = verts->count();
   for(int i = 0; i < numVerts; i++)
   {
-    if(v[i].pos[0] < ll.pos[0]) { ll.pos[0] = v[i].pos[0]; }
-    if(v[i].pos[0] > ur.pos[0]) { ur.pos[0] = v[i].pos[0]; }
-    if(v[i].pos[1] < ll.pos[1]) { ll.pos[1] = v[i].pos[1]; }
-    if(v[i].pos[1] > ur.pos[1]) { ur.pos[1] = v[i].pos[1]; }
-    if(v[i].pos[2] < ll.pos[2]) { ll.pos[2] = v[i].pos[2]; }
-    if(v[i].pos[2] > ur.pos[2]) { ur.pos[2] = v[i].pos[2]; }
+    if(v[i].pos[0] < ll.pos[0])
+    {
+      ll.pos[0] = v[i].pos[0];
+    }
+    if(v[i].pos[0] > ur.pos[0])
+    {
+      ur.pos[0] = v[i].pos[0];
+    }
+    if(v[i].pos[1] < ll.pos[1])
+    {
+      ll.pos[1] = v[i].pos[1];
+    }
+    if(v[i].pos[1] > ur.pos[1])
+    {
+      ur.pos[1] = v[i].pos[1];
+    }
+    if(v[i].pos[2] < ll.pos[2])
+    {
+      ll.pos[2] = v[i].pos[2];
+    }
+    if(v[i].pos[2] > ur.pos[2])
+    {
+      ur.pos[2] = v[i].pos[2];
+    }
   }
 }
 
@@ -314,12 +359,30 @@ void GeometryMath::FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32Dynamic
   for(int i = 0; i < numFaces; i++)
   {
     FindBoundingBoxOfFace(faces, faceId[i], facell, faceur);
-    if(facell.pos[0] < ll.pos[0]) { ll.pos[0] = facell.pos[0]; }
-    if(facell.pos[1] < ll.pos[1]) { ll.pos[1] = facell.pos[1]; }
-    if(facell.pos[2] < ll.pos[2]) { ll.pos[2] = facell.pos[2]; }
-    if(faceur.pos[0] > ur.pos[0]) { ur.pos[0] = faceur.pos[0]; }
-    if(faceur.pos[1] > ur.pos[1]) { ur.pos[1] = faceur.pos[1]; }
-    if(faceur.pos[2] > ur.pos[2]) { ur.pos[2] = faceur.pos[2]; }
+    if(facell.pos[0] < ll.pos[0])
+    {
+      ll.pos[0] = facell.pos[0];
+    }
+    if(facell.pos[1] < ll.pos[1])
+    {
+      ll.pos[1] = facell.pos[1];
+    }
+    if(facell.pos[2] < ll.pos[2])
+    {
+      ll.pos[2] = facell.pos[2];
+    }
+    if(faceur.pos[0] > ur.pos[0])
+    {
+      ur.pos[0] = faceur.pos[0];
+    }
+    if(faceur.pos[1] > ur.pos[1])
+    {
+      ur.pos[1] = faceur.pos[1];
+    }
+    if(faceur.pos[2] > ur.pos[2])
+    {
+      ur.pos[2] = faceur.pos[2];
+    }
   }
 
   if(faceIds.ncells == 0)
@@ -352,12 +415,30 @@ void GeometryMath::FindBoundingBoxOfRotatedFaces(FaceArray::Pointer faces, Int32
   for(int i = 0; i < numFaces; i++)
   {
     FindBoundingBoxOfRotatedFace(faces, faceId[i], g, facell, faceur);
-    if(facell.pos[0] < ll.pos[0]) { ll.pos[0] = facell.pos[0]; }
-    if(facell.pos[1] < ll.pos[1]) { ll.pos[1] = facell.pos[1]; }
-    if(facell.pos[2] < ll.pos[2]) { ll.pos[2] = facell.pos[2]; }
-    if(faceur.pos[0] > ur.pos[0]) { ur.pos[0] = faceur.pos[0]; }
-    if(faceur.pos[1] > ur.pos[1]) { ur.pos[1] = faceur.pos[1]; }
-    if(faceur.pos[2] > ur.pos[2]) { ur.pos[2] = faceur.pos[2]; }
+    if(facell.pos[0] < ll.pos[0])
+    {
+      ll.pos[0] = facell.pos[0];
+    }
+    if(facell.pos[1] < ll.pos[1])
+    {
+      ll.pos[1] = facell.pos[1];
+    }
+    if(facell.pos[2] < ll.pos[2])
+    {
+      ll.pos[2] = facell.pos[2];
+    }
+    if(faceur.pos[0] > ur.pos[0])
+    {
+      ur.pos[0] = faceur.pos[0];
+    }
+    if(faceur.pos[1] > ur.pos[1])
+    {
+      ur.pos[1] = faceur.pos[1];
+    }
+    if(faceur.pos[2] > ur.pos[2])
+    {
+      ur.pos[2] = faceur.pos[2];
+    }
   }
 
   if(numFaces == 0)
@@ -385,18 +466,54 @@ void GeometryMath::FindBoundingBoxOfFace(FaceArray::Pointer faces, int faceId, V
   ur.pos[1] = a.pos[1];
   ll.pos[2] = a.pos[2];
   ur.pos[2] = a.pos[2];
-  if(b.pos[0] < ll.pos[0]) { ll.pos[0] = b.pos[0]; }
-  if(b.pos[0] > ur.pos[0]) { ur.pos[0] = b.pos[0]; }
-  if(b.pos[1] < ll.pos[1]) { ll.pos[1] = b.pos[1]; }
-  if(b.pos[1] > ur.pos[1]) { ur.pos[1] = b.pos[1]; }
-  if(b.pos[2] < ll.pos[2]) { ll.pos[2] = b.pos[2]; }
-  if(b.pos[2] > ur.pos[2]) { ur.pos[2] = b.pos[2]; }
-  if(c.pos[0] < ll.pos[0]) { ll.pos[0] = c.pos[0]; }
-  if(c.pos[0] > ur.pos[0]) { ur.pos[0] = c.pos[0]; }
-  if(c.pos[1] < ll.pos[1]) { ll.pos[1] = c.pos[1]; }
-  if(c.pos[1] > ur.pos[1]) { ur.pos[1] = c.pos[1]; }
-  if(c.pos[2] < ll.pos[2]) { ll.pos[2] = c.pos[2]; }
-  if(c.pos[2] > ur.pos[2]) { ur.pos[2] = c.pos[2]; }
+  if(b.pos[0] < ll.pos[0])
+  {
+    ll.pos[0] = b.pos[0];
+  }
+  if(b.pos[0] > ur.pos[0])
+  {
+    ur.pos[0] = b.pos[0];
+  }
+  if(b.pos[1] < ll.pos[1])
+  {
+    ll.pos[1] = b.pos[1];
+  }
+  if(b.pos[1] > ur.pos[1])
+  {
+    ur.pos[1] = b.pos[1];
+  }
+  if(b.pos[2] < ll.pos[2])
+  {
+    ll.pos[2] = b.pos[2];
+  }
+  if(b.pos[2] > ur.pos[2])
+  {
+    ur.pos[2] = b.pos[2];
+  }
+  if(c.pos[0] < ll.pos[0])
+  {
+    ll.pos[0] = c.pos[0];
+  }
+  if(c.pos[0] > ur.pos[0])
+  {
+    ur.pos[0] = c.pos[0];
+  }
+  if(c.pos[1] < ll.pos[1])
+  {
+    ll.pos[1] = c.pos[1];
+  }
+  if(c.pos[1] > ur.pos[1])
+  {
+    ur.pos[1] = c.pos[1];
+  }
+  if(c.pos[2] < ll.pos[2])
+  {
+    ll.pos[2] = c.pos[2];
+  }
+  if(c.pos[2] > ur.pos[2])
+  {
+    ur.pos[2] = c.pos[2];
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -427,18 +544,54 @@ void GeometryMath::FindBoundingBoxOfRotatedFace(FaceArray::Pointer faces, int fa
   ur.pos[1] = p1r[1];
   ll.pos[2] = p1r[2];
   ur.pos[2] = p1r[2];
-  if(p2r[0] < ll.pos[0]) { ll.pos[0] = p2r[0]; }
-  if(p2r[0] > ur.pos[0]) { ur.pos[0] = p2r[0]; }
-  if(p2r[1] < ll.pos[1]) { ll.pos[1] = p2r[1]; }
-  if(p2r[1] > ur.pos[1]) { ur.pos[1] = p2r[1]; }
-  if(p2r[2] < ll.pos[2]) { ll.pos[2] = p2r[2]; }
-  if(p2r[2] > ur.pos[2]) { ur.pos[2] = p2r[2]; }
-  if(p3r[0] < ll.pos[0]) { ll.pos[0] = p3r[0]; }
-  if(p3r[0] > ur.pos[0]) { ur.pos[0] = p3r[0]; }
-  if(p3r[1] < ll.pos[1]) { ll.pos[1] = p3r[1]; }
-  if(p3r[1] > ur.pos[1]) { ur.pos[1] = p3r[1]; }
-  if(p3r[2] < ll.pos[2]) { ll.pos[2] = p3r[2]; }
-  if(p3r[2] > ur.pos[2]) { ur.pos[2] = p3r[2]; }
+  if(p2r[0] < ll.pos[0])
+  {
+    ll.pos[0] = p2r[0];
+  }
+  if(p2r[0] > ur.pos[0])
+  {
+    ur.pos[0] = p2r[0];
+  }
+  if(p2r[1] < ll.pos[1])
+  {
+    ll.pos[1] = p2r[1];
+  }
+  if(p2r[1] > ur.pos[1])
+  {
+    ur.pos[1] = p2r[1];
+  }
+  if(p2r[2] < ll.pos[2])
+  {
+    ll.pos[2] = p2r[2];
+  }
+  if(p2r[2] > ur.pos[2])
+  {
+    ur.pos[2] = p2r[2];
+  }
+  if(p3r[0] < ll.pos[0])
+  {
+    ll.pos[0] = p3r[0];
+  }
+  if(p3r[0] > ur.pos[0])
+  {
+    ur.pos[0] = p3r[0];
+  }
+  if(p3r[1] < ll.pos[1])
+  {
+    ll.pos[1] = p3r[1];
+  }
+  if(p3r[1] > ur.pos[1])
+  {
+    ur.pos[1] = p3r[1];
+  }
+  if(p3r[2] < ll.pos[2])
+  {
+    ll.pos[2] = p3r[2];
+  }
+  if(p3r[2] > ur.pos[2])
+  {
+    ur.pos[2] = p3r[2];
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -518,12 +671,30 @@ char GeometryMath::RayIntersectsTriangle(const VertexArray::Vert_t& a, const Ver
 
   code = RayIntersectsPlane(a, b, c, q, r, p, m);
 
-  if(code == '0') { return '0'; }
-  else if(code == 'q') { return PointInTriangle3D(a, b, c, m, q); }
-  else if(code == 'r') { return PointInTriangle3D(a, b, c, m, r); }
-  else if(code == 'p') { return 'p'; }
-  else if(code == '1') { return RayCrossesTriangle(a, b, c, q, r); }
-  else { return code; }
+  if(code == '0')
+  {
+    return '0';
+  }
+  else if(code == 'q')
+  {
+    return PointInTriangle3D(a, b, c, m, q);
+  }
+  else if(code == 'r')
+  {
+    return PointInTriangle3D(a, b, c, m, r);
+  }
+  else if(code == 'p')
+  {
+    return 'p';
+  }
+  else if(code == '1')
+  {
+    return RayCrossesTriangle(a, b, c, q, r);
+  }
+  else
+  {
+    return code;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -546,8 +717,14 @@ char GeometryMath::RayIntersectsPlane(const VertexArray::Vert_t& a, const Vertex
 
   if(denom == 0.0)
   {
-    if(num == 0.0) { return 'p'; }
-    else { return '0'; }
+    if(num == 0.0)
+    {
+      return 'p';
+    }
+    else
+    {
+      return '0';
+    }
   }
   else
   {
@@ -556,10 +733,22 @@ char GeometryMath::RayIntersectsPlane(const VertexArray::Vert_t& a, const Vertex
     {
       p.pos[i] = q.pos[i] + (t * (r.pos[i] - q.pos[i]));
     }
-    if(t > 0.0 && t < 1.0) { return '1'; }
-    else if (num == 0.0) { return 'q'; }
-    else if (num == denom) { return 'r'; }
-    else { return '0'; }
+    if(t > 0.0 && t < 1.0)
+    {
+      return '1';
+    }
+    else if (num == 0.0)
+    {
+      return 'q';
+    }
+    else if (num == denom)
+    {
+      return 'r';
+    }
+    else
+    {
+      return '0';
+    }
   }
 }
 
@@ -596,12 +785,30 @@ char GeometryMath::PointInTriangle2D(const VertexArray::Vert_t& a, const VertexA
   FindTriangleArea(p, b, c, area1);
   FindTriangleArea(p, c, a, area2);
 
-  if((area0 == 0 && area1 > 0 && area2 > 0) || (area1 == 0 && area0 > 0 && area2 > 0) || (area2 == 0 && area0 > 0 && area1 > 0)) { return 'E'; }
-  else if((area0 == 0 && area1 < 0 && area2 < 0) || (area1 == 0 && area0 < 0 && area2 < 0) || (area2 == 0 && area0 < 0 && area1 < 0)) { return 'E'; }
-  else if((area0 > 0 && area1 > 0 && area2 > 0) || (area0 < 0 && area1 < 0 && area2 < 0)) { return 'F'; }
-  else if((area0 == 0 && area1 == 0 && area2 == 0)) { return '?'; }
-  else if((area0 == 0 && area1 == 0) || (area0 == 0 && area2 == 0) || (area1 == 0 && area2 == 0)) { return 'V'; }
-  else { return '0'; }
+  if((area0 == 0 && area1 > 0 && area2 > 0) || (area1 == 0 && area0 > 0 && area2 > 0) || (area2 == 0 && area0 > 0 && area1 > 0))
+  {
+    return 'E';
+  }
+  else if((area0 == 0 && area1 < 0 && area2 < 0) || (area1 == 0 && area0 < 0 && area2 < 0) || (area2 == 0 && area0 < 0 && area1 < 0))
+  {
+    return 'E';
+  }
+  else if((area0 > 0 && area1 > 0 && area2 > 0) || (area0 < 0 && area1 < 0 && area2 < 0))
+  {
+    return 'F';
+  }
+  else if((area0 == 0 && area1 == 0 && area2 == 0))
+  {
+    return '?';
+  }
+  else if((area0 == 0 && area1 == 0) || (area0 == 0 && area2 == 0) || (area1 == 0 && area2 == 0))
+  {
+    return 'V';
+  }
+  else
+  {
+    return '0';
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -615,12 +822,30 @@ char GeometryMath::RayCrossesTriangle(const VertexArray::Vert_t& a, const Vertex
   FindTetrahedronVolume(q, b, c, r, vol1);
   FindTetrahedronVolume(q, c, a, r, vol2);
 
-  if((vol0 > 0 && vol1 > 0 && vol2 > 0) || (vol0 < 0 && vol1 < 0 && vol2 < 0)) { return 'f'; }
-  else if((vol0 > 0 || vol1 > 0 || vol2 > 0) && (vol0 < 0 || vol1 < 0 || vol2 < 0)) { return '0'; }
-  else if((vol0 == 0 && vol1 == 0 && vol2 == 0)) { return '?'; }
-  else if((vol0 == 0 && vol1 == 0) || (vol0 == 0 && vol2 == 0) || (vol1 == 0 && vol2 == 0)) { return 'v'; }
-  else if(vol0 == 0 || vol1 == 0 || vol2 == 0) { return 'e'; }
-  else { return '?'; }
+  if((vol0 > 0 && vol1 > 0 && vol2 > 0) || (vol0 < 0 && vol1 < 0 && vol2 < 0))
+  {
+    return 'f';
+  }
+  else if((vol0 > 0 || vol1 > 0 || vol2 > 0) && (vol0 < 0 || vol1 < 0 || vol2 < 0))
+  {
+    return '0';
+  }
+  else if((vol0 == 0 && vol1 == 0 && vol2 == 0))
+  {
+    return '?';
+  }
+  else if((vol0 == 0 && vol1 == 0) || (vol0 == 0 && vol2 == 0) || (vol1 == 0 && vol2 == 0))
+  {
+    return 'v';
+  }
+  else if(vol0 == 0 || vol1 == 0 || vol2 == 0)
+  {
+    return 'e';
+  }
+  else
+  {
+    return '?';
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -695,7 +920,10 @@ LOOP:
       }
 
       /* If query endpoint q sits on a V/E/F, return that code. */
-      else if ( code == 'V' || code == 'E' || code == 'F' ) { return(code); }
+      else if ( code == 'V' || code == 'E' || code == 'F' )
+      {
+        return(code);
+      }
 
     } /* End check each face */
 
@@ -705,7 +933,13 @@ LOOP:
   } /* End while loop */
 
   /* q strictly interior to polyhedron if an odd number of crossings. */
-  if( ( crossings % 2 ) == 1 ) { return 'i'; }
-  else { return 'o'; }
+  if( ( crossings % 2 ) == 1 )
+  {
+    return 'i';
+  }
+  else
+  {
+    return 'o';
+  }
 }
 

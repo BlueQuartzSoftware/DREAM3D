@@ -172,7 +172,10 @@ void RawBinaryWriter::execute()
   dataCheck();
   // Check to make sure you made it through the data check. Errors would have been reported already so if something
   // happens to fail in the dataCheck() then we simply return
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   setErrorCondition(0);
 
   /* Place all your code to execute your filter here. */

@@ -492,12 +492,21 @@ int H5FilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v)
 {
   int numQFilters = static_cast<int>( 1 );
   int err = writeValue(name,  numQFilters);
-  if (err < 0) { return err; }
+  if (err < 0)
+  {
+    return err;
+  }
   QString parseOrder = "Angle, H, K, L";
   err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, "Data Order", parseOrder);
-  if (err < 0) { return err; }
+  if (err < 0)
+  {
+    return err;
+  }
   err = writeValue(name, v, 0);
-  if (err < 0) { return err; }
+  if (err < 0)
+  {
+    return err;
+  }
   return err;
 }
 
@@ -524,14 +533,23 @@ int H5FilterParametersWriter::writeValue(const QString name, QVector<AxisAngleIn
 {
   int numQFilters = static_cast<int>( v.size() );
   int err = writeValue(name,  numQFilters);
-  if (err < 0) { return err; }
+  if (err < 0)
+  {
+    return err;
+  }
   QString parseOrder = "Angle, H, K, L";
   err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, "Data Order", parseOrder);
-  if (err < 0) { return err; }
+  if (err < 0)
+  {
+    return err;
+  }
   for(int i = 0; i < numQFilters; i++)
   {
     err = writeValue(name, v[i], i);
-    if (err < 0) { return err; }
+    if (err < 0)
+    {
+      return err;
+    }
   }
   return err;
 }
@@ -582,7 +600,10 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    if(dcProxy.flag == Qt::Unchecked)
+    {
+      continue;    // Skip to the next DataContainer if we are not reading this one.
+    }
     hid_t dcGid = QH5Utilities::createGroup(dcaGid, dcProxy.name);
 
     QStringList flat;
@@ -592,7 +613,10 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
       amIter.next();
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      if(amProxy.flag == Qt::Unchecked)
+      {
+        continue;    // Skip to the next AttributeMatrix if not reading this one
+      }
       hid_t amGid = QH5Utilities::createGroup(dcGid, amProxy.name);
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
@@ -601,7 +625,10 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
         dIter.next();
 
         const DataArrayProxy& daProxy = dIter.value();
-        if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
+        if(daProxy.flag == DREAM3D::Unchecked)
+        {
+          continue;    // Skip to the next DataArray if not reading this one
+        }
 
         flat << dIter.value().name;
       }

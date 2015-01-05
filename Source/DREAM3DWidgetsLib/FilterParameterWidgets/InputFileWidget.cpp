@@ -76,7 +76,7 @@ InputFileWidget::~InputFileWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InputFileWidget::setFilterParameter(FilterParameter *value)
+void InputFileWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
 }

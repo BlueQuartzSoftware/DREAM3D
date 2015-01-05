@@ -58,9 +58,9 @@ namespace Detail
 
 namespace Detail
 {
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
   template<typename T>
   void ConvertData(T* ptr, QVector<size_t> dims, DataContainer::Pointer m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
   {
@@ -277,12 +277,15 @@ void ConvertData::dataCheck(bool preflight)
     return;
   }
 
- // int numberOfComponents = 0;
+// int numberOfComponents = 0;
   if (true == preflight)
   {
 
     AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, m_SelectedCellArrayPath, -301);
-    if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+    if(getErrorCondition() < 0 || NULL == cellAttrMat.get() )
+    {
+      return;
+    }
 
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
     //IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
@@ -294,7 +297,7 @@ void ConvertData::dataCheck(bool preflight)
       return;
     }
 
-  //  numberOfComponents = p->getNumberOfComponents();
+    //  numberOfComponents = p->getNumberOfComponents();
     QVector<size_t> dims = p->getComponentDimensions();
     int64_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
@@ -364,7 +367,10 @@ void ConvertData::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck(false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedCellArrayPath.getDataContainerName());
 
@@ -408,26 +414,34 @@ AbstractFilter::Pointer ConvertData::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{
+  return DREAM3D::FilterSubGroups::MiscFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getHumanLabel()
-{ return "Convert Cell Data"; }
+{
+  return "Convert Cell Data";
+}
 

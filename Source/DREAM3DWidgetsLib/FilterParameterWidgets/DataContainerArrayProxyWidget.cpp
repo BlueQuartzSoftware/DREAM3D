@@ -77,7 +77,7 @@ DataContainerArrayProxyWidget::~DataContainerArrayProxyWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::setFilterParameter(FilterParameter *value)
+void DataContainerArrayProxyWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<DataContainerArrayProxyFilterParameter*>(value);
 }

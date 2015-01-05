@@ -99,10 +99,10 @@ int SobelEdge::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -204,7 +204,7 @@ void SobelEdge::execute()
         sobelFilter->Update();
         rescaleFilter->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         setErrorCondition(-5);
         QString ss = QObject::tr("Failed to execute itk::SobelEdgeDetectionImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -238,7 +238,7 @@ void SobelEdge::execute()
       sobelFilter->Update();
       rescaleFilter->Update();
     }
-    catch( itk::ExceptionObject & err )
+    catch( itk::ExceptionObject& err )
     {
       setErrorCondition(-5);
       QString ss = QObject::tr("Failed to execute itk::SobelEdgeDetectionImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

@@ -108,49 +108,49 @@ SGRDFTableModel* StatsGenRDFWidget::tableModel()
 void GenerateTestData(QwtPlot* plotPtr)
 {
   QwtPlot& plot = *plotPtr;
-     plot.setCanvasBackground(QColor(Qt::white));
-     plot.setTitle("Histogram");
+  plot.setCanvasBackground(QColor(Qt::white));
+  plot.setTitle("Histogram");
 
-     QwtPlotGrid *grid = new QwtPlotGrid;
-     grid->enableXMin(true);
-     grid->enableYMin(true);
-     grid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
-     grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
-     grid->attach(&plot);
+  QwtPlotGrid* grid = new QwtPlotGrid;
+  grid->enableXMin(true);
+  grid->enableYMin(true);
+  grid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
+  grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
+  grid->attach(&plot);
 
-     QwtHistogramItem *histogram = new QwtHistogramItem();
-     histogram->setColor(Qt::darkCyan);
+  QwtHistogramItem* histogram = new QwtHistogramItem();
+  histogram->setColor(Qt::darkCyan);
 
-     const int numValues = 20;
+  const int numValues = 20;
 
-     QwtArray<QwtDoubleInterval> intervals(numValues);
-     QwtArray<double> values(numValues);
+  QwtArray<QwtDoubleInterval> intervals(numValues);
+  QwtArray<double> values(numValues);
 
-     double pos = 0.0;
-     for ( int i = 0; i < (int)intervals.size(); i++ )
-     {
-         const int width = 5 + rand() % 15;
-         const int value = rand() % 100;
+  double pos = 0.0;
+  for ( int i = 0; i < (int)intervals.size(); i++ )
+  {
+    const int width = 5 + rand() % 15;
+    const int value = rand() % 100;
 
-         intervals[i] = QwtDoubleInterval(pos, pos + double(width));
-         values[i] = value;
+    intervals[i] = QwtDoubleInterval(pos, pos + double(width));
+    values[i] = value;
 
-         pos += width;
-     }
+    pos += width;
+  }
 
-     histogram->setData(QwtIntervalData(intervals, values));
-     histogram->attach(&plot);
+  histogram->setData(QwtIntervalData(intervals, values));
+  histogram->attach(&plot);
 
-     plot.setAxisScale(QwtPlot::yLeft, 0.0, 100.0);
-     plot.setAxisScale(QwtPlot::xBottom, 0.0, pos);
-     plot.replot();
+  plot.setAxisScale(QwtPlot::yLeft, 0.0, 100.0);
+  plot.setAxisScale(QwtPlot::xBottom, 0.0, pos);
+  plot.replot();
 
- #if QT_VERSION < 0x040000
-     a.setMainWidget(&plot);
- #endif
+#if QT_VERSION < 0x040000
+  a.setMainWidget(&plot);
+#endif
 
-     plot.resize(600,400);
-     plot.show();
+  plot.resize(600, 400);
+  plot.show();
 }
 #endif
 
@@ -196,9 +196,9 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
   boxDims[1] = 100;
   boxDims[2] = 100;
   std::vector<float> boxRes(3);
-  boxRes[0] = 0.1;
-  boxRes[1] = 0.1;
-  boxRes[2] = 0.1;
+  boxRes[0] = 0.1f;
+  boxRes[1] = 0.1f;
+  boxRes[2] = 0.1f;
 
   // Generate the RDF Frequencies
   std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(minDist, maxDist, numBins, boxDims, boxRes);

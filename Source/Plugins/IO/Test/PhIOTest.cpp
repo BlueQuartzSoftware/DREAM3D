@@ -130,9 +130,9 @@ int TestPhWriter()
     bool propWasSet = phWriter->setProperty("FeatureIdsArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile);
+    propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        pipeline->pushBack(phWriter);
+    pipeline->pushBack(phWriter);
   }
   else
   {
@@ -153,9 +153,9 @@ int TestPhWriter()
 // -----------------------------------------------------------------------------
 int TestPhReader()
 {
- // FilterPipeline::Pointer pipeline = FilterPipeline::New();
+// FilterPipeline::Pointer pipeline = FilterPipeline::New();
   DataContainerArray::Pointer dca = DataContainerArray::New();
- // dca->pushBack(m);
+// dca->pushBack(m);
 
   AbstractFilter::Pointer phReader = AbstractFilter::NullPointer();
   QString filtName = "PhReader";
@@ -172,7 +172,7 @@ int TestPhReader()
     phReader->execute();
     int err = phReader->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0);
-   // pipeline->pushBack(phReader);
+    // pipeline->pushBack(phReader);
   }
   else
   {
@@ -187,7 +187,7 @@ int TestPhReader()
 
 
   VolumeDataContainer* m = phReader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
-  DREAM3D_REQUIRED_PTR(m, !=, NULL)
+  DREAM3D_REQUIRED_PTR(m, != , NULL)
 
   m->getDimensions(nx, ny, nz);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);

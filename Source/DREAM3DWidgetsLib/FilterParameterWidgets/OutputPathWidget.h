@@ -83,7 +83,7 @@ class DREAM3DWidgetsLib_EXPORT OutputPathWidget : public FilterParameterWidget, 
     void setupGui();
 
 
-    void setFilterParameter(FilterParameter *value);
+    void setFilterParameter(FilterParameter* value);
     FilterParameter* getFilterParameter() const;
 
 

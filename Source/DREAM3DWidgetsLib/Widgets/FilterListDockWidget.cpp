@@ -84,7 +84,7 @@ void FilterListDockWidget::setupGui()
   setupSearchField();
   updateSearchIcons();
 
-    QString css(" QToolTip {\
+  QString css(" QToolTip {\
               border: 2px solid #434343;\
               padding: 2px;\
               border-radius: 3px;\

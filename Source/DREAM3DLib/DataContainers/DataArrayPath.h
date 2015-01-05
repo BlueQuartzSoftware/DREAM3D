@@ -82,6 +82,9 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
 
     virtual ~DataArrayPath();
 
+
+    static QVector<DataArrayPath> ConvertToQVector(QStringList& paths);
+
     DREAM3D_PIMPL_PROPERTY_DECL(QString, DataContainerName)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, AttributeMatrixName)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, DataArrayName)
@@ -155,11 +158,11 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     bool sameDataContainer(const DataArrayPath& other) const;
 
-     /**
-     * @brief checks that two paths share the same attribute matrix
-     * @param other The other path
-     * @return true if the two paths share the same attribute matrix, false otherwise
-     */
+    /**
+    * @brief checks that two paths share the same attribute matrix
+    * @param other The other path
+    * @return true if the two paths share the same attribute matrix, false otherwise
+    */
     bool sameAttributeMatrix(const DataArrayPath& other) const;
 
     /**

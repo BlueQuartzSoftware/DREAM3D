@@ -49,11 +49,19 @@
 
 #include "GenerateFeatureIds.h"
 
+// Macro to create an empty data array
+#define CREATE_DATA_ARRAY(name, type, attrMat, tDims, cDims, err)\
+  DataArray<type>::Pointer _##type##Array = DataArray<type>::CreateArray(tDims, cDims, name, true);\
+  err = attrMat->addAttributeArray(name, _##type##Array);\
+  DREAM3D_REQUIRE(err >= 0);
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
 {
+  int err = 0;
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
   VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New("Data Container");
@@ -66,9 +74,16 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   amDims.push_back(30);
   amDims.push_back(20);
   AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, "Attribute Matrix", DREAM3D::AttributeMatrixType::Cell);
-  dc1->addAttributeMatrix(am1->getName(), am1);
+  am1->getNumTuples();
 
-  //IDataArray::Pointer da1 = am1->createAndAddAttributeArray()
+  QVector<size_t> tDims;
+  tDims.push_back(40);
+  tDims.push_back(30);
+  tDims.push_back(20);
+  QVector<size_t> cDims(1, 1);
+  CREATE_DATA_ARRAY("Confidence Index", float, am1, tDims, cDims, err)
+
+  dc1->addAttributeMatrix(am1->getName(), am1);
 
   dca->addDataContainer(dc1);
 
@@ -88,7 +103,7 @@ int TestCropVolume()
 //  cropFilter->setXMin(10);
 //  cropFilter->setYMax(28);
 
-	return 0;
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

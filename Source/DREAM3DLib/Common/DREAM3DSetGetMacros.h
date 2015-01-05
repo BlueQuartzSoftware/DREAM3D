@@ -305,15 +305,15 @@
 
 #define DREAM3D_PIMPL_PROPERTY_DECL(type, prpty)\
   public:\
-    void set##prpty(type value);\
-    type get##prpty() const;
+  void set##prpty(type value);\
+  type get##prpty() const;
 
 
 #define DREAM3D_PIMPL_PROPERTY_DEF(Class, type, prpty)\
   void Class::set##prpty(type value) {\
     Q_D(Class);\
     d->m_##prpty = value;\
-    }\
+  }\
   type Class::get##prpty() const {\
     Q_D(const Class);\
     return d->m_##prpty;\
@@ -322,10 +322,10 @@
 
 #define DREAM3D_OVERLOAD_PROPERTY(type, prpty, overload)\
   private:\
-   type m_##prpty;\
-   public:\
-   DREAM3D_SET_PROPERTY(overload, prpty)\
-   DREAM3D_GET_PROPERTY(overload, prpty)
+  type m_##prpty;\
+  public:\
+  DREAM3D_SET_PROPERTY(overload, prpty)\
+  DREAM3D_GET_PROPERTY(overload, prpty)
 
 #define DREAM3D_BOOL_PROPERTY(prpty)\
   private:\
@@ -520,14 +520,14 @@
 
 
 
-  //used in place of 'DEFINE_REQUIRED_DATAARRAY_VARIABLE' in filter header
+//used in place of 'DEFINE_REQUIRED_DATAARRAY_VARIABLE' in filter header
 #define DEFINE_REQUIRED_IDATAARRAY_VARIABLE(varName)\
   DREAM3D_INSTANCE_STRING_PROPERTY(varName##ArrayName);\
   private:\
   IDataArray::WeakPointer m_##varName##Ptr;\
   void* m_##varName;
 
-  //used in place of 'DEFINE_CREATED_DATAARRAY_VARIABLE' in filter header
+//used in place of 'DEFINE_CREATED_DATAARRAY_VARIABLE' in filter header
 #define DEFINE_CREATED_IDATAARRAY_VARIABLE(varName)\
   private:\
   IDataArray::WeakPointer m_##varName##Ptr;\
@@ -557,7 +557,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-
+   
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

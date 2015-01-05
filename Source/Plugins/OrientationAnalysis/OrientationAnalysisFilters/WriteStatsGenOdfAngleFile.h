@@ -151,7 +151,7 @@ class WriteStatsGenOdfAngleFile : public AbstractFilter
     void dataCheck();
 
     int determineOutputLineCount(int64_t totalPoints, int32_t phase);
-    int writeOutputFile(QTextStream &out, int32_t lineCount, int64_t totalPoints, int32_t phase);
+    int writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase);
 
 
   private:

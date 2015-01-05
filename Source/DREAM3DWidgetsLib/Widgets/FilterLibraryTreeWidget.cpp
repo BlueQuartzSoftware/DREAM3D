@@ -82,7 +82,7 @@ void FilterLibraryTreeWidget::setLeafActionList(QList<QAction*> list)
 // -----------------------------------------------------------------------------
 void FilterLibraryTreeWidget::setDefaultActionList(QList<QAction*> list)
 {
-    m_DefaultActions = list;
+  m_DefaultActions = list;
 }
 
 // -----------------------------------------------------------------------------
@@ -100,7 +100,7 @@ void FilterLibraryTreeWidget::onCustomContextMenuRequested(const QPoint& pos)
   }
   else
   {
-      showContextMenu( NULL, mapToGlobal(pos) );
+    showContextMenu( NULL, mapToGlobal(pos) );
   }
 }
 
@@ -113,28 +113,28 @@ void FilterLibraryTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoin
   // Clear menu's previous actions
   m_Menu.clear();
 
-    if (item == NULL)
+  if (item == NULL)
+  {
+    if ( !m_LeafActions.isEmpty() )
+    { addActionList(m_DefaultActions); }
+  }
+  else
+  {
+    int itemType = item->type();
+    switch (itemType)
     {
+      case Leaf_Item_Type:
         if ( !m_LeafActions.isEmpty() )
-        { addActionList(m_DefaultActions); }
+        { addActionList(m_LeafActions); }
+        break;
+
+
+      case Node_Item_Type:
+        if ( !m_NodeActions.isEmpty() )
+        { addActionList(m_NodeActions); }
+        break;
     }
-    else
-    {
-        int itemType = item->type();
-        switch (itemType)
-        {
-            case Leaf_Item_Type:
-                if ( !m_LeafActions.isEmpty() )
-                { addActionList(m_LeafActions); }
-                break;
-                
-                
-            case Node_Item_Type:
-                if ( !m_NodeActions.isEmpty() )
-                { addActionList(m_NodeActions); }
-                break;
-        }
-    }
+  }
 
   m_Menu.exec(globalPos);
 }

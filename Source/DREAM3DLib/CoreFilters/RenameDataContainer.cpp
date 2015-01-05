@@ -107,10 +107,10 @@ void RenameDataContainer::dataCheck()
   DataContainerArray::Pointer dca = getDataContainerArray();
   if (NULL == dca.get() )
   {
-      setErrorCondition(-11003);
-      QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+    setErrorCondition(-11003);
+    QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   bool check = dca->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName());
@@ -143,7 +143,10 @@ void RenameDataContainer::execute()
   setErrorCondition(0);
 
   dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -168,26 +171,34 @@ AbstractFilter::Pointer RenameDataContainer::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getHumanLabel()
-{ return "Rename Data Container"; }
+{
+  return "Rename Data Container";
+}
 

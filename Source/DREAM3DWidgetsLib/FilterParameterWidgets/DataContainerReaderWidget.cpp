@@ -56,7 +56,8 @@
 // Initialize private static member variable
 QString DataContainerReaderWidget::m_OpenDialogLastDirectory = "";
 
-namespace Detail {
+namespace Detail
+{
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
@@ -286,7 +287,7 @@ DataContainerReaderWidget::~DataContainerReaderWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReaderWidget::setFilter(AbstractFilter *value)
+void DataContainerReaderWidget::setFilter(AbstractFilter* value)
 {
   m_Filter = dynamic_cast<DataContainerReader*>(value);
 }
@@ -303,7 +304,7 @@ AbstractFilter* DataContainerReaderWidget::getFilter() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReaderWidget::setFilterParameter(FilterParameter *value)
+void DataContainerReaderWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<DataContainerReaderFilterParameter*>(value);
 }
@@ -413,7 +414,7 @@ void DataContainerReaderWidget::updateModelFromProxy(DataContainerArrayProxy& pr
       QStandardItem* amItem = Detail::getColumnItem<AttributeMatrixProxy>(dcItem, amName, attrProxy);
       assert(amItem != NULL);
 
-       //  qDebug() << "@@@ " << amName;
+      //  qDebug() << "@@@ " << amName;
       // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
       QMap<QString, DataArrayProxy>& dataArrays = attrProxy.dataArrays;
       QMutableMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
@@ -422,7 +423,7 @@ void DataContainerReaderWidget::updateModelFromProxy(DataContainerArrayProxy& pr
         dataArraysIter.next();
         DataArrayProxy& daProxy = dataArraysIter.value();
         QString daName = dataArraysIter.key();
-         //   qDebug() << "#### " << daName;
+        //   qDebug() << "#### " << daName;
         QStandardItem* daItem = Detail::getColumnItem<DataArrayProxy>(amItem, daName, daProxy);
         assert(daItem != NULL);
 
@@ -582,7 +583,7 @@ void DataContainerReaderWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
- // qDebug() << "DataContainerReaderWidget::filterNeedsInputParameters()";
+// qDebug() << "DataContainerReaderWidget::filterNeedsInputParameters()";
   m_Filter->setInputFile(filePath->text());
   updateProxyFromModel(); // Will update m_DcaProxy with the latest selections from the Model
   m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);
@@ -624,6 +625,7 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 {
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
+
   if (verifyPathExists(text, filePath) == true)
   {
     if(getFilter() != NULL)
@@ -640,8 +642,19 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 
       if(filePath->text().isEmpty() == false)
       {
+        // We need to do this now so that the validity of the InputFileDCAProxy will be correct for the if-else statements below
+        m_Filter->setInputFile(text);
 
-        DataContainerArrayProxy proxy = m_Filter->readDataContainerArrayStructure(filePath->text());
+        DataContainerArrayProxy proxy;
+        if (m_Filter->getInputFileDataContainerArrayProxy().isValid == true)
+        {
+          proxy = m_Filter->getInputFileDataContainerArrayProxy();
+        }
+        else
+        {
+          proxy = m_Filter->readDataContainerArrayStructure(filePath->text());
+        }
+
         updateModelFromProxy(proxy);
       }
     }
@@ -680,7 +693,7 @@ void DataContainerReaderWidget::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReaderWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex &index)
+void DataContainerReaderWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex& index)
 {
 //    QVariant var = index.data();
 //    QString name = var.toString();

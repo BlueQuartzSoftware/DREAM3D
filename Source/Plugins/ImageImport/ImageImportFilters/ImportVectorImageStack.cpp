@@ -198,7 +198,7 @@ void ImportVectorImageStack::dataCheck()
     // an RGB array by default
     int err = 0;
     QImage image(fileList[0]);
-    int64_t dims[3] = {image.width(), image.height(), ((m_EndIndex-m_StartIndex)+1)};
+    int64_t dims[3] = {image.width(), image.height(), ((m_EndIndex - m_StartIndex) + 1)};
     int pixelBytes = 0;
     //int test = image.format();
     if (image.format() == QImage::Format_Indexed8)
@@ -250,7 +250,7 @@ void ImportVectorImageStack::dataCheck()
 
     //set up component dimensions for the vector image array
     QVector<size_t> arraydims(2);
-    arraydims[0] = ((m_EndComp-m_StartComp)+1);
+    arraydims[0] = ((m_EndComp - m_StartComp) + 1);
     arraydims[1] = pixelBytes;
 
     // This would be for a gray scale image

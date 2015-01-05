@@ -87,7 +87,7 @@ void DataArrayInformationDisplayWidget::setupGui()
 // -----------------------------------------------------------------------------
 QString DataArrayInformationDisplayWidget::getNameText()
 {
-    return nameText->text();
+  return nameText->text();
 }
 
 // -----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ QString DataArrayInformationDisplayWidget::getNameText()
 // -----------------------------------------------------------------------------
 void DataArrayInformationDisplayWidget::setNameText(QString name)
 {
-    nameText->setText(name);
+  nameText->setText(name);
 }
 
 // -----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ void DataArrayInformationDisplayWidget::setNameText(QString name)
 // -----------------------------------------------------------------------------
 QString DataArrayInformationDisplayWidget::getPathText()
 {
-    return pathText->text();
+  return pathText->text();
 }
 
 // -----------------------------------------------------------------------------
@@ -111,5 +111,5 @@ QString DataArrayInformationDisplayWidget::getPathText()
 // -----------------------------------------------------------------------------
 void DataArrayInformationDisplayWidget::setPathText(QString path)
 {
-    pathText->setText(path);
+  pathText->setText(path);
 }

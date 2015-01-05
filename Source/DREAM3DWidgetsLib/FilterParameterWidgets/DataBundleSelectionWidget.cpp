@@ -144,9 +144,9 @@ void DataBundleSelectionWidget::populateComboBoxes()
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
-    if(NULL == dca.get()) { return; }
+  if(NULL == dca.get()) { return; }
 
-      // Check to see if we have any DataContainers to actually populate drop downs with.
+  // Check to see if we have any DataContainers to actually populate drop downs with.
   if(dca->getDataContainers().size() == 0)
   {
     return;
@@ -154,10 +154,10 @@ void DataBundleSelectionWidget::populateComboBoxes()
   QMap<QString, IDataContainerBundle::Pointer> dcb = dca->getDataContainerBundles();
 
 
-    // Check to see if we have any DataBundles to actually populate drop downs with.
+  // Check to see if we have any DataBundles to actually populate drop downs with.
   if(dcb.size() == 0)
   {
-      return;
+    return;
   }
 
   // Grab what is currently selected

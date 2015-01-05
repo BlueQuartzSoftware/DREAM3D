@@ -374,8 +374,8 @@ void VolumeDataContainer::writeXdmfPolyMeshStructureHeader(QTextStream& out, QSt
 // -----------------------------------------------------------------------------
 void VolumeDataContainer::writeXdmfRectMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
-    int64_t volDims[3] =
-    { static_cast<int64_t>(getXPoints()), static_cast<int64_t>(getYPoints()), static_cast<int64_t>(getZPoints()) };
+  int64_t volDims[3] =
+  { static_cast<int64_t>(getXPoints()), static_cast<int64_t>(getYPoints()), static_cast<int64_t>(getZPoints()) };
   float spacing[3] =
   { getXRes(), getYRes(), getZRes() };
   float origin[3] =
@@ -385,9 +385,9 @@ void VolumeDataContainer::writeXdmfRectMeshStructureHeader(QTextStream& out, QSt
   out << "\n  <Grid Name=\"" << getName() << "\" GridType=\"Uniform\">" << "\n";
   out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
   out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
-  out << "      <!-- Origin -->" << "\n";
+  out << "      <!-- Origin  Z, Y, X -->" << "\n";
   out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" << "\n";
-  out << "      <!-- DxDyDz (Spacing/Resolution) -->" << "\n";
+  out << "      <!-- DxDyDz (Spacing/Resolution) Z, Y, X -->" << "\n";
   out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
 }

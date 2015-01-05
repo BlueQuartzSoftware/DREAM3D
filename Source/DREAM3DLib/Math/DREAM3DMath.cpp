@@ -89,7 +89,10 @@ float DREAM3DMath::Gamma(float x)
     0.14e-14f
   };
 
-  if (x > 34.0f) { return std::numeric_limits<float>::max(); }    // This value is an overflow flag.
+  if (x > 34.0f)
+  {
+    return std::numeric_limits<float>::max();    // This value is an overflow flag.
+  }
   if (x == (int)x)
   {
     if (x > 0.0)
@@ -101,7 +104,9 @@ float DREAM3DMath::Gamma(float x)
       }
     }
     else
-    { ga = std::numeric_limits<float>::max(); }
+    {
+      ga = std::numeric_limits<float>::max();
+    }
   }
   else
   {
@@ -117,7 +122,9 @@ float DREAM3DMath::Gamma(float x)
       z -= m;
     }
     else
-    { z = x; }
+    {
+      z = x;
+    }
     gr = g[24];
     for (k = 23; k >= 0; k--)
     {
@@ -292,7 +299,10 @@ float DREAM3DMath::erf(float x)
 
 
   s = 1;
-  if(x < 0) { s = -1; }
+  if(x < 0)
+  {
+    s = -1;
+  }
   x = fabs(x);
   if(x < 0.5)
   {
@@ -748,20 +758,38 @@ float DREAM3DMath::incompletebetaps(float a, float b, float x, float maxgam)
 
 void DREAM3DMath::boundD(double& val, double min, double max)
 {
-  if(val < min) { val = min; }
-  else if(val > max) { val = max; }
+  if(val < min)
+  {
+    val = min;
+  }
+  else if(val > max)
+  {
+    val = max;
+  }
 }
 
 void DREAM3DMath::boundF(float& val, float min, float max)
 {
-  if(val < min) { val = min; }
-  else if(val > max) { val = max; }
+  if(val < min)
+  {
+    val = min;
+  }
+  else if(val > max)
+  {
+    val = max;
+  }
 }
 
 void DREAM3DMath::boundI(int& val, int min, int max)
 {
-  if(val < min) { val = min; }
-  else if(val > max) { val = max; }
+  if(val < min)
+  {
+    val = min;
+  }
+  else if(val > max)
+  {
+    val = max;
+  }
 }
 
 std::vector<double> DREAM3DMath::linspace(double minVal, double maxVal, int dim)

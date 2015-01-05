@@ -112,7 +112,7 @@ ENDif()
 
 
 if(CMP_SIZEOF___INT64)
-  if("CMP_TYPE_SAME_LONG_AND___INT64" MATCHES "^CMP_TYPE_SAME_LONG_AND___INT64$")
+  if(CMP_TYPE_SAME_LONG_AND___INT64 MATCHES "^CMP_TYPE_SAME_LONG_AND___INT64$")
     MESSAGE(STATUS "Checking whether long and __int64 are the same type")
     TRY_COMPILE(CMP_TYPE_SAME_LONG_AND___INT64
       ${PROJECT_BINARY_DIR}/CMakeTmp
@@ -136,9 +136,9 @@ if(CMP_SIZEOF___INT64)
         "failed with the following output:\n"
         "${OUTPUT}\n" APPEND)
     ENDif(CMP_TYPE_SAME_LONG_AND___INT64)
-  ENDif("CMP_TYPE_SAME_LONG_AND___INT64" MATCHES "^CMP_TYPE_SAME_LONG_AND___INT64$")
+  ENDif(CMP_TYPE_SAME_LONG_AND___INT64 MATCHES "^CMP_TYPE_SAME_LONG_AND___INT64$")
   if(CMP_SIZEOF_LONG_LONG)
-    if("CMP_TYPE_SAME_LONG_LONG_AND___INT64" MATCHES "^CMP_TYPE_SAME_LONG_LONG_AND___INT64$")
+    if(CMP_TYPE_SAME_LONG_LONG_AND___INT64 MATCHES "^CMP_TYPE_SAME_LONG_LONG_AND___INT64$")
       MESSAGE(STATUS "Checking whether long long and __int64 are the same type")
       TRY_COMPILE(CMP_TYPE_SAME_LONG_LONG_AND___INT64
         ${PROJECT_BINARY_DIR}/CMakeTmp
@@ -162,39 +162,8 @@ if(CMP_SIZEOF___INT64)
           "failed with the following output:\n"
           "${OUTPUT}\n" APPEND)
       ENDif(CMP_TYPE_SAME_LONG_LONG_AND___INT64)
-    ENDif("CMP_TYPE_SAME_LONG_LONG_AND___INT64" MATCHES "^CMP_TYPE_SAME_LONG_LONG_AND___INT64$")
+    ENDif(CMP_TYPE_SAME_LONG_LONG_AND___INT64 MATCHES "^CMP_TYPE_SAME_LONG_LONG_AND___INT64$")
   ENDif(CMP_SIZEOF_LONG_LONG)
-  if(NOT CMP_TYPE_SAME_LONG_AND___INT64)
-    if(NOT CMP_TYPE_SAME_LONG_LONG_AND___INT64)
-#  VS 6 cannot convert unsigned __int64 to double unless the
-# "Visual C++ Processor Pack" is installed.
-      if("CMP_TYPE_CONVERT_UI64_TO_DOUBLE" MATCHES "^CMP_TYPE_CONVERT_UI64_TO_DOUBLE$")
-        MESSAGE(STATUS "Checking whether unsigned __int64 can convert to double")
-        TRY_COMPILE(CMP_TYPE_CONVERT_UI64_TO_DOUBLE
-          ${PROJECT_BINARY_DIR}/CMakeTmp
-          ${CMP_CORE_TESTS_SOURCE_DIR}/TestConvertTypes.cxx
-          COMPILE_DEFINITIONS
-          -DCMP_TEST_CONVERT_TYPE_FROM=TYPE_UNSIGNED___INT64
-          -DCMP_TEST_CONVERT_TYPE_TO=double
-          OUTPUT_VARIABLE OUTPUT)
-        if(CMP_TYPE_CONVERT_UI64_TO_DOUBLE)
-          MESSAGE(STATUS "Checking whether unsigned __int64 can convert to double -- yes")
-          SET(CMP_TYPE_CONVERT_UI64_TO_DOUBLE 1 CACHE INTERNAL "Whether unsigned __int64 can convert to double")
-          WRITE_FILE(${CMAKE_BINARY_DIR}/CMakeFiles/CMakeOutput.log
-            "Determining whether unsigned __int64 can convert to double "
-            "passed with the following output:\n"
-            "${OUTPUT}\n" APPEND)
-        ELSE(CMP_TYPE_CONVERT_UI64_TO_DOUBLE)
-          MESSAGE(STATUS "Checking whether unsigned __int64 can convert to double -- no")
-          SET(CMP_TYPE_CONVERT_UI64_TO_DOUBLE 0 CACHE INTERNAL "Whether unsigned __int64 can convert to double")
-          WRITE_FILE(${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
-            "Determining whether unsigned __int64 can convert to double "
-            "failed with the following output:\n"
-            "${OUTPUT}\n" APPEND)
-        ENDif(CMP_TYPE_CONVERT_UI64_TO_DOUBLE)
-      ENDif("CMP_TYPE_CONVERT_UI64_TO_DOUBLE" MATCHES "^CMP_TYPE_CONVERT_UI64_TO_DOUBLE$")
-    ENDif(NOT CMP_TYPE_SAME_LONG_LONG_AND___INT64)
-  ENDif(NOT CMP_TYPE_SAME_LONG_AND___INT64)
 ENDif(CMP_SIZEOF___INT64)
 
 # Enable the "long long" type if it is available.  It is standard in

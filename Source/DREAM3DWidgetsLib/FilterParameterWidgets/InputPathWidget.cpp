@@ -70,7 +70,7 @@ InputPathWidget::~InputPathWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InputPathWidget::setFilterParameter(FilterParameter *value)
+void InputPathWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
 }

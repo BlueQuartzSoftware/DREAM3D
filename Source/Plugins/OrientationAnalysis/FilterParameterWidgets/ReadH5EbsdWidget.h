@@ -73,10 +73,10 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     virtual void setupGui();
 
 
-    void setFilter(AbstractFilter *value);
+    void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
 
-    void setFilterParameter(FilterParameter *value);
+    void setFilterParameter(FilterParameter* value);
     FilterParameter* getFilterParameter() const;
 
 

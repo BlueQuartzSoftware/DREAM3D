@@ -64,16 +64,15 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     virtual ~DataContainerReader();
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    QString getInputFile();
+    void setInputFile(QString filePath);
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
     Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers)
 
-  //  DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
-  //  Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy)
-
-    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, InputFileDataContainerArrayProxy)
+    DataContainerArrayProxy getInputFileDataContainerArrayProxy();
+    void setInputFileDataContainerArrayProxy(DataContainerArrayProxy proxy);
     Q_PROPERTY(DataContainerArrayProxy InputFileDataContainerArrayProxy READ getInputFileDataContainerArrayProxy WRITE setInputFileDataContainerArrayProxy)
 
 
@@ -126,7 +125,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      * @param path The file path to the DREAm3D file
      * @return
      */
-    DataContainerArrayProxy readDataContainerArrayStructure(const QString &path);
+    DataContainerArrayProxy readDataContainerArrayStructure(const QString& path);
 
     /**
      * @brief readDataContainerBundles Reads the data Container bundles from the HDF5 file
@@ -157,10 +156,12 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     void readData(bool preflight, DataContainerArrayProxy& proxy, DataContainerArray::Pointer dca);
 
-  private:
-    QString m_CachedInputFilePath;
+  private:    
+    DataContainerArrayProxy         m_InputFileDataContainerArrayProxy;
 
-    FilterPipeline::Pointer m_PipelineFromFile;
+    QString                         m_InputFile;
+
+    FilterPipeline::Pointer         m_PipelineFromFile;
 
     /**
      * @brief readDataContainers

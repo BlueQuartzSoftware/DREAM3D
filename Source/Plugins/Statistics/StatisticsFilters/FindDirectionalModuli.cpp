@@ -316,23 +316,23 @@ void FindDirectionalModuli::execute()
       */
 
       //Instead I've solved the above symbolically for the quaternion derivted rotation matrix
-        // float g00 = (1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z));
-        // float g01 = ((2.0f * q1.x * q1.y) - (2.0f * q1.z * q1.w));
-        // float g02 = ((2.0f * q1.x * q1.z) + (2.0f * q1.y * q1.w));
+      // float g00 = (1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z));
+      // float g01 = ((2.0f * q1.x * q1.y) - (2.0f * q1.z * q1.w));
+      // float g02 = ((2.0f * q1.x * q1.z) + (2.0f * q1.y * q1.w));
 
-        // float g10 = ((2.0f * q1.x * q1.y) + (2.0f * q1.z * q1.w));
-        // float g11 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z));
-        // float g12 = (2.0f * q1.y * q1.z) - (2.0f * q1.x * q1.w);
+      // float g10 = ((2.0f * q1.x * q1.y) + (2.0f * q1.z * q1.w));
+      // float g11 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z));
+      // float g12 = (2.0f * q1.y * q1.z) - (2.0f * q1.x * q1.w);
 
-        // float g20 = ((2.0f * q1.x * q1.z) - (2.0f * q1.y * q1.w));
-        // float g21 = (2.0f * q1.y * q1.z) + (2.0f * q1.x * q1.w);
-        // float g22 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.y * q1.y));
+      // float g20 = ((2.0f * q1.x * q1.z) - (2.0f * q1.y * q1.w));
+      // float g21 = (2.0f * q1.y * q1.z) + (2.0f * q1.x * q1.w);
+      // float g22 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.y * q1.y));
 
       //everything simplifies to a function of 4 factors
-        // float a = g11 * g22 - g12 * g21;
-        // float b = g12 * g20 - g10 * g22;
-        // float c = g10 * g21 - g11 * g20;
-        // float denom = powf(g02 * g11 * g20 - g01 * g12 * g20 - g02 * g10 * g21 + g00 * g12 * g21 + g01 * g10 * g22 - g00 * g11 * g22, 4);
+      // float a = g11 * g22 - g12 * g21;
+      // float b = g12 * g20 - g10 * g22;
+      // float c = g10 * g21 - g11 * g20;
+      // float denom = powf(g02 * g11 * g20 - g01 * g12 * g20 - g02 * g10 * g21 + g00 * g12 * g21 + g01 * g10 * g22 - g00 * g11 * g22, 4);
 
       //these can be expressed more compactly directly from quaternions (especially if a unit quaternion is assumed)
       float a = 1.0f - 2.0f * (qTotal.y * qTotal.y + qTotal.z * qTotal.z);

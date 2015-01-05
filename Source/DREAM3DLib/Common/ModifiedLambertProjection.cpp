@@ -198,23 +198,50 @@ void ModifiedLambertProjection::addInterpolatedValues(Square square, float* sqCo
   modY -= bbin;
   modX -= 0.5;
   modY -= 0.5;
-  if(modX == 0.0) { abinSign = 1; }
-  else { abinSign = modX / fabs(modX); }
-  if(modY == 0.0) { bbinSign = 1; }
-  else { bbinSign = modY / fabs(modY); }
+  if(modX == 0.0)
+  {
+    abinSign = 1;
+  }
+  else
+  {
+    abinSign = modX / fabs(modX);
+  }
+  if(modY == 0.0)
+  {
+    bbinSign = 1;
+  }
+  else
+  {
+    bbinSign = modY / fabs(modY);
+  }
   abin1 = abin;
   bbin1 = bbin;
   abin2 = abin + abinSign;
   bbin2 = bbin;
-  if(abin2 < 0 || abin2 > m_Dimension - 1) { abin2 = abin2 - (abinSign * m_Dimension), bbin2 = m_Dimension - bbin2 - 1; }
+  if(abin2 < 0 || abin2 > m_Dimension - 1)
+  {
+    abin2 = abin2 - (abinSign * m_Dimension), bbin2 = m_Dimension - bbin2 - 1;
+  }
   abin3 = abin;
   bbin3 = bbin + bbinSign;
-  if(bbin3 < 0 || bbin3 > m_Dimension - 1) { abin3 = m_Dimension - abin3 - 1, bbin3 = bbin3 - (bbinSign * m_Dimension); }
+  if(bbin3 < 0 || bbin3 > m_Dimension - 1)
+  {
+    abin3 = m_Dimension - abin3 - 1, bbin3 = bbin3 - (bbinSign * m_Dimension);
+  }
   abin4 = abin + abinSign;
   bbin4 = bbin + bbinSign;
-  if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 >= 0 && bbin4 <= m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = m_Dimension - bbin4 - 1; }
-  else if((abin4 >= 0 && abin4 <= m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = m_Dimension - abin4 - 1, bbin4 = bbin4 - (bbinSign * m_Dimension); }
-  else if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = bbin4 - (bbinSign * m_Dimension); }
+  if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 >= 0 && bbin4 <= m_Dimension - 1))
+  {
+    abin4 = abin4 - (abinSign * m_Dimension), bbin4 = m_Dimension - bbin4 - 1;
+  }
+  else if((abin4 >= 0 && abin4 <= m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1))
+  {
+    abin4 = m_Dimension - abin4 - 1, bbin4 = bbin4 - (bbinSign * m_Dimension);
+  }
+  else if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1))
+  {
+    abin4 = abin4 - (abinSign * m_Dimension), bbin4 = bbin4 - (bbinSign * m_Dimension);
+  }
   modX = fabs(modX);
   modY = fabs(modY);
 
@@ -312,23 +339,50 @@ double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqC
   modY -= bbin;
   modX -= 0.5;
   modY -= 0.5;
-  if(modX == 0.0) { abinSign = 1; }
-  else { abinSign = modX / fabs(modX); }
-  if(modY == 0.0) { bbinSign = 1; }
-  else { bbinSign = modY / fabs(modY); }
+  if(modX == 0.0)
+  {
+    abinSign = 1;
+  }
+  else
+  {
+    abinSign = modX / fabs(modX);
+  }
+  if(modY == 0.0)
+  {
+    bbinSign = 1;
+  }
+  else
+  {
+    bbinSign = modY / fabs(modY);
+  }
   abin1 = abin;
   bbin1 = bbin;
   abin2 = abin + abinSign;
   bbin2 = bbin;
-  if(abin2 < 0 || abin2 > m_Dimension - 1) { abin2 = abin2 - (abinSign * m_Dimension), bbin2 = m_Dimension - bbin2 - 1; }
+  if(abin2 < 0 || abin2 > m_Dimension - 1)
+  {
+    abin2 = abin2 - (abinSign * m_Dimension), bbin2 = m_Dimension - bbin2 - 1;
+  }
   abin3 = abin;
   bbin3 = bbin + bbinSign;
-  if(bbin3 < 0 || bbin3 > m_Dimension - 1) { abin3 = m_Dimension - abin3 - 1, bbin3 = bbin3 - (bbinSign * m_Dimension); }
+  if(bbin3 < 0 || bbin3 > m_Dimension - 1)
+  {
+    abin3 = m_Dimension - abin3 - 1, bbin3 = bbin3 - (bbinSign * m_Dimension);
+  }
   abin4 = abin + abinSign;
   bbin4 = bbin + bbinSign;
-  if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 >= 0 && bbin4 <= m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = m_Dimension - bbin4 - 1; }
-  else if((abin4 >= 0 && abin4 <= m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = m_Dimension - abin4 - 1, bbin4 = bbin4 - (bbinSign * m_Dimension); }
-  else if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1)) { abin4 = abin4 - (abinSign * m_Dimension), bbin4 = bbin4 - (bbinSign * m_Dimension); }
+  if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 >= 0 && bbin4 <= m_Dimension - 1))
+  {
+    abin4 = abin4 - (abinSign * m_Dimension), bbin4 = m_Dimension - bbin4 - 1;
+  }
+  else if((abin4 >= 0 && abin4 <= m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1))
+  {
+    abin4 = m_Dimension - abin4 - 1, bbin4 = bbin4 - (bbinSign * m_Dimension);
+  }
+  else if((abin4 < 0 || abin4 > m_Dimension - 1) && (bbin4 < 0 || bbin4 > m_Dimension - 1))
+  {
+    abin4 = abin4 - (abinSign * m_Dimension), bbin4 = bbin4 - (bbinSign * m_Dimension);
+  }
   modX = fabs(modX);
   modY = fabs(modY);
   if (square == NorthSquare)
@@ -401,13 +455,19 @@ int ModifiedLambertProjection::getSquareIndex(float* sqCoord)
   {
     x = m_Dimension - 1;
   }
-  if (x < 0) { x = 0; }
+  if (x < 0)
+  {
+    x = 0;
+  }
   int y = (int)( (sqCoord[1] + m_MaxCoord) / m_StepSize);
   if (y >= m_Dimension)
   {
     y = m_Dimension - 1;
   }
-  if (y < 0) { y = 0; }
+  if (y < 0)
+  {
+    y = 0;
+  }
   int index = y * m_Dimension + x;
   BOOST_ASSERT(index < m_Dimension * m_Dimension);
   return index;
@@ -486,7 +546,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
 
   stereoIntensity->initializeWithZeros();
   double* intensity = stereoIntensity->getPointer(0);
- // int sqIndex = 0;
+// int sqIndex = 0;
 
   for (int64_t y = 0; y < ypoints; y++)
   {
@@ -506,7 +566,10 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
 
         for( int64_t m = 0; m < 2; m++)
         {
-          if(m == 1) { MatrixMath::Multiply3x1withConstant(xyz, -1.0); }
+          if(m == 1)
+          {
+            MatrixMath::Multiply3x1withConstant(xyz, -1.0);
+          }
           nhCheck = getSquareCoord(xyz, sqCoord);
           //sqIndex = getSquareIndex(sqCoord);
           if (nhCheck == true)

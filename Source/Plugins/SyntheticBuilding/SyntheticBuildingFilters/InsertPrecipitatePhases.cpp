@@ -461,15 +461,15 @@ void  InsertPrecipitatePhases::load_precipitates()
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
     vol = fourThirds * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
-    eqDiam = 2.0f*powf((vol * (0.75f) * (DREAM3D::Constants::k_1OverPi)), (DREAM3D::Constants::k_1Over3));
+    eqDiam = 2.0f * powf((vol * (0.75f) * (DREAM3D::Constants::k_1OverPi)), (DREAM3D::Constants::k_1Over3));
     m_Centroids[3 * currentFeature + 0] = xC;
     m_Centroids[3 * currentFeature + 1] = yC;
     m_Centroids[3 * currentFeature + 2] = zC;
     m_Volumes[currentFeature] = vol;
     m_EquivalentDiameters[currentFeature] = eqDiam;
-    m_AxisLengths[3 * currentFeature + 0] = axisA/axisA;
-    m_AxisLengths[3 * currentFeature + 1] = axisB/axisA;
-    m_AxisLengths[3 * currentFeature + 2] = axisC/axisA;
+    m_AxisLengths[3 * currentFeature + 0] = axisA / axisA;
+    m_AxisLengths[3 * currentFeature + 1] = axisB / axisA;
+    m_AxisLengths[3 * currentFeature + 2] = axisC / axisA;
     m_AxisEulerAngles[3 * currentFeature + 0] = phi1;
     m_AxisEulerAngles[3 * currentFeature + 1] = PHI;
     m_AxisEulerAngles[3 * currentFeature + 2] = phi2;
@@ -497,7 +497,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   notifyStatusMessage(getHumanLabel(), "Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
@@ -564,8 +564,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
 
   //This is the set that we are going to keep updated with the points that are not in an exclusion zone
-  std::map<size_t,size_t> availablePoints;
-  std::map<size_t,size_t> availablePointsInv;
+  std::map<size_t, size_t> availablePoints;
+  std::map<size_t, size_t> availablePointsInv;
 
   // Get a pointer to the Feature Owners that was just initialized in the initialize_packinggrid() method
   int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
@@ -657,24 +657,24 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         //       int test =rdfTarget[0]->getNumberOfTuples();
         m_numRDFbins = freqs.size();
         //      std::vector<float> rdfTargetDist;
-        m_rdfTargetDist.resize(m_numRDFbins+1);
+        m_rdfTargetDist.resize(m_numRDFbins + 1);
         //       m_rdfCurrentDist.resize(m_numRDFbins+2);
 
         m_rdfTargetDist[0] = 0;
 
         for (int j = 0; j < m_numRDFbins; j++)
         {
-          m_rdfTargetDist[j+1] = freqs[j];
+          m_rdfTargetDist[j + 1] = freqs[j];
         }
         m_rdfMax = rdfTarget->getMaxDistance();
         m_rdfMin = rdfTarget->getMinDistance();
 
-        m_StepSize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
-        float max_box_distance = sqrtf((m_SizeX*m_SizeX) + (m_SizeY*m_SizeY) + (m_SizeZ*m_SizeZ));
+        m_StepSize = (m_rdfMax - m_rdfMin) / m_numRDFbins;
+        float max_box_distance = sqrtf((m_SizeX * m_SizeX) + (m_SizeY * m_SizeY) + (m_SizeZ * m_SizeZ));
 
-        int32_t current_num_bins = ceil((max_box_distance - m_rdfMin)/(m_StepSize));
+        int32_t current_num_bins = ceil((max_box_distance - m_rdfMin) / (m_StepSize));
 
-        m_rdfCurrentDist.resize(current_num_bins+1);
+        m_rdfCurrentDist.resize(current_num_bins + 1);
       }
     }
   }
@@ -708,13 +708,13 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
   for (size_t i = 1; i < m_TotalPoints; i++)
   {
-      if (m_BoundaryCells[i] != 0)
-      {
-          boundaryVoxels++;
-      }
+    if (m_BoundaryCells[i] != 0)
+    {
+      boundaryVoxels++;
+    }
   }
 
-  float boundaryFraction = (float)boundaryVoxels/(float)m_TotalPoints;
+  float boundaryFraction = (float)boundaryVoxels / (float)m_TotalPoints;
 
 
 
@@ -731,70 +731,70 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
     if (boundaryFraction != 0)
     {
-        if(random <= precipboundaryfraction)
-        {
-          // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-          if(availablePointsCount > 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-            featureOwnersIdx = availablePointsInv[key];
-            while (m_BoundaryCells[featureOwnersIdx] == 0)
-            {
-              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-              featureOwnersIdx = availablePointsInv[key];
-            }
-          }
-          else
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            while (m_BoundaryCells[featureOwnersIdx] == 0)
-            {
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            }
-          }
-
-        }
-        else if(random > precipboundaryfraction)
-        {
-          if(availablePointsCount > 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-            featureOwnersIdx = availablePointsInv[key];
-            while (m_BoundaryCells[featureOwnersIdx] != 0)
-            {
-              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-              featureOwnersIdx = availablePointsInv[key];
-            }
-          }
-          else
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            while (m_BoundaryCells[featureOwnersIdx] != 0)
-            {
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            }
-          }
-        }
-    }
-    else
-    {
-
-        if (precipboundaryfraction > 0)
-        {
-          QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero. This filter will run without trying to match the precipitate fraction");
-          notifyWarningMessage(getHumanLabel(), msg, -5010);
-        }
-
-
+      if(random <= precipboundaryfraction)
+      {
+        // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
         if(availablePointsCount > 0)
         {
-          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
           featureOwnersIdx = availablePointsInv[key];
+          while (m_BoundaryCells[featureOwnersIdx] == 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+            featureOwnersIdx = availablePointsInv[key];
+          }
         }
         else
         {
           featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          while (m_BoundaryCells[featureOwnersIdx] == 0)
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          }
         }
+
+      }
+      else if(random > precipboundaryfraction)
+      {
+        if(availablePointsCount > 0)
+        {
+          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+          featureOwnersIdx = availablePointsInv[key];
+          while (m_BoundaryCells[featureOwnersIdx] != 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+            featureOwnersIdx = availablePointsInv[key];
+          }
+        }
+        else
+        {
+          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          while (m_BoundaryCells[featureOwnersIdx] != 0)
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          }
+        }
+      }
+    }
+    else
+    {
+
+      if (precipboundaryfraction > 0)
+      {
+        QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero. This filter will run without trying to match the precipitate fraction");
+        notifyWarningMessage(getHumanLabel(), msg, -5010);
+      }
+
+
+      if(availablePointsCount > 0)
+      {
+        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+        featureOwnersIdx = availablePointsInv[key];
+      }
+      else
+      {
+        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+      }
     }
 
     column = featureOwnersIdx % m_XPoints;
@@ -815,55 +815,55 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
   if (m_MatchRDF == true)
   {
-      /*RANDOM: Figure out the RDF for randomly distributed particles.
-      We always keep the same stepsize as the target RDF,
-      but change (increase if the current box is bigger than what the target dist was built on and vice versa)
-      the number of bins to account for smaller and larger (up to the max distance i.e. the box diagonal)
-      distances that can occur when particles are just randomly placed in a box. This is true for both m_rdfRandom and m_rdfCurrentDist.*/
+    /*RANDOM: Figure out the RDF for randomly distributed particles.
+    We always keep the same stepsize as the target RDF,
+    but change (increase if the current box is bigger than what the target dist was built on and vice versa)
+    the number of bins to account for smaller and larger (up to the max distance i.e. the box diagonal)
+    distances that can occur when particles are just randomly placed in a box. This is true for both m_rdfRandom and m_rdfCurrentDist.*/
 
 
-      //initialize boxdims and boxres vectors
-      std::vector<float> boxdims(3);
-      boxdims[0] = m_SizeX;
-      boxdims[1] = m_SizeY;
-      boxdims[2] = m_SizeZ;
+    //initialize boxdims and boxres vectors
+    std::vector<float> boxdims(3);
+    boxdims[0] = m_SizeX;
+    boxdims[1] = m_SizeY;
+    boxdims[2] = m_SizeZ;
 
-      std::vector<float> boxres(3);
-      boxres[0] = m->getXRes();
-      boxres[1] = m->getYRes();
-      boxres[2] = m->getZRes();
+    std::vector<float> boxres(3);
+    boxres[0] = m->getXRes();
+    boxres[1] = m->getYRes();
+    boxres[2] = m->getZRes();
 
-      float max_box_distance = sqrtf((m_SizeX*m_SizeX) + (m_SizeY*m_SizeY) + (m_SizeZ*m_SizeZ));
+    float max_box_distance = sqrtf((m_SizeX * m_SizeX) + (m_SizeY * m_SizeY) + (m_SizeZ * m_SizeZ));
 
-      int32_t current_num_bins = ceil((max_box_distance - m_rdfMin)/(m_StepSize));
+    int32_t current_num_bins = ceil((max_box_distance - m_rdfMin) / (m_StepSize));
 
-      //resize box to include all the possible distances but using the same stepsize as the target RDF. The zero bin includes all distances smaller than the smallest from the targetRDF
-      m_rdfRandom.resize(current_num_bins+1);
+    //resize box to include all the possible distances but using the same stepsize as the target RDF. The zero bin includes all distances smaller than the smallest from the targetRDF
+    m_rdfRandom.resize(current_num_bins + 1);
 
-      //Call this function to generate the random distribution, which is normalized by the total number of distances
-      m_rdfRandom = RadialDistributionFunction::GenerateRandomDistribution(m_rdfMin, m_rdfMax, m_numRDFbins, boxdims, boxres);
+    //Call this function to generate the random distribution, which is normalized by the total number of distances
+    m_rdfRandom = RadialDistributionFunction::GenerateRandomDistribution(m_rdfMin, m_rdfMax, m_numRDFbins, boxdims, boxres);
 
-      size_t numPPTfeatures = numfeatures - m_FirstPrecipitateFeature;
+    size_t numPPTfeatures = numfeatures - m_FirstPrecipitateFeature;
 
-      //Scale the randomRDF to have the same number of particles (and therfore distances) as the current distribution.
+    //Scale the randomRDF to have the same number of particles (and therfore distances) as the current distribution.
+    for (size_t i = 0; i < m_rdfRandom.size(); i++)
+    {
+      m_rdfRandom[i] = m_rdfRandom[i] * numPPTfeatures * (numPPTfeatures - 1);
+    }
+
+    if(write_test_outputs == true)
+    {
+
+      std::ofstream testFile6;
+      testFile6.open("/Users/Shared/Data/PW_Work/OUTFILE/randomRDFCurrent.txt");
       for (size_t i = 0; i < m_rdfRandom.size(); i++)
       {
-          m_rdfRandom[i] = m_rdfRandom[i]*numPPTfeatures*(numPPTfeatures-1);
+        testFile6 << "\n" << m_rdfRandom[i];
       }
-
-      if(write_test_outputs == true)
-      {
-
-          std::ofstream testFile6;
-          testFile6.open("/Users/Shared/Data/PW_Work/OUTFILE/randomRDFCurrent.txt");
-          for (size_t i = 0; i < m_rdfRandom.size(); i++)
-          {
-          testFile6 << "\n" << m_rdfRandom[i];
-          }
-          testFile6.close();
+      testFile6.close();
 
 
-       }
+    }
 
   }
 
@@ -871,7 +871,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   if(m_MatchRDF == true)
   {
 
-      //calculate the initial current RDF - this will change as we move particles around
+    //calculate the initial current RDF - this will change as we move particles around
     for (size_t i = m_FirstPrecipitateFeature; i < numfeatures; i++)
     {
       m_oldRDFerror = check_RDFerror(i, -1000, false);
@@ -925,69 +925,69 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         random = static_cast<float>(rg.genrand_res53());
         if (boundaryFraction != 0)
         {
-            if(random <= precipboundaryfraction)
-            {
-              // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-              if(availablePointsCount > 0)
-              {
-                key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-                featureOwnersIdx = availablePointsInv[key];
-                while (m_BoundaryCells[featureOwnersIdx] == 0)
-                {
-                  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-                  featureOwnersIdx = availablePointsInv[key];
-                }
-              }
-              else
-              {
-                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-                while (m_BoundaryCells[featureOwnersIdx] == 0)
-                {
-                  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-                }
-              }
-
-            }
-            else if(random > precipboundaryfraction)
-            {
-              if(availablePointsCount > 0)
-              {
-                key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-                featureOwnersIdx = availablePointsInv[key];
-                while (m_BoundaryCells[featureOwnersIdx] != 0)
-                {
-                  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-                  featureOwnersIdx = availablePointsInv[key];
-                }
-              }
-              else
-              {
-                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-                while (m_BoundaryCells[featureOwnersIdx] != 0)
-                {
-                  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-                }
-              }
-            }
-        }
-        else
-        {
-
-            if (precipboundaryfraction > 0)
-            {
-                QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero. This filter will run without trying to match the precipitate fraction");
-                notifyWarningMessage(getHumanLabel(), msg, -5010);
-            }
-
+          if(random <= precipboundaryfraction)
+          {
+            // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
             if(availablePointsCount > 0)
             {
-              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
               featureOwnersIdx = availablePointsInv[key];
+              while (m_BoundaryCells[featureOwnersIdx] == 0)
+              {
+                key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+                featureOwnersIdx = availablePointsInv[key];
+              }
             }
             else
             {
               featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+              while (m_BoundaryCells[featureOwnersIdx] == 0)
+              {
+                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+              }
             }
+
+          }
+          else if(random > precipboundaryfraction)
+          {
+            if(availablePointsCount > 0)
+            {
+              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+              featureOwnersIdx = availablePointsInv[key];
+              while (m_BoundaryCells[featureOwnersIdx] != 0)
+              {
+                key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+                featureOwnersIdx = availablePointsInv[key];
+              }
+            }
+            else
+            {
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+              while (m_BoundaryCells[featureOwnersIdx] != 0)
+              {
+                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+              }
+            }
+          }
+        }
+        else
+        {
+
+          if (precipboundaryfraction > 0)
+          {
+            QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero. This filter will run without trying to match the precipitate fraction");
+            notifyWarningMessage(getHumanLabel(), msg, -5010);
+          }
+
+          if(availablePointsCount > 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+            featureOwnersIdx = availablePointsInv[key];
+          }
+          else
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          }
         }
         column = featureOwnersIdx % m_XPoints;
         row = int(featureOwnersIdx / m_XPoints) % m_YPoints;
@@ -1058,7 +1058,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     testFile2.close();
   }
 
-std::cout << "Done Jumping" <<std::endl;
+  std::cout << "Done Jumping" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -1295,7 +1295,7 @@ void InsertPrecipitatePhases::update_exclusionZones(int gadd, int gremove, Int32
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::update_availablepoints(std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv)
+void InsertPrecipitatePhases::update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv)
 {
   size_t removeSize = pointsToRemove.size();
   size_t addSize = pointsToAdd.size();
@@ -1313,9 +1313,9 @@ void InsertPrecipitatePhases::update_availablepoints(std::map<size_t,size_t> &av
     featureOwnersIdx = pointsToRemove[i];
     key = availablePoints[featureOwnersIdx];
     //  availablePoints.erase(featureOwnersIdx);
-    val = availablePointsInv[availablePointsCount-1];
+    val = availablePointsInv[availablePointsCount - 1];
     //  availablePointsInv.erase(availablePointsCount-1);
-    if(key < availablePointsCount-1)
+    if(key < availablePointsCount - 1)
     {
       availablePointsInv[key] = val;
       availablePoints[val] = key;
@@ -1362,7 +1362,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
       zn = m_Centroids[3 * n + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
-      rdfBin = (r-m_rdfMin)/m_StepSize;
+      rdfBin = (r - m_rdfMin) / m_StepSize;
 
       if (r < m_rdfMin)
       { rdfBin = -1;}
@@ -1373,11 +1373,11 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
       //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
       if (double_count == true)
       {
-        m_rdfCurrentDist[rdfBin+1] += 2*add;
+        m_rdfCurrentDist[rdfBin + 1] += 2 * add;
       }
       else if (double_count == false)
       {
-        m_rdfCurrentDist[rdfBin+1] += add;
+        m_rdfCurrentDist[rdfBin + 1] += add;
       }
 
       numPPTfeatures += 1;
@@ -1385,7 +1385,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
   }
 
 
-    m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, m_StepSize, m_rdfMin, numPPTfeatures, m_TotalVol);
+  m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, m_StepSize, m_rdfMin, numPPTfeatures, m_TotalVol);
 
 //  std::cout << "test" << std::endl;
 
@@ -1420,7 +1420,7 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
       zn = m_RandomCentroids[3 * n + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
-      rdfBin = (r-m_rdfMin)/m_StepSize;
+      rdfBin = (r - m_rdfMin) / m_StepSize;
 
       if (r < m_rdfMin)
       {
@@ -1428,11 +1428,11 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
       }
       if (double_count == true)
       {
-        m_rdfRandom[rdfBin+1] += 2*add;
+        m_rdfRandom[rdfBin + 1] += 2 * add;
       }
       else if (double_count == false)
       {
-        m_rdfRandom[rdfBin+1] += add;
+        m_rdfRandom[rdfBin + 1] += add;
       }
 
     }
@@ -1449,16 +1449,16 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
 // -----------------------------------------------------------------------------
 std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int num_bins, float m_StepSize, float rdfmin, size_t numPPTfeatures, float volume)
 {
-      //Normalizing the RDF by number density of particles (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
+  //Normalizing the RDF by number density of particles (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
 //    float normfactor;
 //    float r1;
 //    float r2;
 //    float oneovervolume = 1.0f/volume;
 //    float finiteAdjFactor = .5;
 
-    //r1 = 0*finiteAdjFactor;
-    //r2 = rdfmin*finiteAdjFactor;
-    //normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
+  //r1 = 0*finiteAdjFactor;
+  //r2 = rdfmin*finiteAdjFactor;
+  //normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
 //    rdf[0] = rdf[0];
 
 //    for (size_t i = 1; i < num_bins+2; i++)
@@ -1471,12 +1471,12 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
 //          rdf[i] = rdf[i]/normfactor;
 //      }
 
-    for (size_t i = 0; i < rdf.size(); i++)
-    {
-        rdf[i] = rdf[i]/m_rdfRandom[i];
-    }
+  for (size_t i = 0; i < rdf.size(); i++)
+  {
+    rdf[i] = rdf[i] / m_rdfRandom[i];
+  }
 
-      return rdf;
+  return rdf;
 }
 
 // -----------------------------------------------------------------------------
@@ -1488,14 +1488,14 @@ float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove, bool double
   float rdferror;
   float bhattdist;
 
-    if(gadd > 0)
-    {
-      determine_currentRDF(gadd, 1, double_count);
-    }
-    if(gremove > 0)
-    {
-      determine_currentRDF(gremove, -1, double_count);
-    }
+  if(gadd > 0)
+  {
+    determine_currentRDF(gadd, 1, double_count);
+  }
+  if(gremove > 0)
+  {
+    determine_currentRDF(gremove, -1, double_count);
+  }
 
   if (m_rdfCurrentDistNorm.size() > m_rdfTargetDist.size())
   {
@@ -1526,15 +1526,15 @@ void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1,
 
   for (size_t i = 0; i < array1.size(); i++)
   {
-      sum_array1 = sum_array1 + array1[i];
-      sum_array2 = sum_array2 + array2[i];
+    sum_array1 = sum_array1 + array1[i];
+    sum_array2 = sum_array2 + array2[i];
 
   }
 
   for (size_t i = 0; i < array1.size(); i++)
   {
-    array1[i] = array1[i]/sum_array1;
-    array2[i] = array2[i]/sum_array2;
+    array1[i] = array1[i] / sum_array1;
+    array2[i] = array2[i] / sum_array2;
 
     bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
@@ -1699,7 +1699,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
   //adjust radcur1 to make larger exclusion zone to prevent precipitate overlap
-  radcur1 = radcur1*2.0;
+  radcur1 = radcur1 * 2.0;
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);

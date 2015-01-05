@@ -90,7 +90,7 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
      */
     virtual void setupGui();
 
-    void setFilter(AbstractFilter *value);
+    void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
 
   public slots:
@@ -124,7 +124,7 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
     void resolutionChanged(const QString& string);
     void originChanged(const QString& string);
 
-   void stackingOrderChanged(bool checked);
+    void stackingOrderChanged(bool checked);
 
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }

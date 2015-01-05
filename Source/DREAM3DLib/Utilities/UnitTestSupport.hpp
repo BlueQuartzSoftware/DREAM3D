@@ -403,17 +403,42 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
       ss <<"Your test required the following\n            '";\
       ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
       ss << "            " << #L << " = ";\
-      if(NULL != L) { ss << L; }\
+      if(L) { ss << reinterpret_cast<void*>(L); }\
       else { ss << "Left side was NULL"; }\
       ss << "\n";\
       ss << "            " << #R << " = ";\
-      if(NULL != R) { ss << static_cast<long long int>(R);}\
+      if(R) { ss << reinterpret_cast<void*>(R);}\
       else { ss << "Right Side was NULL";}\
       ss << "\n";\
       DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
     }\
   }
 
+#define DREAM3D_REQUIRE_VALID_POINTER(L)\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    if ( L == NULL ) \
+    {\
+      ss <<"Your test requires\n            '";\
+      ss << #L << "' != NULL' but this condition was not met.\n";\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
+  }
+
+#define DREAM3D_REQUIRE_NULL_POINTER(L)\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    if ( L != NULL ) \
+    {\
+      ss <<"Your test requires\n            '";\
+      ss << #L << " == NULL' but this condition was not met.\n";\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
+  }
 
 // -----------------------------------------------------------------------------
 // Private Macros. The Normal developer should NOT be using these.

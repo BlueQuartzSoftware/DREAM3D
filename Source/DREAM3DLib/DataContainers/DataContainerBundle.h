@@ -58,7 +58,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
      * @param name The Name of the Bundle
      * @return
      */
-    static Pointer New(const QString &name)
+    static Pointer New(const QString& name)
     {
       Pointer sharedPtr (new DataContainerBundle);
       sharedPtr->setName(name);
@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
      * @brief Sets All the DataContainers for this bundle
      * @param containers
      */
-    void setDataContainers(QVector<DataContainer::Pointer> &containers);
+    void setDataContainers(QVector<DataContainer::Pointer>& containers);
     QVector<QString> getDataContainerNames();
 
 
@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
      * @brief Removes a DataContainer by name from the bundle
      * @param name
      */
-    void removeDataContainer(const QString &name);
+    void removeDataContainer(const QString& name);
 
     /**
      * @brief Removes a Data Container by index
@@ -144,7 +144,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
      * @brief This function returns all the Data Arrays Path objects that all the
      * DataContainers have in common with each other.
      */
-    QVector<DataArrayPath> findCommonDataArrayPaths();
+    QVector<DataArrayPath> findCommonDataArrayPaths(bool filterMetaData = true);
 
     /**
      * @brief writeH5Data Write this bundle out to an HDF5 File

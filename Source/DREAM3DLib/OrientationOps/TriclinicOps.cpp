@@ -161,8 +161,14 @@ float TriclinicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   n1 = n1min / denom;
   n2 = n2min / denom;
   n3 = n3min / denom;
-  if(denom == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
-  if(wmin == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
+  if(denom == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
+  if(wmin == 0)
+  {
+    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  }
   return wmin;
 
 }
@@ -336,7 +342,7 @@ void TriclinicOps::getSchmidFactorAndSS(float load[3], float plane[3], float dir
   for(int i = 0; i < k_NumSymQuats; i++)
   {
     //compute slip system
-    float slipPlane[3] = {0}; 
+    float slipPlane[3] = {0};
     slipPlane[2] = TriclinicMatSym[i][2][0] * plane[0] + TriclinicMatSym[i][2][1] * plane[1] + TriclinicMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
@@ -512,7 +518,10 @@ void TriclinicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
 // -----------------------------------------------------------------------------
 bool TriclinicOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (180.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) ) { return false; }
+  if( eta < 0 || eta > (180.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) )
+  {
+    return false;
+  }
   return true;
 }
 
@@ -557,12 +566,24 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0) { continue; }
-    else if(getHasInversion() == true && p[2] < 0) { p[0] = -p[0], p[1] = -p[1], p[2] = -p[2]; }
+    if(getHasInversion() == false && p[2] < 0)
+    {
+      continue;
+    }
+    else if(getHasInversion() == true && p[2] < 0)
+    {
+      p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    }
     chi = acos(p[2]);
     eta = atan2(p[1], p[0]);
-    if(inUnitTriangle(eta, chi) == false) { continue; }
-    else {break;}
+    if(inUnitTriangle(eta, chi) == false)
+    {
+      continue;
+    }
+    else
+    {
+      break;
+    }
   }
 
   float etaMin = 0.0;
@@ -581,8 +602,14 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2
   _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
-  if (_rgb[1] > max) { max = _rgb[1]; }
-  if (_rgb[2] > max) { max = _rgb[2]; }
+  if (_rgb[1] > max)
+  {
+    max = _rgb[1];
+  }
+  if (_rgb[2] > max)
+  {
+    max = _rgb[2];
+  }
 
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
@@ -680,8 +707,14 @@ QVector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigureConf
   size_t count = intensity001->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
 
@@ -689,16 +722,28 @@ QVector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigureConf
   count = intensity011->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
   dPtr = intensity111->getPointer(0);
   count = intensity111->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    if (dPtr[i] > max) { max = dPtr[i]; }
-    if (dPtr[i] < min) { min = dPtr[i]; }
+    if (dPtr[i] > max)
+    {
+      max = dPtr[i];
+    }
+    if (dPtr[i] < min)
+    {
+      min = dPtr[i];
+    }
   }
 
   config.minScale = min;

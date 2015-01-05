@@ -98,12 +98,12 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParamete
      * @param lineEdit
      * @return
      */
-    bool verifyPathExists(QString filePath, QFSDropLabel *lineEdit);
+    bool verifyPathExists(QString filePath, QFSDropLabel* lineEdit);
 
-    void setFilter(AbstractFilter *value);
+    void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
 
-    void setFilterParameter(FilterParameter *value);
+    void setFilterParameter(FilterParameter* value);
     FilterParameter* getFilterParameter() const;
 
   public slots:
@@ -115,7 +115,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParamete
 
     void on_filePath_fileDropped(const QString& text);
     void on_selectBtn_clicked();
-    void on_dcaProxyView_updatePreviewWidget(const QModelIndex &index);
+    void on_dcaProxyView_updatePreviewWidget(const QModelIndex& index);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

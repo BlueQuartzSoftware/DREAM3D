@@ -100,7 +100,7 @@ class DREAM3DWidgetsLib_EXPORT VolumeDataContainerInfoWidget : public FilterPara
     void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
 
 
-    void setFilterParameter(FilterParameter *value);
+    void setFilterParameter(FilterParameter* value);
     FilterParameter* getFilterParameter() const;
 
   public slots:

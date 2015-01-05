@@ -164,7 +164,7 @@ void CropSurfaceMesh::dataCheck()
   SurfaceDataContainer* srcSurfDataContainer = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getFaceAttributeMatrixPath().getDataContainerName());
   if (NULL == srcSurfDataContainer)
   {
-      return;
+    return;
   }
 
   AttributeMatrix::Pointer nodeAttrMat = AttributeMatrix::NullPointer();
@@ -173,15 +173,15 @@ void CropSurfaceMesh::dataCheck()
   if(m_HasNodeData == true)
   {
     nodeAttrMat = srcSurfDataContainer->getAttributeMatrix(getVertexAttributeMatrixPath().getAttributeMatrixName());
-    if(NULL == nodeAttrMat) return;
+    if(NULL == nodeAttrMat) { return; }
   }
   if(m_HasFaceData == true)
   {
     faceAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceAttributeMatrixPath().getAttributeMatrixName());
-    if(NULL == faceAttrMat) return;
+    if(NULL == faceAttrMat) { return; }
   }
   SurfaceDataContainer* destSurfDataContainer = srcSurfDataContainer;
-  if(NULL == destSurfDataContainer) return;
+  if(NULL == destSurfDataContainer) { return; }
 
   if (m_SaveAsNewDataContainer == true)
   {
@@ -192,7 +192,7 @@ void CropSurfaceMesh::dataCheck()
       AttributeMatrix::Pointer nodeAttrMatCopy = nodeAttrMat->deepCopy();
       destSurfDataContainer->addAttributeMatrix(nodeAttrMatCopy->getName(), nodeAttrMatCopy);
       nodeAttrMat = srcSurfDataContainer->getAttributeMatrix(getVertexAttributeMatrixPath().getAttributeMatrixName());
-      if(NULL == nodeAttrMat) return;
+      if(NULL == nodeAttrMat) { return; }
     }
 
     if(m_HasFaceData == true)
@@ -200,7 +200,7 @@ void CropSurfaceMesh::dataCheck()
       AttributeMatrix::Pointer faceAttrMatCopy = faceAttrMat->deepCopy();
       destSurfDataContainer->addAttributeMatrix(faceAttrMatCopy->getName(), faceAttrMatCopy);
       faceAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceAttributeMatrixPath().getAttributeMatrixName());
-      if(NULL == faceAttrMat) return;
+      if(NULL == faceAttrMat) { return; }
     }
   }
 
@@ -211,15 +211,15 @@ void CropSurfaceMesh::dataCheck()
 
   if(m_RenumberFeatures == true)
   {
-      QVector<size_t> dims(1, 1);
-      m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    QVector<size_t> dims(1, 1);
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-      AttributeMatrix::Pointer faceFeatureAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceFeatureAttributeMatrixPath().getAttributeMatrixName());
-      if(getErrorCondition() < 0) { return; }
-      QVector<bool> activeObjects(faceFeatureAttrMat->getNumTuples(), true);
-      faceFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    AttributeMatrix::Pointer faceFeatureAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceFeatureAttributeMatrixPath().getAttributeMatrixName());
+    if(getErrorCondition() < 0) { return; }
+    QVector<bool> activeObjects(faceFeatureAttrMat->getNumTuples(), true);
+    faceFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
 }
 
@@ -257,15 +257,15 @@ void CropSurfaceMesh::execute()
   if(m_HasNodeData == true)
   {
     nodeAttrMat = srcSurfDataContainer->getAttributeMatrix(getVertexAttributeMatrixPath().getAttributeMatrixName());
-    if(NULL == nodeAttrMat) return;
+    if(NULL == nodeAttrMat) { return; }
   }
   if(m_HasFaceData == true)
   {
     faceAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceAttributeMatrixPath().getAttributeMatrixName());
-    if(NULL == faceAttrMat) return;
+    if(NULL == faceAttrMat) { return; }
   }
   SurfaceDataContainer* destSurfDataContainer = srcSurfDataContainer;
-  if(NULL == destSurfDataContainer) return;
+  if(NULL == destSurfDataContainer) { return; }
 
   if (m_SaveAsNewDataContainer == true)
   {
@@ -276,7 +276,7 @@ void CropSurfaceMesh::execute()
       AttributeMatrix::Pointer nodeAttrMatCopy = nodeAttrMat->deepCopy();
       destSurfDataContainer->addAttributeMatrix(nodeAttrMatCopy->getName(), nodeAttrMatCopy);
       nodeAttrMat = srcSurfDataContainer->getAttributeMatrix(getVertexAttributeMatrixPath().getAttributeMatrixName());
-      if(NULL == nodeAttrMat) return;
+      if(NULL == nodeAttrMat) { return; }
     }
 
     if(m_HasFaceData == true)
@@ -284,7 +284,7 @@ void CropSurfaceMesh::execute()
       AttributeMatrix::Pointer faceAttrMatCopy = faceAttrMat->deepCopy();
       destSurfDataContainer->addAttributeMatrix(faceAttrMatCopy->getName(), faceAttrMatCopy);
       faceAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceAttributeMatrixPath().getAttributeMatrixName());
-      if(NULL == faceAttrMat) return;
+      if(NULL == faceAttrMat) { return; }
     }
   }
 
@@ -302,9 +302,9 @@ void CropSurfaceMesh::execute()
   size_t numFaces = faces->getNumberOfTuples();
 
   QList<QString> nodeArrayNames;
-  if(m_HasNodeData == true) nodeArrayNames = nodeAttrMat->getAttributeArrayNames();
+  if(m_HasNodeData == true) { nodeArrayNames = nodeAttrMat->getAttributeArrayNames(); }
   QList<QString> faceArrayNames;
-  if(m_HasFaceData == true) faceArrayNames = faceAttrMat->getAttributeArrayNames();
+  if(m_HasFaceData == true) { faceArrayNames = faceAttrMat->getAttributeArrayNames(); }
 
   //Determine which nodes are within the cropped volume and remove the nodes that do not
   bool badNode = false;
@@ -315,9 +315,9 @@ void CropSurfaceMesh::execute()
   for (int64_t i = 0; i < numVerts; i++)
   {
     badNode = false;
-    if(vertex[i].pos[0] < m_XMin || vertex[i].pos[0] > m_XMax) badNode = true;
-    if(vertex[i].pos[1] < m_YMin || vertex[i].pos[1] > m_YMax) badNode = true;
-    if(vertex[i].pos[2] < m_ZMin || vertex[i].pos[2] > m_ZMax) badNode = true;
+    if(vertex[i].pos[0] < m_XMin || vertex[i].pos[0] > m_XMax) { badNode = true; }
+    if(vertex[i].pos[1] < m_YMin || vertex[i].pos[1] > m_YMax) { badNode = true; }
+    if(vertex[i].pos[2] < m_ZMin || vertex[i].pos[2] > m_ZMax) { badNode = true; }
     if(badNode == false)
     {
       vertex[goodNodeCount].pos[0] = vertex[i].pos[0];
@@ -353,7 +353,7 @@ void CropSurfaceMesh::execute()
     node1 = face[i].verts[0];
     node2 = face[i].verts[1];
     node3 = face[i].verts[2];
-    if(newNNumbers[node1] == -1 || newNNumbers[node2] == -1 || newNNumbers[node3] == -1) badFace = true;
+    if(newNNumbers[node1] == -1 || newNNumbers[node2] == -1 || newNNumbers[node3] == -1) { badFace = true; }
     if(badFace == false)
     {
       face[goodFaceCount].verts[0] = newNNumbers[node1];
@@ -403,18 +403,18 @@ void CropSurfaceMesh::execute()
     // Find the unique set of feature ids
     for (int64_t i = 0; i < numFaces; ++i)
     {
-        int32_t currentFeatureId = m_FeatureIds[i];
-        if (currentFeatureId < totalFeatures)
-        {
-            activeObjects[currentFeatureId] = true;
-        }
-        else
-        {
-            setErrorCondition(-601);
-            QString ss = QObject::tr("The total number of features from %1 is %2, but a value of %3 was found in Data Array %4.").arg(faceFeatureAttrMat->getName()).arg(totalFeatures).arg(currentFeatureId).arg(getFeatureIdsArrayPath().serialize("/"));
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
+      int32_t currentFeatureId = m_FeatureIds[i];
+      if (currentFeatureId < totalFeatures)
+      {
+        activeObjects[currentFeatureId] = true;
+      }
+      else
+      {
+        setErrorCondition(-601);
+        QString ss = QObject::tr("The total number of features from %1 is %2, but a value of %3 was found in Data Array %4.").arg(faceFeatureAttrMat->getName()).arg(totalFeatures).arg(currentFeatureId).arg(getFeatureIdsArrayPath().serialize("/"));
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
     }
     faceFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }

@@ -57,7 +57,7 @@ PowerLawOps::PowerLawOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
+int PowerLawOps::calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float alpha = 0;
@@ -66,7 +66,10 @@ int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::P
   {
     for(std::vector<float>::size_type i = 0; i < data.size(); i++)
     {
-      if (data[i] < min) { min = data[i]; }
+      if (data[i] < min)
+      {
+        min = data[i];
+      }
     }
     for(std::vector<float>::size_type i = 0; i < data.size(); i++)
     {
@@ -87,7 +90,7 @@ int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::P
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float alpha = 0;
@@ -99,13 +102,19 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > 
       min = std::numeric_limits<float>::max();
       for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
       {
-        if (data[i][j] < min) { min = data[i][j]; }
+        if (data[i][j] < min)
+        {
+          min = data[i][j];
+        }
       }
       for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
       {
         alpha = alpha + log(data[i][j] / min);
       }
-      if(alpha != 0.0f) { alpha = 1.0f / alpha; }
+      if(alpha != 0.0f)
+      {
+        alpha = 1.0f / alpha;
+      }
       alpha = 1.0f + (alpha * data[i].size());
     }
     else

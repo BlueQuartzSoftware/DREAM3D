@@ -96,9 +96,9 @@ int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter*
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
-      DREAM3D_FILTER_WRITE_PARAMETER(Loop)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
+  DREAM3D_FILTER_WRITE_PARAMETER(Loop)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

@@ -46,14 +46,14 @@ static const int k_MoveDataArray = 1;
 //
 // -----------------------------------------------------------------------------
 MoveData::MoveData() :
-AbstractFilter(),
-m_WhatToMove(k_MoveAttributeMatrix),
-m_DataContainerDestination(""),
-m_AttributeMatrixSource(),
-m_AttributeMatrixDestination(),
-m_DataArraySource()
+  AbstractFilter(),
+  m_WhatToMove(k_MoveAttributeMatrix),
+  m_DataContainerDestination(""),
+  m_AttributeMatrixSource(),
+  m_AttributeMatrixDestination(),
+  m_DataArraySource()
 {
-    setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -68,36 +68,36 @@ MoveData::~MoveData()
 // -----------------------------------------------------------------------------
 void MoveData::setupFilterParameters()
 {
-    FilterParameterVector parameters;
+  FilterParameterVector parameters;
 
-    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-    parameter->setHumanLabel("What to Move");
-    parameter->setPropertyName("WhatToMove");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setDefaultValue(getWhatToMove()); // Just set the first index
+  LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+  parameter->setHumanLabel("What to Move");
+  parameter->setPropertyName("WhatToMove");
+  parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+  parameter->setDefaultValue(getWhatToMove()); // Just set the first index
 
-    QVector<QString> choices;
-    choices.push_back("Attribute Matrix");
-    choices.push_back("Data Array");
+  QVector<QString> choices;
+  choices.push_back("Attribute Matrix");
+  choices.push_back("Data Array");
 
-    parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "DataContainerDestination" << "AttributeMatrixSource" << "AttributeMatrixDestination" << "DataArraySource";
-    parameter->setLinkedProperties(linkedProps);
-    parameter->setEditable(false);
-    parameters.push_back(parameter);
+  parameter->setChoices(choices);
+  QStringList linkedProps;
+  linkedProps << "DataContainerDestination" << "AttributeMatrixSource" << "AttributeMatrixDestination" << "DataArraySource";
+  parameter->setLinkedProperties(linkedProps);
+  parameter->setEditable(false);
+  parameters.push_back(parameter);
 
-    parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), false, "", 0));
+  parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), false, "", 0));
 
-    parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), false, "", 0));
-
-
-    parameters.push_back(FilterParameter::New("Data Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), false, "", 1));
-
-    parameters.push_back(FilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixDestination(), false, "", 1));
+  parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), false, "", 0));
 
 
-    setFilterParameters(parameters);
+  parameters.push_back(FilterParameter::New("Data Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), false, "", 1));
+
+  parameters.push_back(FilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixDestination(), false, "", 1));
+
+
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -105,13 +105,13 @@ void MoveData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void MoveData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-    reader->openFilterGroup(this, index);
-    setWhatToMove( reader->readValue("WhatToMove", getWhatToMove() ) );
-    setDataContainerDestination( reader->readString("DataContainerDestination", getDataContainerDestination() ) );
-    setAttributeMatrixSource( reader->readDataArrayPath("AttributeMatrixSource", getAttributeMatrixSource() ) );
-    setAttributeMatrixDestination( reader->readDataArrayPath("AttributeMatrixDestination", getAttributeMatrixDestination() ) );
-    setDataArraySource( reader->readDataArrayPath("DataArraySource", getDataArraySource() ) );
-    reader->closeFilterGroup();
+  reader->openFilterGroup(this, index);
+  setWhatToMove( reader->readValue("WhatToMove", getWhatToMove() ) );
+  setDataContainerDestination( reader->readString("DataContainerDestination", getDataContainerDestination() ) );
+  setAttributeMatrixSource( reader->readDataArrayPath("AttributeMatrixSource", getAttributeMatrixSource() ) );
+  setAttributeMatrixDestination( reader->readDataArrayPath("AttributeMatrixDestination", getAttributeMatrixDestination() ) );
+  setDataArraySource( reader->readDataArrayPath("DataArraySource", getDataArraySource() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -119,19 +119,19 @@ void MoveData::readFilterParameters(AbstractFilterParametersReader* reader, int 
 // -----------------------------------------------------------------------------
 int MoveData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-    writer->openFilterGroup(this, index);
-    int val = getWhatToMove();
-    writer->writeValue("WhatToMove", val );
-    QString val2 = getDataContainerDestination();
-    writer->writeValue("DataContainerDestination", val2 );
-    DataArrayPath val3 = getAttributeMatrixSource();
-    writer->writeValue("AttributeMatrixSource", val3 );
-    DataArrayPath val4 = getAttributeMatrixDestination();
-    writer->writeValue("AttributeMatrixDestination", val4 );
-    DataArrayPath val5 = getDataArraySource();
-    writer->writeValue("DataArraySource", val5 );
-    writer->closeFilterGroup();
-    return ++index;
+  writer->openFilterGroup(this, index);
+  int val = getWhatToMove();
+  writer->writeValue("WhatToMove", val );
+  QString val2 = getDataContainerDestination();
+  writer->writeValue("DataContainerDestination", val2 );
+  DataArrayPath val3 = getAttributeMatrixSource();
+  writer->writeValue("AttributeMatrixSource", val3 );
+  DataArrayPath val4 = getAttributeMatrixDestination();
+  writer->writeValue("AttributeMatrixDestination", val4 );
+  DataArrayPath val5 = getDataArraySource();
+  writer->writeValue("DataArraySource", val5 );
+  writer->closeFilterGroup();
+  return ++index;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,89 +139,89 @@ int MoveData::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 void MoveData::dataCheck()
 {
-    setErrorCondition(0);
-    DataArrayPath amSrcPath = getAttributeMatrixSource();
-    DataArrayPath amDestPath = getAttributeMatrixDestination();
-    DataArrayPath daSrcPath = getDataArraySource();
+  setErrorCondition(0);
+  DataArrayPath amSrcPath = getAttributeMatrixSource();
+  DataArrayPath amDestPath = getAttributeMatrixDestination();
+  DataArrayPath daSrcPath = getDataArraySource();
 
-    if( getWhatToMove() == k_MoveAttributeMatrix )
+  if( getWhatToMove() == k_MoveAttributeMatrix )
+  {
+    DataContainer::Pointer amDestDataContainer = getDataContainerArray()->getDataContainer(getDataContainerDestination());
+    DataContainer::Pointer amSrcDataContainer = getDataContainerArray()->getDataContainer(amSrcPath);
+    AttributeMatrix::Pointer amSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(amSrcPath);
+
+    if (NULL == amDestDataContainer.get())
     {
-        DataContainer::Pointer amDestDataContainer = getDataContainerArray()->getDataContainer(getDataContainerDestination());
-        DataContainer::Pointer amSrcDataContainer = getDataContainerArray()->getDataContainer(amSrcPath);
-        AttributeMatrix::Pointer amSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(amSrcPath);
-
-        if (NULL == amDestDataContainer.get())
-        {
-            setErrorCondition(-11011);
-            QString ss = QObject::tr("The destination Data Container for the specified Attribute Matrix was not found in the DataContainerArray");
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
-        else if (NULL == amSrcDataContainer.get())
-        {
-            setErrorCondition(-11012);
-            QString ss = QObject::tr("The source Data Container for the specified Attribute Matrix was not found in the DataContainerArray");
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
-        else if (NULL == amSrcAttributeMatrix.get())
-        {
-            setErrorCondition(-11013);
-            QString ss = QObject::tr("The specified Attribute Matrix was not found inside its Data Container");
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
-        else if(amSrcDataContainer->getName() == amDestDataContainer->getName())
-        {
-            QString ss = QObject::tr("The source and destination Data Container are the same.  Is this what you meant to do?");
-            notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
-
-        amDestDataContainer->addAttributeMatrix(amSrcAttributeMatrix->getName(), amSrcAttributeMatrix);
-        amSrcDataContainer->removeAttributeMatrix(amSrcAttributeMatrix->getName());
+      setErrorCondition(-11011);
+      QString ss = QObject::tr("The destination Data Container for the specified Attribute Matrix was not found in the DataContainerArray");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
-    else if( getWhatToMove() == k_MoveDataArray )
+    else if (NULL == amSrcDataContainer.get())
     {
-        AttributeMatrix::Pointer daSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(daSrcPath);
-        IDataArray::Pointer daSrcDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<IDataArray, AbstractFilter>(this, daSrcPath);
-
-        if (getErrorCondition() < 0)
-        {
-            return;
-        }
-
-        AttributeMatrix::Pointer daDestAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer>(this, amDestPath, -11013);
-
-        if (getErrorCondition() < 0)
-        {
-            return;
-        }
-
-        if (daDestAttributeMatrix->getNumTuples() != daSrcDataArray->getNumberOfTuples())
-        {
-            setErrorCondition(-11019);
-            QString ss = QObject::tr("The number of tuples of source and destination do not match");
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
-        else if (daSrcAttributeMatrix->getName() == daDestAttributeMatrix->getName())
-        {
-            QString ss = QObject::tr("The source and destination Attribute Matrix are the same.  Is this what you meant to do?");
-            notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-        }
-
-        daDestAttributeMatrix->addAttributeArray(daSrcPath.getDataArrayName(), daSrcDataArray);
-        daSrcAttributeMatrix->removeAttributeArray(daSrcPath.getDataArrayName());
+      setErrorCondition(-11012);
+      QString ss = QObject::tr("The source Data Container for the specified Attribute Matrix was not found in the DataContainerArray");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
-    else
+    else if (NULL == amSrcAttributeMatrix.get())
     {
-        setErrorCondition(-11020);
-        QString ss = QObject::tr("Neither an Attribute Matrix nor a Data Array was selected to be moved.  Please contact the DREAM3D developers to resolve this issue");
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
+      setErrorCondition(-11013);
+      QString ss = QObject::tr("The specified Attribute Matrix was not found inside its Data Container");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
+    else if(amSrcDataContainer->getName() == amDestDataContainer->getName())
+    {
+      QString ss = QObject::tr("The source and destination Data Container are the same.  Is this what you meant to do?");
+      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    amDestDataContainer->addAttributeMatrix(amSrcAttributeMatrix->getName(), amSrcAttributeMatrix);
+    amSrcDataContainer->removeAttributeMatrix(amSrcAttributeMatrix->getName());
+  }
+  else if( getWhatToMove() == k_MoveDataArray )
+  {
+    AttributeMatrix::Pointer daSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(daSrcPath);
+    IDataArray::Pointer daSrcDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<IDataArray, AbstractFilter>(this, daSrcPath);
+
+    if (getErrorCondition() < 0)
+    {
+      return;
+    }
+
+    AttributeMatrix::Pointer daDestAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer>(this, amDestPath, -11013);
+
+    if (getErrorCondition() < 0)
+    {
+      return;
+    }
+
+    if (daDestAttributeMatrix->getNumTuples() != daSrcDataArray->getNumberOfTuples())
+    {
+      setErrorCondition(-11019);
+      QString ss = QObject::tr("The number of tuples of source and destination do not match");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+    else if (daSrcAttributeMatrix->getName() == daDestAttributeMatrix->getName())
+    {
+      QString ss = QObject::tr("The source and destination Attribute Matrix are the same.  Is this what you meant to do?");
+      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    daDestAttributeMatrix->addAttributeArray(daSrcPath.getDataArrayName(), daSrcDataArray);
+    daSrcAttributeMatrix->removeAttributeArray(daSrcPath.getDataArrayName());
+  }
+  else
+  {
+    setErrorCondition(-11020);
+    QString ss = QObject::tr("Neither an Attribute Matrix nor a Data Array was selected to be moved.  Please contact the DREAM3D developers to resolve this issue");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -229,12 +229,12 @@ void MoveData::dataCheck()
 // -----------------------------------------------------------------------------
 void MoveData::preflight()
 {
-    setInPreflight(true);
-    emit preflightAboutToExecute();
-    emit updateFilterParameters(this);
-    dataCheck();
-    emit preflightExecuted();
-    setInPreflight(false);
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -242,14 +242,17 @@ void MoveData::preflight()
 // -----------------------------------------------------------------------------
 void MoveData::execute()
 {
-    int err = 0;
-    QString ss;
-    setErrorCondition(err);
+  int err = 0;
+  QString ss;
+  setErrorCondition(err);
 
-    // Simply running the preflight will do what we need it to.
-    dataCheck();
-    if(getErrorCondition() < 0) { return; }
-    notifyStatusMessage(getHumanLabel(), "Complete");
+  // Simply running the preflight will do what we need it to.
+  dataCheck();
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -257,38 +260,46 @@ void MoveData::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer MoveData::newFilterInstance(bool copyFilterParameters)
 {
-    MoveData::Pointer filter = MoveData::New();
-    if(true == copyFilterParameters)
-    {
-        copyFilterParameterInstanceVariables(filter.get());
-    }
-    return filter;
+  MoveData::Pointer filter = MoveData::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getHumanLabel()
-{ return "Move Data"; }
+{
+  return "Move Data";
+}
 

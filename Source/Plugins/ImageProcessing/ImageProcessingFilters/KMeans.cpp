@@ -101,11 +101,11 @@ int KMeans::writeFilterParameters(AbstractFilterParametersWriter* writer, int in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-      DREAM3D_FILTER_WRITE_PARAMETER(Classes)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+  DREAM3D_FILTER_WRITE_PARAMETER(Classes)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -218,7 +218,7 @@ void KMeans::execute()
       {
         kMeans->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         setErrorCondition(-5);
         QString ss = QObject::tr("Failed to execute itk::KMeans filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -257,7 +257,7 @@ void KMeans::execute()
     {
       kMeans->Update();
     }
-    catch( itk::ExceptionObject & err )
+    catch( itk::ExceptionObject& err )
     {
       setErrorCondition(-5);
       QString ss = QObject::tr("Failed to execute itk::KMeans filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

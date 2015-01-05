@@ -167,13 +167,19 @@ void ScaleVolume::dataCheck()
   if (m_ApplyToVoxelVolume == true)
   {
     getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
     SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
     // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
@@ -205,7 +211,10 @@ void ScaleVolume::execute()
   QString ss;
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   if (m_ApplyToVoxelVolume == true)
   {
@@ -253,13 +262,31 @@ void ScaleVolume::updateSurfaceMesh()
   size_t count = nodesPtr->getNumberOfTuples();
   for (size_t i = 0; i < count; i++)
   {
-    if (nodes[i].pos[0] > max[0]) { max[0] = nodes[i].pos[0]; }
-    if (nodes[i].pos[1] > max[1]) { max[1] = nodes[i].pos[1]; }
-    if (nodes[i].pos[2] > max[2]) { max[2] = nodes[i].pos[2]; }
+    if (nodes[i].pos[0] > max[0])
+    {
+      max[0] = nodes[i].pos[0];
+    }
+    if (nodes[i].pos[1] > max[1])
+    {
+      max[1] = nodes[i].pos[1];
+    }
+    if (nodes[i].pos[2] > max[2])
+    {
+      max[2] = nodes[i].pos[2];
+    }
 
-    if (nodes[i].pos[0] < min[0]) { min[0] = nodes[i].pos[0]; }
-    if (nodes[i].pos[1] < min[1]) { min[1] = nodes[i].pos[1]; }
-    if (nodes[i].pos[2] < min[2]) { min[2] = nodes[i].pos[2]; }
+    if (nodes[i].pos[0] < min[0])
+    {
+      min[0] = nodes[i].pos[0];
+    }
+    if (nodes[i].pos[1] < min[1])
+    {
+      min[1] = nodes[i].pos[1];
+    }
+    if (nodes[i].pos[2] < min[2])
+    {
+      min[2] = nodes[i].pos[2];
+    }
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -298,26 +325,34 @@ AbstractFilter::Pointer ScaleVolume::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+{
+  return DREAM3D::FilterSubGroups::SpatialFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getHumanLabel()
-{ return "Change Scaling of Volume"; }
+{
+  return "Change Scaling of Volume";
+}
 

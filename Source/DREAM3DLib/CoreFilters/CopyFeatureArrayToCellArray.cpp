@@ -90,9 +90,9 @@ int CopyFeatureArrayToCellArray::writeFilterParameters(AbstractFilterParametersW
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CreatedArrayName)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CreatedArrayName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -125,16 +125,24 @@ void CopyFeatureArrayToCellArray::dataCheck()
   }
 
   AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, getFeatureIdsArrayPath(), -303);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() )
+  {
+    return;
+  }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, getSelectedFeatureArrayPath(), -302);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   else
   {
     return;
@@ -229,7 +237,10 @@ void CopyFeatureArrayToCellArray::execute()
   setErrorCondition(0);
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
@@ -326,26 +337,34 @@ AbstractFilter::Pointer CopyFeatureArrayToCellArray::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString CopyFeatureArrayToCellArray::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyFeatureArrayToCellArray::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyFeatureArrayToCellArray::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyFeatureArrayToCellArray::getHumanLabel()
-{ return "Create Cell Array From Feature Array"; }
+{
+  return "Create Cell Array From Feature Array";
+}
 

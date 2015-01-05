@@ -74,7 +74,8 @@ void WriteHeader(FILE* f, bool binary, int* dims, float* origin, float* scaling)
 {
   fprintf(f, "# vtk DataFile Version 3.0\n");
   fprintf(f, "vtk output\n");
-  if(binary) {
+  if(binary)
+  {
     fprintf(f, "BINARY\n");
   }
   else
@@ -91,7 +92,7 @@ void WriteHeader(FILE* f, bool binary, int* dims, float* origin, float* scaling)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void WriteScalars(FILE* f, const std::string &type, const std::string &name, int* dims, bool binary)
+void WriteScalars(FILE* f, const std::string& type, const std::string& name, int* dims, bool binary)
 {
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), type.c_str());
   fprintf(f, "LOOKUP_TABLE default\n");
@@ -106,8 +107,10 @@ void WriteScalars(FILE* f, const std::string &type, const std::string &name, int
     {
       dPtr[i] = static_cast<T>(i);
       char* ptr = (char*)(dPtr + i);
-      if(BIGENDIAN == 0) {
-        if(sizeof(T) == 4) {
+      if(BIGENDIAN == 0)
+      {
+        if(sizeof(T) == 4)
+        {
           mxa_bswap(0, 3, ptr);
           mxa_bswap(1, 2, ptr);
         }
@@ -151,7 +154,7 @@ void WriteScalars(FILE* f, const std::string &type, const std::string &name, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteTestFile(bool binary, const std::string &filePath)
+void WriteTestFile(bool binary, const std::string& filePath)
 {
   FILE* f = fopen(filePath.c_str(), "wb");
 
@@ -209,11 +212,11 @@ void TestWritingFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadTestFile(const std::string &filePath)
+void ReadTestFile(const std::string& filePath)
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
- // Now instantiate the PhWriter Filter from the FilterManager
+// Now instantiate the PhWriter Filter from the FilterManager
   QString filtName = "VtkStructuredPointsReader";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
@@ -231,13 +234,13 @@ void ReadTestFile(const std::string &filePath)
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     filter->preflight();
-    DREAM3D_REQUIRED( filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED( filter->getErrorCondition(), >= , 0);
 
 
     filter->setDataContainerArray(DataContainerArray::New());
 
     filter->execute();
-    DREAM3D_REQUIRED( filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED( filter->getErrorCondition(), >= , 0);
     dca = filter->getDataContainerArray();
 
     // Need to actually check the data against what _should_ have been written

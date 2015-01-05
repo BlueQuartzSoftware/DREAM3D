@@ -187,7 +187,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     void populatePipelineView(FilterPipeline::Pointer pipeline, ExtractionType type);
 
-    bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject*, QEvent*);
 
   public slots:
 
@@ -271,13 +271,13 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief extractPipelineFromFile
      * @param filePath
      */
-    void extractPipelineFromFile(const QString &filePath, ExtractionType type);
+    void extractPipelineFromFile(const QString& filePath, ExtractionType type);
 
     /**
      * @brief addDREAM3DReaderFilter
      * @param filePath
      */
-    void addDREAM3DReaderFilter(const QString &filePath, ExtractionType type);
+    void addDREAM3DReaderFilter(const QString& filePath, ExtractionType type);
 
     /**
      * @brief readPipelineFromFile

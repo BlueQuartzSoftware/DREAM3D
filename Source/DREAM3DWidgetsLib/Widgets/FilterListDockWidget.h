@@ -69,7 +69,7 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      * @param list
      * @param sortItems
      */
-   // void updateFilterList(const QStringList& list, bool sortItems);
+    // void updateFilterList(const QStringList& list, bool sortItems);
 
     /**
      * @brief searchFieldsChanged

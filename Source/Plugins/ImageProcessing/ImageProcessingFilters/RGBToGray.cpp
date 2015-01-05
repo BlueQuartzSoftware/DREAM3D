@@ -102,16 +102,16 @@ class RGBToGrayPrivate
 
       //convert to gray
       typename RGBToGrayType::Pointer itkFilter = RGBToGrayType::New();
-      itkFilter->GetFunctor().SetRWeight(weights.x/mag);
-      itkFilter->GetFunctor().SetGWeight(weights.y/mag);
-      itkFilter->GetFunctor().SetBWeight(weights.z/mag);
+      itkFilter->GetFunctor().SetRWeight(weights.x / mag);
+      itkFilter->GetFunctor().SetGWeight(weights.y / mag);
+      itkFilter->GetFunctor().SetBWeight(weights.z / mag);
       itkFilter->SetInput(inputImage);
       itkFilter->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
       try
       {
         itkFilter->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         filter->setErrorCondition(-5);
         QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -212,7 +212,7 @@ void RGBToGray::dataCheck()
   int type = TemplateUtilities::getTypeFromTypeName(typeName);
 
   //create new array of same type
-  dims[0]=1;
+  dims[0] = 1;
   TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, type);
 #endif
   VolumeDataContainer* dc = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );

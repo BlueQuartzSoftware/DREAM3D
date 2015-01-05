@@ -199,9 +199,9 @@ IFilterFactory::Pointer FilterManager::getFactoryForFilter(const QString& filter
 {
   FilterManager::Collection::const_iterator item = m_Factories.find(filterName);
   if(item != m_Factories.end())
-    return item.value();
+  { return item.value(); }
   else
-    return IFilterFactory::NullPointer();
+  { return IFilterFactory::NullPointer(); }
 }
 
 // -----------------------------------------------------------------------------

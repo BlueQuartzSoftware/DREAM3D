@@ -70,7 +70,7 @@ OutputFileWidget::~OutputFileWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OutputFileWidget::setFilterParameter(FilterParameter *value)
+void OutputFileWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
 }

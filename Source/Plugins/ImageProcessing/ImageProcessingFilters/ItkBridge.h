@@ -55,7 +55,7 @@ template<typename T, typename K, typename ItkOutPixelType>
 class Dream3DToItkImageConversion
 {
   public:
-    Dream3DToItkImageConversion(){}
+    Dream3DToItkImageConversion() {}
     virtual ~Dream3DToItkImageConversion() {}
 
     /// Itk ImportImage Filter Types
@@ -121,7 +121,7 @@ class Dream3DToItkImageConversion
       {
         importFilter->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         ItkImportImageFilterPointerType nullPointer;
         importFilter = nullPointer;
@@ -193,7 +193,7 @@ class ItkBridge2
     }
 
   protected:
-    ItkBridge2(){}
+    ItkBridge2() {}
 
     ItkBridge2(const ItkBridge2&); // Copy Constructor Not Implemented
     void operator=(const ItkBridge2&); // Operator '=' Not Implemented
@@ -204,8 +204,8 @@ template<typename ComponentType>
 class CreateItkWrapperForDataPointer
 {
   public:
-    CreateItkWrapperForDataPointer(){}
-    virtual ~CreateItkWrapperForDataPointer(){}
+    CreateItkWrapperForDataPointer() {}
+    virtual ~CreateItkWrapperForDataPointer() {}
 
     typedef typename itk::Image<ComponentType, ImageProcessing::ImageDimension>                       ScalarImageType;  // 3D Scalar Image
     typedef typename ScalarImageType::Pointer                                                         ScalarImagePointerType;
@@ -258,7 +258,7 @@ class CreateItkWrapperForDataPointer
       importFilter->Update();
 
 
-     // ImportImageFilterPointerType importer = Dream3DtoITKImportFilter<ComponentType>(m, attrMatName, data);
+      // ImportImageFilterPointerType importer = Dream3DtoITKImportFilter<ComponentType>(m, attrMatName, data);
       const ScalarImageType* constImage = importFilter->GetOutput();
       typename ScalarImageType::Pointer image = ScalarImageType::New();
       image->Graft(constImage);

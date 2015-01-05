@@ -200,9 +200,9 @@ void FindShapes::execute()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  scaleFactor = 1.0/xRes;
-  if(yRes > xRes && yRes > zRes) scaleFactor = 1.0/yRes;
-  if(zRes > xRes && zRes > yRes) scaleFactor = 1.0/zRes;
+  scaleFactor = 1.0 / xRes;
+  if(yRes > xRes && yRes > zRes) { scaleFactor = 1.0 / yRes; }
+  if(zRes > xRes && zRes > yRes) { scaleFactor = 1.0 / zRes; }
 
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_moments(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_moments2D(); }

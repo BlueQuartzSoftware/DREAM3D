@@ -208,7 +208,7 @@ class DREAM3DMath
         intercept = 0;
         return false;
       }
-      
+
       //compute sums
       double sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
       for(size_t i = 0; i < count; i++)

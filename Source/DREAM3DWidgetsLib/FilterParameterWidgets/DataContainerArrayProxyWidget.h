@@ -89,7 +89,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public FilterPara
     */
     void setupGui();
 
-    void setFilterParameter(FilterParameter *value);
+    void setFilterParameter(FilterParameter* value);
     FilterParameter* getFilterParameter() const;
 
   public slots:

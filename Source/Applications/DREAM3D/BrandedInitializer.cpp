@@ -123,8 +123,8 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 #elif defined (Q_OS_LINUX)
   if (! dir.cd("Plugins"))
   {
-      dir.cdUp();
-      dir.cd("Plugins");
+    dir.cdUp();
+    dir.cd("Plugins");
   }
 #elif defined (Q_OS_WIN)
   dir.cdUp();
@@ -220,7 +220,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   }
   // Now try moving up a directory which is what should happen when running from a
   // proper distribution of DREAM3D
- // qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
+// qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
   aPluginDir.cdUp();
 //  qDebug() << "cdUp() Linux Plugins:" << aPluginDir.absolutePath();
   if (aPluginDir.cd("Plugins"))

@@ -168,7 +168,7 @@ void AlignSectionsFeature::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsFeature::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

@@ -101,7 +101,7 @@ void RenameAttributeMatrix::dataCheck()
     setErrorCondition(-11004);
     QString ss = QObject::tr("The New Attribute Matrix name can not be empty. Please set a value.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+    return;
   }
 
   if (m_SelectedAttributeMatrixPath.isEmpty() == true)
@@ -109,25 +109,25 @@ void RenameAttributeMatrix::dataCheck()
     setErrorCondition(-11005);
     QString ss = QObject::tr("The complete path to the Attribute Matrix can not be empty. Please set an appropriate path.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+    return;
   }
   else
   {
     QString dcName = m_SelectedAttributeMatrixPath.getDataContainerName();
     QString amName = m_SelectedAttributeMatrixPath.getAttributeMatrixName();
-      
-      DataContainerArray::Pointer dca = getDataContainerArray();
-      
-      if (NULL == dca.get())
-      {
-          setErrorCondition(-11003);
-          QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-          return;
-      }
+
+    DataContainerArray::Pointer dca = getDataContainerArray();
+
+    if (NULL == dca.get())
+    {
+      setErrorCondition(-11003);
+      QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
 
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-      
+
     if(NULL == dc.get())
     {
       setErrorCondition(-11007);
@@ -177,7 +177,10 @@ void RenameAttributeMatrix::execute()
   setErrorCondition(0);
 
   dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -202,26 +205,34 @@ AbstractFilter::Pointer RenameAttributeMatrix::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeMatrix::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeMatrix::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeMatrix::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeMatrix::getHumanLabel()
-{ return "Rename Attribute Matrix"; }
+{
+  return "Rename Attribute Matrix";
+}
 

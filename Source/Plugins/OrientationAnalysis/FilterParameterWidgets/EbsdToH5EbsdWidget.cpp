@@ -112,7 +112,7 @@ EbsdToH5EbsdWidget::~EbsdToH5EbsdWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::setFilter(AbstractFilter *value)
+void EbsdToH5EbsdWidget::setFilter(AbstractFilter* value)
 {
   m_Filter = dynamic_cast<EbsdToH5Ebsd*>(value);
 }

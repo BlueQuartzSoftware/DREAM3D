@@ -64,7 +64,7 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
 
     virtual void setupGui();
 
-    bool eventFilter(QObject *o, QEvent *e);
+    bool eventFilter(QObject* o, QEvent* e);
 
   protected:
 

@@ -103,7 +103,7 @@ class GrayToRGBPrivate
       {
         composeRGB->Update();
       }
-      catch( itk::ExceptionObject & err )
+      catch( itk::ExceptionObject& err )
       {
         filter->setErrorCondition(-5);
         QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
@@ -173,10 +173,10 @@ int GrayToRGB::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(RedArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(GreenArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(BlueArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(GreenArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(BlueArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -218,7 +218,7 @@ void GrayToRGB::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   //create new array of same type
-  compDims[0]=3;
+  compDims[0] = 3;
   m_NewCellArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, redArrayptr);
   if( NULL != m_NewCellArrayPtr.lock().get() )
   {

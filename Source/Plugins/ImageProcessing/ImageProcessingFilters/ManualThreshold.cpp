@@ -99,10 +99,10 @@ int ManualThreshold::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-      DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -176,10 +176,11 @@ void ManualThreshold::execute()
   thresholdFilter->SetOutsideValue(0);
   thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples(), false);
 
-  try {
+  try
+  {
     thresholdFilter->Update();
   }
-  catch( itk::ExceptionObject & err )
+  catch( itk::ExceptionObject& err )
   {
     setErrorCondition(-5);
     QString ss = QObject::tr("Failed to execute itk::ManualThreshold filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());

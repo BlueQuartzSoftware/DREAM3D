@@ -177,12 +177,12 @@ void LammpsFileWriter::execute()
   for (int i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
-    if(pos[0] < xMin) xMin = pos[0];
-    if(pos[0] > xMax) xMax = pos[0];
-    if(pos[1] < yMin) yMin = pos[1];
-    if(pos[1] > yMax) yMax = pos[1];
-    if(pos[2] < zMin) zMin = pos[2];
-    if(pos[2] > zMax) zMax = pos[2];
+    if(pos[0] < xMin) { xMin = pos[0]; }
+    if(pos[0] > xMax) { xMax = pos[0]; }
+    if(pos[1] < yMin) { yMin = pos[1]; }
+    if(pos[1] > yMax) { yMax = pos[1]; }
+    if(pos[2] < zMin) { zMin = pos[2]; }
+    if(pos[2] > zMax) { zMax = pos[2]; }
   }
 
   fprintf(lammpsFile, "LAMMPS data file from restart file: timestep = 1, procs = 4\n");

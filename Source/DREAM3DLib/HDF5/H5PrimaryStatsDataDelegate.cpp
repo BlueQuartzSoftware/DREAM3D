@@ -344,7 +344,10 @@ int H5PrimaryStatsDataDelegate::readVectorOfArrays(hid_t pid, VectorOfFloatArray
   {
     FloatArrayType::Pointer d = *iter;
     err = d->readH5Data(pid);
-    if (err < 0) { return err; }
+    if (err < 0)
+    {
+      return err;
+    }
   }
 
   return err;
@@ -458,7 +461,10 @@ int H5PrimaryStatsDataDelegate::writeWeightsData(hid_t pid, const QString& hdf5G
                                                  VectorOfFloatArray colData)
 {
   herr_t err = 0;
-  if (colData.size() == 0) { return err; }
+  if (colData.size() == 0)
+  {
+    return err;
+  }
   // Create the Group Folder
   hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)

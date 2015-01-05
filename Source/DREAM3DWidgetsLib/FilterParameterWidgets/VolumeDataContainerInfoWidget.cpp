@@ -82,7 +82,7 @@ VolumeDataContainerInfoWidget::~VolumeDataContainerInfoWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerInfoWidget::setFilterParameter(FilterParameter *value)
+void VolumeDataContainerInfoWidget::setFilterParameter(FilterParameter* value)
 {
   m_FilterParameter = dynamic_cast<VolumeInfoFilterParameter*>(value);
 }
@@ -264,7 +264,7 @@ void VolumeDataContainerInfoWidget::populateComboBoxes()
   if(dcIndex < 0 && dcName.isEmpty() == false)
   {
     dataContainerList->addItem(dcName);
-   // qDebug() << "[2] Adding " << dcName;
+    // qDebug() << "[2] Adding " << dcName;
   } // the string was not found so just set it to the first index
   else
   {
