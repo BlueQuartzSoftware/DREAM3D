@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "Plugins/Reconstruction/ReconstructionConstants.h"
 

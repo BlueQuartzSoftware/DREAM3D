@@ -54,6 +54,9 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 # Include any extra Widgets that this plugin needs
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
 
+# Include the ShapeOps Classes
+include(${${PLUGIN_NAME}_SOURCE_DIR}/ShapeOps/SourceList.cmake)
+
 
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 
@@ -173,6 +176,10 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
   ${${PLUGIN_NAME}_GEN_HDRS}
+
+  #-- Add the ShapeOps Classes
+  ${ShapeOps_HDRS}
+  ${ShapeOps_SRCS}
 )
 
 # --------------------------------------------------------------------
@@ -187,6 +194,7 @@ add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     ${QT_QTCORE_LIBRARY}
                     DREAM3DLib
+                    OrientationLib
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
                     DREAM3DWidgetsLib

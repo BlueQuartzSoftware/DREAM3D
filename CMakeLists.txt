@@ -383,8 +383,12 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 
 # -----------------------------------------------------------------------
-# -- Add in the DREAM3D Sources into a static library
+# -- Add in the DREAM3D Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
+
+# -----------------------------------------------------------------------
+# -- Add in the DREAM3D Sources into a library
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib/ ${PROJECT_BINARY_DIR}/OrientationLib)
 
 # Build the static QtSupport library - which MUST be a static library or the linking
 # will not work due to signals/slots mechanism.

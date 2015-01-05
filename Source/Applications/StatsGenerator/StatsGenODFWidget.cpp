@@ -67,13 +67,13 @@
 
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
-#include "DREAM3DLib/Utilities/IO/AngleFileLoader.h"
+#include "OrientationLib/IO/AngleFileLoader.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
 
-#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 #include "QtSupport/PoleFigureImageUtilities.h"
 
 

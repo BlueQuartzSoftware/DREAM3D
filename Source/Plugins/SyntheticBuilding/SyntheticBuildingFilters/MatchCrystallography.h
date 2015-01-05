@@ -52,7 +52,7 @@
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"

@@ -62,7 +62,7 @@
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "OrientationLib/OrientationOps/CubicOps.h"
 
 
 

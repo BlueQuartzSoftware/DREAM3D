@@ -41,7 +41,7 @@
 #include <QtGui/QImage>
 
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h

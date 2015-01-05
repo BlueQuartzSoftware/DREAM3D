@@ -39,10 +39,10 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
-#include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
-#include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "Statistics/DistributionAnalysisOps/BetaOps.h"
+#include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
+#include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
+#include "OrientationLib/Math/OrientationMath.h"
 
 //FIXME: #1 Need to update this to link the phase selectionwidget to the rest of the GUI, so that it preflights after it's updated.
 //FIXME: #2 Need to fix phase selectionWidget to not show phase 0

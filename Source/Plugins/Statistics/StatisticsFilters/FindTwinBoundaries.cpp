@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationMath.h"
 
 
 class CalculateTwinBoundaryImpl

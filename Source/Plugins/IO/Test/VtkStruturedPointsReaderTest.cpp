@@ -105,7 +105,8 @@ void WriteScalars(FILE* f, const std::string& type, const std::string& name, int
     // Fill with some data
     for(size_t i = 0; i < dims[0]; i++)
     {
-      dPtr[i] = static_cast<T>(i);
+      data[i] = static_cast<T>(i);
+
       char* ptr = (char*)(dPtr + i);
       if(BIGENDIAN == 0)
       {
@@ -116,7 +117,7 @@ void WriteScalars(FILE* f, const std::string& type, const std::string& name, int
         }
         if(sizeof(T) == 2)
         {
-          mxa_bswap(1, 2, ptr);
+          mxa_bswap(0, 1, ptr);
         }
       }
 

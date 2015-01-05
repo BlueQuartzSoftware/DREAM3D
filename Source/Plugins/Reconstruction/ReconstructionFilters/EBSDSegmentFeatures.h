@@ -54,7 +54,7 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"

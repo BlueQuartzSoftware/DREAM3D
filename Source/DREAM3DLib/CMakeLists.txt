@@ -52,7 +52,7 @@ set(CMP_GENERATE_VERSION_STRING 1)
 
 set(DREAM3DLib_FILTER_DOC_DIR ${DREAM3D_DOCUMENTATION_DIR}/ReferenceManual/Filters)
 
-INCLUDE(${CMP_SOURCE_DIR}/cmpProject.cmake)
+include(${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${DREAM3DLib_SOURCE_DIR}/DREAM3DConfiguration.h.in
                             GENERATED_FILE_PATH ${DREAM3DProj_BINARY_DIR}/DREAM3DLib/${CMP_TOP_HEADER_FILE})
@@ -74,7 +74,7 @@ include(${DREAM3DLib_SOURCE_DIR}/DREAM3DLibMacros.cmake)
 
 
 #-------------------------------------------------------------------------------
-Macro(D3DCompileDir DirName)
+macro(D3DCompileDir DirName)
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
     set(Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
 endMacro()
@@ -85,13 +85,11 @@ endMacro()
 D3DCompileDir(Common)
 D3DCompileDir(DataArrays)
 D3DCompileDir(DataContainers)
-D3DCompileDir(DistributionAnalysisOps)
 D3DCompileDir(FilterParameters)
 D3DCompileDir(HDF5)
 D3DCompileDir(Math)
-D3DCompileDir(OrientationOps)
+#D3DCompileDir(OrientationOps)
 D3DCompileDir(Plugin)
-D3DCompileDir(ShapeOps)
 D3DCompileDir(StatsData)
 D3DCompileDir(Utilities)
 D3DCompileDir(VTKUtils)
@@ -146,7 +144,7 @@ include_directories( ${DREAM3DLib_BINARY_DIR} )
 
 #-- Add a library for the DREAM3DLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} EbsdLib ${TBB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} H5Support ${QT_QTCORE_LIBRARY} ${TBB_LIBRARIES})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

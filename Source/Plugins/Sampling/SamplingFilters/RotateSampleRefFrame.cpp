@@ -42,9 +42,9 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 
 

@@ -72,8 +72,7 @@ endmacro()
 
 ADD_DREAM3D_TEST(H5LiteTest "H5Support")
 ADD_DREAM3D_TEST(H5UtilitiesTest "H5Support")
-ADD_DREAM3D_TEST(QuaternionMathTest  "DREAM3DLib")
-ADD_DREAM3D_TEST(OrientationMathTest  "DREAM3DLib")
+
 ADD_DREAM3D_TEST(StructArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(FilterPipelineTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(DataArrayTest  "DREAM3DLib")
@@ -110,18 +109,9 @@ target_link_libraries(ReplaceText ${QT_QTCORE_LIBRARY})
 set_target_properties(ReplaceText PROPERTIES FOLDER Test)
 
 # --------
-add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp)
-target_link_libraries(ODFTest DREAM3DLib)
-set_target_properties(ODFTest PROPERTIES FOLDER Test)
-
-# --------
 add_executable(VoxelTest ${DREAM3DTest_SOURCE_DIR}/VoxelTest.cpp)
 set_target_properties(VoxelTest PROPERTIES FOLDER Test)
 
-# --------
-add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
-target_link_libraries(TextureTest DREAM3DLib)
-set_target_properties(TextureTest PROPERTIES FOLDER Test)
 
 
 # --------
