@@ -147,14 +147,14 @@ void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
 
     if (addFavoriteOverwriteBtn->isDefault())
     {
-      toggleOKandOverwrite();
+      toggleOKBtn();
     }
   }
   else if (pathExists == true)
   {
     errorMessageDisplay->setText("A favorite with that name already exists.  Overwrite?");
     errorMessageDisplay->setHidden(false);
-    toggleOKandOverwrite();
+    toggleOKBtn();
   }
   else if ( text.contains(QRegExp("[^a-zA-Z_-\\d\\s]")) )
   {
@@ -168,7 +168,7 @@ void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
 
     if (addFavoriteOverwriteBtn->isDefault())
     {
-      toggleOKandOverwrite();
+      toggleOKBtn();
     }
   }
   else
@@ -177,7 +177,7 @@ void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
 
     if (addFavoriteOverwriteBtn->isDefault())
     {
-      toggleOKandOverwrite();
+      toggleOKBtn();
     }
   }
 }
@@ -198,7 +198,7 @@ void AddFavoriteWidget::revertToDefault()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddFavoriteWidget::toggleOKandOverwrite()
+void AddFavoriteWidget::toggleOKBtn()
 {
   if (addFavoriteOKBtn->isDefault())
   {
