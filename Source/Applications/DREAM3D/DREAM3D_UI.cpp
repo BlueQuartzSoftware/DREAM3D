@@ -702,7 +702,13 @@ void DREAM3D_UI::setupPipelineContextMenu()
 
   /* ******************************* PipelineView Actions Setup ***********************************************/
   QList<QAction*> pipelineViewActions;
-  pipelineViewActions << actionClearPipeline;
+  pipelineViewActions << actionAddFavorite << actionAddFavoriteFolder;
+  {
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    pipelineViewActions << separator;
+  }
+  pipelineViewActions <<  actionClearPipeline;
   pipelineViewWidget->setContextMenuActions(pipelineViewActions);
 
   /* ******************************* PipelineView Actions Setup ***********************************************/

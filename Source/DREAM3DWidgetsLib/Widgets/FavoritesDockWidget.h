@@ -112,6 +112,8 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     void actionRenameFavorite_triggered();
     void actionAppendFavorite_triggered();
     void actionShowInFileSystem_triggered();
+    void removeFavorite(QString favoritePath);
+
 
   protected:
 

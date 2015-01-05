@@ -47,27 +47,37 @@ AddFavoriteWidget::AddFavoriteWidget(QString prompt, QString parentPath, QWidget
   setupUi(this);
   m_ParentPath = parentPath;
 
-  addfavoriteOKButton->setEnabled(false);
+  revertToDefault();
   BtnClicked = false;
   label->setText(prompt);
-  removeExistingFavoriteBtn->setHidden(true);
-  errorMessageDisplay->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
-  errorMessageDisplay->setHidden(true);
 }
 
 // -----------------------------------------------------------------------------
 //  Called when the OK button is clicked.
 // -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_addfavoriteOKButton_clicked()
+void AddFavoriteWidget::on_addFavoriteOKBtn_clicked()
 {
   BtnClicked = true;
   this->close();
 }
 
 // -----------------------------------------------------------------------------
+//  Called when the Overwrite button is clicked.
+// -----------------------------------------------------------------------------
+void AddFavoriteWidget::on_addFavoriteOverwriteBtn_clicked()
+{
+  QString favoriteTitle = favoriteName->text();
+  QString favoritePath = m_ParentPath + QDir::separator() + favoriteTitle + ".ini";
+
+  emit fireRemoveExistingFavorite(favoritePath);
+
+  on_addFavoriteOKBtn_clicked();
+}
+
+// -----------------------------------------------------------------------------
 //  Called when the Cancel button is clicked.
 // -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_addfavoriteCancelButton_clicked()
+void AddFavoriteWidget::on_addFavoriteCancelBtn_clicked()
 {
   BtnClicked = false;
   this->close();
@@ -133,28 +143,42 @@ void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
 
   if (text.isEmpty())
   {
-    addfavoriteOKButton->setEnabled(false);
+    addFavoriteOKBtn->setEnabled(false);
+
+    if (addFavoriteOverwriteBtn->isDefault())
+    {
+      toggleOKandOverwrite();
+    }
   }
   else if (pathExists == true)
   {
-    errorMessageDisplay->setText("A favorite with that name already exists.");
+    errorMessageDisplay->setText("A favorite with that name already exists.  Overwrite?");
     errorMessageDisplay->setHidden(false);
-    removeExistingFavoriteBtn->setHidden(false);
-    addfavoriteOKButton->setEnabled(false);
+    toggleOKandOverwrite();
   }
   else if ( text.contains(QRegExp("[^a-zA-Z_-\\d\\s]")) )
   {
-    addfavoriteOKButton->setEnabled(false);
+    addFavoriteOKBtn->setEnabled(false);
 
     QString linkText = "<a href=#openWindow>Learn More.</a>";
     errorMessageDisplay->setText("The name that you chose has illegal characters. " + linkText);
     errorMessageDisplay->setTextFormat(Qt::RichText);
     errorMessageDisplay->setTextInteractionFlags(Qt::TextBrowserInteraction);
     errorMessageDisplay->setHidden(false);
+
+    if (addFavoriteOverwriteBtn->isDefault())
+    {
+      toggleOKandOverwrite();
+    }
   }
   else
   {
     revertToDefault();
+
+    if (addFavoriteOverwriteBtn->isDefault())
+    {
+      toggleOKandOverwrite();
+    }
   }
 }
 
@@ -163,11 +187,33 @@ void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void AddFavoriteWidget::revertToDefault()
 {
-  addfavoriteOKButton->setEnabled(true);
-  removeExistingFavoriteBtn->setHidden(true);
+  addFavoriteOKBtn->setEnabled(true);
   errorMessageDisplay->setHidden(true);
+  addFavoriteOverwriteBtn->setHidden(true);
   errorMessageDisplay->setTextFormat(Qt::PlainText);
   errorMessageDisplay->setTextInteractionFlags(Qt::NoTextInteraction);
+  errorMessageDisplay->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFavoriteWidget::toggleOKandOverwrite()
+{
+  if (addFavoriteOKBtn->isDefault())
+  {
+    addFavoriteOverwriteBtn->setHidden(false);
+    addFavoriteOverwriteBtn->setDefault(true);
+    addFavoriteOKBtn->setHidden(true);
+    addFavoriteOKBtn->setDefault(false);
+  }
+  else
+  {
+    addFavoriteOKBtn->setHidden(false);
+    addFavoriteOKBtn->setDefault(true);
+    addFavoriteOverwriteBtn->setHidden(true);
+    addFavoriteOverwriteBtn->setDefault(false);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -183,6 +229,7 @@ void AddFavoriteWidget::on_errorMessageDisplay_linkActivated(const QString &link
   msgBox.setDefaultButton(QMessageBox::Ok);
   int ret = msgBox.exec();
 }
+
 
 
 

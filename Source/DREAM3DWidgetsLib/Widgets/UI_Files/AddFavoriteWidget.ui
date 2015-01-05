@@ -88,19 +88,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="removeExistingFavoriteBtn">
-        <property name="text">
-         <string>Remove Existing Favorite</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>8</width>
-          <height>8</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -131,14 +118,27 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="addfavoriteCancelButton">
+       <widget class="QPushButton" name="addFavoriteCancelBtn">
         <property name="text">
          <string>Cancel</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="addfavoriteOKButton">
+       <widget class="QPushButton" name="addFavoriteOverwriteBtn">
+        <property name="text">
+         <string>Overwrite</string>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addFavoriteOKBtn">
         <property name="text">
          <string>OK</string>
         </property>

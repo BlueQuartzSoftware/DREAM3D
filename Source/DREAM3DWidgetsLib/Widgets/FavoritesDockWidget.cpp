@@ -668,54 +668,18 @@ QString FavoritesDockWidget::displayNewFavoriteDialog()
   QString parentPath = parentItem->data(0, Qt::UserRole).toString(); // Get the selected item's path
 
   AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", parentPath, this);
-  //addfavoriteDialog->setModal(false);
-  bool done = false;
-  while (done == false)
-  {
+
+  connect(addfavoriteDialog, SIGNAL(fireRemoveExistingFavorite(QString)), this, SLOT(removeFavorite(QString)));
+
     addfavoriteDialog->exec(); // Show the dialog
     if(addfavoriteDialog->getBtnClicked()) // the user clicked the OK button, now check what they typed
     {
       favoriteTitle = addfavoriteDialog->getFavoriteName();
-
-      QString prefPath = parentPath + QDir::separator() + favoriteTitle + ".ini"; // Generate the proper path to the favorite
-      QFileInfo prefFileInfo(prefPath);
-
-      if ( favoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d\\s]")) )
-      {
-        QString displayText = "The name of the Favorite that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
-        displayText = displayText + "\n\nNo special characters allowed due to file system restrictions";
-        // Display error message
-        int reply = QMessageBox::critical(this, tr("Add New Favorite"), tr(displayText.toLatin1().data()),
-                                          QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel)
-        {
-          done = true;
-          favoriteTitle = "";
-        }
-      }
-      else if (prefFileInfo.exists() == true)
-      {
-        QString displayText = "A favorite with that name already exists.  Please choose a different favorite name.";
-        // Display error message
-        int reply = QMessageBox::critical(this, tr("Add New Favorite"), tr(displayText.toLatin1().data()),
-                                          QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel)
-        {
-          done = true;
-          favoriteTitle = "";
-        }
-      }
-      else
-      {
-        done = true;
-      }
     }
     else
     {
-      done = true; // The user clicked the cancel button
       favoriteTitle = "";
     }
-  }
 
   return favoriteTitle;
 }
@@ -758,6 +722,18 @@ void FavoritesDockWidget::actionUpdateFavorite_triggered()
   QString filePath = item->data(0, Qt::UserRole).toString();
 
   emit pipelineNeedsToBeSaved(filePath, name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::removeFavorite(QString favoritePath)
+{
+  QFileInfo fileInfo(favoritePath);
+  QString fileName = fileInfo.baseName();
+  //QTreeWidgetItem* item = filterLibraryTree->findChild<QTreeWidgetItem*>(fileName);
+  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(fileName, Qt::MatchFixedString);
+  removeFavorite(list.first());
 }
 
 // -----------------------------------------------------------------------------

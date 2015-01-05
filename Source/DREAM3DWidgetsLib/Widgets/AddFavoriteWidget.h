@@ -58,10 +58,15 @@ class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::Ad
     QString getFavoriteName();
 
     void revertToDefault();
+    void toggleOKandOverwrite();
+
+  signals:
+    void fireRemoveExistingFavorite(QString favoritePath);
 
   protected slots:
-    void on_addfavoriteOKButton_clicked();
-    void on_addfavoriteCancelButton_clicked();
+    void on_addFavoriteOKBtn_clicked();
+    void on_addFavoriteOverwriteBtn_clicked();
+    void on_addFavoriteCancelBtn_clicked();
     void on_favoriteName_textChanged(const QString& text);
     void on_errorMessageDisplay_linkActivated(const QString &link);
 
