@@ -76,6 +76,8 @@
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
+#include "AboutDREAM3D.h"
+
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
 
@@ -1155,15 +1157,8 @@ void DREAM3D_UI::displayHelp(QString file)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionAbout_triggered()
 {
-  QString msg ("DREAM3D Version ");
-  msg.append(DREAM3DLib::Version::Complete().toLatin1().data());
-  msg.append("\n\nThe Primary Developers are:\n");
-  msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
-  msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
-  msg.append("Please send any help, bug or feature requests dream3d@bluequartz.net\n\n");
-  msg.append("See the Help->License Menu for complete license information.\n\n");
-  msg.append("The latest version can always be downloaded from http://dream3d.bluequartz.net\n");
-  QMessageBox::information(this, QString("About DREAM.3D"), msg, QMessageBox::Ok | QMessageBox::Default);
+	AboutDREAM3D d(this);
+	d.exec();
 }
 
 // -----------------------------------------------------------------------------

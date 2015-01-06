@@ -296,7 +296,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
       QMessageBox::critical(MainWindow, "DREAM3D Plugin Load Error",
                             message,
                             QMessageBox::Ok | QMessageBox::Default);
-      delete loader;
+	  delete loader;
     }
   }
 
