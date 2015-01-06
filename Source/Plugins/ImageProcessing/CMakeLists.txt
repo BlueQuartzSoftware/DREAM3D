@@ -17,7 +17,7 @@ include( ${QT_USE_FILE} )
 ## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
-
+include_directories(${ITK_INCLUDE_DIRS})
 
 # --------------------------------------------------------------------
 # What image bit depth should be used
