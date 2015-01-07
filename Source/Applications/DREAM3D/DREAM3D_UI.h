@@ -70,6 +70,7 @@ class UpdateCheckData;
 class UpdateCheck;
 class HelpDialog;
 class QToolButton;
+class AboutDREAM3D;
 
 
 /**

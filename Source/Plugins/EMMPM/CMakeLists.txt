@@ -2,9 +2,9 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ImageProcessing)
+project(EMMPM)
 
-set(PLUGIN_NAME ImageProcessing)
+set(PLUGIN_NAME EMMPM)
 
 # --------------------------------------------------------------------
 # Look for Qt 4 as we need it for the plugin GUI to be generated
@@ -13,28 +13,7 @@ if(NOT QT4_FOUND)
 endif()
 include( ${QT_USE_FILE} )
 
-
-## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
-## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
-include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
-include_directories(${ITK_INCLUDE_DIRS})
-
-# --------------------------------------------------------------------
-# What image bit depth should be used
-# --------------------------------------------------------------------
-set(${PLUGIN_NAME}_BitDepth "8" CACHE STRING "Bitdepth for ${PLUGIN_NAME} filters (8, 16, or 32)")
-if( ${PLUGIN_NAME}_BitDepth STREQUAL "8" OR ${PLUGIN_NAME}_BitDepth STREQUAL "16" OR ${PLUGIN_NAME}_BitDepth STREQUAL "32")
-  add_definitions(-D${PLUGIN_NAME}_BitDepth=${${PLUGIN_NAME}_BitDepth})
-else()
-  message( WARNING "unsupported ${PLUGIN_NAME}_BitDepth (default bitdepth will be used)" )
-endif()
-
-CONFIGURE_FILE(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Config.h.in
-        ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Config.h
-        )
-
-
-
+add_subdirectory(${EMMPM_SOURCE_DIR}/EMMPMLib ${EMMPM_BINARY_DIR}/EMMPMLib)
 
 set(${PLUGIN_NAME}_Project_SRCS "")
 
@@ -202,12 +181,11 @@ endif()
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     ${QT_QTCORE_LIBRARY}
+                    EMMPMLib
                     DREAM3DLib
-                    OrientationLib
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
                     DREAM3DWidgetsLib
-                    ${ITK_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 
@@ -223,6 +201,4 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
-
-ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 

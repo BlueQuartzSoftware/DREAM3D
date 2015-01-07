@@ -136,7 +136,7 @@ mark_as_advanced(OrientationLib_HDF5_SUPPORT)
 mark_as_advanced(OrientationLib_ENABLE_HDF5)
 
 
-set(PROJECT_PREFIX "Ebsd" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+set(PROJECT_PREFIX "OrientationLib" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(OrientationLib_INSTALL_FILES 0)
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the

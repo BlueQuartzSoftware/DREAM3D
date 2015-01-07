@@ -157,8 +157,6 @@ void RGBToGray::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayArrayPath(), false, ""));
   parameters.push_back(FilterParameter::New("Color Weighting", "ColorWeights", FilterParameterWidgetType::FloatVec3Widget, getColorWeights(), false));
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
   parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
   setFilterParameters(parameters);
 }
@@ -194,18 +192,21 @@ int RGBToGray::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void RGBToGray::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
+  DataArrayPath tempPath = getSelectedCellArrayArrayPath();
 
   //check for required arrays
   QVector<size_t> compDims(1, 3);
-  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayArrayPath(), compDims);
+  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, tempPath, compDims);
   if(NULL != m_SelectedCellArrayPtr.lock().get())
   {
     m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
   }
+  else // Something went wrong because that should have worked. Bail out now.
+  {
+    return;
+  }
 
-  //configured created name / location
-  tempPath.update(getSelectedCellArrayArrayPath().getDataContainerName(), getSelectedCellArrayArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
+
 #if 0
   //get type
   QString typeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName())->getAttributeMatrix(getSelectedCellArrayArrayPath().getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName())->getTypeAsString();;
@@ -215,13 +216,17 @@ void RGBToGray::dataCheck()
   dims[0] = 1;
   TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, type);
 #endif
+
   VolumeDataContainer* dc = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer am = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayArrayPath().getAttributeMatrixName(), 80000);
   if(getErrorCondition() < 0) { return; }
   IDataArray::Pointer data = am->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
   if(getErrorCondition() < 0) { return; }
+  compDims[0] = 1;
+  //configured created name / location
 
+  tempPath.setDataArrayName(getNewCellArrayName());
   m_NewCellArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, data);
   if( NULL != m_NewCellArrayPtr.lock().get() )
   {
