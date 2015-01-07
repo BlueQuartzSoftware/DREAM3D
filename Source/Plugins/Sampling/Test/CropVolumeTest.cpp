@@ -100,21 +100,18 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
   tDims.push_back(originalY.getMax());
   tDims.push_back(originalZ.getMax());
 
-  QVector<size_t> cDims(3, 1);
+  QVector<size_t> cDims(1, 3);
 
-  int64_t xDim = tDims[0];
-  int64_t yDim = tDims[1];
-  int64_t zDim = tDims[2];
-  DataArray<int32_t>::Pointer ConfidenceIndexArray = DataArray<int32_t>::CreateArray(xDim*yDim*zDim, cDims, "Confidence Index", true);
+  DataArray<int32_t>::Pointer ConfidenceIndexArray = DataArray<int32_t>::CreateArray(tDims, cDims, "Confidence Index", true);
 
   int64_t index;
-  for (int64_t z = 0; z < zDim; z++)
+  for (int64_t z = 0; z < tDims[2]; z++)
   {
-    for (int64_t y = 0; y < yDim; y++)
+    for (int64_t y = 0; y < tDims[1]; y++)
     {
-      for (int64_t x = 0; x < xDim; x++)
+      for (int64_t x = 0; x < tDims[0]; x++)
       {
-        index = (z*xDim*yDim) + (y*xDim) + x;
+        index = (z*tDims[0]*tDims[1]) + (y*tDims[0]) + x;
 
         ConfidenceIndexArray->setComponent(index, 0, x);
         ConfidenceIndexArray->setComponent(index, 1, y);
@@ -128,7 +125,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
 
   foreach (QString da, am1->getAttributeArrayNames())
   {
-    DREAM3D_REQUIRE_EQUAL(am1->getAttributeArray(da)->getSize(), xDim*yDim*zDim);
+    DREAM3D_REQUIRE_EQUAL(am1->getAttributeArray(da)->getSize(), tDims[0]*tDims[1]*tDims[2]*cDims[0]);
   }
 
   dc1->addAttributeMatrix(am1->getName(), am1);
@@ -159,29 +156,23 @@ void checkCrop(typename DataArray<T>::Pointer ptr, NumPackage X, NumPackage Y, N
   int YP = (Y.getMax() - Y.getMin()) + 1;
   int ZP = (Z.getMax() - Z.getMin()) + 1;
 
-  DREAM3D_REQUIRE_EQUAL(p.getSize(), XP*YP*ZP)
+  DREAM3D_REQUIRE_EQUAL(p.getSize(), XP*YP*ZP*numComponents)
 
   for (int64_t z = Z.getMin(); z < Z.getMax(); z++)
   {
-    int64_t plane = ((z-Z.getMin()) * XP * YP);
     for (int64_t y = Y.getMin(); y < Y.getMax(); y++)
     {
-      int64_t row = ((y-Y.getMin()) * XP);
       for (int64_t x = X.getMin(); x < X.getMax(); x++)
       {
-        int64_t col = x-X.getMin();
-        int64_t index = plane + row + col;
+        int64_t index = ((z-Z.getMin())*XP*YP) + ((y-Y.getMin()) * XP) + (x-X.getMin());
 
-        int32_t value = p[index];
+        int32_t X_value = p.getComponent(index, 0);
+        int32_t Y_value = p.getComponent(index, 1);
+        int32_t Z_value = p.getComponent(index, 2);
 
-//        DREAM3D_REQUIRE_EQUAL( *valPtr, value )
-//            DREAM3D_REQUIRE_EQUAL( *valPtr, value )
-//            DREAM3D_REQUIRE_EQUAL( *valPtr, value )
-
-        for (int64_t c = 0; c < numComponents; c++)
-        {
-//          DREAM3D_REQUIRE_EQUAL( valPtr[3+c], c )
-        }
+        DREAM3D_REQUIRE_EQUAL(X_value, x)
+        DREAM3D_REQUIRE_EQUAL(Y_value, y)
+        DREAM3D_REQUIRE_EQUAL(Z_value, z)
       }
     }
   }
@@ -373,7 +364,7 @@ void executeTests(AbstractFilter::Pointer cropVolume)
       IDataArray::Pointer iDataArray = cropVolume->getDataContainerArray()->getAttributeMatrix(attrMatPath)->getAttributeArray("Confidence Index");
       DataArray<int32_t>::Pointer array = boost::dynamic_pointer_cast< DataArray<int32_t> >(iDataArray);
 
-      checkCrop<int32_t>(array, croppedX, croppedY, croppedZ, 1);
+      checkCrop<int32_t>(array, croppedX, croppedY, croppedZ, array->getNumberOfComponents());
 
 
 //  float origin[3] = cropVolume->getDataContainerArray()->getPrereqDataContainer(cropVolume, DREAM3D::Defaults::VolumeDataContainerName
@@ -393,7 +384,7 @@ void executeTests(AbstractFilter::Pointer cropVolume)
   iDataArray = cropVolume->getDataContainerArray()->getAttributeMatrix(newAttrMatPath)->getAttributeArray("Confidence Index");
   array = boost::dynamic_pointer_cast< DataArray<int32_t> >(iDataArray);
 
-  checkCrop<int32_t>(array, croppedX, croppedY, croppedZ, 1);
+  checkCrop<int32_t>(array, croppedX, croppedY, croppedZ, array->getNumberOfComponents());
 
   resetTest(cropVolume, 1);
 }
