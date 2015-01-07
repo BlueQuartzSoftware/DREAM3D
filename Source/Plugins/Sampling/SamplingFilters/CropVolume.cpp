@@ -462,7 +462,7 @@ void CropVolume::execute()
   tDims[2] = ZP;
   cellAttrMat->setTupleDimensions(tDims); // THIS WILL CAUSE A RESIZE of all the underlying data arrays.
 
-  // Feature Ids MUST already be renumbered.
+
   if (m_RenumberFeatures == true)
   {
     totalPoints = destCellDataContainer->getTotalPoints();
