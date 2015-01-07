@@ -627,7 +627,7 @@ QString DataContainerReader::getInputFile()
 // -----------------------------------------------------------------------------
 void DataContainerReader::setInputFile(QString filePath)
 {
-  if (m_InputFile != filePath && m_InputFile.isEmpty() == false)
+  if (m_InputFile != filePath)
   {
     m_InputFileDataContainerArrayProxy.isValid = false;
   }
