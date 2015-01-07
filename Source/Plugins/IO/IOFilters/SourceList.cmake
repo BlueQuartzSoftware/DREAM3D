@@ -15,11 +15,11 @@ START_FILTER_GROUP(${IO_BINARY_DIR} "${_filterGroupName}" "IO")
 set(_PublicFilters
   AbaqusHexahedronWriter
   AbaqusSurfaceMeshWriter
-  AgilentEddyCurrentReader
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
   DxReader
   DxWriter
+  EddyCurrentDataReader
   EnsembleInfoReader
   FeatureDataCSVWriter
   FeatureInfoReader
@@ -39,7 +39,6 @@ set(_PublicFilters
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
   SurfaceMeshToVtk
-  UniWestEddyCurrentReader
   VASPReader
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
