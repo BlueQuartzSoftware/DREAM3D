@@ -74,9 +74,9 @@ static NumPackage originalX = NumPackage(0, 40);
 static NumPackage originalY = NumPackage(0, 30);
 static NumPackage originalZ = NumPackage(0, 20);
 
-static NumPackage croppedX = NumPackage(6, 15);
-static NumPackage croppedY = NumPackage(5, 18);
-static NumPackage croppedZ = NumPackage(1, 8);
+static NumPackage croppedX = NumPackage(0, 4);
+static NumPackage croppedY = NumPackage(0, 6);
+static NumPackage croppedZ = NumPackage(0, 5);
 
 static float originalRes[3] = {0.25, 0.25, 0.25};
 static float originalOrigin[3] = {0, 0, 0};
@@ -90,7 +90,6 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
   int err = 0;
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  //VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New("Data Container");
   VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
   dc1->setDimensions(originalX.getMax(), originalY.getMax(), originalZ.getMax());
   dc1->setOrigin(originalOrigin);
@@ -101,6 +100,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
   amDims.push_back(originalY.getMax());
   amDims.push_back(originalZ.getMax());
   AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer am2 = AttributeMatrix::New(amDims, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::AttributeMatrixType::CellFeature);
 
   QVector<size_t> tDims;
   tDims.push_back(originalX.getMax());
@@ -110,6 +110,8 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
   QVector<size_t> cDims(1, numComponents);
 
   DataArray<int32_t>::Pointer ConfidenceIndexArray = DataArray<int32_t>::CreateArray(tDims, cDims, "Confidence Index", true);
+  DataArray<int32_t>::Pointer FeatureIdsArray = DataArray<int32_t>::CreateArray(tDims, cDims, "FeatureIds", true);
+  DataArray<bool>::Pointer ActiveArray = DataArray<bool>::CreateArray(tDims, cDims, "Active", true);
 
   int64_t index;
   for (int64_t z = 0; z < tDims[2]; z++)
@@ -120,14 +122,40 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
       {
         index = (z*tDims[0]*tDims[1]) + (y*tDims[0]) + x;
 
-        ConfidenceIndexArray->setComponent(index, 0, x);
-        ConfidenceIndexArray->setComponent(index, 1, y);
-        ConfidenceIndexArray->setComponent(index, 2, z);
+        int64_t temp = x;
+        for(int i = 0; i < cDims[0]; i++)
+        {
+          if (i == 1)
+          {
+            temp = y;
+          }
+          else if (i == 2)
+          {
+            temp = z;
+          }
+          ConfidenceIndexArray->setComponent(index, i, temp);
+          FeatureIdsArray->setComponent(index, i, temp);
+          ActiveArray->setComponent(index, i, true);
+        }
+
+//        ConfidenceIndexArray->setComponent(index, 0, x);
+//        ConfidenceIndexArray->setComponent(index, 1, y);
+//        ConfidenceIndexArray->setComponent(index, 2, z);
+//        FeatureIdsArray->setComponent(index, 0, x);
+//        FeatureIdsArray->setComponent(index, 1, y);
+//        FeatureIdsArray->setComponent(index, 2, z);
+//        ActiveArray->setComponent(index, 0, true);
+//        ActiveArray->setComponent(index, 1, true);
+//        ActiveArray->setComponent(index, 2, true);
       }
     }
   }
 
   err = am1->addAttributeArray("Confidence Index", ConfidenceIndexArray);
+  DREAM3D_REQUIRE(err >= 0);
+  err = am1->addAttributeArray("FeatureIds", FeatureIdsArray);
+  DREAM3D_REQUIRE(err >= 0);
+  err = am2->addAttributeArray("Active", ActiveArray);
   DREAM3D_REQUIRE(err >= 0);
 
   foreach (QString da, am1->getAttributeArrayNames())
@@ -136,6 +164,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
   }
 
   dc1->addAttributeMatrix(am1->getName(), am1);
+  dc1->addAttributeMatrix(am2->getName(), am2);
 
   dca->addDataContainer(dc1);
 
@@ -363,8 +392,9 @@ void executeTests(AbstractFilter::Pointer cropVolume)
   propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
+  #if 0
   // Test that the crop actually works across the entire original set
-      NumPackage testX(0, 4), testY(0, 3), testZ(0, 2);
+      NumPackage testX(croppedX), testY(croppedY), testZ(croppedZ);
   while ( testX.getMin() < (originalX.getMax()-testX.getDiff()) )
   {
     var.setValue(testX.getMin());
@@ -375,6 +405,8 @@ void executeTests(AbstractFilter::Pointer cropVolume)
     propWasSet = cropVolume->setProperty("XMax", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
+        testY.setMin(croppedY.getMin());
+        testY.setMax(croppedY.getMax());
         while ( testY.getMin() < (originalY.getMax()-testY.getDiff()) )
     {
               var.setValue(testY.getMin());
@@ -385,6 +417,8 @@ void executeTests(AbstractFilter::Pointer cropVolume)
           propWasSet = cropVolume->setProperty("YMax", var);
           DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
+              testZ.setMin(croppedZ.getMin());
+              testZ.setMax(croppedZ.getMax());
               while ( testZ.getMin() < (originalZ.getMax()-testZ.getDiff()) )
           {
                     var.setValue(testZ.getMin());
@@ -416,21 +450,103 @@ void executeTests(AbstractFilter::Pointer cropVolume)
     testX.setMin(testX.getMin()+1);
     testX.setMax(testX.getMax()+1);
   }
+#endif
 
-//  // Test if the crop works when we are saving it in a new data container
-//  var.setValue(true);
-//  propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
-//  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-//      cropVolume->execute();
-//  DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), 0)
 
-//  DataArrayPath newAttrMatPath(DREAM3D::Defaults::NewVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "");
-//  IDataArray::Pointer iDataArray = cropVolume->getDataContainerArray()->getAttributeMatrix(newAttrMatPath)->getAttributeArray("Confidence Index");
-//  DataArray<int32_t>::Pointer array = boost::dynamic_pointer_cast< DataArray<int32_t> >(iDataArray);
+#if 0
+  // Test that the crop actually works across the entire original set, when we are saving it in a new data container
+  testX = croppedX;
+  testY = croppedY;
+  testZ = croppedZ;
 
-//  checkCrop<int32_t>(array, croppedX, croppedY, croppedZ, array->getNumberOfComponents());
+  var.setValue(true);
+  propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
+  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-//  resetTest(cropVolume, 3);
+      while ( testX.getMin() < (originalX.getMax()-testX.getDiff()) )
+  {
+    var.setValue(testX.getMin());
+    propWasSet = cropVolume->setProperty("XMin", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+        var.setValue(testX.getMax());
+    propWasSet = cropVolume->setProperty("XMax", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+        testY.setMin(croppedY.getMin());
+    testY.setMax(croppedY.getMax());
+    while ( testY.getMin() < (originalY.getMax()-testY.getDiff()) )
+    {
+      var.setValue(testY.getMin());
+      propWasSet = cropVolume->setProperty("YMin", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+          var.setValue(testY.getMax());
+      propWasSet = cropVolume->setProperty("YMax", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+          testZ.setMin(croppedZ.getMin());
+      testZ.setMax(croppedZ.getMax());
+      while ( testZ.getMin() < (originalZ.getMax()-testZ.getDiff()) )
+      {
+        var.setValue(testZ.getMin());
+        propWasSet = cropVolume->setProperty("ZMin", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+            var.setValue(testZ.getMax());
+        propWasSet = cropVolume->setProperty("ZMax", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+            cropVolume->execute();
+        DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), 0)
+
+            DataArrayPath newAttrMatPath(DREAM3D::Defaults::NewVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "");
+        IDataArray::Pointer iDataArray = cropVolume->getDataContainerArray()->getAttributeMatrix(newAttrMatPath)->getAttributeArray("Confidence Index");
+        DataArray<int32_t>::Pointer array = boost::dynamic_pointer_cast< DataArray<int32_t> >(iDataArray);
+
+        checkCrop<int32_t>(array, testX, testY, testZ, array->getNumberOfComponents());
+
+        resetTest(cropVolume, 3);
+
+        testZ.setMin(testZ.getMin()+1);
+        testZ.setMax(testZ.getMax()+1);
+      }
+      testY.setMin(testY.getMin()+1);
+      testY.setMax(testY.getMax()+1);
+    }
+
+    testX.setMin(testX.getMin()+1);
+    testX.setMax(testX.getMax()+1);
+  }
+#endif
+
+
+    // Test if the crop works when we are saving it in a new data container
+    var.setValue(true);
+    propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        cropVolume->execute();
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), 0)
+
+    DataArrayPath newAttrMatPath(DREAM3D::Defaults::NewVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "");
+    IDataArray::Pointer iDataArray = cropVolume->getDataContainerArray()->getAttributeMatrix(newAttrMatPath)->getAttributeArray("Confidence Index");
+    DataArray<int32_t>::Pointer array = boost::dynamic_pointer_cast< DataArray<int32_t> >(iDataArray);
+
+    checkCrop<int32_t>(array, croppedX, croppedY, croppedZ, array->getNumberOfComponents());
+
+    resetTest(cropVolume, 1);
+
+    var.setValue(false);
+    propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+        // Test Renumber Features flag
+        var.setValue(true);
+        propWasSet = cropVolume->setProperty("RenumberFeatures", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+            cropVolume->execute();
+        DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), 0)
 }
 
 
