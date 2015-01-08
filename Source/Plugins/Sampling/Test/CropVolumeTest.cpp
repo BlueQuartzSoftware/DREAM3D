@@ -74,9 +74,9 @@ static NumPackage originalX = NumPackage(0, 40);
 static NumPackage originalY = NumPackage(0, 30);
 static NumPackage originalZ = NumPackage(0, 20);
 
-static NumPackage croppedX = NumPackage(0, 4);
+static NumPackage croppedX = NumPackage(0, 5);
 static NumPackage croppedY = NumPackage(0, 6);
-static NumPackage croppedZ = NumPackage(0, 5);
+static NumPackage croppedZ = NumPackage(0, 3);
 
 static float originalRes[3] = {0.25, 0.25, 0.25};
 static float originalOrigin[3] = {0, 0, 0};
@@ -113,7 +113,8 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
   DataArray<int32_t>::Pointer FeatureIdsArray = DataArray<int32_t>::CreateArray(tDims, cDims, "FeatureIds", true);
   DataArray<bool>::Pointer ActiveArray = DataArray<bool>::CreateArray(tDims, cDims, "Active", true);
 
-  int64_t index;
+  int64_t index = 0;
+  int64_t id = 1;
   for (int64_t z = 0; z < tDims[2]; z++)
   {
     for (int64_t y = 0; y < tDims[1]; y++)
@@ -134,9 +135,10 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(int numCompone
             temp = z;
           }
           ConfidenceIndexArray->setComponent(index, i, temp);
-          FeatureIdsArray->setComponent(index, i, temp);
+          FeatureIdsArray->setComponent(index, i, id);
           ActiveArray->setComponent(index, i, true);
         }
+        id++;
 
 //        ConfidenceIndexArray->setComponent(index, 0, x);
 //        ConfidenceIndexArray->setComponent(index, 1, y);
@@ -528,6 +530,7 @@ void executeTests(AbstractFilter::Pointer cropVolume)
         cropVolume->execute();
     DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), 0)
 
+    {
     DataArrayPath newAttrMatPath(DREAM3D::Defaults::NewVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "");
     IDataArray::Pointer iDataArray = cropVolume->getDataContainerArray()->getAttributeMatrix(newAttrMatPath)->getAttributeArray("Confidence Index");
     DataArray<int32_t>::Pointer array = boost::dynamic_pointer_cast< DataArray<int32_t> >(iDataArray);
@@ -535,6 +538,7 @@ void executeTests(AbstractFilter::Pointer cropVolume)
     checkCrop<int32_t>(array, croppedX, croppedY, croppedZ, array->getNumberOfComponents());
 
     resetTest(cropVolume, 1);
+    }
 
     var.setValue(false);
     propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
@@ -547,6 +551,34 @@ void executeTests(AbstractFilter::Pointer cropVolume)
 
             cropVolume->execute();
         DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), 0)
+
+        {
+            DataArrayPath newAttrMatPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "");
+            IDataArray::Pointer iDataArray = cropVolume->getDataContainerArray()->getAttributeMatrix(newAttrMatPath)->getAttributeArray("FeatureIds");
+            DataArray<int32_t>::Pointer array = boost::dynamic_pointer_cast< DataArray<int32_t> >(iDataArray);
+
+            int64_t xMin = croppedX.getMin(), yMin = croppedY.getMin(), zMin = croppedZ.getMin();
+            int64_t index = 0, id = 1;
+            int XP = croppedX.getDiff()+1, YP = croppedY.getDiff()+1, ZP = croppedZ.getDiff()+1;
+
+            DREAM3D_REQUIRE_EQUAL(array->getSize(), XP*YP*ZP)
+
+            for (int64_t z = zMin; z < ZP; z++)
+            {
+              for (int64_t y = yMin; y < YP; y++)
+              {
+                for (int64_t x = xMin; x < XP; x++)
+                {
+                  int64_t index = ((z-zMin)*XP*YP) + ((y-yMin) * XP) + (x-xMin);
+
+                  int32_t val = array->getComponent(index, 0);
+
+                  DREAM3D_REQUIRE_EQUAL(val, id)
+                      id++;
+                }
+              }
+            }
+        }
 }
 
 
