@@ -71,9 +71,18 @@ class EMMPMLib_EXPORT EMMPM_Data
 
     int allocateDataStructureMemory();
 
+    /**
+     * @brief allocateOutputImage
+     * @param width
+     * @param height
+     * @param samplesPerPixel
+     */
+    void allocateOutputImage();
+
     void initVariables();
 
     void calculateBetaMatrix(double default_beta);
+
 
     // -----------------------------------------------------------------------------
     //  Inputs from Command line or GUI program
