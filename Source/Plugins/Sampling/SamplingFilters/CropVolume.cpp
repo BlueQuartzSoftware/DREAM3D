@@ -153,6 +153,7 @@ void CropVolume::dataCheck()
 {
   int err = getErrorCondition();
   if(getErrorCondition() < 0) { return; }
+  setErrorCondition(0);
 
   VolumeDataContainer* srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
 
