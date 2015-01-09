@@ -151,6 +151,20 @@ int EMMPM_Data::allocateDataStructureMemory()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EMMPM_Data::allocateOutputImage()
+{
+  if(NULL != this->outputImage)
+  {
+    free(this->outputImage);
+    this->outputImage = NULL;
+  }
+
+  this->outputImage = reinterpret_cast<unsigned char*>(malloc(this->columns * this->rows * this->dims));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EMMPM_Data::initVariables()
 {
 

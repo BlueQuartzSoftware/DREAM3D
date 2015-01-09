@@ -124,8 +124,7 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
 
   if (data->outputImage == NULL)
   {
-    TiffUtilities tifUtil;
-    data->outputImage = tifUtil.allocateTiffImageBuffer(data->columns, data->rows, data->dims);
+    data->allocateOutputImage();
   }
   raster = data->outputImage;
   index = 0;

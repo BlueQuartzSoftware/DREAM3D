@@ -39,7 +39,6 @@
 #include <boost/version.hpp>
 #include <Eigen/src/Core/util/Macros.h>
 #include <H5public.h>
-//#include <Modules/Core/Common/itkVersion.h>
 #include <qwt_global.h>
 #include <tbb/tbb_stddef.h>
 
@@ -100,9 +99,8 @@ void AboutDREAM3D::readVersions()
   version->setItem(2, 1, new QTableWidgetItem(QT_VERSION_STR));
   version->setItem(3, 1, new QTableWidgetItem(QWT_VERSION_STR));
   version->setItem(4, 1, new QTableWidgetItem(strH5));
-	version->setItem(5, 1, new QTableWidgetItem("N/A")); // ITK_VERSION
-  version->setItem(6, 1, new QTableWidgetItem(strEigen));
-	version->setItem(7, 1, new QTableWidgetItem(strTBB));
+  version->setItem(5, 1, new QTableWidgetItem(strEigen));
+	version->setItem(6, 1, new QTableWidgetItem(strTBB));
 
   labelVersion->setText(DREAM3DLib::Version::PackageComplete().toLatin1().data());
 }

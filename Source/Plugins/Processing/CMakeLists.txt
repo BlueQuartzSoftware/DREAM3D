@@ -67,8 +67,7 @@ include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${QtSupport_BINARY_DIR} )
 include_directories( ${QtSupport_SOURCE_DIR} )
-include_directories( ${PipelineBuilderLib_SOURCE_DIR} )
-include_directories( ${PipelineBuilderLib_BINARY_DIR} )
+
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
 

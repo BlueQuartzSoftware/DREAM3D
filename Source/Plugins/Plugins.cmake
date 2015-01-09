@@ -111,6 +111,7 @@ set(DREAM3D_BASE_PLUGINS
   Statistics
   SurfaceMeshing
   SyntheticBuilding
+  EMMPM
 )
 
 
@@ -125,25 +126,4 @@ DREAM3D_ADD_PLUGINS(PLUGIN_NAMES ${DREAM3D_BASE_PLUGINS})
 
 message(STATUS "User defined plugins being compiled ......")
 DREAM3D_ADD_PLUGINS(PLUGIN_NAMES ${DREAM3D_EXTRA_PLUGINS})
-
-
-
-#-------------------------------------------------------------------------------
-# Build the "Built in" Plugins
-#message(STATUS "*** Configuring Standard Plugins ***")
-#foreach(p ${DREAM3D_BASE_PLUGINS})
-#    DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p}
-#                           PLUGIN_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/${p})
-#endforeach()
-
-
-
-
-
-# --- Look for user defined external Plugins that the user has entered
-# into CMake-GUI or through CCMake by the user.
-# if("${DREAM3D_EXTRA_PLUGINS}" STREQUAL "")
-#   set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
-# endif()
-
 

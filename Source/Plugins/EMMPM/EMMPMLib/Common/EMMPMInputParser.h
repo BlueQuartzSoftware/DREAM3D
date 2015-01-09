@@ -56,7 +56,7 @@ class EMMPMLib_EXPORT EMMPMInputParser
      * @param inputs
      * @return
      */
-    int parseCLIArguments(int argc,char *argv[], EMMPM_Data* inputs);
+    int parseCLIArguments(int argc, char* argv[], EMMPM_Data* inputs);
 
     /**
      * @brief This will parse the pixel coordinates for each class that is to be initialized
@@ -64,7 +64,7 @@ class EMMPMLib_EXPORT EMMPMInputParser
      * @param inputs The EMMPM_Data structure to store the results
      * @return
      */
-    int parseInitCoords(const std::string &coords, EMMPM_Data* inputs);
+    int parseInitCoords(const std::string& coords, EMMPM_Data* inputs);
 
     /**
      * @brief Parse the Gray Scale Mapping Table as input by the user
@@ -72,7 +72,7 @@ class EMMPMLib_EXPORT EMMPMInputParser
      * @param inputs The EMMPM_Data structure to store the results
      * @return
      */
-    int parseGrayTable(const std::string &values, EMMPM_Data* inputs);
+    int parseGrayTable(const std::string& values, EMMPM_Data* inputs);
 
     /**
      * @brief Parse the Mean and Variance values from the command line
@@ -80,14 +80,14 @@ class EMMPMLib_EXPORT EMMPMInputParser
      * @param inputs The EMMPM_Data structure to store the results
      * @return
      */
-    int parseMuSigmaValues(const std::string &values, EMMPM_Data* inputs);
+    int parseMuSigmaValues(const std::string& values, EMMPM_Data* inputs);
 
     /**
      * @brief Copys the std::string contents into a newly malloc'ed char array which
      * the programmer will need to free when they are finished with it.
      * @param fname The filename to copy
      */
-    char* copyFilenameToNewCharBuffer( const std::string &fname);
+    char* copyFilenameToNewCharBuffer( const std::string& fname);
 
   private:
     EMMPMInputParser(const EMMPMInputParser&); // Copy Constructor Not Implemented

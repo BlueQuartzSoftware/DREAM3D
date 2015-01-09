@@ -159,11 +159,6 @@ cmp_IDE_GENERATED_PROPERTIES("Generated"
 include_directories(${EMMPM_SOURCE_DIR})
 include_directories(${EMMPM_BINARY_DIR})
 
-include_directories(${EMMPMLib_SOURCE_DIR}/..)
-include_directories(${EMMPMLib_BINARY_DIR}/..)
-
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins/${PLUGIN_NAME}/)
-
 #-- Include all the Source Files
 include( ${EMMPMLib_SOURCE_DIR}/Common/SourceList.cmake)
 include( ${EMMPMLib_SOURCE_DIR}/Core/SourceList.cmake)

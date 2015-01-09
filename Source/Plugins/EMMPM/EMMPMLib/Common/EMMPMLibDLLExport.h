@@ -12,30 +12,16 @@
 #define _EMMPM_DLL_EXPORT_H_
 
 
-#if 0
-#if defined (_MSC_VER)
-  #pragma warning(disable: 4251)
-  #pragma warning(disable: 4710)
-  #pragma warning(disable: 4820)
-  #pragma warning(disable: 4668)
-  #pragma warning(disable: 4265)
-  #pragma warning(disable: 4189)
-  #pragma warning(disable: 4640)
-  #pragma warning(disable: 4996)
-  #pragma warning(disable: 4548)
-#endif
-#endif
-
 /* Cmake will define EMMPMLib_EXPORTS on Windows when it
 configures to build a shared library. If you are going to use
 another build system on windows or create the visual studio
 projects by hand you need to define EMMPMLib_EXPORTS when
-building the MXADatModel DLL on windows.
+building the EMMPMDatModel DLL on windows.
 */
 
 #if defined (EMMPMLib_BUILT_AS_DYNAMIC_LIB)
 
-  #if defined (EMMPMLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+  #if defined (EMMPMLib_EXPORTS)  /* Compiling the EMMPM DLL/Dylib */
     #if defined (_MSC_VER)  /* MSVC Compiler Case */
       #define  EMMPMLib_EXPORT __declspec(dllexport)
     #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */
@@ -55,24 +41,5 @@ building the MXADatModel DLL on windows.
   #define EMMPMLib_EXPORT
 #endif
 
-#if 0
-#if defined (_WIN32) || defined __CYGWIN__
-
-  #if defined (EMMPMLib_BUILT_AS_DYNAMIC_LIB)
-    #if defined(EMMPMLib_EXPORTS)
-      #define  EMMPMLib_EXPORT __declspec(dllexport)
-    #else
-      #define  EMMPMLib_EXPORT __declspec(dllimport)
-    #endif /* EMMPMLib_EXPORTS */
-  #else
-    #define EMMPM_EXPORT
-  #endif
-#elif __GNUC__ >= 4
- #define FLOW_DLL __attribute__ ((visibility("default")))
- #define DLL_LOCAL  __attribute__ ((visibility("hidden")
-#else /* defined (_WIN32) && defined (EMMPM_BUILD_SHARED_LIBS)  */
- #define EMMPM_EXPORT
-#endif
-#endif
 
 #endif /* _EMMPM_DLL_EXPORT_H_ */

@@ -201,7 +201,7 @@ int EMMPMInputParser::parseCLIArguments(int argc, char *argv[], EMMPM_Data* inpu
     return -1;
   }
 
-  TCLAP::CmdLine cmd("", ' ', EMMPMLib::Version::Complete());
+  TCLAP::CmdLine cmd("", ' ', EMMPMLib::Version::Complete().toStdString());
 
   TCLAP::ValueArg<std::string> in_inputFile("i", "inputfile", "Image File to be used as input", true, "", "");
   cmd.add(in_inputFile);
