@@ -49,7 +49,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
 
     unsigned int maxi(int a, int b);
 
-    int mini(int a, int b);
+   unsigned int mini(int a, int b);
 
     /**
      * @brief Performs the Morphological filtering on the input image
