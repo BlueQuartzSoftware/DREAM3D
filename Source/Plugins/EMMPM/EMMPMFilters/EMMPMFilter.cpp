@@ -5,6 +5,7 @@
 #include "EMMPMFilter.h"
 
 #include <QtCore/QString>
+#include <QRgb>
 
 #include "EMMPM/EMMPMConstants.h"
 
@@ -185,6 +186,7 @@ void EMMPMFilter::execute()
   // Copy all the variables from the filter into the EMmpm data structure.
   EMMPM_Data::Pointer data = EMMPM_Data::New();
   data->initVariables();
+  data->initType = EMMPM_Basic;
 
   InitializationFunction::Pointer initFunction = BasicInitialization::New();
 
@@ -198,27 +200,70 @@ void EMMPMFilter::execute()
        initFunction = UserDefinedAreasInitialization::New();
        break;
      default:
+	   initFunction = BasicInitialization::New();
        break;
    }
 
+   data->classes = getNumClasses();
+   data->in_beta = getExchangeEnergy();
    data->emIterations = getHistogramLoops();
    data->mpmIterations = getSegmentationLoops();
-   data->classes = getNumClasses();
-   data->EMMPM_InitializationType = EMMPM_ManualInit;
+   
+   data->colorTable[0] = qRgb(255, 0, 255);
+   data->colorTable[1] = qRgb(255, 255, 255);
 
+   data->min_variance[0] = 4.5;
+   data->min_variance[1] = 4.5;
 
-  // Allocate all the memory here
-  data->allocateDataStructureMemory();
+   data->w_gamma[0] = 0;
+   data->w_gamma[1] = 1;
+
+   DataArrayPath dap = getInputDataArrayPath();
+   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(dap);
+   QVector<size_t> tDims = am->getTupleDimensions();
+   IDataArray::Pointer iDataArray = am->getAttributeArray(getInputDataArrayPath().getDataArrayName());
+   QVector<size_t> cDims = iDataArray->getComponentDimensions();
+
+   data->columns = tDims[0];
+   data->rows = tDims[1];
+   data->dims = 1; // We operate on a single channel | single component "image".
+   data->inputImageChannels = cDims[0];
+   
+   data->simulatedAnnealing = (char)(getUseSimulatedAnnealing());
+   data->useGradientPenalty = getUseGradientPenalty();
+   data->beta_e = getGradientPenalty();
+   data->useCurvaturePenalty = getUseCurvaturePenalty();
+   data->beta_c = getCurvaturePenalty();
+   data->r_max = getRMax();
+   data->ccostLoopDelay = getEMLoopDelay();
+
+   //Assign our data array allocated input and output images into the EMMPM_Data class
+   data->inputImage = m_InputImage;
+   data->xt =  m_OutputImage;
+
+   // Allocate all the memory here
+   data->allocateDataStructureMemory();
+
+   // Create a new StatsDelegate so the EMMPM algorith has somewhere to write its statistics
+   StatsDelegate::Pointer statsDelegate = StatsDelegate::New();
 
   // Start the EM/MPM process going
   EMMPM::Pointer emmpm = EMMPM::New();
-  emmpm->addObserver(getObservers());
+
   emmpm->setData(data);
-  // emmpm->setStatsDelegate(statsDelegate.get());
+  emmpm->setStatsDelegate(statsDelegate.get());
   emmpm->setInitializationFunction(initFunction);
+
+  // Connect up the Error/Warning/Progress object so the filter can report those things
+  connect(emmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+			this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+
   emmpm->execute();
 
-
+  // We manually set the pointers to NULL so that the EMMPM_Data class does not try to free the memory
+  data->inputImage = NULL;
+  data->xt = NULL;
+  //data->outputImage = NULL;
 
   /* If some error occurs this code snippet can report the error up the call chain*/
   if (err < 0)

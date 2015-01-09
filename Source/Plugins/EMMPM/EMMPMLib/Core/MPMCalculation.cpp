@@ -61,7 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "EMMPMLib/Core/EMMPMUtilities.h"
 
 #define USE_TBB_TASK_GROUP 0
-#if defined (EMMPMLib_USE_PARALLEL_ALGORITHMS)
+#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
 #include <tbb/task_scheduler_init.h>
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range2d.h>
@@ -274,7 +274,7 @@ class ParallelMPMLoop
      }
 
 
-#if defined (EMMPMLib_USE_PARALLEL_ALGORITHMS)
+#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
 #if USE_TBB_TASK_GROUP
     void operator()() const
     {
@@ -306,7 +306,9 @@ private:
 //
 // -----------------------------------------------------------------------------
 MPMCalculation::MPMCalculation() :
-m_StatsDelegate(NULL)
+Observable(),
+m_StatsDelegate(NULL),
+m_ErrorCondition(0)
 {
 }
 
@@ -420,7 +422,7 @@ void MPMCalculation::execute()
     if (data->cancel) { data->progress = 100.0; break; }
     data->inside_mpm_loop = 1;
 
-#if defined (EMMPMLib_USE_PARALLEL_ALGORITHMS)
+#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
     tbb::task_scheduler_init init;
     int threads = init.default_num_threads();
 #if USE_TBB_TASK_GROUP
@@ -456,8 +458,8 @@ void MPMCalculation::execute()
     EMMPMUtilities::ConvertXtToOutputImage(getData());
 
     data->currentMPMLoop = k;
-   // snprintf(msgbuff, 256, "MPM Loop %d", data->currentMPMLoop);
-   // notify(msgbuff, 0, UpdateProgressMessage);
+	QString ss = QString("MPM Loop %1").arg(k);
+    notifyStatusMessage(getHumanLabel(), ss);
 
     currentLoopCount = data->mpmIterations * data->currentEMLoop + data->currentMPMLoop;
     data->progress = currentLoopCount / totalLoops * 100.0;
@@ -469,7 +471,7 @@ void MPMCalculation::execute()
     }
   }
 #if 0
-  #if defined (EMMPMLib_USE_PARALLEL_ALGORITHMS)
+  #if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
     std::cout << "Parrallel MPM Loop Time to Complete:";
 #else
     std::cout << "Serial MPM Loop Time To Complete: ";
@@ -500,3 +502,12 @@ void MPMCalculation::execute()
   free(yk);
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MPMCalculation::getHumanLabel()
+{
+	return "MPMCalculation";
+}
+

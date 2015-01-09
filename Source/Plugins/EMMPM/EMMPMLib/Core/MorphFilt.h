@@ -31,15 +31,20 @@
 #ifndef _MORPHFILT_H_
 #define _MORPHFILT_H_
 
+#include <QtCore/QObject>
+#include <QtCore/QString>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Observable.h"
 
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"
-#include "EMMPMLib/Common/Observable.h"
+
 
 class EMMPMLib_EXPORT MorphFilter : public Observable
 {
+	Q_OBJECT;
 
   public:
     DREAM3D_SHARED_POINTERS(MorphFilter);
@@ -65,6 +70,14 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
      * @param data Non NULL EMMPM_Data pointer
      */
     void multiSE(EMMPM_Data* data);
+
+	DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+
+	/**
+	* @brief This returns a string that is displayed in the GUI. It should be readable
+	* and understandable by humans.
+	*/
+	virtual const QString getHumanLabel();
 
   protected:
     MorphFilter();

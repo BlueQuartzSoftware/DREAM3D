@@ -30,6 +30,8 @@
 #ifndef _EMMPMINPUTPARSER_H_
 #define _EMMPMINPUTPARSER_H_
 
+#error
+
 #include <string>
 
 #include "EMMPMLib/EMMPMLib.h"

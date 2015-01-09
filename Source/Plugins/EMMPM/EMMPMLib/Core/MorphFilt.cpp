@@ -48,7 +48,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MorphFilter::MorphFilter()
+MorphFilter::MorphFilter() :
+Observable(),
+m_ErrorCondition(0)
 {
 
 }
@@ -76,8 +78,8 @@ unsigned int MorphFilter::maxi(int a, int b) {
 // -----------------------------------------------------------------------------
 int MorphFilter::mini(int a, int b) {
 	if (a < b)
-		return (unsigned int)a;
-	return (unsigned int)b;
+		return a;
+	return b;
 }
 
 
@@ -88,7 +90,7 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
 {
   unsigned char* erosion;
   unsigned int  l, maxr, maxc;
-  int ii, jj;
+  //int ii, jj;
   int h, w;
   unsigned int se_cols;
   size_t ij, i1j1, iirjjr;
@@ -112,9 +114,9 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
       erosion[ij] = l;
       maxr = mini(r, rows - 1 - i);
       maxc = mini(r, cols - 1 - j);
-      for (ii = -mini(r, i); ii <= (int)maxr; ii++)
+      for (int ii = -mini(r, i); ii <= (int)maxr; ii++)
       {
-        for (jj = -mini(r, j); jj <= (int)maxc && erosion[ij] == l; jj++)
+        for (int jj = -mini(r, j); jj <= (int)maxc && erosion[ij] == l; jj++)
         {
           i1j1 = (cols * (i+ii)) + (j+jj);
           iirjjr = (se_cols * (ii+r)) + (jj+r);
@@ -129,21 +131,22 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
 
   h = r - -r + 1;
   w = r - -r + 1;
-  for (ii = -r; ii <= r; ii++)
+  for (int ii = -r; ii <= r; ii++)
   {
-    for (jj = -r; jj <= r; jj++)
+    for (int jj = -r; jj <= r; jj++)
     {
       iirjjr = (w * (ii+r)) + (jj+r);
       if (se[iirjjr] == 1)
       {
         maxr = rows - maxi(0, ii);
         maxc = cols - maxi(0, jj);
-        for (int32_t i = maxi(0, -ii); i < maxr; ++i)
-          for (int32_t j = maxi(0, -jj); j < maxc; ++j)
+        for (unsigned int i = maxi(0, -ii); i < maxr; ++i)
+          for (unsigned int j = maxi(0, -jj); j < maxc; ++j)
           {
             ij = (cols * i) + j;
             l = erosion[ij];
-            if (l != classes) {
+            if (l != (unsigned int)(classes))
+			{
               i1j1 = (cols * (i+ii)) + (j+jj);
               curve[i1j1] = l;
             }
@@ -227,3 +230,13 @@ void MorphFilter::multiSE(EMMPM_Data* data)
   }
   free(curve);
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MorphFilter::getHumanLabel()
+{
+	return "EMMPM";
+}
+

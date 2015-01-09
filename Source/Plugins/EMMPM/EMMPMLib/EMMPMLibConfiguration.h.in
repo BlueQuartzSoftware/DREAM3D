@@ -13,7 +13,7 @@
 #define EMMPMLib_HDF5_SUPPORT @EMMPMLib_HDF5_SUPPORT@
 
 /* define to 1 if we are using parallel algorithms */
-#cmakedefine EMMPMLib_USE_PARALLEL_ALGORITHMS @EMMPMLib_USE_PARALLEL_ALGORITHMS@
+#cmakedefine EMMPM_USE_PARALLEL_ALGORITHMS @EMMPM_USE_PARALLEL_ALGORITHMS@
 
 /* Use the Mersenne Twister Random Number Generator */
 #cmakedefine USE_MERSENNE_TWISTER @USE_MERSENNE_TWISTER@
