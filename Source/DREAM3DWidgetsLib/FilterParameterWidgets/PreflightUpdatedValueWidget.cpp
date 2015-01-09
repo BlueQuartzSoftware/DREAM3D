@@ -120,7 +120,7 @@ void PreflightUpdatedValueWidget::afterPreflight()
   QVariant var = getFilter()->property(PROPERTY_NAME_AS_CHAR);
   if (var.isValid() )
   {
-    value->setText(QString::number(var.toInt()));
+    value->setText(var.toString());
   }
   else
   {

@@ -225,6 +225,7 @@ void ScaleVolume::execute()
     resolution[0] *= m_ScaleFactor.x;
     resolution[1] *= m_ScaleFactor.y;
     resolution[2] *= m_ScaleFactor.z;
+    m->setResolution(resolution);
   }
 
   if (m_ApplyToSurfaceMesh == true)
