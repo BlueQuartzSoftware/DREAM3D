@@ -31,6 +31,7 @@
 #ifndef OBSERVABLE_H_
 #define OBSERVABLE_H_
 
+#error
 
 #include <vector>
 

@@ -32,15 +32,44 @@ class EMMPMFilter : public AbstractFilter
     /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
      * or other instance variables
      */
-    //DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    /* If you declare a filter parameter above then you MUST create a Q_PROPERTY for that FilterParameter */
-    //Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
+    Q_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
 
-    /* Here is another example of declaring an integer FilterParameter */
-    // DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+    DREAM3D_FILTER_PARAMETER(int, NumClasses)
+    Q_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
 
+    DREAM3D_FILTER_PARAMETER(float, ExchangeEnergy)
+    Q_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
 
+    DREAM3D_FILTER_PARAMETER(int, HistogramLoops)
+    Q_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
+
+    DREAM3D_FILTER_PARAMETER(int, SegmentationLoops)
+    Q_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
+
+    DREAM3D_FILTER_PARAMETER(bool, UseSimulatedAnnealing)
+    Q_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
+
+    DREAM3D_FILTER_PARAMETER(bool, UseGradientPenalty)
+    Q_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
+
+    DREAM3D_FILTER_PARAMETER(float, GradientPenalty)
+    Q_PROPERTY(float GradientPenalty READ getGradientPenalty WRITE setGradientPenalty)
+
+    DREAM3D_FILTER_PARAMETER(bool, UseCurvaturePenalty)
+    Q_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
+
+    DREAM3D_FILTER_PARAMETER(float, CurvaturePenalty)
+    Q_PROPERTY(float CurvaturePenalty READ getCurvaturePenalty WRITE setCurvaturePenalty)
+
+    DREAM3D_FILTER_PARAMETER(float, RMax)
+    Q_PROPERTY(float RMax READ getRMax WRITE setRMax)
+
+    DREAM3D_FILTER_PARAMETER(int, EMLoopDelay)
+    Q_PROPERTY(int EMLoopDelay READ getEMLoopDelay WRITE setEMLoopDelay)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+    Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -139,10 +168,9 @@ class EMMPMFilter : public AbstractFilter
     void dataCheck();
 
   private:
-    /* Your private class instance variables go here. You can use several preprocessor macros to help
-     * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
-     * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
-     */
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, InputImage)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, OutputImage)
+
 
     EMMPMFilter(const EMMPMFilter&); // Copy Constructor Not Implemented
     void operator=(const EMMPMFilter&); // Operator '=' Not Implemented

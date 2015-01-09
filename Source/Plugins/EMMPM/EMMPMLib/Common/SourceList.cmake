@@ -7,8 +7,8 @@
 set (EMMPMLib_Common_SRCS
     ${EMMPMLib_SOURCE_DIR}/Common/EMMPMInputParser.cpp
     ${EMMPMLib_SOURCE_DIR}/Common/EMTime.cpp
-    ${EMMPMLib_SOURCE_DIR}/Common/Observable.cpp
-    ${EMMPMLib_SOURCE_DIR}/Common/Observer.cpp
+    # ${EMMPMLib_SOURCE_DIR}/Common/Observable.cpp
+    # ${EMMPMLib_SOURCE_DIR}/Common/Observer.cpp
     ${EMMPMLib_SOURCE_DIR}/Common/StatsDelegate.cpp
 )
 
@@ -17,8 +17,8 @@ set (EMMPMLib_Common_HDRS
     ${EMMPMLib_SOURCE_DIR}/Common/EMMPMInputParser.h
     ${EMMPMLib_SOURCE_DIR}/Common/EMMPMLibDLLExport.h
     ${EMMPMLib_SOURCE_DIR}/Common/EMTime.h
-    ${EMMPMLib_SOURCE_DIR}/Common/Observable.h
-    ${EMMPMLib_SOURCE_DIR}/Common/Observer.h
+    # ${EMMPMLib_SOURCE_DIR}/Common/Observable.h
+    # ${EMMPMLib_SOURCE_DIR}/Common/Observer.h
     ${EMMPMLib_SOURCE_DIR}/Common/StatsDelegate.h
     ${EMMPMLib_SOURCE_DIR}/Common/MSVCDefines.h
 )

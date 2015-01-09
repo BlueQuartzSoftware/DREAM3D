@@ -8,12 +8,33 @@
 
 #include "EMMPM/EMMPMConstants.h"
 
+#include "EMMPMLib/EMMPMLib.h"
+#include "EMMPMLib/Common/EMTime.h"
+#include "EMMPMLib/Common/EMMPM_Math.h"
+#include "EMMPMLib/Core/EMMPM_Data.h"
+#include "EMMPMLib/Core/EMMPM.h"
+#include "EMMPMLib/Common/StatsDelegate.h"
+#include "EMMPMLib/Core/InitializationFunctions.h"
+#include "EMMPMLib/Core/EMMPMUtilities.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+  AbstractFilter(),
+  m_InputDataArrayPath(),
+  m_NumClasses(4),
+  m_ExchangeEnergy(0.5f),
+  m_HistogramLoops(5),
+  m_SegmentationLoops(5),
+  m_UseSimulatedAnnealing(false),
+  m_UseGradientPenalty(false),
+  m_GradientPenalty(1.0f),
+  m_UseCurvaturePenalty(false),
+  m_CurvaturePenalty(1.0f),
+  m_RMax(15.0f),
+  m_EMLoopDelay(1),
+  m_OutputDataArrayPath()
 {
   setupFilterParameters();
 }
@@ -31,21 +52,31 @@ EMMPMFilter::~EMMPMFilter()
 void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+
+  parameters.push_back(FilterParameter::New("Select Input Array", "InputDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputDataArrayPath()));
+  parameters.push_back(FilterParameter::New("Num Classes", "NumClasses", FilterParameterWidgetType::IntWidget, getNumClasses()));
+  parameters.push_back(FilterParameter::New("Exchange Energy", "ExchangeEnergy", FilterParameterWidgetType::DoubleWidget, getExchangeEnergy()));
+  parameters.push_back(FilterParameter::New("Histogram Loops (EM)", "HistogramLoops", FilterParameterWidgetType::IntWidget, getHistogramLoops()));
+  parameters.push_back(FilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", FilterParameterWidgetType::IntWidget, getSegmentationLoops()));
+
+  parameters.push_back(FilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", FilterParameterWidgetType::BooleanWidget, getUseSimulatedAnnealing()));
+
+  QStringList linkedProps("GradientPenalty");
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), linkedProps, false));
+  parameters.push_back(FilterParameter::New("Gradient Penalty (Beta E)", "GradientPenalty", FilterParameterWidgetType::DoubleWidget, getGradientPenalty()));
+
+  linkedProps.clear();
+  linkedProps << "CurvaturePenalty" << "RMax" << "EMLoopDelay";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), linkedProps));
+  parameters.push_back(FilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", FilterParameterWidgetType::DoubleWidget, getCurvaturePenalty()));
+  parameters.push_back(FilterParameter::New("R Max", "RMax", FilterParameterWidgetType::DoubleWidget, getRMax()));
+  parameters.push_back(FilterParameter::New("EM Loop Delay", "EMLoopDelay", FilterParameterWidgetType::IntWidget, getEMLoopDelay()));
+
+  parameters.push_back(FilterParameter::New("Output Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  parameters.push_back(FilterParameter::New("Created Data Array", "OutputDataArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getOutputDataArrayPath()));
+
+
+
   setFilterParameters(parameters);
 }
 
@@ -55,10 +86,20 @@ void EMMPMFilter::setupFilterParameters()
 void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setInputDataArrayPath(reader->readDataArrayPath("InputDataArrayPath", getInputDataArrayPath()));
+  setNumClasses(reader->readValue("NumClasses", getNumClasses()));
+  setExchangeEnergy(reader->readValue("ExchangeEnergy", getExchangeEnergy()));
+  setHistogramLoops(reader->readValue("HistogramLoops", getHistogramLoops()));
+  setSegmentationLoops(reader->readValue("SegmentationLoops", getSegmentationLoops()));
+  setUseSimulatedAnnealing(reader->readValue("UseSimulatedAnnealing", getUseSimulatedAnnealing()));
+  setUseGradientPenalty(reader->readValue("UseGradientPenalty", getUseGradientPenalty()));
+  setGradientPenalty(reader->readValue("GradientPenalty", getGradientPenalty()));
+  setUseCurvaturePenalty(reader->readValue("UseCurvaturePenalty", getUseCurvaturePenalty()));
+  setCurvaturePenalty(reader->readValue("CurvaturePenalty", getCurvaturePenalty()));
+  setRMax(reader->readValue("RMax", getRMax()));
+  setEMLoopDelay(reader->readValue("EMLoopDelay", getEMLoopDelay()));
+  setOutputDataArrayPath(reader->readDataArrayPath("OutputDataArrayPath", getOutputDataArrayPath()));
+
   reader->closeFilterGroup();
 }
 
@@ -68,8 +109,21 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
 int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+
+  DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
+  DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
+  DREAM3D_FILTER_WRITE_PARAMETER(HistogramLoops)
+  DREAM3D_FILTER_WRITE_PARAMETER(SegmentationLoops)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGradientPenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(GradientPenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(CurvaturePenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(RMax)
+  DREAM3D_FILTER_WRITE_PARAMETER(EMLoopDelay)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputDataArrayPath)
+
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -81,39 +135,24 @@ void EMMPMFilter::dataCheck()
 {
   setErrorCondition(0);
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
+  QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
+  m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_InputImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_InputImage = m_InputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this,  getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_OutputImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_OutputImage = m_OutputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+  if(getNumClasses() > 15)
   {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
+    setErrorCondition(-62000);
+    QString ss = QObject::tr("The Maximum number of classes is 15");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+
 }
 
 // -----------------------------------------------------------------------------
@@ -133,9 +172,74 @@ void EMMPMFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EMMPMFilter::execute()
+{
+  int err = 0;
+  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
+  dataCheck();
+  // Check to make sure you made it through the data check. Errors would have been reported already so if something
+  // happens to fail in the dataCheck() then we simply return
+  if(getErrorCondition() < 0) { return; }
+  setErrorCondition(0);
+
+  // Copy all the variables from the filter into the EMmpm data structure.
+  EMMPM_Data::Pointer data = EMMPM_Data::New();
+  data->initVariables();
+
+  InitializationFunction::Pointer initFunction = BasicInitialization::New();
+
+   // Set the initialization function based on the parameters
+   switch(data->initType)
+   {
+     case EMMPM_ManualInit:
+       initFunction = InitializationFunction::New();
+       break;
+     case EMMPM_UserInitArea:
+       initFunction = UserDefinedAreasInitialization::New();
+       break;
+     default:
+       break;
+   }
+
+   data->emIterations = getHistogramLoops();
+   data->mpmIterations = getSegmentationLoops();
+   data->classes = getNumClasses();
+   data->EMMPM_InitializationType = EMMPM_ManualInit;
+
+
+  // Allocate all the memory here
+  data->allocateDataStructureMemory();
+
+  // Start the EM/MPM process going
+  EMMPM::Pointer emmpm = EMMPM::New();
+  emmpm->addObserver(getObservers());
+  emmpm->setData(data);
+  // emmpm->setStatsDelegate(statsDelegate.get());
+  emmpm->setInitializationFunction(initFunction);
+  emmpm->execute();
+
+
+
+  /* If some error occurs this code snippet can report the error up the call chain*/
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Some error message");
+    setErrorCondition(-99999999);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString EMMPMFilter::getCompiledLibraryName()
 {
-  return EMMPM::EMMPMBaseName;
+  return EMMPMPlugin::EMMPMBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -151,7 +255,7 @@ const QString EMMPMFilter::getGroupName()
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getHumanLabel()
 {
-  return "EMMPMFilter";
+  return "EMMPM Segmentation";
 }
 
 // -----------------------------------------------------------------------------
@@ -159,36 +263,9 @@ const QString EMMPMFilter::getHumanLabel()
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getSubGroupName()
 {
-  return "Misc";
+  return "Segmentation";
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EMMPMFilter::execute()
-{
-  int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
-  dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
-  if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
-
-  /* Place all your code to execute your filter here. */
-
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
-  {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
 
 // -----------------------------------------------------------------------------
 //

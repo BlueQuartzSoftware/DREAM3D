@@ -39,9 +39,6 @@
 #include <string>
 #include <sstream>
 
-#include "MXA/MXA.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
@@ -54,7 +51,6 @@
 #include "EMMPMLib/Common/StatsDelegate.h"
 #include "EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPMLib/Core/EMMPMUtilities.h"
-#include "EMMPMLib/tiff/TiffUtilities.h"
 
 #if defined (EMMPMLib_USE_PARALLEL_ALGORITHMS)
 #include <tbb/task_scheduler_init.h>
