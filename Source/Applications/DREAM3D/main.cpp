@@ -33,45 +33,14 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#if 0
-#include "DREAM3D_UI.h"
-#include "QtSupport/QRecentFileList.h"
-
-/**
- * @brief The Main entry point for the application
- */
-int main (int argc, char* argv[])
-{
-  QApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("DREAM3D");
-#if defined( Q_WS_MAC )
-  //Needed for typical Mac program behavior.
-  app.setQuitOnLastWindowClosed( true );
-#endif //APPLE
-
-
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-  QRecentFileList::instance()->readList(prefs);
-
-  DREAM3D_UI* viewer = new DREAM3D_UI;
-  viewer->show();
-  int app_return = app.exec();
-
-  QRecentFileList::instance()->writeList(prefs);
-
-  return app_return;
-}
-
-#else
 
 
 #include <QtGui/QApplication>
+#include <QtCore/QString>
+#include <QtCore/QDir>
+#include <QtCore/QDebug>
+
+
 #include "BrandedInitializer.h"
 
 #ifdef Q_WS_X11
@@ -89,6 +58,24 @@ int main(int argc, char* argv[])
   QApplication::setStyle(new QPlastiqueStyle);
 #endif
 
+#ifdef Q_WS_WIN
+  // Some where Visual Studio wants to set the Current Working Directory (cwd)
+  // to the subfolder BUILD/Applications/DREAM3D instead of our true binary
+  // directory where everything is built. This wreaks havoc on the prebuilt
+  // pipelines not being able to find the data folder. This _should_ fix things
+  // for debugging and hopefully NOT effect any type of release
+  QFileInfo fi(argv[0]);
+  QString absPathExe = fi.absolutePath();
+  QString cwd = QDir::currentPath();
+
+  if (absPathExe != cwd)
+  {
+	  QDir::setCurrent(absPathExe);
+	  qDebug() << "setting cwd: " << absPathExe;
+  }
+  cwd = QDir::currentPath();
+  qDebug() << "        cwd: " << cwd;
+#endif
 
   QCoreApplication::setApplicationName("DREAM3D_V5");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
@@ -101,8 +88,8 @@ int main(int argc, char* argv[])
 #endif //APPLE
 
   setlocale(LC_NUMERIC, "C");
-  BrandedInitializer pvInitializer;
-  if (!pvInitializer.initialize(argc, argv))
+  BrandedInitializer d3dInitializer;
+  if (!d3dInitializer.initialize(argc, argv))
   {
     return 1;
   }
@@ -110,5 +97,3 @@ int main(int argc, char* argv[])
   return qtapp.exec();
 }
 
-
-#endif
