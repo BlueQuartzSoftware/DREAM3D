@@ -153,6 +153,61 @@ class DREAM3DPluginInterface
     virtual QString getPluginName() = 0;
 
     /**
+     * @brief Returns the version of the plugin
+     */
+    virtual QString getVersion() = 0;
+
+    /**
+     * @brief Returns the compatibility version of the plugin
+     */
+    virtual QString getCompatibilityVersion() = 0;
+
+    /**
+     * @brief Returns the name of the vendor of the plugin
+     */
+    virtual QString getVendor() = 0;
+
+    /**
+     * @brief Returns the group of the plugin
+     */
+    virtual QString getGroup() = 0;
+
+    /**
+     * @brief Returns the URL of the plugin
+     */
+    virtual QString getURL() = 0;
+
+    /**
+     * @brief Returns the location of the plugin
+     */
+    virtual QString getLocation() = 0;
+
+    /**
+     * @brief Returns the compatible platforms for the plugin
+     */
+    virtual QList<QString> getPlatforms() = 0;
+
+    /**
+     * @brief Returns the description of the plugin
+     */
+    virtual QString getDescription() = 0;
+
+    /**
+     * @brief Returns the copyright string of the plugin
+     */
+    virtual QString getCopyright() = 0;
+
+    /**
+     * @brief Returns the license string of the plugin
+     */
+    virtual QString getLicense() = 0;
+
+    /**
+     * @brief Returns the dependencies of the plugin
+     */
+    virtual QList<QString> getDependencies() = 0;
+
+    /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
     virtual void registerFilterWidgets(FilterWidgetManager* fwm) = 0;

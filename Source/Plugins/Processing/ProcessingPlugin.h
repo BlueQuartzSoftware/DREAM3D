@@ -65,6 +65,61 @@ class ProcessingPlugin : public QObject, public DREAM3DPluginInterface
     virtual QString getPluginName();
 
     /**
+     * @brief Returns the version
+     */
+    virtual QString getVersion();
+
+     /**
+     * @brief Returns the compatibility version
+     */
+    virtual QString getCompatibilityVersion();
+
+     /**
+     * @brief Returns the name of the vendor
+     */
+    virtual QString getVendor();
+
+    /**
+     * @brief Returns the group of the plugin
+     */
+    virtual QString getGroup();
+
+    /**
+     * @brief Returns the URL of the plugin
+     */
+    virtual QString getURL();
+
+    /**
+     * @brief Returns the location of the plugin
+     */
+    virtual QString getLocation();
+
+    /**
+     * @brief Returns the compatible platforms of the plugin
+     */
+    virtual QList<QString> getPlatforms();
+
+    /**
+     * @brief Returns the description of the plugin
+     */
+    virtual QString getDescription();
+
+    /**
+     * @brief Returns the copyright of the plugin
+     */
+    virtual QString getCopyright();
+
+    /**
+     * @brief Returns the license of the plugin
+     */
+    virtual QString getLicense();
+
+    /**
+     * @brief Returns the dependencies of the plugin
+     */
+    virtual QList<QString> getDependencies();
+
+    /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
     virtual void registerFilterWidgets(FilterWidgetManager* fwm);
@@ -90,6 +145,18 @@ class ProcessingPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings& prefs);
 
   private:
+    QString             m_Version;
+    QString             m_CompatibilityVersion;
+    QString             m_Vendor;
+    QString             m_Group;
+    QString             m_URL;
+    QString             m_Location;
+    QList<QString>      m_Platforms;
+    QString             m_Description;
+    QString             m_Copyright;
+    QString             m_License;
+    QList<QString>      m_Dependencies;
+
     ProcessingPlugin(const ProcessingPlugin&); // Copy Constructor Not Implemented
     void operator=(const ProcessingPlugin&); // Operator '=' Not Implemented
 };
