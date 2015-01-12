@@ -28,12 +28,14 @@ SET(QWT_INCLUDE_SEARCH_DIRS
   ${QWT_INSTALL}/include/qwt5
   ${QWT_INSTALL}/include
   /usr/include/qwt5
+  /usr/include/qwt
   ${QWT_INSTALL}/lib/qwt.framework/Headers
 )
 
 set(QWT_LIB_SEARCH_DIRS
   ${QWT_INSTALL}/lib
   ${QWT_INSTALL}/lib/qwt.framework/
+  /usr/lib/
   )
 
 set(QWT_BIN_SEARCH_DIRS

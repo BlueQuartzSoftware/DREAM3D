@@ -153,14 +153,14 @@ if(NOT _TBB_INSTALL_DIR)
     endif(_TBB_DEFAULT_INSTALL_DIR)
 endif(NOT _TBB_INSTALL_DIR)
 # sanity check
-if(NOT _TBB_INSTALL_DIR)
+if(NOT _TBB_INSTALL_DIR AND WIN32)
     message ("ERROR: TBB_INSTALL_DIR not found. ${_TBB_INSTALL_DIR}")
-else (NOT _TBB_INSTALL_DIR)
+else()
 # finally: set the cached CMake variable TBB_INSTALL_DIR
-if(NOT TBB_INSTALL_DIR)
+if(NOT TBB_INSTALL_DIR AND WIN32)
     set(TBB_INSTALL_DIR ${_TBB_INSTALL_DIR} CACHE PATH "Intel TBB install directory")
     mark_as_advanced(TBB_INSTALL_DIR)
-endif(NOT TBB_INSTALL_DIR)
+endif()
 
 if(TBB_DEBUG)
 	message(STATUS "*** TBB Variables Calculated")
@@ -185,7 +185,7 @@ endmacro(TBB_CORRECT_LIB_DIR var_content)
 
 
 #-- Look for include directory and set ${TBB_INCLUDE_DIR}
-set(TBB_INC_SEARCH_DIR ${_TBB_INSTALL_DIR}/include)
+set(TBB_INC_SEARCH_DIR ${_TBB_INSTALL_DIR}/include /usr/include)
 find_path(TBB_INCLUDE_DIR
     tbb/task_scheduler_init.h
     PATHS ${TBB_INC_SEARCH_DIR}
@@ -200,6 +200,7 @@ mark_as_advanced(TBB_INCLUDE_DIR)
 set(_TBB_LIBRARY_DIR
 	 ${_TBB_INSTALL_DIR}/lib/${TBB_ARCH_PLATFORM}
 	 ${_TBB_INSTALL_DIR}/${TBB_ARCH_PLATFORM}/lib
+	/usr/lib
 	)
 	
 find_library(TBB_LIBRARY_RELEASE
