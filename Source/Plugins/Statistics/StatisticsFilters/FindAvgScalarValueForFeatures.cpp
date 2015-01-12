@@ -215,6 +215,20 @@ void FindAvgScalarValueForFeatures::execute()
     return;
   }
 
+	QVector<size_t> dims = inputData->getComponentDimensions();
+	int numComp = dims[0];
+	for (int i = 1; i < dims.size(); i++)
+	{
+		numComp *= dims[i];
+	}
+	if (numComp > 1)
+	{
+		ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedCellArrayPath.getDataArrayName());
+		setErrorCondition(-11003);
+		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		return;
+	}
+
   QString dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
@@ -259,7 +273,7 @@ void FindAvgScalarValueForFeatures::execute()
   }
   else if (dType.compare("bool") == 0)
   {
-    ss = QObject::tr("Selected array '%1' cannot be of type Bool?").arg(m_SelectedCellArrayPath.getDataArrayName());
+    ss = QObject::tr("Selected array '%1' cannot be of type Bool").arg(m_SelectedCellArrayPath.getDataArrayName());
     setErrorCondition(-11002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
