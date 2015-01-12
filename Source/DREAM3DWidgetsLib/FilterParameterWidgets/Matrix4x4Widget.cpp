@@ -122,7 +122,7 @@ void Matrix4x4Widget::setupGui()
   v14->setValidator(v14Val);
 
   QDoubleValidator* v21Val = new QDoubleValidator(v21);
-  v22->setValidator(v21Val);
+  v21->setValidator(v21Val);
   QDoubleValidator* v22Val = new QDoubleValidator(v22);
   v22->setValidator(v22Val);
   QDoubleValidator* v23Val = new QDoubleValidator(v23);
@@ -131,20 +131,20 @@ void Matrix4x4Widget::setupGui()
   v24->setValidator(v24Val);
 
   QDoubleValidator* v31Val = new QDoubleValidator(v31);
-  v33->setValidator(v31Val);
+  v31->setValidator(v31Val);
   QDoubleValidator* v32Val = new QDoubleValidator(v32);
-  v34->setValidator(v32Val);
+  v32->setValidator(v32Val);
   QDoubleValidator* v33Val = new QDoubleValidator(v33);
   v33->setValidator(v33Val);
   QDoubleValidator* v34Val = new QDoubleValidator(v34);
   v34->setValidator(v34Val);
 
   QDoubleValidator* v41Val = new QDoubleValidator(v41);
-  v44->setValidator(v41Val);
+  v41->setValidator(v41Val);
   QDoubleValidator* v42Val = new QDoubleValidator(v42);
-  v44->setValidator(v42Val);
+  v42->setValidator(v42Val);
   QDoubleValidator* v43Val = new QDoubleValidator(v43);
-  v44->setValidator(v43Val);
+  v43->setValidator(v43Val);
   QDoubleValidator* v44Val = new QDoubleValidator(v44);
   v44->setValidator(v44Val);
 
@@ -181,11 +181,6 @@ void Matrix4x4Widget::setupGui()
     v43->setText( QString::number(data.v43) );
     v44->setText( QString::number(data.v44) );
   }
-
-  //connect combobox to symmetry state
-  connect(comboBox, SIGNAL(currentIndexChanged( int )), this, SLOT( changeSym( int ) ) );
-  clearSym();
-  changeSym(comboBox->currentIndex());
 
 }
 

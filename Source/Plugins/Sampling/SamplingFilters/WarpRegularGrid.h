@@ -68,6 +68,8 @@ class WarpRegularGrid : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
+    DREAM3D_FILTER_PARAMETER(Float3x3_t, Coefficients)
+    Q_PROPERTY(Float3x3_t Coefficients READ getCoefficients WRITE setCoefficients)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)

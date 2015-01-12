@@ -137,9 +137,9 @@ namespace FilterParameterWidgetType
   const QString IntVec3Widget("IntVec3Widget");
   const QString FloatVec3Widget("FloatVec3Widget");
   const QString FloatVec4Widget("FloatVec4Widget");
-  const QString Float3x3Widget("Float3x3Widget");
-  const QString Float4x4Widget("Float4x4Widget");
-  const QString Float5x5Widget("Float5x5Widget");
+  const QString Matrix3x3Widget("Matrix3x3Widget");
+  const QString Matrix4x4Widget("Matrix4x4Widget");
+  const QString Matrix5x5Widget("Matrix5x5Widget");
   const QString Symmetric6x6Widget("Symmetric6x6Widget");
   const QString AxisAngleWidget("AxisAngleWidget");
   const QString UnknownWidget("UnknownWidget");

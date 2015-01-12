@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Symmetric6x6Widget</class>
- <widget class="QWidget" name="Symmetric6x6Widget">
+ <class>Matrix5x5Widget</class>
+ <widget class="QWidget" name="Matrix5x5Widget">
   <property name="geometry">
    <rect>
     <x>0</x>

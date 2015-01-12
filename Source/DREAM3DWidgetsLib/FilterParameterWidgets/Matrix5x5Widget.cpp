@@ -142,7 +142,7 @@ void Matrix5x5Widget::setupGui()
   v15->setValidator(v15Val);
 
   QDoubleValidator* v21Val = new QDoubleValidator(v21);
-  v22->setValidator(v21Val);
+  v21->setValidator(v21Val);
   QDoubleValidator* v22Val = new QDoubleValidator(v22);
   v22->setValidator(v22Val);
   QDoubleValidator* v23Val = new QDoubleValidator(v23);
@@ -153,9 +153,9 @@ void Matrix5x5Widget::setupGui()
   v25->setValidator(v25Val);
 
   QDoubleValidator* v31Val = new QDoubleValidator(v31);
-  v33->setValidator(v31Val);
+  v31->setValidator(v31Val);
   QDoubleValidator* v32Val = new QDoubleValidator(v32);
-  v34->setValidator(v32Val);
+  v32->setValidator(v32Val);
   QDoubleValidator* v33Val = new QDoubleValidator(v33);
   v33->setValidator(v33Val);
   QDoubleValidator* v34Val = new QDoubleValidator(v34);
@@ -164,24 +164,24 @@ void Matrix5x5Widget::setupGui()
   v35->setValidator(v35Val);
 
   QDoubleValidator* v41Val = new QDoubleValidator(v41);
-  v44->setValidator(v41Val);
+  v41->setValidator(v41Val);
   QDoubleValidator* v42Val = new QDoubleValidator(v42);
-  v44->setValidator(v42Val);
+  v42->setValidator(v42Val);
   QDoubleValidator* v43Val = new QDoubleValidator(v43);
-  v44->setValidator(v43Val);
+  v43->setValidator(v43Val);
   QDoubleValidator* v44Val = new QDoubleValidator(v44);
   v44->setValidator(v44Val);
   QDoubleValidator* v45Val = new QDoubleValidator(v45);
   v45->setValidator(v45Val);
 
   QDoubleValidator* v51Val = new QDoubleValidator(v51);
-  v55->setValidator(v51Val);
+  v51->setValidator(v51Val);
   QDoubleValidator* v52Val = new QDoubleValidator(v52);
-  v55->setValidator(v52Val);
+  v52->setValidator(v52Val);
   QDoubleValidator* v53Val = new QDoubleValidator(v53);
-  v55->setValidator(v53Val);
+  v53->setValidator(v53Val);
   QDoubleValidator* v54Val = new QDoubleValidator(v54);
-  v55->setValidator(v54Val);
+  v54->setValidator(v54Val);
   QDoubleValidator* v55Val = new QDoubleValidator(v55);
   v55->setValidator(v55Val);
 
@@ -228,11 +228,6 @@ void Matrix5x5Widget::setupGui()
     v54->setText( QString::number(data.v54) );
     v55->setText( QString::number(data.v55) );
   }
-
-  //connect combobox to symmetry state
-  connect(comboBox, SIGNAL(currentIndexChanged( int )), this, SLOT( changeSym( int ) ) );
-  clearSym();
-  changeSym(comboBox->currentIndex());
 
 }
 

@@ -57,6 +57,16 @@ WarpRegularGrid::WarpRegularGrid() :
   m_Resolution.y = 1.0f;
   m_Resolution.z = 1.0f;
 
+  m_Coefficients.v11 = 1.0f;
+  m_Coefficients.v12 = 0.0f;
+  m_Coefficients.v13 = 0.0f;
+  m_Coefficients.v21 = 0.0f;
+  m_Coefficients.v22 = 1.0f;
+  m_Coefficients.v23 = 0.0f;
+  m_Coefficients.v31 = 0.0f;
+  m_Coefficients.v32 = 0.0f;
+  m_Coefficients.v33 = 1.0f;
+
   m_NewMinX = 100000000000.0f;
   m_NewMinY = 100000000000.0f;
   m_NewMinZ = 100000000000.0f;
@@ -81,6 +91,7 @@ void WarpRegularGrid::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), false));
+  parameters.push_back(FilterParameter::New("Coefficients", "Coefficients", FilterParameterWidgetType::Matrix3x3Widget, getCoefficients(), false, ""));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
@@ -98,6 +109,7 @@ void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reade
   reader->openFilterGroup(this, index);
   setNewDataContainerName( reader->readString("NewDataContainerName", getNewDataContainerName() ) );
   setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
+  setCoefficients( reader->readFloat3x3("Coefficients", getCoefficients() ) );
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()) );
   reader->closeFilterGroup();
@@ -111,6 +123,7 @@ int WarpRegularGrid::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Coefficients)
   DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
   DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
   writer->closeFilterGroup();

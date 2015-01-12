@@ -106,16 +106,16 @@ void Matrix3x3Widget::setupGui()
   v13->setValidator(v13Val);
 
   QDoubleValidator* v21Val = new QDoubleValidator(v21);
-  v22->setValidator(v21Val);
+  v21->setValidator(v21Val);
   QDoubleValidator* v22Val = new QDoubleValidator(v22);
   v22->setValidator(v22Val);
   QDoubleValidator* v23Val = new QDoubleValidator(v23);
   v23->setValidator(v23Val);
 
   QDoubleValidator* v31Val = new QDoubleValidator(v31);
-  v33->setValidator(v31Val);
+  v31->setValidator(v31Val);
   QDoubleValidator* v32Val = new QDoubleValidator(v32);
-  v34->setValidator(v32Val);
+  v32->setValidator(v32Val);
   QDoubleValidator* v33Val = new QDoubleValidator(v33);
   v33->setValidator(v33Val);
 
@@ -144,11 +144,6 @@ void Matrix3x3Widget::setupGui()
     v32->setText( QString::number(data.v32) );
     v33->setText( QString::number(data.v33) );
   }
-
-  //connect combobox to symmetry state
-  connect(comboBox, SIGNAL(currentIndexChanged( int )), this, SLOT( changeSym( int ) ) );
-  clearSym();
-  changeSym(comboBox->currentIndex());
 
 }
 

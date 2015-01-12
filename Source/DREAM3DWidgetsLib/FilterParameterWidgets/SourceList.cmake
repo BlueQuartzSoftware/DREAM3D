@@ -35,6 +35,10 @@ set(DREAM3D_PARAMETER_WIDGETS
       VolumeDataContainerInfoWidget
       DataContainerReaderWidget
       DynamicChoiceWidget
+	  Matrix3x3Widget
+	  Matrix4x4Widget
+	  Matrix5x5Widget
+	  Symmetric6x6Widget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget
@@ -42,10 +46,6 @@ set(DREAM3D_PARAMETER_WIDGETS
 #      FaceArrayComparisonSelectionWidget
 #      EdgeArrayComparisonSelectionWidget
       UnknownWidget
-  Matrix3x3Widget
-  Matrix4x4Widget
-  Matrix5x5Widget
-  Symmetric6x6Widget
 )
 
 set(REGISTER_KNOWN_WIDGETS ${DREAM3DWidgetsLib_BINARY_DIR}/FilterWidgetManager_RegisterWidgets_tmp.cpp)
