@@ -91,7 +91,7 @@ QString SurfaceMeshingPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ QString SurfaceMeshingPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ QString SurfaceMeshingPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ QString SurfaceMeshingPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ QString SurfaceMeshingPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ QString SurfaceMeshingPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,8 +139,7 @@ QString SurfaceMeshingPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> SurfaceMeshingPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -148,7 +147,7 @@ QList<QString> SurfaceMeshingPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -156,7 +155,7 @@ QString SurfaceMeshingPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -164,7 +163,7 @@ QString SurfaceMeshingPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -172,8 +171,7 @@ QString SurfaceMeshingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> SurfaceMeshingPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

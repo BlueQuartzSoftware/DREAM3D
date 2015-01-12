@@ -60,7 +60,7 @@ QString EMMPMPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ QString EMMPMPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +76,7 @@ QString EMMPMPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ QString EMMPMPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ QString EMMPMPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -100,7 +100,7 @@ QString EMMPMPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -108,8 +108,7 @@ QString EMMPMPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> EMMPMPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +116,7 @@ QList<QString> EMMPMPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -125,7 +124,7 @@ QString EMMPMPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -133,7 +132,7 @@ QString EMMPMPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -141,8 +140,7 @@ QString EMMPMPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> EMMPMPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

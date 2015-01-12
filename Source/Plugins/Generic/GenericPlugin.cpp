@@ -90,7 +90,7 @@ QString GenericPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ QString GenericPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -106,7 +106,7 @@ QString GenericPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ QString GenericPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ QString GenericPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ QString GenericPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -138,8 +138,7 @@ QString GenericPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> GenericPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -147,7 +146,7 @@ QList<QString> GenericPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -155,7 +154,7 @@ QString GenericPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +162,7 @@ QString GenericPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,8 +170,7 @@ QString GenericPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> GenericPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

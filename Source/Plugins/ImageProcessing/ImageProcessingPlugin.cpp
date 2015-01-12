@@ -90,7 +90,7 @@ QString ImageProcessingPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ QString ImageProcessingPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -106,7 +106,7 @@ QString ImageProcessingPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ QString ImageProcessingPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ QString ImageProcessingPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ QString ImageProcessingPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -138,8 +138,7 @@ QString ImageProcessingPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> ImageProcessingPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -147,7 +146,7 @@ QList<QString> ImageProcessingPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -155,7 +154,7 @@ QString ImageProcessingPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +162,7 @@ QString ImageProcessingPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,8 +170,7 @@ QString ImageProcessingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> ImageProcessingPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

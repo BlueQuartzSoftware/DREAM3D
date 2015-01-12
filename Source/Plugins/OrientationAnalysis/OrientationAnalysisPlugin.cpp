@@ -91,7 +91,7 @@ QString OrientationAnalysisPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ QString OrientationAnalysisPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ QString OrientationAnalysisPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ QString OrientationAnalysisPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ QString OrientationAnalysisPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ QString OrientationAnalysisPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,8 +139,7 @@ QString OrientationAnalysisPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> OrientationAnalysisPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -148,7 +147,7 @@ QList<QString> OrientationAnalysisPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -156,7 +155,7 @@ QString OrientationAnalysisPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -164,7 +163,7 @@ QString OrientationAnalysisPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -172,8 +171,7 @@ QString OrientationAnalysisPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> OrientationAnalysisPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

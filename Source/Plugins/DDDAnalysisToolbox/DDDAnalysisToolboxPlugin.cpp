@@ -60,7 +60,7 @@ QString DDDAnalysisToolboxPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ QString DDDAnalysisToolboxPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +76,7 @@ QString DDDAnalysisToolboxPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ QString DDDAnalysisToolboxPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ QString DDDAnalysisToolboxPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -100,7 +100,7 @@ QString DDDAnalysisToolboxPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -108,8 +108,7 @@ QString DDDAnalysisToolboxPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> DDDAnalysisToolboxPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +116,7 @@ QList<QString> DDDAnalysisToolboxPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -125,7 +124,7 @@ QString DDDAnalysisToolboxPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -133,7 +132,7 @@ QString DDDAnalysisToolboxPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString DDDAnalysisToolboxPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -141,8 +140,7 @@ QString DDDAnalysisToolboxPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> DDDAnalysisToolboxPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

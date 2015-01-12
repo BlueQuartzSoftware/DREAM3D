@@ -90,7 +90,7 @@ QString ReconstructionPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ QString ReconstructionPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -106,7 +106,7 @@ QString ReconstructionPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ QString ReconstructionPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ QString ReconstructionPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ QString ReconstructionPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -138,8 +138,7 @@ QString ReconstructionPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> ReconstructionPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -147,7 +146,7 @@ QList<QString> ReconstructionPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -155,7 +154,7 @@ QString ReconstructionPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +162,7 @@ QString ReconstructionPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,8 +170,7 @@ QString ReconstructionPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> ReconstructionPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

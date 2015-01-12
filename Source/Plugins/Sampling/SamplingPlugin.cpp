@@ -61,7 +61,7 @@ QString SamplingPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ QString SamplingPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ QString SamplingPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ QString SamplingPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ QString SamplingPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ QString SamplingPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -109,8 +109,7 @@ QString SamplingPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> SamplingPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -118,7 +117,7 @@ QList<QString> SamplingPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -126,7 +125,7 @@ QString SamplingPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -134,7 +133,7 @@ QString SamplingPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -142,8 +141,7 @@ QString SamplingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> SamplingPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

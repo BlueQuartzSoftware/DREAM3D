@@ -90,7 +90,7 @@ QString StatisticsPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ QString StatisticsPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -106,7 +106,7 @@ QString StatisticsPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ QString StatisticsPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ QString StatisticsPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ QString StatisticsPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -138,8 +138,7 @@ QString StatisticsPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> StatisticsPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -147,7 +146,7 @@ QList<QString> StatisticsPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -155,7 +154,7 @@ QString StatisticsPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +162,7 @@ QString StatisticsPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,8 +170,7 @@ QString StatisticsPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> StatisticsPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------

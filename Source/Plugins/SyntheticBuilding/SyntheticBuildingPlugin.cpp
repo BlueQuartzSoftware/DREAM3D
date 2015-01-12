@@ -91,7 +91,7 @@ QString SyntheticBuildingPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ QString SyntheticBuildingPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ QString SyntheticBuildingPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ QString SyntheticBuildingPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ QString SyntheticBuildingPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ QString SyntheticBuildingPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,8 +139,7 @@ QString SyntheticBuildingPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> SyntheticBuildingPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -148,7 +147,7 @@ QList<QString> SyntheticBuildingPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -156,7 +155,7 @@ QString SyntheticBuildingPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -164,7 +163,7 @@ QString SyntheticBuildingPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getLicense()
 {
-  return "";
+  return m_License;
 }
 
 // -----------------------------------------------------------------------------
@@ -172,8 +171,7 @@ QString SyntheticBuildingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> SyntheticBuildingPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------
