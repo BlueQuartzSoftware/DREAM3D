@@ -51,6 +51,7 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "DREAM3DLib/Plugin/PluginManager.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
@@ -262,7 +263,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   // into their own plugin and load the plugins from a command line.
   fm->RegisterKnownFilters(fm);
 
-  QVector<DREAM3DPluginInterface*> loadedPlugins;
+  PluginManager* pluginManager = PluginManager::Instance();
 
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
@@ -283,7 +284,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
         QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
         this->Splash->showMessage(msg);
         //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
-        loadedPlugins.push_back(ipPlugin);
+        pluginManager->addPlugin(ipPlugin);
         ipPlugin->registerFilterWidgets(fwm);
         ipPlugin->registerFilters(fm);
       }
@@ -300,5 +301,5 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
     }
   }
 
-  return loadedPlugins;
+  return pluginManager->getPluginsVector();
 }

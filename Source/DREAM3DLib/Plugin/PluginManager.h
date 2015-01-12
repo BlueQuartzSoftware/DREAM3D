@@ -78,13 +78,13 @@ class DREAM3DLib_EXPORT PluginManager
      * @brief getPluginNames Returns all plugin names as a QSet
      * @return
      */
-    QSet<QString> getPluginNames();
+    QList<QString> getPluginNames();
 
     /**
      * @brief getPluginList Returns the plugins list
      * @return
      */
-    QList<DREAM3DPluginInterface*> getPluginList();
+    QVector<DREAM3DPluginInterface*> getPluginsVector();
 
 
   protected:
@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT PluginManager
 
   private:
 
-    QList<DREAM3DPluginInterface*> list;
+    QVector<DREAM3DPluginInterface*> plugins;
     static PluginManager* self;
 
     PluginManager(const PluginManager&); // Copy Constructor Not Implemented
