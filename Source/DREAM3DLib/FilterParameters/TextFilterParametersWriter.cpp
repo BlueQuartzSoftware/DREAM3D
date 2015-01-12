@@ -305,6 +305,33 @@ int TextFilterParametersWriter::writeValue(const QString name, FloatVec21_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, Float3x3_t v)
+{
+  int err = -1;
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, Float4x4_t v)
+{
+  int err = -1;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, Float5x5_t v)
+{
+  int err = -1;
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
 {
   int err = -1;

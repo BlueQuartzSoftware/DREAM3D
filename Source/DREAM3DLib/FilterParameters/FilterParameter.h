@@ -75,6 +75,27 @@ typedef struct
 } FloatVec21_t;
 typedef struct
 {
+  float v11; float v12; float v13;
+  float v21; float v22; float v23;
+  float v31; float v32; float v33;
+} Float3x3_t;
+typedef struct
+{
+  float v11; float v12; float v13; float v14;
+  float v21; float v22; float v23; float v24;
+  float v31; float v32; float v33; float v34;
+  float v41; float v42; float v43; float v44;
+} Float4x4_t;
+typedef struct
+{
+  float v11; float v12; float v13; float v14; float v15;
+  float v21; float v22; float v23; float v24; float v25;
+  float v31; float v32; float v33; float v34; float v35;
+  float v41; float v42; float v43; float v44; float v45;
+  float v51; float v52; float v53; float v54; float v55;
+} Float5x5_t;
+typedef struct
+{
   qint32 PaddingDigits;
   quint32 Ordering;
   qint32 StartIndex;
@@ -93,6 +114,9 @@ Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
 Q_DECLARE_METATYPE(FloatVec21_t)
+Q_DECLARE_METATYPE(Float3x3_t)
+Q_DECLARE_METATYPE(Float4x4_t)
+Q_DECLARE_METATYPE(Float5x5_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
 Q_DECLARE_METATYPE(FileListInfo_t)
 
@@ -113,6 +137,9 @@ namespace FilterParameterWidgetType
   const QString IntVec3Widget("IntVec3Widget");
   const QString FloatVec3Widget("FloatVec3Widget");
   const QString FloatVec4Widget("FloatVec4Widget");
+  const QString Float3x3Widget("Float3x3Widget");
+  const QString Float4x4Widget("Float4x4Widget");
+  const QString Float5x5Widget("Float5x5Widget");
   const QString Symmetric6x6Widget("Symmetric6x6Widget");
   const QString AxisAngleWidget("AxisAngleWidget");
   const QString UnknownWidget("UnknownWidget");
@@ -187,6 +214,24 @@ class DREAM3DLib_EXPORT FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec21_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const Float3x3_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const Float4x4_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const Float5x5_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);

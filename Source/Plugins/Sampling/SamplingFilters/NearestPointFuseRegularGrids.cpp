@@ -104,6 +104,20 @@ void NearestPointFuseRegularGrids::dataCheck()
   AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, m_ReferenceCellAttributeMatrixPath, err);
   AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, m_SamplingCellAttributeMatrixPath, err);
   if(getErrorCondition() < 0) { return; }
+
+  //create arrays on the reference grid to hold data present on the sampling grid
+  QList<QString> voxelArrayNames = sampleAttrMat->getAttributeArrayNames();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    QString name = *iter;
+    IDataArray::Pointer p = sampleAttrMat->getAttributeArray(*iter);
+    // Make a copy of the 'p' array that has the same name. When placed into
+    // the data container this will over write the current array with
+    // the same name. At least in theory
+    IDataArray::Pointer data = p->createNewArray(refAttrMat->getNumTuples(), p->getComponentDimensions(), p->getName());
+    refAttrMat->addAttributeArray(p->getName(), data);
+  }
+
 }
 
 // -----------------------------------------------------------------------------

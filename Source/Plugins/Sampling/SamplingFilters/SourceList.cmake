@@ -20,6 +20,7 @@ set(_PublicFilters
   RotateSampleRefFrame
   NearestPointFuseRegularGrids
   UncertainRegularGridSampleSurfaceMesh
+  WarpRegularGrid
 )
 
 #--------------

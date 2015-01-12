@@ -126,12 +126,89 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const FloatVec21_t& defaultValue,
+                                              bool advanced,
+                                              const QString& units, int groupIndex)
+{
+
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const Float3x3_t& defaultValue,
+                                              bool advanced,
+                                              const QString& units, int groupIndex)
+{
+
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const Float4x4_t& defaultValue,
+                                              bool advanced,
+                                              const QString& units, int groupIndex)
+{
+
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const Float5x5_t& defaultValue,
                                               bool advanced,
                                               const QString& units, int groupIndex)
 {

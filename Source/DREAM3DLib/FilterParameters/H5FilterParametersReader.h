@@ -116,6 +116,9 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v);
     virtual FloatVec4_t readFloatVec4(const QString name, FloatVec4_t v);
     virtual FloatVec21_t readFloatVec21(const QString name, FloatVec21_t v);
+    virtual Float3x3_t readFloat3x3(const QString name, Float3x3_t v);
+    virtual Float4x4_t readFloat4x4(const QString name, Float4x4_t v);
+    virtual Float5x5_t readFloat5x5(const QString name, Float5x5_t v);
     virtual FileListInfo_t readFileListInfo(const QString name, FileListInfo_t v);
     virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
     virtual ComparisonInputs readComparisonInputs(const QString name, ComparisonInputs v);

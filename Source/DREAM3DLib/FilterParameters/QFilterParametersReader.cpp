@@ -1125,6 +1125,441 @@ FloatVec21_t QFilterParametersReader::readFloatVec21(const QString name, FloatVe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+Float3x3_t QFilterParametersReader::readFloat3x3(const QString name, Float3x3_t defaultValue)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  bool ok = false;
+  Float3x3_t vec;
+  vec.v11 = 0.0f;
+  vec.v12 = 0.0f;
+  vec.v13 = 0.0f;
+
+  vec.v21 = 0.0f;
+  vec.v22 = 0.0f;
+  vec.v23 = 0.0f;
+
+  vec.v31 = 0.0f;
+  vec.v32 = 0.0f;
+  vec.v33 = 0.0f;
+
+  int count = m_Prefs->beginReadArray(name);
+  if (count == 0)
+  {
+    m_Prefs->endArray();
+    return defaultValue;
+  }
+
+  m_Prefs->setArrayIndex(0);
+  vec.v11 = m_Prefs->value("v11", vec.v11).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v11 = defaultValue.v11;
+  }
+  m_Prefs->setArrayIndex(1);
+  vec.v12 = m_Prefs->value("v12", vec.v12).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v12 = defaultValue.v12;
+  }
+  m_Prefs->setArrayIndex(2);
+  vec.v13 = m_Prefs->value("v13", vec.v13).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v13 = defaultValue.v13;
+  }
+
+  m_Prefs->setArrayIndex(3);
+  vec.v21 = m_Prefs->value("v21", vec.v21).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v21 = defaultValue.v21;
+  }
+  m_Prefs->setArrayIndex(4);
+  vec.v22 = m_Prefs->value("v22", vec.v22).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v22 = defaultValue.v22;
+  }
+  m_Prefs->setArrayIndex(5);
+  vec.v23 = m_Prefs->value("v23", vec.v23).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v23 = defaultValue.v23;
+  }
+
+  m_Prefs->setArrayIndex(6);
+  vec.v31 = m_Prefs->value("v31", vec.v31).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v31 = defaultValue.v31;
+  }
+  m_Prefs->setArrayIndex(7);
+  vec.v32 = m_Prefs->value("v32", vec.v32).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v32 = defaultValue.v32;
+  }
+  m_Prefs->setArrayIndex(8);
+  vec.v33 = m_Prefs->value("v33", vec.v33).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v33 = defaultValue.v33;
+  }
+
+
+  m_Prefs->endArray();
+
+  return vec;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Float4x4_t QFilterParametersReader::readFloat4x4(const QString name, Float4x4_t defaultValue)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  bool ok = false;
+  Float4x4_t vec;
+  vec.v11 = 0.0f;
+  vec.v12 = 0.0f;
+  vec.v13 = 0.0f;
+  vec.v14 = 0.0f;
+
+  vec.v21 = 0.0f;
+  vec.v22 = 0.0f;
+  vec.v23 = 0.0f;
+  vec.v24 = 0.0f;
+
+  vec.v31 = 0.0f;
+  vec.v32 = 0.0f;
+  vec.v33 = 0.0f;
+  vec.v34 = 0.0f;
+
+  vec.v41 = 0.0f;
+  vec.v42 = 0.0f;
+  vec.v43 = 0.0f;
+  vec.v44 = 0.0f;
+
+  int count = m_Prefs->beginReadArray(name);
+  if (count == 0)
+  {
+    m_Prefs->endArray();
+    return defaultValue;
+  }
+
+  m_Prefs->setArrayIndex(0);
+  vec.v11 = m_Prefs->value("v11", vec.v11).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v11 = defaultValue.v11;
+  }
+  m_Prefs->setArrayIndex(1);
+  vec.v12 = m_Prefs->value("v12", vec.v12).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v12 = defaultValue.v12;
+  }
+  m_Prefs->setArrayIndex(2);
+  vec.v13 = m_Prefs->value("v13", vec.v13).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v13 = defaultValue.v13;
+  }
+  m_Prefs->setArrayIndex(3);
+  vec.v14 = m_Prefs->value("v14", vec.v14).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v14 = defaultValue.v14;
+  }
+
+  m_Prefs->setArrayIndex(4);
+  vec.v21 = m_Prefs->value("v21", vec.v21).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v21 = defaultValue.v21;
+  }
+  m_Prefs->setArrayIndex(5);
+  vec.v22 = m_Prefs->value("v22", vec.v22).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v22 = defaultValue.v22;
+  }
+  m_Prefs->setArrayIndex(6);
+  vec.v23 = m_Prefs->value("v23", vec.v23).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v23 = defaultValue.v23;
+  }
+  m_Prefs->setArrayIndex(7);
+  vec.v24 = m_Prefs->value("v24", vec.v24).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v24 = defaultValue.v24;
+  }
+
+  m_Prefs->setArrayIndex(8);
+  vec.v31 = m_Prefs->value("v31", vec.v31).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v31 = defaultValue.v31;
+  }
+  m_Prefs->setArrayIndex(9);
+  vec.v32 = m_Prefs->value("v32", vec.v32).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v32 = defaultValue.v32;
+  }
+  m_Prefs->setArrayIndex(10);
+  vec.v33 = m_Prefs->value("v33", vec.v33).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v33 = defaultValue.v33;
+  }
+  m_Prefs->setArrayIndex(11);
+  vec.v34 = m_Prefs->value("v34", vec.v34).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v34 = defaultValue.v34;
+  }
+
+  m_Prefs->setArrayIndex(12);
+  vec.v41 = m_Prefs->value("v41", vec.v41).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v41 = defaultValue.v41;
+  }
+  m_Prefs->setArrayIndex(13);
+  vec.v42 = m_Prefs->value("v42", vec.v42).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v42 = defaultValue.v42;
+  }
+  m_Prefs->setArrayIndex(14);
+  vec.v43 = m_Prefs->value("v43", vec.v43).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v43 = defaultValue.v43;
+  }
+  m_Prefs->setArrayIndex(15);
+  vec.v44 = m_Prefs->value("v44", vec.v44).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v44 = defaultValue.v44;
+  }
+
+  m_Prefs->endArray();
+
+  return vec;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Float5x5_t QFilterParametersReader::readFloat5x5(const QString name, Float5x5_t defaultValue)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  bool ok = false;
+  Float5x5_t vec;
+  vec.v11 = 0.0f;
+  vec.v12 = 0.0f;
+  vec.v13 = 0.0f;
+  vec.v14 = 0.0f;
+  vec.v15 = 0.0f;
+
+  vec.v21 = 0.0f;
+  vec.v22 = 0.0f;
+  vec.v23 = 0.0f;
+  vec.v24 = 0.0f;
+  vec.v25 = 0.0f;
+
+  vec.v31 = 0.0f;
+  vec.v32 = 0.0f;
+  vec.v33 = 0.0f;
+  vec.v34 = 0.0f;
+  vec.v35 = 0.0f;
+
+  vec.v41 = 0.0f;
+  vec.v42 = 0.0f;
+  vec.v43 = 0.0f;
+  vec.v44 = 0.0f;
+  vec.v45 = 0.0f;
+
+  vec.v51 = 0.0f;
+  vec.v52 = 0.0f;
+  vec.v53 = 0.0f;
+  vec.v54 = 0.0f;
+  vec.v55 = 0.0f;
+
+  int count = m_Prefs->beginReadArray(name);
+  if (count == 0)
+  {
+    m_Prefs->endArray();
+    return defaultValue;
+  }
+
+  m_Prefs->setArrayIndex(0);
+  vec.v11 = m_Prefs->value("v11", vec.v11).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v11 = defaultValue.v11;
+  }
+  m_Prefs->setArrayIndex(1);
+  vec.v12 = m_Prefs->value("v12", vec.v12).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v12 = defaultValue.v12;
+  }
+  m_Prefs->setArrayIndex(2);
+  vec.v13 = m_Prefs->value("v13", vec.v13).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v13 = defaultValue.v13;
+  }
+  m_Prefs->setArrayIndex(3);
+  vec.v14 = m_Prefs->value("v14", vec.v14).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v14 = defaultValue.v14;
+  }
+  m_Prefs->setArrayIndex(4);
+  vec.v15 = m_Prefs->value("v15", vec.v15).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v15 = defaultValue.v15;
+  }
+
+  m_Prefs->setArrayIndex(5);
+  vec.v21 = m_Prefs->value("v21", vec.v21).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v21 = defaultValue.v21;
+  }
+  m_Prefs->setArrayIndex(6);
+  vec.v22 = m_Prefs->value("v22", vec.v22).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v22 = defaultValue.v22;
+  }
+  m_Prefs->setArrayIndex(7);
+  vec.v23 = m_Prefs->value("v23", vec.v23).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v23 = defaultValue.v23;
+  }
+  m_Prefs->setArrayIndex(8);
+  vec.v24 = m_Prefs->value("v24", vec.v24).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v24 = defaultValue.v24;
+  }
+  m_Prefs->setArrayIndex(9);
+  vec.v25 = m_Prefs->value("v25", vec.v25).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v25 = defaultValue.v25;
+  }
+
+  m_Prefs->setArrayIndex(10);
+  vec.v31 = m_Prefs->value("v31", vec.v31).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v31 = defaultValue.v31;
+  }
+  m_Prefs->setArrayIndex(11);
+  vec.v32 = m_Prefs->value("v32", vec.v32).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v32 = defaultValue.v32;
+  }
+  m_Prefs->setArrayIndex(12);
+  vec.v33 = m_Prefs->value("v33", vec.v33).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v33 = defaultValue.v33;
+  }
+  m_Prefs->setArrayIndex(13);
+  vec.v34 = m_Prefs->value("v34", vec.v34).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v34 = defaultValue.v34;
+  }
+  m_Prefs->setArrayIndex(14);
+  vec.v35 = m_Prefs->value("v35", vec.v35).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v35 = defaultValue.v35;
+  }
+
+  m_Prefs->setArrayIndex(15);
+  vec.v41 = m_Prefs->value("v41", vec.v41).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v41 = defaultValue.v41;
+  }
+  m_Prefs->setArrayIndex(16);
+  vec.v42 = m_Prefs->value("v42", vec.v42).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v42 = defaultValue.v42;
+  }
+  m_Prefs->setArrayIndex(17);
+  vec.v43 = m_Prefs->value("v43", vec.v43).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v43 = defaultValue.v43;
+  }
+  m_Prefs->setArrayIndex(18);
+  vec.v44 = m_Prefs->value("v44", vec.v44).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v44 = defaultValue.v44;
+  }
+  m_Prefs->setArrayIndex(19);
+  vec.v45 = m_Prefs->value("v45", vec.v45).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v45 = defaultValue.v45;
+  }
+
+  m_Prefs->setArrayIndex(20);
+  vec.v51 = m_Prefs->value("v51", vec.v51).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v51 = defaultValue.v51;
+  }
+  m_Prefs->setArrayIndex(21);
+  vec.v52 = m_Prefs->value("v52", vec.v52).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v52 = defaultValue.v52;
+  }
+  m_Prefs->setArrayIndex(22);
+  vec.v53 = m_Prefs->value("v53", vec.v53).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v53 = defaultValue.v53;
+  }
+  m_Prefs->setArrayIndex(23);
+  vec.v54 = m_Prefs->value("v54", vec.v54).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v54 = defaultValue.v54;
+  }
+  m_Prefs->setArrayIndex(24);
+  vec.v55 = m_Prefs->value("v55", vec.v55).toFloat(&ok);
+  if(!ok)
+  {
+    vec.v55 = defaultValue.v55;
+  }
+
+  m_Prefs->endArray();
+
+  return vec;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FileListInfo_t QFilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);

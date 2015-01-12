@@ -655,6 +655,51 @@ FloatVec21_t H5FilterParametersReader::readFloatVec21(const QString name, FloatV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+Float3x3_t H5FilterParametersReader::readFloat3x3(const QString name, Float3x3_t defaultValue)
+{
+  int err = 0;
+  Float3x3_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0)
+  {
+    return defaultValue;
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Float4x4_t H5FilterParametersReader::readFloat4x4(const QString name, Float4x4_t defaultValue)
+{
+  int err = 0;
+  Float4x4_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0)
+  {
+    return defaultValue;
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Float5x5_t H5FilterParametersReader::readFloat5x5(const QString name, Float5x5_t defaultValue)
+{
+  int err = 0;
+  Float5x5_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0)
+  {
+    return defaultValue;
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
 {
 
