@@ -503,7 +503,14 @@ void RotateSampleRefFrame::execute()
       newIndicies_I = newindicies[i];
       if(newIndicies_I >= 0)
       {
-        source = p->getVoidPointer((nComp * newIndicies_I));
+				source = p->getVoidPointer((nComp * newIndicies_I));
+				if (NULL == source)
+				{
+					QString ss = QObject::tr("The index is outside the bounds of the source array");
+					setErrorCondition(-11004);
+					notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+					return;
+				}
         destination = data->getVoidPointer((data->getNumberOfComponents() * i));
         ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
       }

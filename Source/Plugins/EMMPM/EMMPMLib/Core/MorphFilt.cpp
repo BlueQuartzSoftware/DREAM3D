@@ -74,7 +74,7 @@ unsigned int MorphFilter::maxi(int a, int b) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MorphFilter::mini(int a, int b) {
+unsigned int MorphFilter::mini(int a, int b) {
 	if (a < b)
 		return (unsigned int)a;
 	return (unsigned int)b;
@@ -138,12 +138,13 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
       {
         maxr = rows - maxi(0, ii);
         maxc = cols - maxi(0, jj);
-        for (int32_t i = maxi(0, -ii); i < maxr; ++i)
-          for (int32_t j = maxi(0, -jj); j < maxc; ++j)
+        for (unsigned int i = maxi(0, -ii); i < maxr; i++)
+          for (unsigned int j = maxi(0, -jj); j < maxc; j++)
           {
             ij = (cols * i) + j;
             l = erosion[ij];
-            if (l != classes) {
+            if (l != (unsigned int)(classes))
+			{
               i1j1 = (cols * (i+ii)) + (j+jj);
               curve[i1j1] = l;
             }

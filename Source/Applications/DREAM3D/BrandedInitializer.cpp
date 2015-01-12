@@ -116,6 +116,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   this->Splash->show();
 
   QDir dir(QApplication::applicationDirPath());
+  
 #if defined (Q_OS_MAC)
   dir.cdUp();
   dir.cd("Plugins");
@@ -139,7 +140,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 
   // Create main window.
   this->MainWindow = new DREAM3D_UI();
-  this->MainWindow->setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
+  this->MainWindow->setWindowTitle("[*] DREAM3D Version " + DREAM3DLib::Version::Package());
   this->MainWindow->setLoadedPlugins(plugins);
 
   // give GUI components time to update before the mainwindow is shown
