@@ -136,6 +136,13 @@ void ExtractComponentAsArray::dataCheck()
         notifyErrorMessage(getHumanLabel(), "New array name must be set.", getErrorCondition());
         return;
       }
+      if(m_CompNumber >= inputData->getNumberOfComponents())
+      {
+        setErrorCondition(-11003);
+        QString ss = QObject::tr("Component to extract is larger than the number of components for array selected: '%1'").arg(m_SelectedArrayPath.getDataArrayName());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
       QVector<size_t> dims(1, 1);
       IDataArray::Pointer newData = inputData->createNewArray(inputData->getNumberOfTuples(), dims, m_NewArrayArrayName, !getInPreflight());
       getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName())->getAttributeMatrix(m_SelectedArrayPath.getAttributeMatrixName())->addAttributeArray(m_NewArrayArrayName, newData);

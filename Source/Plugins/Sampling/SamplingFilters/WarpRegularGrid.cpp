@@ -104,9 +104,9 @@ void WarpRegularGrid::setupFilterParameters()
     parameter->setPropertyName("PolyOrder");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     QVector<QString> choices;
+    choices.push_back("2nd");
     choices.push_back("3rd");
     choices.push_back("4th");
-    choices.push_back("5th");
     parameter->setChoices(choices);
     QStringList linkedProps;
     linkedProps << "SecondOrderACoeff" << "ThirdOrderACoeff" << "FourthOrderACoeff";
