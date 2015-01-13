@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ConvertArrayTo8BitImage_H_
-#define _ConvertArrayTo8BitImage_H_
+#ifndef _ExtractComponentAsArray_H_
+#define _ExtractComponentAsArray_H_
 
 #include <QtCore/QString>
 #include <set>
@@ -50,21 +50,21 @@
 
 #include "ImageProcessing/ImageProcessingConstants.h"
 /**
- * @class ConvertArrayTo8BitImage ConvertArrayTo8BitImage.h /FilterCategoryFilters/ConvertArrayTo8BitImage.h
+ * @class ExtractComponentAsArray ExtractComponentAsArray.h /FilterCategoryFilters/ExtractComponentAsArray.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class ConvertArrayTo8BitImage : public AbstractFilter
+class ExtractComponentAsArray : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ConvertArrayTo8BitImage)
-    DREAM3D_STATIC_NEW_MACRO(ConvertArrayTo8BitImage)
-    DREAM3D_TYPE_MACRO_SUPER(ConvertArrayTo8BitImage, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ExtractComponentAsArray)
+    DREAM3D_STATIC_NEW_MACRO(ExtractComponentAsArray)
+    DREAM3D_TYPE_MACRO_SUPER(ExtractComponentAsArray, AbstractFilter)
 
-    virtual ~ConvertArrayTo8BitImage();
+    virtual ~ExtractComponentAsArray();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
     Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
@@ -124,7 +124,7 @@ class ConvertArrayTo8BitImage : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ConvertArrayTo8BitImage();
+    ExtractComponentAsArray();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -139,10 +139,10 @@ class ConvertArrayTo8BitImage : public AbstractFilter
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, NewArray)
 
-    ConvertArrayTo8BitImage(const ConvertArrayTo8BitImage&); // Copy Constructor Not Implemented
-    void operator=(const ConvertArrayTo8BitImage&); // Operator '=' Not Implemented
+    ExtractComponentAsArray(const ExtractComponentAsArray&); // Copy Constructor Not Implemented
+    void operator=(const ExtractComponentAsArray&); // Operator '=' Not Implemented
 };
 
-#endif /* ConvertArrayTo8BitImage_H_ */
+#endif /* ExtractComponentAsArray_H_ */
 
 

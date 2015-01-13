@@ -35,14 +35,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ConvertArrayTo8BitImage.h"
+#include "ExtractComponentAsArray.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertArrayTo8BitImage::ConvertArrayTo8BitImage() :
+ExtractComponentAsArray::ExtractComponentAsArray() :
   AbstractFilter(),
   m_SelectedArrayPath("", "", ""),
   m_NewArrayArrayName(""),
@@ -54,14 +54,14 @@ ConvertArrayTo8BitImage::ConvertArrayTo8BitImage() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertArrayTo8BitImage::~ConvertArrayTo8BitImage()
+ExtractComponentAsArray::~ExtractComponentAsArray()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertArrayTo8BitImage::setupFilterParameters()
+void ExtractComponentAsArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Array To Convert", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
@@ -74,7 +74,7 @@ void ConvertArrayTo8BitImage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertArrayTo8BitImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ExtractComponentAsArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setNewArrayArrayName(reader->readString("NewArrayArrayName", getNewArrayArrayName() ) );
@@ -85,7 +85,7 @@ void ConvertArrayTo8BitImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ConvertArrayTo8BitImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ExtractComponentAsArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NewArrayArrayName)
@@ -97,7 +97,7 @@ int ConvertArrayTo8BitImage::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertArrayTo8BitImage::dataCheck()
+void ExtractComponentAsArray::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
@@ -131,7 +131,7 @@ void ConvertArrayTo8BitImage::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertArrayTo8BitImage::preflight()
+void ExtractComponentAsArray::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -180,7 +180,7 @@ void scaleArray(IDataArray::Pointer inputData, uint8_t* newArray)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertArrayTo8BitImage::execute()
+void ExtractComponentAsArray::execute()
 {
   setErrorCondition(0);
   dataCheck();
@@ -245,9 +245,9 @@ void ConvertArrayTo8BitImage::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ConvertArrayTo8BitImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ExtractComponentAsArray::newFilterInstance(bool copyFilterParameters)
 {
-  ConvertArrayTo8BitImage::Pointer filter = ConvertArrayTo8BitImage::New();
+  ExtractComponentAsArray::Pointer filter = ExtractComponentAsArray::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -258,27 +258,27 @@ AbstractFilter::Pointer ConvertArrayTo8BitImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertArrayTo8BitImage::getCompiledLibraryName()
+const QString ExtractComponentAsArray::getCompiledLibraryName()
 { return ImageProcessing::ImageProcessingBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertArrayTo8BitImage::getGroupName()
+const QString ExtractComponentAsArray::getGroupName()
 { return "ImageProcessing"; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertArrayTo8BitImage::getSubGroupName()
+const QString ExtractComponentAsArray::getSubGroupName()
 { return "Misc"; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertArrayTo8BitImage::getHumanLabel()
+const QString ExtractComponentAsArray::getHumanLabel()
 { return "Convert Array To 8 Bit Image"; }
 
