@@ -1,4 +1,4 @@
-Find Feature Average C-Axes {#findavgcaxes}
+Correlate Values with Vector Direction {#correlatevalueswithvectordirection}
 ======
 
 ## Group (Subgroup) ##
