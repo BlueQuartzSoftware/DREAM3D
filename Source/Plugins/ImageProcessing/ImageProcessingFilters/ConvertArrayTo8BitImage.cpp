@@ -119,6 +119,13 @@ void ConvertArrayTo8BitImage::dataCheck()
     }
     else
     {
+      if(inputData->getNumberOfComponents() > 1)
+      {
+        QString ss = QObject::tr("Data array '%1' cannot have more than 1 component").arg(m_SelectedArrayPath.getDataArrayName());
+        setErrorCondition(-11002);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
       QVector<size_t> dims(1, 1);
       tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getNewArrayArrayName() );
       m_NewArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

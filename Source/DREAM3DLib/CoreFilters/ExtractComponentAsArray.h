@@ -46,9 +46,6 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-
-#include "ImageProcessing/ImageProcessingConstants.h"
 /**
  * @class ExtractComponentAsArray ExtractComponentAsArray.h /FilterCategoryFilters/ExtractComponentAsArray.h
  * @brief
@@ -68,6 +65,9 @@ class ExtractComponentAsArray : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
     Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(int, CompNumber)
+    Q_PROPERTY(int CompNumber READ getCompNumber WRITE setCompNumber)
 
     DREAM3D_FILTER_PARAMETER(QString, NewArrayArrayName)
     Q_PROPERTY(QString NewArrayArrayName READ getNewArrayArrayName WRITE setNewArrayArrayName)
