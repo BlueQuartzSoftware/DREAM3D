@@ -15,6 +15,7 @@ START_FILTER_GROUP(${ImageProcessing_BINARY_DIR} "${_filterGroupName}" "ImagePro
 set(_PublicFilters
   #AlignSectionsPhaseCorrelation
   AutoThreshold
+  ConvertArrayTo8BitImage
   DiscreteGaussianBlur
   GaussianBlur
   HoughCircles
