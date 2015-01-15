@@ -147,7 +147,7 @@ void NearestPointFuseRegularGrids::execute()
   VolumeDataContainer* sampleDC = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSamplingCellAttributeMatrixPath().getDataContainerName());
 
   AttributeMatrix::Pointer refAttrMat = refDC->getAttributeMatrix(m_ReferenceCellAttributeMatrixPath.getAttributeMatrixName());
-  AttributeMatrix::Pointer sampleAttrMat = sampleDC->getAttributeMatrix(m_ReferenceCellAttributeMatrixPath.getAttributeMatrixName());
+  AttributeMatrix::Pointer sampleAttrMat = sampleDC->getAttributeMatrix(m_SamplingCellAttributeMatrixPath.getAttributeMatrixName());
 
   //get dimensions and resolutions of two grids
   size_t refDims[3];

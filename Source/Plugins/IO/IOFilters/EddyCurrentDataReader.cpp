@@ -350,16 +350,16 @@ int EddyCurrentDataReader::readFile(QFile &reader)
   GenericDataParser::Pointer parser;
 
   float x, y;
-  float xMin = 100000000000.0;
-  float yMin = 100000000000.0;
-  float xMax = -100000000000.0;
-  float yMax = -100000000000.0;
-  float xStep = 0.0;
-  float yStep = 0.0;
+  float xMin = 100000000000.0f;
+  float yMin = 100000000000.0f;
+  float xMax = -100000000000.0f;
+  float yMax = -100000000000.0f;
+  float xStep = 0.0f;
+  float yStep = 0.0f;
   size_t xDim = 0;
   size_t yDim = 0;
-  float lastXcoord = -1000000000000.0;
-  float lastYcoord = -1000000000000.0;
+  float lastXcoord = -1000000000000.0f;
+  float lastYcoord = -1000000000000.0f;
 
   while(parserIter.hasNext())
   {
