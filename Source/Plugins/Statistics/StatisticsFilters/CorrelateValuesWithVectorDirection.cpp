@@ -56,7 +56,7 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   m_CorrelatedDataArrayPath("", "", "")
 {
 
-  setupFilterParameters();  
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -579,7 +579,7 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
       int index = y * xpoints + x;
       sqCoord[0] = float(x*xres) - (float(xpoints*xres) / 2.0) + float(xres/2.0);
       sqCoord[1] = float(y*yres) - (float(ypoints*yres) / 2.0) + float(yres/2.0);
-      
+
       determineXYZCoords(sqCoord, xyz);
 
       zbin = int((asinf(xyz[2])*180.0/DREAM3D::Constants::k_Pi)/5.0);
@@ -632,4 +632,30 @@ AbstractFilter::Pointer CorrelateValuesWithVectorDirection::newFilterInstance(bo
     copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CorrelateValuesWithVectorDirection::writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
+{
+  int err = 0;
+  fprintf(f, "%s %lld %s\n", axis, (long long int)(npoints), type);
+  float* data = new float[npoints];
+  float d;
+  for (int idx = 0; idx < npoints; ++idx)
+  {
+    d = idx * step + min;
+    DREAM3D::Endian::FromSystemToBig::convert(d);
+    data[idx] = d;
+  }
+  size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
+  delete[] data;
+  if (totalWritten != static_cast<size_t>(npoints) )
+  {
+    qDebug() << "Error Writing Binary VTK Data into file " ;
+    fclose(f);
+    return -1;
+  }
+  return err;
 }

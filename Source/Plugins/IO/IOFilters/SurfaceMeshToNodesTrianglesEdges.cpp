@@ -339,7 +339,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     <<< <<< <<< < #error FIX THIS CODE BELOW. WE PROBABLY NEED TO GENERATE THE EDGE INFORMATION IF NEEDED
 #endif
 
-    fprintf(triFile, "%10lld    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, m_SurfaceMeshFaceLabels[j * 2], m_SurfaceMeshFaceLabels[j * 2 + 1]);
+    fprintf(triFile, "%10lld    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", (long long int)(j), n1, n2, n3, e1, e2, e3, m_SurfaceMeshFaceLabels[j * 2], m_SurfaceMeshFaceLabels[j * 2 + 1]);
   }
 
   fclose(triFile);
