@@ -130,19 +130,19 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(XMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(YMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(XMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(YMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
+      DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -198,8 +198,8 @@ void CropVolume::dataCheck()
     destCellDataContainer->setResolution(rx, ry, rz);
     destCellDataContainer->setDimensions(dx, dy, dz);
 
-      destCellAttrMat = srcCellAttrMat->deepCopy();
-      destCellDataContainer->addAttributeMatrix(destCellAttrMat->getName(), destCellAttrMat);
+    destCellAttrMat = srcCellAttrMat->deepCopy();
+    destCellDataContainer->addAttributeMatrix(destCellAttrMat->getName(), destCellAttrMat);
   }
   else
   {
@@ -256,24 +256,24 @@ void CropVolume::dataCheck()
 
   if (getXMax() > (static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1))
   {
-      QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -5556);
-      setErrorCondition(-5556);
-      return;
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5556);
+    setErrorCondition(-5556);
+    return;
   }
   if (getYMax() > (static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1))
   {
-      QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -5557);
-      setErrorCondition(-5557);
-      return;
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5557);
+    setErrorCondition(-5557);
+    return;
   }
   if (getZMax() > (static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1))
   {
-      QString ss = QObject::tr("The Z Max you entered of %1 is greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -5558);
-      setErrorCondition(-5558);
-      return;
+    QString ss = QObject::tr("The Z Max you entered of %1 is greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5558);
+    setErrorCondition(-5558);
+    return;
   }
 
   QVector<size_t> tDims(3, 0);
@@ -299,20 +299,20 @@ void CropVolume::dataCheck()
 
   if(m_RenumberFeatures == true)
   {
-      QVector<size_t> dims(1, 1);
-      m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      {
-        m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-      } /* Now assign the raw pointer to data from the DataArray<T> object */
+    QVector<size_t> dims(1, 1);
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    {
+      m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-      AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-      if(getErrorCondition() < 0)
-      {
-        return;
-      }
-      QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
-      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
+    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
 }
 
@@ -467,6 +467,8 @@ void CropVolume::execute()
   if (m_RenumberFeatures == true)
   {
     totalPoints = destCellDataContainer->getTotalPoints();
+
+    // This just sanity checks to make sure there were existing features before the cropping
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
     QVector<bool> activeObjects(totalFeatures, false);
@@ -474,16 +476,25 @@ void CropVolume::execute()
     {
       setErrorCondition(-600);
       notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", getErrorCondition());
-      notifyStatusMessage(getHumanLabel(), "Completed");
       return;
     }
 
-    QVector<size_t> cDims(1, 1);
-    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+   // QVector<size_t> cDims(1, 1);
+    DataArrayPath dap = getFeatureIdsArrayPath();
+    if(getSaveAsNewDataContainer())
+    {
+      dap.setDataContainerName(getNewDataContainerName());
+    }
+    m_FeatureIdsPtr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(dap.getDataArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() < 0)
+    else
     {
+      setErrorCondition(-601);
+      QString ss = QObject::tr("The Feature Ids array with name '%1' was not found in the destination DataContainer. The expected path was '%2'")
+                                .arg(dap.getDataArrayName()).arg(dap.serialize("/"));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
