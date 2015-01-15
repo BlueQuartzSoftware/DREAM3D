@@ -1,1 +1,6 @@
-copy  @UPLOAD_FILE_NAME@ \\THOR\DREAM3D_Public_Builds\@UPLOAD_FILE_NAME@
+@rem Get the YYYY-MM-DD so we can copy the file to the correct path
+today=`date +%F`
+@rem make sure the directory is created
+mkdir \\THOR\DREAM3D_Public_Builds\%today%
+@rem Copy the executable to the webserver
+copy  @UPLOAD_FILE_NAME@ \\THOR\DREAM3D_Public_Builds\%today%\@UPLOAD_FILE_NAME@

@@ -238,7 +238,7 @@ void WarpRegularGrid::execute()
 
         index_old = (plane * dims[0] * dims[1]) + (row * dims[0]) + col;
         newindicies[index] = index_old;
-        if(col > 0 && col < dims[0] && row > 0 && row < dims[1]) goodPoint[index] == true;
+        if(col > 0 && col < dims[0] && row > 0 && row < dims[1]) goodPoint[index] = true;
         else goodPoint[index] = false;
       }
     }
