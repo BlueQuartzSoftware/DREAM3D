@@ -12,9 +12,8 @@
 
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
+  message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
 endif()
-
-message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
 
 project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)

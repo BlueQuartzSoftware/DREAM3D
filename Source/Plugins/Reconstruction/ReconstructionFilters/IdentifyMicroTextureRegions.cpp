@@ -507,11 +507,11 @@ void IdentifyMicroTextureRegions::execute()
   size_t numPatchFeatures = m_PatchActivePtr.lock()->getNumberOfTuples();
   QVector<bool> activeObjects(numPatchFeatures, true);
   std::vector<size_t> counters(numPatchFeatures, 0);
-  for(int64_t iter = 0; iter < totalPatches; ++iter)
+  for(size_t iter = 0; iter < totalPatches; ++iter)
   {
     counters[m_PatchIds[iter]]++;
   }
-  for(int64_t iter = 0; iter < numPatchFeatures; ++iter)
+  for(size_t iter = 0; iter < numPatchFeatures; ++iter)
   {
     if(counters[iter] < 4) { activeObjects[iter] = false; }
   }
