@@ -33,7 +33,7 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "Matrix3x3Widget.h"
+#include "FourthOrderPolynomialWidget.h"
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Matrix3x3Widget::Matrix3x3Widget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+FourthOrderPolynomialWidget::FourthOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
@@ -55,7 +55,7 @@ Matrix3x3Widget::Matrix3x3Widget(FilterParameter* parameter, AbstractFilter* fil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Matrix3x3Widget::~Matrix3x3Widget()
+FourthOrderPolynomialWidget::~FourthOrderPolynomialWidget()
 {
 }
 
@@ -63,7 +63,7 @@ Matrix3x3Widget::~Matrix3x3Widget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix3x3Widget::setupGui()
+void FourthOrderPolynomialWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
@@ -78,46 +78,68 @@ void Matrix3x3Widget::setupGui()
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 
-  connect(v11, SIGNAL(textChanged(const QString&)),
+  connect(c40, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v12, SIGNAL(textChanged(const QString&)),
+  connect(c04, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v13, SIGNAL(textChanged(const QString&)),
+  connect(c31, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v21, SIGNAL(textChanged(const QString&)),
+  connect(c13, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v22, SIGNAL(textChanged(const QString&)),
+  connect(c22, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v23, SIGNAL(textChanged(const QString&)),
+  connect(c30, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v31, SIGNAL(textChanged(const QString&)),
+  connect(c03, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v32, SIGNAL(textChanged(const QString&)),
+  connect(c21, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v33, SIGNAL(textChanged(const QString&)),
+  connect(c12, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&) ) );
+  connect(c20, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&) ) );
+  connect(c02, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&) ) );
+  connect(c11, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&) ) );
+  connect(c10, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&) ) );
+  connect(c01, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&) ) );
+  connect(c00, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
 
 
-  QDoubleValidator* v11Val = new QDoubleValidator(v11);
-  v11->setValidator(v11Val);
-  QDoubleValidator* v12Val = new QDoubleValidator(v12);
-  v12->setValidator(v12Val);
-  QDoubleValidator* v13Val = new QDoubleValidator(v13);
-  v13->setValidator(v13Val);
-
-  QDoubleValidator* v21Val = new QDoubleValidator(v21);
-  v21->setValidator(v21Val);
-  QDoubleValidator* v22Val = new QDoubleValidator(v22);
-  v22->setValidator(v22Val);
-  QDoubleValidator* v23Val = new QDoubleValidator(v23);
-  v23->setValidator(v23Val);
-
-  QDoubleValidator* v31Val = new QDoubleValidator(v31);
-  v31->setValidator(v31Val);
-  QDoubleValidator* v32Val = new QDoubleValidator(v32);
-  v32->setValidator(v32Val);
-  QDoubleValidator* v33Val = new QDoubleValidator(v33);
-  v33->setValidator(v33Val);
+  QDoubleValidator* c40Val = new QDoubleValidator(c40);
+  c40->setValidator(c40Val);
+  QDoubleValidator* c04Val = new QDoubleValidator(c04);
+  c04->setValidator(c04Val);
+  QDoubleValidator* c31Val = new QDoubleValidator(c31);
+  c31->setValidator(c31Val);
+  QDoubleValidator* c13Val = new QDoubleValidator(c13);
+  c13->setValidator(c13Val);
+  QDoubleValidator* c22Val = new QDoubleValidator(c22);
+  c22->setValidator(c22Val);
+  QDoubleValidator* c30Val = new QDoubleValidator(c30);
+  c30->setValidator(c30Val);
+  QDoubleValidator* c03Val = new QDoubleValidator(c03);
+  c03->setValidator(c03Val);
+  QDoubleValidator* c21Val = new QDoubleValidator(c21);
+  c21->setValidator(c21Val);
+  QDoubleValidator* c12Val = new QDoubleValidator(c12);
+  c12->setValidator(c12Val);
+  QDoubleValidator* c20Val = new QDoubleValidator(c20);
+  c20->setValidator(c20Val);
+  QDoubleValidator* c02Val = new QDoubleValidator(c02);
+  c02->setValidator(c02Val);
+  QDoubleValidator* c11Val = new QDoubleValidator(c11);
+  c11->setValidator(c11Val);
+  QDoubleValidator* c10Val = new QDoubleValidator(c10);
+  c10->setValidator(c10Val);
+  QDoubleValidator* c01Val = new QDoubleValidator(c01);
+  c01->setValidator(c01Val);
+  QDoubleValidator* c00Val = new QDoubleValidator(c00);
+  c00->setValidator(c00Val);
 
   if (getFilterParameter() != NULL)
   {
@@ -131,18 +153,22 @@ void Matrix3x3Widget::setupGui()
       label->setText(getFilterParameter()->getHumanLabel() );
     }
 
-    Float3x3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float3x3_t>();
-    v11->setText( QString::number(data.v11)  );
-    v12->setText( QString::number(data.v12)  );
-    v13->setText( QString::number(data.v13)  );
-
-    v21->setText( QString::number(data.v21) );
-    v22->setText( QString::number(data.v22) );
-    v23->setText( QString::number(data.v23) );
-
-    v31->setText( QString::number(data.v31) );
-    v32->setText( QString::number(data.v32) );
-    v33->setText( QString::number(data.v33) );
+    Float4thOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float4thOrderPoly_t>();
+    c40->setText( QString::number(data.c40)  );
+    c04->setText( QString::number(data.c04)  );
+    c31->setText( QString::number(data.c31)  );
+    c13->setText( QString::number(data.c13) );
+    c22->setText( QString::number(data.c22)  );
+    c30->setText( QString::number(data.c30)  );
+    c03->setText( QString::number(data.c03)  );
+    c21->setText( QString::number(data.c21)  );
+    c12->setText( QString::number(data.c12) );
+    c20->setText( QString::number(data.c20)  );
+    c02->setText( QString::number(data.c02)  );
+    c11->setText( QString::number(data.c11)  );
+    c10->setText( QString::number(data.c10) );
+    c01->setText( QString::number(data.c01) );
+    c00->setText( QString::number(data.c00) );
   }
 
 }
@@ -150,7 +176,7 @@ void Matrix3x3Widget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix3x3Widget::widgetChanged(const QString& text)
+void FourthOrderPolynomialWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }
@@ -158,21 +184,25 @@ void Matrix3x3Widget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix3x3Widget::filterNeedsInputParameters(AbstractFilter* filter)
+void FourthOrderPolynomialWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
-  Float3x3_t data;
-  data.v11 = v11->text().toDouble(&ok);
-  data.v12 = v12->text().toDouble(&ok);
-  data.v13 = v13->text().toDouble(&ok);
-
-  data.v21 = v21->text().toDouble(&ok);
-  data.v22 = v22->text().toDouble(&ok);
-  data.v23 = v23->text().toDouble(&ok);
-
-  data.v31 = v31->text().toDouble(&ok);
-  data.v32 = v32->text().toDouble(&ok);
-  data.v33 = v33->text().toDouble(&ok);
+  Float4thOrderPoly_t data;
+  data.c40 = c40->text().toDouble(&ok);
+  data.c04 = c04->text().toDouble(&ok);
+  data.c31 = c31->text().toDouble(&ok);
+  data.c13 = c13->text().toDouble(&ok);
+  data.c22 = c22->text().toDouble(&ok);
+  data.c30 = c30->text().toDouble(&ok);
+  data.c03 = c03->text().toDouble(&ok);
+  data.c21 = c21->text().toDouble(&ok);
+  data.c12 = c12->text().toDouble(&ok);
+  data.c20 = c20->text().toDouble(&ok);
+  data.c02 = c02->text().toDouble(&ok);
+  data.c11 = c11->text().toDouble(&ok);
+  data.c10 = c10->text().toDouble(&ok);
+  data.c01 = c01->text().toDouble(&ok);
+  data.c00 = c00->text().toDouble(&ok);
 
   QVariant v;
   v.setValue(data);
@@ -187,7 +217,7 @@ void Matrix3x3Widget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix3x3Widget::beforePreflight()
+void FourthOrderPolynomialWidget::beforePreflight()
 {
 
 }
@@ -195,7 +225,7 @@ void Matrix3x3Widget::beforePreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix3x3Widget::afterPreflight()
+void FourthOrderPolynomialWidget::afterPreflight()
 {
 
 }

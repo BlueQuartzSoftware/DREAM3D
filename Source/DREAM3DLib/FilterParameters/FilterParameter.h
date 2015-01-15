@@ -75,25 +75,17 @@ typedef struct
 } FloatVec21_t;
 typedef struct
 {
-  float v11; float v12; float v13;
-  float v21; float v22; float v23;
-  float v31; float v32; float v33;
-} Float3x3_t;
+  float c20; float c02; float c11; float c10; float c01; float c00;
+} Float2ndOrderPoly_t;
 typedef struct
 {
-  float v11; float v12; float v13; float v14;
-  float v21; float v22; float v23; float v24;
-  float v31; float v32; float v33; float v34;
-  float v41; float v42; float v43; float v44;
-} Float4x4_t;
+  float c30; float c03; float c21; float c12; float c20; float c02; float c11; float c10; float c01; float c00;
+} Float3rdOrderPoly_t;
 typedef struct
 {
-  float v11; float v12; float v13; float v14; float v15;
-  float v21; float v22; float v23; float v24; float v25;
-  float v31; float v32; float v33; float v34; float v35;
-  float v41; float v42; float v43; float v44; float v45;
-  float v51; float v52; float v53; float v54; float v55;
-} Float5x5_t;
+  float c40; float c04; float c31; float c13; float c22; float c30; float c03; float c21; float c12; float c20;
+  float c02; float c11; float c10; float c01; float c00;
+} Float4thOrderPoly_t;
 typedef struct
 {
   qint32 PaddingDigits;
@@ -114,9 +106,9 @@ Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
 Q_DECLARE_METATYPE(FloatVec21_t)
-Q_DECLARE_METATYPE(Float3x3_t)
-Q_DECLARE_METATYPE(Float4x4_t)
-Q_DECLARE_METATYPE(Float5x5_t)
+Q_DECLARE_METATYPE(Float2ndOrderPoly_t)
+Q_DECLARE_METATYPE(Float3rdOrderPoly_t)
+Q_DECLARE_METATYPE(Float4thOrderPoly_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
 Q_DECLARE_METATYPE(FileListInfo_t)
 
@@ -137,9 +129,9 @@ namespace FilterParameterWidgetType
   const QString IntVec3Widget("IntVec3Widget");
   const QString FloatVec3Widget("FloatVec3Widget");
   const QString FloatVec4Widget("FloatVec4Widget");
-  const QString Matrix3x3Widget("Matrix3x3Widget");
-  const QString Matrix4x4Widget("Matrix4x4Widget");
-  const QString Matrix5x5Widget("Matrix5x5Widget");
+  const QString SecondOrderPolynomialWidget("SecondOrderPolynomialWidget");
+  const QString ThirdOrderPolynomialWidget("ThirdOrderPolynomialWidget");
+  const QString FourthOrderPolynomialWidget("FourthOrderPolynomialWidget");
   const QString Symmetric6x6Widget("Symmetric6x6Widget");
   const QString AxisAngleWidget("AxisAngleWidget");
   const QString UnknownWidget("UnknownWidget");
@@ -219,19 +211,19 @@ class DREAM3DLib_EXPORT FilterParameter
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const Float3x3_t& defaultValue,
+                       const QString& widgetType, const Float2ndOrderPoly_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const Float4x4_t& defaultValue,
+                       const QString& widgetType, const Float3rdOrderPoly_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const Float5x5_t& defaultValue,
+                       const QString& widgetType, const Float4thOrderPoly_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);

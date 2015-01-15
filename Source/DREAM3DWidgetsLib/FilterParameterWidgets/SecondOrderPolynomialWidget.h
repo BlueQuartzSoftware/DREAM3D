@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _Matrix3x3Widget_H_
-#define _Matrix3x3Widget_H_
+#ifndef _SecondOrderPolynomialWidget_H_
+#define _SecondOrderPolynomialWidget_H_
 
 
 #include <QtCore/QObject>
@@ -50,7 +50,7 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 
-#include "DREAM3DWidgetsLib/ui_Matrix3x3Widget.h"
+#include "DREAM3DWidgetsLib/ui_SecondOrderPolynomialWidget.h"
 
 
 /**
@@ -58,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT Matrix3x3Widget : public FilterParameterWidget, private Ui::Matrix3x3Widget
+class DREAM3DWidgetsLib_EXPORT SecondOrderPolynomialWidget : public FilterParameterWidget, private Ui::SecondOrderPolynomialWidget
 {
     Q_OBJECT
 
@@ -69,9 +69,9 @@ class DREAM3DWidgetsLib_EXPORT Matrix3x3Widget : public FilterParameterWidget, p
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    Matrix3x3Widget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    SecondOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~Matrix3x3Widget();
+    virtual ~SecondOrderPolynomialWidget();
 
     /**
     * @brief This method does additional GUI widget connections
@@ -95,11 +95,11 @@ class DREAM3DWidgetsLib_EXPORT Matrix3x3Widget : public FilterParameterWidget, p
     //helper functions for complex inter dependancies
     // void vbar(QLineEdit* obj);
 
-    Matrix3x3Widget(const Matrix3x3Widget&); // Copy Constructor Not Implemented
-    void operator=(const Matrix3x3Widget&); // Operator '=' Not Implemented
+    SecondOrderPolynomialWidget(const SecondOrderPolynomialWidget&); // Copy Constructor Not Implemented
+    void operator=(const SecondOrderPolynomialWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _Matrix3x3Widget_H_ */
+#endif /* _SecondOrderPolynomialWidget_H_ */
 
 

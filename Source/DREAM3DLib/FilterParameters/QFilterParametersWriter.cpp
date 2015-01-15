@@ -572,32 +572,25 @@ int QFilterParametersWriter::writeValue(const QString name, FloatVec21_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, Float3x3_t v)
+int QFilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
 
   m_Prefs->setArrayIndex(0);
-  m_Prefs->setValue("v11", static_cast<double>(v.v11));
+  m_Prefs->setValue("c20", static_cast<double>(v.c20));
   m_Prefs->setArrayIndex(1);
-  m_Prefs->setValue("v12", static_cast<double>(v.v12));
+  m_Prefs->setValue("c02", static_cast<double>(v.c02));
   m_Prefs->setArrayIndex(2);
-  m_Prefs->setValue("v13", static_cast<double>(v.v13));
+  m_Prefs->setValue("c11", static_cast<double>(v.c11));
 
   m_Prefs->setArrayIndex(3);
-  m_Prefs->setValue("v21", static_cast<double>(v.v21));
+  m_Prefs->setValue("c10", static_cast<double>(v.c10));
   m_Prefs->setArrayIndex(4);
-  m_Prefs->setValue("v22", static_cast<double>(v.v22));
+  m_Prefs->setValue("c01", static_cast<double>(v.c01));
   m_Prefs->setArrayIndex(5);
-  m_Prefs->setValue("v23", static_cast<double>(v.v23));
-
-  m_Prefs->setArrayIndex(6);
-  m_Prefs->setValue("v31", static_cast<double>(v.v31));
-  m_Prefs->setArrayIndex(7);
-  m_Prefs->setValue("v32", static_cast<double>(v.v32));
-  m_Prefs->setArrayIndex(8);
-  m_Prefs->setValue("v33", static_cast<double>(v.v33));
+  m_Prefs->setValue("c00", static_cast<double>(v.c00));
 
   m_Prefs->endArray();
   return err;
@@ -606,47 +599,32 @@ int QFilterParametersWriter::writeValue(const QString name, Float3x3_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, Float4x4_t v)
+int QFilterParametersWriter::writeValue(const QString name, Float3rdOrderPoly_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
 
   m_Prefs->setArrayIndex(0);
-  m_Prefs->setValue("v11", static_cast<double>(v.v11));
+  m_Prefs->setValue("c30", static_cast<double>(v.c30));
   m_Prefs->setArrayIndex(1);
-  m_Prefs->setValue("v12", static_cast<double>(v.v12));
+  m_Prefs->setValue("c03", static_cast<double>(v.c03));
   m_Prefs->setArrayIndex(2);
-  m_Prefs->setValue("v13", static_cast<double>(v.v13));
+  m_Prefs->setValue("c21", static_cast<double>(v.c21));
   m_Prefs->setArrayIndex(3);
-  m_Prefs->setValue("v14", static_cast<double>(v.v14));
-
+  m_Prefs->setValue("c12", static_cast<double>(v.c12));
   m_Prefs->setArrayIndex(4);
-  m_Prefs->setValue("v21", static_cast<double>(v.v21));
+  m_Prefs->setValue("c20", static_cast<double>(v.c20));
   m_Prefs->setArrayIndex(5);
-  m_Prefs->setValue("v22", static_cast<double>(v.v22));
+  m_Prefs->setValue("c02", static_cast<double>(v.c02));
   m_Prefs->setArrayIndex(6);
-  m_Prefs->setValue("v23", static_cast<double>(v.v23));
+  m_Prefs->setValue("c11", static_cast<double>(v.c11));
   m_Prefs->setArrayIndex(7);
-  m_Prefs->setValue("v24", static_cast<double>(v.v24));
-
+  m_Prefs->setValue("c10", static_cast<double>(v.c10));
   m_Prefs->setArrayIndex(8);
-  m_Prefs->setValue("v31", static_cast<double>(v.v31));
+  m_Prefs->setValue("c01", static_cast<double>(v.c01));
   m_Prefs->setArrayIndex(9);
-  m_Prefs->setValue("v32", static_cast<double>(v.v32));
-  m_Prefs->setArrayIndex(10);
-  m_Prefs->setValue("v33", static_cast<double>(v.v33));
-  m_Prefs->setArrayIndex(11);
-  m_Prefs->setValue("v34", static_cast<double>(v.v34));
-
-  m_Prefs->setArrayIndex(12);
-  m_Prefs->setValue("v41", static_cast<double>(v.v41));
-  m_Prefs->setArrayIndex(13);
-  m_Prefs->setValue("v42", static_cast<double>(v.v42));
-  m_Prefs->setArrayIndex(14);
-  m_Prefs->setValue("v43", static_cast<double>(v.v43));
-  m_Prefs->setArrayIndex(15);
-  m_Prefs->setValue("v44", static_cast<double>(v.v44));
+  m_Prefs->setValue("c00", static_cast<double>(v.c00));
 
   m_Prefs->endArray();
   return err;
@@ -655,66 +633,42 @@ int QFilterParametersWriter::writeValue(const QString name, Float4x4_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, Float5x5_t v)
+int QFilterParametersWriter::writeValue(const QString name, Float4thOrderPoly_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
 
   m_Prefs->setArrayIndex(0);
-  m_Prefs->setValue("v11", static_cast<double>(v.v11));
+  m_Prefs->setValue("c40", static_cast<double>(v.c40));
   m_Prefs->setArrayIndex(1);
-  m_Prefs->setValue("v12", static_cast<double>(v.v12));
+  m_Prefs->setValue("c04", static_cast<double>(v.c04));
   m_Prefs->setArrayIndex(2);
-  m_Prefs->setValue("v13", static_cast<double>(v.v13));
+  m_Prefs->setValue("c31", static_cast<double>(v.c31));
   m_Prefs->setArrayIndex(3);
-  m_Prefs->setValue("v14", static_cast<double>(v.v14));
+  m_Prefs->setValue("c13", static_cast<double>(v.c13));
   m_Prefs->setArrayIndex(4);
-  m_Prefs->setValue("v15", static_cast<double>(v.v15));
-
+  m_Prefs->setValue("c22", static_cast<double>(v.c22));
   m_Prefs->setArrayIndex(5);
-  m_Prefs->setValue("v21", static_cast<double>(v.v21));
+  m_Prefs->setValue("c30", static_cast<double>(v.c30));
   m_Prefs->setArrayIndex(6);
-  m_Prefs->setValue("v22", static_cast<double>(v.v22));
+  m_Prefs->setValue("c03", static_cast<double>(v.c03));
   m_Prefs->setArrayIndex(7);
-  m_Prefs->setValue("v23", static_cast<double>(v.v23));
+  m_Prefs->setValue("c21", static_cast<double>(v.c21));
   m_Prefs->setArrayIndex(8);
-  m_Prefs->setValue("v24", static_cast<double>(v.v24));
+  m_Prefs->setValue("c12", static_cast<double>(v.c12));
   m_Prefs->setArrayIndex(9);
-  m_Prefs->setValue("v25", static_cast<double>(v.v25));
-
+  m_Prefs->setValue("c20", static_cast<double>(v.c20));
   m_Prefs->setArrayIndex(10);
-  m_Prefs->setValue("v31", static_cast<double>(v.v31));
+  m_Prefs->setValue("c02", static_cast<double>(v.c02));
   m_Prefs->setArrayIndex(11);
-  m_Prefs->setValue("v32", static_cast<double>(v.v32));
+  m_Prefs->setValue("c11", static_cast<double>(v.c11));
   m_Prefs->setArrayIndex(12);
-  m_Prefs->setValue("v33", static_cast<double>(v.v33));
+  m_Prefs->setValue("c10", static_cast<double>(v.c10));
   m_Prefs->setArrayIndex(13);
-  m_Prefs->setValue("v34", static_cast<double>(v.v34));
+  m_Prefs->setValue("c01", static_cast<double>(v.c01));
   m_Prefs->setArrayIndex(14);
-  m_Prefs->setValue("v35", static_cast<double>(v.v35));
-
-  m_Prefs->setArrayIndex(15);
-  m_Prefs->setValue("v41", static_cast<double>(v.v41));
-  m_Prefs->setArrayIndex(16);
-  m_Prefs->setValue("v42", static_cast<double>(v.v42));
-  m_Prefs->setArrayIndex(17);
-  m_Prefs->setValue("v43", static_cast<double>(v.v43));
-  m_Prefs->setArrayIndex(18);
-  m_Prefs->setValue("v44", static_cast<double>(v.v44));
-  m_Prefs->setArrayIndex(19);
-  m_Prefs->setValue("v45", static_cast<double>(v.v45));
-
-  m_Prefs->setArrayIndex(20);
-  m_Prefs->setValue("v51", static_cast<double>(v.v51));
-  m_Prefs->setArrayIndex(21);
-  m_Prefs->setValue("v52", static_cast<double>(v.v52));
-  m_Prefs->setArrayIndex(22);
-  m_Prefs->setValue("v53", static_cast<double>(v.v53));
-  m_Prefs->setArrayIndex(23);
-  m_Prefs->setValue("v54", static_cast<double>(v.v54));
-  m_Prefs->setArrayIndex(24);
-  m_Prefs->setValue("v55", static_cast<double>(v.v55));
+  m_Prefs->setValue("c00", static_cast<double>(v.c00));
 
   m_Prefs->endArray();
   return err;

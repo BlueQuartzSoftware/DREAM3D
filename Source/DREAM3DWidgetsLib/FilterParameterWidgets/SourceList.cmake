@@ -35,9 +35,9 @@ set(DREAM3D_PARAMETER_WIDGETS
       VolumeDataContainerInfoWidget
       DataContainerReaderWidget
       DynamicChoiceWidget
-	  Matrix3x3Widget
-	  Matrix4x4Widget
-	  Matrix5x5Widget
+	  SecondOrderPolynomialWidget
+	  ThirdOrderPolynomialWidget
+	  FourthOrderPolynomialWidget
 	  Symmetric6x6Widget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget

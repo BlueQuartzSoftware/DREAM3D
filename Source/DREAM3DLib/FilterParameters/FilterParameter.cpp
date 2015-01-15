@@ -156,7 +156,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                              const QString& widgetType, const Float3x3_t& defaultValue,
+                                              const QString& widgetType, const Float2ndOrderPoly_t& defaultValue,
                                               bool advanced,
                                               const QString& units, int groupIndex)
 {
@@ -182,7 +182,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                              const QString& widgetType, const Float4x4_t& defaultValue,
+                                              const QString& widgetType, const Float3rdOrderPoly_t& defaultValue,
                                               bool advanced,
                                               const QString& units, int groupIndex)
 {
@@ -208,7 +208,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                              const QString& widgetType, const Float5x5_t& defaultValue,
+                                              const QString& widgetType, const Float4thOrderPoly_t& defaultValue,
                                               bool advanced,
                                               const QString& units, int groupIndex)
 {

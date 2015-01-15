@@ -33,7 +33,7 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "Matrix4x4Widget.h"
+#include "SecondOrderPolynomialWidget.h"
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Matrix4x4Widget::Matrix4x4Widget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+SecondOrderPolynomialWidget::SecondOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
@@ -55,7 +55,7 @@ Matrix4x4Widget::Matrix4x4Widget(FilterParameter* parameter, AbstractFilter* fil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Matrix4x4Widget::~Matrix4x4Widget()
+SecondOrderPolynomialWidget::~SecondOrderPolynomialWidget()
 {
 }
 
@@ -63,7 +63,7 @@ Matrix4x4Widget::~Matrix4x4Widget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix4x4Widget::setupGui()
+void SecondOrderPolynomialWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
@@ -78,75 +78,33 @@ void Matrix4x4Widget::setupGui()
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 
-  connect(v11, SIGNAL(textChanged(const QString&)),
+  connect(c20, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v12, SIGNAL(textChanged(const QString&)),
+  connect(c02, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v13, SIGNAL(textChanged(const QString&)),
+  connect(c11, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v14, SIGNAL(textChanged(const QString&)),
+  connect(c10, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v21, SIGNAL(textChanged(const QString&)),
+  connect(c01, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(v22, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v23, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v24, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v31, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v32, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v33, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v34, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v41, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v42, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v43, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(v44, SIGNAL(textChanged(const QString&)),
+  connect(c00, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
 
 
-  QDoubleValidator* v11Val = new QDoubleValidator(v11);
-  v11->setValidator(v11Val);
-  QDoubleValidator* v12Val = new QDoubleValidator(v12);
-  v12->setValidator(v12Val);
-  QDoubleValidator* v13Val = new QDoubleValidator(v13);
-  v13->setValidator(v13Val);
-  QDoubleValidator* v14Val = new QDoubleValidator(v14);
-  v14->setValidator(v14Val);
+  QDoubleValidator* c20Val = new QDoubleValidator(c20);
+  c20->setValidator(c20Val);
+  QDoubleValidator* c02Val = new QDoubleValidator(c02);
+  c02->setValidator(c02Val);
+  QDoubleValidator* c11Val = new QDoubleValidator(c11);
+  c11->setValidator(c11Val);
 
-  QDoubleValidator* v21Val = new QDoubleValidator(v21);
-  v21->setValidator(v21Val);
-  QDoubleValidator* v22Val = new QDoubleValidator(v22);
-  v22->setValidator(v22Val);
-  QDoubleValidator* v23Val = new QDoubleValidator(v23);
-  v23->setValidator(v23Val);
-  QDoubleValidator* v24Val = new QDoubleValidator(v24);
-  v24->setValidator(v24Val);
-
-  QDoubleValidator* v31Val = new QDoubleValidator(v31);
-  v31->setValidator(v31Val);
-  QDoubleValidator* v32Val = new QDoubleValidator(v32);
-  v32->setValidator(v32Val);
-  QDoubleValidator* v33Val = new QDoubleValidator(v33);
-  v33->setValidator(v33Val);
-  QDoubleValidator* v34Val = new QDoubleValidator(v34);
-  v34->setValidator(v34Val);
-
-  QDoubleValidator* v41Val = new QDoubleValidator(v41);
-  v41->setValidator(v41Val);
-  QDoubleValidator* v42Val = new QDoubleValidator(v42);
-  v42->setValidator(v42Val);
-  QDoubleValidator* v43Val = new QDoubleValidator(v43);
-  v43->setValidator(v43Val);
-  QDoubleValidator* v44Val = new QDoubleValidator(v44);
-  v44->setValidator(v44Val);
+  QDoubleValidator* c10Val = new QDoubleValidator(c10);
+  c10->setValidator(c10Val);
+  QDoubleValidator* c01Val = new QDoubleValidator(c01);
+  c01->setValidator(c01Val);
+  QDoubleValidator* c00Val = new QDoubleValidator(c00);
+  c00->setValidator(c00Val);
 
   if (getFilterParameter() != NULL)
   {
@@ -160,26 +118,14 @@ void Matrix4x4Widget::setupGui()
       label->setText(getFilterParameter()->getHumanLabel() );
     }
 
-    Float4x4_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float4x4_t>();
-    v11->setText( QString::number(data.v11)  );
-    v12->setText( QString::number(data.v12)  );
-    v13->setText( QString::number(data.v13)  );
-    v14->setText( QString::number(data.v14)  );
+    Float2ndOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float2ndOrderPoly_t>();
+    c20->setText( QString::number(data.c20)  );
+    c02->setText( QString::number(data.c02)  );
+    c11->setText( QString::number(data.c11)  );
 
-    v21->setText( QString::number(data.v21) );
-    v22->setText( QString::number(data.v22) );
-    v23->setText( QString::number(data.v23) );
-    v24->setText( QString::number(data.v24) );
-
-    v31->setText( QString::number(data.v31) );
-    v32->setText( QString::number(data.v32) );
-    v33->setText( QString::number(data.v33) );
-    v34->setText( QString::number(data.v34) );
-
-    v41->setText( QString::number(data.v41) );
-    v42->setText( QString::number(data.v42) );
-    v43->setText( QString::number(data.v43) );
-    v44->setText( QString::number(data.v44) );
+    c10->setText( QString::number(data.c10) );
+    c01->setText( QString::number(data.c01) );
+    c00->setText( QString::number(data.c00) );
   }
 
 }
@@ -187,7 +133,7 @@ void Matrix4x4Widget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix4x4Widget::widgetChanged(const QString& text)
+void SecondOrderPolynomialWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }
@@ -195,29 +141,17 @@ void Matrix4x4Widget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix4x4Widget::filterNeedsInputParameters(AbstractFilter* filter)
+void SecondOrderPolynomialWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
-  Float4x4_t data;
-  data.v11 = v11->text().toDouble(&ok);
-  data.v12 = v12->text().toDouble(&ok);
-  data.v13 = v13->text().toDouble(&ok);
-  data.v14 = v14->text().toDouble(&ok);
+  Float2ndOrderPoly_t data;
+  data.c20 = c20->text().toDouble(&ok);
+  data.c02 = c02->text().toDouble(&ok);
+  data.c11 = c11->text().toDouble(&ok);
 
-  data.v21 = v21->text().toDouble(&ok);
-  data.v22 = v22->text().toDouble(&ok);
-  data.v23 = v23->text().toDouble(&ok);
-  data.v24 = v24->text().toDouble(&ok);
-
-  data.v31 = v31->text().toDouble(&ok);
-  data.v32 = v32->text().toDouble(&ok);
-  data.v33 = v33->text().toDouble(&ok);
-  data.v34 = v34->text().toDouble(&ok);
-
-  data.v41 = v41->text().toDouble(&ok);
-  data.v42 = v42->text().toDouble(&ok);
-  data.v43 = v43->text().toDouble(&ok);
-  data.v44 = v44->text().toDouble(&ok);
+  data.c10 = c10->text().toDouble(&ok);
+  data.c01 = c01->text().toDouble(&ok);
+  data.c00 = c00->text().toDouble(&ok);
 
   QVariant v;
   v.setValue(data);
@@ -232,7 +166,7 @@ void Matrix4x4Widget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix4x4Widget::beforePreflight()
+void SecondOrderPolynomialWidget::beforePreflight()
 {
 
 }
@@ -240,7 +174,7 @@ void Matrix4x4Widget::beforePreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Matrix4x4Widget::afterPreflight()
+void SecondOrderPolynomialWidget::afterPreflight()
 {
 
 }

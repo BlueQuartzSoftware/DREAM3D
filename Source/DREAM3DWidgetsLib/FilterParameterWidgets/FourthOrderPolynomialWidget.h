@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _Matrix5x5Widget_H_
-#define _Matrix5x5Widget_H_
+#ifndef _FourthOrderPolynomialWidget_H_
+#define _FourthOrderPolynomialWidget_H_
 
 
 #include <QtCore/QObject>
@@ -50,7 +50,7 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 
-#include "DREAM3DWidgetsLib/ui_Matrix5x5Widget.h"
+#include "DREAM3DWidgetsLib/ui_FourthOrderPolynomialWidget.h"
 
 
 /**
@@ -58,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT Matrix5x5Widget : public FilterParameterWidget, private Ui::Matrix5x5Widget
+class DREAM3DWidgetsLib_EXPORT FourthOrderPolynomialWidget : public FilterParameterWidget, private Ui::FourthOrderPolynomialWidget
 {
     Q_OBJECT
 
@@ -69,9 +69,9 @@ class DREAM3DWidgetsLib_EXPORT Matrix5x5Widget : public FilterParameterWidget, p
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    Matrix5x5Widget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    FourthOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~Matrix5x5Widget();
+    virtual ~FourthOrderPolynomialWidget();
 
     /**
     * @brief This method does additional GUI widget connections
@@ -95,11 +95,11 @@ class DREAM3DWidgetsLib_EXPORT Matrix5x5Widget : public FilterParameterWidget, p
     //helper functions for complex inter dependancies
     // void vbar(QLineEdit* obj);
 
-    Matrix5x5Widget(const Matrix5x5Widget&); // Copy Constructor Not Implemented
-    void operator=(const Matrix5x5Widget&); // Operator '=' Not Implemented
+    FourthOrderPolynomialWidget(const FourthOrderPolynomialWidget&); // Copy Constructor Not Implemented
+    void operator=(const FourthOrderPolynomialWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _Matrix5x5Widget_H_ */
+#endif /* _FourthOrderPolynomialWidget_H_ */
 
 

@@ -54,32 +54,22 @@ WarpRegularGrid::WarpRegularGrid() :
   m_PolyOrder(0),
   m_SaveAsNewDataContainer(false)
 {
-  m_SecondOrderACoeff.v11 = 1.0f, m_SecondOrderACoeff.v12 = 0.0f, m_SecondOrderACoeff.v13 = 0.0f;
-  m_SecondOrderACoeff.v21 = 0.0f, m_SecondOrderACoeff.v22 = 1.0f, m_SecondOrderACoeff.v23 = 0.0f;
-  m_SecondOrderACoeff.v31 = 0.0f, m_SecondOrderACoeff.v32 = 0.0f, m_SecondOrderACoeff.v33 = 1.0f;
-  m_SecondOrderBCoeff.v11 = 1.0f, m_SecondOrderBCoeff.v12 = 0.0f, m_SecondOrderBCoeff.v13 = 0.0f;
-  m_SecondOrderBCoeff.v21 = 0.0f, m_SecondOrderBCoeff.v22 = 1.0f, m_SecondOrderBCoeff.v23 = 0.0f;
-  m_SecondOrderBCoeff.v31 = 0.0f, m_SecondOrderBCoeff.v32 = 0.0f, m_SecondOrderBCoeff.v33 = 1.0f;
+  m_SecondOrderACoeff.c20 = 0.0f, m_SecondOrderACoeff.c02 = 0.0f, m_SecondOrderACoeff.c11 = 0.0f;
+  m_SecondOrderACoeff.c10 = 1.0f, m_SecondOrderACoeff.c01 = 1.0f, m_SecondOrderACoeff.c00 = 0.0f;
+  m_SecondOrderBCoeff.c20 = 0.0f, m_SecondOrderBCoeff.c02 = 0.0f, m_SecondOrderBCoeff.c11 = 0.0f;
+  m_SecondOrderBCoeff.c10 = 1.0f, m_SecondOrderBCoeff.c01 = 1.0f, m_SecondOrderBCoeff.c00 = 0.0f;
 
-  m_ThirdOrderACoeff.v11 = 1.0f, m_ThirdOrderACoeff.v12 = 0.0f, m_ThirdOrderACoeff.v13 = 0.0f, m_ThirdOrderACoeff.v14 = 0.0f;
-  m_ThirdOrderACoeff.v21 = 0.0f, m_ThirdOrderACoeff.v22 = 1.0f, m_ThirdOrderACoeff.v23 = 0.0f, m_ThirdOrderACoeff.v24 = 0.0f;
-  m_ThirdOrderACoeff.v31 = 0.0f, m_ThirdOrderACoeff.v32 = 0.0f, m_ThirdOrderACoeff.v33 = 1.0f, m_ThirdOrderACoeff.v34 = 0.0f;
-  m_ThirdOrderACoeff.v41 = 0.0f, m_ThirdOrderACoeff.v42 = 0.0f, m_ThirdOrderACoeff.v43 = 0.0f, m_ThirdOrderACoeff.v44 = 1.0f;
-  m_ThirdOrderBCoeff.v11 = 1.0f, m_ThirdOrderBCoeff.v12 = 0.0f, m_ThirdOrderBCoeff.v13 = 0.0f, m_ThirdOrderBCoeff.v14 = 0.0f;
-  m_ThirdOrderBCoeff.v21 = 0.0f, m_ThirdOrderBCoeff.v22 = 1.0f, m_ThirdOrderBCoeff.v23 = 0.0f, m_ThirdOrderBCoeff.v24 = 0.0f;
-  m_ThirdOrderBCoeff.v31 = 0.0f, m_ThirdOrderBCoeff.v32 = 0.0f, m_ThirdOrderBCoeff.v33 = 1.0f, m_ThirdOrderBCoeff.v34 = 0.0f;
-  m_ThirdOrderBCoeff.v41 = 0.0f, m_ThirdOrderBCoeff.v42 = 0.0f, m_ThirdOrderBCoeff.v43 = 0.0f, m_ThirdOrderBCoeff.v44 = 1.0f;
+  m_ThirdOrderACoeff.c30 = 0.0f, m_ThirdOrderACoeff.c03 = 0.0f, m_ThirdOrderACoeff.c21 = 0.0f, m_ThirdOrderACoeff.c12 = 0.0f, m_ThirdOrderACoeff.c20 = 0.0f;
+  m_ThirdOrderACoeff.c02 = 0.0f, m_ThirdOrderACoeff.c11 = 0.0f, m_ThirdOrderACoeff.c10 = 1.0f; m_ThirdOrderACoeff.c01 = 1.0f, m_ThirdOrderACoeff.c00 = 0.0f;
+  m_ThirdOrderBCoeff.c30 = 0.0f, m_ThirdOrderBCoeff.c03 = 0.0f, m_ThirdOrderBCoeff.c21 = 0.0f, m_ThirdOrderBCoeff.c12 = 0.0f, m_ThirdOrderBCoeff.c20 = 0.0f;
+  m_ThirdOrderBCoeff.c02 = 0.0f, m_ThirdOrderBCoeff.c11 = 0.0f, m_ThirdOrderBCoeff.c10 = 1.0f; m_ThirdOrderBCoeff.c01 = 1.0f, m_ThirdOrderBCoeff.c00 = 0.0f;
 
-  m_FourthOrderACoeff.v11 = 1.0f, m_FourthOrderACoeff.v12 = 0.0f, m_FourthOrderACoeff.v13 = 0.0f, m_FourthOrderACoeff.v14 = 0.0f, m_FourthOrderACoeff.v15 = 0.0f;
-  m_FourthOrderACoeff.v21 = 0.0f, m_FourthOrderACoeff.v22 = 1.0f, m_FourthOrderACoeff.v23 = 0.0f, m_FourthOrderACoeff.v24 = 0.0f, m_FourthOrderACoeff.v25 = 0.0f;
-  m_FourthOrderACoeff.v31 = 0.0f, m_FourthOrderACoeff.v32 = 0.0f, m_FourthOrderACoeff.v33 = 1.0f, m_FourthOrderACoeff.v34 = 0.0f, m_FourthOrderACoeff.v35 = 0.0f;
-  m_FourthOrderACoeff.v41 = 0.0f, m_FourthOrderACoeff.v42 = 0.0f, m_FourthOrderACoeff.v43 = 0.0f, m_FourthOrderACoeff.v44 = 1.0f, m_FourthOrderACoeff.v45 = 0.0f;
-  m_FourthOrderACoeff.v51 = 0.0f, m_FourthOrderACoeff.v52 = 0.0f, m_FourthOrderACoeff.v53 = 0.0f, m_FourthOrderACoeff.v54 = 0.0f, m_FourthOrderACoeff.v55 = 1.0f;
-  m_FourthOrderBCoeff.v11 = 1.0f, m_FourthOrderBCoeff.v12 = 0.0f, m_FourthOrderBCoeff.v13 = 0.0f, m_FourthOrderBCoeff.v14 = 0.0f, m_FourthOrderBCoeff.v15 = 0.0f;
-  m_FourthOrderBCoeff.v21 = 0.0f, m_FourthOrderBCoeff.v22 = 1.0f, m_FourthOrderBCoeff.v23 = 0.0f, m_FourthOrderBCoeff.v24 = 0.0f, m_FourthOrderBCoeff.v25 = 0.0f;
-  m_FourthOrderBCoeff.v31 = 0.0f, m_FourthOrderBCoeff.v32 = 0.0f, m_FourthOrderBCoeff.v33 = 1.0f, m_FourthOrderBCoeff.v34 = 0.0f, m_FourthOrderBCoeff.v35 = 0.0f;
-  m_FourthOrderBCoeff.v41 = 0.0f, m_FourthOrderBCoeff.v42 = 0.0f, m_FourthOrderBCoeff.v43 = 0.0f, m_FourthOrderBCoeff.v44 = 1.0f, m_FourthOrderBCoeff.v45 = 0.0f;
-  m_FourthOrderBCoeff.v51 = 0.0f, m_FourthOrderBCoeff.v52 = 0.0f, m_FourthOrderBCoeff.v53 = 0.0f, m_FourthOrderBCoeff.v54 = 0.0f, m_FourthOrderBCoeff.v55 = 1.0f;
+  m_FourthOrderACoeff.c40 = 0.0f, m_FourthOrderACoeff.c04 = 0.0f, m_FourthOrderACoeff.c31 = 0.0f; m_FourthOrderACoeff.c13 = 0.0f, m_FourthOrderACoeff.c22 = 0.0f;
+  m_FourthOrderACoeff.c30 = 0.0f, m_FourthOrderACoeff.c03 = 0.0f, m_FourthOrderACoeff.c21 = 0.0f, m_FourthOrderACoeff.c12 = 0.0f, m_FourthOrderACoeff.c20 = 0.0f;
+  m_FourthOrderACoeff.c02 = 0.0f, m_FourthOrderACoeff.c11 = 0.0f, m_FourthOrderACoeff.c10 = 1.0f; m_FourthOrderACoeff.c01 = 1.0f, m_FourthOrderACoeff.c00 = 0.0f;
+  m_FourthOrderBCoeff.c40 = 0.0f, m_FourthOrderBCoeff.c04 = 0.0f, m_FourthOrderBCoeff.c31 = 0.0f; m_FourthOrderBCoeff.c13 = 0.0f, m_FourthOrderBCoeff.c22 = 0.0f;
+  m_FourthOrderBCoeff.c30 = 0.0f, m_FourthOrderBCoeff.c03 = 0.0f, m_FourthOrderBCoeff.c21 = 0.0f, m_FourthOrderBCoeff.c12 = 0.0f, m_FourthOrderBCoeff.c20 = 0.0f;
+  m_FourthOrderBCoeff.c02 = 0.0f, m_FourthOrderBCoeff.c11 = 0.0f, m_FourthOrderBCoeff.c10 = 1.0f; m_FourthOrderBCoeff.c01 = 1.0f, m_FourthOrderBCoeff.c00 = 0.0f;
 
   setupFilterParameters();
 }
@@ -115,12 +105,12 @@ void WarpRegularGrid::setupFilterParameters()
     parameter->setEditable(false);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", FilterParameterWidgetType::Matrix3x3Widget, getSecondOrderACoeff(), false, "", 0));
-  parameters.push_back(FilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", FilterParameterWidgetType::Matrix3x3Widget, getSecondOrderBCoeff(), false, "", 0));
-  parameters.push_back(FilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", FilterParameterWidgetType::Matrix4x4Widget, getThirdOrderACoeff(), false, "", 1));
-  parameters.push_back(FilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", FilterParameterWidgetType::Matrix4x4Widget, getThirdOrderBCoeff(), false, "", 1));
-  parameters.push_back(FilterParameter::New("Fourth Order A Coefficients", "FourthOrderACoeff", FilterParameterWidgetType::Matrix5x5Widget, getFourthOrderACoeff(), false, "", 2));
-  parameters.push_back(FilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", FilterParameterWidgetType::Matrix5x5Widget, getFourthOrderBCoeff(), false, "", 2));
+  parameters.push_back(FilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderACoeff(), false, "", 0));
+  parameters.push_back(FilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderBCoeff(), false, "", 0));
+  parameters.push_back(FilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderACoeff(), false, "", 1));
+  parameters.push_back(FilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderBCoeff(), false, "", 1));
+  parameters.push_back(FilterParameter::New("Fourth Order A Coefficients", "FourthOrderACoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderACoeff(), false, "", 2));
+  parameters.push_back(FilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderBCoeff(), false, "", 2));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, false));
@@ -137,12 +127,12 @@ void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reade
   reader->openFilterGroup(this, index);
   setNewDataContainerName( reader->readString("NewDataContainerName", getNewDataContainerName() ) );
   setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
-  setSecondOrderACoeff( reader->readFloat3x3("SecondOrderACoeff", getSecondOrderACoeff() ) );
-  setSecondOrderBCoeff( reader->readFloat3x3("SecondOrderBCoeff", getSecondOrderBCoeff() ) );
-  setThirdOrderACoeff( reader->readFloat4x4("ThirdOrderACoeff", getThirdOrderACoeff() ) );
-  setThirdOrderBCoeff( reader->readFloat4x4("ThirdOrderBCoeff", getThirdOrderBCoeff() ) );
-  setFourthOrderACoeff( reader->readFloat5x5("FourthOrderACoeff", getFourthOrderACoeff() ) );
-  setFourthOrderBCoeff( reader->readFloat5x5("FourthOrderBCoeff", getFourthOrderBCoeff() ) );
+  setSecondOrderACoeff( reader->readFloat2ndOrderPoly("SecondOrderACoeff", getSecondOrderACoeff() ) );
+  setSecondOrderBCoeff( reader->readFloat2ndOrderPoly("SecondOrderBCoeff", getSecondOrderBCoeff() ) );
+  setThirdOrderACoeff( reader->readFloat3rdOrderPoly("ThirdOrderACoeff", getThirdOrderACoeff() ) );
+  setThirdOrderBCoeff( reader->readFloat3rdOrderPoly("ThirdOrderBCoeff", getThirdOrderBCoeff() ) );
+  setFourthOrderACoeff( reader->readFloat4thOrderPoly("FourthOrderACoeff", getFourthOrderACoeff() ) );
+  setFourthOrderBCoeff( reader->readFloat4thOrderPoly("FourthOrderBCoeff", getFourthOrderBCoeff() ) );
   setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()) );
   reader->closeFilterGroup();
 }
@@ -299,8 +289,8 @@ void WarpRegularGrid::determine_warped_coordinates(float x, float y, float &newX
 {
   if(m_PolyOrder == 0)
   {
-    newX = x*x*m_SecondOrderACoeff.v31 + y*y*m_SecondOrderACoeff.v13 + x*y*m_SecondOrderACoeff.v22 + x*m_SecondOrderACoeff.v21 + y*m_SecondOrderACoeff.v12 + m_SecondOrderACoeff.v11;
-    newY = x*x*m_SecondOrderBCoeff.v31 + y*y*m_SecondOrderBCoeff.v13 + x*y*m_SecondOrderBCoeff.v22 + x*m_SecondOrderBCoeff.v21 + y*m_SecondOrderBCoeff.v12 + m_SecondOrderBCoeff.v11;
+    newX = x*x*m_SecondOrderACoeff.c20 + y*y*m_SecondOrderACoeff.c02 + x*y*m_SecondOrderACoeff.c11 + x*m_SecondOrderACoeff.c10 + y*m_SecondOrderACoeff.c01 + m_SecondOrderACoeff.c00;
+    newY = x*x*m_SecondOrderBCoeff.c20 + y*y*m_SecondOrderBCoeff.c02 + x*y*m_SecondOrderBCoeff.c11 + x*m_SecondOrderBCoeff.c10 + y*m_SecondOrderBCoeff.c01 + m_SecondOrderBCoeff.c00;
   }
   if(m_PolyOrder == 1)
   {

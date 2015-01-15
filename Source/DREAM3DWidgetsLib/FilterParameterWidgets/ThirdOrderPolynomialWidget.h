@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _Matrix4x4Widget_H_
-#define _Matrix4x4Widget_H_
+#ifndef _ThirdOrderPolynomialWidget_H_
+#define _ThirdOrderPolynomialWidget_H_
 
 
 #include <QtCore/QObject>
@@ -50,7 +50,7 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 
-#include "DREAM3DWidgetsLib/ui_Matrix4x4Widget.h"
+#include "DREAM3DWidgetsLib/ui_ThirdOrderPolynomialWidget.h"
 
 
 /**
@@ -58,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT Matrix4x4Widget : public FilterParameterWidget, private Ui::Matrix4x4Widget
+class DREAM3DWidgetsLib_EXPORT ThirdOrderPolynomialWidget : public FilterParameterWidget, private Ui::ThirdOrderPolynomialWidget
 {
     Q_OBJECT
 
@@ -69,9 +69,9 @@ class DREAM3DWidgetsLib_EXPORT Matrix4x4Widget : public FilterParameterWidget, p
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    Matrix4x4Widget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    ThirdOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~Matrix4x4Widget();
+    virtual ~ThirdOrderPolynomialWidget();
 
     /**
     * @brief This method does additional GUI widget connections
@@ -95,11 +95,11 @@ class DREAM3DWidgetsLib_EXPORT Matrix4x4Widget : public FilterParameterWidget, p
     //helper functions for complex inter dependancies
     // void vbar(QLineEdit* obj);
 
-    Matrix4x4Widget(const Matrix4x4Widget&); // Copy Constructor Not Implemented
-    void operator=(const Matrix4x4Widget&); // Operator '=' Not Implemented
+    ThirdOrderPolynomialWidget(const ThirdOrderPolynomialWidget&); // Copy Constructor Not Implemented
+    void operator=(const ThirdOrderPolynomialWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _Matrix4x4Widget_H_ */
+#endif /* _ThirdOrderPolynomialWidget_H_ */
 
 
