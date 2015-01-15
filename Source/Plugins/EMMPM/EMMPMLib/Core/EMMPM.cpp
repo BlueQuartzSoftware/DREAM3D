@@ -45,7 +45,9 @@
 //
 // -----------------------------------------------------------------------------
 EMMPM::EMMPM() :
-m_StatsDelegate(NULL)
+Observable(),
+m_StatsDelegate(NULL),
+m_ErrorCondition(0)
 {
 
 }
@@ -186,9 +188,10 @@ void EMMPM::execute()
     CurvatureInitialization::Pointer curvatureInit = CurvatureInitialization::New();
     curvatureInit->initCurvatureVariables(m_Data);
 
-    if (data->ccost == NULL) {
-      notify("Error Allocating Curvature Variables Memory", 0, UpdateErrorMessage);
-     // freeRandStruct(data->rngVars);
+    if (data->ccost == NULL) 
+    {
+      setErrorCondition(-55100);
+	    notifyErrorMessage(getHumanLabel(), "Error Allocating Curvature Variables Memory", getErrorCondition());
       return;
     }
   }
@@ -204,9 +207,10 @@ void EMMPM::execute()
     GradientVariablesInitialization::Pointer gradientInit = GradientVariablesInitialization::New();
     gradientInit->initialize(m_Data);
 
-    if (data->ns == NULL || data->ew == NULL || data->nw == NULL || data->sw == NULL) {
-      notify("Error Allocating Gradient Variables Memory", 0, UpdateErrorMessage);
-     // freeRandStruct(data->rngVars);
+    if (data->ns == NULL || data->ew == NULL || data->nw == NULL || data->sw == NULL) 
+	{
+	  setErrorCondition(-55000);
+	  notifyErrorMessage(getHumanLabel(), "Error Allocating Gradient Variables Memory", getErrorCondition());
       return;
     }
   }
@@ -236,13 +240,26 @@ void EMMPM::execute()
   // Now actually run the EM/MPM algorithm
   EMCalculation::Pointer em = EMCalculation::New();
   em->setData(getData());
-  em->setObservers(getObservers());
   em->setStatsDelegate(getStatsDelegate());
+
+  // Connect up the Error/Warning/Progress object so the filter can report those things
+  connect(em.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+	  this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+
   em->execute();
 
   data->progress = 100.0;
   m_StatsDelegate->reportProgress(getData());
 //  notify("", data->progress, UpdateProgressValue);
 //  notify("EM/MPM Completed.", 100, UpdateProgressValueAndMessage);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EMMPM::getHumanLabel()
+{
+	return "EMMPM";
 }
 

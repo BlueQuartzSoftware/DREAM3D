@@ -33,11 +33,15 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
+#include "EMCalculation.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "EMCalculation.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 
 #include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
@@ -50,7 +54,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "EMMPMLib/Core/MorphFilt.h"
 #include "EMMPMLib/Core/MPMCalculation.h"
 
-#if defined (EMMPMLib_USE_PARALLEL_ALGORITHMS)
+#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
 #include <tbb/task_scheduler_init.h>
 #endif
 
@@ -58,7 +62,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // -----------------------------------------------------------------------------
 EMCalculation::EMCalculation() :
-m_StatsDelegate(NULL)
+Observable(),
+m_StatsDelegate(NULL),
+m_ErrorCondition(0)
 {
 
 }
@@ -76,7 +82,7 @@ EMCalculation::~EMCalculation()
 // -----------------------------------------------------------------------------
 void EMCalculation::execute()
 {
-#if defined (EMMPMLib_USE_PARALLEL_ALGORITHMS)
+#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
     tbb::task_scheduler_init init;
   //  int threads = init.default_num_threads();
  //   std::cout << "TBB Thread Count: " << threads << std::endl;
@@ -129,20 +135,23 @@ void EMCalculation::execute()
   /* After curveLoopDelay iterations, begin calculating curvature costs */
   if (k >= ccostLoopDelay && data->useCurvaturePenalty)
   {
-    notify("Performing Morphological Filter on input data", 0, UpdateProgressMessage);
+	notifyStatusMessage(getHumanLabel(), "Performing Morphological Filter on input data");
     morphFilt->multiSE(data);
   }
 
   // Zero out the Mean, Variance and N values for both the current and previous
   EMMPMUtilities::ZeroMeanVariance(data->classes, data->dims, data->prev_mu, data->prev_variance, data->N);
-
-  notify("Performing Initial MPM Loop", 0, UpdateProgressMessage);
+  notifyStatusMessage(getHumanLabel(), "Performing Initial MPM Loop");
 
   /* Perform initial MPM - (Estimation) */
   MPMCalculation::Pointer acvmpm = MPMCalculation::New();
   acvmpm->setData(getData());
-  acvmpm->setObservers(getObservers());
   acvmpm->setStatsDelegate(getStatsDelegate());
+
+  // Connect up the Error/Warning/Progress object so the filter can report those things
+  connect(acvmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+	  this, SLOT(broadcastPipelineMessage(const PipelineMessage&))); 
+  
   acvmpm->execute();
 
 
@@ -160,8 +169,8 @@ void EMCalculation::execute()
       m_StatsDelegate->reportProgress(getData());
     }
 
-    snprintf(msgbuff, 256, "EM Loop %d", data->currentEMLoop);
-    notify(msgbuff, 0, UpdateProgressMessage);
+	QString ss = QString("EM Loop %1").arg(data->currentEMLoop);
+	notifyStatusMessage(getHumanLabel(), ss);
 
     /* Check to see if we are canceled */
     if (data->cancel) { data->progress = 100.0; break; }
@@ -226,4 +235,12 @@ void EMCalculation::execute()
 
   data->inside_em_loop = 0;
   free(simAnnealKappas);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EMCalculation::getHumanLabel()
+{
+	return "EMCalculation";
 }

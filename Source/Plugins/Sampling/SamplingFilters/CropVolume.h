@@ -65,13 +65,16 @@ class CropVolume : public AbstractFilter
     virtual ~CropVolume();
     DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
     IntVec3_t getCurrentVolumeDataContainerDimensions();
     Q_PROPERTY(IntVec3_t CurrentVolumeDataContainerDimensions READ getCurrentVolumeDataContainerDimensions)
+
     FloatVec3_t getCurrentVolumeDataContainerResolutions();
     Q_PROPERTY(FloatVec3_t CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
 
@@ -89,10 +92,13 @@ class CropVolume : public AbstractFilter
     Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
     DREAM3D_FILTER_PARAMETER(int, ZMax)
     Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
+
     DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
     Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
+
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
     Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
+
     DREAM3D_FILTER_PARAMETER(bool, UpdateOrigin)
     Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
 
