@@ -166,7 +166,7 @@ void NearestPointFuseRegularGrids::execute()
   size_t numRefTuples = refDims[0]*refDims[1]*refDims[2];
 
   float x, y, z;
-  size_t col, row, plane;
+  int64_t col, row, plane;
   size_t refIndex;
   size_t sampleIndex;
   size_t planeComp, rowComp;
