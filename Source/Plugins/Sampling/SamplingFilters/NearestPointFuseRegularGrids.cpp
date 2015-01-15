@@ -197,14 +197,17 @@ void NearestPointFuseRegularGrids::execute()
         x = (k * refRes[0] + refOrigin[0]);
         y = (j * refRes[1] + refOrigin[1]);
         z = (i * refRes[2] + refOrigin[2]);
-        col = int((x - sampleOrigin[0]) / sampleRes[0]);
-        row = int((y - sampleOrigin[1]) / sampleRes[1]);
-        plane = int((z - sampleOrigin[2]) / sampleRes[2]);
-        if(col < 0 || col > sampleDims[0] ||  row < 0 || row > sampleDims[1] ||  plane < 0 || plane > sampleDims[2]) outside = true;
-        sampleIndex = (plane * sampleDims[0] * sampleDims[1]) + (row * sampleDims[0]) + col;
-        refIndex = planeComp + rowComp + k;
+        if((x - sampleOrigin[0]) < 0) outside = true;
+        else col = int((x - sampleOrigin[0]) / sampleRes[0]);
+        if((y - sampleOrigin[1]) < 0) outside = true;
+        else row = int((y - sampleOrigin[1]) / sampleRes[1]);
+        if((z - sampleOrigin[2]) < 0) outside = true;
+        else plane = int((z - sampleOrigin[2]) / sampleRes[2]);
+        if(col > sampleDims[0] ||  row > sampleDims[1] ||  plane > sampleDims[2]) outside = true;
         if(outside == false)
         {
+          sampleIndex = (plane * sampleDims[0] * sampleDims[1]) + (row * sampleDims[0]) + col;
+          refIndex = planeComp + rowComp + k;
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
