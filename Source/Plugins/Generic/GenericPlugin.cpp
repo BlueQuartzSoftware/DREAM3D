@@ -35,6 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenericPlugin.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -64,10 +67,9 @@ m_Location(""),
 m_Platforms(QList<QString>()),
 m_Description(""),
 m_Copyright(""),
-m_License(""),
 m_Dependencies(QList<QString>())
 {
-
+  getLicense();
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +164,19 @@ QString GenericPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getLicense()
 {
-  return m_License;
+  QFile licenseFile(":/DREAM3D/DREAM3DLicense.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--License was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

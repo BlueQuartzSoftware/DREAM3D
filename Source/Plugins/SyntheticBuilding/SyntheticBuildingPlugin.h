@@ -154,7 +154,7 @@ class SyntheticBuildingPlugin : public QObject, public DREAM3DPluginInterface
     QList<QString>      m_Platforms;
     QString             m_Description;
     QString             m_Copyright;
-    QString             m_License;
+
     QList<QString>      m_Dependencies;
 
     SyntheticBuildingPlugin(const SyntheticBuildingPlugin&); // Copy Constructor Not Implemented
