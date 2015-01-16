@@ -88,6 +88,11 @@ class Version4CompatibilityPlugin : public QObject, public DREAM3DPluginInterfac
     virtual QList<QString> getDependencies();
 
     /**
+     * @brief Returns the third party licenses of the plugin
+     */
+    virtual QMap<QString, QString> getThirdPartyLicenses();
+
+    /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
     virtual void registerFilterWidgets(FilterWidgetManager* fwm);

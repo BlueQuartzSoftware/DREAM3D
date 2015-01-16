@@ -160,6 +160,36 @@ QList<QString> Version4CompatibilityPlugin::getDependencies()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QMap<QString, QString> Version4CompatibilityPlugin::getThirdPartyLicenses()
+{
+  QMap<QString, QString> licenseMap;
+  QList<QString> fileStrList;
+  fileStrList.push_back(":/ThirdParty/HDF5.txt");
+  fileStrList.push_back(":/ThirdParty/Boost.txt");
+  fileStrList.push_back(":/ThirdParty/Qt.txt");
+  fileStrList.push_back(":/ThirdParty/Qwt.txt");
+
+  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  {
+    QFile file(*iter);
+    QFileInfo licenseFileInfo(file);
+
+    if ( licenseFileInfo.exists() )
+    {
+      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      {
+        QTextStream in(&file);
+        licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
+      }
+    }
+  }
+
+  return licenseMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Version4CompatibilityPlugin::writeSettings(QSettings& prefs)
 {
 
