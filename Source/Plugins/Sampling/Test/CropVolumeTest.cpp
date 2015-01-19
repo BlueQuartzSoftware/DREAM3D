@@ -172,8 +172,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, 
   featureIds->initializeWithValue(0xABABABAB);
   DataArray<bool>::Pointer actives = DataArray<bool>::CreateArray(tDims, cDims, k_ActivesName, true);
 
-  int64_t index = 0;
-  int64_t id = 1;
+  size_t index = 0;
 
   struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a;} rgba;
   int32_t* ptr = reinterpret_cast<int32_t*>(&rgba);
@@ -181,13 +180,13 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, 
 
 
   u8ptr[3] = 0;
-  for (int64_t z = 0; z < tDims[2]; z++)
+  for (size_t z = 0; z < tDims[2]; z++)
   {
     u8ptr[2] = (uint8_t)(z);
-    for (int64_t y = 0; y < tDims[1]; y++)
+    for (size_t y = 0; y < tDims[1]; y++)
     {
       u8ptr[1] = (uint8_t)(y);
-      for (int64_t x = 0; x < tDims[0]; x++)
+      for (size_t x = 0; x < tDims[0]; x++)
       {
         index = (z*tDims[0] * tDims[1]) + (y*tDims[0]) + x;
 
@@ -202,9 +201,6 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, 
         featureIds->setValue(index, index);
         actives->setValue(index, true);
       }
-
-
-      id++;
     }
   }
 
