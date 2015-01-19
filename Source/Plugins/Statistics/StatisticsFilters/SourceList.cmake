@@ -12,6 +12,7 @@ START_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics")
 
 set(_PublicFilters
   CorrelateValuesWithVectorDirection
+  FindArrayHistogram
   FindBasalLoadingFactor
   FindAvgCAxes
   FindAvgOrientations
