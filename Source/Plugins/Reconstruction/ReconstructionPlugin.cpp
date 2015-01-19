@@ -35,6 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ReconstructionPlugin.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -54,7 +57,17 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReconstructionPlugin::ReconstructionPlugin()
+ReconstructionPlugin::ReconstructionPlugin() :
+m_Version(""),
+m_CompatibilityVersion(""),
+m_Vendor(""),
+m_Group(""),
+m_URL(""),
+m_Location(""),
+m_Platforms(QList<QString>()),
+m_Description(""),
+m_Copyright(""),
+m_Dependencies(QList<QString>())
 {
 
 }
@@ -72,6 +85,136 @@ ReconstructionPlugin::~ReconstructionPlugin()
 QString ReconstructionPlugin::getPluginName()
 {
   return (Detail::ReconstructionPluginDisplayName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getVersion()
+{
+  return m_Version;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getCompatibilityVersion()
+{
+  return m_CompatibilityVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getVendor()
+{
+  return m_Vendor;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getGroup()
+{
+  return m_Group;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getURL()
+{
+  return m_URL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getLocation()
+{
+  return m_Location;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> ReconstructionPlugin::getPlatforms()
+{
+  return m_Platforms;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getDescription()
+{
+  return m_Description;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getCopyright()
+{
+  return m_Copyright;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getLicense()
+{
+  QFile licenseFile(":/DREAM3D/DREAM3DLicense.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--License was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> ReconstructionPlugin::getDependencies()
+{
+  return m_Dependencies;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, QString> ReconstructionPlugin::getThirdPartyLicenses()
+{
+  QMap<QString, QString> licenseMap;
+  QList<QString> fileStrList;
+  fileStrList.push_back(":/ThirdParty/HDF5.txt");
+  fileStrList.push_back(":/ThirdParty/Boost.txt");
+  fileStrList.push_back(":/ThirdParty/Qt.txt");
+  fileStrList.push_back(":/ThirdParty/Qwt.txt");
+
+  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  {
+    QFile file(*iter);
+    QFileInfo licenseFileInfo(file);
+
+    if ( licenseFileInfo.exists() )
+    {
+      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      {
+        QTextStream in(&file);
+        licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
+      }
+    }
+  }
+
+  return licenseMap;
 }
 
 // -----------------------------------------------------------------------------

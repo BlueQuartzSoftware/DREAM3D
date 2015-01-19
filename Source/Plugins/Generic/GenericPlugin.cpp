@@ -35,6 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenericPlugin.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -54,9 +57,19 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenericPlugin::GenericPlugin()
+GenericPlugin::GenericPlugin() :
+m_Version(""),
+m_CompatibilityVersion(""),
+m_Vendor(""),
+m_Group(""),
+m_URL(""),
+m_Location(""),
+m_Platforms(QList<QString>()),
+m_Description(""),
+m_Copyright(""),
+m_Dependencies(QList<QString>())
 {
-
+  getLicense();
 }
 
 // -----------------------------------------------------------------------------
@@ -72,6 +85,136 @@ GenericPlugin::~GenericPlugin()
 QString GenericPlugin::getPluginName()
 {
   return (Detail::GenericPluginDisplayName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getVersion()
+{
+  return m_Version;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getCompatibilityVersion()
+{
+  return m_CompatibilityVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getVendor()
+{
+  return m_Vendor;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getGroup()
+{
+  return m_Group;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getURL()
+{
+  return m_URL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getLocation()
+{
+  return m_Location;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> GenericPlugin::getPlatforms()
+{
+  return m_Platforms;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getDescription()
+{
+  return m_Description;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getCopyright()
+{
+  return m_Copyright;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getLicense()
+{
+  QFile licenseFile(":/DREAM3D/DREAM3DLicense.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--License was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> GenericPlugin::getDependencies()
+{
+  return m_Dependencies;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, QString> GenericPlugin::getThirdPartyLicenses()
+{
+  QMap<QString, QString> licenseMap;
+  QList<QString> fileStrList;
+  fileStrList.push_back(":/ThirdParty/HDF5.txt");
+  fileStrList.push_back(":/ThirdParty/Boost.txt");
+  fileStrList.push_back(":/ThirdParty/Qt.txt");
+  fileStrList.push_back(":/ThirdParty/Qwt.txt");
+
+  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  {
+    QFile file(*iter);
+    QFileInfo licenseFileInfo(file);
+
+    if ( licenseFileInfo.exists() )
+    {
+      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      {
+        QTextStream in(&file);
+        licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
+      }
+    }
+  }
+
+  return licenseMap;
 }
 
 // -----------------------------------------------------------------------------
