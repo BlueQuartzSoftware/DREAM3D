@@ -103,9 +103,9 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
 
   erosion = (unsigned char*)malloc(cols * rows * sizeof(unsigned char));
 
-  for (int32_t i = 0; i < rows; i++)
+  for (int i = 0; i < rows; i++)
   {
-    for (int32_t j = 0; j < cols; j++)
+    for (int j = 0; j < cols; j++)
     {
       ij = (cols * i) + j;
 
@@ -144,9 +144,9 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
         maxc = cols - maxi(0, jj);
         int maxi_ii = (0 < -ii ? -ii : 0);
         int maxi_jj = (0 < -jj ? -jj : 0);
-        for (int i = maxi_ii; i < maxr; ++i)
+        for (int i = maxi_ii; i < (int)maxr; ++i)
         {
-          for (int j = maxi_jj; j < maxc; ++j)
+          for (int j = maxi_jj; j < (int)maxc; ++j)
           {
             ij = (cols * i) + j;
             l = erosion[ij];
