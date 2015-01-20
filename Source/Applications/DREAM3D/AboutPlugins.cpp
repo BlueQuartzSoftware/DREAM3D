@@ -61,6 +61,9 @@ void AboutPlugins::setupGui()
   pluginsTable->horizontalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
   pluginsTable->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
 
+  // Set selection behavior so that only full rows can be selected
+  pluginsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
   loadInstalledPlugins();
 }
 
@@ -71,7 +74,6 @@ void AboutPlugins::loadInstalledPlugins()
 {
   PluginManager* manager = PluginManager::Instance();
   QVector<DREAM3DPluginInterface*> vector = manager->getPluginsVector();
-  QList<QString> names = manager->getPluginNames();
   pluginsTable->setRowCount(vector.size());
   int col = 0;
 
@@ -82,7 +84,6 @@ void AboutPlugins::loadInstalledPlugins()
 
     // Add name of plugin to the row
     QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
-    nameItem->setFlags(Qt::ItemIsEnabled);
     pluginsTable->setItem(row, col, nameItem);
     col++;
 
@@ -99,13 +100,11 @@ void AboutPlugins::loadInstalledPlugins()
 
     // Add version information
     QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
-    versionItem->setFlags(Qt::ItemIsEnabled);
     pluginsTable->setItem(row, col, versionItem);
     col++;
 
     // Add vendor information
     QTableWidgetItem* vendorItem = new QTableWidgetItem(plugin->getVendor());
-    vendorItem->setFlags(Qt::ItemIsEnabled);
     pluginsTable->setItem(row, col, vendorItem);
   }
 }

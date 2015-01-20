@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,73 +32,39 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _PluginManager_H_
-#define _PluginManager_H_
+
+#ifndef PLUGINDETAILS_H
+#define PLUGINDETAILS_H
+
+#include <QtCore/QObject>
+
+#include <DREAM3DLib/Plugin/PluginManager.h>
+#include <DREAM3DLib/Plugin/DREAM3DPluginInterface.h>
 
 
-#include <QtCore/QString>
+//-- UIC generated Header
+#include "ui_PluginDetails.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-#include "DREAM3DPluginInterface.h"
-
-/**
- * @brief The PluginManager class manages instances of plugins and is mainly used to keep
- * track of all plugin instances. This class uses the Singleton design pattern.
- */
-class DREAM3DLib_EXPORT PluginManager
+class PluginDetails : public QDialog, private Ui::PluginDetails
 {
+    Q_OBJECT
+
   public:
-//    DREAM3D_SHARED_POINTERS(PluginManager)
-    DREAM3D_TYPE_MACRO(PluginManager)
+    PluginDetails(QString pluginName, QWidget* parent = 0);
+    virtual ~PluginDetails();
 
-    virtual ~PluginManager();
+    DREAM3D_INSTANCE_PROPERTY(QString, PluginName)
 
-    /**
-     * @brief Static instance to retrieve the global instance of this class
-     * @return
-     */
-    static PluginManager* Instance();
+    void setupGui();
 
+    void loadPluginDetails();
 
-    /**
-     * @brief PluginManager::printPluginNames
-     */
-    void printPluginNames();
-
-    /**
-     * @brief Adds a Plugin to the list
-     * @param plugin
-     */
-    void addPlugin(DREAM3DPluginInterface* plugin);
-
-    /**
-     * @brief getPluginNames Returns all plugin names as a QSet
-     * @return
-     */
-    QList<QString> getPluginNames();
-
-    /**
-     * @brief getPluginList Returns the plugins list
-     * @return
-     */
-    QVector<DREAM3DPluginInterface*> getPluginsVector();
-
-    DREAM3DPluginInterface* findPlugin(QString pluginName);
-
-
-  protected:
-    PluginManager();
+  public slots:
+    void on_closeBtn_clicked();
 
   private:
-
-    QVector<DREAM3DPluginInterface*> plugins;
-    static PluginManager* self;
-
-    PluginManager(const PluginManager&); // Copy Constructor Not Implemented
-    void operator=(const PluginManager&); // Operator '=' Not Implemented
+    PluginDetails(const PluginDetails&); // Copy Constructor Not Implemented
+    void operator=(const PluginDetails&); // Operator '=' Not Implemented
 };
 
-#endif /* _PluginManager_H_ */
-
+#endif // PLUGINDETAILS_H

@@ -58,7 +58,6 @@ class AboutDREAM3D : public QDialog, private Ui::AboutDREAM3D
     AboutDREAM3D(const AboutDREAM3D&); // Copy Constructor Not Implemented
     void operator=(const AboutDREAM3D&); // Operator '=' Not Implemented
     void readVersions();
-    void readPlugins();
 };
 #endif /* _AboutDREAM3D_H_ */
 
