@@ -68,7 +68,6 @@ m_Location(""),
 m_Platforms(QList<QString>()),
 m_Description(""),
 m_Copyright(""),
-
 m_Dependencies(QList<QString>())
 {
 
