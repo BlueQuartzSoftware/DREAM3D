@@ -13,8 +13,8 @@
   <property name="windowTitle">
    <string>Installed Plugins</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QTableWidget" name="pluginsTable">
@@ -75,6 +75,9 @@
         <widget class="QPushButton" name="closeBtn">
          <property name="text">
           <string>Close</string>
+         </property>
+         <property name="default">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

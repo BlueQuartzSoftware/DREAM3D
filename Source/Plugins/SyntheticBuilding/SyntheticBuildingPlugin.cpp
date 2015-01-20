@@ -59,11 +59,11 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 SyntheticBuildingPlugin::SyntheticBuildingPlugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_Group(""),
-m_URL(""),
+m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
 m_Description(""),

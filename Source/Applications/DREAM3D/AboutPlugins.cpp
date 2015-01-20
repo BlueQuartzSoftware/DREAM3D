@@ -55,6 +55,12 @@ AboutPlugins::~AboutPlugins() {}
 // -----------------------------------------------------------------------------
 void AboutPlugins::setupGui()
 {
+  // Resize the column widths so that all text is showing
+  pluginsTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  pluginsTable->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
+
   loadInstalledPlugins();
 }
 
@@ -76,6 +82,7 @@ void AboutPlugins::loadInstalledPlugins()
 
     // Add name of plugin to the row
     QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
+    nameItem->setFlags(Qt::ItemIsEnabled);
     pluginsTable->setItem(row, col, nameItem);
     col++;
 
@@ -88,6 +95,18 @@ void AboutPlugins::loadInstalledPlugins()
     layout->setContentsMargins(0, 0, 0, 0);
     checkBox->setLayout(layout);
     pluginsTable->setCellWidget(row, col, checkBox);
+    col++;
+
+    // Add version information
+    QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
+    versionItem->setFlags(Qt::ItemIsEnabled);
+    pluginsTable->setItem(row, col, versionItem);
+    col++;
+
+    // Add vendor information
+    QTableWidgetItem* vendorItem = new QTableWidgetItem(plugin->getVendor());
+    vendorItem->setFlags(Qt::ItemIsEnabled);
+    pluginsTable->setItem(row, col, vendorItem);
   }
 }
 

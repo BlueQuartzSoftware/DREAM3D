@@ -79,6 +79,8 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
 
     /**
      * @brief Returns the license of the plugin
+     * PLEASE UPDATE YOUR PLUGIN'S LICENSE FILE.
+     * It is located at @PluginName@/Resources/@PluginName@/@PluginName@License.txt
      */
     virtual QString getLicense();
 

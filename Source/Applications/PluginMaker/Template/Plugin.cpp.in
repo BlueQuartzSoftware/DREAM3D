@@ -28,16 +28,16 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 @PluginName@Plugin::@PluginName@Plugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
-m_Group(""),
-m_URL(""),
-m_Location(""),
-m_Platforms(QList<QString>()),
-m_Description(""),
-m_Copyright(""),
-m_Dependencies(QList<QString>())
+m_Version("Version Number"),                            // Initialize @PluginName@'s Version Number Here
+m_CompatibilityVersion("Compatibility Version Number"), // Initialize @PluginName@'s Compatibility Version Number Here
+m_Vendor("Vendor Name"),                                // Initialize @PluginName@'s Vendor Name Here
+m_Group("Group Name"),                                  // Initialize @PluginName@'s Group Name Here
+m_URL("URL"),                                           // Initialize Company URL Here
+m_Location("Location"),                                 // Initialize Company Location Here
+m_Platforms(QList<QString>()),                          // Initialize @PluginName@'s Compatible Operating System Platforms Here
+m_Description("Description"),                           // Initialize @PluginName@'s Description Here
+m_Copyright("Copyright"),                               // Initialize @PluginName@'s Copyright Here
+m_Dependencies(QList<QString>())                        // Initialize @PluginName@'s List of Dependencies Here
 {
 
 }
@@ -134,7 +134,10 @@ QString @PluginName@Plugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getLicense()
 {
-  QFile licenseFile(":/DREAM3D/DREAM3DLicense.txt");
+  /* PLEASE UPDATE YOUR PLUGIN'S LICENSE FILE.
+  It is located at @PluginName@/Resources/@PluginName@/@PluginName@License.txt */
+
+  QFile licenseFile(":/@PluginName@/@PluginName@License.txt");
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--License was not read-->>";
 
