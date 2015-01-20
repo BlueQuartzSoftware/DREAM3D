@@ -20,7 +20,7 @@ Q_EXPORT_PLUGIN2(EMMPMPlugin, EMMPMPlugin)
 namespace Detail
 {
   const QString EMMPMPluginFile("EMMPMPlugin");
-  const QString EMMPMPluginDisplayName("EMMPMPlugin");
+  const QString EMMPMPluginDisplayName("EMMPM");
   const QString EMMPMPluginBaseName("EMMPMPlugin");
 }
 

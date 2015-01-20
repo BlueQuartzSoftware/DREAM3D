@@ -51,7 +51,7 @@ Q_EXPORT_PLUGIN2(OrientationAnalysisPlugin, OrientationAnalysisPlugin)
 namespace Detail
 {
   const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
-  const QString OrientationAnalysisPluginDisplayName("OrientationAnalysisPlugin");
+  const QString OrientationAnalysisPluginDisplayName("OrientationAnalysis");
   const QString OrientationAnalysisPluginBaseName("OrientationAnalysisPlugin");
 }
 

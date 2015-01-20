@@ -50,7 +50,7 @@ Q_EXPORT_PLUGIN2(StatisticsPlugin, StatisticsPlugin)
 namespace Detail
 {
   const QString StatisticsPluginFile("StatisticsPlugin");
-  const QString StatisticsPluginDisplayName("StatisticsPlugin");
+  const QString StatisticsPluginDisplayName("Statistics");
   const QString StatisticsPluginBaseName("StatisticsPlugin");
 }
 

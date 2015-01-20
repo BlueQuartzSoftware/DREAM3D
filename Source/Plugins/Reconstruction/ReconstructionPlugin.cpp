@@ -50,7 +50,7 @@ Q_EXPORT_PLUGIN2(ReconstructionPlugin, ReconstructionPlugin)
 namespace Detail
 {
   const QString ReconstructionPluginFile("ReconstructionPlugin");
-  const QString ReconstructionPluginDisplayName("ReconstructionPlugin");
+  const QString ReconstructionPluginDisplayName("Reconstruction");
   const QString ReconstructionPluginBaseName("ReconstructionPlugin");
 }
 

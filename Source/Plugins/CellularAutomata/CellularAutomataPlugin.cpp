@@ -20,7 +20,7 @@ Q_EXPORT_PLUGIN2(CellularAutomataPlugin, CellularAutomataPlugin)
 namespace Detail
 {
   const QString CellularAutomataPluginFile("CellularAutomataPlugin");
-  const QString CellularAutomataPluginDisplayName("CellularAutomataPlugin");
+  const QString CellularAutomataPluginDisplayName("CellularAutomata");
   const QString CellularAutomataPluginBaseName("CellularAutomataPlugin");
 }
 

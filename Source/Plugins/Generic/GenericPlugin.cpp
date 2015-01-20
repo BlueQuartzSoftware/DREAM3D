@@ -50,7 +50,7 @@ Q_EXPORT_PLUGIN2(GenericPlugin, GenericPlugin)
 namespace Detail
 {
   const QString GenericPluginFile("GenericPlugin");
-  const QString GenericPluginDisplayName("GenericPlugin");
+  const QString GenericPluginDisplayName("Generic");
   const QString GenericPluginBaseName("GenericPlugin");
 }
 

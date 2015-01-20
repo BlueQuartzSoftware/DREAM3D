@@ -77,6 +77,7 @@
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
 #include "AboutDREAM3D.h"
+#include "AboutPlugins.h"
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
@@ -855,7 +856,14 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
   setWindowModified(false);
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionAbout_Plugins_triggered()
+{
+  AboutPlugins* dialog = new AboutPlugins(this);
+  dialog->exec();
+}
 
 // -----------------------------------------------------------------------------
 //

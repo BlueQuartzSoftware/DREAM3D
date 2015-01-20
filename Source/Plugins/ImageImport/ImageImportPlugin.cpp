@@ -50,7 +50,7 @@ Q_EXPORT_PLUGIN2(ImageImportPlugin, ImageImportPlugin)
 namespace Detail
 {
   const QString ImageImportPluginFile("ImageImportPlugin");
-  const QString ImageImportPluginDisplayName("ImageImportPlugin");
+  const QString ImageImportPluginDisplayName("ImageImport");
   const QString ImageImportPluginBaseName("ImageImportPlugin");
 }
 

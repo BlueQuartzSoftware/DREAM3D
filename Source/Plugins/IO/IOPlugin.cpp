@@ -51,7 +51,7 @@ Q_EXPORT_PLUGIN2(IOPlugin, IOPlugin)
 namespace Detail
 {
   const QString IOPluginFile("IOPlugin");
-  const QString IOPluginDisplayName("IOPlugin");
+  const QString IOPluginDisplayName("IO");
   const QString IOPluginBaseName("IOPlugin");
 }
 

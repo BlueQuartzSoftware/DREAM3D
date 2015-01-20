@@ -51,7 +51,7 @@ Q_EXPORT_PLUGIN2(SyntheticBuildingPlugin, SyntheticBuildingPlugin)
 namespace Detail
 {
   const QString SyntheticBuildingPluginFile("SyntheticBuildingPlugin");
-  const QString SyntheticBuildingPluginDisplayName("SyntheticBuildingPlugin");
+  const QString SyntheticBuildingPluginDisplayName("SyntheticBuilding");
   const QString SyntheticBuildingPluginBaseName("SyntheticBuildingPlugin");
 }
 

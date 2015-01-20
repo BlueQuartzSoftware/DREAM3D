@@ -49,16 +49,7 @@ sss</string>
     </size>
    </property>
    <layout class="QGridLayout" name="widgetLayout">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -137,8 +128,8 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>607</width>
-             <height>544</height>
+             <width>638</width>
+             <height>535</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -222,7 +213,7 @@ border: 2px solid;
      <x>0</x>
      <y>0</y>
      <width>1060</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -265,8 +256,11 @@ border: 2px solid;
     </property>
     <addaction name="actionShow_User_Manual"/>
     <addaction name="actionLicense_Information"/>
-    <addaction name="actionAbout"/>
+    <addaction name="separator"/>
     <addaction name="actionCheck_For_Updates"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAbout_Plugins"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -465,6 +459,11 @@ border: 2px solid;
    </property>
    <property name="shortcut">
     <string>Ctrl+Backspace</string>
+   </property>
+  </action>
+  <action name="actionAbout_Plugins">
+   <property name="text">
+    <string>About Plugins</string>
    </property>
   </action>
  </widget>

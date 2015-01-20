@@ -20,7 +20,7 @@ Q_EXPORT_PLUGIN2(DDDAnalysisToolboxPlugin, DDDAnalysisToolboxPlugin)
 namespace Detail
 {
   const QString DDDAnalysisToolboxPluginFile("DDDAnalysisToolboxPlugin");
-  const QString DDDAnalysisToolboxPluginDisplayName("DDDAnalysisToolboxPlugin");
+  const QString DDDAnalysisToolboxPluginDisplayName("DDDAnalysisToolbox");
   const QString DDDAnalysisToolboxPluginBaseName("DDDAnalysisToolboxPlugin");
 }
 

@@ -21,7 +21,7 @@ Q_EXPORT_PLUGIN2(SamplingPlugin, SamplingPlugin)
 namespace Detail
 {
   const QString SamplingPluginFile("SamplingPlugin");
-  const QString SamplingPluginDisplayName("SamplingPlugin");
+  const QString SamplingPluginDisplayName("Sampling");
   const QString SamplingPluginBaseName("SamplingPlugin");
 }
 

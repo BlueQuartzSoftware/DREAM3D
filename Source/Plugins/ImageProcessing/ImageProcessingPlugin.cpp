@@ -50,7 +50,7 @@ Q_EXPORT_PLUGIN2(ImageProcessingPlugin, ImageProcessingPlugin)
 namespace Detail
 {
   const QString ImageProcessingPluginFile("ImageProcessingPlugin");
-  const QString ImageProcessingPluginDisplayName("ImageProcessingPlugin");
+  const QString ImageProcessingPluginDisplayName("ImageProcessing");
   const QString ImageProcessingPluginBaseName("ImageProcessingPlugin");
 }
 

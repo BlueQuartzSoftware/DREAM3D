@@ -51,7 +51,7 @@ Q_EXPORT_PLUGIN2(SurfaceMeshingPlugin, SurfaceMeshingPlugin)
 namespace Detail
 {
   const QString SurfaceMeshingPluginFile("SurfaceMeshingPlugin");
-  const QString SurfaceMeshingPluginDisplayName("SurfaceMeshingPlugin");
+  const QString SurfaceMeshingPluginDisplayName("SurfaceMeshing");
   const QString SurfaceMeshingPluginBaseName("SurfaceMeshingPlugin");
 }
 

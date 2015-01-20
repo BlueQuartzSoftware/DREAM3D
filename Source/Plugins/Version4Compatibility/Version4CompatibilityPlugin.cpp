@@ -20,7 +20,7 @@ Q_EXPORT_PLUGIN2(Version4CompatibilityPlugin, Version4CompatibilityPlugin)
 namespace Detail
 {
   const QString Version4CompatibilityPluginFile("Version4CompatibilityPlugin");
-  const QString Version4CompatibilityPluginDisplayName("Version4CompatibilityPlugin");
+  const QString Version4CompatibilityPluginDisplayName("Version4Compatibility");
   const QString Version4CompatibilityPluginBaseName("Version4CompatibilityPlugin");
 }
 

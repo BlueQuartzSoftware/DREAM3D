@@ -147,6 +147,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionCheck_For_Updates_triggered();
     void on_actionLicense_Information_triggered();
     void on_actionAbout_triggered();
+    void on_actionAbout_Plugins_triggered();
     void on_actionShow_User_Manual_triggered();
 
     // Buttons and other widgets that send signals that we want to catch
