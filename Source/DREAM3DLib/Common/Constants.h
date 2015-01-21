@@ -64,7 +64,11 @@ namespace DREAM3D
   static const uint8_t PartiallyChecked = 1;
   static const uint8_t Checked = 2;
 
-
+  namespace BlueQuartz
+  {
+    const QString VendorName("BlueQuartz Software, LLC");
+    const QString URL("http://www.bluequartz.net");
+  }
 
   namespace TypeNames
   {
