@@ -75,6 +75,9 @@ void AboutPlugins::setupGui()
   pluginsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
   loadInstalledPlugins();
+
+  // Set Default Cell
+  pluginsTable->setCurrentCell(0, 0);
 }
 
 // -----------------------------------------------------------------------------
