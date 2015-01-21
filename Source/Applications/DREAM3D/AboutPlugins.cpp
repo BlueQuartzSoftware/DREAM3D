@@ -33,7 +33,17 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "PluginDetails.h"
+
 #include "AboutPlugins.h"
+
+enum ColumnNumbers
+{
+  NAME_NUM = 0,
+  LOAD_NUM = 1,
+  VERSION_NUM = 2,
+  VENDOR_NUM = 3
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -122,8 +132,12 @@ void AboutPlugins::on_closeBtn_clicked()
 //
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_detailsBtn_clicked()
-{
+{  
+  QTableWidgetItem* item = pluginsTable->item(pluginsTable->currentRow(), NAME_NUM);
+
   // Launch Details dialog box
+  PluginDetails* dialog = new PluginDetails(item->text());
+  dialog->exec();
 }
 
 

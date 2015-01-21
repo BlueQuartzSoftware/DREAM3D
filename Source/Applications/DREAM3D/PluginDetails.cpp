@@ -72,6 +72,12 @@ void PluginDetails::loadPluginDetails()
   DREAM3DPluginInterface* plugin = manager->findPlugin(m_PluginName);
 
   // Add plugin details to PluginDetails dialog box
+  nameLabel->setText(plugin->getPluginName());
+  versionLabel->setText(plugin->getVersion());
+  cVersionLabel->setText(plugin->getCompatibilityVersion());
+  vendorLabel->setText(plugin->getVendor());
+  urlLabel->setText(plugin->getURL());
+  licenseTextEdit->setText(plugin->getLicense());
 }
 
 // -----------------------------------------------------------------------------
