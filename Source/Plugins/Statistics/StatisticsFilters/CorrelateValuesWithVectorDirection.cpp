@@ -368,7 +368,7 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
   tDims[1] = ypoints;
   QVector<size_t> cDims(1, numComps);
   DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "StereoProjection");
-  stereoIntensity->initializeWithZeros();
+  stereoIntensity->initializeWithValue(-1000.0f);
   double* intensity = stereoIntensity->getPointer(0);
   double* m_LambertProjection = m_LambertProj->getPointer(0);
 
