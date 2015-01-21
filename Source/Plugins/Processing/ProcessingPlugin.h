@@ -152,7 +152,6 @@ class ProcessingPlugin : public QObject, public DREAM3DPluginInterface
     QString             m_URL;
     QString             m_Location;
     QList<QString>      m_Platforms;
-    QString             m_Description;
     QString             m_Copyright;
     QList<QString>      m_Dependencies;
 

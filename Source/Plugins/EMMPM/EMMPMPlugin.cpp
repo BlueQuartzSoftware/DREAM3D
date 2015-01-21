@@ -35,9 +35,7 @@ m_Group(""),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Description(""),
 m_Copyright(""),
-
 m_Dependencies(QList<QString>())
 {
 
@@ -111,7 +109,19 @@ QList<QString> EMMPMPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getDescription()
 {
-  return m_Description;
+  QFile licenseFile(":/EMMPM/EMMPMDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

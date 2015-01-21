@@ -77,7 +77,23 @@ void PluginDetails::loadPluginDetails()
   cVersionLabel->setText(plugin->getCompatibilityVersion());
   vendorLabel->setText(plugin->getVendor());
   urlLabel->setText(plugin->getURL());
+  locationLabel->setText(plugin->getLocation());
+
+  QList<QString> platforms = plugin->getPlatforms();
+  for (QList<QString>::iterator iter = platforms.begin(); iter != platforms.end(); iter++)
+  {
+    platformsListWidget->addItem(*iter);
+  }
+
+  descriptionTextEdit->setText(plugin->getDescription());
+  copyrightLabel->setText(plugin->getCopyright());
   licenseTextEdit->setText(plugin->getLicense());
+
+  QList<QString> dependencies = plugin->getDependencies();
+  for (QList<QString>::iterator iter = dependencies.begin(); iter != dependencies.end(); iter++)
+  {
+    dependenciesListWidget->addItem(*iter);
+  }
 }
 
 // -----------------------------------------------------------------------------
