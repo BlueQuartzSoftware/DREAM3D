@@ -104,3 +104,5 @@ void PluginDetails::on_closeBtn_clicked()
   // Close the dialog box
   close();
 }
+
+

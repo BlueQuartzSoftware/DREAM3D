@@ -31,7 +31,6 @@ namespace Detail
 m_Version("Version Number"),                            // Initialize @PluginName@'s Version Number Here
 m_CompatibilityVersion("Compatibility Version Number"), // Initialize @PluginName@'s Compatibility Version Number Here
 m_Vendor("Vendor Name"),                                // Initialize @PluginName@'s Vendor Name Here
-m_Group("Group Name"),                                  // Initialize @PluginName@'s Group Name Here
 m_URL("URL"),                                           // Initialize Company URL Here
 m_Location("Location"),                                 // Initialize Company Location Here
 m_Platforms(QList<QString>()),                          // Initialize @PluginName@'s Compatible Operating System Platforms Here
@@ -84,14 +83,6 @@ QString @PluginName@Plugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString @PluginName@Plugin::getGroup()
-{
-  return m_Group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getURL()
 {
   return m_URL;
@@ -118,7 +109,22 @@ QList<QString> @PluginName@Plugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getDescription()
 {
-  return m_Description;
+  /* PLEASE UPDATE YOUR PLUGIN'S DESCRIPTION FILE.
+  It is located at @PluginName@/Resources/@PluginName@/@PluginName@Description.txt */
+
+  QFile licenseFile(":/@PluginName@/@PluginName@Description.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

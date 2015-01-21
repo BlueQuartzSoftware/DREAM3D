@@ -323,6 +323,35 @@ void PluginMaker::setupGui()
     gen->setDoesGenerateOutput(true);
   }
 
+  PMGeneratorTreeItem* resources_description = new PMGeneratorTreeItem(F_res_sub);
+  resources_description->setText(0, tr("Unknown Plugin Name"));
+  {
+    pathTemplate = "@PluginName@/Resources/@PluginName@/";
+
+    QString resourceTemplate( generateFileSystemPath("/Template/Resources/FilterDescription.txt.in") );
+    PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
+                                               pathTemplate,
+                                               QString(""),
+                                               resourceTemplate,
+                                               resources_description,
+                                               this);
+
+    resources_description->setFileGenPtr(gen);
+    gen->setNameChangeable(true);
+    gen->setDoesGenerateOutput(true);
+    gen->setDisplaySuffix("Description.txt");
+    connect(m_PluginName, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(pluginNameChanged(const QString&)));
+    connect(m_OutputDir, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(outputDirChanged(const QString&)));
+    // For "Directories" this probably isn't needed
+    connect(generateButton, SIGNAL(clicked()),
+            gen, SLOT(generateOutput()));
+    connect(gen, SIGNAL(outputError(const QString&)),
+            this, SLOT(generationError(const QString&)));
+    gen->setDoesGenerateOutput(true);
+  }
+
 
   F_doc = new PMGeneratorTreeItem(F_main);
   F_doc->setText(0, tr("Documentation"));
