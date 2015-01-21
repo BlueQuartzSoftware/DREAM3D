@@ -148,7 +148,6 @@ class SyntheticBuildingPlugin : public QObject, public DREAM3DPluginInterface
     QString             m_Version;
     QString             m_CompatibilityVersion;
     QString             m_Vendor;
-    QString             m_Group;
     QString             m_URL;
     QString             m_Location;
     QList<QString>      m_Platforms;

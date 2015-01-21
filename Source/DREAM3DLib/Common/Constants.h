@@ -92,6 +92,7 @@ namespace DREAM3D
   {
     const QString VendorName("BlueQuartz Software, LLC");
     const QString URL("http://www.bluequartz.net");
+    const QString Copyright("(C) 2015 BlueQuartz Software, LLC");
   }
 
 

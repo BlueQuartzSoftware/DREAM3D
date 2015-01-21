@@ -62,11 +62,10 @@ IOPlugin::IOPlugin() :
 m_Version(DREAM3DLib::Version::Package()),
 m_CompatibilityVersion(DREAM3DLib::Version::Package()),
 m_Vendor(DREAM3D::BlueQuartz::VendorName),
-m_Group(""),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Copyright(""),
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
 m_Dependencies(QList<QString>())
 {
 
