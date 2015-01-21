@@ -31,8 +31,8 @@
 /* Written by Joel Dumke on 1/30/09 */
 
 /* This function calculates the curvature cost values stored in curve based on
-	the classification image, xt, morphologically opened under structuring
-	element se */
+  the classification image, xt, morphologically opened under structuring
+  element se */
 
 /* Note: This is the function where I really got windowing right for the first time. */
 
@@ -67,9 +67,9 @@ MorphFilter::~MorphFilter()
 //
 // -----------------------------------------------------------------------------
 unsigned int MorphFilter::maxi(int a, int b) {
-	if (a < b)
-		return (unsigned int)b;
-	return (unsigned int)a;
+  if (a < b)
+    return (unsigned int)b;
+  return (unsigned int)a;
 }
 
 
@@ -77,9 +77,9 @@ unsigned int MorphFilter::maxi(int a, int b) {
 //
 // -----------------------------------------------------------------------------
 unsigned int MorphFilter::mini(int a, int b) {
-	if (a < b)
-		return a;
-	return b;
+  if (a < b)
+    return (unsigned int)a;
+  return (unsigned int)b;
 }
 
 
@@ -103,20 +103,22 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
 
   erosion = (unsigned char*)malloc(cols * rows * sizeof(unsigned char));
 
-  for (int32_t i = 0; i < rows; i++)
+  for (int i = 0; i < rows; i++)
   {
-    for (int32_t j = 0; j < cols; j++)
+    for (int j = 0; j < cols; j++)
     {
       ij = (cols * i) + j;
 
       curve[ij] = classes;
       l = data->xt[ij];
       erosion[ij] = l;
-      maxr = mini(r, rows - 1 - i);
-      maxc = mini(r, cols - 1 - j);
-      for (int ii = -mini(r, i); ii <= (int)maxr; ii++)
+      maxr = ( r < rows - 1 - i ? r : rows - 1 - i); // mini(r, rows - 1 - i);
+      maxc = ( r < cols - 1 - j ? r : cols - 1 - j); //mini(r, cols - 1 - j);
+      int mini_ii = ( r < i ? r : i);
+      int mini_jj = ( r < j ? r : j);
+      for (int ii = -mini_ii; ii <= (int)maxr; ii++)
       {
-        for (int jj = -mini(r, j); jj <= (int)maxc && erosion[ij] == l; jj++)
+        for (int jj = -mini_jj; jj <= (int)maxc && erosion[ij] == l; jj++)
         {
           i1j1 = (cols * (i+ii)) + (j+jj);
           iirjjr = (se_cols * (ii+r)) + (jj+r);
@@ -140,14 +142,16 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
       {
         maxr = rows - maxi(0, ii);
         maxc = cols - maxi(0, jj);
-        for (unsigned int i = maxi(0, -ii); i < maxr; ++i)
+        int maxi_ii = (0 < -ii ? -ii : 0);
+        int maxi_jj = (0 < -jj ? -jj : 0);
+        for (int i = maxi_ii; i < (int)maxr; ++i)
         {
-          for (unsigned int j = maxi(0, -jj); j < maxc; ++j)
+          for (int j = maxi_jj; j < (int)maxc; ++j)
           {
             ij = (cols * i) + j;
             l = erosion[ij];
             if (l != (unsigned int)(classes))
-			      {
+            {
               i1j1 = (cols * (i+ii)) + (j+jj);
               curve[i1j1] = l;
             }
@@ -239,6 +243,6 @@ void MorphFilter::multiSE(EMMPM_Data* data)
 // -----------------------------------------------------------------------------
 const QString MorphFilter::getHumanLabel()
 {
-	return "EMMPM";
+  return "EMMPM";
 }
 

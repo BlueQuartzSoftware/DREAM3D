@@ -53,6 +53,8 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 #-----------------------------------------------------
 # Include any extra Widgets that this plugin needs
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
+# -- Include all the resources
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/${PLUGIN_NAME}/SourceList.cmake)
 
 # Include the ShapeOps Classes
 include(${${PLUGIN_NAME}_SOURCE_DIR}/ShapeOps/SourceList.cmake)
@@ -176,6 +178,8 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
   ${${PLUGIN_NAME}_GEN_HDRS}
+  # -- Add in the miscellaneous resources (license, plugin info, ...)
+  ${${PLUGIN_NAME}_Generated_RC_SRCS}
 
   #-- Add the ShapeOps Classes
   ${ShapeOps_HDRS}

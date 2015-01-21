@@ -156,6 +156,8 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
   ${${PLUGIN_NAME}_GEN_HDRS}
+  # -- Add in the miscellaneous resources (license, plugin info, ...)
+  ${${PLUGIN_NAME}_Generated_RC_SRCS}
 
   #-- Add the Distribution Analysis Ops Classes
   ${DistributionAnalysisOps_HDRS}
