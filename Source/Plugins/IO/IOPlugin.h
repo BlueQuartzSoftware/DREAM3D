@@ -79,11 +79,6 @@ class IOPlugin : public QObject, public DREAM3DPluginInterface
     virtual QString getVendor();
 
     /**
-     * @brief Returns the group of the plugin
-     */
-    virtual QString getGroup();
-
-    /**
      * @brief Returns the URL of the plugin
      */
     virtual QString getURL();

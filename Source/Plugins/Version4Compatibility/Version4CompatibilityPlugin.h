@@ -48,11 +48,6 @@ class Version4CompatibilityPlugin : public QObject, public DREAM3DPluginInterfac
     virtual QString getVendor();
 
     /**
-     * @brief Returns the group of the plugin
-     */
-    virtual QString getGroup();
-
-    /**
      * @brief Returns the URL of the plugin
      */
     virtual QString getURL();

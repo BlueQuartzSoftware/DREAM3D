@@ -103,6 +103,7 @@ void AboutPlugins::loadInstalledPlugins()
     // Add check box that is centered in the cell
     QWidget* checkBox = new QWidget();
     QCheckBox* loadChkBox = new QCheckBox();
+    loadChkBox->setChecked(true);
     QHBoxLayout* layout = new QHBoxLayout(checkBox);
     layout->addWidget(loadChkBox);
     layout->setAlignment(Qt::AlignCenter);
