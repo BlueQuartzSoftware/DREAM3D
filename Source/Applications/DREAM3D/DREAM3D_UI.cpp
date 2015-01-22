@@ -141,6 +141,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
+
+  // Turn off "About Plugins" menu item until it is ready and functional.
+  actionAbout_Plugins->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------
