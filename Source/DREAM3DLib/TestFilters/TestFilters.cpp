@@ -112,7 +112,7 @@ void Filt0::execute()
   int err = 0;
   setErrorCondition(err);
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -133,7 +133,7 @@ void Filt0::execute()
 // -----------------------------------------------------------------------------
 Filt1::Filt1() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_Filt1_Float(9.9f),
   m_Filt1_Integer(123)
 {
@@ -232,8 +232,8 @@ void Filt1::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+  if (NULL == m.get())
   {
     setErrorCondition(-1);
     QString ss = QObject::tr(" DataContainer was NULL");

@@ -55,11 +55,11 @@ namespace Detail
    */
   class UpdateVerticesImpl
   {
-      VertexArray::Pointer m_Nodes;
+      float* m_Nodes;
       float* m_Delta;
 
     public:
-      UpdateVerticesImpl(VertexArray::Pointer nodes, float* delta) :
+      UpdateVerticesImpl(float* nodes, float* delta) :
         m_Nodes(nodes),
         m_Delta(delta)
       {
@@ -70,12 +70,11 @@ namespace Detail
       void generate(size_t start, size_t end) const
       {
 
-        VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
         for (size_t i = start; i < end; i++)
         {
-          nodes[i].pos[0] = nodes[i].pos[0] - m_Delta[0];
-          nodes[i].pos[1] = nodes[i].pos[1] - m_Delta[1];
-          nodes[i].pos[2] = nodes[i].pos[2] - m_Delta[2];
+          m_Nodes[3*i] -= m_Delta[0];
+          m_Nodes[3*i+1] -= m_Delta[1];
+          m_Nodes[3*i+2] -= m_Delta[2];
         }
 
       }
@@ -97,8 +96,8 @@ namespace Detail
 // -----------------------------------------------------------------------------
 AdjustVolumeOrigin::AdjustVolumeOrigin() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_ApplyToVoxelVolume(true),
   m_ApplyToSurfaceMesh(true)
 {
@@ -171,25 +170,31 @@ void AdjustVolumeOrigin::dataCheck()
   setErrorCondition(0);
   if (m_ApplyToVoxelVolume == true)
   {
-    getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
     if(getErrorCondition() < 0)
     {
       return;
+    }
+    ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(image.get() == NULL)
+    {
+      setErrorCondition(-384);
+      notifyErrorMessage(getHumanLabel(), "DataContainer missing ImageGeom (voxel) geometry", getErrorCondition());
     }
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+    DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
     if(getErrorCondition() < 0)
     {
       return;
     }
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
+    VertexGeom::Pointer vertices = sm->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
+    if(vertices.get() == NULL)
     {
       setErrorCondition(-384);
-      notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "DataContainer missing VertexGeom (nodes) geometry", getErrorCondition());
     }
   }
 }
@@ -225,8 +230,9 @@ void AdjustVolumeOrigin::execute()
   // Set the Voxel Volume First, since this is easy
   if (m_ApplyToVoxelVolume == true)
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+    image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
   }
 
   if (m_ApplyToSurfaceMesh == true)
@@ -252,27 +258,27 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
-  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
+  VertexGeom::Pointer nodesPtr = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName())->getGeometryAs<VertexGeom>();
+  float* nodes = nodesPtr->getVertexPointer(0);
 
   // First get the min/max coords.
 
   float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 
-  size_t count = nodesPtr->getNumberOfTuples();
+  size_t count = nodesPtr->getNumberOfVertices();
   for (size_t i = 0; i < count; i++)
   {
-    if (nodes[i].pos[0] < min[0])
+    if (nodes[3*i] < min[0])
     {
-      min[0] = nodes[i].pos[0];
+      min[0] = nodes[i];
     }
-    if (nodes[i].pos[1] < min[1])
+    if (nodes[3*i+1] < min[1])
     {
-      min[1] = nodes[i].pos[1];
+      min[1] = nodes[i+1];
     }
-    if (nodes[i].pos[2] < min[2])
+    if (nodes[3*i+2] < min[2])
     {
-      min[2] = nodes[i].pos[2];
+      min[2] = nodes[i+2];
     }
   }
 
@@ -281,12 +287,12 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                      Detail::UpdateVerticesImpl(nodesPtr, delta), tbb::auto_partitioner());
+                      Detail::UpdateVerticesImpl(nodes, delta), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    Detail::UpdateVerticesImpl serial(nodesPtr, delta);
+    Detail::UpdateVerticesImpl serial(nodes, delta);
     serial.generate(0, count);
   }
 }

@@ -30,120 +30,91 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-10-D-5210
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "VertexArray.h"
-
-
-typedef StructArray<VertexArray::Vert_t> VertexContainerType;
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::VertexArray()
+SharedEdgeList::Pointer GEOM_CLASS_NAME::CreateSharedEdgeList(int64_t numEdges)
 {
-  m_Array = VertexContainerType::CreateArray(0, "VertexArray_Internal_Use_Only");
+  QVector<size_t> edgeDims(1, 2);
+  SharedEdgeList::Pointer edges = SharedEdgeList::CreateArray(numEdges, edgeDims, DREAM3D::Geometry::SharedEdgeList);
+  edges->initializeWithZeros();
+  return edges;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::~VertexArray()
+void GEOM_CLASS_NAME::resizeEdgeList(int64_t newNumEdges)
 {
-
+  m_EdgeList->resize(newNumEdges);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::resizeArray(int32_t newSize)
+void GEOM_CLASS_NAME::setEdges(SharedEdgeList::Pointer edges)
 {
-  m_Array->resize(newSize);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int32_t VertexArray::getNumberOfTuples()
-{
-  return m_Array->getNumberOfTuples();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int32_t VertexArray::count()
-{
-  return m_Array->getNumberOfTuples();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-VertexArray::Pointer VertexArray::CreateArray(int32_t numElements, const QString& name)
-{
-  if (name.isEmpty() == true)
+  if (edges->getName().compare(DREAM3D::Geometry::SharedEdgeList) != 0)
   {
-    return NullPointer();
+    edges->setName(DREAM3D::Geometry::SharedEdgeList);
   }
-  VertexArray* d = new VertexArray();
-  d->resizeArray(numElements);
-  Pointer ptr(d);
-  return ptr;
+  m_EdgeList = edges;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::initializeWithZeros()
+SharedEdgeList::Pointer GEOM_CLASS_NAME::getEdges()
 {
-  m_Array->initializeWithZeros();
+  return m_EdgeList;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::getCoords(int32_t vertId, float* coords)
+void GEOM_CLASS_NAME::setVertsAtEdge(int64_t edgeId, int64_t* verts)
 {
-  Vert_t& Vert = *(m_Array->getPointer(vertId));
-  coords[0] = Vert.pos[0];
-  coords[1] = Vert.pos[1];
-  coords[2] = Vert.pos[2];
+  int64_t* Edge = m_EdgeList->getTuplePointer(edgeId);
+  Edge[0] = verts[0];
+  Edge[1] = verts[1];
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexArray::setCoords(int32_t vertId, float* coords)
+void GEOM_CLASS_NAME::getVertsAtEdge(int64_t edgeId, int64_t* verts)
 {
-  Vert_t& Vert = *(m_Array->getPointer(vertId));
-  Vert.pos[0] = coords[0];
-  Vert.pos[1] = coords[1];
-  Vert.pos[2] = coords[2];
+  int64_t* Edge = m_EdgeList->getTuplePointer(edgeId);
+  verts[0] = Edge[0];
+  verts[1] = Edge[1];
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Vert_t* VertexArray::getPointer(int32_t i)
+void GEOM_CLASS_NAME::getVertReferencesAtEdge(int64_t edgeId, float* vert1, float* vert2)
 {
-  return m_Array->getPointer(i);
+  int64_t* Edge = m_EdgeList->getTuplePointer(edgeId);
+  vert1 = m_VertexList->getTuplePointer(Edge[0]);
+  vert2 = m_VertexList->getTuplePointer(Edge[1]);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Vert_t& VertexArray::operator[](int32_t i)
+int64_t* GEOM_CLASS_NAME::getEdgePointer(int64_t i)
 {
-  return (*m_Array)[i];
+  return m_EdgeList->getTuplePointer(i);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Vert_t& VertexArray::getVert(int32_t i)
+int64_t GEOM_CLASS_NAME::getNumberOfEdges()
 {
-  return (*m_Array)[i];
+  return m_EdgeList->getNumberOfTuples();
 }

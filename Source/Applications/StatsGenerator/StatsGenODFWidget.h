@@ -54,7 +54,6 @@
 #include <qwt_symbol.h>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"

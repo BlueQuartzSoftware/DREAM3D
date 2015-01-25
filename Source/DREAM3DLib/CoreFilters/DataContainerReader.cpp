@@ -261,9 +261,9 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
     QH5Utilities::closeFile(fileId);
     fileId = QH5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
   }
-  if(fVersion < 6.0)
+  if(fVersion < 7.0)
   {
-    ss = QObject::tr(": File unable to be read - file structure older than 6.0 '%1'").arg(ClassName());
+    ss = QObject::tr(": File unable to be read - file structure older than 7.0 '%1'").arg(ClassName());
     setErrorCondition(-250);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

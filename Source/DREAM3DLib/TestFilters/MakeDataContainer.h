@@ -33,8 +33,8 @@
 *                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _MakeVolumeDataContainer_H_
-#define _MakeVolumeDataContainer_H_
+#ifndef _MakeDataContainer_H_
+#define _MakeDataContainer_H_
 
 
 #include <QtCore/QString>
@@ -53,15 +53,15 @@
 * @date
 * @version 1.0
 */
-class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
+class DREAM3DLib_EXPORT MakeDataContainer : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(MakeVolumeDataContainer)
-    DREAM3D_STATIC_NEW_MACRO(MakeVolumeDataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(MakeVolumeDataContainer, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(MakeDataContainer)
+    DREAM3D_STATIC_NEW_MACRO(MakeDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(MakeDataContainer, AbstractFilter)
 
-    virtual ~MakeVolumeDataContainer();
+    virtual ~MakeDataContainer();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
@@ -142,7 +142,7 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    MakeVolumeDataContainer();
+    MakeDataContainer();
 
 
     /**
@@ -162,8 +162,8 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-    MakeVolumeDataContainer(const MakeVolumeDataContainer&); // Copy Constructor Not Implemented
-    void operator=(const MakeVolumeDataContainer&); // Operator '=' Not Implemented
+    MakeDataContainer(const MakeDataContainer&); // Copy Constructor Not Implemented
+    void operator=(const MakeDataContainer&); // Operator '=' Not Implemented
 };
 
 #endif /*    */

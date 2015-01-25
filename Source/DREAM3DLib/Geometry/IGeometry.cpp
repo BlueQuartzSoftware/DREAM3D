@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,67 +33,18 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SGWIDGET_H_
-#define _SGWIDGET_H_
 
-#include <QtGui/QWidget>
+#include "DREAM3DLib/Geometry//IGeometry.h"
 
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
-#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry::IGeometry()
+{}
 
-class QwtPlotZoomer;
-class QwtPlotPicker;
-class QwtPlotPanner;
-class QwtPlotGrid;
-class QwtPlotCurve;
-class QwtPlotMarker;
-
-/*
- *
- */
-class SGWidget : public QWidget
-{
-
-    Q_OBJECT
-
-  public:
-    SGWidget(QWidget* parent = 0);
-    virtual ~SGWidget();
-
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
-
-    virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
-    virtual int gatherStatsData(AttributeMatrix::Pointer attrMat);
-
-    virtual QString getComboString();
-    virtual QString getTabTitle();
-
-    virtual void on_m_GenerateDefaultData_clicked();
-
-  public slots:
-
-
-  protected slots:
-
-    virtual void dataWasEdited();
-
-  protected:
-
-
-  private:
-
-
-    SGWidget(const SGWidget&); // Copy Constructor Not Implemented
-    void operator=(const SGWidget&); // Operator '=' Not Implemented
-
-};
-
-#endif /* SGWIDGET_H_ */
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry::~IGeometry()
+{}

@@ -123,6 +123,9 @@ namespace DREAM3D
 
     const DREAM3D_STRING GenericBundleAttributeMatrixName("GenericBundleAttributeMatrix");
     const DREAM3D_STRING TimeSeriesBundleAttributeMatrixName("TimeSeriesBundleAttributeMatrix");
+
+    const DREAM3D_STRING DataContainerName("DataContainer");
+    const DREAM3D_STRING NewDataContainerName("NewDataContainer");
   }
 
   namespace FilterGroups
@@ -386,7 +389,7 @@ namespace DREAM3D
 
   namespace HDF5
   {
-    const DREAM3D_STRING FileVersion("6.0");
+    const DREAM3D_STRING FileVersion("7.0");
     const DREAM3D_STRING FileVersionName("FileVersion");
     const DREAM3D_STRING DREAM3DVersion("DREAM3D Version");
     const DREAM3D_STRING ObjectType("ObjectType");
@@ -438,6 +441,9 @@ namespace DREAM3D
     const DREAM3D_STRING FaceNeighbors("FaceNeighbors");
     const DREAM3D_STRING FacesContainingVert("FacesContainingVert");
     const DREAM3D_STRING FacesName("Faces");
+    const DREAM3D_STRING TrianglesName("Triangles");
+    const DREAM3D_STRING TriangleNeighbors("TriangleNeighbors");
+    const DREAM3D_STRING TrianglesContainingVert("TrianglesContainingVert");
     const DREAM3D_STRING Frequencies("Frequencies");
 
     const DREAM3D_STRING GBCD("GBCD");
@@ -488,6 +494,7 @@ namespace DREAM3D
 
     const DREAM3D_STRING VerticesName("Vertices");
     const DREAM3D_STRING VertsName("Verts");
+    const DREAM3D_STRING ImageName("Image");
 
     const DREAM3D_STRING Weight("Weight");
 
@@ -633,6 +640,36 @@ namespace DREAM3D
     const unsigned int MetaData = 12; //!<
     const unsigned int Generic = 13; //!<
     const unsigned int Unknown = 999; //!<
+  }
+
+  namespace Geometry
+  {
+    const DREAM3D_STRING Geometry("_SIMPL_GEOMETRY");
+    const DREAM3D_STRING GeometryName("GeometryName");
+    const DREAM3D_STRING GeometryType("GeometryType");
+    const DREAM3D_STRING GeometryTypeName("GeometryTypeName");
+    const DREAM3D_STRING NumberOfTuples("NumberOfTuples");
+    const DREAM3D_STRING UnitDimensionality("UnitDimensionality");
+    const DREAM3D_STRING SpatialDimensionality("SpatialDimensionality");
+
+    const DREAM3D_STRING UnknownGeometry("UnkownGeometry");
+    const DREAM3D_STRING ImageGeometry("ImageGeometry");
+    const DREAM3D_STRING VertexGeometry("VertexGeometry");
+    const DREAM3D_STRING EdgeGeometry("EdgeGeometry");
+    const DREAM3D_STRING TriangleGeometry("TriangleGeometry");
+
+    const DREAM3D_STRING SharedVertexList("SharedVertexList");
+    const DREAM3D_STRING SharedEdgeList("SharedEdgeList");
+    const DREAM3D_STRING SharedTriList("SharedTriList");
+  }
+
+  namespace GeometryType
+  {
+    const unsigned int ImageGeometry = 0;
+    const unsigned int VertexGeometry = 1;
+    const unsigned int EdgeGeometry = 2;
+    const unsigned int TriangleGeometry = 3;
+    const unsigned int UnknownGeometry = 999;
   }
 
   namespace XdmfGridType

@@ -40,7 +40,6 @@
 #include "ui_TransformationPhaseWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 #if QWT_VERSION >= 0x060000

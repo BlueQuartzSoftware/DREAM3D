@@ -36,9 +36,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/VertexArray.h"
-#include "DREAM3DLib/DataContainers/FaceArray.hpp"
-#include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
+#include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
+#include "DREAM3DLib/Geometry/VertexGeom.h"
+#include "DREAM3DLib/Geometry/TriangleGeom.h"
 
 
 /*
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param distance
      * @return
      */
-    static void FindDistanceBetweenPoints(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, float& distance);
+    static void FindDistanceBetweenPoints(const float* a, const float* b, float& distance);
 
     /**
      * @brief Computes the area of a triangle defined by 3 points.
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param area
      * @return
      */
-    static void FindTriangleArea(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float& area);
+    static void FindTriangleArea(const float* a, const float* b, const float* c, float& area);
 
     /**
      * @brief Computes the volume of a tetrahedron defined by 4 points.
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param volume
      * @return
      */
-    static void FindTetrahedronVolume(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& d, float& volume);
+    static void FindTetrahedronVolume(const float* a, const float* b, const float* c, const float* d, float& volume);
 
     /**
      * @brief Computes the normal vector to a plane containing 3 points (AB X AC).
@@ -112,7 +112,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param n
      * @return
      */
-    static void FindPlaneNormalVector(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float n[3]);
+    static void FindPlaneNormalVector(const float* a, const float* b, const float* c, float n[3]);
 
     /**
      * @brief Computes the coefficients of a plane containing 3 points (AB X AC).
@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param d float
      * @return
      */
-    static void FindPlaneCoefficients(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float n[3], float& d);
+    static void FindPlaneCoefficients(const float* a, const float* b, const float* c, float n[3], float& d);
 
     /**
      * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static bool PointInBox(const VertexArray::Vert_t& p, const VertexArray::Vert_t& lowerLeft, const VertexArray::Vert_t& upperRight);
+    static bool PointInBox(const float* p, const float* lowerLeft, const float* upperRight);
 
     /**
      * @brief Determines if a point is inside of a polyhedron defined by a set of faces
@@ -141,12 +141,12 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static char PointInPolyhedron(const FaceArray::Pointer faces,
-                                  const Int32DynamicListArray::ElementList& faceIds,
-                                  const VertexArray::Pointer faceBBs,
-                                  const VertexArray::Vert_t& q,
-                                  const VertexArray::Vert_t& ll,
-                                  const VertexArray::Vert_t& ur,
+    static char PointInPolyhedron(const TriangleGeom::Pointer faces,
+                                  const Int32Int32DynamicListArray::ElementList& faceIds,
+                                  const VertexGeom::Pointer faceBBs,
+                                  const float* q,
+                                  const float* ll,
+                                  const float* ur,
                                   float radius);
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
@@ -157,7 +157,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char PointInTriangle3D(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, int m, const VertexArray::Vert_t& p);
+    static char PointInTriangle3D(const float* a, const float* b, const float* c, int m, const float* p);
 
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char PointInTriangle2D(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& p);
+    static char PointInTriangle2D(const float* a, const float* b, const float* c, const float* p);
 
     /**
      * @brief Determines if a segment between two points intersects a box defined by the lower left and upper right corners
@@ -177,7 +177,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static bool RayIntersectsBox(const VertexArray::Vert_t& p, const VertexArray::Vert_t& q, const VertexArray::Vert_t& lowerLeft, const VertexArray::Vert_t& upperRight);
+    static bool RayIntersectsBox(const float* p, const float* q, const float* lowerLeft, const float* upperRight);
 
     /**
      * @brief Determines length of a segment between two points that lies within a box defined by the lower left and upper right corners
@@ -187,7 +187,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static float LengthOfRayInBox(const VertexArray::Vert_t& p, const VertexArray::Vert_t& q, const VertexArray::Vert_t& lowerLeft, const VertexArray::Vert_t& upperRight);
+    static float LengthOfRayInBox(const float* p, const float* q, const float* lowerLeft, const float* upperRight);
 
     /**
      * @brief Creates a randomly oriented ray of given length
@@ -204,7 +204,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+    static void FindBoundingBoxOfVertices(VertexGeom::Pointer verts, float* lowerLeft, float* upperRight);
 
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
@@ -213,7 +213,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfFace(FaceArray::Pointer faces, int faceId, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+    static void FindBoundingBoxOfFace(TriangleGeom::Pointer faces, int faceId, float* lowerLeft, float* upperRight);
 
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
@@ -222,7 +222,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfRotatedFace(FaceArray::Pointer faces, int faceId, float g[3][3], VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+    static void FindBoundingBoxOfRotatedFace(TriangleGeom::Pointer faces, int faceId, float g[3][3], float* lowerLeft, float* upperRight);
 
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of faces
@@ -231,7 +231,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+    static void FindBoundingBoxOfFaces(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::ElementList faceIds, float* lowerLeft, float* upperRight);
 
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of rotated faces
@@ -241,7 +241,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static void FindBoundingBoxOfRotatedFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, float g[3][3], VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+    static void FindBoundingBoxOfRotatedFaces(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::ElementList faceIds, float g[3][3], float* lowerLeft, float* upperRight);
 
     /**
      * @brief Determines if a segment between two points intersects a triangle defined by 3 points
@@ -253,7 +253,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char RayIntersectsTriangle(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r, VertexArray::Vert_t& p);
+    static char RayIntersectsTriangle(const float* a, const float* b, const float* c, const float* q, const float* r, float* p);
 
     /**
      * @brief Determines if a segment between two points crosses a triangle defined by 3 points
@@ -264,7 +264,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param c
      * @return
      */
-    static char RayCrossesTriangle(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r);
+    static char RayCrossesTriangle(const float* a, const float* b, const float* c, const float* q, const float* r);
 
     /**
      * @brief Determines if a segment between two points intersects a plane defined by 3 points
@@ -276,7 +276,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char RayIntersectsPlane(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r, VertexArray::Vert_t& p, int& m);
+    static char RayIntersectsPlane(const float* a, const float* b, const float* c, const float* q, const float* r, float* p, int& m);
 
   protected:
     GeometryMath();

@@ -79,7 +79,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
   for(int i = 0; i < containers.size(); i++) // Loop on each Data Container
   {
     DataContainer::Pointer container = containers.at(i);
-    DataContainerProxy dcProxy(container->getName(), Qt::Checked, container->getDCType()); // Create a new DataContainerProxy
+    DataContainerProxy dcProxy(container->getName(), Qt::Checked, DREAM3D::DataContainerType::UnknownDataContainer); // Create a new DataContainerProxy
 
     // Now loop over each AttributeMatrix in the data container that was selected
     DataContainer::AttributeMatrixMap_t attrMats = container->getAttributeMatrices();

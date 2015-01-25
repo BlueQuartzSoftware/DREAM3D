@@ -37,8 +37,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/Geometry/MeshStructs.h"
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 

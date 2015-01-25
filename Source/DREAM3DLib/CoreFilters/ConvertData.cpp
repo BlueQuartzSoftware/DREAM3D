@@ -281,7 +281,7 @@ void ConvertData::dataCheck(bool preflight)
   if (true == preflight)
   {
 
-    AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, m_SelectedCellArrayPath, -301);
+    AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_SelectedCellArrayPath, -301);
     if(getErrorCondition() < 0 || NULL == cellAttrMat.get() )
     {
       return;

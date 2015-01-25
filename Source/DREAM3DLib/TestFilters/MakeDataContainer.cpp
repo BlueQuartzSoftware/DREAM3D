@@ -34,17 +34,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "MakeVolumeDataContainer.h"
+#include "MakeDataContainer.h"
 
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/Geometry/ImageGeom.h"
+#include "DREAM3DLib/Geometry/VertexGeom.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MakeVolumeDataContainer::MakeVolumeDataContainer() :
+MakeDataContainer::MakeDataContainer() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_PhaseNameArrayName("Phase"),
@@ -68,13 +69,13 @@ MakeVolumeDataContainer::MakeVolumeDataContainer() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MakeVolumeDataContainer::~MakeVolumeDataContainer()
+MakeDataContainer::~MakeDataContainer()
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MakeVolumeDataContainer::setupFilterParameters()
+void MakeDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
@@ -90,7 +91,7 @@ void MakeVolumeDataContainer::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MakeVolumeDataContainer::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void MakeDataContainer::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
 
 }
@@ -98,7 +99,7 @@ void MakeVolumeDataContainer::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MakeVolumeDataContainer::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int MakeDataContainer::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(LatticeConstantsArrayName)
@@ -113,16 +114,16 @@ int MakeVolumeDataContainer::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MakeVolumeDataContainer::dataCheck()
+void MakeDataContainer::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if (getErrorCondition() < 0)
   {
     return;
   }
-  QVector<size_t> tDims(3, 0);
+  QVector<size_t> tDims(3, 1);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if (getErrorCondition() < 0)
   {
@@ -143,9 +144,23 @@ void MakeVolumeDataContainer::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  m->setResolution(0.1f, 0.2f, 0.3f);
-  m->setOrigin(100.3f, 987.234f, 0.0f);
+//  ImageGeom::Pointer image = ImageGeom::CreateGeometry("TestImageGeom");
+//  image->setResolution(0.1f, 0.2f, 0.3f);
+//  image->setOrigin(100.3f, 987.234f, 0.0f);
+//  m->setGeometry(image);
 
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(100, "TestVertexGeom");
+  //float* verts = vertices->getVertexPointer(0);
+  SharedVertexList::Pointer test = vertices->getVertices();
+  float* verts = test->getPointer(0);
+  for (size_t i=0;i<vertices->getNumberOfVertices();i++)
+  {
+    verts[3*i] = float(0.1 + i);
+    verts[3*i+1] = float(0.2 + i);
+    verts[3*i+2] = float(0.3 + i);
+  }
+
+  m->setGeometry(vertices);
 
 }
 
@@ -153,7 +168,7 @@ void MakeVolumeDataContainer::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MakeVolumeDataContainer::preflight()
+void MakeDataContainer::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -167,7 +182,7 @@ void MakeVolumeDataContainer::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MakeVolumeDataContainer::execute()
+void MakeDataContainer::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -187,9 +202,9 @@ void MakeVolumeDataContainer::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer MakeVolumeDataContainer::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer MakeDataContainer::newFilterInstance(bool copyFilterParameters)
 {
-  MakeVolumeDataContainer::Pointer filter = MakeVolumeDataContainer::New();
+  MakeDataContainer::Pointer filter = MakeDataContainer::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -200,7 +215,7 @@ AbstractFilter::Pointer MakeVolumeDataContainer::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MakeVolumeDataContainer::getCompiledLibraryName()
+const QString MakeDataContainer::getCompiledLibraryName()
 {
   return Test::TestBaseName;
 }
@@ -209,7 +224,7 @@ const QString MakeVolumeDataContainer::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MakeVolumeDataContainer::getGroupName()
+const QString MakeDataContainer::getGroupName()
 {
   return DREAM3D::FilterGroups::TestFilters;
 }
@@ -218,7 +233,7 @@ const QString MakeVolumeDataContainer::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MakeVolumeDataContainer::getSubGroupName()
+const QString MakeDataContainer::getSubGroupName()
 {
   return "Create Stuff";
 }
@@ -227,8 +242,8 @@ const QString MakeVolumeDataContainer::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MakeVolumeDataContainer::getHumanLabel()
+const QString MakeDataContainer::getHumanLabel()
 {
-  return "Make Volume DataContainer";
+  return "Make DataContainer";
 }
 

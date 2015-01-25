@@ -35,10 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DataContainer.h"
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -61,7 +57,15 @@ DataContainer::DataContainer(const QString name) :
 // -----------------------------------------------------------------------------
 DataContainer::~DataContainer()
 {
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainer::Pointer DataContainer::createNewDataContainer(const QString &name)
+{
+  DataContainer::Pointer p = DataContainer::New(name);
+  return p;
 }
 
 // -----------------------------------------------------------------------------
@@ -99,6 +103,38 @@ void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContain
     // Insert the DataContainerProxy proxy into the DataContainerArrayProxy
     proxy.list.push_back(dcProxy);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::setName(const QString &name)
+{
+  m_Name = name;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainer::getName()
+{
+  return m_Name;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::setGeometry(IGeometry::Pointer geometry)
+{
+  m_Geometry = geometry;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry::Pointer DataContainer::getGeometry()
+{
+  return m_Geometry;
 }
 
 // -----------------------------------------------------------------------------
@@ -330,8 +366,16 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, co
 // -----------------------------------------------------------------------------
 DataContainer::Pointer DataContainer::deepCopy()
 {
-  BOOST_ASSERT(false);
-  return DataContainer::NullPointer();
+  DataContainer::Pointer dcCopy = DataContainer::New(getName());
+  dcCopy->setName(getName());
+
+  for (AttributeMatrixMap_t::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
+  {
+    AttributeMatrix::Pointer attrMat = (*iter)->deepCopy();
+    dcCopy->addAttributeMatrix(attrMat->getName(), attrMat);
+  }
+
+  return dcCopy;
 }
 
 // -----------------------------------------------------------------------------
@@ -339,8 +383,64 @@ DataContainer::Pointer DataContainer::deepCopy()
 // -----------------------------------------------------------------------------
 int DataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 {
-  BOOST_ASSERT(false);
-  return -1;
+  int err;
+  hid_t geometryId;
+  err = QH5Utilities::createGroupsFromPath(DREAM3D::Geometry::Geometry, dcGid);
+  if (err < 0)
+  {
+    return err;
+  }
+  geometryId = H5Gopen(dcGid, DREAM3D::Geometry::Geometry.toLatin1().data(), H5P_DEFAULT);
+  HDF5ScopedGroupSentinel gSentinel(&geometryId, false);
+
+  if (NULL == m_Geometry.get())
+  {
+    err = QH5Lite::writeScalarAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryType, DREAM3D::GeometryType::UnknownGeometry);
+    if (err < 0)
+    {
+      return err;
+    }
+    err = QH5Lite::writeStringAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryTypeName, DREAM3D::Geometry::UnknownGeometry);
+    if (err < 0)
+    {
+      return err;
+    }
+  }
+  else
+  {
+    err = QH5Lite::writeScalarAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryType, m_Geometry->getGeometryType());
+    if (err < 0)
+    {
+      return err;
+    }
+    err = QH5Lite::writeStringAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryTypeName, m_Geometry->getGeometryTypeAsString());
+    if (err < 0)
+    {
+      return err;
+    }
+    err = QH5Lite::writeStringAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryName, m_Geometry->getName());
+    if (err < 0)
+    {
+      return err;
+    }
+    err = QH5Lite::writeScalarAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::UnitDimensionality, m_Geometry->getUnitDimensionality());
+    if (err < 0)
+    {
+      return err;
+    }
+    err = QH5Lite::writeScalarAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::SpatialDimensionality, m_Geometry->getSpatialDimensionality());
+    if (err < 0)
+    {
+      return err;
+    }
+    err = m_Geometry->writeGeometryToHDF5(geometryId, writeXdmf);
+    if (err < 0)
+    {
+      return err;
+    }
+  }
+
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -348,8 +448,90 @@ int DataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 // -----------------------------------------------------------------------------
 int DataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
-  BOOST_ASSERT(false);
-  return -1;
+  herr_t err = 0;
+
+  if (NULL == m_Geometry.get())
+  {
+    return -1;
+  }
+
+  m_Geometry->writeXdmf(out, getName(), hdfFileName);
+  unsigned int geomType = m_Geometry->getGeometryType();
+
+  // Get all of our AttributeMatrices
+  AttributeMatrixMap_t amMap = getAttributeMatrices();
+  // Loop over each AttributeMatrix and write the meta data to the Xdmf file
+  QString xdmfCenter = "";
+  for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = amMap.begin(); iter != amMap.end(); ++iter)
+  {
+    xdmfCenter = "";
+    AttributeMatrix::Pointer attrMat = iter.value();
+    uint32_t amType = attrMat->getType();
+    switch(geomType)
+    {
+    case DREAM3D::GeometryType::VertexGeometry:
+      switch(amType)
+      {
+      //FIXME: There are more AttributeMatrix Types that should be implemented
+      case DREAM3D::AttributeMatrixType::Vertex:
+        xdmfCenter = DREAM3D::XdmfCenterType::Node;
+        break;
+      default:
+        break;
+      }
+    case DREAM3D::GeometryType::EdgeGeometry:
+      switch(amType)
+      {
+      //FIXME: There are more AttributeMatrix Types that should be implemented
+      case DREAM3D::AttributeMatrixType::Vertex:
+        xdmfCenter = DREAM3D::XdmfCenterType::Node;
+        break;
+      case DREAM3D::AttributeMatrixType::Edge:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      default:
+        break;
+      }
+    case DREAM3D::GeometryType::ImageGeometry:
+      switch(amType)
+      {
+      //FIXME: There are more AttributeMatrix Types that should be implemented
+      case DREAM3D::AttributeMatrixType::Vertex:
+        xdmfCenter = DREAM3D::XdmfCenterType::Node;
+        break;
+      case DREAM3D::AttributeMatrixType::Edge:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      case DREAM3D::AttributeMatrixType::Face:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      case DREAM3D::AttributeMatrixType::Cell:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      default:
+        break;
+      }
+    }
+
+    if(xdmfCenter.isEmpty() == false)
+    {
+      QString xdmfText = attrMat->generateXdmfText(xdmfCenter, getName(), hdfFileName, m_Geometry->getXdmfGridType());
+      out << xdmfText;
+    }
+  }
+
+  writeXdmfFooter(out);
+
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainer::writeXdmfFooter(QTextStream &xdmf)
+{
+  xdmf << "  </Grid>" << "\n";
+  xdmf << "  <!-- *************** END OF " << getName() << " *************** -->" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -357,8 +539,65 @@ int DataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
-  BOOST_ASSERT(false);
-  return -1;
+  herr_t err = 0;
+  unsigned int geometryType = DREAM3D::GeometryType::UnknownGeometry;
+
+  err = QH5Lite::readScalarAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryType, geometryType);
+  if (err < 0)
+  {
+    return err;
+  }
+
+  hid_t geometryId = H5Gopen(dcGid, DREAM3D::Geometry::Geometry.toLatin1().data(), H5P_DEFAULT);
+  if (geometryId < 0)
+  {
+    return err;
+  }
+
+  IGeometry::Pointer geomPtr = IGeometry::NullPointer();
+
+  if (NULL == m_Geometry.get())
+  {
+    switch(geometryType)
+    {
+    case DREAM3D::GeometryType::ImageGeometry:
+    {
+      ImageGeom::Pointer image = ImageGeom::New();
+      err = image->readGeometryFromHDF5(geometryId, preflight);
+      setGeometry(image);
+      break;
+    }
+    case DREAM3D::GeometryType::VertexGeometry:
+    {
+      VertexGeom::Pointer vertices = VertexGeom::New();
+      err = vertices->readGeometryFromHDF5(geometryId, preflight);
+      setGeometry(vertices);
+      break;
+    }
+    case DREAM3D::GeometryType::EdgeGeometry:
+    {
+      EdgeGeom::Pointer edges = EdgeGeom::New();
+      err = edges->readGeometryFromHDF5(geometryId, preflight);
+      setGeometry(edges);
+      break;
+    }
+    case DREAM3D::GeometryType::TriangleGeometry:
+    {
+      TriangleGeom::Pointer triangles = TriangleGeom::New();
+      err = triangles->readGeometryFromHDF5(geometryId, preflight);
+      setGeometry(triangles);
+      break;
+    }
+    case DREAM3D::GeometryType::UnknownGeometry:
+      setGeometry(geomPtr);
+      break;
+    default:
+      setGeometry(geomPtr);
+      break;
+    }
+  }
+
+  return err;
 }
 
 // -----------------------------------------------------------------------------

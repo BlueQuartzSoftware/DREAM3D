@@ -153,7 +153,7 @@ void ThresholdExample::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m)
   {
     return;

@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 #include "DREAM3DLib/TestFilters/GenericExample.h"
 #include "DREAM3DLib/TestFilters/ArraySelectionExample.h"
-#include "DREAM3DLib/TestFilters/MakeVolumeDataContainer.h"
+#include "DREAM3DLib/TestFilters/MakeDataContainer.h"
 #include "DREAM3DLib/TestFilters/ThresholdExample.h"
 #include "DREAM3DLib/TestFilters/TestFilters.h"
 
@@ -100,7 +100,7 @@ void TestPipelinePushPop()
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  MakeVolumeDataContainer::Pointer read_h5ebsd = MakeVolumeDataContainer::New();
+  MakeDataContainer::Pointer read_h5ebsd = MakeDataContainer::New();
   //  pipeline->pushBack(read_h5ebsd);
 
   GenericExample::Pointer align_sections = GenericExample::New();

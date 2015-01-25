@@ -46,7 +46,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 
-
 /**
  * @class ConvertData ConvertData.h /IOFilters/ConvertData.h
  * @brief
