@@ -59,9 +59,17 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
 
     void loadInstalledPlugins();
 
+    void readCheckState(QCheckBox* checkBox, QString pluginName);
+
+    QMap<QString,bool> getPluginCheckBoxSettingsFromGUI();
+    static QMap<QString,bool> readPluginCheckBoxSettingsFromFile();
+
   public slots:
     void on_closeBtn_clicked();
     void on_detailsBtn_clicked();
+    void writePluginLoadingPreferences(int state);
+    void togglePluginState(int state);
+    void displayDetailsWindow(QTableWidgetItem* item);
 
   private:
     AboutPlugins(const AboutPlugins&); // Copy Constructor Not Implemented

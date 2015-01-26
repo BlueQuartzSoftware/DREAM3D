@@ -78,6 +78,8 @@ void AboutPlugins::setupGui()
 
   // Set Default Cell
   pluginsTable->setCurrentCell(0, 0);
+
+  connect(pluginsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(displayDetailsWindow(QTableWidgetItem*)));
 }
 
 // -----------------------------------------------------------------------------
@@ -101,15 +103,20 @@ void AboutPlugins::loadInstalledPlugins()
     col++;
 
     // Add check box that is centered in the cell
-    QWidget* checkBox = new QWidget();
-    QCheckBox* loadChkBox = new QCheckBox();
-    loadChkBox->setChecked(true);
-    QHBoxLayout* layout = new QHBoxLayout(checkBox);
-    layout->addWidget(loadChkBox);
+    QCheckBox* checkBox = new QCheckBox();
+    readCheckState(checkBox, plugin->getPluginName());
+
+    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(writePluginLoadingPreferences(int)));
+
+    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(togglePluginState(int)));
+
+    QHBoxLayout* layout = new QHBoxLayout();
+    layout->addWidget(checkBox);
     layout->setAlignment(Qt::AlignCenter);
     layout->setContentsMargins(0, 0, 0, 0);
-    checkBox->setLayout(layout);
-    pluginsTable->setCellWidget(row, col, checkBox);
+    QWidget* widget = new QWidget();
+    widget->setLayout(layout);
+    pluginsTable->setCellWidget(row, col, widget);
     col++;
 
     // Add version information
@@ -142,6 +149,146 @@ void AboutPlugins::on_detailsBtn_clicked()
   // Launch Details dialog box
   PluginDetails* dialog = new PluginDetails(item->text());
   dialog->exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::writePluginLoadingPreferences(int state)
+{
+#if defined (Q_OS_MAC)
+  QSettings::Format format = QSettings::NativeFormat;
+#else
+  QSettings::Format format = QSettings::IniFormat;
+#endif
+  QString filePath;
+
+  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
+  filePath = prefs.fileName();
+
+  prefs.beginGroup("PluginLoad");
+
+  QMap<QString,bool> pluginSettingsMap = getPluginCheckBoxSettingsFromGUI();
+
+  for (QMap<QString,bool>::iterator iter = pluginSettingsMap.begin(); iter != pluginSettingsMap.end(); iter++)
+  {
+    prefs.setValue(iter.key(), iter.value());
+  }
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::togglePluginState(int state)
+{
+  QCheckBox* checkBox = qobject_cast<QCheckBox*>(sender());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::readCheckState(QCheckBox* checkBox, QString pluginName)
+{
+#if defined (Q_OS_MAC)
+  QSettings::Format format = QSettings::NativeFormat;
+#else
+  QSettings::Format format = QSettings::IniFormat;
+#endif
+  QString filePath;
+
+  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
+  filePath = prefs.fileName();
+
+  prefs.beginGroup("PluginLoad");
+  checkBox->setChecked(prefs.value(pluginName, true).toBool());
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::displayDetailsWindow(QTableWidgetItem* item)
+{
+  on_detailsBtn_clicked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString,bool> AboutPlugins::getPluginCheckBoxSettingsFromGUI()
+{
+  QMap<QString,bool> pluginSettingsMap;
+
+  for (int row=0; row<pluginsTable->rowCount(); row++)
+  {
+    QString pluginName = pluginsTable->item(row, NAME_NUM)->text();
+    if (pluginsTable->cellWidget(row, LOAD_NUM) != NULL)
+    {
+      QWidget* widget = pluginsTable->cellWidget(row, LOAD_NUM);
+
+      if (NULL == widget)
+      {
+        return QMap<QString,bool>();
+      }
+      QHBoxLayout* layout = qobject_cast<QHBoxLayout*>(widget->layout());
+
+      if (NULL == layout)
+      {
+        return QMap<QString,bool>();
+      }
+      QCheckBox* checkBox = qobject_cast<QCheckBox*>(layout->itemAt(0)->widget());
+
+      if (NULL == checkBox)
+      {
+        return QMap<QString,bool>();
+      }
+
+      if (checkBox->checkState() == Qt::Checked)
+      {
+        pluginSettingsMap.insert(pluginName, true);
+      }
+      else
+      {
+        pluginSettingsMap.insert(pluginName, false);
+      }
+    }
+  }
+
+  return pluginSettingsMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString,bool> AboutPlugins::readPluginCheckBoxSettingsFromFile()
+{
+  QMap<QString,bool> map;
+
+#if defined (Q_OS_MAC)
+  QSettings::Format format = QSettings::NativeFormat;
+#else
+  QSettings::Format format = QSettings::IniFormat;
+#endif
+  QString filePath;
+
+  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
+  filePath = prefs.fileName();
+
+  prefs.beginGroup("PluginLoad");
+  QStringList pluginNameList = prefs.allKeys();
+
+  for (QStringList::iterator iter = pluginNameList.begin(); iter != pluginNameList.end(); iter++)
+  {
+    map.insert(*iter, prefs.value(*iter, true).toBool());
+  }
+  prefs.endGroup();
+
+  return map;
 }
 
 

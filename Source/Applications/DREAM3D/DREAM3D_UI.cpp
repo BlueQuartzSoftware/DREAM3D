@@ -143,7 +143,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   this->setAcceptDrops(true);
 
   // Turn off "About Plugins" menu item until it is ready and functional.
-  actionAbout_Plugins->setVisible(false);
+  //actionAbout_Plugins->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -57,6 +57,7 @@
 
 #include "QtSupport/QRecentFileList.h"
 
+#include "AboutPlugins.h"
 #include "DREAM3D_UI.h"
 
 // -----------------------------------------------------------------------------
@@ -282,12 +283,18 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
       DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
       if (ipPlugin)
       {
-        QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
-        this->Splash->showMessage(msg);
-        //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
+        QMap<QString,bool> pluginLoadMap = AboutPlugins::readPluginCheckBoxSettingsFromFile();
+
+        if (pluginLoadMap.value(ipPlugin->getPluginName()) == true)
+        {
+          QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
+          this->Splash->showMessage(msg);
+          //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
+          ipPlugin->registerFilterWidgets(fwm);
+          ipPlugin->registerFilters(fm);
+        }
+
         pluginManager->addPlugin(ipPlugin);
-        ipPlugin->registerFilterWidgets(fwm);
-        ipPlugin->registerFilters(fm);
       }
       m_PluginLoaders.push_back(loader);
     }

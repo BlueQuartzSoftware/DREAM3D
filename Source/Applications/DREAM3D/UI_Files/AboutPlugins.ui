@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>500</height>
+    <width>779</width>
+    <height>636</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,6 +24,9 @@
        <property name="horizontalScrollBarPolicy">
         <enum>Qt::ScrollBarAsNeeded</enum>
        </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
        <attribute name="horizontalHeaderStretchLastSection">
         <bool>false</bool>
        </attribute>
@@ -38,6 +41,9 @@
        <column>
         <property name="text">
          <string>Load</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
         </property>
        </column>
        <column>
