@@ -156,13 +156,13 @@ int VertexGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 
   out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << getNumberOfVertices() << "\">" << "\n";
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << getNumberOfVertices() << "\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/Geometry/" << "Verts" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << "Verts" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
 
   out << "    <Geometry Type=\"XYZ\">" << "\n";
   out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << getNumberOfVertices() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/Geometry/" << "Vertices" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::SharedVertexList << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
   out << "" << "\n";
@@ -178,24 +178,7 @@ int VertexGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   herr_t err = 0;
   SharedVertexList::Pointer vertices = SharedVertexList::NullPointer();
   vertices = IGeometry::ReadMeshFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight);
-  if (true == preflight)
-  {
-    err = IGeometry::ReadMetaDataFromHDF5<VertexGeom>(parentId, this);
-    if(err < 0)
-    {
-      return err;
-    }
-    setVertices(vertices);
-  }
-  else
-  {
-    err = IGeometry::ReadMetaDataFromHDF5<VertexGeom>(parentId, this);
-    if(err < 0)
-    {
-      return err;
-    }
-    setVertices(vertices);
-  }
+  setVertices(vertices);
 
   return 1;
 }

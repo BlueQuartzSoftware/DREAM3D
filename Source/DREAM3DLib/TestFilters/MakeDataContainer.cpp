@@ -103,11 +103,11 @@ int MakeDataContainer::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(LatticeConstantsArrayName)
-  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  writer->closeFilterGroup();
+      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -123,19 +123,19 @@ void MakeDataContainer::dataCheck()
   {
     return;
   }
-  QVector<size_t> tDims(3, 1);
+  QVector<size_t> tDims(3, 64);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if (getErrorCondition() < 0)
   {
     return;
   }
-  tDims.resize(1);
-  tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  //  tDims.resize(1);
+  //  tDims[0] = 0;
+  //  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  //  if(getErrorCondition() < 0)
+  //  {
+  //    return;
+  //  }
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -144,23 +144,22 @@ void MakeDataContainer::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-//  ImageGeom::Pointer image = ImageGeom::CreateGeometry("TestImageGeom");
-//  image->setResolution(0.1f, 0.2f, 0.3f);
-//  image->setOrigin(100.3f, 987.234f, 0.0f);
-//  m->setGeometry(image);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry("TestImageGeom");
+  image->setResolution(0.1f, 0.2f, 0.3f);
+  image->setOrigin(100.3f, 987.234f, 0.0f);
+  image->setDimensions(64, 64, 64);
+  m->setGeometry(image);
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(100, "TestVertexGeom");
-  //float* verts = vertices->getVertexPointer(0);
-  SharedVertexList::Pointer test = vertices->getVertices();
-  float* verts = test->getPointer(0);
-  for (size_t i=0;i<vertices->getNumberOfVertices();i++)
-  {
-    verts[3*i] = float(0.1 + i);
-    verts[3*i+1] = float(0.2 + i);
-    verts[3*i+2] = float(0.3 + i);
-  }
-
-  m->setGeometry(vertices);
+//    VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(100, "TestVertexGeom");
+//    SharedVertexList::Pointer test = vertices->getVertices();
+//    float* verts = test->getPointer(0);
+//    for (size_t i=0;i<vertices->getNumberOfVertices();i++)
+//    {
+//      verts[3*i] = float(0.1 + i);
+//      verts[3*i+1] = float(0.2 + i);
+//      verts[3*i+2] = float(0.3 + i);
+//    }
+//    m->setGeometry(vertices);
 
 }
 
@@ -193,6 +192,31 @@ void MakeDataContainer::execute()
   {
     return;
   }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getDataContainerName())->getGeometryAs<ImageGeom>();
+
+  size_t index;
+  size_t iDims[3] = {0, 0, 0};
+  image->getDimensions(iDims);
+
+  for (size_t z=0;z<image->getZPoints();z++)
+  {
+    for (size_t y=0;y<image->getYPoints();y++)
+    {
+      for (size_t x=0;x<image->getXPoints();x++)
+      {
+        index = (z * iDims[0] * iDims[1]) + (y * iDims[0]) + x;
+        m_FeatureIds[index] = z + x + y;
+      }
+    }
+  }
+
+//  VertexGeom::Pointer verts = getDataContainerArray()->getDataContainer(getDataContainerName())->getGeometryAs<VertexGeom>();
+
+//  for (size_t i=0;i<verts->getNumberOfVertices();i++)
+//  {
+//    m_FeatureIds[i] = i;
+//  }
 
 
   /* Let the GUI know we are done with this filter */

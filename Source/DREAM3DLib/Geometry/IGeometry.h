@@ -110,8 +110,7 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      * @param geometry
      * @return
      */
-    template<typename GeometryType>
-    static int ReadMetaDataFromHDF5(hid_t parentId, GeometryType* geometry)
+    static int ReadMetaDataFromHDF5(hid_t parentId, IGeometry::Pointer geometry)
     {
       herr_t err = 0;
       unsigned int spatialDims = 0;

@@ -392,7 +392,7 @@ int EdgeGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 
   out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << getNumberOfEdges() << "\">" << "\n";
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << getNumberOfEdges() << " 2\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/Geometry/" << "Edges" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::SharedEdgeList << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
 
@@ -409,7 +409,7 @@ int EdgeGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
   {
     out << "    <Geometry Type=\"XYZ\">" << "\n";
     out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << getNumberOfVertices() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-    out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/Geometry/" << "Vertices" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::SharedVertexList << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Geometry>" << "\n";
     out << "" << "\n";
@@ -433,11 +433,6 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   edges = IGeometry::ReadMeshFromHDF5<SharedEdgeList>(DREAM3D::Geometry::SharedEdgeList, parentId, preflight);
   if (true == preflight)
   {
-    err = IGeometry::ReadMetaDataFromHDF5<EdgeGeom>(parentId, this);
-    if (err < 0)
-    {
-      return err;
-    }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
     if(err >= 0)
     {
@@ -455,11 +450,6 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   }
   else
   {
-    err = IGeometry::ReadMetaDataFromHDF5<EdgeGeom>(parentId, this);
-    if (err < 0)
-    {
-      return err;
-    }
     int64_t numEdges = edges->getNumberOfTuples();
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
     if (err >= 0)

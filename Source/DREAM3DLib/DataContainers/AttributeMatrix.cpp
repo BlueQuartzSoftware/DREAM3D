@@ -86,34 +86,37 @@ void AttributeMatrix::ReadAttributeMatrixStructure(hid_t containerId, DataContai
   QH5Utilities::getGroupObjects(containerId, H5Utilities::H5Support_GROUP, attributeMatrixNames);
   foreach(QString attributeMatrixName, attributeMatrixNames)
   {
-    if(__SHOW_DEBUG_MSG__)
+    if (attributeMatrixName.compare(DREAM3D::Geometry::Geometry) != 0)
     {
-      std::cout << "    AttributeMatrix: " << attributeMatrixName.toStdString()  << std::endl;
+      if(__SHOW_DEBUG_MSG__)
+      {
+        std::cout << "    AttributeMatrix: " << attributeMatrixName.toStdString()  << std::endl;
+      }
+      hid_t attrMatGid = H5Gopen(containerId, attributeMatrixName.toAscii().constData(), H5P_DEFAULT);
+      if (attrMatGid < 0)
+      {
+        continue;
+      }
+      HDF5ScopedGroupSentinel sentinel(&attrMatGid, true);
+
+      AttributeMatrixProxy amProxy(attributeMatrixName);
+      amProxy.name = attributeMatrixName;
+      amProxy.flag = Qt::Checked;
+      herr_t err = QH5Lite::readScalarAttribute(containerId, attributeMatrixName, DREAM3D::StringConstants::AttributeMatrixType, amProxy.amType);
+      if(err < 0)
+      {
+        std::cout << "Error Reading the AttributeMatrix Type for AttributeMatrix " << attributeMatrixName.toStdString() << std::endl;
+      }
+
+      QString h5Path = h5InternalPath + "/" + attributeMatrixName;
+
+      // Read in the names of the Data Arrays that make up the AttributeMatrix
+      QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+      DataArrayProxy::ReadDataArrayStructure(attrMatGid, daProxies, h5Path);
+
+      // Insert the AttributeMatrixProxy proxy into the dataContainer proxy
+      dcProxy.attributeMatricies.insert(attributeMatrixName, amProxy);
     }
-    hid_t attrMatGid = H5Gopen(containerId, attributeMatrixName.toAscii().constData(), H5P_DEFAULT);
-    if (attrMatGid < 0)
-    {
-      continue;
-    }
-    HDF5ScopedGroupSentinel sentinel(&attrMatGid, true);
-
-    AttributeMatrixProxy amProxy(attributeMatrixName);
-    amProxy.name = attributeMatrixName;
-    amProxy.flag = Qt::Checked;
-    herr_t err = QH5Lite::readScalarAttribute(containerId, attributeMatrixName, DREAM3D::StringConstants::AttributeMatrixType, amProxy.amType);
-    if(err < 0)
-    {
-      std::cout << "Error Reading the AttributeMatrix Type for AttributeMatrix " << attributeMatrixName.toStdString() << std::endl;
-    }
-
-    QString h5Path = h5InternalPath + "/" + attributeMatrixName;
-
-    // Read in the names of the Data Arrays that make up the AttributeMatrix
-    QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
-    DataArrayProxy::ReadDataArrayStructure(attrMatGid, daProxies, h5Path);
-
-    // Insert the AttributeMatrixProxy proxy into the dataContainer proxy
-    dcProxy.attributeMatricies.insert(attributeMatrixName, amProxy);
   }
 }
 
@@ -277,9 +280,9 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
   bool acceptableMatrix = false;
   //Only valid for feature or ensemble type matrices
   if(m_Type == DREAM3D::AttributeMatrixType::VertexFeature || m_Type == DREAM3D::AttributeMatrixType::VertexEnsemble ||
-      m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
-      m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
-      m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble)
+     m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
+     m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
+     m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble)
   {
     acceptableMatrix = true;
   }
@@ -531,13 +534,13 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
       statsData->readH5Data(amGid);
       dPtr = statsData;
     }
-//    else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
-//    {
-//      StatsDataArray::Pointer statsData = StatsDataArray::New();
-//      statsData->setName(DREAM3D::EnsembleData::Statistics);
-//      statsData->readH5Data(amGid);
-//      dPtr = statsData;
-//    }
+    //    else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
+    //    {
+    //      StatsDataArray::Pointer statsData = StatsDataArray::New();
+    //      statsData->setName(DREAM3D::EnsembleData::Statistics);
+    //      statsData->readH5Data(amGid);
+    //      dPtr = statsData;
+    //    }
 
     if (NULL != dPtr.get())
     {
@@ -588,7 +591,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
   QString dimStrHalf = tupleStr + QString::number(array->getNumberOfComponents() / 2);
 
   if(numComp == 1 || numComp == 3 || numComp == 9)
-//  if(numComp == 1 || numComp == 3 || numComp == 6 || numComp == 9)
+    //  if(numComp == 1 || numComp == 3 || numComp == 6 || numComp == 9)
   {
     out << "    <Attribute Name=\"" << array->getName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -601,7 +604,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
     out << "    </Attribute>" << "\n";
   }
   else if(numComp == 2 || numComp == 6)
-//  else if(numComp == 2)
+    //  else if(numComp == 2)
   {
     //First Slab
     out << "    <Attribute Name=\"" << array->getName() << " (Feature 0)\" ";
@@ -680,7 +683,7 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
   {
     attrType = "Vector";
   }
-//  if(numComp == 6) { attrType = "Tensor6"; }
+  //  if(numComp == 6) { attrType = "Tensor6"; }
   if(numComp == 9)
   {
     attrType = "Tensor";

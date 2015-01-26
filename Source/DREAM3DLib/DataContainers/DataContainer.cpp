@@ -90,11 +90,6 @@ void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContain
     DataContainerProxy dcProxy(dataContainerName);
     dcProxy.name = dataContainerName;
     dcProxy.flag = Qt::Checked;
-    herr_t err = QH5Lite::readScalarAttribute(dcArrayGroupId, dataContainerName, DREAM3D::StringConstants::DataContainerType, dcProxy.dcType);
-    if(err < 0)
-    {
-      std::cout << "Error Reading the DataContainer Type for DataContainer " << dataContainerName.toStdString() << std::endl;
-    }
 
     QString h5Path = h5InternalPath + "/" + dataContainerName;
     // Read the Attribute Matricies for this Data Container
@@ -391,6 +386,10 @@ int DataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
     return err;
   }
   geometryId = H5Gopen(dcGid, DREAM3D::Geometry::Geometry.toLatin1().data(), H5P_DEFAULT);
+  if (geometryId < 0)
+  {
+    return -1;
+  }
   HDF5ScopedGroupSentinel gSentinel(&geometryId, false);
 
   if (NULL == m_Geometry.get())
@@ -551,8 +550,9 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
   hid_t geometryId = H5Gopen(dcGid, DREAM3D::Geometry::Geometry.toLatin1().data(), H5P_DEFAULT);
   if (geometryId < 0)
   {
-    return err;
+    return -1;
   }
+  HDF5ScopedGroupSentinel gSentinel(&geometryId, false);
 
   IGeometry::Pointer geomPtr = IGeometry::NullPointer();
 
@@ -564,6 +564,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       ImageGeom::Pointer image = ImageGeom::New();
       err = image->readGeometryFromHDF5(geometryId, preflight);
+      err = IGeometry::ReadMetaDataFromHDF5(dcGid, image);
       setGeometry(image);
       break;
     }
@@ -571,6 +572,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       VertexGeom::Pointer vertices = VertexGeom::New();
       err = vertices->readGeometryFromHDF5(geometryId, preflight);
+      err = IGeometry::ReadMetaDataFromHDF5(dcGid, vertices);
       setGeometry(vertices);
       break;
     }
@@ -578,6 +580,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       EdgeGeom::Pointer edges = EdgeGeom::New();
       err = edges->readGeometryFromHDF5(geometryId, preflight);
+      err = IGeometry::ReadMetaDataFromHDF5(dcGid, edges);
       setGeometry(edges);
       break;
     }
@@ -585,6 +588,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       TriangleGeom::Pointer triangles = TriangleGeom::New();
       err = triangles->readGeometryFromHDF5(geometryId, preflight);
+      err = IGeometry::ReadMetaDataFromHDF5(dcGid, triangles);
       setGeometry(triangles);
       break;
     }

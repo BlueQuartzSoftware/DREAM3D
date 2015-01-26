@@ -187,11 +187,6 @@ int ImageGeom::gatherMetaData(hid_t parentId, int64_t volDims[3], float spacing[
   {
     return err;
   }
-  err = IGeometry::ReadMetaDataFromHDF5<ImageGeom>(parentId, this);
-  if(err < 0)
-  {
-    return err;
-  }
   setDimensions(volDims[0], volDims[1], volDims[2]);
   setResolution(spacing);
   setOrigin(origin);
