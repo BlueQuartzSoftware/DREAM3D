@@ -1,6 +1,6 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
-
+ <file>EMMPM/EMMPMDescription.txt</file>
  </qresource>
  </RCC>

@@ -112,3 +112,21 @@ QVector<DREAM3DPluginInterface*> PluginManager::getPluginsVector()
 {
   return plugins;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3DPluginInterface* PluginManager::findPlugin(QString pluginName)
+{
+  for (QVector<DREAM3DPluginInterface*>::iterator iter = plugins.begin(); iter!= plugins.end(); iter++)
+  {
+    DREAM3DPluginInterface* plugin = *iter;
+    if (plugin->getPluginName() == pluginName)
+    {
+      return plugin;
+    }
+  }
+
+  // If the plugin isn't found in the vector...
+  return NULL;
+}

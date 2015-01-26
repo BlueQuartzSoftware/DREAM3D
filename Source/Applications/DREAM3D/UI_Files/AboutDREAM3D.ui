@@ -21,16 +21,7 @@
    <property name="spacing">
     <number>2</number>
    </property>
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>2</number>
    </property>
    <item>
@@ -146,106 +137,66 @@
     </layout>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="versionTab">
-      <attribute name="title">
-       <string>Version</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTableWidget" name="version">
-         <property name="rowCount">
-          <number>7</number>
+    <widget class="QGroupBox" name="groupBox">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QTableWidget" name="version">
+        <property name="rowCount">
+         <number>7</number>
+        </property>
+        <property name="columnCount">
+         <number>2</number>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>258</number>
+        </attribute>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <column/>
+        <column/>
+        <item row="0" column="0">
+         <property name="text">
+          <string>DREAM3D</string>
          </property>
-         <property name="columnCount">
-          <number>2</number>
+        </item>
+        <item row="1" column="0">
+         <property name="text">
+          <string>Boost</string>
          </property>
-         <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>258</number>
-         </attribute>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <column/>
-         <column/>
-         <item row="0" column="0">
-          <property name="text">
-           <string>DREAM3D</string>
-          </property>
-         </item>
-         <item row="1" column="0">
-          <property name="text">
-           <string>Boost</string>
-          </property>
-         </item>
-         <item row="2" column="0">
-          <property name="text">
-           <string>Qt</string>
-          </property>
-         </item>
-         <item row="3" column="0">
-          <property name="text">
-           <string>Qwt</string>
-          </property>
-         </item>
-         <item row="4" column="0">
-          <property name="text">
-           <string>HDF5</string>
-          </property>
-         </item>
-         <item row="5" column="0">
-          <property name="text">
-           <string>Eigen</string>
-          </property>
-         </item>
-         <item row="6" column="0">
-          <property name="text">
-           <string>Threading Building Blocks (TBB)</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pluginTab">
-      <attribute name="title">
-       <string>Plugin</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QTableWidget" name="plugin">
-         <property name="rowCount">
-          <number>8</number>
+        </item>
+        <item row="2" column="0">
+         <property name="text">
+          <string>Qt</string>
          </property>
-         <property name="columnCount">
-          <number>1</number>
+        </item>
+        <item row="3" column="0">
+         <property name="text">
+          <string>Qwt</string>
          </property>
-         <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>258</number>
-         </attribute>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <row/>
-         <column/>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+        </item>
+        <item row="4" column="0">
+         <property name="text">
+          <string>HDF5</string>
+         </property>
+        </item>
+        <item row="5" column="0">
+         <property name="text">
+          <string>Eigen</string>
+         </property>
+        </item>
+        <item row="6" column="0">
+         <property name="text">
+          <string>Threading Building Blocks (TBB)</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

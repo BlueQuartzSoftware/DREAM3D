@@ -50,7 +50,7 @@ Q_EXPORT_PLUGIN2(StatisticsPlugin, StatisticsPlugin)
 namespace Detail
 {
   const QString StatisticsPluginFile("StatisticsPlugin");
-  const QString StatisticsPluginDisplayName("StatisticsPlugin");
+  const QString StatisticsPluginDisplayName("Statistics");
   const QString StatisticsPluginBaseName("StatisticsPlugin");
 }
 
@@ -58,16 +58,13 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 StatisticsPlugin::StatisticsPlugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
-m_Group(""),
-m_URL(""),
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Description(""),
-m_Copyright(""),
-
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
 m_Dependencies(QList<QString>())
 {
 
@@ -115,14 +112,6 @@ QString StatisticsPlugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString StatisticsPlugin::getGroup()
-{
-  return m_Group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString StatisticsPlugin::getURL()
 {
   return m_URL;
@@ -149,7 +138,19 @@ QList<QString> StatisticsPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getDescription()
 {
-  return m_Description;
+  QFile licenseFile(":/Statistics/StatisticsDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

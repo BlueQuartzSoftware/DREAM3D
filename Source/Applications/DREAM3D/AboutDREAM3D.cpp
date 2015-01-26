@@ -52,13 +52,9 @@
 AboutDREAM3D::AboutDREAM3D(QWidget* parent) :
 QDialog(parent)
 {
-  this->setupUi(this);
+  setupUi(this);
 
-  // read versions
   readVersions();
-
-  // read plugin names
-  readPlugins();
 }
 
 // -----------------------------------------------------------------------------
@@ -103,37 +99,5 @@ void AboutDREAM3D::readVersions()
 	version->setItem(6, 1, new QTableWidgetItem(strTBB));
 
   labelVersion->setText(DREAM3DLib::Version::PackageComplete().toLatin1().data());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AboutDREAM3D::readPlugins()
-{ 
-	QTableWidgetItem* qtwi = new QTableWidgetItem(QString("Plugins"), QTableWidgetItem::Type);
-	plugin->setHorizontalHeaderItem(0, qtwi);
-	QStringList list;
-
-	FilterManager* fm = FilterManager::Instance();
-	FilterManager::Collection factories = fm->getFactories();
-	QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
-	while (iter.hasNext())
-	{
-		iter.next();
-		IFilterFactory::Pointer factory = iter.value();
-		AbstractFilter::Pointer filter = factory->create();
-		list.append(filter->getCompiledLibraryName());
-	}
-
-	list.removeDuplicates();
-	list.removeOne("Core"); // for now
-	list.removeOne("DREAM3DLib"); // for now
-	list.removeOne("TestPlugin"); // for now
-	plugin->setRowCount(list.count());
-	for (int i = 0; i < list.size(); ++i){
-		QTableWidgetItem* item = new QTableWidgetItem();
-		item->setText(list.at(i));
-		plugin->setItem(i, 0, item);
-	}
 }
 

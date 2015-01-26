@@ -20,7 +20,7 @@ Q_EXPORT_PLUGIN2(CellularAutomataPlugin, CellularAutomataPlugin)
 namespace Detail
 {
   const QString CellularAutomataPluginFile("CellularAutomataPlugin");
-  const QString CellularAutomataPluginDisplayName("CellularAutomataPlugin");
+  const QString CellularAutomataPluginDisplayName("CellularAutomata");
   const QString CellularAutomataPluginBaseName("CellularAutomataPlugin");
 }
 
@@ -28,15 +28,13 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 CellularAutomataPlugin::CellularAutomataPlugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
-m_Group(""),
-m_URL(""),
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Description(""),
-m_Copyright(""),
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
 m_Dependencies(QList<QString>())
 {
 
@@ -84,14 +82,6 @@ QString CellularAutomataPlugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString CellularAutomataPlugin::getGroup()
-{
-  return m_Group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString CellularAutomataPlugin::getURL()
 {
   return m_URL;
@@ -118,7 +108,19 @@ QList<QString> CellularAutomataPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString CellularAutomataPlugin::getDescription()
 {
-  return m_Description;
+  QFile licenseFile(":/CellularAutomata/CellularAutomataDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

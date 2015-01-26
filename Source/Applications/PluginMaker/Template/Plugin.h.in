@@ -48,11 +48,6 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
     virtual QString getVendor();
 
     /**
-     * @brief Returns the group of the plugin
-     */
-    virtual QString getGroup();
-
-    /**
      * @brief Returns the URL of the plugin
      */
     virtual QString getURL();
@@ -69,6 +64,8 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
 
     /**
      * @brief Returns the description of the plugin
+     * PLEASE UPDATE YOUR PLUGIN'S DESCRIPTION FILE.
+     * It is located at @PluginName@/Resources/@PluginName@/@PluginName@Description.txt
      */
     virtual QString getDescription();
 
@@ -79,6 +76,8 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
 
     /**
      * @brief Returns the license of the plugin
+     * PLEASE UPDATE YOUR PLUGIN'S LICENSE FILE.
+     * It is located at @PluginName@/Resources/@PluginName@/@PluginName@License.txt
      */
     virtual QString getLicense();
 
@@ -86,6 +85,11 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
      * @brief Returns the dependencies of the plugin
      */
     virtual QList<QString> getDependencies();
+
+    /**
+     * @brief Returns the third party licenses of the plugin
+     */
+    virtual QMap<QString, QString> getThirdPartyLicenses();
 
     /**
      * @brief Register all the filters with the FilterWidgetFactory
@@ -116,13 +120,11 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
     QString             m_Version;
     QString             m_CompatibilityVersion;
     QString             m_Vendor;
-    QString             m_Group;
     QString             m_URL;
     QString             m_Location;
     QList<QString>      m_Platforms;
     QString             m_Description;
     QString             m_Copyright;
-
     QList<QString>      m_Dependencies;
 
     @PluginName@Plugin(const @PluginName@Plugin&); // Copy Constructor Not Implemented

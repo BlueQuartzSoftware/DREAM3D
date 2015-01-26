@@ -50,7 +50,7 @@ Q_EXPORT_PLUGIN2(ImageProcessingPlugin, ImageProcessingPlugin)
 namespace Detail
 {
   const QString ImageProcessingPluginFile("ImageProcessingPlugin");
-  const QString ImageProcessingPluginDisplayName("ImageProcessingPlugin");
+  const QString ImageProcessingPluginDisplayName("ImageProcessing");
   const QString ImageProcessingPluginBaseName("ImageProcessingPlugin");
 }
 
@@ -58,16 +58,13 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 ImageProcessingPlugin::ImageProcessingPlugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
-m_Group(""),
-m_URL(""),
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Description(""),
-m_Copyright(""),
-
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
 m_Dependencies(QList<QString>())
 {
 
@@ -115,14 +112,6 @@ QString ImageProcessingPlugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageProcessingPlugin::getGroup()
-{
-  return m_Group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getURL()
 {
   return m_URL;
@@ -149,7 +138,19 @@ QList<QString> ImageProcessingPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getDescription()
 {
-  return m_Description;
+  QFile licenseFile(":/ImageProcessing/ImageProcessingDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

@@ -47,6 +47,8 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 
 include(${${PLUGIN_NAME}_SOURCE_DIR}/DistributionAnalysisOps/SourceList.cmake)
+# -- Include all the resources
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 

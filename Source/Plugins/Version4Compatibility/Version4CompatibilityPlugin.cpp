@@ -20,7 +20,7 @@ Q_EXPORT_PLUGIN2(Version4CompatibilityPlugin, Version4CompatibilityPlugin)
 namespace Detail
 {
   const QString Version4CompatibilityPluginFile("Version4CompatibilityPlugin");
-  const QString Version4CompatibilityPluginDisplayName("Version4CompatibilityPlugin");
+  const QString Version4CompatibilityPluginDisplayName("Version4Compatibility");
   const QString Version4CompatibilityPluginBaseName("Version4CompatibilityPlugin");
 }
 
@@ -28,15 +28,13 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 Version4CompatibilityPlugin::Version4CompatibilityPlugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
-m_Group(""),
-m_URL(""),
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Description(""),
-m_Copyright(""),
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
 m_Dependencies(QList<QString>())
 {
 
@@ -84,14 +82,6 @@ QString Version4CompatibilityPlugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString Version4CompatibilityPlugin::getGroup()
-{
-  return m_Group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString Version4CompatibilityPlugin::getURL()
 {
   return m_URL;
@@ -118,7 +108,19 @@ QList<QString> Version4CompatibilityPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString Version4CompatibilityPlugin::getDescription()
 {
-  return m_Description;
+  QFile licenseFile(":/Version4Compatibility/Version4CompatibilityDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

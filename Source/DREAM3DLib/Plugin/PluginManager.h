@@ -86,6 +86,8 @@ class DREAM3DLib_EXPORT PluginManager
      */
     QVector<DREAM3DPluginInterface*> getPluginsVector();
 
+    DREAM3DPluginInterface* findPlugin(QString pluginName);
+
 
   protected:
     PluginManager();

@@ -77,6 +77,7 @@
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
 #include "AboutDREAM3D.h"
+#include "AboutPlugins.h"
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
@@ -140,6 +141,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
+
+  // Turn off "About Plugins" menu item until it is ready and functional.
+  actionAbout_Plugins->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -855,7 +859,14 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
   setWindowModified(false);
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionAbout_Plugins_triggered()
+{
+  AboutPlugins* dialog = new AboutPlugins(this);
+  dialog->exec();
+}
 
 // -----------------------------------------------------------------------------
 //

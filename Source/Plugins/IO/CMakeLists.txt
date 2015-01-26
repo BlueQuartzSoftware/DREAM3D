@@ -48,7 +48,7 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 # Include any extra Widgets that this plugin needs
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
 # -- Include all the resources
-include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/${PLUGIN_NAME}/SourceList.cmake)
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 

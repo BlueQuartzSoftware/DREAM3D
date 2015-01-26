@@ -51,7 +51,7 @@ Q_EXPORT_PLUGIN2(SurfaceMeshingPlugin, SurfaceMeshingPlugin)
 namespace Detail
 {
   const QString SurfaceMeshingPluginFile("SurfaceMeshingPlugin");
-  const QString SurfaceMeshingPluginDisplayName("SurfaceMeshingPlugin");
+  const QString SurfaceMeshingPluginDisplayName("SurfaceMeshing");
   const QString SurfaceMeshingPluginBaseName("SurfaceMeshingPlugin");
 }
 
@@ -59,16 +59,13 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshingPlugin::SurfaceMeshingPlugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
-m_Group(""),
-m_URL(""),
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Description(""),
-m_Copyright(""),
-
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
 m_Dependencies(QList<QString>())
 {
 
@@ -116,14 +113,6 @@ QString SurfaceMeshingPlugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SurfaceMeshingPlugin::getGroup()
-{
-  return m_Group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getURL()
 {
   return m_URL;
@@ -150,7 +139,19 @@ QList<QString> SurfaceMeshingPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getDescription()
 {
-  return m_Description;
+  QFile licenseFile(":/SurfaceMeshing/SurfaceMeshingDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------

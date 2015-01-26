@@ -79,11 +79,6 @@ class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
     virtual QString getVendor();
 
     /**
-     * @brief Returns the group of the plugin
-     */
-    virtual QString getGroup();
-
-    /**
      * @brief Returns the URL of the plugin
      */
     virtual QString getURL();
@@ -152,11 +147,9 @@ class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
     QString             m_Version;
     QString             m_CompatibilityVersion;
     QString             m_Vendor;
-    QString             m_Group;
     QString             m_URL;
     QString             m_Location;
     QList<QString>      m_Platforms;
-    QString             m_Description;
     QString             m_Copyright;
     QList<QString>      m_Dependencies;
 
