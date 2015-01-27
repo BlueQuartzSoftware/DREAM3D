@@ -49,6 +49,7 @@
 
 #include "DREAM3DWidgetsLib/ui_IntWidget.h"
 
+class QLineEdit;
 
 /**
 * @brief
@@ -75,6 +76,8 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public FilterParameterWidget, private
     */
     void setupGui();
 
+		QString generateStyleSheet(int style);
+		void setInputStyle(QLineEdit* lineEdit);
 
   public slots:
     void widgetChanged(const QString& msg);

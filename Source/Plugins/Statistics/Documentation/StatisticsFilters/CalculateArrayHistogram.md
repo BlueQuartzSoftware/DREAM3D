@@ -1,4 +1,4 @@
-Find Array Histogram {#findarrayhistogram}
+Calculate Array Histogram {#calculatearrayhistogram}
 ==========
 
 ## Group (Subgroup) ##

@@ -35,47 +35,45 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FindArrayHistogram_H_
-#define _FindArrayHistogram_H_
+#ifndef _CalculateArrayHistogram_H_
+#define _CalculateArrayHistogram_H_
 
 #include <QtCore/QString>
-#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 
 /**
- * @class FindArrayHistogram FindArrayHistogram.h /FilterCategoryFilters/FindArrayHistogram.h
+ * @class CalculateArrayHistogram CalculateArrayHistogram.h /FilterCategoryFilters/CalculateArrayHistogram.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class FindArrayHistogram : public AbstractFilter
+class CalculateArrayHistogram : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindArrayHistogram)
-    DREAM3D_STATIC_NEW_MACRO(FindArrayHistogram)
-    DREAM3D_TYPE_MACRO_SUPER(FindArrayHistogram, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CalculateArrayHistogram)
+    DREAM3D_STATIC_NEW_MACRO(CalculateArrayHistogram)
+    DREAM3D_TYPE_MACRO_SUPER(CalculateArrayHistogram, AbstractFilter)
 
-
-    virtual ~FindArrayHistogram();
-
-    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
-    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+    virtual ~CalculateArrayHistogram();
 
 		DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
 		Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+
+		DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
+		Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+
+		DREAM3D_FILTER_PARAMETER(bool, Normalize)
+		Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
 
 		DREAM3D_FILTER_PARAMETER(QString, NewAttributeMatrixName)
 		Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
@@ -83,9 +81,11 @@ class FindArrayHistogram : public AbstractFilter
 		DREAM3D_FILTER_PARAMETER(QString, NewDataArrayName)
 		Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
 
-		DREAM3D_FILTER_PARAMETER(bool, Normalize)
-		Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
+		DREAM3D_FILTER_PARAMETER(bool, NewDataContainer)
+		Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
 
+		DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
+		Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
 		/**
 		* @brief This returns the group that the filter belongs to. You can select
@@ -139,7 +139,7 @@ class FindArrayHistogram : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    FindArrayHistogram();
+    CalculateArrayHistogram();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -152,15 +152,12 @@ class FindArrayHistogram : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-		DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, NewArray)
+		DEFINE_CREATED_DATAARRAY_VARIABLE(double, NewDataArray)
 
-    FindArrayHistogram(const FindArrayHistogram&); // Copy Constructor Not Implemented
-    void operator=(const FindArrayHistogram&); // Operator '=' Not Implemented
+    CalculateArrayHistogram(const CalculateArrayHistogram&); // Copy Constructor Not Implemented
+    void operator=(const CalculateArrayHistogram&); // Operator '=' Not Implemented
 };
 
-#endif /* _FindArrayHistogram_H_ */
+#endif /* _CalculateArrayHistogram_H_ */
 
 
