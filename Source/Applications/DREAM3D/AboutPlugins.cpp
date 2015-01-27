@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <QtGui/QMessageBox>
+
 #include "PluginDetails.h"
 
 #include "AboutPlugins.h"
@@ -48,7 +50,8 @@ enum ColumnNumbers
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AboutPlugins::AboutPlugins(QWidget* parent)
+AboutPlugins::AboutPlugins(QWidget* parent) :
+  m_loadPreferencesDidChange(false)
 {
   setupUi(this);
 
@@ -58,7 +61,10 @@ AboutPlugins::AboutPlugins(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AboutPlugins::~AboutPlugins() {}
+AboutPlugins::~AboutPlugins()
+{
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -103,18 +109,18 @@ void AboutPlugins::loadInstalledPlugins()
     col++;
 
     // Add check box that is centered in the cell
-    QCheckBox* checkBox = new QCheckBox();
+    QCheckBox* checkBox = new QCheckBox(NULL);
     readCheckState(checkBox, plugin->getPluginName());
 
     connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(writePluginLoadingPreferences(int)));
 
     connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(togglePluginState(int)));
 
-    QHBoxLayout* layout = new QHBoxLayout();
+    QHBoxLayout* layout = new QHBoxLayout(NULL);
     layout->addWidget(checkBox);
     layout->setAlignment(Qt::AlignCenter);
     layout->setContentsMargins(0, 0, 0, 0);
-    QWidget* widget = new QWidget();
+    QWidget* widget = new QWidget(NULL);
     widget->setLayout(layout);
     pluginsTable->setCellWidget(row, col, widget);
     col++;
@@ -147,8 +153,11 @@ void AboutPlugins::on_detailsBtn_clicked()
   QTableWidgetItem* item = pluginsTable->item(pluginsTable->currentRow(), NAME_NUM);
 
   // Launch Details dialog box
-  PluginDetails* dialog = new PluginDetails(item->text());
-  dialog->exec();
+  PluginDetails dialog(item->text());
+  dialog.exec();
+
+  // Clean up memory
+  delete item;
 }
 
 // -----------------------------------------------------------------------------
@@ -177,6 +186,8 @@ void AboutPlugins::writePluginLoadingPreferences(int state)
   }
 
   prefs.endGroup();
+
+  m_loadPreferencesDidChange = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -291,6 +302,13 @@ QMap<QString,bool> AboutPlugins::readPluginCheckBoxSettingsFromFile()
   return map;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AboutPlugins::getLoadPreferencesDidChange()
+{
+  return m_loadPreferencesDidChange;
+}
 
 
 

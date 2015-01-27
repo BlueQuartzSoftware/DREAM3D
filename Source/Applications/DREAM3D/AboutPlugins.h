@@ -64,6 +64,8 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
     QMap<QString,bool> getPluginCheckBoxSettingsFromGUI();
     static QMap<QString,bool> readPluginCheckBoxSettingsFromFile();
 
+    bool getLoadPreferencesDidChange();
+
   public slots:
     void on_closeBtn_clicked();
     void on_detailsBtn_clicked();
@@ -72,6 +74,8 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
     void displayDetailsWindow(QTableWidgetItem* item);
 
   private:
+    bool m_loadPreferencesDidChange;
+
     AboutPlugins(const AboutPlugins&); // Copy Constructor Not Implemented
     void operator=(const AboutPlugins&); // Operator '=' Not Implemented
 };

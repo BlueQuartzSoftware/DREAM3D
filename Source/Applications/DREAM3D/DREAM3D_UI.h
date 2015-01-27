@@ -304,6 +304,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QToolButton*        m_FavoritesBtn;
     QToolButton*        m_PrebuiltBtn;
     QToolButton*        m_IssuesBtn;
+    bool                m_ShouldRestart;
 
 
     static QString    m_OpenDialogLastDirectory;

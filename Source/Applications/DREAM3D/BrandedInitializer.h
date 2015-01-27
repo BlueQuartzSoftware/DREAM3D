@@ -60,6 +60,7 @@ class BrandedInitializer : public QObject
     virtual ~BrandedInitializer();
 
     bool initialize(int argc, char* argv[]);
+
   protected:
     QVector<DREAM3DPluginInterface*> loadPlugins();
 

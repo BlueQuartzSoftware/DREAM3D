@@ -142,6 +142,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 
   // Create main window.
   this->MainWindow = new DREAM3D_UI();
+
   this->MainWindow->setWindowTitle("[*] DREAM3D Version " + DREAM3DLib::Version::Package());
   this->MainWindow->setLoadedPlugins(plugins);
 
@@ -267,6 +268,8 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
 
   PluginManager* pluginManager = PluginManager::Instance();
 
+  QMap<QString,bool> loadMap = AboutPlugins::readPluginCheckBoxSettingsFromFile();
+
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
@@ -283,8 +286,6 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
       DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
       if (ipPlugin)
       {
-        QMap<QString,bool> loadMap = AboutPlugins::readPluginCheckBoxSettingsFromFile();
-
         if (loadMap.contains(ipPlugin->getPluginName()))
         {
           if (loadMap.value(ipPlugin->getPluginName()) == true)
@@ -318,3 +319,6 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
 
   return pluginManager->getPluginsVector();
 }
+
+
+

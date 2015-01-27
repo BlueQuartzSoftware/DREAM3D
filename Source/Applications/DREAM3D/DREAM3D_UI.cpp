@@ -44,6 +44,7 @@
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
 #include <QtCore/QDateTime>
+#include <QtCore/QProcess>
 #include <QtGui/QApplication>
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
@@ -106,7 +107,8 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_FilterLibraryBtn(NULL),
   m_FavoritesBtn(NULL),
   m_PrebuiltBtn(NULL),
-  m_IssuesBtn(NULL)
+  m_IssuesBtn(NULL),
+  m_ShouldRestart(false)
 {
   // First thing, set the title of the window
   setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
@@ -220,6 +222,12 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
     writeSettings();
     on_actionClearPipeline_triggered();
     event->accept();
+  }
+
+  if (m_ShouldRestart == true)
+  {
+    // Restart DREAM3D
+    QProcess::startDetached(QApplication::applicationFilePath());
   }
 }
 
@@ -864,8 +872,29 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionAbout_Plugins_triggered()
 {
-  AboutPlugins* dialog = new AboutPlugins(this);
-  dialog->exec();
+  AboutPlugins dialog(this);
+  dialog.exec();
+
+  /* If any of the load checkboxes were changed, display a dialog warning
+   * the user that they must restart DREAM3D to see the changes.
+   */
+  if (dialog.getLoadPreferencesDidChange() == true)
+  {
+    QMessageBox msgBox;
+    msgBox.setText("DREAM3D must be restarted to allow these changes to take effect.");
+    msgBox.setInformativeText("Restart?");
+    msgBox.setWindowTitle("Restart Needed");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    int choice = msgBox.exec();
+
+    if (choice == QMessageBox::Yes)
+    {
+      // Set Restart Flag and Begin closing DREAM3D
+      m_ShouldRestart = true;
+      this->close();
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
