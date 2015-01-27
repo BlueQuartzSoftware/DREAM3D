@@ -283,18 +283,25 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
       DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
       if (ipPlugin)
       {
-        QMap<QString,bool> pluginLoadMap = AboutPlugins::readPluginCheckBoxSettingsFromFile();
+        QMap<QString,bool> loadMap = AboutPlugins::readPluginCheckBoxSettingsFromFile();
 
-        if (pluginLoadMap.value(ipPlugin->getPluginName()) == true)
+        if (loadMap.contains(ipPlugin->getPluginName()))
         {
-          QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
-          this->Splash->showMessage(msg);
-          //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
-          ipPlugin->registerFilterWidgets(fwm);
-          ipPlugin->registerFilters(fm);
-        }
+          if (loadMap.value(ipPlugin->getPluginName()) == true)
+          {
+            QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
+            this->Splash->showMessage(msg);
+            //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
+            ipPlugin->registerFilterWidgets(fwm);
+            ipPlugin->registerFilters(fm);
+          }
+          else
+          {
+            qDebug() << "Plugin " << ipPlugin->getPluginName() << " Disabled.\n";
+          }
 
-        pluginManager->addPlugin(ipPlugin);
+          pluginManager->addPlugin(ipPlugin);
+        }
       }
       m_PluginLoaders.push_back(loader);
     }
