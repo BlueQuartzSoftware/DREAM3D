@@ -145,6 +145,14 @@ void CalculateArrayHistogram::dataCheck()
     return;
   }
 
+	if (m_NewDataContainer && m_NewDataContainerName.isEmpty() == true)
+	{
+		setErrorCondition(-11014);
+		QString ss = QObject::tr("The New Data Container name can not be empty. Please set a value.");
+		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		return;
+	}
+
   if (m_NumberOfBins <= 0)
   {
     setErrorCondition(-11011);

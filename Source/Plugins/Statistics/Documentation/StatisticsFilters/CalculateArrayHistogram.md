@@ -5,15 +5,15 @@ Calculate Array Histogram {#calculatearrayhistogram}
 Statistics Filters (Ensemble)
 
 ## Description ##
-This filter will bin a specified **Array** level attribute.  The user can chose both which attributes to bin and the number of bins.  The bins will be stored in an **Ensemble** array.
+This filter will bin a specified scalar **Array**.  The user will select the number of bins (a value greater than zero). The user will enter a new attribute matrix name and a new histogram array name. If the user clicks the new Data Container check box, a new data container name must be entered. Otherwise the current data container will be used. To normalize the array, the user clicks the normalize check box.  The bins will be stored in the histogram array. The normalization is discrete probability distribution. See Normalization Quick Reference at https://plot.ly/histogram/. 
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------| ----------- |
-| Feature Array To Bin | String | Feature to be binned. |
-| Number Of Bins | Integer | |
-| Remove Biased Features | Boolean | TRUE if biased features are to be omitted from the binning counts. |
+| Scalar Array To Bin | various | Create a histogram of this scalar array. |
+| Number Of Bins | Integer greater than zero | |
+| Normalize | Boolean | TRUE the array will be normalized |
 
 ## Required Arrays ##
 
