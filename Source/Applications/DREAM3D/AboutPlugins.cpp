@@ -39,12 +39,19 @@
 
 #include "AboutPlugins.h"
 
-enum ColumnNumbers
+enum ColumnIndex
 {
-  NAME_NUM = 0,
-  LOAD_NUM = 1,
-  VERSION_NUM = 2,
-  VENDOR_NUM = 3
+  NAME_INDEX = 0,
+  CHECKBOX_INDEX = 1,
+  STATUS_INDEX = 2,
+  VERSION_INDEX = 3,
+  VENDOR_INDEX = 4
+};
+
+enum SettingIndex
+{
+  PATH_INDEX = 0,
+  ENABLED_INDEX = 1
 };
 
 // -----------------------------------------------------------------------------
@@ -80,7 +87,8 @@ void AboutPlugins::setupGui()
   // Set selection behavior so that only full rows can be selected
   pluginsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-  loadInstalledPlugins();
+  QList<PluginProxy::Pointer> currentCache = readPluginCache();
+  loadPlugins(currentCache);
 
   // Set Default Cell
   pluginsTable->setCurrentCell(0, 0);
@@ -91,49 +99,96 @@ void AboutPlugins::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AboutPlugins::loadInstalledPlugins()
+void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
 {
   PluginManager* manager = PluginManager::Instance();
   QVector<DREAM3DPluginInterface*> vector = manager->getPluginsVector();
   pluginsTable->setRowCount(vector.size());
-  int col = 0;
 
+  // Iterate over PluginManager and add each entry to the plugin table
   for (int row=0; row<vector.size(); row++)
   {
     DREAM3DPluginInterface* plugin = vector.at(row);
-    col = 0;
+    int errorCode = addPluginToTable(plugin, row);
 
-    // Add name of plugin to the row
-    QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
-    pluginsTable->setItem(row, col, nameItem);
-    col++;
-
-    // Add check box that is centered in the cell
-    QCheckBox* checkBox = new QCheckBox(NULL);
-    readCheckState(checkBox, plugin->getPluginName());
-
-    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(writePluginLoadingPreferences(int)));
-
-    connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(togglePluginState(int)));
-
-    QHBoxLayout* layout = new QHBoxLayout(NULL);
-    layout->addWidget(checkBox);
-    layout->setAlignment(Qt::AlignCenter);
-    layout->setContentsMargins(0, 0, 0, 0);
-    QWidget* widget = new QWidget(NULL);
-    widget->setLayout(layout);
-    pluginsTable->setCellWidget(row, col, widget);
-    col++;
-
-    // Add version information
-    QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
-    pluginsTable->setItem(row, col, versionItem);
-    col++;
-
-    // Add vendor information
-    QTableWidgetItem* vendorItem = new QTableWidgetItem(plugin->getVendor());
-    pluginsTable->setItem(row, col, vendorItem);
+    if (errorCode < 0)
+    {
+      // Throw an error???  Plugin pointer is NULL...
+    }
   }
+
+  // Iterate over proxy and find all entries that are not in PluginManager
+  QList<QString> managerNames = manager->getPluginNames();
+  QList<QString> pluginNames;
+
+  for (QList<PluginProxy::Pointer>::iterator proxyIter = proxies.begin(); proxyIter != proxies.end(); proxyIter++)
+  {
+    pluginNames.push_back((*proxyIter)->getPluginName());
+  }
+
+  for (QList<QString>::iterator nameIter = pluginNames.begin(); nameIter != pluginNames.end(); nameIter++)
+  {
+    QString proxyName = *nameIter;
+    if ( managerNames.contains(proxyName) == false )
+    {
+      qDebug() << "The plugin " << proxyName << " was not found in the PluginManager.";
+//      DREAM3DPluginInterface* plugin = new DREAM3DPluginInterface(NULL);
+//      int errorCode = addPluginToTable(plugin, row);
+
+//      if (errorCode < 0)
+//      {
+//        // Throw an error???  Plugin pointer is NULL...
+//      }
+    }
+  }
+
+  // Write anything newly loaded to the cache
+  //writePluginCache(0);    // Dummy parameter to make the function run...
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AboutPlugins::addPluginToTable(DREAM3DPluginInterface* plugin, int row)
+{
+  if (NULL == plugin)
+  {
+    return -1;
+  }
+
+  // Add name of plugin to the row
+  QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
+  pluginsTable->setItem(row, NAME_INDEX, nameItem);
+
+  // Add check box that is centered in the cell
+  QCheckBox* checkBox = new QCheckBox(NULL);
+  readCheckState(checkBox, plugin->getPluginName());
+
+  connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(writePluginCache(int)));
+
+  connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(togglePluginState(int)));
+
+  QHBoxLayout* layout = new QHBoxLayout(NULL);
+  layout->addWidget(checkBox);
+  layout->setAlignment(Qt::AlignCenter);
+  layout->setContentsMargins(0, 0, 0, 0);
+  QWidget* widget = new QWidget(NULL);
+  widget->setLayout(layout);
+  pluginsTable->setCellWidget(row, CHECKBOX_INDEX, widget);
+
+  // Add load status information
+  QTableWidgetItem* statusItem = new QTableWidgetItem(plugin->getDidLoad());
+  pluginsTable->setItem(row, STATUS_INDEX, statusItem);
+
+  // Add version information
+  QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
+  pluginsTable->setItem(row, VERSION_INDEX, versionItem);
+
+  // Add vendor information
+  QTableWidgetItem* vendorItem = new QTableWidgetItem(plugin->getVendor());
+  pluginsTable->setItem(row, VENDOR_INDEX, vendorItem);
+
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -150,20 +205,17 @@ void AboutPlugins::on_closeBtn_clicked()
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_detailsBtn_clicked()
 {  
-  QTableWidgetItem* item = pluginsTable->item(pluginsTable->currentRow(), NAME_NUM);
+  QTableWidgetItem* item = pluginsTable->item(pluginsTable->currentRow(), NAME_INDEX);
 
   // Launch Details dialog box
   PluginDetails dialog(item->text());
   dialog.exec();
-
-  // Clean up memory
-  delete item;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AboutPlugins::writePluginLoadingPreferences(int state)
+void AboutPlugins::writePluginCache(int state)
 {
 #if defined (Q_OS_MAC)
   QSettings::Format format = QSettings::NativeFormat;
@@ -176,13 +228,20 @@ void AboutPlugins::writePluginLoadingPreferences(int state)
 
   filePath = prefs.fileName();
 
-  prefs.beginGroup("PluginLoad");
+  prefs.beginGroup("PluginPreferences");
 
-  QMap<QString,bool> pluginSettingsMap = getPluginCheckBoxSettingsFromGUI();
+  QList<PluginProxy::Pointer> proxies = getPluginCheckBoxSettingsFromGUI();
 
-  for (QMap<QString,bool>::iterator iter = pluginSettingsMap.begin(); iter != pluginSettingsMap.end(); iter++)
+  for (QList<PluginProxy::Pointer>::iterator proxyIter = proxies.begin(); proxyIter != proxies.end(); proxyIter++)
   {
-    prefs.setValue(iter.key(), iter.value());
+    QString pluginName = (*proxyIter)->getPluginName();
+    QString filePath = (*proxyIter)->getFilePath();
+    bool enabled = (*proxyIter)->getEnabled();
+
+    prefs.beginGroup(pluginName);
+    prefs.setValue(QString::number(PATH_INDEX), filePath);
+    prefs.setValue(QString::number(ENABLED_INDEX), enabled);
+    prefs.endGroup();
   }
 
   prefs.endGroup();
@@ -214,8 +273,10 @@ void AboutPlugins::readCheckState(QCheckBox* checkBox, QString pluginName)
 
   filePath = prefs.fileName();
 
-  prefs.beginGroup("PluginLoad");
-  checkBox->setChecked(prefs.value(pluginName, true).toBool());
+  prefs.beginGroup("PluginPreferences");
+  prefs.beginGroup(pluginName);
+  checkBox->setChecked(prefs.value(QString::number(ENABLED_INDEX), true).toBool());
+  prefs.endGroup();
   prefs.endGroup();
 }
 
@@ -230,54 +291,68 @@ void AboutPlugins::displayDetailsWindow(QTableWidgetItem* item)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QMap<QString,bool> AboutPlugins::getPluginCheckBoxSettingsFromGUI()
+QList<PluginProxy::Pointer> AboutPlugins::getPluginCheckBoxSettingsFromGUI()
 {
-  QMap<QString,bool> pluginSettingsMap;
+  PluginManager* manager = PluginManager::Instance();
+  QList<PluginProxy::Pointer> list;
 
   for (int row=0; row<pluginsTable->rowCount(); row++)
   {
-    QString pluginName = pluginsTable->item(row, NAME_NUM)->text();
-    if (pluginsTable->cellWidget(row, LOAD_NUM) != NULL)
+    QString pluginName = pluginsTable->item(row, NAME_INDEX)->text();
+    DREAM3DPluginInterface* plugin = manager->findPlugin(pluginName);
+
+    PluginProxy::Pointer proxy = PluginProxy::New();
+    proxy->setPluginName(pluginName);
+
+    if (pluginsTable->cellWidget(row, CHECKBOX_INDEX) != NULL)
     {
-      QWidget* widget = pluginsTable->cellWidget(row, LOAD_NUM);
+      QWidget* widget = pluginsTable->cellWidget(row, CHECKBOX_INDEX);
 
       if (NULL == widget)
       {
-        return QMap<QString,bool>();
+        return QList<PluginProxy::Pointer>();
       }
       QHBoxLayout* layout = qobject_cast<QHBoxLayout*>(widget->layout());
 
       if (NULL == layout)
       {
-        return QMap<QString,bool>();
+        return QList<PluginProxy::Pointer>();
       }
       QCheckBox* checkBox = qobject_cast<QCheckBox*>(layout->itemAt(0)->widget());
 
       if (NULL == checkBox)
       {
-        return QMap<QString,bool>();
+        return QList<PluginProxy::Pointer>();
       }
 
       if (checkBox->checkState() == Qt::Checked)
       {
-        pluginSettingsMap.insert(pluginName, true);
+        proxy->setEnabled(true);
       }
       else
       {
-        pluginSettingsMap.insert(pluginName, false);
+        proxy->setEnabled(false);
       }
     }
+
+    if ( plugin )
+    {
+      QString filePath = plugin->getLocation();
+      proxy->setFilePath(filePath);
+    }
+
+    list.push_back(proxy);
   }
 
-  return pluginSettingsMap;
+  return list;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QMap<QString,bool> AboutPlugins::readPluginCheckBoxSettingsFromFile()
+QList<PluginProxy::Pointer> AboutPlugins::readPluginCache()
 {
-  QMap<QString,bool> map;
+  QList<PluginProxy::Pointer> proxyList;
 
 #if defined (Q_OS_MAC)
   QSettings::Format format = QSettings::NativeFormat;
@@ -290,16 +365,25 @@ QMap<QString,bool> AboutPlugins::readPluginCheckBoxSettingsFromFile()
 
   filePath = prefs.fileName();
 
-  prefs.beginGroup("PluginLoad");
-  QStringList pluginNameList = prefs.allKeys();
+  prefs.beginGroup("PluginPreferences");
+  QStringList pluginNameList = prefs.childGroups();
 
   for (QStringList::iterator iter = pluginNameList.begin(); iter != pluginNameList.end(); iter++)
   {
-    map.insert(*iter, prefs.value(*iter, true).toBool());
+    PluginProxy::Pointer proxy = PluginProxy::New();
+    QString pluginName = *iter;
+
+    prefs.beginGroup(pluginName);
+    proxy->setPluginName(pluginName);
+    proxy->setFilePath(prefs.value(QString::number(PATH_INDEX)).toString());
+    proxy->setEnabled(prefs.value(QString::number(ENABLED_INDEX)).toBool());
+    prefs.endGroup();
+
+    proxyList.push_back(proxy);
   }
   prefs.endGroup();
 
-  return map;
+  return proxyList;
 }
 
 // -----------------------------------------------------------------------------

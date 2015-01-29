@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,55 +33,44 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef ABOUTPLUGINS_H
-#define ABOUTPLUGINS_H
-
-#include <QtGui/QCheckBox>
-
-#include <QtCore/QObject>
-
-#include <DREAM3DLib/Plugin/PluginProxy.h>
-#include <DREAM3DLib/Plugin/PluginManager.h>
-#include <DREAM3DLib/Plugin/DREAM3DPluginInterface.h>
+#ifndef _PluginProxy_H_
+#define _PluginProxy_H_
 
 
-//-- UIC generated Header
-#include "ui_AboutPlugins.h"
+#include <QtCore/QString>
 
-class AboutPlugins : public QDialog, private Ui::AboutPlugins
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+/**
+ * @brief The PluginProxy class is a wrapper class for important plugin information.
+ */
+class DREAM3DLib_EXPORT PluginProxy
 {
-    Q_OBJECT
-
   public:
-    AboutPlugins(QWidget* parent = 0);
-    virtual ~AboutPlugins();
+    DREAM3D_SHARED_POINTERS(PluginProxy)
+    DREAM3D_STATIC_NEW_MACRO(PluginProxy)
+    DREAM3D_TYPE_MACRO(PluginProxy)
 
-    void setupGui();
+    PluginProxy();
+    virtual ~PluginProxy();
 
-    int addPluginToTable(DREAM3DPluginInterface* plugin, int row);
+    void setPluginName(QString name);
+    QString getPluginName();
 
-    void loadPlugins(QList<PluginProxy::Pointer> proxies);
+    void setFilePath(QString path);
+    QString getFilePath();
 
-    void readCheckState(QCheckBox* checkBox, QString pluginName);
-
-    QList<PluginProxy::Pointer> getPluginCheckBoxSettingsFromGUI();
-    static QList<PluginProxy::Pointer> readPluginCache();
-
-    bool getLoadPreferencesDidChange();
-
-  public slots:
-    void on_closeBtn_clicked();
-    void on_detailsBtn_clicked();
-    void writePluginCache(int state);
-    void togglePluginState(int state);
-    void displayDetailsWindow(QTableWidgetItem* item);
+    void setEnabled(bool isEnabled);
+    bool getEnabled();
 
   private:
-    bool m_loadPreferencesDidChange;
+    QString m_PluginName;
+    QString m_FilePath;
+    bool m_Enabled;
 
-    AboutPlugins(const AboutPlugins&); // Copy Constructor Not Implemented
-    void operator=(const AboutPlugins&); // Operator '=' Not Implemented
+    PluginProxy(const PluginProxy&); // Copy Constructor Not Implemented
+    void operator=(const PluginProxy&); // Operator '=' Not Implemented
 };
 
-#endif // ABOUTPLUGINS_H
+#endif /* _PluginProxy_H_ */

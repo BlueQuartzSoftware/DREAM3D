@@ -88,6 +88,23 @@ class DDDAnalysisToolboxPlugin : public QObject, public DREAM3DPluginInterface
     virtual QMap<QString, QString> getThirdPartyLicenses();
 
     /**
+     * @brief Returns the load status of the plugin
+     */
+    virtual bool getDidLoad();
+
+    /**
+     * @brief Sets the load status of the plugin
+     */
+    virtual void setDidLoad(bool didLoad);
+
+    /**
+     * @brief Sets the location of the plugin on the file system.
+     * This is required so that we can cache the file path information
+     * as the plugin is loaded.
+     */
+    virtual void setLocation(QString filePath);
+
+    /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
     virtual void registerFilterWidgets(FilterWidgetManager* fwm);
@@ -121,7 +138,7 @@ class DDDAnalysisToolboxPlugin : public QObject, public DREAM3DPluginInterface
     QList<QString>      m_Platforms;
     QString             m_Copyright;
     QList<QString>      m_Dependencies;
-
+    bool                m_DidLoad;
 
     DDDAnalysisToolboxPlugin(const DDDAnalysisToolboxPlugin&); // Copy Constructor Not Implemented
     void operator=(const DDDAnalysisToolboxPlugin&); // Operator '=' Not Implemented

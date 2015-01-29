@@ -40,10 +40,15 @@
        </column>
        <column>
         <property name="text">
-         <string>Load</string>
+         <string>Enabled</string>
         </property>
         <property name="textAlignment">
          <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Status</string>
         </property>
        </column>
        <column>
