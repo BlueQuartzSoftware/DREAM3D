@@ -11,6 +11,7 @@ START_FILTER_GROUP(${SurfaceMeshing_BINARY_DIR} "${_filterGroupName}" "Surface M
 # List your public filters here
 
 set(_PublicFilters
+  FindBoundaryAreas
   FindGBCD
   GenerateSurfaceMeshConnectivity
   GenerateFaceIPFColoring
