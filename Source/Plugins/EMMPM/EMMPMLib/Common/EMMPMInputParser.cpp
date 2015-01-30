@@ -319,9 +319,10 @@ int EMMPMInputParser::parseCLIArguments(int argc, char *argv[], EMMPM_Data* inpu
       for (int value = 0; value < inputs->classes; ++value)
       {
        unsigned int argb = 0xFF000000; // Black
-       (&argb)[1] = value * 255 / n;
-       (&argb)[2] = value * 255 / n;
-       (&argb)[3] = value * 255 / n;
+       unsigned char* ptr = reinterpret_cast<unsigned char*>(&argb);
+       ptr[1] = value * 255 / n;
+       ptr[2] = value * 255 / n;
+       ptr[3] = value * 255 / n;
        inputs->colorTable[value] = argb;
       }
     }
