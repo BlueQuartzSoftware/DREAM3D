@@ -63,9 +63,8 @@ m_CompatibilityVersion(DREAM3DLib::Version::Package()),
 m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
-m_Platforms(QList<QString>()),
 m_Copyright(DREAM3D::BlueQuartz::Copyright),
-m_Dependencies(QList<QString>()),
+m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 
@@ -129,14 +128,6 @@ QString ImageProcessingPlugin::getLocation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ImageProcessingPlugin::getPlatforms()
-{
-  return m_Platforms;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString ImageProcessingPlugin::getDescription()
 {
   QFile licenseFile(":/ImageProcessing/ImageProcessingDescription.txt");
@@ -185,9 +176,9 @@ QString ImageProcessingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ImageProcessingPlugin::getDependencies()
+QList<QString> ImageProcessingPlugin::getFilters()
 {
-  return m_Dependencies;
+  return m_Filters;
 }
 
 // -----------------------------------------------------------------------------
@@ -218,6 +209,22 @@ QMap<QString, QString> ImageProcessingPlugin::getThirdPartyLicenses()
   }
 
   return licenseMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImageProcessingPlugin::getDidLoad()
+{
+    return m_DidLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImageProcessingPlugin::setDidLoad(bool didLoad)
+{
+    m_DidLoad = didLoad;
 }
 
 // -----------------------------------------------------------------------------

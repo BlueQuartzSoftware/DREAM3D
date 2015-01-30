@@ -33,10 +33,10 @@ m_CompatibilityVersion("Compatibility Version Number"), // Initialize @PluginNam
 m_Vendor("Vendor Name"),                                // Initialize @PluginName@'s Vendor Name Here
 m_URL("URL"),                                           // Initialize Company URL Here
 m_Location("Location"),                                 // Initialize Company Location Here
-m_Platforms(QList<QString>()),                          // Initialize @PluginName@'s Compatible Operating System Platforms Here
 m_Description("Description"),                           // Initialize @PluginName@'s Description Here
 m_Copyright("Copyright"),                               // Initialize @PluginName@'s Copyright Here
-m_Dependencies(QList<QString>())                        // Initialize @PluginName@'s List of Dependencies Here
+m_Filters(QList<QString>()),                        // Initialize @PluginName@'s List of Dependencies Here
+m_DidLoad(false)
 {
 
 }
@@ -99,14 +99,6 @@ QString @PluginName@Plugin::getLocation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> @PluginName@Plugin::getPlatforms()
-{
-  return m_Platforms;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getDescription()
 {
   /* PLEASE UPDATE YOUR PLUGIN'S DESCRIPTION FILE.
@@ -161,9 +153,9 @@ QString @PluginName@Plugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> @PluginName@Plugin::getDependencies()
+QList<QString> @PluginName@Plugin::getFilters()
 {
-  return m_Dependencies;
+  return m_Filters;
 }
 
 // -----------------------------------------------------------------------------
@@ -194,6 +186,30 @@ QMap<QString, QString> @PluginName@Plugin::getThirdPartyLicenses()
   }
 
   return licenseMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool @PluginName@Plugin::getDidLoad()
+{
+  return m_DidLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Plugin::setDidLoad(bool didLoad)
+{
+  m_DidLoad = didLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Plugin::setLocation(QString filePath)
+{
+  m_Location = filePath;
 }
 
 // -----------------------------------------------------------------------------

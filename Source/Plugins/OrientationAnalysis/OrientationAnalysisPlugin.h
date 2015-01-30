@@ -89,11 +89,6 @@ class OrientationAnalysisPlugin : public QObject, public DREAM3DPluginInterface
     virtual QString getLocation();
 
     /**
-     * @brief Returns the compatible platforms of the plugin
-     */
-    virtual QList<QString> getPlatforms();
-
-    /**
      * @brief Returns the description of the plugin
      */
     virtual QString getDescription();
@@ -109,9 +104,9 @@ class OrientationAnalysisPlugin : public QObject, public DREAM3DPluginInterface
     virtual QString getLicense();
 
     /**
-     * @brief Returns the dependencies of the plugin
+     * @brief Returns the filters of the plugin
      */
-    virtual QList<QString> getDependencies();
+    virtual QList<QString> getFilters();
 
     /**
      * @brief Returns the third party licenses of the plugin
@@ -166,9 +161,8 @@ class OrientationAnalysisPlugin : public QObject, public DREAM3DPluginInterface
     QString             m_Vendor;
     QString             m_URL;
     QString             m_Location;
-    QList<QString>      m_Platforms;
     QString             m_Copyright;
-    QList<QString>      m_Dependencies;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     OrientationAnalysisPlugin(const OrientationAnalysisPlugin&); // Copy Constructor Not Implemented

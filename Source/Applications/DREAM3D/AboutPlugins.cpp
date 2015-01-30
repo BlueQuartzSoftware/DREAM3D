@@ -176,8 +176,16 @@ int AboutPlugins::addPluginToTable(DREAM3DPluginInterface* plugin, int row)
   widget->setLayout(layout);
   pluginsTable->setCellWidget(row, CHECKBOX_INDEX, widget);
 
+  QTableWidgetItem* statusItem;
   // Add load status information
-  QTableWidgetItem* statusItem = new QTableWidgetItem(plugin->getDidLoad());
+  if (plugin->getDidLoad() == true)
+  {
+	  statusItem = new QTableWidgetItem("Enabled");
+  }
+  else
+  {
+	  statusItem = new QTableWidgetItem("Disabled");
+  }
   pluginsTable->setItem(row, STATUS_INDEX, statusItem);
 
   // Add version information
@@ -204,7 +212,7 @@ void AboutPlugins::on_closeBtn_clicked()
 //
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_detailsBtn_clicked()
-{  
+{
   QTableWidgetItem* item = pluginsTable->item(pluginsTable->currentRow(), NAME_INDEX);
 
   // Launch Details dialog box

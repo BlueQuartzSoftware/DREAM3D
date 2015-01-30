@@ -33,9 +33,8 @@ m_CompatibilityVersion(DREAM3DLib::Version::Package()),
 m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
-m_Platforms(QList<QString>()),
 m_Copyright(DREAM3D::BlueQuartz::Copyright),
-m_Dependencies(QList<QString>()),
+m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 
@@ -99,14 +98,6 @@ QString CellularAutomataPlugin::getLocation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> CellularAutomataPlugin::getPlatforms()
-{
-  return m_Platforms;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString CellularAutomataPlugin::getDescription()
 {
   QFile licenseFile(":/CellularAutomata/CellularAutomataDescription.txt");
@@ -155,9 +146,9 @@ QString CellularAutomataPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> CellularAutomataPlugin::getDependencies()
+QList<QString> CellularAutomataPlugin::getFilters()
 {
-  return m_Dependencies;
+  return m_Filters;
 }
 
 // -----------------------------------------------------------------------------

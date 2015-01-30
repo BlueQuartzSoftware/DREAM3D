@@ -64,9 +64,8 @@ m_CompatibilityVersion(DREAM3DLib::Version::Package()),
 m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
-m_Platforms(QList<QString>()),
 m_Copyright(DREAM3D::BlueQuartz::Copyright),
-m_Dependencies(QList<QString>()),
+m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 
@@ -130,14 +129,6 @@ QString SyntheticBuildingPlugin::getLocation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SyntheticBuildingPlugin::getPlatforms()
-{
-  return m_Platforms;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getDescription()
 {
   QFile licenseFile(":/SyntheticBuilding/SyntheticBuildingDescription.txt");
@@ -186,9 +177,9 @@ QString SyntheticBuildingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SyntheticBuildingPlugin::getDependencies()
+QList<QString> SyntheticBuildingPlugin::getFilters()
 {
-  return m_Dependencies;
+  return m_Filters;
 }
 
 // -----------------------------------------------------------------------------

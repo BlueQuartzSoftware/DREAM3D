@@ -178,11 +178,6 @@ class DREAM3DPluginInterface
     virtual QString getLocation() = 0;
 
     /**
-     * @brief Returns the compatible platforms for the plugin
-     */
-    virtual QList<QString> getPlatforms() = 0;
-
-    /**
      * @brief Returns the description of the plugin
      */
     virtual QString getDescription() = 0;
@@ -200,7 +195,7 @@ class DREAM3DPluginInterface
     /**
      * @brief Returns the dependencies of the plugin
      */
-    virtual QList<QString> getDependencies() = 0;
+    virtual QList<QString> getFilters() = 0;
 
     /**
      * @brief Returns the third party licenses of the plugin

@@ -73,26 +73,29 @@ void PluginDetails::loadPluginDetails()
 
   // Add plugin details to PluginDetails dialog box
   nameLabel->setText(plugin->getPluginName());
+
+  if (plugin->getDidLoad() == true)
+  {
+      statusLabel->setText("Enabled");
+  }
+  else
+  {
+      statusLabel->setText("Disabled");
+  }
+
   versionLabel->setText(plugin->getVersion());
   cVersionLabel->setText(plugin->getCompatibilityVersion());
   vendorLabel->setText(plugin->getVendor());
   urlLabel->setText(plugin->getURL());
   locationLabel->setText(plugin->getLocation());
-
-  QList<QString> platforms = plugin->getPlatforms();
-  for (QList<QString>::iterator iter = platforms.begin(); iter != platforms.end(); iter++)
-  {
-    platformsListWidget->addItem(*iter);
-  }
-
   descriptionTextEdit->setText(plugin->getDescription());
   copyrightLabel->setText(plugin->getCopyright());
   licenseTextEdit->setText(plugin->getLicense());
 
-  QList<QString> dependencies = plugin->getDependencies();
-  for (QList<QString>::iterator iter = dependencies.begin(); iter != dependencies.end(); iter++)
+  QList<QString> filters = plugin->getFilters();
+  for (QList<QString>::iterator iter = filters.begin(); iter != filters.end(); iter++)
   {
-    dependenciesListWidget->addItem(*iter);
+    filtersListWidget->addItem(*iter);
   }
 }
 

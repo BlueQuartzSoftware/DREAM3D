@@ -63,9 +63,8 @@ m_CompatibilityVersion(DREAM3DLib::Version::Package()),
 m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
-m_Platforms(QList<QString>()),
 m_Copyright(DREAM3D::BlueQuartz::Copyright),
-m_Dependencies(QList<QString>()),
+m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 
@@ -129,14 +128,6 @@ QString ImageImportPlugin::getLocation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ImageImportPlugin::getPlatforms()
-{
-  return m_Platforms;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString ImageImportPlugin::getDescription()
 {
   QFile licenseFile(":/ImageImport/ImageImportDescription.txt");
@@ -185,9 +176,9 @@ QString ImageImportPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ImageImportPlugin::getDependencies()
+QList<QString> ImageImportPlugin::getFilters()
 {
-  return m_Dependencies;
+  return m_Filters;
 }
 
 // -----------------------------------------------------------------------------
