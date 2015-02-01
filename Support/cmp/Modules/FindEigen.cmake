@@ -16,6 +16,7 @@ endif()
 
 SET(EIGEN_INCLUDE_SEARCH_DIRS
   ${EIGEN_INSTALL}/include/eigen3
+  /usr/include/eigen3
 )
 
 FIND_PATH(EIGEN_INCLUDE_DIR

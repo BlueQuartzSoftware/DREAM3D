@@ -26,7 +26,7 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0042 OLD)
 
   # CMake 3.1 introduces if() policies on dereferencing variables in quotes
-  if(${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0.2") 
+  if(${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0.2")
     cmake_policy(SET CMP0054 NEW)
   endif()
 
@@ -188,12 +188,6 @@ if("${HDF5_INSTALL}" STREQUAL "")
     set(HDF5_INSTALL  $ENV{HDF5_INSTALL})
 endif()
 
-if( "${HDF5_INSTALL}" STREQUAL "")
-  message(FATAL_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
-                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")
-endif()
-
-
 if(WIN32)
     set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/cmake/hdf5")
     set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
@@ -235,7 +229,12 @@ if(HDF5_FOUND)
                         TYPES ${BUILD_TYPES})
   endif()
 ELSE(HDF5_FOUND)
-    MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
+    if( "${HDF5_INSTALL}" STREQUAL "")
+        message(FATAL_ERROR "Cannot build without HDF5. The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
+                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")
+    else()
+        MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
+    endif()
 ENDif(HDF5_FOUND)
 
 # --------------------------------------------------------------------
