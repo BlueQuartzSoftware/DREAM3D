@@ -3,29 +3,29 @@
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
- * RedisQuadbution and use in source and binary forms, with or without modification,
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
- * RedisQuadbutions of source code must retain the above copyright notice, this
+ * Redistribution of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
  *
- * RedisQuadbutions in binary form must reproduce the above copyright notice, this
+ * Redistributions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the disQuadbution.
+ * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its conQuadbutors may be used to endorse
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONQuadBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONQuadBUTORS BE LIABLE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, SQuadCT LIABILITY,
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, SQTRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
@@ -58,10 +58,6 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
 
     virtual ~QuadGeom();
 
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, QuadsContainingVert)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, QuadNeighbors)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(FloatArrayType::Pointer, QuadCentroids)
-
     /**
      * @brief CreateGeometry
      * @param numQuads
@@ -79,41 +75,6 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @return
      */
     static Pointer CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name);
-
-    /**
-     * @brief initializeWithZeros
-     */
-    void initializeWithZeros();
-
-    /**
-     * @brief findQuadsContainingVert
-     */
-    void findQuadsContainingVert();
-
-    /**
-     * @brief deleteQuadsContainingVert
-     */
-    void deleteQuadsContainingVert();
-
-    /**
-     * @brief findQuadNeighbors
-     */
-    void findQuadNeighbors();
-
-    /**
-     * @brief deleteQuadNeighbors
-     */
-    void deleteQuadNeighbors();
-
-    /**
-     * @brief findQuadCentroids
-     */
-    void findQuadCentroids();
-
-    /**
-     * @brief deleteQuadCentroids
-     */
-    void deleteQuadCentroids();
 
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
@@ -306,6 +267,68 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
 // -----------------------------------------------------------------------------
 
     /**
+     * @brief initializeWithZeros
+     */
+    virtual void initializeWithZeros();
+
+    /**
+     * @brief getNumberOfTuples
+     * @return
+     */
+    virtual size_t getNumberOfTuples();
+
+    /**
+     * @brief findCellsContainingVert
+     * @return
+     */
+    virtual int findCellsContainingVert();
+
+    /**
+     * @brief getCellsContainingVert
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellsContainingVert();
+
+    /**
+     * @brief deleteCellsContainingVert
+     */
+    virtual void deleteCellsContainingVert();
+
+    /**
+     * @brief findCellNeighbors
+     * @return
+     */
+    virtual int findCellNeighbors();
+
+    /**
+     * @brief getCellNeighbors
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellNeighbors();
+
+    /**
+     * @brief deleteCellNeighbors
+     */
+    virtual void deleteCellNeighbors();
+
+    /**
+     * @brief findCellCentroids
+     * @return
+     */
+    virtual int findCellCentroids();
+
+    /**
+     * @brief getCellCentroids
+     * @return
+     */
+    virtual FloatArrayType::Pointer getCellCentroids();
+
+    /**
+     * @brief deleteCellCentroids
+     */
+    virtual void deleteCellCentroids();
+
+    /**
      * @brief setName
      * @param name
      */
@@ -393,6 +416,9 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
     SharedQuadList::Pointer m_QuadList;
+    CellDynamicList::Pointer m_QuadsContainingVert;
+    CellDynamicList::Pointer m_QuadNeighbors;
+    FloatArrayType::Pointer m_QuadCentroids;
 
     QuadGeom(const QuadGeom&); // Copy Constructor Not Implemented
     void operator=(const QuadGeom&); // Operator '=' Not Implemented

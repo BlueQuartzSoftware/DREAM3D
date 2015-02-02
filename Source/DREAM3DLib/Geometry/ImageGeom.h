@@ -80,6 +80,68 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
 // -----------------------------------------------------------------------------
 
     /**
+     * @brief initializeWithZeros
+     */
+    virtual void initializeWithZeros();
+
+    /**
+     * @brief getNumberOfTuples
+     * @return
+     */
+    virtual size_t getNumberOfTuples();
+
+    /**
+     * @brief findCellsContainingVert
+     * @return
+     */
+    virtual int findCellsContainingVert();
+
+    /**
+     * @brief getCellsContainingVert
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellsContainingVert();
+
+    /**
+     * @brief deleteCellsContainingVert
+     */
+    virtual void deleteCellsContainingVert();
+
+    /**
+     * @brief findCellNeighbors
+     * @return
+     */
+    virtual int findCellNeighbors();
+
+    /**
+     * @brief getCellNeighbors
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellNeighbors();
+
+    /**
+     * @brief deleteCellNeighbors
+     */
+    virtual void deleteCellNeighbors();
+
+    /**
+     * @brief findCellCentroids
+     * @return
+     */
+    virtual int findCellCentroids();
+
+    /**
+     * @brief getCellCentroids
+     * @return
+     */
+    virtual FloatArrayType::Pointer getCellCentroids();
+
+    /**
+     * @brief deleteCellCentroids
+     */
+    virtual void deleteCellCentroids();
+
+    /**
      * @brief setName
      * @param name
      */

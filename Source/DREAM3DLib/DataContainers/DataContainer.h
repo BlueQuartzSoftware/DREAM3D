@@ -59,6 +59,7 @@
 #include "DREAM3DLib/Geometry/VertexGeom.h"
 #include "DREAM3DLib/Geometry/EdgeGeom.h"
 #include "DREAM3DLib/Geometry/TriangleGeom.h"
+#include "DREAM3DLib/Geometry/QuadGeom.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"

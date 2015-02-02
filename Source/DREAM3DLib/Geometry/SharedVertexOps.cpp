@@ -58,9 +58,12 @@ void GEOM_CLASS_NAME::resizeVertexList(int64_t newNumVertices)
 // -----------------------------------------------------------------------------
 void GEOM_CLASS_NAME::setVertices(SharedVertexList::Pointer vertices)
 {
-  if (vertices->getName().compare(DREAM3D::Geometry::SharedVertexList) != 0)
+  if (vertices.get() != NULL)
   {
-    vertices->setName(DREAM3D::Geometry::SharedVertexList);
+    if (vertices->getName().compare(DREAM3D::Geometry::SharedVertexList) != 0)
+    {
+      vertices->setName(DREAM3D::Geometry::SharedVertexList);
+    }
   }
   m_VertexList = vertices;
 }

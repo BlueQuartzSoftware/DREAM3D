@@ -57,10 +57,6 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
 
     virtual ~EdgeGeom();
 
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, EdgesContainingVert)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, EdgeNeighbors)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(FloatArrayType::Pointer, EdgeCentroids)
-
     /**
      * @brief CreateGeometry
      * @param numEdges
@@ -78,41 +74,6 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      * @return
      */
     static Pointer CreateGeometry(SharedEdgeList::Pointer edges, SharedVertexList::Pointer vertices, const QString& name);
-
-    /**
-     * @brief initializeWithZeros
-     */
-    void initializeWithZeros();
-
-    /**
-     * @brief findEdgesContainingVert
-     */
-    void findEdgesContainingVert();
-
-    /**
-     * @brief deleteEdgesContainingVert
-     */
-    void deleteEdgesContainingVert();
-
-    /**
-     * @brief findEdgeNeighbors
-     */
-    void findEdgeNeighbors();
-
-    /**
-     * @brief deleteEdgeNeighbors
-     */
-    void deleteEdgeNeighbors();
-
-    /**
-     * @brief findEdgeCentroids
-     */
-    void findEdgeCentroids();
-
-    /**
-     * @brief deleteEdgeCentroids
-     */
-    void deleteEdgeCentroids();
 
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
@@ -239,6 +200,68 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
 // -----------------------------------------------------------------------------
 
     /**
+     * @brief initializeWithZeros
+     */
+    virtual void initializeWithZeros();
+
+    /**
+     * @brief getNumberOfTuples
+     * @return
+     */
+    virtual size_t getNumberOfTuples();
+
+    /**
+     * @brief findCellsContainingVert
+     * @return
+     */
+    virtual int findCellsContainingVert();
+
+    /**
+     * @brief getCellsContainingVert
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellsContainingVert();
+
+    /**
+     * @brief deleteCellsContainingVert
+     */
+    virtual void deleteCellsContainingVert();
+
+    /**
+     * @brief findCellNeighbors
+     * @return
+     */
+    virtual int findCellNeighbors();
+
+    /**
+     * @brief getCellNeighbors
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellNeighbors();
+
+    /**
+     * @brief deleteCellNeighbors
+     */
+    virtual void deleteCellNeighbors();
+
+    /**
+     * @brief findCellCentroids
+     * @return
+     */
+    virtual int findCellCentroids();
+
+    /**
+     * @brief getCellCentroids
+     * @return
+     */
+    virtual FloatArrayType::Pointer getCellCentroids();
+
+    /**
+     * @brief deleteCellCentroids
+     */
+    virtual void deleteCellCentroids();
+
+    /**
      * @brief setName
      * @param name
      */
@@ -325,6 +348,9 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
     unsigned int m_SpatialDimensionality;
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
+    CellDynamicList::Pointer m_EdgesContainingVert;
+    CellDynamicList::Pointer m_EdgeNeighbors;
+    FloatArrayType::Pointer m_EdgeCentroids;
 
     EdgeGeom(const EdgeGeom&); // Copy Constructor Not Implemented
     void operator=(const EdgeGeom&); // Operator '=' Not Implemented

@@ -3,29 +3,29 @@
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
- * RedisQuadbution and use in source and binary forms, with or without modification,
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
- * RedisQuadbutions of source code must retain the above copyright notice, this
+ * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
  *
- * RedisQuadbutions in binary form must reproduce the above copyright notice, this
+ * Redisytibutions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the disQuadbution.
+ * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its conQuadbutors may be used to endorse
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONQuadBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONQuadBUTORS BE LIABLE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, SQuadCT LIABILITY,
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
@@ -69,7 +69,7 @@ QuadGeom::Pointer QuadGeom::CreateGeometry(int64_t numQuads, SharedVertexList::P
   {
     return NullPointer();
   }
-  SharedQuadList::Pointer quads = QuadGeom::CreateSharedQuadList(0);
+  SharedQuadList::Pointer quads = QuadGeom::CreateSharedQuadList(numQuads);
   QuadGeom* d = new QuadGeom();
   d->setVertices(vertices);
   d->setQuads(quads);
@@ -109,23 +109,43 @@ QuadGeom::Pointer QuadGeom::CreateGeometry(SharedQuadList::Pointer quads, Shared
 void QuadGeom::initializeWithZeros()
 {
   m_VertexList->initializeWithZeros();
-  m_EdgeList->initializeWithZeros();
   m_QuadList->initializeWithZeros();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::findQuadsContainingVert()
+size_t QuadGeom::getNumberOfTuples()
 {
-  m_QuadsContainingVert = CellDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
+  return m_QuadList->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteQuadsContainingVert()
+int QuadGeom::findCellsContainingVert()
+{
+  m_QuadsContainingVert = CellDynamicList::New();
+  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
+  if (m_QuadsContainingVert.get() == NULL)
+  {
+    return -1;
+  }
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+CellDynamicList::Pointer QuadGeom::getCellsContainingVert()
+{
+  return m_QuadsContainingVert;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::deleteCellsContainingVert()
 {
   m_QuadsContainingVert = CellDynamicList::NullPointer();
 }
@@ -133,20 +153,34 @@ void QuadGeom::deleteQuadsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::findQuadNeighbors()
+int QuadGeom::findCellNeighbors()
 {
+  int err = 0;
   if (m_QuadsContainingVert.get() == NULL)
   {
-    return;
+    return -1;
   }
   m_QuadNeighbors = CellDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
+  err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
+  if (m_QuadNeighbors.get() == NULL)
+  {
+    return -1;
+  }
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteQuadNeighbors()
+CellDynamicList::Pointer QuadGeom::getCellNeighbors()
+{
+  return m_QuadNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::deleteCellNeighbors()
 {
   m_QuadNeighbors = CellDynamicList::NullPointer();
 }
@@ -154,17 +188,30 @@ void QuadGeom::deleteQuadNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::findQuadCentroids()
+int QuadGeom::findCellCentroids()
 {
   QVector<size_t> cDims(1, 3);
-  m_QuadCentroids = FloatArrayType::CreateArray(getNumberOfEdges(), cDims, DREAM3D::StringConstants::QuadCentroids);
+  m_QuadCentroids = FloatArrayType::CreateArray(getNumberOfQuads(), cDims, DREAM3D::StringConstants::QuadCentroids);
   GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_QuadList, m_VertexList, m_QuadCentroids);
+  if (m_QuadCentroids.get() == NULL)
+  {
+    return -1;
+  }
+  return 1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteQuadCentroids()
+FloatArrayType::Pointer QuadGeom::getCellCentroids()
+{
+  return m_QuadCentroids;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::deleteCellCentroids()
 {
   m_QuadCentroids = FloatArrayType::NullPointer();
 }
@@ -250,7 +297,7 @@ int QuadGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
   out << "  <Grid Name=\"" << dcName << "\" GridType=\"Uniform\">" << "\n";
 
   out << "    <Topology TopologyType=\"Quadrilateral\" NumberOfElements=\"" << getNumberOfQuads() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << getNumberOfQuads() << " 3\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << getNumberOfQuads() << " 4\">" << "\n";
   out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::SharedQuadList << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
@@ -300,18 +347,18 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
     if (err >= 0)
     {
       CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
-      setQuadNeighbors(quadNeighbors);
+      m_QuadNeighbors = quadNeighbors;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadsContainingVert, dims, type_class, type_size);
     if (err >= 0)
     {
       CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
-      setQuadsContainingVert(quadsContainingVert);
+      m_QuadsContainingVert = quadsContainingVert;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadCentroids, dims, type_class, type_size);
     if (err >= 0)
     {
-      setQuadCentroids(quadCentroids);
+      m_QuadCentroids = quadCentroids;
     }
     setVertices(vertices);
     setEdges(edges);
@@ -336,7 +383,7 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       }
       CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
       quadNeighbors->deserializeLinks(buffer, numQuads);
-      setQuadNeighbors(quadNeighbors);
+      m_QuadNeighbors = quadNeighbors;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadsContainingVert, dims, type_class, type_size);
     if (err >= 0)
@@ -350,12 +397,12 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       }
       CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
       quadsContainingVert->deserializeLinks(buffer, numQuads);
-      setQuadsContainingVert(quadsContainingVert);
+      m_QuadsContainingVert = quadsContainingVert;
     }
     err = quadCentroids->readH5Data(parentId);
     if (err >= 0)
     {
-      setQuadCentroids(quadCentroids);
+      m_QuadCentroids = quadCentroids;
     }
     setVertices(vertices);
     setEdges(edges);

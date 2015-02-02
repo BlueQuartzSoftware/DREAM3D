@@ -58,9 +58,12 @@ void GEOM_CLASS_NAME::resizeTriList(int64_t newNumTris)
 // -----------------------------------------------------------------------------
 void GEOM_CLASS_NAME::setTriangles(SharedTriList::Pointer triangles)
 {
-  if (triangles->getName().compare(DREAM3D::Geometry::SharedTriList) != 0)
+  if (triangles.get() != NULL)
   {
-    triangles->setName(DREAM3D::Geometry::SharedTriList);
+    if (triangles->getName().compare(DREAM3D::Geometry::SharedTriList) != 0)
+    {
+      triangles->setName(DREAM3D::Geometry::SharedTriList);
+    }
   }
   m_TriList = triangles;
 }

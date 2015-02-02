@@ -3,12 +3,13 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <math.h>
+
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 #include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Geometry/IGeometry.h"
 
@@ -213,12 +214,14 @@ namespace GeometryHelpers
        * @param dynamicList
        */
       template<typename T, typename K>
-      static void FindCellNeighbors(typename DataArray<K>::Pointer cellList, typename DynamicListArray<T, K>::Pointer cellsContainingVerts, typename DynamicListArray<T, K>::Pointer dynamicList)
+      static int FindCellNeighbors(typename DataArray<K>::Pointer cellList, typename DynamicListArray<T, K>::Pointer cellsContainingVerts,
+                                   typename DynamicListArray<T, K>::Pointer dynamicList)
       {
         size_t numCells = cellList->getNumberOfTuples();
         size_t numVertsPerCell = cellList->getNumberOfComponents();
         size_t numSharedVerts = 0;
         QVector<T> linkCount(numCells, 0);
+        int err = 0;
 
         switch(numVertsPerCell)
         {
@@ -282,7 +285,10 @@ namespace GeometryHelpers
                 }
               }
 
-              BOOST_ASSERT(vCount < numVertsPerCell); // No way 2 cell can share all vertices. Something is VERY wrong at this point
+              if (vCount < numVertsPerCell) // No way 2 cells can share all vertices. Something is VERY wrong at this point
+              {
+                return -1;
+              }
 
               // So if our vertex match count is numSharedVerts and we have not visited the cell in question then add this cell index
               // into the list of vertex indices as neighbors for the source cell.
@@ -309,15 +315,26 @@ namespace GeometryHelpers
           // Allocate the array storage for the current edge to hold its vertex list
           dynamicList->setElementList(t, linkCount[t], &(loop_neighbors[0]));
         }
+
+        return err;
       }
   };
 
+  /**
+   * @brief The Topology class
+   */
   class Topology
   {
     public:
       Topology() {}
       virtual ~Topology() {}
 
+      /**
+       * @brief FindCellCentroids
+       * @param cellList
+       * @param vertices
+       * @param cellCentroids
+       */
       template<typename T>
       static void FindCellCentroids(typename DataArray<T>::Pointer cellList, FloatArrayType::Pointer vertices, FloatArrayType::Pointer cellCentroids)
       {
@@ -344,16 +361,110 @@ namespace GeometryHelpers
       }
   };
 
+  /**
+   * @brief The Generic class
+   */
+  class Generic
+  {
+    public:
+      Generic() {}
+      virtual ~Generic() {}
+
+      /**
+       * @brief AverageVertexArrayValues
+       * @param cellList
+       * @param inVertexArray
+       * @param outCellArray
+       */
+      template<typename T, typename K>
+      static void AverageVertexArrayValues(typename DataArray<T>::Pointer cellList, typename DataArray<K>::Pointer inVertexArray, DataArray<float>::Pointer outCellArray)
+      {
+        BOOST_ASSERT(outCellArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+        BOOST_ASSERT(cellList->getNumberOfTuples() == outCellArray->getNumberOfTuples());
+
+        K* vertArray = inVertexArray->getPointer(0);
+        float* cellArray = outCellArray->getPointer(0);
+
+        size_t numCells = outCellArray->getNumberOfTuples();
+        size_t numDims = inVertexArray->getNumberOfComponents();
+        size_t numVertsPerCell = cellList->getNumberOfComponents();
+
+        for (size_t i=0;i<numDims;i++)
+        {
+          for (size_t j=0;j<numCells;j++)
+          {
+            T* Cell = cellList->getTuplePointer(j);
+            float vertValue = 0.0;
+            for (size_t k=0;k<numVertsPerCell;k++)
+            {
+              vertValue += vertArray[numDims*Cell[k]+i];
+            }
+            vertValue /= static_cast<float>(numVertsPerCell);
+            cellArray[numDims*j+i] = vertValue;
+          }
+        }
+      }
+
+      /**
+       * @brief WeightedAverageVertexArrayValues
+       * @param cellList
+       * @param vertices
+       * @param centroids
+       * @param inVertexArray
+       * @param outCellArray
+       */
+      template<typename T, typename K>
+      static void WeightedAverageVertexArrayValues(typename DataArray<T>::Pointer cellList, DataArray<float>::Pointer vertices,
+                                                   DataArray<float>::Pointer centroids, typename DataArray<K>::Pointer inVertexArray, DataArray<float>::Pointer outCellArray)
+      {
+        BOOST_ASSERT(outCellArray->getNumberOfTuples() == cellList->getNumberOfTuples());
+        BOOST_ASSERT(outCellArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+
+        K* vertArray = inVertexArray->getPointer(0);
+        float* cellArray = outCellArray->getPointer(0);
+        float* cellCentroids = centroids->getPointer(0);
+        float* vertex = vertices->getPointer(0);
+
+        size_t numCells = outCellArray->getNumberOfTuples();
+        size_t cDims = inVertexArray->getNumberOfComponents();
+        size_t numVertsPerCell = cellList->getNumberOfComponents();
+        size_t numDims = 3;
+
+        // Vector to hold vertex-centroid distances, 4 per cell
+        std::vector<float> vertCentDist(numCells*numVertsPerCell);
+
+        for (size_t i=0;i<numCells;i++)
+        {
+          T* Cell = cellList->getTuplePointer(i);
+          for (size_t j=0;j<numVertsPerCell;j++)
+          {
+            for (size_t k=0;k<numDims;k++)
+            {
+              vertCentDist[numVertsPerCell*i+j] += (vertex[numDims*Cell[j]+k] - cellCentroids[numDims*i+k]) * (vertex[numDims*Cell[j]+k] - cellCentroids[numDims*i+k]);
+            }
+            vertCentDist[numVertsPerCell*i+j] = sqrt(vertCentDist[numVertsPerCell*i+j]);
+          }
+        }
+
+        for (size_t i=0;i<cDims;i++)
+        {
+          for (size_t j=0;j<numCells;j++)
+          {
+            T* Cell = cellList->getTuplePointer(j);
+            float vertValue = 0.0;
+            float sumDist = 0.0;
+            for (size_t k=0;k<numVertsPerCell;k++)
+            {
+              vertValue += vertArray[cDims*Cell[k]+i] * vertCentDist[numVertsPerCell*j+k];
+              sumDist += vertCentDist[numVertsPerCell*j+k];
+            }
+            vertValue /= static_cast<float>(sumDist);
+            cellArray[cDims*j+i] = vertValue;
+          }
+        }
+      }
+  };
+
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-typedef FloatArrayType SharedVertexList;
-typedef Int64ArrayType SharedEdgeList;
-typedef Int64ArrayType SharedTriList;
-typedef Int64ArrayType SharedQuadList;
-typedef UInt16Int64DynamicListArray CellDynamicList;
 
 #endif /* _GeometryHelpers_H_ */

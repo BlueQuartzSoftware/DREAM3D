@@ -491,6 +491,44 @@ int DataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
       default:
         break;
       }
+    case DREAM3D::GeometryType::TriangleGeometry:
+      switch(amType)
+      {
+      //FIXME: There are more AttributeMatrix Types that should be implemented
+      case DREAM3D::AttributeMatrixType::Vertex:
+        xdmfCenter = DREAM3D::XdmfCenterType::Node;
+        break;
+      case DREAM3D::AttributeMatrixType::Edge:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      case DREAM3D::AttributeMatrixType::Face:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      case DREAM3D::AttributeMatrixType::Cell:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      default:
+        break;
+      }
+    case DREAM3D::GeometryType::QuadGeometry:
+      switch(amType)
+      {
+      //FIXME: There are more AttributeMatrix Types that should be implemented
+      case DREAM3D::AttributeMatrixType::Vertex:
+        xdmfCenter = DREAM3D::XdmfCenterType::Node;
+        break;
+      case DREAM3D::AttributeMatrixType::Edge:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      case DREAM3D::AttributeMatrixType::Face:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      case DREAM3D::AttributeMatrixType::Cell:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
+      default:
+        break;
+      }
     case DREAM3D::GeometryType::ImageGeometry:
       switch(amType)
       {
@@ -590,6 +628,14 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       err = triangles->readGeometryFromHDF5(geometryId, preflight);
       err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, triangles);
       setGeometry(triangles);
+      break;
+    }
+    case DREAM3D::GeometryType::QuadGeometry:
+    {
+      QuadGeom::Pointer quads = QuadGeom::New();
+      err = quads->readGeometryFromHDF5(geometryId, preflight);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, quads);
+      setGeometry(quads);
       break;
     }
     case DREAM3D::GeometryType::UnknownGeometry:

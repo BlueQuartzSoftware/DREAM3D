@@ -54,8 +54,19 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
+
+// -----------------------------------------------------------------------------
+// Typedefs
+// -----------------------------------------------------------------------------
+
+typedef FloatArrayType SharedVertexList;
+typedef Int64ArrayType SharedEdgeList;
+typedef Int64ArrayType SharedTriList;
+typedef Int64ArrayType SharedQuadList;
+typedef UInt16Int64DynamicListArray CellDynamicList;
 
 /**
  * @brief The IGeometry class
@@ -68,6 +79,75 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
 
     IGeometry();
     virtual ~IGeometry();
+
+// -----------------------------------------------------------------------------
+// Connectivity
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief findCellsContainingVert
+     * @return
+     */
+    virtual int findCellsContainingVert() = 0;
+
+    /**
+     * @brief getCellsContainingVert
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellsContainingVert() = 0;
+
+    /**
+     * @brief deleteCellsContainingVert
+     */
+    virtual void deleteCellsContainingVert() = 0;
+
+    /**
+     * @brief findCellNeighbors
+     * @return
+     */
+    virtual int findCellNeighbors() = 0;
+
+    /**
+     * @brief getCellNeighbors
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellNeighbors() = 0;
+
+    /**
+     * @brief deleteCellNeighbors
+     */
+    virtual void deleteCellNeighbors() = 0;
+
+// -----------------------------------------------------------------------------
+// Topology
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief getNumberOfTuples
+     * @return
+     */
+    virtual size_t getNumberOfTuples() = 0;
+
+    /**
+     * @brief findCellCentroids
+     * @return
+     */
+    virtual int findCellCentroids() = 0;
+
+    /**
+     * @brief getCellCentroids
+     * @return
+     */
+    virtual FloatArrayType::Pointer getCellCentroids() = 0;
+
+    /**
+     * @brief deleteCellCentroids
+     */
+    virtual void deleteCellCentroids() = 0;
+
+// -----------------------------------------------------------------------------
+// Generic
+// -----------------------------------------------------------------------------
 
     /**
      * @brief setName
@@ -142,7 +222,13 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      */
     virtual int readGeometryFromHDF5(hid_t parentId, bool preflight) = 0;
 
+    /**
+     * @brief initializeWithZeros
+     */
+    virtual void initializeWithZeros() = 0;
+
   private:
+
     IGeometry(const IGeometry&); // Copy Constructor Not Implemented
     void operator=(const IGeometry&); // Operator '=' Not Implemented
 };

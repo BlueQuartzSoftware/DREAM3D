@@ -69,7 +69,7 @@ TriangleGeom::Pointer TriangleGeom::CreateGeometry(int64_t numTriangles, SharedV
   {
     return NullPointer();
   }
-  SharedTriList::Pointer triangles = TriangleGeom::CreateSharedTriList(0);
+  SharedTriList::Pointer triangles = TriangleGeom::CreateSharedTriList(numTriangles);
   TriangleGeom* d = new TriangleGeom();
   d->setVertices(vertices);
   d->setTriangles(triangles);
@@ -109,23 +109,43 @@ TriangleGeom::Pointer TriangleGeom::CreateGeometry(SharedTriList::Pointer triang
 void TriangleGeom::initializeWithZeros()
 {
   m_VertexList->initializeWithZeros();
-  m_EdgeList->initializeWithZeros();
   m_TriList->initializeWithZeros();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleGeom::findTrianglesContainingVert()
+size_t TriangleGeom::getNumberOfTuples()
 {
-  m_TrianglesContainingVert = CellDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, getNumberOfVertices());
+  return m_TriList->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleGeom::deleteTrianglesContainingVert()
+int TriangleGeom::findCellsContainingVert()
+{
+  m_TrianglesContainingVert = CellDynamicList::New();
+  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, getNumberOfVertices());
+  if (m_TrianglesContainingVert.get() == NULL)
+  {
+    return -1;
+  }
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+CellDynamicList::Pointer TriangleGeom::getCellsContainingVert()
+{
+  return m_TrianglesContainingVert;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::deleteCellsContainingVert()
 {
   m_TrianglesContainingVert = CellDynamicList::NullPointer();
 }
@@ -133,20 +153,34 @@ void TriangleGeom::deleteTrianglesContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleGeom::findTriangleNeighbors()
+int TriangleGeom::findCellNeighbors()
 {
+  int err = 0;
   if (m_TrianglesContainingVert.get() == NULL)
   {
-    return;
+    return -1;
   }
   m_TriangleNeighbors = CellDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, m_TriangleNeighbors);
+  err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, m_TriangleNeighbors);
+  if (m_TriangleNeighbors.get() == NULL)
+  {
+    return -1;
+  }
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleGeom::deleteTriangleNeighbors()
+CellDynamicList::Pointer TriangleGeom::getCellNeighbors()
+{
+  return m_TriangleNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::deleteCellNeighbors()
 {
   m_TriangleNeighbors = CellDynamicList::NullPointer();
 }
@@ -154,17 +188,30 @@ void TriangleGeom::deleteTriangleNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleGeom::findTriangleCentroids()
+int TriangleGeom::findCellCentroids()
 {
   QVector<size_t> cDims(1, 3);
   m_TriangleCentroids = FloatArrayType::CreateArray(getNumberOfTris(), cDims, DREAM3D::StringConstants::TriangleCentroids);
   GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_TriList, m_VertexList, m_TriangleCentroids);
+  if (m_TriangleCentroids.get() == NULL)
+  {
+    return -1;
+  }
+  return 1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleGeom::deleteTriangleCentroids()
+FloatArrayType::Pointer TriangleGeom::getCellCentroids()
+{
+  return m_TriangleCentroids;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::deleteCellCentroids()
 {
   m_TriangleCentroids = FloatArrayType::NullPointer();
 }
@@ -300,18 +347,18 @@ int TriangleGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
     if (err >= 0)
     {
       CellDynamicList::Pointer triNeighbors = CellDynamicList::New();
-      setTriangleNeighbors(triNeighbors);
+      m_TriangleNeighbors = triNeighbors;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TrianglesContainingVert, dims, type_class, type_size);
     if (err >= 0)
     {
       CellDynamicList::Pointer trisContainingVert = CellDynamicList::New();
-      setTrianglesContainingVert(trisContainingVert);
+      m_TrianglesContainingVert = trisContainingVert;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TriangleCentroids, dims, type_class, type_size);
     if (err >= 0)
     {
-      setTriangleCentroids(triCentroids);
+      m_TriangleCentroids = triCentroids;
     }
     setVertices(vertices);
     setEdges(edges);
@@ -336,7 +383,7 @@ int TriangleGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       }
       CellDynamicList::Pointer triNeighbors = CellDynamicList::New();
       triNeighbors->deserializeLinks(buffer, numTris);
-      setTriangleNeighbors(triNeighbors);
+      m_TriangleNeighbors = triNeighbors;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TrianglesContainingVert, dims, type_class, type_size);
     if (err >= 0)
@@ -350,12 +397,12 @@ int TriangleGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       }
       CellDynamicList::Pointer trisContainingVert = CellDynamicList::New();
       trisContainingVert->deserializeLinks(buffer, numTris);
-      setTrianglesContainingVert(trisContainingVert);
+      m_TrianglesContainingVert = trisContainingVert;
     }
     err = triCentroids->readH5Data(parentId);
     if (err >= 0)
     {
-      setTriangleCentroids(triCentroids);
+      m_TriangleCentroids = triCentroids;
     }
     setVertices(vertices);
     setEdges(edges);

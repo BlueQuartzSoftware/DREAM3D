@@ -58,9 +58,12 @@ void GEOM_CLASS_NAME::resizeEdgeList(int64_t newNumEdges)
 // -----------------------------------------------------------------------------
 void GEOM_CLASS_NAME::setEdges(SharedEdgeList::Pointer edges)
 {
-  if (edges->getName().compare(DREAM3D::Geometry::SharedEdgeList) != 0)
+  if (edges.get() != NULL)
   {
-    edges->setName(DREAM3D::Geometry::SharedEdgeList);
+    if (edges->getName().compare(DREAM3D::Geometry::SharedEdgeList) != 0)
+    {
+      edges->setName(DREAM3D::Geometry::SharedEdgeList);
+    }
   }
   m_EdgeList = edges;
 }

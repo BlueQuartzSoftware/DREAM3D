@@ -58,10 +58,6 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
 
     virtual ~TriangleGeom();
 
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, TrianglesContainingVert)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, TriangleNeighbors)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(FloatArrayType::Pointer, TriangleCentroids)
-
     /**
      * @brief CreateGeometry
      * @param numTriangles
@@ -79,41 +75,6 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
      * @return
      */
     static Pointer CreateGeometry(SharedTriList::Pointer triangles, SharedVertexList::Pointer vertices, const QString& name);
-
-    /**
-     * @brief initializeWithZeros
-     */
-    void initializeWithZeros();
-
-    /**
-     * @brief findTrianglesContainingVert
-     */
-    void findTrianglesContainingVert();
-
-    /**
-     * @brief deleteTrianglesContainingVert
-     */
-    void deleteTrianglesContainingVert();
-
-    /**
-     * @brief findTriangleNeighbors
-     */
-    void findTriangleNeighbors();
-
-    /**
-     * @brief deleteTriangleNeighbors
-     */
-    void deleteTriangleNeighbors();
-
-    /**
-     * @brief findTriangleCentroids
-     */
-    void findTriangleCentroids();
-
-    /**
-     * @brief deleteTriangleCentroids
-     */
-    void deleteTriangleCentroids();
 
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
@@ -305,6 +266,68 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
 // -----------------------------------------------------------------------------
 
     /**
+     * @brief initializeWithZeros
+     */
+    virtual void initializeWithZeros();
+
+    /**
+     * @brief getNumberOfTuples
+     * @return
+     */
+    virtual size_t getNumberOfTuples();
+
+    /**
+     * @brief findCellsContainingVert
+     * @return
+     */
+    virtual int findCellsContainingVert();
+
+    /**
+     * @brief getCellsContainingVert
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellsContainingVert();
+
+    /**
+     * @brief deleteCellsContainingVert
+     */
+    virtual void deleteCellsContainingVert();
+
+    /**
+     * @brief findCellNeighbors
+     * @return
+     */
+    virtual int findCellNeighbors();
+
+    /**
+     * @brief getCellNeighbors
+     * @return
+     */
+    virtual CellDynamicList::Pointer getCellNeighbors();
+
+    /**
+     * @brief deleteCellNeighbors
+     */
+    virtual void deleteCellNeighbors();
+
+    /**
+     * @brief findCellCentroids
+     * @return
+     */
+    virtual int findCellCentroids();
+
+    /**
+     * @brief getCellCentroids
+     * @return
+     */
+    virtual FloatArrayType::Pointer getCellCentroids();
+
+    /**
+     * @brief deleteCellCentroids
+     */
+    virtual void deleteCellCentroids();
+
+    /**
      * @brief setName
      * @param name
      */
@@ -392,6 +415,9 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
     SharedTriList::Pointer m_TriList;
+    CellDynamicList::Pointer m_TrianglesContainingVert;
+    CellDynamicList::Pointer m_TriangleNeighbors;
+    FloatArrayType::Pointer m_TriangleCentroids;
 
     TriangleGeom(const TriangleGeom&); // Copy Constructor Not Implemented
     void operator=(const TriangleGeom&); // Operator '=' Not Implemented

@@ -58,9 +58,12 @@ void GEOM_CLASS_NAME::resizeQuadList(int64_t newNumQuads)
 // -----------------------------------------------------------------------------
 void GEOM_CLASS_NAME::setQuads(SharedQuadList::Pointer quads)
 {
-  if (quads->getName().compare(DREAM3D::Geometry::SharedQuadList) != 0)
+  if (quads.get() != NULL)
   {
-    quads->setName(DREAM3D::Geometry::SharedQuadList);
+    if (quads->getName().compare(DREAM3D::Geometry::SharedQuadList) != 0)
+    {
+      quads->setName(DREAM3D::Geometry::SharedQuadList);
+    }
   }
   m_QuadList = quads;
 }
