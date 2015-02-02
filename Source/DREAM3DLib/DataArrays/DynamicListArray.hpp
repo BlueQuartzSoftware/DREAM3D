@@ -49,7 +49,7 @@
  * @brief The MeshFaceNeighbors class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
  */
-template<typename K, typename T>
+template<typename T, typename K>
 class DynamicListArray
 {
   public:
@@ -61,8 +61,8 @@ class DynamicListArray
     class ElementList
     {
       public:
-        K ncells;
-        T* cells;
+        T ncells;
+        K* cells;
     };
 
 
@@ -105,7 +105,7 @@ class DynamicListArray
      * @param data
      * @return
      */
-    bool setElementList(size_t ptId, K nCells, T* data)
+    bool setElementList(size_t ptId, T nCells, K* data)
     {
       if(ptId >= m_Size) { return false; }
       if(NULL != m_Array[ptId].cells && m_Array[ptId].ncells > 0)
@@ -115,18 +115,18 @@ class DynamicListArray
       }
       m_Array[ptId].ncells = nCells;
       //If nCells is huge then there could be problems with this
-      this->m_Array[ptId].cells = new T[nCells];
-      ::memcpy(m_Array[ptId].cells, data, sizeof(T) * nCells);
+      this->m_Array[ptId].cells = new K[nCells];
+      ::memcpy(m_Array[ptId].cells, data, sizeof(K) * nCells);
       return true;
     }
 
     // Description:
     // Get the number of cells using the point specified by ptId.
-    K getNumberOfElements(size_t ptId) {return this->m_Array[ptId].ncells;}
+    T getNumberOfElements(size_t ptId) {return this->m_Array[ptId].ncells;}
 
     // Description:
     // Return a list of cell ids using the point.
-    T* getElementListPointer(size_t ptId) {return this->m_Array[ptId].cells;}
+    K* getElementListPointer(size_t ptId) {return this->m_Array[ptId].cells;}
 
     // -----------------------------------------------------------------------------
     //
@@ -138,16 +138,15 @@ class DynamicListArray
       uint8_t* bufPtr = buffer.data();
 
       // Walk the array and allocate all the array links to Zero and NULL
-      K* ncells = NULL;
-      //int32_t* cells = NULL;
+      T* ncells = NULL;
       for(size_t i = 0; i < nElements; ++i)
       {
-        ncells = reinterpret_cast<K*>(bufPtr + offset);
+        ncells = reinterpret_cast<T*>(bufPtr + offset);
         this->m_Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
-        this->m_Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
-        ::memcpy(this->m_Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from the buffer into the new list memory
-        offset += (*ncells) * sizeof(T); // Increment the offset
+        this->m_Array[i].cells = new K[(*ncells)]; // Allocate a new chunk of memory to store the list
+        ::memcpy(this->m_Array[i].cells, bufPtr + offset, (*ncells)*sizeof(K) ); // Copy from the buffer into the new list memory
+        offset += (*ncells) * sizeof(K); // Increment the offset
       }
     }
 
@@ -161,16 +160,16 @@ class DynamicListArray
       uint8_t* bufPtr = &(buffer.front());
 
       // Walk the array and allocate all the array links to Zero and NULL
-      K* ncells = NULL;
+      T* ncells = NULL;
       //int32_t* cells = NULL;
       for(size_t i = 0; i < nElements; ++i)
       {
-        ncells = reinterpret_cast<K*>(bufPtr + offset);
+        ncells = reinterpret_cast<T*>(bufPtr + offset);
         this->m_Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
-        this->m_Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
-        ::memcpy(this->m_Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from teh buffer into the new list memory
-        offset += (*ncells) * sizeof(T); // Increment the offset
+        this->m_Array[i].cells = new K[(*ncells)]; // Allocate a new chunk of memory to store the list
+        ::memcpy(this->m_Array[i].cells, bufPtr + offset, (*ncells)*sizeof(K) ); // Copy from the buffer into the new list memory
+        offset += (*ncells) * sizeof(K); // Increment the offset
       }
     }
 
@@ -181,10 +180,10 @@ class DynamicListArray
     void allocateLists(QVector<size_t>& linkCounts)
     {
       allocate(linkCounts.size());
-      for (T i = 0; i < linkCounts.size(); i++)
+      for (K i = 0; i < linkCounts.size(); i++)
       {
         this->m_Array[i].ncells = linkCounts[i];
-        this->m_Array[i].cells = new T[this->m_Array[i].ncells];
+        this->m_Array[i].cells = new K[this->m_Array[i].ncells];
       }
     }
 
@@ -195,10 +194,10 @@ class DynamicListArray
     void allocateLists(std::vector<size_t>& linkCounts)
     {
       allocate(linkCounts.size());
-      for (T i = 0; i < linkCounts.size(); i++)
+      for (K i = 0; i < linkCounts.size(); i++)
       {
         this->m_Array[i].ncells = linkCounts[i];
-        this->m_Array[i].cells = new T[this->m_Array[i].ncells];
+        this->m_Array[i].cells = new K[this->m_Array[i].ncells];
       }
     }
 
@@ -213,7 +212,7 @@ class DynamicListArray
     // structure is initialized to Zero Entries and a NULL Pointer
     void allocate(size_t sz, size_t ext = 1000)
     {
-      static typename DynamicListArray<K,T>::ElementList linkInit = {0, NULL};
+      static typename DynamicListArray<T,K>::ElementList linkInit = {0, NULL};
 
       // This makes sure we deallocate any lists that have been created
       for (size_t i = 0; i < this->m_Size; i++)
@@ -231,7 +230,7 @@ class DynamicListArray
 
       this->m_Size = sz;
       // Allocate a whole new set of structures
-      this->m_Array = new typename DynamicListArray<K,T>::ElementList[sz];
+      this->m_Array = new typename DynamicListArray<T,K>::ElementList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
       for (size_t i = 0; i < sz; i++)

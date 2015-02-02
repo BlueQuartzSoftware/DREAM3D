@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 
 /**
  * @brief The VertexGeom class represents a point cloud
@@ -109,14 +110,14 @@ class DREAM3DLib_EXPORT VertexGeom : public IGeometry
      * @param vertId
      * @param coords
      */
-    void setCoords(int64_t vertId, float* coords);
+    void setCoords(int64_t vertId, float coords[3]);
 
     /**
      * @brief getCoords
      * @param vertId
      * @param coords
      */
-    void getCoords(int64_t vertId, float* coords);
+    void getCoords(int64_t vertId, float coords[3]);
 
     /**
      * @brief getVertexPointer

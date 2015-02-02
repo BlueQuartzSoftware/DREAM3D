@@ -433,6 +433,7 @@ namespace DREAM3D
     const DREAM3D_STRING EdgeNeighbors("EdgeNeighbors");
     const DREAM3D_STRING EdgesContainingVert("EdgesContainingVert");
     const DREAM3D_STRING EdgesName("Edges");
+    const DREAM3D_STRING EdgeCentroids("EdgeCentroids");
     const DREAM3D_STRING Euler1("Euler 1");
     const DREAM3D_STRING Euler2("Euler 2");
     const DREAM3D_STRING Euler3("Euler 3");
@@ -444,7 +445,13 @@ namespace DREAM3D
     const DREAM3D_STRING TrianglesName("Triangles");
     const DREAM3D_STRING TriangleNeighbors("TriangleNeighbors");
     const DREAM3D_STRING TrianglesContainingVert("TrianglesContainingVert");
+    const DREAM3D_STRING TriangleCentroids("TriangleCentroids");
     const DREAM3D_STRING Frequencies("Frequencies");
+
+    const DREAM3D_STRING QuadsName("Quadrilaterals");
+    const DREAM3D_STRING QuadNeighbors("QuadrilateralNeighbors");
+    const DREAM3D_STRING QuadsContainingVert("QuadrilateralsContainingVerts");
+    const DREAM3D_STRING QuadCentroids("QuadrilateralCentroids");
 
     const DREAM3D_STRING GBCD("GBCD");
     const DREAM3D_STRING FeatureAvgDisorientation ("FeatureAvgDisorientation");
@@ -657,18 +664,21 @@ namespace DREAM3D
     const DREAM3D_STRING VertexGeometry("VertexGeometry");
     const DREAM3D_STRING EdgeGeometry("EdgeGeometry");
     const DREAM3D_STRING TriangleGeometry("TriangleGeometry");
+    const DREAM3D_STRING QuadGeometry("QuadrilateralGeometry");
 
     const DREAM3D_STRING SharedVertexList("SharedVertexList");
     const DREAM3D_STRING SharedEdgeList("SharedEdgeList");
     const DREAM3D_STRING SharedTriList("SharedTriList");
+    const DREAM3D_STRING SharedQuadList("SharedQuadList");
   }
 
   namespace GeometryType
   {
-    const unsigned int ImageGeometry = 0;
+    const unsigned int ImageGeometry = 11;
     const unsigned int VertexGeometry = 1;
-    const unsigned int EdgeGeometry = 2;
-    const unsigned int TriangleGeometry = 3;
+    const unsigned int EdgeGeometry = 3;
+    const unsigned int TriangleGeometry = 5;
+    const unsigned int QuadGeometry = 9;
     const unsigned int UnknownGeometry = 999;
   }
 

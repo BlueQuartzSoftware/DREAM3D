@@ -110,8 +110,7 @@ int VertexGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
 
   if (m_VertexList.get() != NULL)
   {
-    tDims[0] = getNumberOfVertices();
-    err = m_VertexList->writeH5Data(parentId, tDims);
+    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_VertexList);
     if (err < 0)
     {
       return err;
@@ -175,9 +174,12 @@ int VertexGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 // -----------------------------------------------------------------------------
 int VertexGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
-  herr_t err = 0;
   SharedVertexList::Pointer vertices = SharedVertexList::NullPointer();
-  vertices = IGeometry::ReadMeshFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight);
+  vertices = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight);
+  if (vertices.get() == NULL)
+  {
+    return -1;
+  }
   setVertices(vertices);
 
   return 1;

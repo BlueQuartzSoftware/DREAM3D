@@ -301,6 +301,13 @@
   DREAM3D_SET_PROPERTY(type, prpty)\
   DREAM3D_GET_PROPERTY(type, prpty)
 
+#define DREAM3D_PRIVATE_INSTANCE_PROPERTY(type, prpty)\
+  private:\
+  type   m_##prpty;\
+  DREAM3D_SET_PROPERTY(type, prpty)\
+  public:\
+  DREAM3D_GET_PROPERTY(type, prpty)
+
 
 
 #define DREAM3D_PIMPL_PROPERTY_DECL(type, prpty)\
@@ -557,7 +564,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-   
+
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

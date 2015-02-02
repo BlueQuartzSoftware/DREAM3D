@@ -3,29 +3,29 @@
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
+ * RedisQuadbution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this
+ * RedisQuadbutions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice, this
+ * RedisQuadbutions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
+ * other materials provided with the disQuadbution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * BlueQuartz Software nor the names of its conQuadbutors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONQuadBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONQuadBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, SQuadCT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
@@ -37,84 +37,90 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SharedEdgeList::Pointer GEOM_CLASS_NAME::CreateSharedEdgeList(int64_t numEdges)
+SharedQuadList::Pointer GEOM_CLASS_NAME::CreateSharedQuadList(int64_t numQuads)
 {
-  QVector<size_t> edgeDims(1, 2);
-  SharedEdgeList::Pointer edges = SharedEdgeList::CreateArray(numEdges, edgeDims, DREAM3D::Geometry::SharedEdgeList);
-  edges->initializeWithZeros();
-  return edges;
+  QVector<size_t> quadDims(1, 4);
+  SharedQuadList::Pointer quads = SharedEdgeList::CreateArray(numQuads, quadDims, DREAM3D::Geometry::SharedQuadList);
+  quads->initializeWithZeros();
+  return quads;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::resizeEdgeList(int64_t newNumEdges)
+void GEOM_CLASS_NAME::resizeQuadList(int64_t newNumQuads)
 {
-  m_EdgeList->resize(newNumEdges);
+  m_QuadList->resize(newNumQuads);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::setEdges(SharedEdgeList::Pointer edges)
+void GEOM_CLASS_NAME::setQuads(SharedQuadList::Pointer quads)
 {
-  if (edges->getName().compare(DREAM3D::Geometry::SharedEdgeList) != 0)
+  if (quads->getName().compare(DREAM3D::Geometry::SharedQuadList) != 0)
   {
-    edges->setName(DREAM3D::Geometry::SharedEdgeList);
+    quads->setName(DREAM3D::Geometry::SharedQuadList);
   }
-  m_EdgeList = edges;
+  m_QuadList = quads;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SharedEdgeList::Pointer GEOM_CLASS_NAME::getEdges()
+SharedQuadList::Pointer GEOM_CLASS_NAME::getQuads()
 {
-  return m_EdgeList;
+  return m_QuadList;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::setVertsAtEdge(int64_t edgeId, int64_t verts[2])
+void GEOM_CLASS_NAME::setVertsAtQuad(int64_t quadId, int64_t verts[4])
 {
-  int64_t* Edge = m_EdgeList->getTuplePointer(edgeId);
-  Edge[0] = verts[0];
-  Edge[1] = verts[1];
+  int64_t* Quad = m_QuadList->getTuplePointer(quadId);
+  Quad[0] = verts[0];
+  Quad[1] = verts[1];
+  Quad[2] = verts[2];
+  Quad[3] = verts[3];
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::getVertsAtEdge(int64_t edgeId, int64_t verts[2])
+void GEOM_CLASS_NAME::getVertsAtQuad(int64_t quadId, int64_t verts[4])
 {
-  int64_t* Edge = m_EdgeList->getTuplePointer(edgeId);
-  verts[0] = Edge[0];
-  verts[1] = Edge[1];
+  int64_t* Quad = m_QuadList->getTuplePointer(quadId);
+  verts[0] = Quad[0];
+  verts[1] = Quad[1];
+  verts[2] = Quad[2];
+  verts[3] = Quad[3];
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::getVertCoordsAtEdge(int64_t edgeId, float vert1[3], float vert2[3])
+void GEOM_CLASS_NAME::getVertCoordsAtQuad(int64_t quadId, float vert1[3], float vert2[3], float vert3[3], float vert4[3])
 {
-  int64_t* Edge = m_EdgeList->getTuplePointer(edgeId);
-  vert1 = m_VertexList->getTuplePointer(Edge[0]);
-  vert2 = m_VertexList->getTuplePointer(Edge[1]);
+  int64_t* Quad = m_QuadList->getTuplePointer(quadId);
+  vert1 = m_VertexList->getTuplePointer(Quad[0]);
+  vert2 = m_VertexList->getTuplePointer(Quad[1]);
+  vert3 = m_VertexList->getTuplePointer(Quad[2]);
+  vert4 = m_VertexList->getTuplePointer(Quad[3]);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t* GEOM_CLASS_NAME::getEdgePointer(int64_t i)
+int64_t* GEOM_CLASS_NAME::getQuadPointer(int64_t i)
 {
-  return m_EdgeList->getTuplePointer(i);
+  return m_QuadList->getTuplePointer(i);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t GEOM_CLASS_NAME::getNumberOfEdges()
+int64_t GEOM_CLASS_NAME::getNumberOfQuads()
 {
-  return m_EdgeList->getNumberOfTuples();
+  return m_QuadList->getNumberOfTuples();
 }

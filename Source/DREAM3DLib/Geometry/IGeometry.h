@@ -70,68 +70,6 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
     virtual ~IGeometry();
 
     /**
-     * @brief ReadMeshFromHDF5
-     * @param listName
-     * @param parentId
-     * @param preflight
-     * @return
-     */
-    template<typename ListType>
-    static typename ListType::Pointer ReadMeshFromHDF5(const QString& listName, hid_t parentId, bool preflight)
-    {
-      herr_t err = 0;
-      QVector<hsize_t> dims;
-      H5T_class_t type_class;
-      size_t type_size;
-      typename ListType::Pointer mesh = ListType::CreateArray(0, listName);
-      if (true == preflight)
-      {
-        err = QH5Lite::getDatasetInfo(parentId, listName, dims, type_class, type_size);
-        if (err < 0)
-        {
-          mesh = ListType::NullPointer();
-        }
-      }
-      else
-      {
-        err = mesh->readH5Data(parentId);
-        if (err < 0)
-        {
-          mesh = ListType::NullPointer();
-        }
-      }
-
-      return mesh;
-    }
-
-    /**
-     * @brief ReadMetaDataFromHDF5
-     * @param parentId
-     * @param geometry
-     * @return
-     */
-    static int ReadMetaDataFromHDF5(hid_t parentId, IGeometry::Pointer geometry)
-    {
-      herr_t err = 0;
-      unsigned int spatialDims = 0;
-      QString geomName = "";
-      err = QH5Lite::readScalarAttribute(parentId, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::SpatialDimensionality, spatialDims);
-      if(err < 0)
-      {
-        return err;
-      }
-      err = QH5Lite::readStringAttribute(parentId, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryName, geomName);
-      if(err < 0)
-      {
-        return err;
-      }
-      geometry->setSpatialDimensionality(spatialDims);
-      geometry->setName(geomName);
-
-      return 1;
-    }
-
-    /**
      * @brief setName
      * @param name
      */
@@ -208,14 +146,6 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
     IGeometry(const IGeometry&); // Copy Constructor Not Implemented
     void operator=(const IGeometry&); // Operator '=' Not Implemented
 };
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-typedef FloatArrayType SharedVertexList;
-typedef Int64ArrayType SharedEdgeList;
-typedef Int64ArrayType SharedTriList;
 
 #endif /* _IGeometry_H_ */
 

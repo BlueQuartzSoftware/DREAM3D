@@ -459,7 +459,7 @@ void GeometryMath::FindBoundingBoxOfFace(TriangleGeom::Pointer faces, int faceId
 {
   float a[3], b[3], c[3];
 
-  faces->getVertReferencesAtTri(faceId, a, b, c);
+  faces->getVertCoordsAtTri(faceId, a, b, c);
   ll[0] = a[0];
   ur[0] = a[0];
   ll[1] = a[1];
@@ -525,7 +525,7 @@ void GeometryMath::FindBoundingBoxOfRotatedFace(TriangleGeom::Pointer faces, int
   float p1[3], p2[3], p3[3];
   float p1r[3], p2r[3], p3r[3];
 
-  faces->getVertReferencesAtTri(faceId, a, b, c);
+  faces->getVertCoordsAtTri(faceId, a, b, c);
   p1[0] = a[0];
   p1[1] = a[1];
   p1[2] = a[2];
@@ -904,7 +904,7 @@ LOOP:
       }
       else
       {
-        faces->getVertReferencesAtTri(faceId[f], a, b, c);
+        faces->getVertCoordsAtTri(faceId[f], a, b, c);
         code = RayIntersectsTriangle(a, b, c, q, r, p);
       }
 

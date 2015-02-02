@@ -3,29 +3,29 @@
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
+ * RedisQuadbution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this
+ * RedisQuadbutions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice, this
+ * RedisQuadbutions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
+ * other materials provided with the disQuadbution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * BlueQuartz Software nor the names of its conQuadbutors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONQuadBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONQuadBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, SQuadCT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
@@ -34,45 +34,45 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3DLib/Geometry/EdgeGeom.h"
-#define GEOM_CLASS_NAME EdgeGeom
+#include "DREAM3DLib/Geometry/QuadGeom.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EdgeGeom::EdgeGeom()
+QuadGeom::QuadGeom()
 {
-  m_GeometryTypeName = DREAM3D::Geometry::EdgeGeometry;
-  m_GeometryType = DREAM3D::GeometryType::EdgeGeometry;
+  m_GeometryTypeName = DREAM3D::Geometry::QuadGeometry;
+  m_GeometryType = DREAM3D::GeometryType::QuadGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::PolyData;
-  m_UnitDimensionality = 1;
+  m_UnitDimensionality = 2;
   m_SpatialDimensionality = 3;
-  m_VertexList = EdgeGeom::CreateSharedVertexList(0);
-  m_EdgeList = EdgeGeom::CreateSharedEdgeList(0);
-  m_EdgesContainingVert = CellDynamicList::NullPointer();
-  m_EdgeNeighbors = CellDynamicList::NullPointer();
-  m_EdgeCentroids = FloatArrayType::NullPointer();
+  m_VertexList = QuadGeom::CreateSharedVertexList(0);
+  m_QuadList = QuadGeom::CreateSharedQuadList(0);
+  m_EdgeList = SharedEdgeList::NullPointer();
+  m_QuadsContainingVert = CellDynamicList::NullPointer();
+  m_QuadNeighbors = CellDynamicList::NullPointer();
+  m_QuadCentroids = FloatArrayType::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EdgeGeom::~EdgeGeom()
+QuadGeom::~QuadGeom()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EdgeGeom::Pointer EdgeGeom::CreateGeometry(int64_t numEdges, SharedVertexList::Pointer vertices, const QString& name)
+QuadGeom::Pointer QuadGeom::CreateGeometry(int64_t numQuads, SharedVertexList::Pointer vertices, const QString& name)
 {
   if (name.isEmpty() == true)
   {
     return NullPointer();
   }
-  SharedEdgeList::Pointer edges = EdgeGeom::CreateSharedEdgeList(numEdges);
-  EdgeGeom* d = new EdgeGeom();
+  SharedQuadList::Pointer quads = QuadGeom::CreateSharedQuadList(0);
+  QuadGeom* d = new QuadGeom();
   d->setVertices(vertices);
-  d->setEdges(edges);
+  d->setQuads(quads);
   d->setName(name);
   Pointer ptr(d);
   return ptr;
@@ -81,23 +81,23 @@ EdgeGeom::Pointer EdgeGeom::CreateGeometry(int64_t numEdges, SharedVertexList::P
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EdgeGeom::Pointer EdgeGeom::CreateGeometry(SharedEdgeList::Pointer edges, SharedVertexList::Pointer vertices, const QString& name)
+QuadGeom::Pointer QuadGeom::CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name)
 {
   if (name.isEmpty() == true)
   {
-    return EdgeGeom::NullPointer();
+    return NullPointer();
   }
   if (vertices.get() == NULL)
   {
-    return EdgeGeom::NullPointer();
+    return QuadGeom::NullPointer();
   }
-  if (edges.get() == NULL)
+  if (quads.get() == NULL)
   {
-    return EdgeGeom::NullPointer();
+    return QuadGeom::NullPointer();
   }
-  EdgeGeom* d = new EdgeGeom();
+  QuadGeom* d = new QuadGeom();
   d->setVertices(vertices);
-  d->setEdges(edges);
+  d->setQuads(quads);
   d->setName(name);
   Pointer ptr(d);
   return ptr;
@@ -106,72 +106,73 @@ EdgeGeom::Pointer EdgeGeom::CreateGeometry(SharedEdgeList::Pointer edges, Shared
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::initializeWithZeros()
+void QuadGeom::initializeWithZeros()
 {
   m_VertexList->initializeWithZeros();
   m_EdgeList->initializeWithZeros();
+  m_QuadList->initializeWithZeros();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::findEdgesContainingVert()
+void QuadGeom::findQuadsContainingVert()
 {
-  m_EdgesContainingVert = CellDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, getNumberOfVertices());
+  m_QuadsContainingVert = CellDynamicList::New();
+  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::deleteEdgesContainingVert()
+void QuadGeom::deleteQuadsContainingVert()
 {
-  m_EdgesContainingVert = CellDynamicList::NullPointer();
+  m_QuadsContainingVert = CellDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::findEdgeNeighbors()
+void QuadGeom::findQuadNeighbors()
 {
-  if (m_EdgesContainingVert.get() == NULL)
+  if (m_QuadsContainingVert.get() == NULL)
   {
     return;
   }
-  m_EdgeNeighbors = CellDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, m_EdgeNeighbors);
+  m_QuadNeighbors = CellDynamicList::New();
+  GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::deleteEdgeNeighbors()
+void QuadGeom::deleteQuadNeighbors()
 {
-  m_EdgeNeighbors = CellDynamicList::NullPointer();
+  m_QuadNeighbors = CellDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::findEdgeCentroids()
+void QuadGeom::findQuadCentroids()
 {
   QVector<size_t> cDims(1, 3);
-  m_EdgeCentroids = FloatArrayType::CreateArray(getNumberOfEdges(), cDims, DREAM3D::StringConstants::EdgeCentroids);
-  GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_EdgeList, m_VertexList, m_EdgeCentroids);
+  m_QuadCentroids = FloatArrayType::CreateArray(getNumberOfEdges(), cDims, DREAM3D::StringConstants::QuadCentroids);
+  GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_QuadList, m_VertexList, m_QuadCentroids);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::deleteEdgeCentroids()
+void QuadGeom::deleteQuadCentroids()
 {
-  m_EdgeCentroids = FloatArrayType::NullPointer();
+  m_QuadCentroids = FloatArrayType::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
+int QuadGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
 {
   herr_t err = 0;
 
@@ -193,32 +194,41 @@ int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
     }
   }
 
-  // Next write the edge centroids if the exist
-  if (m_EdgeCentroids.get() != NULL)
+  if (m_QuadList.get() != NULL)
   {
-    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_EdgeCentroids);
+    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_QuadList);
     if (err < 0)
     {
       return err;
     }
   }
 
-  // Next write edge neighbors if they exist
-  if (m_EdgeNeighbors.get() != NULL)
+  // Next write the quad centroids if the exist
+  if (m_QuadCentroids.get() != NULL)
   {
-    size_t numEdges = getNumberOfEdges();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_EdgeNeighbors, numEdges);
+    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_QuadCentroids);
     if (err < 0)
     {
       return err;
     }
   }
 
-  // last write edges containing verts if they exist
-  if (m_EdgesContainingVert.get() != NULL)
+  // Next write quad neighbors if they exist
+  if (m_QuadNeighbors.get() != NULL)
+  {
+    size_t numQuads = getNumberOfQuads();
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadNeighbors, numQuads);
+    if (err < 0)
+    {
+      return err;
+    }
+  }
+
+  // Last write faces containing verts if they exist
+  if (m_QuadsContainingVert.get() != NULL)
   {
     size_t numVerts = getNumberOfVertices();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_EdgesContainingVert, numVerts);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadsContainingVert, numVerts);
     if (err < 0)
     {
       return err;
@@ -231,7 +241,7 @@ int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
+int QuadGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 {
   herr_t err = 0;
 
@@ -239,9 +249,9 @@ int EdgeGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
   out << "  <!-- *************** START OF " << dcName << " *************** -->" << "\n";
   out << "  <Grid Name=\"" << dcName << "\" GridType=\"Uniform\">" << "\n";
 
-  out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << getNumberOfEdges() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << getNumberOfEdges() << " 2\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::SharedEdgeList << "\n";
+  out << "    <Topology TopologyType=\"Quadrilateral\" NumberOfElements=\"" << getNumberOfQuads() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << getNumberOfQuads() << " 3\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::SharedQuadList << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
 
@@ -270,7 +280,7 @@ int EdgeGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
+int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
   herr_t err = 0;
   QVector<hsize_t> dims;
@@ -278,74 +288,78 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   size_t type_size;
   SharedVertexList::Pointer vertices = SharedVertexList::NullPointer();
   SharedEdgeList::Pointer edges = SharedEdgeList::NullPointer();
+  SharedQuadList::Pointer quads = SharedQuadList::NullPointer();
   vertices = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight);
   edges = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedEdgeList>(DREAM3D::Geometry::SharedEdgeList, parentId, preflight);
+  quads = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedQuadList>(DREAM3D::Geometry::SharedQuadList, parentId, preflight);
   QVector<size_t> cDims(1, 0);
-  FloatArrayType::Pointer edgeCentroids = FloatArrayType::CreateArray(cDims, cDims, DREAM3D::StringConstants::EdgeCentroids);
+  FloatArrayType::Pointer quadCentroids = FloatArrayType::CreateArray(cDims, cDims, DREAM3D::StringConstants::QuadCentroids);
   if (true == preflight)
   {
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadNeighbors, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer edgeNeighbors = CellDynamicList::New();
-      setEdgeNeighbors(edgeNeighbors);
+      CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
+      setQuadNeighbors(quadNeighbors);
     }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgesContainingVert, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadsContainingVert, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer edgesContainingVert = CellDynamicList::New();
-      setEdgesContainingVert(edgesContainingVert);
+      CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
+      setQuadsContainingVert(quadsContainingVert);
     }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeCentroids, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadCentroids, dims, type_class, type_size);
     if (err >= 0)
     {
-      setEdgeCentroids(edgeCentroids);
+      setQuadCentroids(quadCentroids);
     }
     setVertices(vertices);
     setEdges(edges);
+    setQuads(quads);
   }
   else
   {
-    if (edges.get() == NULL)
+    if (quads.get() == NULL)
     {
       return -1;
     }
-    int64_t numEdges = edges->getNumberOfTuples();
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
+    size_t numQuads = quads->getNumberOfTuples();
+    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadNeighbors, dims, type_class, type_size);
     if (err >= 0)
     {
-      // Read the edgeNeighbors array into the buffer
+      // Read the quadNeighbors array into the buffer
       std::vector<uint8_t> buffer;
-      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::EdgeNeighbors, buffer);
+      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::QuadNeighbors, buffer);
       if (err < 0)
       {
         return err;
       }
-      CellDynamicList::Pointer edgeNeighbors = CellDynamicList::New();
-      edgeNeighbors->deserializeLinks(buffer, numEdges);
-      setEdgeNeighbors(edgeNeighbors);
+      CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
+      quadNeighbors->deserializeLinks(buffer, numQuads);
+      setQuadNeighbors(quadNeighbors);
     }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgesContainingVert, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadsContainingVert, dims, type_class, type_size);
     if (err >= 0)
     {
-      // Read the edgesContainingVert array into the buffer
+      // Read the quadsContainingVert array into the buffer
       std::vector<uint8_t> buffer;
-      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::EdgesContainingVert, buffer);
+      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::QuadsContainingVert, buffer);
       if (err < 0)
       {
         return err;
       }
-      CellDynamicList::Pointer edgesContainingVert = CellDynamicList::New();
-      edgesContainingVert->deserializeLinks(buffer, numEdges);
-      setEdgesContainingVert(edgesContainingVert);
+      CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
+      quadsContainingVert->deserializeLinks(buffer, numQuads);
+      setQuadsContainingVert(quadsContainingVert);
     }
-    err = edgeCentroids->readH5Data(parentId);
+    err = quadCentroids->readH5Data(parentId);
     if (err >= 0)
     {
-      setEdgeCentroids(edgeCentroids);
+      setQuadCentroids(quadCentroids);
     }
     setVertices(vertices);
     setEdges(edges);
+    setQuads(quads);
   }
 
   return 1;
@@ -356,7 +370,8 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 // -----------------------------------------------------------------------------
 
 // Shared ops includes
-#define GEOM_CLASS_NAME EdgeGeom
+#define GEOM_CLASS_NAME QuadGeom
 #include "DREAM3DLib/Geometry/SharedGeometryOps.cpp"
 #include "DREAM3DLib/Geometry/SharedVertexOps.cpp"
 #include "DREAM3DLib/Geometry/SharedEdgeOps.cpp"
+#include "DREAM3DLib/Geometry/SharedQuadOps.cpp"

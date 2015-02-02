@@ -42,6 +42,7 @@
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 #include "DREAM3DLib/Geometry/IGeometry.h"
 #include "DREAM3DLib/Geometry/VertexGeom.h"
+#include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 
 /**
  * @brief The EdgeGeom class represents a collection of line segments
@@ -56,8 +57,9 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
 
     virtual ~EdgeGeom();
 
-    DREAM3D_INSTANCE_PROPERTY(UInt16Int64DynamicListArray::Pointer, EdgesContainingVert)
-    DREAM3D_INSTANCE_PROPERTY(UInt16Int64DynamicListArray::Pointer, EdgeNeighbors)
+    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, EdgesContainingVert)
+    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, EdgeNeighbors)
+    DREAM3D_PRIVATE_INSTANCE_PROPERTY(FloatArrayType::Pointer, EdgeCentroids)
 
     /**
      * @brief CreateGeometry
@@ -102,6 +104,16 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      */
     void deleteEdgeNeighbors();
 
+    /**
+     * @brief findEdgeCentroids
+     */
+    void findEdgeCentroids();
+
+    /**
+     * @brief deleteEdgeCentroids
+     */
+    void deleteEdgeCentroids();
+
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
 // -----------------------------------------------------------------------------
@@ -136,14 +148,14 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      * @param vertId
      * @param coords
      */
-    void setCoords(int64_t vertId, float* coords);
+    void setCoords(int64_t vertId, float coords[3]);
 
     /**
      * @brief getCoords
      * @param vertId
      * @param coords
      */
-    void getCoords(int64_t vertId, float* coords);
+    void getCoords(int64_t vertId, float coords[3]);
 
     /**
      * @brief getVertexPointer
@@ -192,22 +204,22 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      * @param edgeId
      * @param verts
      */
-    void setVertsAtEdge(int64_t edgeId, int64_t* verts);
+    void setVertsAtEdge(int64_t edgeId, int64_t verts[2]);
 
     /**
      * @brief getVerts
      * @param edgeId
      * @param verts
      */
-    void getVertsAtEdge(int64_t edgeId, int64_t* verts);
+    void getVertsAtEdge(int64_t edgeId, int64_t verts[2]);
 
     /**
-     * @brief getVertReferences
+     * @brief getVertCoordsAtEdge
      * @param edgeId
      * @param vert1
      * @param vert2
      */
-    void getVertReferencesAtEdge(int64_t edgeId, float* vert1, float* vert2);
+    void getVertCoordsAtEdge(int64_t edgeId, float vert1[3], float vert2[3]);
 
     /**
      * @brief getEdgePointer

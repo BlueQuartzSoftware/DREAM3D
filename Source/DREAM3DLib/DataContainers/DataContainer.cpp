@@ -564,7 +564,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       ImageGeom::Pointer image = ImageGeom::New();
       err = image->readGeometryFromHDF5(geometryId, preflight);
-      err = IGeometry::ReadMetaDataFromHDF5(dcGid, image);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, image);
       setGeometry(image);
       break;
     }
@@ -572,7 +572,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       VertexGeom::Pointer vertices = VertexGeom::New();
       err = vertices->readGeometryFromHDF5(geometryId, preflight);
-      err = IGeometry::ReadMetaDataFromHDF5(dcGid, vertices);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, vertices);
       setGeometry(vertices);
       break;
     }
@@ -580,7 +580,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       EdgeGeom::Pointer edges = EdgeGeom::New();
       err = edges->readGeometryFromHDF5(geometryId, preflight);
-      err = IGeometry::ReadMetaDataFromHDF5(dcGid, edges);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, edges);
       setGeometry(edges);
       break;
     }
@@ -588,7 +588,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
     {
       TriangleGeom::Pointer triangles = TriangleGeom::New();
       err = triangles->readGeometryFromHDF5(geometryId, preflight);
-      err = IGeometry::ReadMetaDataFromHDF5(dcGid, triangles);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, triangles);
       setGeometry(triangles);
       break;
     }

@@ -3,29 +3,29 @@
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
+ * RedisQuadbution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this
+ * RedisQuadbutions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
  *
- * Redistributions in binary form must reproduce the above copyright notice, this
+ * RedisQuadbutions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
+ * other materials provided with the disQuadbution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * BlueQuartz Software nor the names of its conQuadbutors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONQuadBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONQuadBUTORS BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, SQuadCT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _TriangleGeom_H_
-#define _TriangleGeom_H_
+#ifndef _QuadGeom_H_
+#define _QuadGeom_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -46,39 +46,39 @@
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 
 /**
- * @brief The TriangleGeom class represents a collection of triangles
+ * @brief The QuadGeom class represents a collection of quadrilaterals
  */
-class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
+class DREAM3DLib_EXPORT QuadGeom : public IGeometry
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(TriangleGeom)
-    DREAM3D_STATIC_NEW_MACRO(TriangleGeom)
-    DREAM3D_TYPE_MACRO_SUPER(TriangleGeom, Observable)
+    DREAM3D_SHARED_POINTERS(QuadGeom)
+    DREAM3D_STATIC_NEW_MACRO(QuadGeom)
+    DREAM3D_TYPE_MACRO_SUPER(QuadGeom, Observable)
 
-    virtual ~TriangleGeom();
+    virtual ~QuadGeom();
 
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, TrianglesContainingVert)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, TriangleNeighbors)
-    DREAM3D_PRIVATE_INSTANCE_PROPERTY(FloatArrayType::Pointer, TriangleCentroids)
+    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, QuadsContainingVert)
+    DREAM3D_PRIVATE_INSTANCE_PROPERTY(CellDynamicList::Pointer, QuadNeighbors)
+    DREAM3D_PRIVATE_INSTANCE_PROPERTY(FloatArrayType::Pointer, QuadCentroids)
 
     /**
      * @brief CreateGeometry
-     * @param numTriangles
+     * @param numQuads
      * @param vertices
      * @param name
      * @return
      */
-    static Pointer CreateGeometry(int64_t numTriangles, SharedVertexList::Pointer vertices, const QString& name);
+    static Pointer CreateGeometry(int64_t numQuads, SharedVertexList::Pointer vertices, const QString& name);
 
     /**
      * @brief CreateGeometry
-     * @param triangles
+     * @param quads
      * @param vertices
      * @param name
      * @return
      */
-    static Pointer CreateGeometry(SharedTriList::Pointer triangles, SharedVertexList::Pointer vertices, const QString& name);
+    static Pointer CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name);
 
     /**
      * @brief initializeWithZeros
@@ -86,34 +86,34 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
     void initializeWithZeros();
 
     /**
-     * @brief findTrianglesContainingVert
+     * @brief findQuadsContainingVert
      */
-    void findTrianglesContainingVert();
+    void findQuadsContainingVert();
 
     /**
-     * @brief deleteTrianglesContainingVert
+     * @brief deleteQuadsContainingVert
      */
-    void deleteTrianglesContainingVert();
+    void deleteQuadsContainingVert();
 
     /**
-     * @brief findTriangleNeighbors
+     * @brief findQuadNeighbors
      */
-    void findTriangleNeighbors();
+    void findQuadNeighbors();
 
     /**
-     * @brief deleteTriangleNeighbors
+     * @brief deleteQuadNeighbors
      */
-    void deleteTriangleNeighbors();
+    void deleteQuadNeighbors();
 
     /**
-     * @brief findTriangleCentroids
+     * @brief findQuadCentroids
      */
-    void findTriangleCentroids();
+    void findQuadCentroids();
 
     /**
-     * @brief deleteTriangleCentroids
+     * @brief deleteQuadCentroids
      */
-    void deleteTriangleCentroids();
+    void deleteQuadCentroids();
 
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
@@ -236,69 +236,70 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
     int64_t getNumberOfEdges();
 
 // -----------------------------------------------------------------------------
-// Inherited from SharedTriOps
+// Inherited from SharedQuadOps
 // -----------------------------------------------------------------------------
 
     /**
-     * @brief CreateSharedTriLost
-     * @param numTris
+     * @brief CreateSharedQuadLost
+     * @param numQuads
      * @return
      */
-    static SharedTriList::Pointer CreateSharedTriList(int64_t numTris);
+    static SharedQuadList::Pointer CreateSharedQuadList(int64_t numQuads);
 
     /**
-     * @brief resizeTriList
-     * @param newNumTris
+     * @brief resizeQuadList
+     * @param newNumQuads
      */
-    void resizeTriList(int64_t newNumTris);
+    void resizeQuadList(int64_t newNumQuads);
 
     /**
-     * @brief setTriangles
-     * @param triangles
+     * @brief setQuads
+     * @param quads
      */
-    void setTriangles(SharedTriList::Pointer triangles);
+    void setQuads(SharedQuadList::Pointer quads);
 
     /**
-     * @brief getTriangles
+     * @brief getQuads
      * @return
      */
-    SharedTriList::Pointer getTriangles();
+    SharedQuadList::Pointer getQuads();
 
     /**
-     * @brief setVertsAtTri
-     * @param triId
+     * @brief setVertsAtQuad
+     * @param quadId
      * @param verts
      */
-    void setVertsAtTri(int64_t triId, int64_t verts[3]);
+    void setVertsAtQuad(int64_t quadId, int64_t verts[4]);
 
     /**
-     * @brief getVertsAtTri
-     * @param triId
+     * @brief getVertsAtQuad
+     * @param quadId
      * @param verts
      */
-    void getVertsAtTri(int64_t triId, int64_t verts[3]);
+    void getVertsAtQuad(int64_t quadId, int64_t verts[4]);
 
     /**
-     * @brief getVertCoordsAtTri
-     * @param triId
+     * @brief getVertCoordsAtQuad
+     * @param quadId
      * @param vert1
      * @param vert2
      * @param vert3
+     * @param vert4
      */
-    void getVertCoordsAtTri(int64_t triId, float vert1[3], float vert2[3], float vert3[3]);
+    void getVertCoordsAtQuad(int64_t quadId, float vert1[3], float vert2[3], float vert3[3], float vert4[3]);
 
     /**
      * @brief getPointer
      * @param i
      * @return
      */
-    int64_t* getTriPointer(int64_t i);
+    int64_t* getQuadPointer(int64_t i);
 
     /**
-     * @brief getNumberOfTris
+     * @brief getNumberOfQuads
      * @return
      */
-    int64_t getNumberOfTris();
+    int64_t getNumberOfQuads();
 
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry
@@ -323,7 +324,7 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
     virtual unsigned int getGeometryType();
 
     /**
-     * @brief getGeometryTypeAsString
+     * @brief getGeometryTypeAsSQuadng
      * @return
      */
     virtual QString getGeometryTypeAsString();
@@ -379,7 +380,7 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
 
   protected:
 
-    TriangleGeom();
+    QuadGeom();
 
   private:
 
@@ -391,12 +392,12 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
     unsigned int m_SpatialDimensionality;
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
-    SharedTriList::Pointer m_TriList;
+    SharedQuadList::Pointer m_QuadList;
 
-    TriangleGeom(const TriangleGeom&); // Copy Constructor Not Implemented
-    void operator=(const TriangleGeom&); // Operator '=' Not Implemented
+    QuadGeom(const QuadGeom&); // Copy Constructor Not Implemented
+    void operator=(const QuadGeom&); // Operator '=' Not Implemented
 };
 
 
-#endif /* _TriangleGeom_H_ */
+#endif /* _QuadGeom_H_ */
 

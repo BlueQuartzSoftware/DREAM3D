@@ -76,7 +76,7 @@ SharedTriList::Pointer GEOM_CLASS_NAME::getTriangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::setVertsAtTri(int64_t triId, int64_t* verts)
+void GEOM_CLASS_NAME::setVertsAtTri(int64_t triId, int64_t verts[3])
 {
   int64_t* Tri = m_TriList->getTuplePointer(triId);
   Tri[0] = verts[0];
@@ -87,7 +87,7 @@ void GEOM_CLASS_NAME::setVertsAtTri(int64_t triId, int64_t* verts)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::getVertsAtTri(int64_t triId, int64_t* verts)
+void GEOM_CLASS_NAME::getVertsAtTri(int64_t triId, int64_t verts[3])
 {
   int64_t* Tri = m_TriList->getTuplePointer(triId);
   verts[0] = Tri[0];
@@ -98,7 +98,7 @@ void GEOM_CLASS_NAME::getVertsAtTri(int64_t triId, int64_t* verts)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::getVertReferencesAtTri(int64_t triId, float* vert1, float* vert2, float* vert3)
+void GEOM_CLASS_NAME::getVertCoordsAtTri(int64_t triId, float vert1[3], float vert2[3], float vert3[3])
 {
   int64_t* Tri = m_TriList->getTuplePointer(triId);
   vert1 = m_VertexList->getTuplePointer(Tri[0]);
