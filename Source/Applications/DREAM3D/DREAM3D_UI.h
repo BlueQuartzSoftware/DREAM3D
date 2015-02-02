@@ -52,7 +52,7 @@
 
 
 #include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
 
@@ -60,7 +60,7 @@
 #include "ui_DREAM3D_UI.h"
 
 
-class DREAM3DPluginInterface;
+class IDREAM3DPlugin;
 class FilterLibraryDockWidget;
 class FavoritesDockWidget;
 class PrebuiltPipelinesDockWidget;
@@ -94,9 +94,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     /**
      * @brief setLoadedPlugins This will set the plugins that have already been loaded by another mechanism. The plugins are NOT
      * deleted by this class and the unloading and clean up of the plugin pointers is the responsibility of the caller.
-     * @param plugins The plugins that adhere to the DREAM3DPluginInterface
+     * @param plugins The plugins that adhere to the IDREAM3DPlugin
      */
-    void setLoadedPlugins(QVector<DREAM3DPluginInterface*> plugins);
+    void setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins);
 
     /**
      * @brief displayHelp
@@ -286,8 +286,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   private:
     QThread*                    m_WorkerThread;
-    DREAM3DPluginInterface*     m_ActivePlugin;
-    QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
+    IDREAM3DPlugin*     m_ActivePlugin;
+    QVector<IDREAM3DPlugin*> m_LoadedPlugins;
 
     HelpDialog*                 m_HelpDialog;
 

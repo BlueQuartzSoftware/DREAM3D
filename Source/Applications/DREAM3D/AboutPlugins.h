@@ -42,7 +42,8 @@
 
 #include <DREAM3DLib/Plugin/PluginProxy.h>
 #include <DREAM3DLib/Plugin/PluginManager.h>
-#include <DREAM3DLib/Plugin/DREAM3DPluginInterface.h>
+#include <DREAM3DLib/Plugin/IDREAM3DPlugin.h>
+#include <DREAM3DLib/Plugin/DREAM3DPlugin.h>
 
 
 //-- UIC generated Header
@@ -58,7 +59,8 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
 
     void setupGui();
 
-    int addPluginToTable(DREAM3DPluginInterface* plugin, int row);
+    void addPluginToTable(IDREAM3DPlugin* plugin, int row);
+	void addPlaceHolderToTable(DREAM3DPlugin* plugin, int row);
 
     void loadPlugins(QList<PluginProxy::Pointer> proxies);
 
@@ -69,12 +71,16 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
 
     bool getLoadPreferencesDidChange();
 
+	//bool deletePlugin(QString pluginName);
+
   public slots:
     void on_closeBtn_clicked();
     void on_detailsBtn_clicked();
+	void on_pluginsTable_cellClicked(int row, int column);
     void writePluginCache(int state);
     void togglePluginState(int state);
     void displayDetailsWindow(QTableWidgetItem* item);
+	void deletePlugin();
 
   private:
     bool m_loadPreferencesDidChange;

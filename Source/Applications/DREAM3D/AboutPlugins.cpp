@@ -44,8 +44,10 @@ enum ColumnIndex
   NAME_INDEX = 0,
   CHECKBOX_INDEX = 1,
   STATUS_INDEX = 2,
-  VERSION_INDEX = 3,
-  VENDOR_INDEX = 4
+  LOCATION_INDEX = 3,
+  VERSION_INDEX = 4,
+  VENDOR_INDEX = 5,
+  DELETE_INDEX = 6
 };
 
 enum SettingIndex
@@ -53,6 +55,8 @@ enum SettingIndex
   PATH_INDEX = 0,
   ENABLED_INDEX = 1
 };
+
+static const QString DOES_NOT_EXIST_STRING = "This Plugin No Longer Exists";
 
 // -----------------------------------------------------------------------------
 //
@@ -80,9 +84,12 @@ void AboutPlugins::setupGui()
 {
   // Resize the column widths so that all text is showing
   pluginsTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  pluginsTable->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
-  pluginsTable->horizontalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
-  pluginsTable->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setResizeMode(NAME_INDEX, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setResizeMode(CHECKBOX_INDEX, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setResizeMode(STATUS_INDEX, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setResizeMode(LOCATION_INDEX, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setResizeMode(VERSION_INDEX, QHeaderView::ResizeToContents);
+
 
   // Set selection behavior so that only full rows can be selected
   pluginsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -90,7 +97,7 @@ void AboutPlugins::setupGui()
   QList<PluginProxy::Pointer> currentCache = readPluginCache();
   loadPlugins(currentCache);
 
-  // Set Default Cell
+  // Set default cell to the first item in the list
   pluginsTable->setCurrentCell(0, 0);
 
   connect(pluginsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(displayDetailsWindow(QTableWidgetItem*)));
@@ -102,19 +109,14 @@ void AboutPlugins::setupGui()
 void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
 {
   PluginManager* manager = PluginManager::Instance();
-  QVector<DREAM3DPluginInterface*> vector = manager->getPluginsVector();
+  QVector<IDREAM3DPlugin*> vector = manager->getPluginsVector();
   pluginsTable->setRowCount(vector.size());
 
   // Iterate over PluginManager and add each entry to the plugin table
   for (int row=0; row<vector.size(); row++)
   {
-    DREAM3DPluginInterface* plugin = vector.at(row);
-    int errorCode = addPluginToTable(plugin, row);
-
-    if (errorCode < 0)
-    {
-      // Throw an error???  Plugin pointer is NULL...
-    }
+    IDREAM3DPlugin* plugin = vector.at(row);
+    addPluginToTable(plugin, row);
   }
 
   // Iterate over proxy and find all entries that are not in PluginManager
@@ -132,33 +134,24 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
     if ( managerNames.contains(proxyName) == false )
     {
       qDebug() << "The plugin " << proxyName << " was not found in the PluginManager.";
-//      DREAM3DPluginInterface* plugin = new DREAM3DPluginInterface(NULL);
-//      int errorCode = addPluginToTable(plugin, row);
-
-//      if (errorCode < 0)
-//      {
-//        // Throw an error???  Plugin pointer is NULL...
-//      }
+	  DREAM3DPlugin* plugin = new DREAM3DPlugin();
+	  plugin->setPluginName(proxyName);
+	  plugin->setDidLoad(false);
+	  plugin->setLocation(DOES_NOT_EXIST_STRING);
+      addPlaceHolderToTable(plugin, 0);
     }
   }
-
-  // Write anything newly loaded to the cache
-  //writePluginCache(0);    // Dummy parameter to make the function run...
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AboutPlugins::addPluginToTable(DREAM3DPluginInterface* plugin, int row)
+void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
 {
-  if (NULL == plugin)
-  {
-    return -1;
-  }
-
   // Add name of plugin to the row
   QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
   pluginsTable->setItem(row, NAME_INDEX, nameItem);
+
 
   // Add check box that is centered in the cell
   QCheckBox* checkBox = new QCheckBox(NULL);
@@ -176,6 +169,7 @@ int AboutPlugins::addPluginToTable(DREAM3DPluginInterface* plugin, int row)
   widget->setLayout(layout);
   pluginsTable->setCellWidget(row, CHECKBOX_INDEX, widget);
 
+
   QTableWidgetItem* statusItem;
   // Add load status information
   if (plugin->getDidLoad() == true)
@@ -188,6 +182,10 @@ int AboutPlugins::addPluginToTable(DREAM3DPluginInterface* plugin, int row)
   }
   pluginsTable->setItem(row, STATUS_INDEX, statusItem);
 
+  // Add location information
+  QTableWidgetItem* locationItem = new QTableWidgetItem(plugin->getLocation());
+  pluginsTable->setItem(row, LOCATION_INDEX, locationItem);
+
   // Add version information
   QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
   pluginsTable->setItem(row, VERSION_INDEX, versionItem);
@@ -196,8 +194,140 @@ int AboutPlugins::addPluginToTable(DREAM3DPluginInterface* plugin, int row)
   QTableWidgetItem* vendorItem = new QTableWidgetItem(plugin->getVendor());
   pluginsTable->setItem(row, VENDOR_INDEX, vendorItem);
 
-  return 0;
+  // Add delete button that is centered in the cell
+  QWidget* deleteWidget = new QWidget(NULL);
+  QHBoxLayout* deleteLayout = new QHBoxLayout(NULL);
+  QPushButton* deleteBtn = new QPushButton(deleteWidget);
+  deleteBtn->setText("Delete");
+
+  connect(deleteBtn, SIGNAL(pressed()), this, SLOT(deletePlugin()));
+
+  deleteLayout->addWidget(deleteBtn);
+  deleteLayout->setAlignment(Qt::AlignCenter);
+  deleteLayout->setContentsMargins(0, 0, 0, 0);
+  deleteWidget->setLayout(deleteLayout);
+  pluginsTable->setCellWidget(row, DELETE_INDEX, deleteWidget);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::addPlaceHolderToTable(DREAM3DPlugin* plugin, int row)
+{
+	// Insert the empty row
+	pluginsTable->insertRow(row);
+
+	// Create bold font
+	QFont errorFont;
+	errorFont.setBold(true);
+
+	// Add name of plugin to the row
+	QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
+	nameItem->setFont(errorFont);
+	nameItem->setBackgroundColor(Qt::red);
+	pluginsTable->setItem(row, NAME_INDEX, nameItem);
+
+	// Add empty checkbox item to the row
+	QTableWidgetItem* enabledItem = new QTableWidgetItem();
+	enabledItem->setBackgroundColor(Qt::red);
+	pluginsTable->setItem(row, ENABLED_INDEX, enabledItem);
+
+	// Add empty status item to the row
+	QTableWidgetItem* statusItem = new QTableWidgetItem();
+	statusItem->setBackgroundColor(Qt::red);
+	pluginsTable->setItem(row, STATUS_INDEX, statusItem);
+
+	// Add location information
+	QTableWidgetItem* locationItem = new QTableWidgetItem(plugin->getLocation());
+	locationItem->setFont(errorFont);
+	locationItem->setBackgroundColor(Qt::red);
+	pluginsTable->setItem(row, LOCATION_INDEX, locationItem);
+
+	// Add version information
+	QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
+	versionItem->setBackgroundColor(Qt::red);
+	pluginsTable->setItem(row, VERSION_INDEX, versionItem);
+
+	// Add vendor information
+	QTableWidgetItem* vendorItem = new QTableWidgetItem(plugin->getVendor());
+	vendorItem->setBackgroundColor(Qt::red);
+	pluginsTable->setItem(row, VENDOR_INDEX, vendorItem);
+
+	// Add delete button that is centered in the cell
+	QWidget* deleteWidget = new QWidget(NULL);
+	QHBoxLayout* deleteLayout = new QHBoxLayout(NULL);
+	QPushButton* deleteBtn = new QPushButton(deleteWidget);
+	deleteBtn->setText("Delete");
+
+	connect(deleteBtn, SIGNAL(pressed()), this, SLOT(deletePlugin()));
+
+	deleteLayout->addWidget(deleteBtn);
+	deleteLayout->setAlignment(Qt::AlignCenter);
+	deleteLayout->setContentsMargins(0, 0, 0, 0);
+	deleteWidget->setLayout(deleteLayout);
+	pluginsTable->setCellWidget(row, DELETE_INDEX, deleteWidget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::deletePlugin()
+{
+	QPushButton* btn = qobject_cast<QPushButton*>( sender() );
+
+	if (NULL == btn)
+	{
+		return;
+	}
+
+	QWidget* cellWidget = qobject_cast<QWidget*>( btn->parent() );
+
+	if (NULL == cellWidget)
+	{
+		return;
+	}
+
+	QModelIndex index = pluginsTable->indexAt(cellWidget->pos());
+	QTableWidgetItem* nameItem = pluginsTable->item(index.row(), NAME_INDEX);
+
+	if (NULL != nameItem)
+	{
+		QString pluginName = nameItem->text();
+	}
+}
+
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AboutPlugins::deletePlugin(QString pluginName)
+{
+#if defined (Q_OS_MAC)
+	QSettings::Format format = QSettings::NativeFormat;
+#else
+	QSettings::Format format = QSettings::IniFormat;
+#endif
+	QString filePath;
+
+	QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
+	filePath = prefs.fileName();
+
+	PluginManager* manager = PluginManager::Instance();
+	QVector<IDREAM3DPlugin*> pluginsVector = manager->getPluginsVector();
+	for (QVector<IDREAM3DPlugin*>::iterator pluginIter = pluginsVector.begin(); pluginIter != pluginsVector.end(); pluginIter++)
+	{
+		IDREAM3DPlugin* plugin = *pluginIter;
+		if (plugin->getPluginName() == pluginName)
+		{
+			QString path = plugin->getLocation();
+			prefs.beginGroup("PluginPreferences");
+
+		}
+	}
+}
+#endif // 0
+
 
 // -----------------------------------------------------------------------------
 //
@@ -218,6 +348,21 @@ void AboutPlugins::on_detailsBtn_clicked()
   // Launch Details dialog box
   PluginDetails dialog(item->text());
   dialog.exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::on_pluginsTable_cellClicked(int row, int column)
+{
+	if (pluginsTable->item(row, LOCATION_INDEX)->text() == DOES_NOT_EXIST_STRING)
+	{
+		detailsBtn->setDisabled(true);
+	}
+	else
+	{
+		detailsBtn->setEnabled(true);
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -246,10 +391,10 @@ void AboutPlugins::writePluginCache(int state)
     QString filePath = (*proxyIter)->getFilePath();
     bool enabled = (*proxyIter)->getEnabled();
 
-    prefs.beginGroup(pluginName);
-    prefs.setValue(QString::number(PATH_INDEX), filePath);
-    prefs.setValue(QString::number(ENABLED_INDEX), enabled);
-    prefs.endGroup();
+	prefs.beginGroup(pluginName);
+	prefs.setValue(QString::number(PATH_INDEX), filePath);
+	prefs.setValue(QString::number(ENABLED_INDEX), enabled);
+	prefs.endGroup();
   }
 
   prefs.endGroup();
@@ -293,7 +438,12 @@ void AboutPlugins::readCheckState(QCheckBox* checkBox, QString pluginName)
 // -----------------------------------------------------------------------------
 void AboutPlugins::displayDetailsWindow(QTableWidgetItem* item)
 {
-  on_detailsBtn_clicked();
+	QTableWidgetItem* locationItem = pluginsTable->item(item->row(), LOCATION_INDEX);
+
+	if (NULL != locationItem && locationItem->text() != DOES_NOT_EXIST_STRING)
+	{
+		on_detailsBtn_clicked();
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -307,7 +457,7 @@ QList<PluginProxy::Pointer> AboutPlugins::getPluginCheckBoxSettingsFromGUI()
   for (int row=0; row<pluginsTable->rowCount(); row++)
   {
     QString pluginName = pluginsTable->item(row, NAME_INDEX)->text();
-    DREAM3DPluginInterface* plugin = manager->findPlugin(pluginName);
+    IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);
 
     PluginProxy::Pointer proxy = PluginProxy::New();
     proxy->setPluginName(pluginName);

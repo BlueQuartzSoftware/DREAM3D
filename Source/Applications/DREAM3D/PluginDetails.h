@@ -39,7 +39,7 @@
 #include <QtCore/QObject>
 
 #include <DREAM3DLib/Plugin/PluginManager.h>
-#include <DREAM3DLib/Plugin/DREAM3DPluginInterface.h>
+#include <DREAM3DLib/Plugin/IDREAM3DPlugin.h>
 
 
 //-- UIC generated Header

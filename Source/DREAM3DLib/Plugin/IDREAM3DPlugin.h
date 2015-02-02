@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DREAM3DPluginInterface_H_
-#define _DREAM3DPluginInterface_H_
+#ifndef _IDREAM3DPlugin_H_
+#define _IDREAM3DPlugin_H_
 
 
 #include <QtCore/QSettings>
@@ -85,7 +85,7 @@ class FilterManager;
 class FilterWidgetManager;
 
 /**
- * @class DREAM3DPluginInterface DREAM3DPluginInterface.h IPHelper/plugins/DREAM3DPluginInterface.h
+ * @class IDREAM3DPlugin IDREAM3DPlugin.h IPHelper/plugins/IDREAM3DPlugin.h
  * @brief This class defines the interface used by plugins that would like to process
  * images and display their output.
  * @author Michael A. Jackson for BlueQuartz Software
@@ -102,10 +102,10 @@ class FilterWidgetManager;
  *  the input images.
  *
  * @subsection plugin_interface PluginInterface
- *    The developer should create a C++ class that inherits publicly from DREAM3DPluginInterface and
+ *    The developer should create a C++ class that inherits publicly from IDREAM3DPlugin and
  *    QObject.
  *    @code
- *    class MyPlugin : public QObject, public DREAM3DPluginInterface {
+ *    class MyPlugin : public QObject, public IDREAM3DPlugin {
  *    @endcode
  *
  *    The developer will also need to add some macro declarations to their class declaration (usually
@@ -113,7 +113,7 @@ class FilterWidgetManager;
  *
  *    @code
  *      Q_OBJECT
- *      Q_INTERFACES(DREAM3DPluginInterface )
+ *      Q_INTERFACES(IDREAM3DPlugin )
  *    @endcode
  *    The programmer will also need to add the following macros to their implementation file.
  *    @code
@@ -121,7 +121,7 @@ class FilterWidgetManager;
  *    @endcode
  *
  *    At this point the developer is ready to implement each of the virtual functions in the
- *    DREAM3DPluginInterface in order to make their plugin valid
+ *    IDREAM3DPlugin in order to make their plugin valid
  *
  * @subsection plugin_inputui PluginInputUI
  *   In order for the user to be able to set the proper inputs for thier image
@@ -140,12 +140,12 @@ class FilterWidgetManager;
  *
  * @section details Details
  */
-class DREAM3DPluginInterface
+class IDREAM3DPlugin
 {
   public:
-    DREAM3D_SHARED_POINTERS(DREAM3DPluginInterface)
+    DREAM3D_SHARED_POINTERS(IDREAM3DPlugin)
 
-    virtual ~DREAM3DPluginInterface() {}
+    virtual ~IDREAM3DPlugin() {}
 
     /**
      * @brief Returns the name of the plugin
@@ -245,8 +245,8 @@ class DREAM3DPluginInterface
 };
 
 
-Q_DECLARE_INTERFACE(DREAM3DPluginInterface,
-                    "net.BlueQuartz.DREAM3DPluginInterface/1.0")
+Q_DECLARE_INTERFACE(IDREAM3DPlugin,
+                    "net.BlueQuartz.IDREAM3DPlugin/1.0")
 
-#endif /* DREAM3DPluginInterface_H_ */
+#endif /* IDREAM3DPlugin_H_ */
 

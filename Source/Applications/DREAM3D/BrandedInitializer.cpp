@@ -139,7 +139,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   QMetaObjectUtilities::RegisterMetaTypes();
 
   // Load application plugins.
-  QVector<DREAM3DPluginInterface*> plugins = loadPlugins();
+  QVector<IDREAM3DPlugin*> plugins = loadPlugins();
 
   // Create main window.
   this->MainWindow = new DREAM3D_UI();
@@ -165,7 +165,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
+QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
 {
   QStringList pluginDirs;
   pluginDirs << qApp->applicationDirPath();
@@ -289,7 +289,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin )
     {
-      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
+      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
       if (ipPlugin)
       {
         QString pluginName = ipPlugin->getPluginName();
@@ -297,7 +297,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
         {
           QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
           this->Splash->showMessage(msg);
-          //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
+          //IDREAM3DPlugin::Pointer ipPluginPtr(ipPlugin);
           ipPlugin->registerFilterWidgets(fwm);
           ipPlugin->registerFilters(fm);
           ipPlugin->setDidLoad(true);

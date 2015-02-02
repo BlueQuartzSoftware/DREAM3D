@@ -69,7 +69,7 @@ void PluginDetails::setupGui()
 void PluginDetails::loadPluginDetails()
 {
   PluginManager* manager = PluginManager::Instance();
-  DREAM3DPluginInterface* plugin = manager->findPlugin(m_PluginName);
+  IDREAM3DPlugin* plugin = manager->findPlugin(m_PluginName);
 
   // Add plugin details to PluginDetails dialog box
   nameLabel->setText(plugin->getPluginName());

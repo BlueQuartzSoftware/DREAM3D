@@ -42,7 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DPluginInterface.h"
+#include "IDREAM3DPlugin.h"
 
 /**
  * @brief The PluginManager class manages instances of plugins and is mainly used to keep
@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT PluginManager
      * @brief Adds a Plugin to the list
      * @param plugin
      */
-    void addPlugin(DREAM3DPluginInterface* plugin);
+    void addPlugin(IDREAM3DPlugin* plugin);
 
     /**
      * @brief getPluginNames Returns all plugin names as a QSet
@@ -84,9 +84,9 @@ class DREAM3DLib_EXPORT PluginManager
      * @brief getPluginList Returns the plugins list
      * @return
      */
-    QVector<DREAM3DPluginInterface*> getPluginsVector();
+    QVector<IDREAM3DPlugin*> getPluginsVector();
 
-    DREAM3DPluginInterface* findPlugin(QString pluginName);
+    IDREAM3DPlugin* findPlugin(QString pluginName);
 
 
   protected:
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT PluginManager
 
   private:
 
-    QVector<DREAM3DPluginInterface*> plugins;
+    QVector<IDREAM3DPlugin*> plugins;
     static PluginManager* self;
 
     PluginManager(const PluginManager&); // Copy Constructor Not Implemented

@@ -815,7 +815,7 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setLoadedPlugins(QVector<DREAM3DPluginInterface*> plugins)
+void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 {
   m_LoadedPlugins = plugins;
 }

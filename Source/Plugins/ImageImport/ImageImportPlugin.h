@@ -38,7 +38,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 
 
 /**
@@ -48,10 +48,10 @@
  * @date May 10, 2012
  * @version 1.0
  */
-class ImageImportPlugin : public QObject, public DREAM3DPluginInterface
+class ImageImportPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-    Q_INTERFACES(DREAM3DPluginInterface)
+    Q_INTERFACES(IDREAM3DPlugin)
 
   public:
     ImageImportPlugin();

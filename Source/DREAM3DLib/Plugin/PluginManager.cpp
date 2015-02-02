@@ -74,7 +74,7 @@ PluginManager* PluginManager::Instance()
 // -----------------------------------------------------------------------------
 void PluginManager::printPluginNames()
 {
-  for(QVector<DREAM3DPluginInterface*>::iterator iter = plugins.begin(); iter != plugins.end(); ++iter)
+  for(QVector<IDREAM3DPlugin*>::iterator iter = plugins.begin(); iter != plugins.end(); ++iter)
   {
     qDebug() << "Name: " << *iter << "\n";
   }
@@ -83,7 +83,7 @@ void PluginManager::printPluginNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PluginManager::addPlugin(DREAM3DPluginInterface* plugin)
+void PluginManager::addPlugin(IDREAM3DPlugin* plugin)
 {
   plugins.push_back(plugin);
 }
@@ -94,9 +94,9 @@ void PluginManager::addPlugin(DREAM3DPluginInterface* plugin)
 QList<QString> PluginManager::getPluginNames()
 {
   QList<QString> pluginNames;
-  for (QVector<DREAM3DPluginInterface*>::iterator iter = plugins.begin(); iter != plugins.end(); ++iter)
+  for (QVector<IDREAM3DPlugin*>::iterator iter = plugins.begin(); iter != plugins.end(); ++iter)
   {
-    DREAM3DPluginInterface* plugin = *iter;
+    IDREAM3DPlugin* plugin = *iter;
     if(NULL != plugin)
     {
       pluginNames.push_back(plugin->getPluginName());
@@ -108,7 +108,7 @@ QList<QString> PluginManager::getPluginNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<DREAM3DPluginInterface*> PluginManager::getPluginsVector()
+QVector<IDREAM3DPlugin*> PluginManager::getPluginsVector()
 {
   return plugins;
 }
@@ -116,11 +116,11 @@ QVector<DREAM3DPluginInterface*> PluginManager::getPluginsVector()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DPluginInterface* PluginManager::findPlugin(QString pluginName)
+IDREAM3DPlugin* PluginManager::findPlugin(QString pluginName)
 {
-  for (QVector<DREAM3DPluginInterface*>::iterator iter = plugins.begin(); iter!= plugins.end(); iter++)
+  for (QVector<IDREAM3DPlugin*>::iterator iter = plugins.begin(); iter!= plugins.end(); iter++)
   {
-    DREAM3DPluginInterface* plugin = *iter;
+    IDREAM3DPlugin* plugin = *iter;
     if (plugin->getPluginName() == pluginName)
     {
       return plugin;

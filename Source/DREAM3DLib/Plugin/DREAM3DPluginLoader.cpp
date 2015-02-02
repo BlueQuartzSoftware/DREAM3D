@@ -45,7 +45,7 @@
 
 
 #include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -158,7 +158,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
   }
 
   QStringList pluginFileNames;
-  QVector<DREAM3DPluginInterface*> loadedPlugins;
+  QVector<IDREAM3DPlugin*> loadedPlugins;
 
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
@@ -172,7 +172,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin && pluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
-      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
+      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
       if (ipPlugin)
       {
         loadedPlugins.push_back(ipPlugin);
