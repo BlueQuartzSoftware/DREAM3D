@@ -71,16 +71,19 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
 
     bool getLoadPreferencesDidChange();
 
-	//bool deletePlugin(QString pluginName);
+	void deletePlugin(QTableWidgetItem* nameItem);
+
+	void addPlugin(QString pluginPath);
 
   public slots:
     void on_closeBtn_clicked();
     void on_detailsBtn_clicked();
+	void on_addPluginBtn_pressed();
+	void on_removePluginBtn_pressed();
 	void on_pluginsTable_cellClicked(int row, int column);
     void writePluginCache(int state);
     void togglePluginState(int state);
     void displayDetailsWindow(QTableWidgetItem* item);
-	void deletePlugin();
 
   private:
     bool m_loadPreferencesDidChange;

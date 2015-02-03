@@ -285,7 +285,7 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
     QPluginLoader* loader = new QPluginLoader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    QObject* plugin = loader->instance();
+    QObject* plugin = loader->instance(); 
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin )
     {

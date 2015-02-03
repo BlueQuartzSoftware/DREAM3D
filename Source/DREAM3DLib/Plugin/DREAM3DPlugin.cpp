@@ -46,7 +46,7 @@ m_PluginName(""),
 m_Version(""),
 m_Vendor(""),
 m_Location(""),
-m_DidLoad(false)
+m_Status("")
 {
 
 }
@@ -125,16 +125,16 @@ void DREAM3DPlugin::setLocation(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DREAM3DPlugin::getDidLoad()
+QString DREAM3DPlugin::getStatus()
 {
-	return m_DidLoad;
+	return m_Status;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DPlugin::setDidLoad(bool didLoad)
+void DREAM3DPlugin::setStatus(QString status)
 {
-	m_DidLoad = didLoad;
+	m_Status = status;
 }
 

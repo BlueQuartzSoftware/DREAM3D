@@ -100,19 +100,19 @@ public:
 	/**
 	* @brief Returns the load status of the plugin
 	*/
-	bool getDidLoad();
+	QString getStatus();
 
 	/**
 	* @brief Sets the load status of the plugin
 	*/
-	void setDidLoad(bool didLoad);
+	void setStatus(QString status);
 
 private:
 	QString				m_PluginName;
 	QString             m_Version;
 	QString             m_Vendor;
 	QString             m_Location;
-	bool                m_DidLoad;
+	QString             m_Status;
 
 	DREAM3DPlugin(const DREAM3DPlugin&); // Copy Constructor Not Implemented
 	void operator=(const DREAM3DPlugin&); // Operator '=' Not Implemented
