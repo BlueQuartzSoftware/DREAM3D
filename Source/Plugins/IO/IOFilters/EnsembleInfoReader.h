@@ -39,7 +39,6 @@
 #define _EnsembleInfoReader_H_
 
 #include <QtCore/QString>
-#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -97,7 +96,6 @@ class  EnsembleInfoReader : public FileReader
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
-
   signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
@@ -112,10 +110,13 @@ class  EnsembleInfoReader : public FileReader
 
     void dataCheck();
     void updateEnsembleInstancePointers();
+		void ensembleLookup(QStringList values);
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+		DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+		DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+		int m_ptype;
+		int m_crystruct;
 
     EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented
     void operator=(const EnsembleInfoReader&); //Not Implemented
