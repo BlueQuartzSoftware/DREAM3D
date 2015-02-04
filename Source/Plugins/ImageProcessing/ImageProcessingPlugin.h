@@ -139,6 +139,11 @@ class ImageProcessingPlugin : public QObject, public IDREAM3DPlugin
     */
     virtual void registerFilters(FilterManager* fm);
 
+    /**
+    * @brief This returns a list of names for the filters that this plugin implements
+    */
+    QList<QString> getFiltersList();
+
 
     /**
      * @brief Writes the settings in the input gui to the Application's preference file
@@ -160,7 +165,6 @@ class ImageProcessingPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
-    QList<QString>      m_Filters;
     bool				m_DidLoad;
 
     ImageProcessingPlugin(const ImageProcessingPlugin&); // Copy Constructor Not Implemented

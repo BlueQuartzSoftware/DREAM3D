@@ -34,7 +34,6 @@ m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Copyright(DREAM3D::BlueQuartz::Copyright),
-m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 
@@ -148,7 +147,7 @@ QString CellularAutomataPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> CellularAutomataPlugin::getFilters()
 {
-  return m_Filters;
+  return getFiltersList();
 }
 
 // -----------------------------------------------------------------------------
