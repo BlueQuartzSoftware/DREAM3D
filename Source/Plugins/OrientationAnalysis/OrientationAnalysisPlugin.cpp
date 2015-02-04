@@ -176,14 +176,6 @@ QString OrientationAnalysisPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> OrientationAnalysisPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> OrientationAnalysisPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

@@ -145,14 +145,6 @@ QString Version4CompatibilityPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> Version4CompatibilityPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> Version4CompatibilityPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

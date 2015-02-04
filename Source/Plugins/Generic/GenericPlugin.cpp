@@ -175,14 +175,6 @@ QString GenericPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> GenericPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> GenericPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

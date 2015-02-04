@@ -175,14 +175,6 @@ QString ProcessingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ProcessingPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> ProcessingPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

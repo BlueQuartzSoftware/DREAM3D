@@ -175,14 +175,6 @@ QString ReconstructionPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ReconstructionPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> ReconstructionPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

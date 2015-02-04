@@ -175,14 +175,6 @@ QString ImageImportPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ImageImportPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> ImageImportPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

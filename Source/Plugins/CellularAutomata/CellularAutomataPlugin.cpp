@@ -145,14 +145,6 @@ QString CellularAutomataPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> CellularAutomataPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> CellularAutomataPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

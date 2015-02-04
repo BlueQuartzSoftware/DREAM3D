@@ -57,7 +57,7 @@ file(APPEND ${RegisterKnownFiltersFile} "\n }\n")
 
 #-----------------------------------------------------
 # Add function to return all filter names in a list
-file(APPEND ${RegisterKnownFiltersFile} "\nQList<QString> ${PLUGIN_NAME}Plugin::getFiltersList()\n{\n")
+file(APPEND ${RegisterKnownFiltersFile} "\nQList<QString> ${PLUGIN_NAME}Plugin::getFilters()\n{\n")
 ADD_FILTER_LIST()
 file(APPEND ${RegisterKnownFiltersFile} "\n}\n\n")
 

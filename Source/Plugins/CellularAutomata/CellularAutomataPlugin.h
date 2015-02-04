@@ -110,11 +110,6 @@ class CellularAutomataPlugin : public QObject, public IDREAM3DPlugin
     */
     virtual void registerFilters(FilterManager* fm);
 
-    /**
-    * @brief This returns a list of names for the filters that this plugin implements
-    */
-    QList<QString> getFiltersList();
-
 
     /**
      * @brief Writes the settings in the input gui to the Application's preference file

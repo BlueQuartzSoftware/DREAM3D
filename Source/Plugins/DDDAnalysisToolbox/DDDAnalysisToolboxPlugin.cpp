@@ -145,14 +145,6 @@ QString DDDAnalysisToolboxPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> DDDAnalysisToolboxPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> DDDAnalysisToolboxPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;
