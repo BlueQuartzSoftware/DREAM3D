@@ -70,6 +70,10 @@ AboutPlugins::AboutPlugins(QWidget* parent) :
   setupUi(this);
 
   setupGui();
+
+  // Hide the add and remove plugin buttons until we are ready to use them
+  addPluginBtn->setVisible(false);
+  removePluginBtn->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,18 +151,24 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
 // -----------------------------------------------------------------------------
 void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
 {
+	QColor defaultColor(Qt::white);
+
   // Add name of plugin to the row
   QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
+  nameItem->setBackgroundColor(defaultColor);
   pluginsTable->setItem(row, NAME_INDEX, nameItem);
 
+  // Set checkbox cell to default settings
+  QTableWidgetItem* enabledItem = new QTableWidgetItem();
+  enabledItem->setBackgroundColor(defaultColor);
+  pluginsTable->setItem(row, ENABLED_INDEX, enabledItem);
 
   // Add check box that is centered in the cell
   QCheckBox* checkBox = new QCheckBox(NULL);
   readCheckState(checkBox, plugin->getPluginName());
 
-  connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(writePluginCache(int)));
-
   connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(togglePluginState(int)));
+  connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(setLoadPreferencesFlag(int)));
 
   QHBoxLayout* layout = new QHBoxLayout(NULL);
   layout->addWidget(checkBox);
@@ -179,10 +189,12 @@ void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
   {
 	  statusItem = new QTableWidgetItem("Disabled");
   }
+  statusItem->setBackgroundColor(Qt::white);
   pluginsTable->setItem(row, STATUS_INDEX, statusItem);
 
   // Add version information
   QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
+  versionItem->setBackgroundColor(Qt::white);
   pluginsTable->setItem(row, VERSION_INDEX, versionItem);
 }
 
@@ -261,6 +273,22 @@ void AboutPlugins::on_pluginsTable_cellClicked(int row, int column)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AboutPlugins::setLoadPreferencesFlag()
+{
+	setLoadPreferencesFlag(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::setLoadPreferencesFlag(int state)
+{
+	m_loadPreferencesDidChange = true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AboutPlugins::on_addPluginBtn_pressed()
 {
 	QString pluginPath = QFileDialog::getOpenFileName(this, tr("Open Plugin File Path"), "", tr("Plugin Files (*.plugin)"));
@@ -304,6 +332,7 @@ void AboutPlugins::addPlugin(QString pluginPath)
 			pluginManager->addPlugin(ipPlugin);
 
 			addPluginToTable(ipPlugin, 0);
+			setLoadPreferencesFlag();
 		}
 	}
 	else
@@ -373,7 +402,7 @@ void AboutPlugins::deletePlugin(QTableWidgetItem* nameItem)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AboutPlugins::writePluginCache(int state)
+void AboutPlugins::writePluginCache()
 {
 #if defined (Q_OS_MAC)
   QSettings::Format format = QSettings::NativeFormat;
@@ -403,16 +432,6 @@ void AboutPlugins::writePluginCache(int state)
   }
 
   prefs.endGroup();
-
-  m_loadPreferencesDidChange = true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AboutPlugins::togglePluginState(int state)
-{
-  QCheckBox* checkBox = qobject_cast<QCheckBox*>(sender());
 }
 
 // -----------------------------------------------------------------------------

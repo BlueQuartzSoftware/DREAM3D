@@ -69,11 +69,15 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
     QList<PluginProxy::Pointer> getPluginCheckBoxSettingsFromGUI();
     static QList<PluginProxy::Pointer> readPluginCache();
 
+	void writePluginCache();
+
     bool getLoadPreferencesDidChange();
 
 	void deletePlugin(QTableWidgetItem* nameItem);
 
 	void addPlugin(QString pluginPath);
+
+	void setLoadPreferencesFlag();
 
   public slots:
     void on_closeBtn_clicked();
@@ -81,9 +85,8 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
 	void on_addPluginBtn_pressed();
 	void on_removePluginBtn_pressed();
 	void on_pluginsTable_cellClicked(int row, int column);
-    void writePluginCache(int state);
-    void togglePluginState(int state);
     void displayDetailsWindow(QTableWidgetItem* item);
+	void setLoadPreferencesFlag(int state);
 
   private:
     bool m_loadPreferencesDidChange;

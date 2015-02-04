@@ -875,6 +875,9 @@ void DREAM3D_UI::on_actionAbout_Plugins_triggered()
   AboutPlugins dialog(this);
   dialog.exec();
 
+  // Write cache on exit
+  dialog.writePluginCache();
+
   /* If any of the load checkboxes were changed, display a dialog warning
    * the user that they must restart DREAM3D to see the changes.
    */

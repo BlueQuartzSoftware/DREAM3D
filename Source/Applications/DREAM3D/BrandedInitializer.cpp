@@ -276,6 +276,8 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
     loadingMap.insert(proxy->getPluginName(), proxy->getEnabled());
   }
 
+  fm->printFactoryNames();
+
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
