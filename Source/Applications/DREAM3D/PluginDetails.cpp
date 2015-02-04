@@ -93,7 +93,6 @@ void PluginDetails::loadPluginDetails()
   licenseTextEdit->setText(plugin->getLicense());
 
   QList<QString> filters = plugin->getFilters();
-  int count = filters.size();
   for (QList<QString>::iterator iter = filters.begin(); iter != filters.end(); iter++)
   {
     filtersListWidget->addItem(*iter);
