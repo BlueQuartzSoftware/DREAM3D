@@ -234,7 +234,6 @@ void RenumberFeaturesBinnedOrientations::execute()
   float bins[3];
   float step[3];
   float binFactor = 0.0f;
-  float inverseCubic = 0.0f;
   // hardcoded for hexagonal for now
   // defaulted at 5 degree bins
   dim[0] = HexDim1InitValue;
@@ -242,14 +241,13 @@ void RenumberFeaturesBinnedOrientations::execute()
   dim[2] = HexDim3InitValue;
 
   binFactor = float(m_BinWidth) * 0.2f;
-  inverseCubic = binFactor * binFactor * binFactor;
 
   step[0] = HexDim1StepValue * binFactor;
   step[1] = HexDim2StepValue * binFactor;
   step[2] = HexDim3StepValue * binFactor;
-  bins[0] = 36.0f / inverseCubic;
-  bins[1] = 36.0f / inverseCubic;
-  bins[2] = 12.0f / inverseCubic;
+  bins[0] = 36.0f / binFactor;
+  bins[1] = 36.0f / binFactor;
+  bins[2] = 12.0f / binFactor;
   for (size_t i = 0; i < totalFeatures; i++)
   {
 	binid[i] = 0;
