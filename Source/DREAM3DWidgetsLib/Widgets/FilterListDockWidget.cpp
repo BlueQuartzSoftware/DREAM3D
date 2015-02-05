@@ -287,7 +287,7 @@ QList<QString> FilterListDockWidget::serializeString(QString string, char token)
 	int spaceIndex = 0;
 	QString strPart = "";
 
-	while (spaceIndex >= 0)
+	while (spaceIndex >= 0 && string.isEmpty() == false)
 	{ 
 		spaceIndex = string.indexOf(token);
 		strPart = string.left(spaceIndex);
@@ -299,6 +299,107 @@ QList<QString> FilterListDockWidget::serializeString(QString string, char token)
 	}
 
 	return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int &filterCount)
+{
+	QList<QString> wordList = serializeString(fullWord, ' ');
+	QList<AbstractFilter::Pointer> filterCache;
+
+	while (iter.hasNext())
+	{
+		iter.next();
+		IFilterFactory::Pointer factory = iter.value();
+		if (NULL == factory.get())
+		{
+			continue;
+		}
+
+		AbstractFilter::Pointer filter = factory->create();
+		if (NULL == filter.get())
+		{
+			continue;
+		}
+
+		bool match = false;
+		QString filterHumanLabel = filter->getHumanLabel();
+
+		for (QList<QString>::iterator wordIter = wordList.begin(); wordIter != wordList.end(); wordIter++)
+		{
+			QString keyword = *wordIter;
+
+			if (m_ActionSearchFilterHumanName->isChecked() && filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true)
+			{
+				//  qDebug() << "   " << filterHumanLabel;
+
+				match = true;
+			}
+
+			QString filterClassName = filter->getNameOfClass();
+			if (m_ActionSearchFilterClassName->isChecked() && filterClassName.contains(keyword, Qt::CaseInsensitive) == true)
+			{
+				//   qDebug() << "   " << filterClassName;
+				match = true;
+			}
+
+			QString groupName = filter->getGroupName();
+			QString subGroupName = filter->getSubGroupName();
+			QString compileLibrary = filter->getCompiledLibraryName();
+			if (m_ActionSearchGroupName->isChecked() && groupName.contains(keyword, Qt::CaseInsensitive) == true)
+			{
+				//   qDebug() << "       " << option->getPropertyName();
+				match = true;
+			}
+			if (m_ActionSearchSubGroupName->isChecked() && subGroupName.contains(keyword, Qt::CaseInsensitive) == true)
+			{
+				//   qDebug() << "       " << option->getPropertyName();
+				match = true;
+			}
+			if (m_ActionSearchPluginName->isChecked() && compileLibrary.contains(keyword, Qt::CaseInsensitive) == true)
+			{
+				//   qDebug() << "       " << option->getPropertyName();
+				match = true;
+			}
+			// Get a list of all the filterParameters from the filter.
+			QVector<FilterParameter::Pointer> filterParameters = filter->getFilterParameters();
+			// Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+			for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter)
+			{
+				FilterParameter* option = (*iter).get();
+				if (m_ActionSearchParameterName->isChecked() && option->getHumanLabel().contains(keyword, Qt::CaseInsensitive) == true)
+				{
+					//  qDebug() << "       " << option->getHumanLabel();
+					match = true;
+				}
+				if (m_ActionSearchParameterPropertyName->isChecked() && option->getPropertyName().contains(keyword, Qt::CaseInsensitive) == true)
+				{
+					//   qDebug() << "       " << option->getPropertyName();
+					match = true;
+				}
+
+			}
+
+			if (match && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0 && filterHumanLabel.startsWith(fullWord, Qt::CaseInsensitive))
+			{
+				filterCount++;
+				addItemToList(filter);
+			}
+			else if (match && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0)
+			{
+				filterCount++;
+				filterCache.push_back(filter);
+			}
+		}
+	}
+
+	// Add the remaining items to the list that do not match the full text, but match one or more words
+	for (QList<AbstractFilter::Pointer>::iterator iter = filterCache.begin(); iter != filterCache.end(); iter++)
+	{
+		addItemToList(*iter);
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -325,96 +426,9 @@ void FilterListDockWidget::searchFilters()
   // The user is typing something in the search box so lets search the filter class name and human label
   // int listWidgetSize = m_LoadedFilters.size();
   int filterCount = 0;
-  bool match = false;
   QMapIterator<QString, IFilterFactory::Pointer> iter(m_LoadedFilters);
 
-  while (iter.hasNext())
-  {
-	  iter.next();
-	  IFilterFactory::Pointer factory = iter.value();
-	  if (NULL == factory.get())
-	  {
-		  continue;
-	  }
-
-	  AbstractFilter::Pointer filter = factory->create();
-	  if (NULL == filter.get())
-	  {
-		  continue;
-	  }
-
-	  QList<QString> wordList = serializeString(text, ' ');
-	  match = false;
-	  QString filterHumanLabel = filter->getHumanLabel();
-
-	  for (QList<QString>::iterator wordIter = wordList.begin(); wordIter != wordList.end(); wordIter++)
-	  {
-		  QString keyword = *wordIter;
-
-		  if (m_ActionSearchFilterHumanName->isChecked() && filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true)
-		  {
-			  //  qDebug() << "   " << filterHumanLabel;
-
-			  match = true;
-		  }
-
-		  QString filterClassName = filter->getNameOfClass();
-		  if (m_ActionSearchFilterClassName->isChecked() && filterClassName.contains(keyword, Qt::CaseInsensitive) == true)
-		  {
-			  //   qDebug() << "   " << filterClassName;
-			  match = true;
-		  }
-
-		  QString groupName = filter->getGroupName();
-		  QString subGroupName = filter->getSubGroupName();
-		  QString compileLibrary = filter->getCompiledLibraryName();
-		  if (m_ActionSearchGroupName->isChecked() && groupName.contains(keyword, Qt::CaseInsensitive) == true)
-		  {
-			  //   qDebug() << "       " << option->getPropertyName();
-			  match = true;
-		  }
-		  if (m_ActionSearchSubGroupName->isChecked() && subGroupName.contains(keyword, Qt::CaseInsensitive) == true)
-		  {
-			  //   qDebug() << "       " << option->getPropertyName();
-			  match = true;
-		  }
-		  if (m_ActionSearchPluginName->isChecked() && compileLibrary.contains(keyword, Qt::CaseInsensitive) == true)
-		  {
-			  //   qDebug() << "       " << option->getPropertyName();
-			  match = true;
-		  }
-		  // Get a list of all the filterParameters from the filter.
-		  QVector<FilterParameter::Pointer> filterParameters = filter->getFilterParameters();
-		  // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
-		  for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter)
-		  {
-			  FilterParameter* option = (*iter).get();
-			  if (m_ActionSearchParameterName->isChecked() && option->getHumanLabel().contains(keyword, Qt::CaseInsensitive) == true)
-			  {
-				  //  qDebug() << "       " << option->getHumanLabel();
-				  match = true;
-			  }
-			  if (m_ActionSearchParameterPropertyName->isChecked() && option->getPropertyName().contains(keyword, Qt::CaseInsensitive) == true)
-			  {
-				  //   qDebug() << "       " << option->getPropertyName();
-				  match = true;
-			  }
-
-		  }
-
-		  if (match && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0)
-		  {
-			  filterCount++;
-			  addItemToList(filter);
-		  }
-	  }
-  }
-
-  bool sortItems = true;
-  if (sortItems)
-  {
-    filterList->sortItems(Qt::AscendingOrder);
-  }
+  matchFilter(iter, text, filterCount);
 
   QString countText = QObject::tr("Filter Count: %1").arg(filterCount);
   filterCountLabel->setText(countText);
