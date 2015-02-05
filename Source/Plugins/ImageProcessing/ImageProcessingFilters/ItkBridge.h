@@ -44,7 +44,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 
 // Our Plugin Includes next
@@ -73,7 +73,7 @@ class Dream3DToItkImageConversion
      * @param data
      * @return
      */
-    ItkImportImageFilterPointerType operator()(VolumeDataContainer* m, QString attrMatName, T* data)
+    ItkImportImageFilterPointerType operator()(DataContainer::Pointer m, QString attrMatName, T* data)
     {
       AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(attrMatName);
 
@@ -99,15 +99,15 @@ class Dream3DToItkImageConversion
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      m->getOrigin(sampleOrigin);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
       origin[2] = sampleOrigin[2];    // Z coordinate
-      importFilter->SetOrigin( origin );
+      /* FIXME: ImageGeom */ importFilter->setOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      m->getResolution(voxelResolution);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction
@@ -145,7 +145,7 @@ class ItkBridge2
     typedef itk::ImportImageFilter<OutputPixelType, ImageProcessing::ImageDimension> ItkImportImageFilterType;
     typedef typename ItkImportImageFilterType::Pointer ItkImportImageFilterPointerType;
 
-    static ItkImportImageFilterPointerType Dream3DtoITKImportFilter(VolumeDataContainer* m, QString attrMatName, InputPixelType* data)
+    static ItkImportImageFilterPointerType Dream3DtoITKImportFilter(DataContainer::Pointer m, QString attrMatName, InputPixelType* data)
     {
       AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(attrMatName);
 
@@ -171,15 +171,15 @@ class ItkBridge2
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      m->getOrigin(sampleOrigin);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
       origin[2] = sampleOrigin[2];    // Z coordinate
-      importFilter->SetOrigin( origin );
+      /* FIXME: ImageGeom */ importFilter->getGeometryAs<ImageGeom>()->setOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      m->getResolution(voxelResolution);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction
@@ -212,7 +212,7 @@ class CreateItkWrapperForDataPointer
     typedef itk::ImportImageFilter<ComponentType, ImageProcessing::ImageDimension>                    ImportImageFilterType;
     typedef typename ImportImageFilterType::Pointer                                                   ImportImageFilterPointerType;
 
-    ScalarImagePointerType operator()(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
+    ScalarImagePointerType operator()(DataContainer::Pointer m, QString attrMatName, ComponentType* data)
     {
       AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(attrMatName);
 
@@ -238,15 +238,15 @@ class CreateItkWrapperForDataPointer
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      m->getOrigin(sampleOrigin);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
       origin[2] = sampleOrigin[2];    // Z coordinate
-      importFilter->SetOrigin( origin );
+      importFilter->setOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      m->getResolution(voxelResolution);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction
@@ -313,7 +313,7 @@ class ItkBridge
      * @return
      */
     template<typename TPixel>
-    static typename itk::ImportImageFilter<TPixel, ImageProcessing::ImageDimension>::Pointer Dream3DtoITKImportFilter(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
+    static typename itk::ImportImageFilter<TPixel, ImageProcessing::ImageDimension>::Pointer Dream3DtoITKImportFilter(DataContainer::Pointer m, QString attrMatName, ComponentType* data)
     {
       AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(attrMatName);
 
@@ -339,7 +339,7 @@ class ItkBridge
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      m->getOrigin(sampleOrigin);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
@@ -347,7 +347,7 @@ class ItkBridge
       importFilter->SetOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      m->getResolution(voxelResolution);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction
@@ -367,7 +367,7 @@ class ItkBridge
      * @param data
      * @return
      */
-    static typename ScalarImageType::Pointer CreateItkWrapperForDataPointer(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
+    static typename ScalarImageType::Pointer CreateItkWrapperForDataPointer(DataContainer::Pointer m, QString attrMatName, ComponentType* data)
     {
       ImportImageFilterPointerType importer = Dream3DtoITKImportFilter<ComponentType>(m, attrMatName, data);
       const ScalarImageType* constImage = importer->GetOutput();
@@ -385,7 +385,7 @@ class ItkBridge
      */
 #if 1
     template <typename TImage>
-    static typename TImage::Pointer CreateItkWrapperForDataPointer(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
+    static typename TImage::Pointer CreateItkWrapperForDataPointer(DataContainer::Pointer m, QString attrMatName, ComponentType* data)
     {
       return Dream3DtoITKImportFilter<typename TImage::PixelType>(m, attrMatName, data)->GetOutput();
     }

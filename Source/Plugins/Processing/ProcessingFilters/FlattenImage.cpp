@@ -91,7 +91,7 @@ class FlattenImageImpl
 FlattenImage::FlattenImage() :
   AbstractFilter(),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
-  m_ImageDataArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
+  m_ImageDataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_ImageData(NULL),
   m_FlatImageData(NULL)
@@ -166,7 +166,7 @@ void FlattenImage::dataCheck()
 
   int numImageComp = 1;
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ImageDataArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -204,6 +204,12 @@ void FlattenImage::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

@@ -47,6 +47,8 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 
 include(${${PLUGIN_NAME}_SOURCE_DIR}/DistributionAnalysisOps/SourceList.cmake)
+# -- Include all the resources
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 
@@ -156,6 +158,8 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
   ${${PLUGIN_NAME}_GEN_HDRS}
+  # -- Add in the miscellaneous resources (license, plugin info, ...)
+  ${${PLUGIN_NAME}_Generated_RC_SRCS}
 
   #-- Add the Distribution Analysis Ops Classes
   ${DistributionAnalysisOps_HDRS}

@@ -231,7 +231,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         if (filter)
         {
           filter->setErrorCondition(-999);
-          QString ss = "The DataContainer Object with the specific name " + name + " was not available.";
+          QString ss = "The DataContainer Object with the specific name '" + name + "' was not available.";
           PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
           filter->broadcastPipelineMessage(em);
         }
@@ -261,7 +261,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         if (filter)
         {
           filter->setErrorCondition(-888);
-          QString ss = "The DataContainer Object with the specific name " + dataContainerName + " already exists.";
+          QString ss = "The DataContainer Object with the specific name '" + dataContainerName + "' already exists.";
           PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
           filter->broadcastPipelineMessage(em);
         }
@@ -363,7 +363,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     }
 
     /**
-    * @brief getExistingPrereqArrayFromPath
+    * @brief getPrereqIDataArrayFromPath
     * @param filter
     * @param path
     * @return

@@ -75,6 +75,19 @@ typedef struct
 } FloatVec21_t;
 typedef struct
 {
+  float c20; float c02; float c11; float c10; float c01; float c00;
+} Float2ndOrderPoly_t;
+typedef struct
+{
+  float c30; float c03; float c21; float c12; float c20; float c02; float c11; float c10; float c01; float c00;
+} Float3rdOrderPoly_t;
+typedef struct
+{
+  float c40; float c04; float c31; float c13; float c22; float c30; float c03; float c21; float c12; float c20;
+  float c02; float c11; float c10; float c01; float c00;
+} Float4thOrderPoly_t;
+typedef struct
+{
   qint32 PaddingDigits;
   quint32 Ordering;
   qint32 StartIndex;
@@ -93,6 +106,9 @@ Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
 Q_DECLARE_METATYPE(FloatVec21_t)
+Q_DECLARE_METATYPE(Float2ndOrderPoly_t)
+Q_DECLARE_METATYPE(Float3rdOrderPoly_t)
+Q_DECLARE_METATYPE(Float4thOrderPoly_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
 Q_DECLARE_METATYPE(FileListInfo_t)
 
@@ -113,6 +129,9 @@ namespace FilterParameterWidgetType
   const QString IntVec3Widget("IntVec3Widget");
   const QString FloatVec3Widget("FloatVec3Widget");
   const QString FloatVec4Widget("FloatVec4Widget");
+  const QString SecondOrderPolynomialWidget("SecondOrderPolynomialWidget");
+  const QString ThirdOrderPolynomialWidget("ThirdOrderPolynomialWidget");
+  const QString FourthOrderPolynomialWidget("FourthOrderPolynomialWidget");
   const QString Symmetric6x6Widget("Symmetric6x6Widget");
   const QString AxisAngleWidget("AxisAngleWidget");
   const QString UnknownWidget("UnknownWidget");
@@ -187,6 +206,24 @@ class DREAM3DLib_EXPORT FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec21_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const Float2ndOrderPoly_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const Float3rdOrderPoly_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const Float4thOrderPoly_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);

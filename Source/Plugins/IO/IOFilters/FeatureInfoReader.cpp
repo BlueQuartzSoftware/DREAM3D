@@ -53,12 +53,12 @@
 // -----------------------------------------------------------------------------
 FeatureInfoReader::FeatureInfoReader() :
   FileReader(),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_InputFile(""),
   m_CreateCellLevelArrays(true),
   m_RenumberFeatures(true),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -161,7 +161,7 @@ void FeatureInfoReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, FeatureInfoReader>(this, m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
@@ -222,6 +222,7 @@ void FeatureInfoReader::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -238,7 +239,7 @@ int FeatureInfoReader::readFile()
   dataCheck();
   if(getErrorCondition() < 0) { return -999; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
 
   std::ifstream inFile;

@@ -49,11 +49,11 @@ FindFeatureClustering::FindFeatureClustering() :
   m_ErrorOutputFile(),
   m_NumberOfBins(1),
   m_PhaseNumber(1),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_RemoveBiasedFeatures(false),
-  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EquivalentDiameters),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
+  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EquivalentDiameters),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CentroidsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_NewEnsembleArrayArrayName("RDF"),
   m_MaxMinArrayName(getNewEnsembleArrayArrayName() + "MaxMinDistances"),
@@ -211,6 +211,12 @@ void FindFeatureClustering::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 // -----------------------------------------------------------------------------
 //
@@ -261,11 +267,11 @@ void FindFeatureClustering::find_clustering()
 
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_EquivalentDiametersArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_EquivalentDiametersArrayPath.getDataContainerName());
 
   size_t udims[3] =
   { 0, 0, 0 };
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -274,9 +280,9 @@ void FindFeatureClustering::find_clustering()
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
-  sizex = dims[0] * m->getXRes();
-  sizey = dims[1] * m->getYRes();
-  sizez = dims[2] * m->getZRes();
+  sizex = dims[0] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  sizey = dims[1] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  sizez = dims[2] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   totalvol = sizex * sizey * sizez;
   totalpoints = dims[0] * dims[1] * dims[2];
 
@@ -288,9 +294,9 @@ void FindFeatureClustering::find_clustering()
   boxdims[2] = sizez;
 
   std::vector<float> boxres(3);
-  boxres[0] = m->getXRes();
-  boxres[1] = m->getYRes();
-  boxres[2] = m->getZRes();
+  boxres[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  boxres[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  boxres[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
 
 

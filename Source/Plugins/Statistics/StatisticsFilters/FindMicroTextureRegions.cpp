@@ -45,8 +45,8 @@
 // -----------------------------------------------------------------------------
 FindMicroTextureRegions::FindMicroTextureRegions() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_MicroTextureRegionNumCellsArrayName(DREAM3D::FeatureData::MicroTextureRegionNumCells),
   m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FeatureData::MicroTextureRegionFractionOccupied),
   m_MicroTextureRegionNumCells(NULL),
@@ -140,6 +140,12 @@ void FindMicroTextureRegions::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 // -----------------------------------------------------------------------------
 //
@@ -159,7 +165,7 @@ void FindMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::find_microtextureregions()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t nummicrotextureregions = m_MicroTextureRegionNumCellsPtr.lock()->getNumberOfTuples();
@@ -180,12 +186,12 @@ void FindMicroTextureRegions::find_microtextureregions()
   double* microtextureregionzmins = m_MicroTextureRegionZMins->getPointer(0);
   double* microtextureregionzmaxs = m_MicroTextureRegionZMaxs->getPointer(0);
 
-  float xPoints = m->getXPoints();
-  float yPoints = m->getYPoints();
-  float zPoints = m->getZPoints();
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+  float yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+  float zPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
   // Initialize every element to 0.0 or max Dimension
   for (size_t i = 0; i < nummicrotextureregions * 1; i++)

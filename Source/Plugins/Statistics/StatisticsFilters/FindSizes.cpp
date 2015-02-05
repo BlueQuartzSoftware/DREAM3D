@@ -46,8 +46,8 @@
 // -----------------------------------------------------------------------------
 FindSizes::FindSizes() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
@@ -148,6 +148,12 @@ void FindSizes::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 // -----------------------------------------------------------------------------
 //
@@ -158,10 +164,10 @@ void FindSizes::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_sizes(); }
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_sizes2D(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_sizes(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_sizes2D(); }
   notifyStatusMessage(getHumanLabel(), "FindSizes Completed");
 }
 
@@ -173,7 +179,7 @@ void FindSizes::find_sizes()
   float radcubed;
   float diameter;
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 
@@ -191,7 +197,7 @@ void FindSizes::find_sizes()
     int gnum = m_FeatureIds[j];
     featurecounts[gnum]++;
   }
-  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+  float res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   float vol_term = static_cast<double>( (4.0 / 3.0) * DREAM3D::Constants::k_Pi );
   for (size_t i = 1; i < numfeatures; i++)
   {
@@ -208,7 +214,7 @@ void FindSizes::find_sizes2D()
   float radsquared;
   float diameter;
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 
@@ -225,9 +231,9 @@ void FindSizes::find_sizes2D()
     featurecounts[gnum]++;
   }
   float res_scalar = 0;
-  if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
-  else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
-  else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1) { res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes(); }
+  else if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1) { res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes(); }
+  else if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes(); }
   for (size_t i = 1; i < numfeatures; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );

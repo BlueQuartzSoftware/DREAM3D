@@ -50,12 +50,14 @@
  */
 class CalculateAreasImpl
 {
-    VertexArray::Pointer m_Nodes;
-    FaceArray::Pointer m_Triangles;
+    SharedVertexList::Pointer m_Nodes;
+    SharedTriList::Pointer m_Triangles;
     double* m_Areas;
 
   public:
-    CalculateAreasImpl(VertexArray::Pointer nodes, FaceArray::Pointer triangles, double* Areas) :
+    CalculateAreasImpl(SharedVertexList::Pointer nodes,
+                       SharedTriList::Pointer triangles,
+                       double* Areas) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Areas(Areas)
@@ -64,19 +66,19 @@ class CalculateAreasImpl
 
     void generate(size_t start, size_t end) const
     {
-
-      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
-      FaceArray::Face_t* triangles = m_Triangles->getPointer(0);
+      float* nodes = m_Nodes->getPointer(0);
+      int64_t* triangles = m_Triangles->getPointer(0);
 
       float ABx, ABy, ABz, ACx, ACy, ACz;
       for (size_t i = start; i < end; i++)
       {
-        ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
-        ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
-        ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
-        ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-        ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-        ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+        ABx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+1]*3+0];
+        ABy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+1]*3+1];
+        ABz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+1]*3+2];
+
+        ACx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+2]*3+0];
+        ACy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+2]*3+1];
+        ACz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+2]*3+2];
         m_Areas[i]  = 0.5 * sqrt(((ABy * ACz - ABz * ACy) * (ABy * ACz - ABz * ACy)) + ((ABz * ACx - ABx * ACz) * (ABz * ACx - ABx * ACz)) + ((ABx * ACy - ABy * ACx) * (ABx * ACy - ABy * ACx)));
       }
     }
@@ -97,7 +99,7 @@ class CalculateAreasImpl
 // -----------------------------------------------------------------------------
 TriangleAreaFilter::TriangleAreaFilter() :
   SurfaceMeshFilter(),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
   m_SurfaceMeshTriangleAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshTriangleAreas(NULL)
 {
@@ -142,8 +144,8 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayName)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -153,21 +155,38 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void TriangleAreaFilter::dataCheck()
 {
   DataArrayPath tempPath;
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
-  {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-  }
-
-  // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  IGeometry::Pointer geom = sm->getGeometry();
+  if(NULL == geom.get())
   {
     setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
+  if(NULL == triangles.get())
+  {
+    setErrorCondition(-384);
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
+  {
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+  }
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
+  {
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   else
   {
@@ -203,7 +222,7 @@ void TriangleAreaFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getFaceAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getFaceAttributeMatrixName().getDataContainerName());
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -211,23 +230,21 @@ void TriangleAreaFilter::execute()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t numTriangles = trianglesPtr->getNumberOfTuples();
+  // No check because datacheck() made sure we can do the next line.
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
-                      CalculateAreasImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleAreas), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
+                      CalculateAreasImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleAreas), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    CalculateAreasImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleAreas);
-    serial.generate(0, numTriangles);
+    CalculateAreasImpl serial(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleAreas);
+    serial.generate(0, triangleGeom->getNumberOfTris());
   }
 
   /* Let the GUI know we are done with this filter */

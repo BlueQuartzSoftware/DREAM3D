@@ -50,10 +50,10 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
@@ -161,7 +161,7 @@ void FindNeighbors::dataCheck()
     { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -304);
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -304);
   if(getErrorCondition() < 0) { return; }
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNumNeighborsArrayName() );
@@ -204,6 +204,12 @@ void FindNeighbors::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -215,12 +221,12 @@ void FindNeighbors::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -295,16 +301,16 @@ void FindNeighbors::execute()
     feature = m_FeatureIds[j];
     if(feature > 0)
     {
-      column = static_cast<float>( j % m->getXPoints() );
-      row = static_cast<float>( (j / m->getXPoints()) % m->getYPoints() );
-      plane = static_cast<float>( j / (m->getXPoints() * m->getYPoints()) );
+      column = static_cast<float>( j % /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() );
+      row = static_cast<float>( (j / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()) % /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() );
+      plane = static_cast<float>( j / (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints()) );
       if(m_StoreSurfaceFeatures == true)
       {
-        if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1) || plane == 0 || plane == (m->getZPoints() - 1)) && m->getZPoints() != 1)
+        if((column == 0 || column == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() - 1) || row == 0 || row == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() - 1) || plane == 0 || plane == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() != 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
-        if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1)) && m->getZPoints() == 1)
+        if((column == 0 || column == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() - 1) || row == 0 || row == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() - 1)) && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
@@ -314,11 +320,11 @@ void FindNeighbors::execute()
         good = 1;
         neighbor = static_cast<int>( j + neighpoints[k] );
         if(k == 0 && plane == 0) { good = 0; }
-        if(k == 5 && plane == (m->getZPoints() - 1)) { good = 0; }
+        if(k == 5 && plane == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) { good = 0; }
         if(k == 1 && row == 0) { good = 0; }
-        if(k == 4 && row == (m->getYPoints() - 1)) { good = 0; }
+        if(k == 4 && row == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() - 1)) { good = 0; }
         if(k == 2 && column == 0) { good = 0; }
-        if(k == 3 && column == (m->getXPoints() - 1)) { good = 0; }
+        if(k == 3 && column == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) { good = 0; }
         if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
         {
           onsurf++;
@@ -366,7 +372,7 @@ void FindNeighbors::execute()
     {
       int neigh = iter.key(); // get the neighbor feature
       int number = iter.value(); // get the number of voxels
-      float area = number * m->getXRes() * m->getYRes();
+      float area = number * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
 
       // Push the neighbor feature id back onto the list so we stay synced up
       neighborlist[i].push_back(neigh);

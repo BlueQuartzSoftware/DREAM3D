@@ -57,7 +57,7 @@
 // -----------------------------------------------------------------------------
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData)
 {
@@ -148,7 +148,7 @@ void ImportImageStack::dataCheck()
     setErrorCondition(-13);
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, ImportImageStack>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   bool hasMissingFiles = false;
@@ -205,9 +205,9 @@ void ImportImageStack::dataCheck()
     }
     /* ************ End Sanity Check *************************** */
 
-    m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
-    m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
     QVector<size_t> tDims(3, 0);
     for(int i = 0; i < 3; i++)
@@ -237,6 +237,12 @@ void ImportImageStack::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -249,10 +255,10 @@ void ImportImageStack::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
@@ -304,7 +310,7 @@ void ImportImageStack::execute()
     // This is the first image so we need to create our block of data to store the data
     if (z ==  m_InputFileListInfo.StartIndex)
     {
-      m->setDimensions(width, height, fileList.size());
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size());
       if (image.format() == QImage::Format_Indexed8)
       {
         pixelBytes = 1;

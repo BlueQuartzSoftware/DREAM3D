@@ -12,11 +12,18 @@
 
 
 set(DREAM3DLib_Plugin_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPluginInterface.h
-  ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPluginLoader.h
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/IDREAM3DPlugin.h
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPlugin.h
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPluginLoader.h  
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/PluginManager.h
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/PluginProxy.h
+
 )
 set(DREAM3DLib_Plugin_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPluginLoader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/PluginManager.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/PluginProxy.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Plugin/DREAM3DPlugin.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Plugin" "${DREAM3DLib_Plugin_HDRS}" "${DREAM3DLib_Plugin_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

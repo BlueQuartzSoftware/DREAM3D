@@ -163,11 +163,11 @@ class TSpecificCompareFunctor : public CompareFunctor
 ScalarSegmentFeatures::ScalarSegmentFeatures() :
   SegmentFeatures(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_ScalarArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_ScalarArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_ScalarTolerance(5.0f),
   m_RandomizeFeatureIds(true),
   m_UseGoodVoxels(true),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_FeatureIds(NULL),
@@ -266,7 +266,7 @@ void ScalarSegmentFeatures::dataCheck()
   //Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_ScalarArrayPath.getDataContainerName());
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
@@ -300,6 +300,12 @@ void ScalarSegmentFeatures::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -312,7 +318,7 @@ void ScalarSegmentFeatures::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   QVector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
@@ -410,7 +416,7 @@ void ScalarSegmentFeatures::execute()
   // By default we randomize grains
   if (true == m_RandomizeFeatureIds)
   {
-    totalPoints = m->getTotalPoints();
+    totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
 
@@ -469,7 +475,7 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t tota
 int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int seed = -1;

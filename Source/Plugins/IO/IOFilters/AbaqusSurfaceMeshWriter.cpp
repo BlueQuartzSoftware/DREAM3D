@@ -55,7 +55,7 @@
 AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter() :
   AbstractFilter(),
   m_OutputFile(""),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL)
 {
@@ -116,13 +116,38 @@ void AbaqusSurfaceMeshWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  if (sm->getFaces().get() == NULL)
+  IGeometry::Pointer geom = sm->getGeometry();
+  if(NULL == geom.get())
+  {
+    setErrorCondition(-385);
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
+  if(NULL == triangles.get())
   {
     setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
+  {
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+  }
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
+  {
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   else
   {
@@ -131,11 +156,7 @@ void AbaqusSurfaceMeshWriter::dataCheck()
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-  if (sm->getVertices().get() == NULL)
-  {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-  }
+
 }
 
 
@@ -162,7 +183,7 @@ void AbaqusSurfaceMeshWriter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -176,12 +197,11 @@ void AbaqusSurfaceMeshWriter::execute()
     return;
   }
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-  FaceArray::Pointer trianglePtr = sm->getFaces();
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
-  for (int i = 0; i < trianglePtr->getNumberOfTuples(); i++)
+  for (int64_t i = 0; i < triangleGeom->getNumberOfTris(); i++)
   {
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
@@ -190,7 +210,7 @@ void AbaqusSurfaceMeshWriter::execute()
   FILE* f = fopen(m_OutputFile.toLatin1().data(), "wb");
   ScopedFileMonitor fileMonitor(f);
 
-  err = writeHeader(f, nodesPtr->getNumberOfTuples(), trianglePtr->getNumberOfTuples(), uniqueSpins.size() - 1);
+  err = writeHeader(f, triangleGeom->getNumberOfVertices(), triangleGeom->getNumberOfTris(), uniqueSpins.size() - 1);
   if(err < 0)
   {
     setErrorCondition(-8000);
@@ -220,7 +240,7 @@ void AbaqusSurfaceMeshWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int nodeCount, int triCount, int featureCount)
+int AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int64_t nodeCount, int64_t triCount, int featureCount)
 {
   if (NULL == f)
   {
@@ -232,7 +252,7 @@ int AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int nodeCount, int triCount, i
   fprintf(f, "** This file represents a trianguglar based mesh. The element type selected is %s for the triangles\n", TRI_ELEMENT_TYPE);
   fprintf(f, "** This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus\n");
   fprintf(f, "** We have selected to use a 'shell' element type currently. No boundary elements are written\n");
-  fprintf(f, "**Number of Nodes: %d     Number of Triangles: %d   Number of Grains: %d\n", nodeCount, triCount, featureCount);
+  fprintf(f, "**Number of Nodes: %lld     Number of Triangles: %lld   Number of Grains: %d\n", (long long int)nodeCount, (long long int)triCount, featureCount);
   fprintf(f, "*PREPRINT,ECHO=NO,HISTORY=NO,MODEL=NO\n");
   return 0;
 }
@@ -242,18 +262,17 @@ int AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int nodeCount, int triCount, i
 // -----------------------------------------------------------------------------
 int AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
 {
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getVertices();
-  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
-  size_t numNodes = nodesPtr->getNumberOfTuples();
+  TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
+  float* nodes = triangleGeom->getVertexPointer(0);
+
+  int64_t numNodes = triangleGeom->getNumberOfVertices();
   int err = 0;
   fprintf(f, "*Node,NSET=NALL\n");
   //1, 72.520433763730, 70.306420652241, 100.000000000000
-
-
-  for(size_t i = 1; i <= numNodes; ++i)
+  // Abaqus Starts number at 1 NOT 0(Zero).
+  for(int64_t i = 1; i <= numNodes; ++i)
   {
-    VertexArray::Vert_t& n = nodes[i - 1];
-    fprintf(f, "%lu, %0.6f, %0.6f, %0.6f\n", i, n.pos[0], n.pos[1], n.pos[2]);
+    fprintf(f, "%lld, %0.6f, %0.6f, %0.6f\n", (long long int)i, nodes[(i-1)*3], nodes[(i-1)*3+1], nodes[(i-1)*3+2]);
   }
 
   return err;
@@ -265,17 +284,18 @@ int AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
 int AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
 {
   int err = 0;
-  FaceArray& triangles = *(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getFaces());
-  size_t numTri = triangles.getNumberOfTuples();
+  TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
+  int64_t numTri = triangleGeom->getNumberOfTris();
+  int64_t* triangles = triangleGeom->getTriPointer(0);
 
   fprintf(f, "*ELEMENT, TYPE=%s\n", TRI_ELEMENT_TYPE);
-  for(size_t i = 1; i <= numTri; ++i)
+  for(int64_t i = 1; i <= numTri; ++i)
   {
     // When we get the node index, add 1 to it because Abaqus number is 1 based.
-    int nId0 = triangles[i - 1].verts[0] + 1;
-    int nId1 = triangles[i - 1].verts[1] + 1;
-    int nId2 = triangles[i - 1].verts[2] + 1;
-    fprintf(f, "%lu, %d, %d, %d\n", i, nId0, nId1, nId2);
+    int64_t nId0 = triangles[(i-1)*3] + 1;
+    int64_t nId1 = triangles[(i-1)*3+1] + 1;
+    int64_t nId2 = triangles[(i-1)*3+2] + 1;
+    fprintf(f, "%lld, %lld, %lld, %lld\n", (long long int)i, (long long int)nId0, (long long int)nId1, (long long int)nId2);
   }
   return err;
 }
@@ -291,15 +311,17 @@ int AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
   int err = 0;
 
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getVertices();
-  FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getFaces();
+  TriangleGeom::Pointer triangleGeo = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
+
+//  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getVertices();
+ // FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getFaces();
   // Get the Labels(FeatureIds or Region Ids) for the triangles
 
-  int nTriangles = trianglePtr->getNumberOfTuples();
+  int64_t nTriangles = triangleGeo->getNumberOfTris();
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
-  for (int i = 0; i < nTriangles; i++)
+  for (int64_t i = 0; i < nTriangles; i++)
   {
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);

@@ -5,7 +5,7 @@ Find Twin Boundaries {#findtwinboundaries}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This filter identifies all **Faces** between neighboring **Features** that have a Sigma 3 twin relationship.  The filter uses the average orientation of the **Features** on either side of the **Face** to determine the *misorientation* between the **Features**.  If the *axis-angle* that describes the *misorientation* is within a both the axis and angle user-defined tolerance, then the **Face** is flagged as being a twin.  After the **Face** is flagged as a twin, the crystal direction parallel to the **Face** normal is determined and compared with the *misorientation axis*.  The misalignment of these two crystal directions is stored as the incoherence value for the **Face** (the value is in degrees).  Note this filter will only extract twin boundaries if the twin **Feature** is the same phase as the parent **Feature**. 
+This filter identifies all **Faces** between neighboring **Features** that have a Sigma 3 twin relationship.  The filter uses the average orientation of the **Features** on either side of the **Face** to determine the *misorientation* between the **Features**.  If the *axis-angle* that describes the *misorientation* is within a both the axis and angle user-defined tolerance, then the **Face** is flagged as being a twin.  After the **Face** is flagged as a twin, the crystal direction parallel to the **Face** normal is determined and compared with the *misorientation axis* if *Compute Coherence* is selected.  The misalignment of these two crystal directions is stored as the incoherence value for the **Face** (the value is in degrees).  Note this filter will only extract twin boundaries if the twin **Feature** is the same phase as the parent **Feature**. 
 
 ## Parameters ##
 
@@ -13,6 +13,7 @@ This filter identifies all **Faces** between neighboring **Features** that have 
 |------|------|
 | Axis Tolerance | Double |
 | Angle Tolerance | Double |
+| Compute Coherence | Boolean |
 
 ## Required DataContainers ##
 + Volume

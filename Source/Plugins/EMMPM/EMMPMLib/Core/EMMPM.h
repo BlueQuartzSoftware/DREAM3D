@@ -31,13 +31,14 @@
 #ifndef _EMMPM_H_
 #define _EMMPM_H_
 
-
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Observable.h"
 
 #include "EMMPMLib/EMMPMLib.h"
-#include "EMMPMLib/Common/Observable.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"
 #include "EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPMLib/Common/StatsDelegate.h"
@@ -46,6 +47,7 @@
 
 class EMMPMLib_EXPORT EMMPM : public Observable
 {
+	Q_OBJECT;
   public:
     DREAM3D_SHARED_POINTERS(EMMPM);
     DREAM3D_STATIC_NEW_MACRO(EMMPM);
@@ -57,7 +59,13 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     DREAM3D_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data);
     DREAM3D_INSTANCE_PROPERTY(InitializationFunction::Pointer, InitializationFunction)
     DREAM3D_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
-
+	DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+	
+	/**
+	* @brief This returns a string that is displayed in the GUI. It should be readable
+	* and understandable by humans.
+	*/
+	virtual const QString getHumanLabel();
 
     /**
      * @brief Main entry point for running the EMMPM algorithm. The Inputs and

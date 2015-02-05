@@ -50,7 +50,7 @@ SaveImages::SaveImages() :
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
-  m_ColorsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor)
+  m_ColorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor)
 {
   setupFilterParameters();
 }
@@ -166,6 +166,12 @@ void SaveImages::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -178,11 +184,11 @@ void SaveImages::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_ColorsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ColorsArrayPath.getDataContainerName());
 
   /* Place all your code to execute your filter here. */
   size_t dims[3];
-  m->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   size_t index = 0;
   uint8_t* slice = NULL;

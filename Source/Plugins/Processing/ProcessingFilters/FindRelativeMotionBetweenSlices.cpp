@@ -219,6 +219,12 @@ void FindRelativeMotionBetweenSlices::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -230,9 +236,9 @@ void FindRelativeMotionBetweenSlices::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
 
-  if(m->getXPoints() <= 1 && m->getYPoints() <= 1 && m->getZPoints() <= 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() <= 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() <= 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() <= 1)
   {
     setErrorCondition(-999);
     notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
@@ -261,7 +267,7 @@ void FindRelativeMotionBetweenSlices::execute()
 #endif
 
   size_t xP, yP, zP;
-  m->getDimensions(xP, yP, zP);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
   size_t totalPoints = xP * yP * zP;
 
   int32_t buffer1 = (m_PSize1 / 2) + (m_SSize1 / 2);
@@ -576,9 +582,9 @@ void FindRelativeMotionBetweenSlices::execute()
   }
 
   float v[3];
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   for(size_t i = 0; i < totalPoints; i++)
   {
     v[0] = m_MotionDirection[3 * i + 0] * xRes;

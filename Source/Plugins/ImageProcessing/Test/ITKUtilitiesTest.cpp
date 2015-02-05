@@ -50,11 +50,11 @@ void TestDream3DtoITKImportFilter()
   ImageProcessing::DefaultImageType::Pointer ptr;
 
 
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
   QString attrMatName("CellData");
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ItkBridge<ImageProcessing::DefaultPixelType>::Dream3DtoITKImportFilter<ImageProcessing::DefaultPixelType>(m.get(), attrMatName, data);
+  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ItkBridge<ImageProcessing::DefaultPixelType>::Dream3DtoITKImportFilter<ImageProcessing::DefaultPixelType>(m, attrMatName, data);
 
 }
 
@@ -65,12 +65,12 @@ void TestDream3DtoITKImportFilter()
 void TestCreateItkWrapperForDataPointer()
 {
   ImageProcessing::DefaultImageType::Pointer imagePtr;
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
   QString attrMatName("CellData");
 
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  imagePtr = (ImageProcessing::DefaultImageType::Pointer)ItkBridge<ImageProcessing::DefaultPixelType>::CreateItkWrapperForDataPointer(m.get(), attrMatName, data);
+  imagePtr = (ImageProcessing::DefaultImageType::Pointer)ItkBridge<ImageProcessing::DefaultPixelType>::CreateItkWrapperForDataPointer(m, attrMatName, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -99,30 +99,7 @@ void TestCopyITKtoDream3D()
   ItkBridge<ImageProcessing::DefaultPixelType>::CopyITKtoDream3D(imagePtr, data);
 
 }
-/*
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestDream3DRGBtoITK()
-{
-  ItkBridge<ImageProcessing::DefaultPixelType>::RGBImageType::Pointer rgbPtr;
 
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  QString attrMatName("CellData");
-  ImageProcessing::DefaultPixelType* data = NULL;
-  rgbPtr = ItkBridge<ImageProcessing::DefaultPixelType>::Dream3DRGBtoITK(m.get(), attrMatName, data);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestCopyRGBITKtoDream3D()
-{
-  ImageProcessing::RGBImageType::Pointer imagePtr;
-  ImageProcessing::DefaultPixelType* data = NULL;
-  ItkBridge<ImageProcessing::DefaultPixelType>::CopyRGBITKtoDream3D(imagePtr, data);
-}
-*/
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

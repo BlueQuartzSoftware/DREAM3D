@@ -236,7 +236,7 @@ void InsertPrecipitatePhases::dataCheck()
   setErrorCondition(0);
 
   // Make sure we have our input DataContainer with the proper Ensemble data
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   //Input Ensemble Data That we require
 //  typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -361,11 +361,11 @@ void InsertPrecipitatePhases::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   //int index;
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -425,7 +425,7 @@ void InsertPrecipitatePhases::execute()
 void  InsertPrecipitatePhases::load_precipitates()
 {
 
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
 
   std::ifstream inFile;
@@ -497,13 +497,13 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   notifyStatusMessage(getHumanLabel(), "Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   size_t udims[3] =
   { 0, 0, 0 };
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -512,9 +512,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
-  m_XRes = m->getXRes();
-  m_YRes = m->getYRes();
-  m_ZRes = m->getZRes();
+  m_XRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  m_YRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  m_ZRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   m_SizeX = dims[0] * m_XRes;
   m_SizeY = dims[1] * m_YRes;
   m_SizeZ = dims[2] * m_ZRes;
@@ -829,9 +829,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     boxdims[2] = m_SizeZ;
 
     std::vector<float> boxres(3);
-    boxres[0] = m->getXRes();
-    boxres[1] = m->getYRes();
-    boxres[2] = m->getZRes();
+    boxres[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+    boxres[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+    boxres[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
     float max_box_distance = sqrtf((m_SizeX * m_SizeX) + (m_SizeY * m_SizeY) + (m_SizeZ * m_SizeZ));
 
@@ -1593,7 +1593,7 @@ void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<st
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
 {
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
@@ -1767,11 +1767,11 @@ void InsertPrecipitatePhases::assign_voxels()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   int index;
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -1785,9 +1785,9 @@ void InsertPrecipitatePhases::assign_voxels()
   };
 
   float totalPoints = dims[0] * dims[1] * dims[2];
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
 //  int oldname;
   size_t column, row, plane;
@@ -1940,12 +1940,12 @@ void InsertPrecipitatePhases::assign_gaps()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   int64_t totpoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -1971,9 +1971,9 @@ void InsertPrecipitatePhases::assign_gaps()
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totpoints, "newowners");
   int32_t* newowners = newownersPtr->getPointer(0);
@@ -2123,9 +2123,9 @@ void InsertPrecipitatePhases::assign_gaps()
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::find_xcoord(long long int index)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  float x = m->getXRes() * float(index % m->getXPoints());
+  float x = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * float(index % /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints());
   return x;
 }
 
@@ -2134,9 +2134,9 @@ float InsertPrecipitatePhases::find_xcoord(long long int index)
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::find_ycoord(long long int index)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  float y = m->getYRes() * float((index / m->getXPoints()) % m->getYPoints());
+  float y = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * float((index / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()) % /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints());
   return y;
 }
 
@@ -2145,9 +2145,9 @@ float InsertPrecipitatePhases::find_ycoord(long long int index)
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::find_zcoord(long long int index)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  float z = m->getZRes() * float(index / (m->getXPoints() * m->getYPoints()));
+  float z = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes() * float(index / (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints()));
   return z;
 }
 
@@ -2158,7 +2158,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

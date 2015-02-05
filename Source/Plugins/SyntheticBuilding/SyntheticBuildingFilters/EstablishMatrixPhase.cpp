@@ -58,8 +58,8 @@ EstablishMatrixPhase::EstablishMatrixPhase() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
-  m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_InputStatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_FeaturePhases(NULL),
@@ -153,7 +153,7 @@ void EstablishMatrixPhase::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName());
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   //Input Ensemble Data That we require
   //typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -213,6 +213,12 @@ void EstablishMatrixPhase::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -241,13 +247,13 @@ void  EstablishMatrixPhase::establish_matrix()
   notifyStatusMessage(getHumanLabel(), "Establishing Matrix");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   size_t udims[3] =
   { 0, 0, 0 };
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -260,9 +266,9 @@ void  EstablishMatrixPhase::establish_matrix()
     static_cast<DimType>(udims[2]),
   };
 
-  sizex = dims[0] * m->getXRes();
-  sizey = dims[1] * m->getYRes();
-  sizez = dims[2] * m->getZRes();
+  sizex = dims[0] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  sizey = dims[1] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  sizez = dims[2] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   totalvol = sizex * sizey * sizez;
 
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();

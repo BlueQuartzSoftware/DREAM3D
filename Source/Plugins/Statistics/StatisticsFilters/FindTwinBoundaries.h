@@ -50,7 +50,7 @@
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 
 #include "Statistics/StatisticsConstants.h"
@@ -76,6 +76,8 @@ class FindTwinBoundaries : public AbstractFilter
     Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+    DREAM3D_FILTER_PARAMETER(bool, FindCoherence)
+    Q_PROPERTY(bool FindCoherence READ getFindCoherence WRITE setFindCoherence)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)

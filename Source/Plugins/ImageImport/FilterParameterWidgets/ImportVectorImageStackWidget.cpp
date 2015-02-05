@@ -41,6 +41,8 @@
 #include <QtGui/QFileDialog>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Geometry/ImageGeom.h"
+
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 #include "QtSupport/QFileCompleter.h"

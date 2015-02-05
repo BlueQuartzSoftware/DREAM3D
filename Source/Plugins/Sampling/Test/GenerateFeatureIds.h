@@ -43,7 +43,7 @@ class GenerateFeatureIds : public AbstractFilter
       dataCheck();
       if(getErrorCondition() < 0) { return; }
 
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
+      DataContainer::Pointer m = getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
 
       int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
       QVector<size_t> tDims(3, 0);
@@ -82,7 +82,7 @@ class GenerateFeatureIds : public AbstractFilter
   protected:
     GenerateFeatureIds() :
       AbstractFilter(),
-      m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+      m_DataContainerName(DREAM3D::Defaults::DataContainerName),
       m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
       m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
       m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -96,7 +96,7 @@ class GenerateFeatureIds : public AbstractFilter
     void dataCheck()
     {
       setErrorCondition(0);
-      VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
       if(getErrorCondition() < 0) { return; }
       AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
       if(getErrorCondition() < 0) { return; }
@@ -115,21 +115,21 @@ class GenerateFeatureIds : public AbstractFilter
 
 
 /**
- * @class CreateVolumeDataContainer
- * @brief This class simply adds a VolumeDataContainer with default name to the DataContainerArray
+ * @class CreateDataContainer
+ * @brief This class simply adds a DataContainer with default name to the DataContainerArray
  * @author
  * @date
  * @version 1.0
  */
-class CreateVolumeDataContainer : public AbstractFilter
+class CreateDataContainer : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CreateVolumeDataContainer)
-    DREAM3D_STATIC_NEW_MACRO(CreateVolumeDataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(CreateVolumeDataContainer, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CreateDataContainer)
+    DREAM3D_STATIC_NEW_MACRO(CreateDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(CreateDataContainer, AbstractFilter)
 
-    virtual ~CreateVolumeDataContainer() {}
+    virtual ~CreateDataContainer() {}
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -142,7 +142,7 @@ class CreateVolumeDataContainer : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "CreateVolumeDataContainer Filter"; }
+    virtual const QString getHumanLabel() { return "CreateDataContainer Filter"; }
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -175,7 +175,7 @@ class CreateVolumeDataContainer : public AbstractFilter
     }
 
   protected:
-    CreateVolumeDataContainer() : AbstractFilter() {}
+    CreateDataContainer() : AbstractFilter() {}
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -187,12 +187,12 @@ class CreateVolumeDataContainer : public AbstractFilter
     */
     void dataCheck()
     {
-      VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-      m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+      DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
+      m->setName(DREAM3D::Defaults::DataContainerName);
       int64_t nx = UnitTest::FeatureIdsTest::XSize;
       int64_t ny = UnitTest::FeatureIdsTest::YSize;
       int64_t nz = UnitTest::FeatureIdsTest::ZSize;
-      m->setDimensions(nx, ny, nz);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
       getDataContainerArray()->addDataContainer(m);
       QVector<size_t> tDims(3, 0);
       tDims[0] = nx;
@@ -204,8 +204,8 @@ class CreateVolumeDataContainer : public AbstractFilter
 
   private:
 
-    CreateVolumeDataContainer(const CreateVolumeDataContainer&); // Copy Constructor Not Implemented
-    void operator=(const CreateVolumeDataContainer&); // Operator '=' Not Implemented
+    CreateDataContainer(const CreateDataContainer&); // Copy Constructor Not Implemented
+    void operator=(const CreateDataContainer&); // Operator '=' Not Implemented
 };
 
 

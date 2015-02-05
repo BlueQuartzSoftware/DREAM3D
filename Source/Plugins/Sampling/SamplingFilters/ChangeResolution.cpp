@@ -49,12 +49,12 @@
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
   AbstractFilter(),
-  m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -142,12 +142,12 @@ void ChangeResolution::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void ChangeResolution::dataCheck()
 {
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName()); }
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName()); }
   else
   {
     getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
-    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
   }
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
@@ -178,22 +178,22 @@ void ChangeResolution::preflight()
     return;
   }
 
-  VolumeDataContainer* m;
+  DataContainer::Pointer m;
   if(m_SaveAsNewDataContainer == false)
   {
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+    m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
   else
   {
-    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
+    m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
   }
 
   size_t dims[3];
-  m->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * m->getXRes();
-  float sizey = (dims[1]) * m->getYRes();
-  float sizez = (dims[2]) * m->getZRes();
+  float sizex = (dims[0]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float sizey = (dims[1]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float sizez = (dims[2]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
@@ -201,8 +201,8 @@ void ChangeResolution::preflight()
   if(m_YP == 0) { m_YP = 1; }
   if(m_ZP == 0) { m_ZP = 1; }
 
-  m->setDimensions(m_XP, m_YP, m_ZP);
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -218,6 +218,12 @@ void ChangeResolution::preflight()
   }
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -232,13 +238,13 @@ void ChangeResolution::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
+  else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
 
-  if(m->getXRes() == m_Resolution.x
-      && m->getYRes() == m_Resolution.y
-      && m->getZRes() == m_Resolution.z)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() == m_Resolution.x
+      && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() == m_Resolution.y
+      && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes() == m_Resolution.z)
   {
     return;
   }
@@ -246,11 +252,11 @@ void ChangeResolution::execute()
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
 
   size_t dims[3];
-  m->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * m->getXRes();
-  float sizey = (dims[1]) * m->getYRes();
-  float sizez = (dims[2]) * m->getZRes();
+  float sizex = (dims[0]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float sizey = (dims[1]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float sizez = (dims[2]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
@@ -267,7 +273,7 @@ void ChangeResolution::execute()
 
   for (int i = 0; i < m_ZP; i++)
   {
-    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getZPoints()) * 100);
+    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints()) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int j = 0; j < m_YP; j++)
     {
@@ -276,10 +282,10 @@ void ChangeResolution::execute()
         x = (k * m_Resolution.x);
         y = (j * m_Resolution.y);
         z = (i * m_Resolution.z);
-        col = int(x / m->getXRes());
-        row = int(y / m->getYRes());
-        plane = int(z / m->getZRes());
-        index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
+        col = int(x / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes());
+        row = int(y / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes());
+        plane = int(z / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes());
+        index_old = (plane * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints()) + (row * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         newindicies[index] = index_old;
       }
@@ -317,15 +323,15 @@ void ChangeResolution::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setDimensions(m_XP, m_YP, m_ZP);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)
   {
-    totalPoints = m->getTotalPoints();
+    totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
     QVector<bool> activeObjects(totalFeatures, false);

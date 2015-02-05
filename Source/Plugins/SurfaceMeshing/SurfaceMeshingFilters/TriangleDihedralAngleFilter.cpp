@@ -52,23 +52,29 @@
  */
 class CalculateDihedralAnglesImpl
 {
-    VertexArray::Pointer m_Nodes;
-    FaceArray::Pointer m_Triangles;
+    SharedVertexList::Pointer m_Nodes;
+    SharedTriList::Pointer m_Triangles;
     double* m_DihedralAngles;
 
   public:
-    CalculateDihedralAnglesImpl(VertexArray::Pointer nodes, FaceArray::Pointer triangles, double* DihedralAngles) :
+    CalculateDihedralAnglesImpl(SharedVertexList::Pointer nodes,
+                                SharedTriList::Pointer triangles,
+                                double* DihedralAngles) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_DihedralAngles(DihedralAngles)
     {}
     virtual ~CalculateDihedralAnglesImpl() {}
 
+    /**
+     * @brief generate Generates the dihedral angle for the triangles
+     * @param start The starting Index
+     * @param end The ending Index
+     */
     void generate(size_t start, size_t end) const
     {
-
-      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
-      FaceArray::Face_t* triangles = m_Triangles->getPointer(0);
+      float* nodes = m_Nodes->getPointer(0);
+      int64_t* triangles = m_Triangles->getPointer(0);
 
       float radToDeg = 180.0 / DREAM3D::Constants::k_Pi;
 
@@ -79,19 +85,19 @@ class CalculateDihedralAnglesImpl
       {
         minDihedralAngle = 180.0;
 
-        ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
-        ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
-        ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
+        ABx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+1]*3+0];
+        ABy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+1]*3+1];
+        ABz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+1]*3+2];
         magAB = sqrt(ABx * ABx + ABy * ABy + ABz * ABz);
 
-        ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-        ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-        ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+        ACx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+2]*3+0];
+        ACy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+2]*3+1];
+        ACz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+2]*3+2];
         magAC = sqrt(ACx * ACx + ACy * ACy + ACz * ACz);
 
-        BCx = nodes[triangles[i].verts[1]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-        BCy = nodes[triangles[i].verts[1]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-        BCz = nodes[triangles[i].verts[1]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+        BCx = nodes[triangles[i*3+1]*3+0] - nodes[triangles[i*3+2]*3+0];
+        BCy = nodes[triangles[i*3+1]*3+1] - nodes[triangles[i*3+2]*3+1];
+        BCz = nodes[triangles[i*3+1]*3+2] - nodes[triangles[i*3+2]*3+2];
         magBC = sqrt(BCx * BCx + BCy * BCy + BCz * BCz);
 
         dihedralAngle1 = radToDeg * acos(((ABx * ACx) + (ABy * ACy) + (ABz * ACz)) / (magAB * magAC));
@@ -122,7 +128,7 @@ class CalculateDihedralAnglesImpl
 // -----------------------------------------------------------------------------
 TriangleDihedralAngleFilter::TriangleDihedralAngleFilter() :
   SurfaceMeshFilter(),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
   m_SurfaceMeshTriangleDihedralAnglesArrayName(DREAM3D::FaceData::SurfaceMeshFaceDihedralAngles),
   m_SurfaceMeshTriangleDihedralAngles(NULL)
 {
@@ -178,21 +184,38 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 void TriangleDihedralAngleFilter::dataCheck()
 {
   DataArrayPath tempPath;
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
-  {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-  }
-
-  // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  IGeometry::Pointer geom = sm->getGeometry();
+  if(NULL == geom.get())
   {
     setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
+  if(NULL == triangles.get())
+  {
+    setErrorCondition(-384);
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
+  {
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+  }
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
+  {
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   else
   {
@@ -227,7 +250,7 @@ void TriangleDihedralAngleFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getFaceAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getFaceAttributeMatrixName().getDataContainerName());
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -235,23 +258,21 @@ void TriangleDihedralAngleFilter::execute()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t numTriangles = trianglesPtr->getNumberOfTuples();
+  // No check because datacheck() made sure we can do the next line.
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
-                      CalculateDihedralAnglesImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleDihedralAngles), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
+                      CalculateDihedralAnglesImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleDihedralAngles), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    CalculateDihedralAnglesImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleDihedralAngles);
-    serial.generate(0, numTriangles);
+    CalculateDihedralAnglesImpl serial(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleDihedralAngles);
+    serial.generate(0, triangleGeom->getNumberOfTris());
   }
 
   /* Let the GUI know we are done with this filter */
@@ -295,5 +316,5 @@ const QString TriangleDihedralAngleFilter::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getHumanLabel()
-{ return "Generate Triangle Dihedral Angles"; }
+{ return "Find Minimum Triangle Dihedral Angle"; }
 

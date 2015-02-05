@@ -416,7 +416,7 @@ void RecrystalizeVolume::dataCheck()
   setErrorCondition(0);
 
   // Create the output Data Container
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   // Sanity Check the Dimensions and Resolution
@@ -428,9 +428,9 @@ void RecrystalizeVolume::dataCheck()
   INIT_SYNTH_VOLUME_CHECK(Resolution.z, -5005);
 
   // Set teh Dimensions, Resolution and Origin of the output data container
-  m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   // Create our output Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
@@ -486,6 +486,12 @@ void RecrystalizeVolume::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -534,7 +540,7 @@ void RecrystalizeVolume::execute()
   setErrorCondition(0);
 
   //get cretaed data container
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_DataContainerName);
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_DataContainerName);
 
   //get created cell attribute matricies
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(m_CellAttributeMatrixName);
@@ -543,9 +549,9 @@ void RecrystalizeVolume::execute()
 
   // Resize the cell attribute matric
   QVector<size_t> cellDims(3, 0);
-  cellDims[0] = m->getXPoints();
-  cellDims[1] = m->getYPoints();
-  cellDims[2] = m->getZPoints();
+  cellDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+  cellDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+  cellDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMat->resizeAttributeArrays(cellDims);
 
   //convert nucleation rate to probabilty / voxel / timestep

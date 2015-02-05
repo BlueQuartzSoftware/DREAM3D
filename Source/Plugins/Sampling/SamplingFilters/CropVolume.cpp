@@ -130,19 +130,19 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(XMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(YMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(XMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(YMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
+      DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -151,53 +151,81 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 void CropVolume::dataCheck()
 {
+  int err = getErrorCondition();
   if(getErrorCondition() < 0) { return; }
+  setErrorCondition(0);
 
-  VolumeDataContainer* srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
 
   // Bail if the source data container cannot be found
   if (NULL == srcCellDataContainer)
   {
     QString ss = QObject::tr("The prerequisite DataContainer '%1' does not exist").arg(getCellAttributeMatrixPath().getDataContainerName());
-    setErrorCondition(-5540);
+    setErrorCondition(-5548);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  if(NULL == cellAttrMat.get())
+  AttributeMatrix::Pointer srcCellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  // Bail if the source attribute matrix cannot be found
+  if (NULL == srcCellAttrMat)
   {
     QString ss = QObject::tr("The prerequisite AttributeMatrix '%1' does not exist").arg(getCellAttributeMatrixPath().getAttributeMatrixName());
-    setErrorCondition(-5541);
+    setErrorCondition(-5549);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  VolumeDataContainer* destCellDataContainer = srcCellDataContainer;
+
+  IGeometry::Pointer geom = srcCellDataContainer->getGeometry();
+  if(NULL == geom.get())
+  {
+    setErrorCondition(-385);
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  ImageGeom::Pointer imageGeom = srcCellDataContainer->getGeometryAs<ImageGeom>();
+  if(NULL == imageGeom.get())
+  {
+    setErrorCondition(-385);
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
+  AttributeMatrix::Pointer destCellAttrMat;
 
   if (m_SaveAsNewDataContainer == true)
   {
     float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
     size_t dx = 0, dy = 0, dz = 0;
-    srcCellDataContainer->getOrigin(ox, oy, oz);
-    srcCellDataContainer->getResolution(rx, ry, rz);
-    srcCellDataContainer->getDimensions(dx, dy, dz);
+    srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(ox, oy, oz);
+    srcCellDataContainer->getGeometryAs<ImageGeom>()->getResolution(rx, ry, rz);
+    srcCellDataContainer->getGeometryAs<ImageGeom>()->getDimensions(dx, dy, dz);
 
-    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
     if(NULL == destCellDataContainer || getErrorCondition() < 0)
     {
       return;
     }
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+    destCellDataContainer->setGeometry(image);
 
-    destCellDataContainer->setOrigin(ox, oy, oz);
-    destCellDataContainer->setResolution(rx, ry, rz);
-    destCellDataContainer->setDimensions(dx, dy, dz);
+    destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(ox, oy, oz);
+    destCellDataContainer->getGeometryAs<ImageGeom>()->setResolution(rx, ry, rz);
+    destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(dx, dy, dz);
 
-    AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy();
-    destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
-    cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+    destCellAttrMat = srcCellAttrMat->deepCopy();
+    destCellDataContainer->addAttributeMatrix(destCellAttrMat->getName(), destCellAttrMat);
+  }
+  else
+  {
+    destCellAttrMat = srcCellAttrMat;
   }
 
-  if(NULL == destCellDataContainer || NULL == cellAttrMat || getErrorCondition() < 0)
+  if(NULL == destCellDataContainer || NULL == destCellAttrMat || getErrorCondition() < 0)
   {
     return;
   }
@@ -207,55 +235,64 @@ void CropVolume::dataCheck()
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
     notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    return;
   }
   if (getYMax() < getYMin())
   {
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
     notifyErrorMessage(getHumanLabel(), ss, -5551);
     setErrorCondition(-5551);
+    return;
   }
   if (getZMax() < getZMin())
   {
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
     notifyErrorMessage(getHumanLabel(), ss, -5552);
     setErrorCondition(-5552);
+    return;
   }
   if (getXMin() < 0)
   {
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
     notifyErrorMessage(getHumanLabel(), ss, -5553);
     setErrorCondition(-5553);
+    return;
   }
   if (getYMin() < 0)
   {
     QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
     notifyErrorMessage(getHumanLabel(), ss, -5554);
     setErrorCondition(-5554);
+    return;
   }
   if (getZMin() < 0)
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
     notifyErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
+    return;
   }
 
-  if (getXMax() > (static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1))
+  if (getXMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints()) - 1))
   {
-    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(destCellDataContainer->getXPoints()) - 1);
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(/* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints()) - 1);
     notifyErrorMessage(getHumanLabel(), ss, -5556);
     setErrorCondition(-5556);
+    return;
   }
-  if (getYMax() > (static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1))
+  if (getYMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints()) - 1))
   {
-    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(destCellDataContainer->getYPoints()) - 1);
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(/* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints()) - 1);
     notifyErrorMessage(getHumanLabel(), ss, -5557);
     setErrorCondition(-5557);
+    return;
   }
-  if (getZMax() > (static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1))
+  if (getZMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getZPoints()) - 1))
   {
-    QString ss = QObject::tr("The Z Max you entered of %1 is greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(destCellDataContainer->getZPoints()) - 1);
+    QString ss = QObject::tr("The Z Max you entered of %1 is greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(/* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->getZPoints()) - 1);
     notifyErrorMessage(getHumanLabel(), ss, -5558);
     setErrorCondition(-5558);
+    return;
   }
 
   QVector<size_t> tDims(3, 0);
@@ -266,7 +303,7 @@ void CropVolume::dataCheck()
   tDims[1] = (getYMax() - getYMin()) + 1;
   tDims[2] = (getZMax() - getZMin()) + 1;
 
-  destCellDataContainer->setDimensions(tDims[0], tDims[1], tDims[2]);
+  destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
 
 
   // If any of the sanity checks fail above then we should NOT attempt to go any further.
@@ -275,17 +312,24 @@ void CropVolume::dataCheck()
     return;
   }
 
-  cellAttrMat->setTupleDimensions(tDims);
+  destCellAttrMat->setTupleDimensions(tDims);
+
+  if(getErrorCondition() < 0 || NULL == destCellAttrMat) { return; }
 
   if(m_RenumberFeatures == true)
   {
     QVector<size_t> dims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    {
+      m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
@@ -318,20 +362,22 @@ void CropVolume::execute()
   //dataCheck();
   //if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  VolumeDataContainer* destCellDataContainer = srcCellDataContainer;
+  DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
 
   if (m_SaveAsNewDataContainer == true)
   {
     float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
-    srcCellDataContainer->getOrigin(ox, oy, oz);
-    srcCellDataContainer->getResolution(rx, ry, rz);
+    srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(ox, oy, oz);
+    srcCellDataContainer->getGeometryAs<ImageGeom>()->getResolution(rx, ry, rz);
 
-    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+    destCellDataContainer->setGeometry(image);
 
-    destCellDataContainer->setOrigin(ox, oy, oz);
-    destCellDataContainer->setResolution(rx, ry, rz);
+    destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(ox, oy, oz);
+    destCellDataContainer->getGeometryAs<ImageGeom>()->setResolution(rx, ry, rz);
 
     AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy();
     destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
@@ -349,7 +395,7 @@ void CropVolume::execute()
 
   size_t udims[3] =
   { 0, 0, 0 };
-  srcCellDataContainer->getDimensions(udims);
+  /* FIXME: ImageGeom */ srcCellDataContainer->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -366,28 +412,34 @@ void CropVolume::execute()
 
   //get current origin
   float oldOrigin[3] = {0.0f, 0.0f, 0.0f};
-  destCellDataContainer->getOrigin(oldOrigin);
+  /* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(oldOrigin);
 
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
   if (dims[0] <= m_XMax)
   {
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max X which is larger than the input volume X Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_XMax).arg(dims[0]);
-    notifyWarningMessage(getHumanLabel(), ss, -950);
+    setErrorCondition(-950);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
   if (dims[1] <= m_YMax)
   {
 
     QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max Y which is larger than the input volume Y Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_YMax).arg(dims[1]);
-    notifyWarningMessage(getHumanLabel(), ss, -950);
+    setErrorCondition(-951);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
   if (dims[2] <= m_ZMax)
   {
 
-    QString ss = QObject::tr("A Maximum value of has been entered for the Max Z which is larger than the input volume Z Dimension of "
+    QString ss = QObject::tr("A Maximum value of %1 has been entered for the Max Z which is larger than the input volume Z Dimension of %2"
                              " This may lead to junk data being filled into the extra space.").arg(m_ZMax).arg(dims[2]);
-    notifyWarningMessage(getHumanLabel(), ss, -950);
+    setErrorCondition(-952);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   int64_t XP = ( (m_XMax - m_XMin) + 1 );
@@ -403,11 +455,11 @@ void CropVolume::execute()
   {
     QString ss = QObject::tr("Cropping Volume - Slice %1 of %2 Complete").arg(i).arg(ZP);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    planeold = (i + m_ZMin) * (destCellDataContainer->getXPoints() * destCellDataContainer->getYPoints());
+    planeold = (i + m_ZMin) * (/* FIXME: ImageGeom */ srcCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ srcCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints());
     plane = (i * XP * YP);
     for (int64_t j = 0; j < YP; j++)
     {
-      rowold = (j + m_YMin) * destCellDataContainer->getXPoints();
+      rowold = (j + m_YMin) * /* FIXME: ImageGeom */ srcCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints();
       row = (j * XP);
       for (int64_t k = 0; k < XP; k++)
       {
@@ -424,18 +476,20 @@ void CropVolume::execute()
       }
     }
   }
-  destCellDataContainer->setDimensions(static_cast<size_t>(XP), static_cast<size_t>(YP), static_cast<size_t>(ZP));
-  totalPoints = destCellDataContainer->getTotalPoints();
+  /* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(XP), static_cast<size_t>(YP), static_cast<size_t>(ZP));
+  totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   QVector<size_t> tDims(3, 0);
   tDims[0] = XP;
   tDims[1] = YP;
   tDims[2] = ZP;
   cellAttrMat->setTupleDimensions(tDims); // THIS WILL CAUSE A RESIZE of all the underlying data arrays.
 
-  // Feature Ids MUST already be renumbered.
+
   if (m_RenumberFeatures == true)
   {
-    totalPoints = destCellDataContainer->getTotalPoints();
+    totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+
+    // This just sanity checks to make sure there were existing features before the cropping
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
     QVector<bool> activeObjects(totalFeatures, false);
@@ -443,16 +497,25 @@ void CropVolume::execute()
     {
       setErrorCondition(-600);
       notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", getErrorCondition());
-      notifyStatusMessage(getHumanLabel(), "Completed");
       return;
     }
 
-    QVector<size_t> cDims(1, 1);
-    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+   // QVector<size_t> cDims(1, 1);
+    DataArrayPath dap = getFeatureIdsArrayPath();
+    if(getSaveAsNewDataContainer())
+    {
+      dap.setDataContainerName(getNewDataContainerName());
+    }
+    m_FeatureIdsPtr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(dap.getDataArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() < 0)
+    else
     {
+      setErrorCondition(-601);
+      QString ss = QObject::tr("The Feature Ids array with name '%1' was not found in the destination DataContainer. The expected path was '%2'")
+                                .arg(dap.getDataArrayName()).arg(dap.serialize("/"));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -468,6 +531,7 @@ void CropVolume::execute()
       {
         setErrorCondition(-601);
         QString ss = QObject::tr("The total number of features from %1 is %2, but a value of %3 was found in Data Array %4.").arg(cellFeatureAttrMat->getName()).arg(totalFeatures).arg(currentFeatureId).arg(getFeatureIdsArrayPath().serialize("/"));
+        qDebug() << ss;
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
@@ -478,16 +542,16 @@ void CropVolume::execute()
   if(m_UpdateOrigin == true)
   {
     float resolution[3] = {0.0f, 0.0f, 0.0f};
-    destCellDataContainer->getResolution(resolution);
+    /* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->getResolution(resolution);
 
     float origin[3] = {0.0f, 0.0f, 0.0f};
-    destCellDataContainer->getOrigin(origin);
+    /* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
     origin[0] = m_XMin * resolution[0] + oldOrigin[0];
     origin[1] = m_YMin * resolution[1] + oldOrigin[1];
     origin[2] = m_ZMin * resolution[2] + oldOrigin[2];
 
-    destCellDataContainer->setOrigin(origin);
+    /* FIXME: ImageGeom */ destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(origin);
   }
 
   notifyStatusMessage(getHumanLabel(), "Completed");
@@ -498,13 +562,13 @@ void CropVolume::execute()
 // -----------------------------------------------------------------------------
 IntVec3_t CropVolume::getCurrentVolumeDataContainerDimensions()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   IntVec3_t data;
   if (NULL != m)
   {
-    data.x = m->getXPoints();
-    data.y = m->getYPoints();
-    data.z = m->getZPoints();
+    data.x = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+    data.y = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+    data.z = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   }
   else
   {
@@ -520,13 +584,13 @@ IntVec3_t CropVolume::getCurrentVolumeDataContainerDimensions()
 // -----------------------------------------------------------------------------
 FloatVec3_t CropVolume::getCurrentVolumeDataContainerResolutions()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   FloatVec3_t data;
   if (NULL != m)
   {
-    data.x = m->getXRes();
-    data.y = m->getYRes();
-    data.z = m->getZRes();
+    data.x = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+    data.y = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+    data.z = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   }
   else
   {

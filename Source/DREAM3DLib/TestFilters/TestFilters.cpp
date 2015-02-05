@@ -12,7 +12,7 @@
 // -----------------------------------------------------------------------------
 Filt0::Filt0() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_Filt0_Float(6.6f),
   m_Filt0_Integer(15)
 {

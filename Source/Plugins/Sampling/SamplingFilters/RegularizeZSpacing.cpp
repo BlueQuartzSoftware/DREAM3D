@@ -53,7 +53,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
   AbstractFilter(),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_InputFile(""),
   m_NewZRes(1.0f)
 {
@@ -111,7 +111,7 @@ void RegularizeZSpacing::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
   if (getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
   if (getErrorCondition() < 0) { return; }
@@ -120,7 +120,7 @@ void RegularizeZSpacing::dataCheck(bool preflight)
   inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
-  for (size_t iter = 0; iter < m->getZPoints() + 1; iter++)
+  for (size_t iter = 0; iter < /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() + 1; iter++)
   {
     inFile >> zval;
   }
@@ -129,10 +129,10 @@ void RegularizeZSpacing::dataCheck(bool preflight)
 
   if(preflight == true)
   {
-    m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints(), /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints(), zP);
     QVector<size_t> tDims(3, 0);
-    tDims[0] = m->getXPoints();
-    tDims[1] = m->getYPoints();
+    tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+    tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
     tDims[2] = zP;
     cellAttrMat->resizeAttributeArrays(tDims);
   }
@@ -151,6 +151,12 @@ void RegularizeZSpacing::preflight()
   dataCheck(true);
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -164,10 +170,10 @@ void RegularizeZSpacing::execute()
   if(getErrorCondition() < 0) { return; }
 
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   size_t dims[3];
-  m->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -181,8 +187,8 @@ void RegularizeZSpacing::execute()
   }
   inFile.close();
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
 
   float sizez = zboundvalues[dims[2]];
   size_t m_XP = dims[0];
@@ -244,8 +250,8 @@ void RegularizeZSpacing::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  m->setResolution(xRes, yRes, m_NewZRes);
-  m->setDimensions(m_XP, m_YP, m_ZP);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(xRes, yRes, m_NewZRes);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 

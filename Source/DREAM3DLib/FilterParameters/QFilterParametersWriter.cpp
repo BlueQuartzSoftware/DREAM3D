@@ -572,6 +572,111 @@ int QFilterParametersWriter::writeValue(const QString name, FloatVec21_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t v)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  int err = 0;
+  m_Prefs->beginWriteArray(name, 3);
+
+  m_Prefs->setArrayIndex(0);
+  m_Prefs->setValue("c20", static_cast<double>(v.c20));
+  m_Prefs->setArrayIndex(1);
+  m_Prefs->setValue("c02", static_cast<double>(v.c02));
+  m_Prefs->setArrayIndex(2);
+  m_Prefs->setValue("c11", static_cast<double>(v.c11));
+
+  m_Prefs->setArrayIndex(3);
+  m_Prefs->setValue("c10", static_cast<double>(v.c10));
+  m_Prefs->setArrayIndex(4);
+  m_Prefs->setValue("c01", static_cast<double>(v.c01));
+  m_Prefs->setArrayIndex(5);
+  m_Prefs->setValue("c00", static_cast<double>(v.c00));
+
+  m_Prefs->endArray();
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, Float3rdOrderPoly_t v)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  int err = 0;
+  m_Prefs->beginWriteArray(name, 3);
+
+  m_Prefs->setArrayIndex(0);
+  m_Prefs->setValue("c30", static_cast<double>(v.c30));
+  m_Prefs->setArrayIndex(1);
+  m_Prefs->setValue("c03", static_cast<double>(v.c03));
+  m_Prefs->setArrayIndex(2);
+  m_Prefs->setValue("c21", static_cast<double>(v.c21));
+  m_Prefs->setArrayIndex(3);
+  m_Prefs->setValue("c12", static_cast<double>(v.c12));
+  m_Prefs->setArrayIndex(4);
+  m_Prefs->setValue("c20", static_cast<double>(v.c20));
+  m_Prefs->setArrayIndex(5);
+  m_Prefs->setValue("c02", static_cast<double>(v.c02));
+  m_Prefs->setArrayIndex(6);
+  m_Prefs->setValue("c11", static_cast<double>(v.c11));
+  m_Prefs->setArrayIndex(7);
+  m_Prefs->setValue("c10", static_cast<double>(v.c10));
+  m_Prefs->setArrayIndex(8);
+  m_Prefs->setValue("c01", static_cast<double>(v.c01));
+  m_Prefs->setArrayIndex(9);
+  m_Prefs->setValue("c00", static_cast<double>(v.c00));
+
+  m_Prefs->endArray();
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, Float4thOrderPoly_t v)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  int err = 0;
+  m_Prefs->beginWriteArray(name, 3);
+
+  m_Prefs->setArrayIndex(0);
+  m_Prefs->setValue("c40", static_cast<double>(v.c40));
+  m_Prefs->setArrayIndex(1);
+  m_Prefs->setValue("c04", static_cast<double>(v.c04));
+  m_Prefs->setArrayIndex(2);
+  m_Prefs->setValue("c31", static_cast<double>(v.c31));
+  m_Prefs->setArrayIndex(3);
+  m_Prefs->setValue("c13", static_cast<double>(v.c13));
+  m_Prefs->setArrayIndex(4);
+  m_Prefs->setValue("c22", static_cast<double>(v.c22));
+  m_Prefs->setArrayIndex(5);
+  m_Prefs->setValue("c30", static_cast<double>(v.c30));
+  m_Prefs->setArrayIndex(6);
+  m_Prefs->setValue("c03", static_cast<double>(v.c03));
+  m_Prefs->setArrayIndex(7);
+  m_Prefs->setValue("c21", static_cast<double>(v.c21));
+  m_Prefs->setArrayIndex(8);
+  m_Prefs->setValue("c12", static_cast<double>(v.c12));
+  m_Prefs->setArrayIndex(9);
+  m_Prefs->setValue("c20", static_cast<double>(v.c20));
+  m_Prefs->setArrayIndex(10);
+  m_Prefs->setValue("c02", static_cast<double>(v.c02));
+  m_Prefs->setArrayIndex(11);
+  m_Prefs->setValue("c11", static_cast<double>(v.c11));
+  m_Prefs->setArrayIndex(12);
+  m_Prefs->setValue("c10", static_cast<double>(v.c10));
+  m_Prefs->setArrayIndex(13);
+  m_Prefs->setValue("c01", static_cast<double>(v.c01));
+  m_Prefs->setArrayIndex(14);
+  m_Prefs->setValue("c00", static_cast<double>(v.c00));
+
+  m_Prefs->endArray();
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);

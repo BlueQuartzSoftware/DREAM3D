@@ -59,7 +59,7 @@
 // -----------------------------------------------------------------------------
 YSChoiAbaqusReader::YSChoiAbaqusReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
@@ -207,7 +207,7 @@ void YSChoiAbaqusReader::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
@@ -260,8 +260,8 @@ void YSChoiAbaqusReader::dataCheck()
         ypoints = tokens[2].toInt(&ok, 10);
         zpoints = tokens[3].toInt(&ok, 10);
         size_t dims[3] = { static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints) };
-        m->setDimensions(dims);
-        m->setOrigin(0, 0, 0);
+        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims);
+        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
       }
       if (RES == word)
       {
@@ -270,7 +270,7 @@ void YSChoiAbaqusReader::dataCheck()
         resy = tokens[2].toInt(&ok, 10);
         resz = tokens[3].toInt(&ok, 10);
         float res[3] = {resx, resy, resz};
-        m->setResolution(res);
+        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(res);
       }
     }
   }
@@ -318,12 +318,18 @@ void YSChoiAbaqusReader::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 void YSChoiAbaqusReader::execute()
 {
   dataCheck();
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   int xpoints, ypoints, zpoints, totalpoints = 0;
   float resx, resy, resz;
@@ -354,8 +360,8 @@ void YSChoiAbaqusReader::execute()
       zpoints = tokens[3].toInt(&ok, 10);
       totalpoints = xpoints * ypoints * zpoints;
       size_t dims[3] = { static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints) };
-      m->setDimensions(dims);
-      m->setOrigin(0, 0, 0);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
 
     }
     if (buf.startsWith(RES))
@@ -365,7 +371,7 @@ void YSChoiAbaqusReader::execute()
       resy = tokens[2].toInt(&ok, 10);
       resz = tokens[3].toInt(&ok, 10);
       float res[3] = {resx, resy, resz};
-      m->setResolution(res);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(res);
     }
     if (buf.startsWith(LOOKUP))
     {

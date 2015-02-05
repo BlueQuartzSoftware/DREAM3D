@@ -53,7 +53,7 @@
 #include <QtGui/QMessageBox>
 
 
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
@@ -344,11 +344,11 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     m_DisplayedImage = QImage();
   }
 
-  VolumeDataContainer::Pointer m = boost::dynamic_pointer_cast<VolumeDataContainer>(dca->getDataContainer(reader->getDataContainerName()));
+  DataContainer::Pointer m = dca->getDataContainer(reader->getDataContainerName());
   size_t dims[3] = {0, 0, 0};
-  m->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
   float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getResolution(res);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
 
   m_XDim->setText(QString::number(dims[0]));
   m_YDim->setText(QString::number(dims[1]));

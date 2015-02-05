@@ -48,9 +48,9 @@ FindNeighborhoods::FindNeighborhoods() :
   AbstractFilter(),
   m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
   m_MultiplesOfAverage(1.0f),
-  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EquivalentDiameters),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
+  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EquivalentDiameters),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CentroidsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
@@ -159,6 +159,12 @@ void FindNeighborhoods::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 // -----------------------------------------------------------------------------
 //
@@ -185,7 +191,7 @@ void FindNeighborhoods::find_neighborhoods()
   std::vector<std::vector<int> > neighborhoodlist;
   std::vector<float> criticalDistance;
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_EquivalentDiametersArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_EquivalentDiametersArrayPath.getDataContainerName());
   size_t totalFeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
 
   neighborhoodlist.resize(totalFeatures);
@@ -205,9 +211,9 @@ void FindNeighborhoods::find_neighborhoods()
   }
 
   float m_OriginX, m_OriginY, m_OriginZ;
-  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   int xbin, ybin, zbin;
   //int bin, bin1, bin2;

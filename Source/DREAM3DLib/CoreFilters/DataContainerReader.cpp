@@ -255,8 +255,8 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
   {
     QH5Utilities::closeFile(fileId);
     fileId = QH5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
-    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::Defaults::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::Defaults::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::Defaults::DataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::Defaults::DataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
     err = QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, "5.0");
     QH5Utilities::closeFile(fileId);
     fileId = QH5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only

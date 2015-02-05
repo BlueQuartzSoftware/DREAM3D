@@ -46,8 +46,8 @@
 // -----------------------------------------------------------------------------
 FindSurfaceFeatures::FindSurfaceFeatures() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
@@ -130,6 +130,12 @@ void FindSurfaceFeatures::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -143,10 +149,10 @@ void FindSurfaceFeatures::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_surfacefeatures(); }
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_surfacefeatures2D(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_surfacefeatures(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_surfacefeatures2D(); }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 
@@ -157,11 +163,11 @@ void FindSurfaceFeatures::execute()
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::find_surfacefeatures()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  size_t xPoints = m->getXPoints();
-  size_t yPoints = m->getYPoints();
-  size_t zPoints = m->getZPoints();
+  size_t xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+  size_t yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+  size_t zPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
 
   int zStride, yStride;
   for(size_t i = 0; i < zPoints; i++)
@@ -197,24 +203,24 @@ void FindSurfaceFeatures::find_surfacefeatures()
 }
 void FindSurfaceFeatures::find_surfacefeatures2D()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
   int xPoints = 0, yPoints = 0;
 
-  if(m->getXPoints() == 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
-    xPoints = m->getYPoints();
-    yPoints = m->getZPoints();
+    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   }
-  if(m->getYPoints() == 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
-    xPoints = m->getXPoints();
-    yPoints = m->getZPoints();
+    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   }
-  if(m->getZPoints() == 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
-    xPoints = m->getXPoints();
-    yPoints = m->getYPoints();
+    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
   }
 
   int yStride;
@@ -234,8 +240,8 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
         {
           if(m_FeatureIds[yStride + k - 1] == 0) { m_SurfaceFeatures[gnum] = true; }
           if(m_FeatureIds[yStride + k + 1] == 0) { m_SurfaceFeatures[gnum] = true; }
-          if(m_FeatureIds[yStride + k - m->getXPoints()] == 0) { m_SurfaceFeatures[gnum] = true; }
-          if(m_FeatureIds[yStride + k + m->getXPoints()] == 0) { m_SurfaceFeatures[gnum] = true; }
+          if(m_FeatureIds[yStride + k - /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()] == 0) { m_SurfaceFeatures[gnum] = true; }
+          if(m_FeatureIds[yStride + k + /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()] == 0) { m_SurfaceFeatures[gnum] = true; }
         }
       }
     }

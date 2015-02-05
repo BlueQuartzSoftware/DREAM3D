@@ -51,7 +51,7 @@ AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
   m_OutputFile(""),
   m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -134,6 +134,12 @@ void AvizoUniformCoordinateWriter::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -197,7 +203,7 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getDimensions(x, y, z);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getDimensions(x, y, z);
   ss << "define Lattice " << (qint32)x << " " << (qint32)y << " " << (qint32)z << "\n\n";
 
   ss << "Parameters {\n";
@@ -211,9 +217,9 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "     }\n";
   ss << "     Content \"" << (qint32)x << "x" << (qint32)y << "x" << (qint32)z << " int, uniform coordinates\",\n";
   float origin[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getOrigin(origin);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getOrigin(origin);
   float res[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getResolution(res);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getResolution(res);
   ss << "     # Bounding Box is xmin xmax ymin ymax zmin zmax\n";
   ss << "     BoundingBox " << origin[0] << " " << origin[0] + (res[0] * x);
   ss << " " << origin[1] << " " << origin[1] + (res[1] * y);

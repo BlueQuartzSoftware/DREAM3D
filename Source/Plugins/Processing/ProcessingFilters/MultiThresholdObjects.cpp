@@ -128,7 +128,7 @@ void MultiThresholdObjects::dataCheck()
     {
       ComparisonInput_t comp = m_SelectedThresholds[i];
       dcSet.insert(comp.dataContainerName);
-      amSet.insert(comp.attributeMatrixName);			
+      amSet.insert(comp.attributeMatrixName);
     }
 
     // Enforce that right now all the arrays MUST come from the same data container and attribute matrix
@@ -183,6 +183,12 @@ void MultiThresholdObjects::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -190,10 +196,10 @@ void MultiThresholdObjects::preflight()
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::execute()
 {
-	int numComp;
-	QVector<size_t> dims;
-	QString ss;
-	int err = 0;
+  int numComp;
+  QVector<size_t> dims;
+  QString ss;
+  int err = 0;
   setErrorCondition(err);
 
   dataCheck();
@@ -206,25 +212,25 @@ void MultiThresholdObjects::execute()
   QString amName = comp_0.attributeMatrixName;
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  VolumeDataContainer* m = dca->getDataContainerAs<VolumeDataContainer>(dcName);
-	// Do not allow non-scalar arrays
-	for (size_t i = 0; i < m_SelectedThresholds.size(); ++i)
-	{
-		IDataArray::Pointer inputData = m->getAttributeMatrix(amName)->getAttributeArray(m_SelectedThresholds[i].attributeArrayName);
-		dims = inputData->getComponentDimensions();
-		numComp = dims[0];
-		for (int d = 1; d < dims.size(); d++)
-		{
-			numComp *= dims[d];
-		}
-		if (numComp > 1)
-		{
-			ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedThresholds[i].attributeArrayName);
-			setErrorCondition(-11003);
-			notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-			return;
-		}
-	}
+  DataContainer::Pointer m = dca->getDataContainer(dcName);
+  // Do not allow non-scalar arrays
+  for (size_t i = 0; i < m_SelectedThresholds.size(); ++i)
+  {
+    IDataArray::Pointer inputData = m->getAttributeMatrix(amName)->getAttributeArray(m_SelectedThresholds[i].attributeArrayName);
+    dims = inputData->getComponentDimensions();
+    numComp = dims[0];
+    for (int d = 1; d < dims.size(); d++)
+    {
+      numComp *= dims[d];
+    }
+    if (numComp > 1)
+    {
+      ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedThresholds[i].attributeArrayName);
+      setErrorCondition(-11003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
 
   // Prime our output array with the result of the first comparison
   {

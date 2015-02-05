@@ -51,7 +51,7 @@
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"

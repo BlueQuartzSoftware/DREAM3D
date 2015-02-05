@@ -251,6 +251,12 @@ void MatchCrystallography::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -346,7 +352,7 @@ void MatchCrystallography::initializeArrays(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
@@ -361,7 +367,7 @@ void MatchCrystallography::determine_volumes()
   {
     m_Volumes[m_FeatureIds[i]]++;
   }
-  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+  float res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   for (size_t i = 1; i < totalFeatures; i++)
   {
     m_Volumes[i] = m_Volumes[i] * res_scalar;

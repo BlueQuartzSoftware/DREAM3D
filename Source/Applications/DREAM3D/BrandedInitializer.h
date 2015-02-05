@@ -41,14 +41,14 @@
 #include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-//#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+//#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 
 
 
 class DSplashScreen;
 class DREAM3D_UI;
 class QPluginLoader;
-class DREAM3DPluginInterface;
+class IDREAM3DPlugin;
 
 
 
@@ -60,8 +60,9 @@ class BrandedInitializer : public QObject
     virtual ~BrandedInitializer();
 
     bool initialize(int argc, char* argv[]);
+
   protected:
-    QVector<DREAM3DPluginInterface*> loadPlugins();
+    QVector<IDREAM3DPlugin*> loadPlugins();
 
   private:
     bool show_splash;

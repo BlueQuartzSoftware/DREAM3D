@@ -43,18 +43,18 @@
 
 #define QSM_GETCOORD(index, res, coord, origin)\
   coord = float((float(index)*float(res)) + float(origin));\
-   
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QuickSurfaceMesh::QuickSurfaceMesh() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_TransferPhaseId(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_NodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_FacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
@@ -171,6 +171,8 @@ void QuickSurfaceMesh::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
+
+
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -183,19 +185,45 @@ void QuickSurfaceMesh::dataCheck()
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  //// Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+  // If something goes wrong with anything above we can not go on.
   if(getErrorCondition() < 0) { return; }
+
+  // Validate we have an ImageGeom Object
+  IGeometry::Pointer geom = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getGeometry();
+  if(NULL == geom.get())
+  {
+    setErrorCondition(-385);
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getGeometryAs<ImageGeom>();
+  if(NULL == image.get())
+  {
+    setErrorCondition(-384);
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+
+  // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
+
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
-  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
-  sm->setVertices(vertices);
-  sm->setFaces(triangles);
+  // Create a Triangle Geometry
+  SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(1);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(1, vertices, DREAM3D::Geometry::TriangleGeometry);
+  sm->setGeometry(triangleGeom);
+
   dims[0] = 2;
   tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName() );
   m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -239,14 +267,14 @@ void QuickSurfaceMesh::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
   float m_OriginX, m_OriginY, m_OriginZ;
-  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -262,21 +290,21 @@ void QuickSurfaceMesh::execute()
   size_t xP = dims[0];
   size_t yP = dims[1];
   size_t zP = dims[2];
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
-  QVector<QSet<int> > ownerLists;
+  std::vector<std::set<int64_t> > ownerLists;
 
   size_t possibleNumNodes = (xP + 1) * (yP + 1) * (zP + 1);
-  QVector<int> m_NodeIds(possibleNumNodes, -1);
+  std::vector<int64_t> m_NodeIds(possibleNumNodes, -1);
 
   int nodeCount = 0;
   int triangleCount = 0;
 
-  size_t point, neigh1, neigh2, neigh3;
+  size_t point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
 
-  size_t nodeId1, nodeId2, nodeId3, nodeId4;
+  size_t nodeId1 = 0, nodeId2 = 0, nodeId3 = 0, nodeId4 = 0;
 
   //first determining which nodes are actually boundary nodes and
   //count number of nodes and triangles that will be created
@@ -557,10 +585,14 @@ void QuickSurfaceMesh::execute()
   }
 
   //now create node and triangle arrays knowing the number that will be needed
-  VertexArray::Pointer vertices = VertexArray::CreateArray(nodeCount, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
-  VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
-  FaceArray::Face_t* triangle = triangles.get()->getPointer(0);
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
+  triangleGeom->resizeTriList(triangleCount);
+  triangleGeom->resizeVertexList(nodeCount);
+
+  float* vertex = triangleGeom->getVertexPointer(0);
+  int64_t* triangle = triangleGeom->getTriPointer(0);
+
+
   QVector<size_t> tDims(1, nodeCount);
   sm->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
   tDims[0] = triangleCount;
@@ -572,7 +604,7 @@ void QuickSurfaceMesh::execute()
   ownerLists.resize(nodeCount);
 
   //Cycle through again assigning coordinates to each node and assigning node numbers and feature labels to each triangle
-  triangleCount = 0;
+  size_t triangleIndex = 0;
   //const float k_Two = static_cast<float>(2.0);
   for(size_t k = 0; k < zP; k++)
   {
@@ -588,40 +620,40 @@ void QuickSurfaceMesh::execute()
         if(i == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId1];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId4];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
@@ -635,40 +667,40 @@ void QuickSurfaceMesh::execute()
         if(j == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId1];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId2];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId4];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
@@ -682,40 +714,40 @@ void QuickSurfaceMesh::execute()
         if(k == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId1];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId4];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
@@ -729,40 +761,40 @@ void QuickSurfaceMesh::execute()
         if(i == (xP - 1))
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId1];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId4];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId2];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
@@ -776,40 +808,40 @@ void QuickSurfaceMesh::execute()
         else if(m_FeatureIds[point] != m_FeatureIds[neigh1])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[neigh1];
-          m_FaceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[neigh1]; m_FacePhases[triangleCount * 2 + 1] = m_CellPhases[point];}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId1];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh1];
+          m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[neigh1]; m_FacePhases[triangleIndex * 2 + 1] = m_CellPhases[point];}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[neigh1];
-          m_FaceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[neigh1]; m_FacePhases[triangleCount * 2 + 1] = m_CellPhases[point];}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId4];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh1];
+          m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[neigh1]; m_FacePhases[triangleIndex * 2 + 1] = m_CellPhases[point];}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[neigh1]);
@@ -823,40 +855,40 @@ void QuickSurfaceMesh::execute()
         if(j == (yP - 1))
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId1];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId4];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId2];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
@@ -870,40 +902,40 @@ void QuickSurfaceMesh::execute()
         else if(m_FeatureIds[point] != m_FeatureIds[neigh2])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[neigh2];
-          m_FaceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[neigh2]; m_FacePhases[triangleCount * 2 + 1] = m_CellPhases[point];}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId1];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh2];
+          m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[neigh2]; m_FacePhases[triangleIndex * 2 + 1] = m_CellPhases[point];}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[neigh2];
-          m_FaceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[neigh2]; m_FacePhases[triangleCount * 2 + 1] = m_CellPhases[point];}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId4];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId3];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh2];
+          m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[neigh2]; m_FacePhases[triangleIndex * 2 + 1] = m_CellPhases[point];}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[neigh2]);
@@ -917,40 +949,40 @@ void QuickSurfaceMesh::execute()
         if(k == (zP - 1))
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId1];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[point];
-          m_FaceLabels[triangleCount * 2 + 1] = -1;
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[point]; m_FacePhases[triangleCount * 2 + 1] = 0;}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId4];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId2];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
+          m_FaceLabels[triangleIndex * 2 + 1] = -1;
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(-1);
@@ -964,40 +996,40 @@ void QuickSurfaceMesh::execute()
         else if(m_FeatureIds[point] != m_FeatureIds[neigh3])
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId1]*3+2], m_OriginZ);
 
           nodeId2 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]*3+0], m_OriginX);
+          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId2]*3+2], m_OriginZ);
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
+          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3]*3+2], m_OriginZ);
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
+          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]*3+0], m_OriginX);
+          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4]*3+1], m_OriginY);
+          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4]*3+2], m_OriginZ);
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[neigh3];
-          m_FaceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[neigh3]; m_FacePhases[triangleCount * 2 + 1] = m_CellPhases[point];}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId1];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId2];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh3];
+          m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[neigh3]; m_FacePhases[triangleIndex * 2 + 1] = m_CellPhases[point];}
+          triangleIndex++;
 
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-          m_FaceLabels[triangleCount * 2] = m_FeatureIds[neigh3];
-          m_FaceLabels[triangleCount * 2 + 1] = m_FeatureIds[point];
-          if(m_TransferPhaseId == true) { m_FacePhases[triangleCount * 2] = m_CellPhases[neigh3]; m_FacePhases[triangleCount * 2 + 1] = m_CellPhases[point];}
-          triangleCount++;
+          triangle[triangleIndex*3+0] = m_NodeIds[nodeId2];
+          triangle[triangleIndex*3+1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex*3+2] = m_NodeIds[nodeId4];
+          m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh3];
+          m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
+          if(m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[neigh3]; m_FacePhases[triangleIndex * 2 + 1] = m_CellPhases[point];}
+          triangleIndex++;
 
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId1]].insert(m_FeatureIds[neigh3]);
@@ -1019,8 +1051,7 @@ void QuickSurfaceMesh::execute()
     if(ownerLists[i].find(-1) != ownerLists[i].end()) { m_NodeTypes[i] += 10; }
   }
 
-  sm->setFaces(triangles);
-  sm->setVertices(vertices);
+
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }

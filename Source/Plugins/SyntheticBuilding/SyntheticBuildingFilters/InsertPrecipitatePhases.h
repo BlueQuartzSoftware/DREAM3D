@@ -48,7 +48,7 @@
 #include "DREAM3DLib/StatsData/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "SyntheticBuilding/ShapeOps/ShapeOps.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"

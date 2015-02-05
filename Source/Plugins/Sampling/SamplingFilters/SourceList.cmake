@@ -12,13 +12,15 @@ START_FILTER_GROUP(${Sampling_BINARY_DIR} "${_filterGroupName}" "SamplingFilters
 
 set(_PublicFilters
   ChangeResolution
-  ExtractFlaggedFeatures
-  RegularGridSampleSurfaceMesh
-  UncertainRegularGridSampleSurfaceMesh
-  RegularizeZSpacing
-  RotateSampleRefFrame
   CropVolume
   CropSurfaceMesh
+  ExtractFlaggedFeatures
+ # RegularGridSampleSurfaceMesh
+  RegularizeZSpacing
+  RotateSampleRefFrame
+  NearestPointFuseRegularGrids
+ # UncertainRegularGridSampleSurfaceMesh
+  WarpRegularGrid
 )
 
 #--------------
@@ -35,8 +37,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-  SampleSurfaceMesh
-
+#  SampleSurfaceMesh
 )
 
 #-----------------

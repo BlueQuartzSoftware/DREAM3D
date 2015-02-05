@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
+#include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),
   m_YPoints(0),
@@ -121,7 +121,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;
@@ -163,12 +163,12 @@ void RegularGridSampleSurfaceMesh::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   // set volume datacontainer details
-  m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-  m->setOrigin(0.0, 0.0, 0.0);
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0.0, 0.0, 0.0);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   SampleSurfaceMesh::execute();
 

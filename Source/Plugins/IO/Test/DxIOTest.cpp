@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
@@ -99,8 +99,8 @@ int TestDxWriter()
 
   int err = 0;
 
-  // Use the helper class CreateVolumeDataContainer to generate a valid DataContainer
-  CreateVolumeDataContainer::Pointer createVolumeDC = CreateVolumeDataContainer::New();
+  // Use the helper class CreateDataContainer to generate a valid DataContainer
+  CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
   pipeline->pushBack(createVolumeDC);
   // Generate some "Feature Ids" inside that DataContainer
   GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
@@ -116,7 +116,7 @@ int TestDxWriter()
     // horribly gone wrong in which case the system is going to come down quickly after this.
     AbstractFilter::Pointer dxWriter = filterFactory->create();
 
-    DataArrayPath path = DataArrayPath(DREAM3D::Defaults::VolumeDataContainerName,
+    DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
                                        DREAM3D::Defaults::CellAttributeMatrixName,
                                        DREAM3D::CellData::FeatureIds);
     QVariant var;
@@ -180,15 +180,15 @@ int TestDxReader()
   size_t nz = 0;
 
 
-  VolumeDataContainer* m = dxReader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
-  DREAM3D_REQUIRED_PTR(m, != , NULL)
+  DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
+  DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
-  m->getDimensions(nx, ny, nz);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
-  IDataArray::Pointer mdata = dxReader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(DREAM3D::CellData::FeatureIds);
+  IDataArray::Pointer mdata = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(DREAM3D::CellData::FeatureIds);
 
   int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());

@@ -41,9 +41,8 @@
 #include <set>
 
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Geometry/TriangleGeom.h"
 
-#include "DREAM3DLib/DataContainers/VertexArray.h"
-#include "DREAM3DLib/DataContainers/FaceArray.hpp"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 
 
@@ -57,26 +56,28 @@ class TriangleOps
   public:
     virtual ~TriangleOps();
 
-    static int getLabelIndex(int32_t* t, int label);
+    static int getLabelIndex(int32_t* triLabels, int label);
 
-    QVector<int> getNodeIndices(FaceArray::Face_t& t, int32_t* faceLabel, int label);
+    QVector<int64_t> getNodeIndices(int64_t t[3], int32_t* faceLabel, int32_t label);
 
-    static void flipWinding(FaceArray::Face_t& triangle);
+    static void flipWinding(int64_t triangle[3]);
 
-    static VectorType computeNormal(VertexArray::Vert_t& n0, VertexArray::Vert_t& n1, VertexArray::Vert_t& n2);
+    static VectorType computeNormal(float n0[3], float n1[3], float n2[3]);
 
     static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>::Pointer faceLabelsPtr);
 
-    static QVector<int32_t> findAdjacentTriangles(FaceArray::Pointer facesPtr,
-                                                  int32_t triangleIndex,
-                                                  DataArray<int32_t>::Pointer faceLabelsPtr,
-                                                  int32_t label);
+    static QVector<int64_t> findAdjacentTriangles(TriangleGeom::Pointer triangles,
+                                                    int64_t triangleIndex,
+                                                    DataArray<int32_t>::Pointer faceLabelsPtr,
+                                                    int32_t label);
 
-    static bool verifyWinding(FaceArray::Face_t& source, FaceArray::Face_t& tri,
+    static bool verifyWinding(int64_t source[3], int64_t tri[3],
                               int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
 
 
-    static void getWindingIndices4(FaceArray::Face_t& triangle, int32_t* faceLabel, int ids[4], int32_t label);
+    static void getWindingIndices4(int64_t triangle[3],
+                                     int32_t* faceLabel,
+                                     int ids[4], int32_t label);
 
   protected:
     TriangleOps();

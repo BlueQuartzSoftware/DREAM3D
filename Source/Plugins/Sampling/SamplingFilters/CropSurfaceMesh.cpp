@@ -48,10 +48,10 @@
 // -----------------------------------------------------------------------------
 CropSurfaceMesh::CropSurfaceMesh() :
   AbstractFilter(),
-  m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
-  m_FaceAttributeMatrixPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
-  m_VertexAttributeMatrixPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, ""),
-  m_FaceFeatureAttributeMatrixPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, ""),
+  m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
+  m_FaceAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
+  m_VertexAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, ""),
+  m_FaceFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, ""),
   m_HasNodeData(false),
   m_HasFaceData(true),
   m_XMin(0),
@@ -62,7 +62,7 @@ CropSurfaceMesh::CropSurfaceMesh() :
   m_ZMax(0),
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -161,7 +161,7 @@ void CropSurfaceMesh::dataCheck()
 {
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* srcSurfDataContainer = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getFaceAttributeMatrixPath().getDataContainerName());
+DataContainer::Pointer srcSurfDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixPath().getDataContainerName());
   if (NULL == srcSurfDataContainer)
   {
     return;
@@ -180,12 +180,12 @@ void CropSurfaceMesh::dataCheck()
     faceAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceAttributeMatrixPath().getAttributeMatrixName());
     if(NULL == faceAttrMat) { return; }
   }
-  SurfaceDataContainer* destSurfDataContainer = srcSurfDataContainer;
+  DataContainer::Pointer destSurfDataContainer = srcSurfDataContainer;
   if(NULL == destSurfDataContainer) { return; }
 
   if (m_SaveAsNewDataContainer == true)
   {
-    destSurfDataContainer = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    destSurfDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
 
     if(m_HasNodeData == true)
     {
@@ -234,6 +234,12 @@ void CropSurfaceMesh::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -250,9 +256,27 @@ void CropSurfaceMesh::execute()
   //dataCheck();
   //if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* srcSurfDataContainer = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getFaceAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer srcSurfDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer nodeAttrMat = AttributeMatrix::NullPointer();
   AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::NullPointer();
+
+  IGeometry::Pointer geom = srcSurfDataContainer->getGeometry();
+  if(NULL == geom.get())
+  {
+    setErrorCondition(-385);
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  TriangleGeom::Pointer triangleGeom = srcSurfDataContainer->getGeometryAs<TriangleGeom>();
+  if(NULL == triangleGeom.get())
+  {
+    setErrorCondition(-384);
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   if(m_HasNodeData == true)
   {
@@ -264,12 +288,12 @@ void CropSurfaceMesh::execute()
     faceAttrMat = srcSurfDataContainer->getAttributeMatrix(getFaceAttributeMatrixPath().getAttributeMatrixName());
     if(NULL == faceAttrMat) { return; }
   }
-  SurfaceDataContainer* destSurfDataContainer = srcSurfDataContainer;
+  DataContainer::Pointer destSurfDataContainer = srcSurfDataContainer;
   if(NULL == destSurfDataContainer) { return; }
 
   if (m_SaveAsNewDataContainer == true)
   {
-    destSurfDataContainer = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    destSurfDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
 
     if(m_HasNodeData == true)
     {
@@ -293,13 +317,13 @@ void CropSurfaceMesh::execute()
     return;
   }
 
+
   // No matter where the AM is (same DC or new DC), we have the correct DC and AM pointers...now it's time to crop
-  VertexArray::Pointer vertices = srcSurfDataContainer->getVertices();
-  VertexArray::Vert_t* vertex = vertices->getPointer(0);
-  size_t numVerts = vertices->getNumberOfTuples();
-  FaceArray::Pointer faces = srcSurfDataContainer->getFaces();
-  FaceArray::Face_t* face = faces->getPointer(0);
-  size_t numFaces = faces->getNumberOfTuples();
+  //SharedVertexList::Pointer vertices = triangles->getVertices();
+  float* vertex = triangleGeom->getVertexPointer(0);
+  size_t numVerts = triangleGeom->getNumberOfVertices();
+  int64_t* face = triangleGeom->getTriPointer(0);
+  size_t numFaces = triangleGeom->getNumberOfTris();
 
   QList<QString> nodeArrayNames;
   if(m_HasNodeData == true) { nodeArrayNames = nodeAttrMat->getAttributeArrayNames(); }
@@ -315,14 +339,14 @@ void CropSurfaceMesh::execute()
   for (int64_t i = 0; i < numVerts; i++)
   {
     badNode = false;
-    if(vertex[i].pos[0] < m_XMin || vertex[i].pos[0] > m_XMax) { badNode = true; }
-    if(vertex[i].pos[1] < m_YMin || vertex[i].pos[1] > m_YMax) { badNode = true; }
-    if(vertex[i].pos[2] < m_ZMin || vertex[i].pos[2] > m_ZMax) { badNode = true; }
+    if(vertex[i*3] < m_XMin || vertex[i*3] > m_XMax) { badNode = true; }
+    if(vertex[i*3+1] < m_YMin || vertex[i*3+1] > m_YMax) { badNode = true; }
+    if(vertex[i*3+2] < m_ZMin || vertex[i*3+2] > m_ZMax) { badNode = true; }
     if(badNode == false)
     {
-      vertex[goodNodeCount].pos[0] = vertex[i].pos[0];
-      vertex[goodNodeCount].pos[1] = vertex[i].pos[1];
-      vertex[goodNodeCount].pos[2] = vertex[i].pos[2];
+      vertex[goodNodeCount*3] = vertex[i*3];
+      vertex[goodNodeCount*3+1] = vertex[i*3+1];
+      vertex[goodNodeCount*3+2] = vertex[i*3+2];
       newNNumbers[i] = goodNodeCount;
       for (QList<QString>::iterator iter = nodeArrayNames.begin(); iter != nodeArrayNames.end(); ++iter)
       {
@@ -333,7 +357,7 @@ void CropSurfaceMesh::execute()
       goodNodeCount++;
     }
   }
-  vertices->resizeArray(goodNodeCount);
+  triangleGeom->resizeVertexList(goodNodeCount);
   if(m_HasNodeData == true)
   {
     QVector<size_t> tDims(1, goodNodeCount);
@@ -350,15 +374,15 @@ void CropSurfaceMesh::execute()
   for (int64_t i = 0; i < numFaces; i++)
   {
     badFace = false;
-    node1 = face[i].verts[0];
-    node2 = face[i].verts[1];
-    node3 = face[i].verts[2];
+    node1 = face[i*3];
+    node2 = face[i*3+1];
+    node3 = face[i*3+2];
     if(newNNumbers[node1] == -1 || newNNumbers[node2] == -1 || newNNumbers[node3] == -1) { badFace = true; }
     if(badFace == false)
     {
-      face[goodFaceCount].verts[0] = newNNumbers[node1];
-      face[goodFaceCount].verts[1] = newNNumbers[node2];
-      face[goodFaceCount].verts[2] = newNNumbers[node3];
+      face[goodFaceCount*3] = newNNumbers[node1];
+      face[goodFaceCount*3+1] = newNNumbers[node2];
+      face[goodFaceCount*3+2] = newNNumbers[node3];
       newFNumbers[i] = goodFaceCount;
       for (QList<QString>::iterator iter = faceArrayNames.begin(); iter != faceArrayNames.end(); ++iter)
       {
@@ -369,7 +393,7 @@ void CropSurfaceMesh::execute()
       goodFaceCount++;
     }
   }
-  faces->resizeArray(goodFaceCount);
+  triangleGeom->resizeTriList(goodFaceCount);
   if(m_HasFaceData == true)
   {
     QVector<size_t> tDims(1, goodFaceCount);

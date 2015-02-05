@@ -45,10 +45,10 @@ Vector3<T>::Vector3(double x_, double y_, double z_)
 {}
 
 template<typename T>
-Vector3<T>::Vector3(VertexArray::Vert_t& node)
-  : x(static_cast<T>(node.pos[0])),
-    y(static_cast<T>(node.pos[1])),
-    z(static_cast<T>(node.pos[2]))
+Vector3<T>::Vector3(float *node)
+  : x(static_cast<T>(node[0])),
+    y(static_cast<T>(node[1])),
+    z(static_cast<T>(node[2]))
 {}
 
 //################## PUBLIC OPERATORS ##################//
@@ -125,9 +125,9 @@ double Vector3<T>::dot(Vector3& rhs)
 }
 
 template <typename T>
-double Vector3<T>::dot(VertexArray::Vert_t& rhs)
+double Vector3<T>::dot(float *rhs)
 {
-  return x * rhs.pos[0] + y * rhs.pos[1] + z * rhs.pos[2];
+  return x * rhs[0] + y * rhs[1] + z * rhs[2];
 }
 
 

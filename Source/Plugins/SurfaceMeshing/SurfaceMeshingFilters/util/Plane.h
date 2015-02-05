@@ -16,7 +16,6 @@
 #include <ostream>
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
-#include "DREAM3DLib/DataContainers/VertexArray.h"
 
 
 
@@ -51,7 +50,7 @@ class Plane
   public:
     Plane(VectorType& normal, double d);
     Plane(VectorType& normal, VectorType& x);
-    Plane(VectorType& normal, VertexArray::Vert_t& x);
+    Plane(VectorType& normal, float* x);
 
     //#################### PUBLIC METHODS ####################
   public:

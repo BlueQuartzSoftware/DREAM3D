@@ -39,6 +39,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QSet>
 #include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DREAM3DVersion.h"

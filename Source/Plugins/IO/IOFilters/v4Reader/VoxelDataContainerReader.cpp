@@ -171,9 +171,9 @@ void VoxelDataContainerReader::execute()
   { 1.0f, 1.0f, 1.0f };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  m->setDimensions(volDims[0], volDims[1], volDims[2]);
-  m->setResolution(spacing);
-  m->setOrigin(origin);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(volDims[0], volDims[1], volDims[2]);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(spacing);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(origin);
 
   if(m_VertexArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadVertexData = false; }
   if(m_EdgeArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadEdgeData = false; }
@@ -306,9 +306,9 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    m->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
-    m->setResolution(spacing);
-    m->setOrigin(origin);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(spacing);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(origin);
   }
 
   if(m_ReadVertexData == true)

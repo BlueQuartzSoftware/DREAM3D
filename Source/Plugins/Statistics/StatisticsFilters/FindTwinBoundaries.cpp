@@ -63,10 +63,11 @@ class CalculateTwinBoundaryImpl
     bool* m_TwinBoundary;
     float* m_TwinBoundaryIncoherence;
     unsigned int* m_CrystalStructures;
+    bool m_FindCoherence;
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
-    CalculateTwinBoundaryImpl(float angtol, float axistol, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundaryIncoherence) :
+    CalculateTwinBoundaryImpl(float angtol, float axistol, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundaryIncoherence, bool FindCoherence) :
       m_AxisTol(axistol),
       m_AngTol(angtol),
       m_Labels(Labels),
@@ -75,7 +76,8 @@ class CalculateTwinBoundaryImpl
       m_Quats(Quats),
       m_TwinBoundary(TwinBoundary),
       m_TwinBoundaryIncoherence(TwinBoundaryIncoherence),
-      m_CrystalStructures(CrystalStructures)
+      m_CrystalStructures(CrystalStructures),
+      m_FindCoherence(FindCoherence)
     {
       m_OrientationOps = OrientationOps::getOrientationOpsQVector();
     }
@@ -108,9 +110,12 @@ class CalculateTwinBoundaryImpl
       {
         feature1 = m_Labels[2 * i];
         feature2 = m_Labels[2 * i + 1];
-        normal[0] = m_Normals[3 * i];
-        normal[1] = m_Normals[3 * i + 1];
-        normal[2] = m_Normals[3 * i + 2];
+        if(m_FindCoherence)
+        {
+          normal[0] = m_Normals[3 * i];
+          normal[1] = m_Normals[3 * i + 1];
+          normal[2] = m_Normals[3 * i + 2];
+        }
         if(feature1 > 0 && feature2 > 0 && m_Phases[feature1] == m_Phases[feature2])
         {
           w = 10000.0;
@@ -126,14 +131,20 @@ class CalculateTwinBoundaryImpl
             QuaternionMathF::Conjugate(q2);
             QuaternionMathF::Multiply(q2, q1, misq);
             OrientationMath::QuattoMat(q1, g1);
-            MatrixMath::Multiply3x3with3x1(g1, normal, xstl_norm);
+          
+            if(m_FindCoherence)
+              MatrixMath::Multiply3x3with3x1(g1, normal, xstl_norm);
+
             for (int j = 0; j < nsym; j++)
             {
               m_OrientationOps[phase1]->getQuatSymOp(j, sym_q);
               //calculate crystal direction parallel to normal
               QuaternionMathF::Multiply(sym_q, misq, s1_misq);
-              OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
+
+              if(m_FindCoherence)
+                OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
               //QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm);
+              
               for (int k = 0; k < nsym; k++)
               {
                 //calculate the symmetric misorienation
@@ -150,9 +161,12 @@ class CalculateTwinBoundaryImpl
                   n[1] = n2;
                   n[2] = n3;
                   m_TwinBoundary[i] = true;
-                  incoherence = 180.0 * acos(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm)) / DREAM3D::Constants::k_Pi;
-                  if(incoherence > 90.0) { incoherence = 180.0 - incoherence; }
-                  if(incoherence < m_TwinBoundaryIncoherence[i]) { m_TwinBoundaryIncoherence[i] = incoherence; }
+                  if(m_FindCoherence)
+                  {
+                    incoherence = 180.0 * acos(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm)) / DREAM3D::Constants::k_Pi;
+                    if(incoherence > 90.0) { incoherence = 180.0 - incoherence; }
+                    if(incoherence < m_TwinBoundaryIncoherence[i]) { m_TwinBoundaryIncoherence[i] = incoherence; }
+                  }
                 }
               }
             }
@@ -176,11 +190,12 @@ FindTwinBoundaries::FindTwinBoundaries()  :
   AbstractFilter(),
   m_AxisTolerance(0.0),
   m_AngleTolerance(0.0),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_FindCoherence(true),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTwinBoundaryArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundary),
   m_SurfaceMeshTwinBoundaryIncoherenceArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundaryIncoherence),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
@@ -214,6 +229,11 @@ void FindTwinBoundaries::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Axis Tolerance", "AxisTolerance", FilterParameterWidgetType::DoubleWidget, getAxisTolerance(), false, "Degrees"));
   parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget, getAngleTolerance(), false, "Degrees"));
+
+  QStringList linkedProps;
+  linkedProps << "SurfaceMeshFaceNormalsArrayPath" << "SurfaceMeshTwinBoundaryIncoherenceArrayName";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Coherence", "FindCoherence", getFindCoherence(), linkedProps, false));
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
@@ -238,6 +258,7 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setAxisTolerance( reader->readValue("AxisTolerance", getAxisTolerance() ) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
+  setFindCoherence( reader->readValue("FindCoherence", getFindCoherence()) );
   reader->closeFilterGroup();
 }
 
@@ -256,6 +277,7 @@ int FindTwinBoundaries::writeFilterParameters(AbstractFilterParametersWriter* wr
   DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AxisTolerance)
   DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(FindCoherence)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -293,19 +315,28 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 3;
-  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  
+  if(getFindCoherence())
+  {
+    dims[0] = 3;
+    m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+
   dims[0] = 1;
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshTwinBoundaryArrayName() );
   m_SurfaceMeshTwinBoundaryPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshTwinBoundaryPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTwinBoundary = m_SurfaceMeshTwinBoundaryPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshTwinBoundaryIncoherenceArrayName() );
-  m_SurfaceMeshTwinBoundaryIncoherencePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 180.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTwinBoundaryIncoherencePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceMeshTwinBoundaryIncoherence = m_SurfaceMeshTwinBoundaryIncoherencePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(getFindCoherence())
+  {
+    tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshTwinBoundaryIncoherenceArrayName() );
+    m_SurfaceMeshTwinBoundaryIncoherencePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 180.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceMeshTwinBoundaryIncoherencePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceMeshTwinBoundaryIncoherence = m_SurfaceMeshTwinBoundaryIncoherencePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -320,6 +351,12 @@ void FindTwinBoundaries::preflight()
   dataCheckSurfaceMesh();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 // -----------------------------------------------------------------------------
 //
@@ -346,13 +383,13 @@ void FindTwinBoundaries::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
-                      CalculateTwinBoundaryImpl(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FeaturePhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence), tbb::auto_partitioner());
+                      CalculateTwinBoundaryImpl(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FeaturePhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence, m_FindCoherence), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    CalculateTwinBoundaryImpl serial(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FeaturePhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence);
+    CalculateTwinBoundaryImpl serial(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FeaturePhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence, m_FindCoherence);
     serial.generate(0, numTriangles);
   }
 

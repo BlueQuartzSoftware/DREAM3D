@@ -655,6 +655,51 @@ FloatVec21_t H5FilterParametersReader::readFloatVec21(const QString name, FloatV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+Float2ndOrderPoly_t H5FilterParametersReader::readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t defaultValue)
+{
+  int err = 0;
+  Float2ndOrderPoly_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0)
+  {
+    return defaultValue;
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Float3rdOrderPoly_t H5FilterParametersReader::readFloat3rdOrderPoly(const QString name, Float3rdOrderPoly_t defaultValue)
+{
+  int err = 0;
+  Float3rdOrderPoly_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0)
+  {
+    return defaultValue;
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Float4thOrderPoly_t H5FilterParametersReader::readFloat4thOrderPoly(const QString name, Float4thOrderPoly_t defaultValue)
+{
+  int err = 0;
+  Float4thOrderPoly_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0)
+  {
+    return defaultValue;
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
 {
 

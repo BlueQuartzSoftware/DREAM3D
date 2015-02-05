@@ -51,11 +51,14 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "DREAM3DLib/Plugin/PluginManager.h"
+#include "DREAM3DLib/Plugin/PluginProxy.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
 #include "QtSupport/QRecentFileList.h"
 
+#include "AboutPlugins.h"
 #include "DREAM3D_UI.h"
 
 // -----------------------------------------------------------------------------
@@ -136,10 +139,11 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   QMetaObjectUtilities::RegisterMetaTypes();
 
   // Load application plugins.
-  QVector<DREAM3DPluginInterface*> plugins = loadPlugins();
+  QVector<IDREAM3DPlugin*> plugins = loadPlugins();
 
   // Create main window.
   this->MainWindow = new DREAM3D_UI();
+
   this->MainWindow->setWindowTitle("[*] DREAM3D Version " + DREAM3DLib::Version::Package());
   this->MainWindow->setLoadedPlugins(plugins);
 
@@ -161,7 +165,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
+QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
 {
   QStringList pluginDirs;
   pluginDirs << qApp->applicationDirPath();
@@ -263,7 +267,16 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   // into their own plugin and load the plugins from a command line.
   fm->RegisterKnownFilters(fm);
 
-  QVector<DREAM3DPluginInterface*> loadedPlugins;
+  PluginManager* pluginManager = PluginManager::Instance();
+  QList<PluginProxy::Pointer> proxies = AboutPlugins::readPluginCache();
+  QMap<QString, bool> loadingMap;
+  for (QList<PluginProxy::Pointer>::iterator nameIter = proxies.begin(); nameIter != proxies.end(); nameIter++)
+  {
+    PluginProxy::Pointer proxy = *nameIter;
+    loadingMap.insert(proxy->getPluginName(), proxy->getEnabled());
+  }
+
+  fm->printFactoryNames();
 
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
@@ -274,19 +287,30 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
     QPluginLoader* loader = new QPluginLoader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    QObject* plugin = loader->instance();
+    QObject* plugin = loader->instance(); 
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin )
     {
-      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
+      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
       if (ipPlugin)
       {
-        QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
-        this->Splash->showMessage(msg);
-        //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
-        loadedPlugins.push_back(ipPlugin);
-        ipPlugin->registerFilterWidgets(fwm);
-        ipPlugin->registerFilters(fm);
+        QString pluginName = ipPlugin->getPluginName();
+        if (loadingMap.value(pluginName, true) == true)
+        {
+          QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
+          this->Splash->showMessage(msg);
+          //IDREAM3DPlugin::Pointer ipPluginPtr(ipPlugin);
+          ipPlugin->registerFilterWidgets(fwm);
+          ipPlugin->registerFilters(fm);
+          ipPlugin->setDidLoad(true);
+        }
+        else
+        {
+          ipPlugin->setDidLoad(false);
+        }
+
+        ipPlugin->setLocation(path);
+        pluginManager->addPlugin(ipPlugin);
       }
       m_PluginLoaders.push_back(loader);
     }
@@ -301,5 +325,8 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
     }
   }
 
-  return loadedPlugins;
+  return pluginManager->getPluginsVector();
 }
+
+
+

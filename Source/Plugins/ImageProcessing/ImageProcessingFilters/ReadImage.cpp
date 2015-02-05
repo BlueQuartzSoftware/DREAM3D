@@ -72,7 +72,7 @@ class ReadImagePrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(ReadImage* filter, QString inputFile, IDataArray::Pointer outputIDataArray, VolumeDataContainer* m, QString attrMatName)
+    void static Execute(ReadImage* filter, QString inputFile, IDataArray::Pointer outputIDataArray, DataContainer::Pointer m, QString attrMatName)
     {
       typename DataArrayType::Pointer outputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(outputIDataArray);
 
@@ -174,7 +174,7 @@ class ReadImagePrivate
 ReadImage::ReadImage() :
   AbstractFilter(),
   m_InputFileName(""),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ImageData(NULL)
@@ -283,18 +283,20 @@ void ReadImage::dataCheck()
 
   //determine if container/attribute matrix already exist. if so check size compatibility
   DataArrayPath createdPath;
-  VolumeDataContainer* m;
+  DataContainer::Pointer m;
   AttributeMatrix::Pointer cellAttrMat;
   createdPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName() );
 
-  m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  m = getDataContainerArray()->getDataContainer(getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   bool createAttributeMatrix = false;
 
   if( NULL == m) //datacontainer doesn't exist->create
   {
-    m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-    m->setDimensions(xdim, ydim, zdim);
+    m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+    m->setGeometry(image);
+    m->getGeometryAs<ImageGeom>()->setDimensions(xdim, ydim, zdim);
     double zRes = 1;
     double zOrigin = 0;
     if(3 == numDimensions)
@@ -302,14 +304,17 @@ void ReadImage::dataCheck()
       zRes = imageIO->GetSpacing(2);
       zOrigin = imageIO->GetOrigin(2);
     }
-    m->setResolution(imageIO->GetSpacing(0), imageIO->GetSpacing(0), zRes);
-    m->setOrigin(imageIO->GetOrigin(0), imageIO->GetOrigin(1), zOrigin);
+    m->getGeometryAs<ImageGeom>()->setResolution(imageIO->GetSpacing(0), imageIO->GetSpacing(0), zRes);
+    m->getGeometryAs<ImageGeom>()->setOrigin(imageIO->GetOrigin(0), imageIO->GetOrigin(1), zOrigin);
     createAttributeMatrix = true;
     if(getErrorCondition() < 0) { return; }
   }
   else   //datacontainer exists, check if attribute matrix exists
   {
-    if(m->doesAttributeMatrixExist(getCellAttributeMatrixName()))//attribute matrix exists, check compatibility
+    bool dcExists = m->doesAttributeMatrixExist(getCellAttributeMatrixName());
+    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+
+    if(dcExists &&  NULL != image.get())//attribute matrix exists, check compatibility
     {
       //get matrix
       cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), false);
@@ -352,7 +357,7 @@ void ReadImage::dataCheck()
         }
       }
     }
-    else//attribute matrix doesn't exist, create
+    else //attribute matrix doesn't exist, create
     {
       createAttributeMatrix = true;
     }
@@ -475,6 +480,12 @@ void ReadImage::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -493,7 +504,7 @@ void ReadImage::execute()
   }
 
   //get volume container
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   //get input and output data
   IDataArray::Pointer imageData = m_ImageDataPtr.lock();

@@ -146,6 +146,12 @@ void VtkRectilinearGridWriter::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -188,7 +194,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 int VtkRectilinearGridWriter::write(const QString& file)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedAttributeMatrixPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedAttributeMatrixPath.getDataContainerName());
 
   int err = 0;
   FILE* f = NULL;
@@ -200,19 +206,19 @@ int VtkRectilinearGridWriter::write(const QString& file)
   // Write the correct header
   if(m_WriteBinaryFile == true)
   {
-    WRITE_RECTILINEAR_GRID_HEADER("BINARY", m, m->getXPoints() + 1, m->getYPoints() + 1, m->getZPoints() + 1)
+    WRITE_RECTILINEAR_GRID_HEADER("BINARY", m, /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() + 1, /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() + 1, /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() + 1)
   }
   else
   {
-    WRITE_RECTILINEAR_GRID_HEADER("ASCII", m, m->getXPoints() + 1, m->getYPoints() + 1, m->getZPoints() + 1)
+    WRITE_RECTILINEAR_GRID_HEADER("ASCII", m, /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() + 1, /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() + 1, /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() + 1)
   }
 
   // Write the Coordinate Points
-  VtkRectilinearGridWriter::WriteCoords(f, "X_COORDINATES", "float", m->getXPoints() + 1, 0.0f - m->getXRes() * 0.5f, (float)(m->getXPoints() + 1 * m->getXRes()), m->getXRes(), m_WriteBinaryFile);
-  VtkRectilinearGridWriter::WriteCoords(f, "Y_COORDINATES", "float", m->getYPoints() + 1, 0.0f - m->getYRes() * 0.5f, (float)(m->getYPoints() + 1 * m->getYRes()), m->getYRes(), m_WriteBinaryFile);
-  VtkRectilinearGridWriter::WriteCoords(f, "Z_COORDINATES", "float", m->getZPoints() + 1, 0.0f - m->getZRes() * 0.5f, (float)(m->getZPoints() + 1 * m->getZRes()), m->getZRes(), m_WriteBinaryFile);
+  VtkRectilinearGridWriter::WriteCoords(f, "X_COORDINATES", "float", /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() + 1, 0.0f - /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * 0.5f, (float)(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() + 1 * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes()), /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes(), m_WriteBinaryFile);
+  VtkRectilinearGridWriter::WriteCoords(f, "Y_COORDINATES", "float", /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() + 1, 0.0f - /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * 0.5f, (float)(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() + 1 * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes()), /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes(), m_WriteBinaryFile);
+  VtkRectilinearGridWriter::WriteCoords(f, "Z_COORDINATES", "float", /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() + 1, 0.0f - /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes() * 0.5f, (float)(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() + 1 * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes()), /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes(), m_WriteBinaryFile);
 
-  int64_t totalPoints = m->getXPoints() * m->getYPoints() * m->getZPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)totalPoints);
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_SelectedAttributeMatrixPath);

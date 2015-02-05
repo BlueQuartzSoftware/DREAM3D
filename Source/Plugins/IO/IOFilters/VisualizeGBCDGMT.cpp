@@ -56,7 +56,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   AbstractFilter(),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
-  m_GBCDArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
+  m_GBCDArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
@@ -145,7 +145,7 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName(), false);
+DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getGBCDArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if(getCrystalStructure() == Ebsd::CrystalStructure::UnknownCrystalStructure)
@@ -183,18 +183,34 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
     setOutputFile(absPath);
   }
 
-  // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
-  {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-  }
-
-  // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  IGeometry::Pointer geom = sm->getGeometry();
+  if(NULL == geom.get())
   {
     setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
+  if(NULL == triangles.get())
+  {
+    setErrorCondition(-384);
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
+  {
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+  }
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
+  {
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   else
   {
@@ -228,6 +244,12 @@ void VisualizeGBCDGMT::preflight()
   dataCheckSurfaceMesh();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +263,7 @@ void VisualizeGBCDGMT::execute()
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getGBCDArrayPath().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getGBCDArrayPath().getDataContainerName());
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
@@ -267,11 +289,6 @@ void VisualizeGBCDGMT::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  // size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();

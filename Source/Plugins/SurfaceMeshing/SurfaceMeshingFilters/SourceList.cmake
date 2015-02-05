@@ -12,13 +12,14 @@ START_FILTER_GROUP(${SurfaceMeshing_BINARY_DIR} "${_filterGroupName}" "Surface M
 
 set(_PublicFilters
   FindGBCD
-  GenerateSurfaceMeshConnectivity
+  FindBoundaryAreas
+  GenerateGeometryConnectivity
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
   GenerateFaceSchuhMisorientationColoring
-  LaplacianSmoothing
-  M3CSliceBySlice
-  MovingFiniteElementSmoothing
+
+#  M3CSliceBySlice
+#  MovingFiniteElementSmoothing
   QuickSurfaceMesh
   ReverseTriangleWinding
   SharedFeatureFaceFilter
@@ -26,7 +27,10 @@ set(_PublicFilters
   TriangleCentroidFilter
   TriangleDihedralAngleFilter
   TriangleNormalFilter
-  VerifyTriangleWinding
+
+# These filters rely on Unique Edges which does not work.
+#  LaplacianSmoothing
+#  VerifyTriangleWinding
 )
 
 if(EIGEN_FOUND)
@@ -85,8 +89,8 @@ ADD_DREAM3D_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util
 ADD_DREAM3D_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/TriangleOps.h)
 ADD_DREAM3D_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/TriangleOps.cpp)
 
-ADD_DREAM3D_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/Exception.h)
-ADD_DREAM3D_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/InvalidParameterException.h)
+#ADD_DREAM3D_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/Exception.h)
+#ADD_DREAM3D_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} util/InvalidParameterException.h)
 
 
 

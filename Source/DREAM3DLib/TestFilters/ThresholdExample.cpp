@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 ThresholdExample::ThresholdExample() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
 {
   setupFilterParameters();

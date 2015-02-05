@@ -51,7 +51,7 @@ AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
   m_OutputFile(""),
   m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -134,6 +134,12 @@ void AvizoRectilinearCoordinateWriter::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -198,7 +204,7 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getDimensions(x, y, z);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getDimensions(x, y, z);
   ss << "define Lattice " << (qint64)x << " " << (qint64)y << (qint64)z << "\n";
   ss << "define Coordinates " << (qint64)(x + y + z) << "\n\n";
 
@@ -212,9 +218,9 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "         Coordinates \"microns\"\n";
   ss << "     }\n";
   float origin[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getOrigin(origin);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getOrigin(origin);
   float res[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getResolution(res);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getResolution(res);
 
   ss << "     CoordType \"rectilinear\"\n";
   ss << "}\n\n";
@@ -230,20 +236,20 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
 // -----------------------------------------------------------------------------
 int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t dims[3];
-  m->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
   float origin[3];
-  m->getOrigin(origin);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(origin);
   float res[3];
-  m->getResolution(res);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
 
   QString start("@1 # FeatureIds in z, y, x with X moving fastest, then Y, then Z\n");
   out << start;
   if (true == m_WriteBinaryFile)
   {
     out.writeRawData(reinterpret_cast<char*>(m_FeatureIds), m_FeatureIdsPtr.lock()->getNumberOfTuples() * sizeof(int32_t));
-    //writer.writeArray(m_FeatureIds, getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints());
+    //writer.writeArray(m_FeatureIds, getDataContainerArray()->getDataContainer(getDataContainerName())->getTotalPoints());
     out << "\n";
   }
   else

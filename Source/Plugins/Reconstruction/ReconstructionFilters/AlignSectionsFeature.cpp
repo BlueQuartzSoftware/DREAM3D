@@ -62,7 +62,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 AlignSectionsFeature::AlignSectionsFeature() :
   AlignSections(),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL)
 {
@@ -146,6 +146,12 @@ void AlignSectionsFeature::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -170,7 +176,7 @@ void AlignSectionsFeature::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   ofstream outFile;
   if (getWriteAlignmentShifts() == true)
@@ -178,7 +184,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int>& xshifts, std::vector<in
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else

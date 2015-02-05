@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 FindCAxisLocations::FindCAxisLocations() :
   AbstractFilter(),
-  m_QuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
+  m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
@@ -126,6 +126,12 @@ void FindCAxisLocations::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

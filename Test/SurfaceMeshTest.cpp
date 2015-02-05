@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
   int err = 0;
   SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
-  sm->setName(DREAM3D::Defaults::SurfaceDataContainerName);
+  sm->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(sm);
 

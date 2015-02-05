@@ -68,7 +68,7 @@ class RGBToGrayPrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(RGBToGray* filter, IDataArray::Pointer inputIDataArray, IDataArray::Pointer outputIDataArray, FloatVec3_t weights, VolumeDataContainer* m, QString attrMatName)
+    void static Execute(RGBToGray* filter, IDataArray::Pointer inputIDataArray, IDataArray::Pointer outputIDataArray, FloatVec3_t weights, DataContainer::Pointer m, QString attrMatName)
     {
       typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(inputIDataArray);
       typename DataArrayType::Pointer outputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(outputIDataArray);
@@ -196,7 +196,7 @@ void RGBToGray::dataCheck()
 
   //check for required arrays
   QVector<size_t> compDims(1, 3);
-  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, tempPath, compDims);
+  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter>()(this, tempPath, compDims);
   if(NULL != m_SelectedCellArrayPtr.lock().get())
   {
     m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
@@ -209,7 +209,7 @@ void RGBToGray::dataCheck()
 
 #if 0
   //get type
-  QString typeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName())->getAttributeMatrix(getSelectedCellArrayArrayPath().getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName())->getTypeAsString();;
+  QString typeName = getDataContainerArray()->getDataContainer(getSelectedCellArrayArrayPath().getDataContainerName())->getAttributeMatrix(getSelectedCellArrayArrayPath().getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName())->getTypeAsString();;
   int type = TemplateUtilities::getTypeFromTypeName(typeName);
 
   //create new array of same type
@@ -217,11 +217,11 @@ void RGBToGray::dataCheck()
   TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, type);
 #endif
 
-  VolumeDataContainer* dc = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );
+DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer am = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayArrayPath().getAttributeMatrixName(), 80000);
   if(getErrorCondition() < 0) { return; }
-  IDataArray::Pointer data = am->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
+  IDataArray::Pointer data = am->getPrereqIDataArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
   if(getErrorCondition() < 0) { return; }
   compDims[0] = 1;
   //configured created name / location
@@ -246,6 +246,12 @@ void RGBToGray::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -264,7 +270,7 @@ void RGBToGray::execute()
   }
 
   //get volume container
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedCellArrayArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayArrayPath().getAttributeMatrixName();
 
   //get input and output data

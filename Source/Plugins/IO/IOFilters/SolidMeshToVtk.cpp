@@ -124,11 +124,11 @@ void SolidMeshToVtk::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-  VolumeDataContainer* sm = getVolumeDataContainer();
+  DataContainer::Pointer sm = getDataContainer();
   if (NULL == sm)
   {
     setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "DataContainer is missing", getErrorCondition());
   }
   else
   {

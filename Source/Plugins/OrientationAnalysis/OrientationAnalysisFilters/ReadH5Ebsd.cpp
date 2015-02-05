@@ -75,7 +75,7 @@
 // -----------------------------------------------------------------------------
 ReadH5Ebsd::ReadH5Ebsd() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_PhaseNameArrayName(""),
@@ -169,7 +169,7 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m)
+int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m)
 {
   int err = 0;
   /* Sanity check what we are trying to load to make sure it can fit in our address space.
@@ -318,7 +318,7 @@ void ReadH5Ebsd::dataCheck()
     return;
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(NULL, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
@@ -360,8 +360,8 @@ void ReadH5Ebsd::dataCheck()
   size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
   //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
   dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
-  m->setDimensions(dcDims);
-  m->setResolution(res);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dcDims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(res);
 
   //Update the size fo the Cell Attribute Matrix now that the dimensions of the volume are known
   tDims.resize(3);
@@ -472,6 +472,12 @@ void ReadH5Ebsd::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -481,7 +487,7 @@ void ReadH5Ebsd::execute()
 {
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   int err = 0;
   setErrorCondition(err);
@@ -497,11 +503,11 @@ void ReadH5Ebsd::execute()
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
 
     size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
-    m->setDimensions(dcDims);
-    m->setResolution(res);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dcDims);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
-    m->setDimensions(dcDims);
+    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dcDims);
     manufacturer = volumeInfoReader->getManufacturer();
     m_RefFrameZDir = volumeInfoReader->getStackingOrder();
     m_SampleTransformation.angle = volumeInfoReader->getSampleTransformationAngle();
@@ -547,7 +553,7 @@ void ReadH5Ebsd::execute()
 
   // Initialize all the arrays with some default values
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   {
     QString ss = QObject::tr("Initializing %1 voxels").arg(totalPoints);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -560,7 +566,7 @@ void ReadH5Ebsd::execute()
   ebsdReader->setSliceEnd(m_ZEndIndex);
   ebsdReader->readAllArrays(false);
   ebsdReader->setArraysToRead(m_SelectedArrayNames);
-  err = ebsdReader->loadData(m->getXPoints(), m->getYPoints(), m->getZPoints(), m_RefFrameZDir);
+  err = ebsdReader->loadData(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints(), /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints(), /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints(), m_RefFrameZDir);
   if(err < 0)
   {
     setErrorCondition(err);
@@ -842,16 +848,16 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
   QVector<size_t> tDims(3, 0);
-  tDims[0] = m->getXPoints();
-  tDims[1] = m->getYPoints();
-  tDims[2] = m->getZPoints();
+  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   QVector<size_t> cDims(1, 1);
   if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end() )
   {
@@ -944,15 +950,15 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
   QVector<size_t> tDims(3, 0);
-  tDims[0] = m->getXPoints();
-  tDims[1] = m->getYPoints();
-  tDims[2] = m->getZPoints();
+  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   QVector<size_t> cDims(1, 1);
   phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
   iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
@@ -1049,15 +1055,15 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
   QVector<size_t> tDims(3, 0);
-  tDims[0] = m->getXPoints();
-  tDims[1] = m->getYPoints();
-  tDims[2] = m->getZPoints();
+  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   float x, y;
   float xMin = 10000000;
@@ -1071,7 +1077,7 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
     if(x < xMin) { xMin = x; }
     if(y < yMin) { yMin = y; }
   }
-  m->setOrigin(xMin, yMin, 0.0);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, 0.0);
   QVector<size_t> cDims(1, 3);
   if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end() )
   {

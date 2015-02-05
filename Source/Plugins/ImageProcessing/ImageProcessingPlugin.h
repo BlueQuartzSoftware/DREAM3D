@@ -37,7 +37,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
 
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 
 
 /**
@@ -47,11 +47,11 @@
  * @date
  * @version 1.0
  */
-class ImageProcessingPlugin : public QObject, public DREAM3DPluginInterface
+class ImageProcessingPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
 
-    Q_INTERFACES(DREAM3DPluginInterface)
+    Q_INTERFACES(IDREAM3DPlugin)
 
   public:
     ImageProcessingPlugin();
@@ -60,6 +60,73 @@ class ImageProcessingPlugin : public QObject, public DREAM3DPluginInterface
      * @brief Returns the name of the plugin
      */
     virtual QString getPluginName();
+
+    /**
+     * @brief Returns the version
+     */
+    virtual QString getVersion();
+
+     /**
+     * @brief Returns the compatibility version
+     */
+    virtual QString getCompatibilityVersion();
+
+     /**
+     * @brief Returns the name of the vendor
+     */
+    virtual QString getVendor();
+
+    /**
+     * @brief Returns the URL of the plugin
+     */
+    virtual QString getURL();
+
+    /**
+     * @brief Returns the location of the plugin
+     */
+    virtual QString getLocation();
+
+    /**
+     * @brief Returns the description of the plugin
+     */
+    virtual QString getDescription();
+
+    /**
+     * @brief Returns the copyright of the plugin
+     */
+    virtual QString getCopyright();
+
+    /**
+     * @brief Returns the license of the plugin
+     */
+    virtual QString getLicense();
+
+    /**
+     * @brief Returns the filters of the plugin
+     */
+    virtual QList<QString> getFilters();
+
+    /**
+     * @brief Returns the third party licenses of the plugin
+     */
+    virtual QMap<QString, QString> getThirdPartyLicenses();
+
+    /**
+     * @brief Returns the load status of the plugin
+     */
+    virtual bool getDidLoad();
+
+    /**
+     * @brief Sets the load status of the plugin
+     */
+    virtual void setDidLoad(bool didLoad);
+
+    /**
+     * @brief Sets the location of the plugin on the file system.
+     * This is required so that we can cache the file path information
+     * as the plugin is loaded.
+     */
+    virtual void setLocation(QString filePath);
 
     /**
      * @brief Register all the filters with the FilterWidgetFactory
@@ -87,6 +154,15 @@ class ImageProcessingPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings& prefs);
 
   private:
+    QString             m_Version;
+    QString             m_CompatibilityVersion;
+    QString             m_Vendor;
+    QString             m_URL;
+    QString             m_Location;
+    QString             m_Copyright;
+    QList<QString>      m_Filters;
+    bool				m_DidLoad;
+
     ImageProcessingPlugin(const ImageProcessingPlugin&); // Copy Constructor Not Implemented
     void operator=(const ImageProcessingPlugin&); // Operator '=' Not Implemented
 };

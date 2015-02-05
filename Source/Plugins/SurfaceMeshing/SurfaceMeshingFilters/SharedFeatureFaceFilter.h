@@ -73,6 +73,12 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
     Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
+    Q_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
+    Q_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
@@ -143,6 +149,8 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
 
     SharedFeatureFaceFilter(const SharedFeatureFaceFilter&); // Copy Constructor Not Implemented
     void operator=(const SharedFeatureFaceFilter&); // Operator '=' Not Implemented

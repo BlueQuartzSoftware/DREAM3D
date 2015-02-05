@@ -5,6 +5,9 @@
 
 #include "@PluginName@Plugin.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -17,14 +20,23 @@ Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin)
 namespace Detail
 {
   const QString @PluginName@PluginFile("@PluginName@Plugin");
-  const QString @PluginName@PluginDisplayName("@PluginName@Plugin");
+  const QString @PluginName@PluginDisplayName("@PluginName@");
   const QString @PluginName@PluginBaseName("@PluginName@Plugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-@PluginName@Plugin::@PluginName@Plugin()
+@PluginName@Plugin::@PluginName@Plugin() :
+m_Version("Version Number"),                            // Initialize @PluginName@'s Version Number Here
+m_CompatibilityVersion("Compatibility Version Number"), // Initialize @PluginName@'s Compatibility Version Number Here
+m_Vendor("Vendor Name"),                                // Initialize @PluginName@'s Vendor Name Here
+m_URL("URL"),                                           // Initialize Company URL Here
+m_Location("Location"),                                 // Initialize Company Location Here
+m_Description("Description"),                           // Initialize @PluginName@'s Description Here
+m_Copyright("Copyright"),                               // Initialize @PluginName@'s Copyright Here
+m_Filters(QList<QString>()),                        // Initialize @PluginName@'s List of Dependencies Here
+m_DidLoad(false)
 {
 
 }
@@ -42,6 +54,162 @@ namespace Detail
 QString @PluginName@Plugin::getPluginName()
 {
   return (Detail::@PluginName@PluginDisplayName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getVersion()
+{
+  return m_Version;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getCompatibilityVersion()
+{
+  return m_CompatibilityVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getVendor()
+{
+  return m_Vendor;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getURL()
+{
+  return m_URL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getLocation()
+{
+  return m_Location;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getDescription()
+{
+  /* PLEASE UPDATE YOUR PLUGIN'S DESCRIPTION FILE.
+  It is located at @PluginName@/Resources/@PluginName@/@PluginName@Description.txt */
+
+  QFile licenseFile(":/@PluginName@/@PluginName@Description.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getCopyright()
+{
+  return m_Copyright;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @PluginName@Plugin::getLicense()
+{
+  /* PLEASE UPDATE YOUR PLUGIN'S LICENSE FILE.
+  It is located at @PluginName@/Resources/@PluginName@/@PluginName@License.txt */
+
+  QFile licenseFile(":/@PluginName@/@PluginName@License.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--License was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> @PluginName@Plugin::getFilters()
+{
+  return m_Filters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, QString> @PluginName@Plugin::getThirdPartyLicenses()
+{
+  QMap<QString, QString> licenseMap;
+  QList<QString> fileStrList;
+  fileStrList.push_back(":/ThirdParty/HDF5.txt");
+  fileStrList.push_back(":/ThirdParty/Boost.txt");
+  fileStrList.push_back(":/ThirdParty/Qt.txt");
+  fileStrList.push_back(":/ThirdParty/Qwt.txt");
+
+  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  {
+    QFile file(*iter);
+    QFileInfo licenseFileInfo(file);
+
+    if ( licenseFileInfo.exists() )
+    {
+      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      {
+        QTextStream in(&file);
+        licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
+      }
+    }
+  }
+
+  return licenseMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool @PluginName@Plugin::getDidLoad()
+{
+  return m_DidLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Plugin::setDidLoad(bool didLoad)
+{
+  m_DidLoad = didLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void @PluginName@Plugin::setLocation(QString filePath)
+{
+  m_Location = filePath;
 }
 
 // -----------------------------------------------------------------------------

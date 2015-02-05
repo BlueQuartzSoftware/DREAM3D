@@ -254,7 +254,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  m_DataContainer = VolumeDataContainer::New();
+  m_DataContainer = DataContainer::New();
   dca->addDataContainer(m_DataContainer);
 
   //      QSet<QString> selectedArrays;
@@ -289,7 +289,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   int err = reader->getErrorCondition();
   if(err < 0)
   {
-    m_DataContainer = VolumeDataContainer::NullPointer();
+    m_DataContainer = DataContainer::NullPointer();
     QMessageBox::critical(this, tr("DREAM.3D"), tr("The DREAM3D Data File could not be read."), QMessageBox::Ok, QMessageBox::Ok);
     return;
   }
@@ -297,7 +297,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   IDataArray::Pointer iPtr = m_DataContainer->getAttributeMatrix("CellEnsembleData")->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
   if (NULL == iPtr.get())
   {
-    m_DataContainer = VolumeDataContainer::NullPointer();
+    m_DataContainer = DataContainer::NullPointer();
     QMessageBox::critical(this, tr("DREAM.3D"), tr("The Ensemble Array 'PhaseTypes' was not found in the File"), QMessageBox::Ok, QMessageBox::Ok);
     return;
   }
@@ -678,9 +678,9 @@ void InitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter*
   m_XPoints->setValue( filter->getXVoxels() );
   m_YPoints->setValue( filter->getYVoxels() );
   m_ZPoints->setValue( filter->getZVoxels() );
-  m_XResolution->setValue( filter->getXRes() );
-  m_YResolution->setValue( filter->getYRes() );
-  m_ZResolution->setValue( filter->getZRes() );
+  m_XResolution->setValue( /* FIXME: ImageGeom */ filter->getGeometryAs<ImageGeom>()->getXRes() );
+  m_YResolution->setValue( /* FIXME: ImageGeom */ filter->getGeometryAs<ImageGeom>()->getYRes() );
+  m_ZResolution->setValue( /* FIXME: ImageGeom */ filter->getGeometryAs<ImageGeom>()->getZRes() );
 
   QVector<uint32_t> shapeTypes = filter->getShapeTypes();
   int count = shapeTypes.size();

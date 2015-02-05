@@ -57,7 +57,7 @@ class FindUniqueIdsImpl
 {
 
   public:
-    FindUniqueIdsImpl(VertexArray::Vert_t* vertex, QVector<QVector<size_t> > nodesInBin, int32_t* uniqueIds) :
+    FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<QVector<size_t> > nodesInBin, int64_t* uniqueIds) :
       m_Vertex(vertex),
       m_NodesInBin(nodesInBin),
       m_UniqueIds(uniqueIds)
@@ -66,6 +66,7 @@ class FindUniqueIdsImpl
 
     void convert(size_t start, size_t end) const
     {
+      float* verts = m_Vertex->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
         for(int j = 0; j < m_NodesInBin[i].size(); j++)
@@ -76,7 +77,7 @@ class FindUniqueIdsImpl
             for(int k = j + 1; k < m_NodesInBin[i].size(); k++)
             {
               size_t node2 = m_NodesInBin[i][k];
-              if(m_Vertex[node1].pos[0] == m_Vertex[node2].pos[0] && m_Vertex[node1].pos[1] == m_Vertex[node2].pos[1] && m_Vertex[node1].pos[2] == m_Vertex[node2].pos[2])
+              if(verts[node1*3] == verts[node2*3] && verts[node1*3+1] == verts[node2*3+1] && verts[node1*3+2] == verts[node2*3+2])
               {
                 m_UniqueIds[node2] = node1;
               }
@@ -93,9 +94,9 @@ class FindUniqueIdsImpl
     }
 #endif
   private:
-    VertexArray::Vert_t* m_Vertex;
+    SharedVertexList::Pointer m_Vertex;
     QVector<QVector<size_t> > m_NodesInBin;
-    int32_t* m_UniqueIds;
+    int64_t* m_UniqueIds;
 
 };
 
@@ -105,7 +106,7 @@ class FindUniqueIdsImpl
 // -----------------------------------------------------------------------------
 ReadStlToSurfaceMesh::ReadStlToSurfaceMesh() :
   AbstractFilter(),
-  m_SurfaceMeshDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_SurfaceMeshDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_StlFilePath(""),
   m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
@@ -193,13 +194,13 @@ void ReadStlToSurfaceMesh::dataCheck()
   }
 
   //// Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceMeshDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
-  sm->setVertices(vertices);
-  sm->setFaces(triangles);
+  SharedVertexList::Pointer sharedVertList = TriangleGeom::CreateSharedVertexList(1);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, sharedVertList, DREAM3D::Geometry::TriangleGeometry);
+
+  sm->setGeometry(triangleGeom);
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
@@ -223,6 +224,12 @@ void ReadStlToSurfaceMesh::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -250,7 +257,7 @@ void ReadStlToSurfaceMesh::readFile()
 {
   int err = 0;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshDataContainerName);
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
   //Open File
   FILE* f = fopen(m_StlFilePath.toLatin1().data(), "rb");
@@ -268,10 +275,18 @@ void ReadStlToSurfaceMesh::readFile()
   fread(&triCount, sizeof(int), 1, f);
 
   //create the nodes and triangles array for the surface mesh
-  VertexArray::Pointer vertices = VertexArray::CreateArray(triCount * 3, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(triCount, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
-  VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
-  FaceArray::Face_t* triangle = triangles.get()->getPointer(0);
+//  VertexArray::Pointer vertices = VertexArray::CreateArray(triCount * 3, DREAM3D::VertexData::SurfaceMeshNodes);
+//  FaceArray::Pointer triangles = FaceArray::CreateArray(triCount, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
+//  VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
+//  FaceArray::Face_t* triangle = triangles.get()->getPointer(0);
+
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
+  triangleGeom->resizeTriList(triCount);
+  triangleGeom->resizeVertexList(triCount*3);
+  float* nodes = triangleGeom->getVertexPointer(0);
+  int64_t* triangles = triangleGeom->getTriPointer(0);
+
+  sm->setGeometry(triangleGeom);
 
   //Resize the triangle attribute matrix to hold the normals and update the normals pointer
   QVector<size_t> tDims(1, triCount);
@@ -309,22 +324,19 @@ void ReadStlToSurfaceMesh::readFile()
     m_SurfaceMeshTriangleNormals[3 * t + 0] = v[0];
     m_SurfaceMeshTriangleNormals[3 * t + 1] = v[1];
     m_SurfaceMeshTriangleNormals[3 * t + 2] = v[2];
-    vertex[3 * t + 0].pos[0] = v[3];
-    vertex[3 * t + 0].pos[1] = v[4];
-    vertex[3 * t + 0].pos[2] = v[5];
-    vertex[3 * t + 1].pos[0] = v[6];
-    vertex[3 * t + 1].pos[1] = v[7];
-    vertex[3 * t + 1].pos[2] = v[8];
-    vertex[3 * t + 2].pos[0] = v[9];
-    vertex[3 * t + 2].pos[1] = v[10];
-    vertex[3 * t + 2].pos[2] = v[11];
-    triangle[t].verts[0] = 3 * t + 0;
-    triangle[t].verts[1] = 3 * t + 1;
-    triangle[t].verts[2] = 3 * t + 2;
+    nodes[3 * (3 * t + 0) + 0] = v[3];
+    nodes[3 * (3 * t + 0) + 1] = v[4];
+    nodes[3 * (3 * t + 0) + 2] = v[5];
+    nodes[3 * (3 * t + 1) + 0] = v[6];
+    nodes[3 * (3 * t + 1) + 1] = v[7];
+    nodes[3 * (3 * t + 1) + 2] = v[8];
+    nodes[3 * (3 * t + 2) + 0] = v[9];
+    nodes[3 * (3 * t + 2) + 1] = v[10];
+    nodes[3 * (3 * t + 2) + 2] = v[11];
+    triangles[t * 3] = 3 * t + 0;
+    triangles[t * 3 + 1] = 3 * t + 1;
+    triangles[t * 3 + 2] = 3 * t + 2;
   }
-
-  sm->setFaces(triangles);
-  sm->setVertices(vertices);
 
   return;
 }
@@ -336,14 +348,20 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
 {
   int err = 0;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshDataContainerName);
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-  int nNodes = nodesPtr->getNumberOfTuples();
-  VertexArray::Vert_t* vertex = nodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
-  FaceArray::Pointer facesPtr = sm->getFaces();
-  int nTriangles = facesPtr->getNumberOfTuples();
-  FaceArray::Face_t* triangle = facesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
+  float* vertex = triangleGeom->getVertexPointer(0);
+  int64_t nNodes = triangleGeom->getNumberOfVertices();
+  int64_t* triangles = triangleGeom->getTriPointer(0);
+  int64_t nTriangles = triangleGeom->getNumberOfTris();
+
+//  VertexArray::Pointer nodesPtr = sm->getVertices();
+//  int nNodes = nodesPtr->getNumberOfTuples();
+//  VertexArray::Vert_t* vertex = nodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
+//  FaceArray::Pointer facesPtr = sm->getFaces();
+//  int nTriangles = facesPtr->getNumberOfTuples();
+//  FaceArray::Face_t* triangle = facesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   float stepX = (m_maxXcoord - m_minXcoord) / 100.0;
   float stepY = (m_maxYcoord - m_minYcoord) / 100.0;
@@ -353,11 +371,11 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
 
   //determine (xyz) bin each node falls in - used to speed up node comparison
   int bin, xBin, yBin, zBin;
-  for(size_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes; i++)
   {
-    xBin = (vertex[i].pos[0] - m_minXcoord) / stepX;
-    yBin = (vertex[i].pos[1] - m_minYcoord) / stepY;
-    zBin = (vertex[i].pos[2] - m_minZcoord) / stepZ;
+    xBin = (vertex[i*3] - m_minXcoord) / stepX;
+    yBin = (vertex[i*3+1] - m_minYcoord) / stepY;
+    zBin = (vertex[i*3+2] - m_minZcoord) / stepZ;
     if(xBin == 100) { xBin = 99; }
     if(yBin == 100) { yBin = 99; }
     if(zBin == 100) { zBin = 99; }
@@ -366,8 +384,8 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   }
 
   //Create array to hold unique node numbers
-  Int32ArrayType::Pointer uniqueIdsPtr = Int32ArrayType::CreateArray(nNodes, "uniqueIds");
-  int32_t* uniqueIds = uniqueIdsPtr->getPointer(0);
+  Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, "uniqueIds");
+  int64_t* uniqueIds = uniqueIdsPtr->getPointer(0);
   for(size_t i = 0; i < nNodes; i++)
   {
     uniqueIds[i] = i;
@@ -383,19 +401,19 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, 100 * 100 * 100),
-                      FindUniqueIdsImpl(vertex, nodesInBin, uniqueIds), tbb::auto_partitioner());
+                      FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    FindUniqueIdsImpl serial(vertex, nodesInBin, uniqueIds);
+    FindUniqueIdsImpl serial(triangleGeom->getVertices(), nodesInBin, uniqueIds);
     serial.convert(0, 100 * 100 * 100);
   }
 
   //renumber the unique nodes
-  size_t uniqueCount = 0;
-  for(size_t i = 0; i < nNodes; i++)
+  int64_t uniqueCount = 0;
+  for(int64_t i = 0; i < nNodes; i++)
   {
     if(uniqueIds[i] == i)
     {
@@ -409,25 +427,25 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   }
 
   //Move nodes to unique Id and then resize nodes array
-  for(size_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes; i++)
   {
-    vertex[uniqueIds[i]].pos[0] = vertex[i].pos[0];
-    vertex[uniqueIds[i]].pos[1] = vertex[i].pos[1];
-    vertex[uniqueIds[i]].pos[2] = vertex[i].pos[2];
+    vertex[uniqueIds[i]*3] = vertex[i*3];
+    vertex[uniqueIds[i]*3+1] = vertex[i*3+1];
+    vertex[uniqueIds[i]*3+2] = vertex[i*3+2];
   }
-  nodesPtr->resizeArray(uniqueCount);
+  triangleGeom->resizeVertexList(uniqueCount);
 
   //Update the triangle nodes to reflect the unique ids
-  size_t node1, node2, node3;
-  for(size_t i = 0; i < nTriangles; i++)
+  int64_t node1, node2, node3;
+  for(int64_t i = 0; i < nTriangles; i++)
   {
-    node1 = triangle[i].verts[0];
-    node2 = triangle[i].verts[1];
-    node3 = triangle[i].verts[2];
+    node1 = triangles[i*3];
+    node2 = triangles[i*3+1];
+    node3 = triangles[i*3+2];
 
-    triangle[i].verts[0] = uniqueIds[node1];
-    triangle[i].verts[1] = uniqueIds[node2];
-    triangle[i].verts[2] = uniqueIds[node3];
+    triangles[i*3] = uniqueIds[node1];
+    triangles[i*3+1] = uniqueIds[node2];
+    triangles[i*3+2] = uniqueIds[node3];
   }
 }
 

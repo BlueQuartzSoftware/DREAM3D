@@ -36,6 +36,9 @@
 
 #include "IOPlugin.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -48,14 +51,22 @@ Q_EXPORT_PLUGIN2(IOPlugin, IOPlugin)
 namespace Detail
 {
   const QString IOPluginFile("IOPlugin");
-  const QString IOPluginDisplayName("IOPlugin");
+  const QString IOPluginDisplayName("IO");
   const QString IOPluginBaseName("IOPlugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IOPlugin::IOPlugin()
+IOPlugin::IOPlugin() :
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
+m_Location(""),
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
+m_Filters(QList<QString>()),
+  m_DidLoad(false)
 {
 
 }
@@ -73,6 +84,156 @@ IOPlugin::~IOPlugin()
 QString IOPlugin::getPluginName()
 {
   return (Detail::IOPluginDisplayName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getVersion()
+{
+  return m_Version;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getCompatibilityVersion()
+{
+  return m_CompatibilityVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getVendor()
+{
+  return m_Vendor;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getURL()
+{
+  return m_URL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getLocation()
+{
+  return m_Location;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getDescription()
+{
+  QFile licenseFile(":/IO/IODescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getCopyright()
+{
+  return m_Copyright;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getLicense()
+{
+  QFile licenseFile(":/DREAM3D/DREAM3DLicense.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--License was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> IOPlugin::getFilters()
+{
+  return m_Filters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, QString> IOPlugin::getThirdPartyLicenses()
+{
+  QMap<QString, QString> licenseMap;
+  QList<QString> fileStrList;
+  fileStrList.push_back(":/ThirdParty/HDF5.txt");
+  fileStrList.push_back(":/ThirdParty/Boost.txt");
+  fileStrList.push_back(":/ThirdParty/Qt.txt");
+  fileStrList.push_back(":/ThirdParty/Qwt.txt");
+
+  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  {
+    QFile file(*iter);
+    QFileInfo licenseFileInfo(file);
+
+    if ( licenseFileInfo.exists() )
+    {
+      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      {
+        QTextStream in(&file);
+        licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
+      }
+    }
+  }
+
+  return licenseMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool IOPlugin::getDidLoad()
+{
+  return m_DidLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IOPlugin::setDidLoad(bool didLoad)
+{
+  m_DidLoad = didLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IOPlugin::setLocation(QString filePath)
+{
+  m_Location = filePath;
 }
 
 // -----------------------------------------------------------------------------

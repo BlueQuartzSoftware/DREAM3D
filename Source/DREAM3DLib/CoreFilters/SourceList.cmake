@@ -23,6 +23,7 @@ set(_PublicFilters
   ConvertData
   CopyFeatureArrayToCellArray
   CreateFeatureArrayFromCellArray
+  ExtractComponentAsArray
   LinkFeatureMapToCellArray
   RemoveArrays
   RenameAttributeMatrix

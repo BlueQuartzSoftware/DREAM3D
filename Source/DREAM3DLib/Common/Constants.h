@@ -64,7 +64,12 @@ namespace DREAM3D
   static const uint8_t PartiallyChecked = 1;
   static const uint8_t Checked = 2;
 
-
+  namespace BlueQuartz
+  {
+    const QString VendorName("BlueQuartz Software, LLC");
+    const QString URL("http://www.bluequartz.net");
+    const QString Copyright("(C) 2015 BlueQuartz Software, LLC");
+  }
 
   namespace TypeNames
   {
@@ -82,7 +87,6 @@ namespace DREAM3D
     const QString UnknownType("UnknownType");
     const QString SupportedTypeList(TypeNames::Int8 + ", " + TypeNames::UInt8 + ", " + TypeNames::Int16 + ", " + TypeNames::UInt16 + ", " + TypeNames::Int32 + ", " + TypeNames::UInt32 + ", " + TypeNames::Int64 + ", " + TypeNames::UInt64 + ", " + TypeNames::Float + ", " + TypeNames::Double);
   }
-
 
   namespace Defaults
   {

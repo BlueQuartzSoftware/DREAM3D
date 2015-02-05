@@ -11,6 +11,8 @@ START_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics")
 # List your public filters here
 
 set(_PublicFilters
+  CorrelateValuesWithVectorDirection
+  CalculateArrayHistogram
   FindBasalLoadingFactor
   FindAvgCAxes
   FindAvgOrientations
@@ -29,6 +31,7 @@ set(_PublicFilters
   FindLocalAverageCAxisMisalignments
   FindMicroTextureRegions
   FindMisorientations
+  FindModulusMismatch
   FindNeighborhoods
   FindNeighbors
   FindNumFeatures

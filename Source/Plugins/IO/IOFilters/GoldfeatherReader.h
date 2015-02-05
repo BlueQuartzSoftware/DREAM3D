@@ -53,7 +53,7 @@
  * @date
  * @version 1.0
  */
-class  GoldfeatherReader : public AbstractFilter
+class GoldfeatherReader : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -84,8 +84,10 @@ class  GoldfeatherReader : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFaceNormalsArrayName)
     Q_PROPERTY(QString SurfaceMeshFaceNormalsArrayName READ getSurfaceMeshFaceNormalsArrayName WRITE setSurfaceMeshFaceNormalsArrayName)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

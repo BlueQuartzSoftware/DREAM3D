@@ -51,7 +51,7 @@
 // -----------------------------------------------------------------------------
 LammpsFileWriter::LammpsFileWriter() :
   AbstractFilter(),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
+  m_VertexDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_LammpsFile("")
 {
   setupFilterParameters();
@@ -112,11 +112,31 @@ void LammpsFileWriter::dataCheck(bool preflight)
     notifyErrorMessage(getHumanLabel(), "Lammps Output file is Not set correctly", -1003);
   }
 
-  VertexDataContainer* v = getDataContainerArray()->getPrereqDataContainer<VertexDataContainer, AbstractFilter>(this, m_VertexDataContainerName);
+  DataContainer::Pointer v = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_VertexDataContainerName);
   if(getErrorCondition() < 0) { return; }
 
+
+  IGeometry::Pointer geom = v->getGeometry();
+  if(NULL == geom.get())
+  {
+    setErrorCondition(-385);
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  VertexGeom::Pointer vertices = v->getGeometryAs<VertexGeom>();
+  if(NULL == vertices.get())
+  {
+    setErrorCondition(-384);
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+
   // We MUST have Nodes
-  if(v->getVertices().get() == NULL)
+  if(NULL == vertices->getVertices().get())
   {
     setErrorCondition(-384);
     notifyErrorMessage(getHumanLabel(), "VertexDataContainer missing Nodes", getErrorCondition());
@@ -146,21 +166,20 @@ void LammpsFileWriter::execute()
   dataCheck(false);
   if(getErrorCondition() < 0) { return; }
 
-  VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
 
-  //pull down faces
-  VertexArray::Pointer vertices = v->getVertices();
-  int numAtoms = vertices->getNumberOfTuples();
+  VertexGeom::Pointer vertices = v->getGeometryAs<VertexGeom>();
+
+  int64_t numAtoms = vertices->getNumberOfVertices();
 
   // Open the output VTK File for writing
   FILE* lammpsFile = NULL;
   lammpsFile = fopen(m_LammpsFile.toLatin1().data(), "wb");
   if (NULL == lammpsFile)
   {
-
-    QString ss = QObject::tr(": Error creating Triangles VTK Visualization '%1'").arg(m_LammpsFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -666);
+    QString ss = QObject::tr(": Error creating LAMMPS output file '%1'").arg(getLammpsFile());
+    setErrorCondition(-11000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -174,7 +193,7 @@ void LammpsFileWriter::execute()
   int atomType = 1;
   float pos[3] = {0.0f, 0.0f, 0.0f};
 
-  for (int i = 0; i < numAtoms; i++)
+  for (int64_t i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
     if(pos[0] < xMin) { xMin = pos[0]; }
@@ -187,7 +206,7 @@ void LammpsFileWriter::execute()
 
   fprintf(lammpsFile, "LAMMPS data file from restart file: timestep = 1, procs = 4\n");
   fprintf(lammpsFile, "\n");
-  fprintf(lammpsFile, "%d atoms\n", numAtoms);
+  fprintf(lammpsFile, "%lld atoms\n", (long long int)(numAtoms) );
   fprintf(lammpsFile, "\n");
   fprintf(lammpsFile, "1 atom types\n");
   fprintf(lammpsFile, "\n");
@@ -203,7 +222,7 @@ void LammpsFileWriter::execute()
   fprintf(lammpsFile, "\n");
 
   // Write the Atom positions (Vertices)
-  for (int i = 0; i < numAtoms; i++)
+  for (int64_t i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
     fprintf(lammpsFile, "%d %d %f %f %f %d %d %d\n", i, atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file

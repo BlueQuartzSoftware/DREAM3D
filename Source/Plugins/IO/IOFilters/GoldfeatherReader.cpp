@@ -60,7 +60,7 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 GoldfeatherReader::GoldfeatherReader() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_SurfaceMeshPrincipalCurvature1sArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),
@@ -89,14 +89,17 @@ void GoldfeatherReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   /*   For an input file use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    ////parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+//  {
+//    FilterParameter::Pointer parameter = FileSystemFilterParameter::New();
+//    parameter->setHumanLabel("Input File");
+//    parameter->setPropertyName("InputFile");
+//    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
+//    ////parameter->setValueType("QString");
+//    parameters.push_back(parameter);
+//  }
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.jg"));
+
+
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("SurfaceDataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("VertexAttributeMatrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
@@ -117,6 +120,7 @@ void GoldfeatherReader::setupFilterParameters()
 void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
   setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
@@ -190,7 +194,7 @@ void GoldfeatherReader::dataCheck()
 {
   DataArrayPath tempPath;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
@@ -213,11 +217,10 @@ void GoldfeatherReader::dataCheck()
   }
 
 
-  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
+  SharedVertexList::Pointer sharedVertList = TriangleGeom::CreateSharedVertexList(1);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, sharedVertList, DREAM3D::Geometry::TriangleGeometry);
 
-  sm->setVertices(vertices);
-  sm->setFaces(triangles);
+  sm->setGeometry(triangleGeom);
 
   QVector<size_t> dims(1, 3);
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeNormalsArrayName() );
@@ -225,6 +228,7 @@ void GoldfeatherReader::dataCheck()
   if( NULL != m_SurfaceMeshNodeNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeNormals = m_SurfaceMeshNodeNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  dims[0] = 1;
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature1sArrayName() );
   m_SurfaceMeshPrincipalCurvature1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshPrincipalCurvature1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -235,6 +239,7 @@ void GoldfeatherReader::dataCheck()
   if( NULL != m_SurfaceMeshPrincipalCurvature2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  dims[0]= 3;
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName() );
   m_SurfaceMeshPrincipalDirection1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshPrincipalDirection1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -284,7 +289,7 @@ void GoldfeatherReader::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
   FILE* f = fopen(m_InputFile.toLatin1().data(), "r");
   if (NULL == f)
@@ -299,11 +304,10 @@ void GoldfeatherReader::execute()
   fscanf(f, "%d\n", &nNodes);
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
-  VertexArray::Pointer nodesPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
-  nodesPtr->initializeWithZeros();
-  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
-
-  sm->setVertices(nodesPtr);
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
+  triangleGeom->resizeVertexList(nNodes);
+  triangleGeom->initializeWithZeros();
+  float* nodes = triangleGeom->getVertexPointer(0);
 
   QVector<size_t> tDims(1, nNodes);
   sm->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
@@ -313,9 +317,9 @@ void GoldfeatherReader::execute()
   for(int n = 0; n < nNodes; ++n)
   {
     fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2);
-    nodes[n].pos[0] = x;
-    nodes[n].pos[1] = y;
-    nodes[n].pos[2] = z;
+    nodes[n*3] = x;
+    nodes[n*3+1] = y;
+    nodes[n*3+2] = z;
     m_SurfaceMeshNodeNormals[n * 3 + 0] = n0;
     m_SurfaceMeshNodeNormals[n * 3 + 1] = n1;
     m_SurfaceMeshNodeNormals[n * 3 + 2] = n2;
@@ -342,10 +346,8 @@ void GoldfeatherReader::execute()
     return;
   }
 
-  FaceArray::Pointer trianglesPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces, nodesPtr.get());
-  FaceArray& triangles = *(trianglesPtr);
-
-  sm->setFaces(trianglesPtr);
+  triangleGeom->resizeTriList(nTriangles);
+  int64_t* triangles = triangleGeom->getTriPointer(0);
 
   tDims[0] = nTriangles;
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);
@@ -354,9 +356,9 @@ void GoldfeatherReader::execute()
   for(int t = 0; t < nTriangles; ++t)
   {
     fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2);
-    triangles[t].verts[0] = x;
-    triangles[t].verts[1] = y;
-    triangles[t].verts[2] = z;
+    triangles[t*3] = x;
+    triangles[t*3+1] = y;
+    triangles[t*3+2] = z;
     //  triangles[t].tIndex = t;
     m_SurfaceMeshFaceLabels[t * 2] = 0;
     m_SurfaceMeshFaceLabels[t * 2 + 1] = 1;
@@ -368,3 +370,18 @@ void GoldfeatherReader::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GoldfeatherReader::newFilterInstance(bool copyFilterParameters)
+{
+  GoldfeatherReader::Pointer filter = GoldfeatherReader::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+

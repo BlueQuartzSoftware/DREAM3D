@@ -48,7 +48,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "OrientationLib/Math/OrientationMath.h"
-#include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
+#include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
@@ -208,11 +208,11 @@ class InsertAtomsImpl
 // -----------------------------------------------------------------------------
 InsertAtoms::InsertAtoms() :
   AbstractFilter(),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
+  m_VertexDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_Basis(0),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
@@ -314,7 +314,7 @@ void InsertAtoms::dataCheck()
 {
   DataArrayPath tempPath;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
+DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   VertexDataContainer* v = getDataContainerArray()->createNonPrereqDataContainer<VertexDataContainer, AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
@@ -367,6 +367,12 @@ void InsertAtoms::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -383,7 +389,7 @@ void InsertAtoms::execute()
   latticeConstants.y = m_LatticeConstants.y / 10000.0;
   latticeConstants.z = m_LatticeConstants.z / 10000.0;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   DREAM3D_RANDOMNG_NEW()
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -453,11 +459,11 @@ void InsertAtoms::execute()
   }
 
   //generate the list of sampling points fom subclass
-  QVector<VertexArray::Pointer> points(numFeatures);
+  QVector<FloatArrayType> points(numFeatures);
   QVector<BoolArrayType::Pointer> inFeature(numFeatures);
   for(int i = 0; i < numFeatures; i++)
   {
-    points[i] = VertexArray::CreateArray(0, "points");
+    points[i] = FloatArrayType::CreateArray(0, "points");
     inFeature[i] = BoolArrayType::CreateArray(0, "inside");
   }
 
@@ -487,7 +493,7 @@ void InsertAtoms::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertAtoms::assign_points(QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature)
+void InsertAtoms::assign_points(QVector<FloatArrayType::Pointer> points, QVector<BoolArrayType::Pointer> inFeature)
 {
   size_t count = 0;
   size_t numFeatures = points.size();
@@ -502,7 +508,7 @@ void InsertAtoms::assign_points(QVector<VertexArray::Pointer> points, QVector<Bo
   }
 
   notifyStatusMessage(getHumanLabel(), "Getting VDC");
-  VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
 
   notifyStatusMessage(getHumanLabel(), "Creating Verts");
   VertexArray::Pointer vertices = VertexArray::CreateArray(count, DREAM3D::VertexData::SurfaceMeshNodes);

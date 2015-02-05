@@ -187,7 +187,7 @@ void M3CEntireVolume::execute()
   }
 
   setErrorCondition(0);
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   size_t totalFeatures = m->getNumFeatureTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
   dataCheck();
@@ -279,11 +279,11 @@ int M3CEntireVolume::createMesh()
   int tnIEdge; // number of endges inside marching square...
 
   float res[3];
-  m->getResolution(res);
-  int64_t totalPoints = m->getTotalPoints();
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   size_t dims[3] =
   { 0, 0, 0 };
-  m->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   size_t fileDim[3] = {dims[0], dims[1], dims[2]};
   size_t posDim[3] = {fileDim[0] + 1, fileDim[1] + 1, fileDim[2] + 1};

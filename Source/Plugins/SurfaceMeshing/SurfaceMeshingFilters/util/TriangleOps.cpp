@@ -37,7 +37,7 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 
 namespace SM = DREAM3D::SurfaceMesh;
@@ -56,29 +56,27 @@ TriangleOps::~TriangleOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int32_t> TriangleOps::findAdjacentTriangles(FaceArray::Pointer facesPtr,
-                                                    int32_t triangleIndex,
+QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triangles,
+                                                    int64_t triangleIndex,
                                                     DataArray<int32_t>::Pointer faceLabelsPtr,
                                                     int32_t label)
 {
-  QVector<int32_t> adjacentTris;
-  // Get the master list of triangles for the mesh
-//  FaceArray::Pointer facesPtr = sm->getFaces();
-//  if(facesPtr == NULL)
-//  {
-//    return adjacentTris;
-//  }
-//  FaceArray::Face_t* faces = facesPtr->getPointer(0);
-//  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
-// DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  QVector<int64_t> adjacentTris;
+
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
+  #warning Check for Triangle Neighbors if they actually exist
+
   // Get the Triangle Neighbor Structure
-  Int32DynamicListArray::Pointer triNeighbors = facesPtr->getFaceNeighbors();
+  CellDynamicList::Pointer triNeighbors = triangles->getCellNeighbors();
+  if(NULL == triNeighbors.get())
+  {
+    return adjacentTris;
+  }
 
   // For the specific triangle that was passed, get its neighbor list
   uint16_t count = triNeighbors->getNumberOfElements(triangleIndex);
-  int32_t* nList = triNeighbors->getElementListPointer(triangleIndex);
+  int64_t* nList = triNeighbors->getElementListPointer(triangleIndex);
 
   if (count < 3)
   {
@@ -114,33 +112,33 @@ QVector<int32_t> TriangleOps::findAdjacentTriangles(FaceArray::Pointer facesPtr,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(FaceArray::Face_t& triangle,
+void TriangleOps::getWindingIndices4(int64_t triangle[3],
                                      int32_t* faceLabel,
                                      int ids[4], int32_t label)
 {
-  int idx = TriangleOps::getLabelIndex(faceLabel, label);
+  int64_t idx = TriangleOps::getLabelIndex(faceLabel, label);
 
   if (idx == 1)
   {
-    ids[0] = triangle.verts[2];
-    ids[1] = triangle.verts[1];
-    ids[2] = triangle.verts[0];
-    ids[3] = triangle.verts[2];
+    ids[0] = triangle[2];
+    ids[1] = triangle[1];
+    ids[2] = triangle[0];
+    ids[3] = triangle[2];
   }
   else
   {
-    ids[0] = triangle.verts[0];
-    ids[1] = triangle.verts[1];
-    ids[2] = triangle.verts[2];
-    ids[3] = triangle.verts[0];
+    ids[0] = triangle[0];
+    ids[1] = triangle[1];
+    ids[2] = triangle[2];
+    ids[3] = triangle[0];
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(FaceArray::Face_t& source,
-                                FaceArray::Face_t& tri,
+bool TriangleOps::verifyWinding(int64_t source[3],
+                                int64_t tri[3],
                                 int32_t* faceLabelSource,
                                 int32_t* faceLabelTri,
                                 int32_t label)
@@ -186,31 +184,31 @@ bool TriangleOps::verifyWinding(FaceArray::Face_t& source,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleOps::getLabelIndex(int32_t* t, int label)
+int TriangleOps::getLabelIndex(int32_t* triLabels, int label)
 {
-  if (label == t[0]) { return 0; }
-  if (label == t[1]) { return 1; }
+  if (label == triLabels[0]) { return 0; }
+  if (label == triLabels[1]) { return 1; }
   return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int> TriangleOps::getNodeIndices(FaceArray::Face_t& t, int32_t* faceLabel, int label)
+QVector<int64_t> TriangleOps::getNodeIndices(int64_t t[3], int32_t* faceLabel, int32_t label)
 {
-  QVector<int > tNodes(3);
-  int idx = TriangleOps::getLabelIndex(faceLabel, label);
+  QVector<int64_t> tNodes(3);
+  int64_t idx = TriangleOps::getLabelIndex(faceLabel, label);
   if (idx == 1)
   {
-    tNodes[0] = t.verts[2];
-    tNodes[1] = t.verts[1];
-    tNodes[2] = t.verts[0];
+    tNodes[0] = t[2];
+    tNodes[1] = t[1];
+    tNodes[2] = t[0];
   }
   else
   {
-    tNodes[0] = t.verts[0];
-    tNodes[1] = t.verts[1];
-    tNodes[2] = t.verts[2];
+    tNodes[0] = t[0];
+    tNodes[1] = t[1];
+    tNodes[2] = t[2];
   }
   return tNodes;
 }
@@ -218,17 +216,17 @@ QVector<int> TriangleOps::getNodeIndices(FaceArray::Face_t& t, int32_t* faceLabe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::flipWinding(FaceArray::Face_t& t)
+void TriangleOps::flipWinding(int64_t t[3])
 {
-  int tmp = t.verts[0];
-  t.verts[0] = t.verts[2];
-  t.verts[2] = tmp;
+  int tmp = t[0];
+  t[0] = t[2];
+  t[2] = tmp;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorType TriangleOps::computeNormal(VertexArray::Vert_t& n0, VertexArray::Vert_t& n1, VertexArray::Vert_t& n2)
+VectorType TriangleOps::computeNormal(float n0[3], float n1[3], float n2[3])
 {
   double vert0[3];
   double vert1[3];
@@ -237,17 +235,17 @@ VectorType TriangleOps::computeNormal(VertexArray::Vert_t& n0, VertexArray::Vert
   double w[3];
   double normal[3];
 
-  vert0[0] = static_cast<float>(n0.pos[0]);
-  vert0[1] = static_cast<float>(n0.pos[1]);
-  vert0[2] = static_cast<float>(n0.pos[2]);
+  vert0[0] = static_cast<float>(n0[0]);
+  vert0[1] = static_cast<float>(n0[1]);
+  vert0[2] = static_cast<float>(n0[2]);
 
-  vert1[0] = static_cast<float>(n1.pos[0]);
-  vert1[1] = static_cast<float>(n1.pos[1]);
-  vert1[2] = static_cast<float>(n1.pos[2]);
+  vert1[0] = static_cast<float>(n1[0]);
+  vert1[1] = static_cast<float>(n1[1]);
+  vert1[2] = static_cast<float>(n1[2]);
 
-  vert2[0] = static_cast<float>(n2.pos[0]);
-  vert2[1] = static_cast<float>(n2.pos[1]);
-  vert2[2] = static_cast<float>(n2.pos[2]);
+  vert2[0] = static_cast<float>(n2[0]);
+  vert2[1] = static_cast<float>(n2[1]);
+  vert2[2] = static_cast<float>(n2[2]);
 
   //
   // Compute the normal

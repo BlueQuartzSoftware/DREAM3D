@@ -46,7 +46,7 @@ AbaqusHexahedronWriter::AbaqusHexahedronWriter() :
   AbstractFilter(),
   m_OutputPath(""),
   m_FilePrefix("default"),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_HourglassStiffness(250),
   m_JobName(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -124,7 +124,7 @@ void AbaqusHexahedronWriter::dataCheck()
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Now make sure we have a VolumeDataContainer
-  VolumeDataContainer* dc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
   if (NULL == dc)
   {
     setErrorCondition(-12002);
@@ -135,7 +135,7 @@ void AbaqusHexahedronWriter::dataCheck()
   if(NULL != m_FeatureIdsPtr.lock().get() && NULL != dc )
   {
     size_t volDims[3] = { 0, 0, 0};
-    dc->getDimensions(volDims);
+    /* FIXME: ImageGeom */ dc->getGeometryAs<ImageGeom>()->getDimensions(volDims);
     size_t volTuples = volDims[0] * volDims[1] * volDims[2];
 
     if (volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples() )
@@ -160,6 +160,12 @@ void AbaqusHexahedronWriter::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -182,16 +188,16 @@ void AbaqusHexahedronWriter::execute()
     return;
   }
 
-  VolumeDataContainer* r = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer r = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t cDims[3] = { 0, 0, 0 };
-  r->getDimensions(cDims);
+  /* FIXME: ImageGeom */ r->getGeometryAs<ImageGeom>()->getDimensions(cDims);
   size_t pDims[3] = { cDims[0] + 1, cDims[1] + 1, cDims[2] + 1 };
   float origin[3] = { 0.0f, 0.0f, 0.0f };
-  r->getOrigin(origin);
+  /* FIXME: ImageGeom */ r->getGeometryAs<ImageGeom>()->getOrigin(origin);
   float spacing[3] = { 0.0f, 0.0f, 0.0f };
-  r->getResolution(spacing);
-  size_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
+  /* FIXME: ImageGeom */ r->getGeometryAs<ImageGeom>()->getResolution(spacing);
+  size_t totalPoints = /* FIXME: ImageGeom */ r->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ r->getGeometryAs<ImageGeom>()->getYPoints() * /* FIXME: ImageGeom */ r->getGeometryAs<ImageGeom>()->getZPoints();
 
   // Create file names
   QString nodesFile = m_OutputPath + QDir::separator() + m_FilePrefix + "_nodes.inp";

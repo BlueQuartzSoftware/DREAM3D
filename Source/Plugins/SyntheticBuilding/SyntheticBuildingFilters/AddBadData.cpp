@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
   AbstractFilter(),
-  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
+  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
   m_PoissonNoise(false),
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),
@@ -136,6 +136,12 @@ void AddBadData::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -164,13 +170,13 @@ void  AddBadData::add_noise()
   notifyStatusMessage(getHumanLabel(), "Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getGBEuclideanDistancesArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName());
 
   QString attMatName = getGBEuclideanDistancesArrayPath().getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attMatName)->getAttributeArrayNames();
 
   float random = 0.0;
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
     if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)

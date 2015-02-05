@@ -1,5 +1,12 @@
 
 
+if( "${DREAM3D_EXTRA_PLUGINS}" STREQUAL "")
+ set(DREAM3D_EXTRA_PLUGINS "" CACHE STRING "")
+else()
+  set(DREAM3D_EXTRA_PLUGINS ${DREAM3D_EXTRA_PLUGINS} CACHE STRING "")
+endif()
+
+
 # --------------------------------------------------------------------
 # This function optionally compiles a named plugin when compiling DREAM3D
 # This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
@@ -100,6 +107,18 @@ endfunction()
 #-----------------
 # These are the core plugins that need to be built
 set(DREAM3D_BASE_PLUGINS
+  Generic
+  IO
+  DDDAnalysisToolbox
+  ImageImport
+  OrientationAnalysis
+  Processing
+  Reconstruction
+  Sampling
+  Statistics
+  SurfaceMeshing
+  SyntheticBuilding
+  EMMPM
 )
 
 

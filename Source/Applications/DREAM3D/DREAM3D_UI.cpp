@@ -44,6 +44,7 @@
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
 #include <QtCore/QDateTime>
+#include <QtCore/QProcess>
 #include <QtGui/QApplication>
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
@@ -77,6 +78,7 @@
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
 #include "AboutDREAM3D.h"
+#include "AboutPlugins.h"
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
@@ -105,7 +107,8 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_FilterLibraryBtn(NULL),
   m_FavoritesBtn(NULL),
   m_PrebuiltBtn(NULL),
-  m_IssuesBtn(NULL)
+  m_IssuesBtn(NULL),
+  m_ShouldRestart(false)
 {
   // First thing, set the title of the window
   setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
@@ -140,6 +143,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
+
+  // Turn off "About Plugins" menu item until it is ready and functional.
+  //actionAbout_Plugins->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -216,6 +222,12 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
     writeSettings();
     on_actionClearPipeline_triggered();
     event->accept();
+  }
+
+  if (m_ShouldRestart == true)
+  {
+    // Restart DREAM3D
+    QProcess::startDetached(QApplication::applicationFilePath());
   }
 }
 
@@ -803,7 +815,7 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setLoadedPlugins(QVector<DREAM3DPluginInterface*> plugins)
+void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 {
   m_LoadedPlugins = plugins;
 }
@@ -855,7 +867,38 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
   setWindowModified(false);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionAbout_Plugins_triggered()
+{
+  AboutPlugins dialog(this);
+  dialog.exec();
 
+  // Write cache on exit
+  dialog.writePluginCache();
+
+  /* If any of the load checkboxes were changed, display a dialog warning
+   * the user that they must restart DREAM3D to see the changes.
+   */
+  if (dialog.getLoadPreferencesDidChange() == true)
+  {
+    QMessageBox msgBox;
+    msgBox.setText("DREAM3D must be restarted to allow these changes to take effect.");
+    msgBox.setInformativeText("Restart?");
+    msgBox.setWindowTitle("Restart Needed");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    int choice = msgBox.exec();
+
+    if (choice == QMessageBox::Yes)
+    {
+      // Set Restart Flag and Begin closing DREAM3D
+      m_ShouldRestart = true;
+      this->close();
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------
 //

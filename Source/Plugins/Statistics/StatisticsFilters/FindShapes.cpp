@@ -45,9 +45,9 @@
 
 FindShapes::FindShapes()  :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CentroidsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
@@ -185,6 +185,12 @@ void FindShapes::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 // -----------------------------------------------------------------------------
 //
@@ -195,23 +201,23 @@ void FindShapes::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
   scaleFactor = 1.0 / xRes;
   if(yRes > xRes && yRes > zRes) { scaleFactor = 1.0 / yRes; }
   if(zRes > xRes && zRes > yRes) { scaleFactor = 1.0 / zRes; }
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_moments(); }
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_moments2D(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_moments(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_moments2D(); }
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_axes(); }
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_axes2D(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_axes(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_axes2D(); }
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_axiseulers(); }
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_axiseulers2D(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_axiseulers(); }
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_axiseulers2D(); }
 
   notifyStatusMessage(getHumanLabel(), "FindShapes Completed");
 }
@@ -221,7 +227,7 @@ void FindShapes::execute()
 // -----------------------------------------------------------------------------
 void FindShapes::find_moments()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   float u200 = 0;
   float u020 = 0;
@@ -234,12 +240,12 @@ void FindShapes::find_moments()
   m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
-  size_t xPoints = m->getXPoints();
-  size_t yPoints = m->getYPoints();
-  size_t zPoints = m->getZPoints();
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  size_t xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+  size_t yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+  size_t zPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
   //using a modified resolution to keept he moment calculations "small" and prevent exceeding numerical bounds.
   //scaleFactor is applied later to rescale the calculated axis lengths
@@ -367,7 +373,7 @@ void FindShapes::find_moments()
 }
 void FindShapes::find_moments2D()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   float xx, yy, xy;
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
@@ -377,26 +383,26 @@ void FindShapes::find_moments2D()
   int xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f;
 
-  if(m->getXPoints() == 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
-    xPoints = m->getYPoints();
-    xRes = m->getYRes();
-    yPoints = m->getZPoints();
-    yRes = m->getZRes();
+    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+    xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(m->getYPoints() == 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
-    xPoints = m->getXPoints();
-    xRes = m->getXRes();
-    yPoints = m->getZPoints();
-    yRes = m->getZRes();
+    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(m->getZPoints() == 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
-    xPoints = m->getXPoints();
-    xRes = m->getXRes();
-    yPoints = m->getYPoints();
-    yRes = m->getYRes();
+    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+    yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
   }
 
   double modXRes = xRes * scaleFactor;

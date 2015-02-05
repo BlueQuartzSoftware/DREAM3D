@@ -93,6 +93,8 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
     QVector<FilterBundler> m_FilterBundles;
     QTreeWidgetItem* F_name;
     QTreeWidgetItem* F_doc;
+    QTreeWidgetItem* F_res;
+    QTreeWidgetItem* F_res_sub;
     QTreeWidgetItem* F_namefilters;
 
 };

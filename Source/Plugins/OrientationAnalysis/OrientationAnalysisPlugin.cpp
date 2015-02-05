@@ -36,6 +36,9 @@
 
 #include "OrientationAnalysisPlugin.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -48,14 +51,22 @@ Q_EXPORT_PLUGIN2(OrientationAnalysisPlugin, OrientationAnalysisPlugin)
 namespace Detail
 {
   const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
-  const QString OrientationAnalysisPluginDisplayName("OrientationAnalysisPlugin");
+  const QString OrientationAnalysisPluginDisplayName("OrientationAnalysis");
   const QString OrientationAnalysisPluginBaseName("OrientationAnalysisPlugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationAnalysisPlugin::OrientationAnalysisPlugin()
+OrientationAnalysisPlugin::OrientationAnalysisPlugin() :
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
+m_Location(""),
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
+m_Filters(QList<QString>()),
+  m_DidLoad(false)
 {
 
 }
@@ -73,6 +84,156 @@ OrientationAnalysisPlugin::~OrientationAnalysisPlugin()
 QString OrientationAnalysisPlugin::getPluginName()
 {
   return (Detail::OrientationAnalysisPluginDisplayName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getVersion()
+{
+  return m_Version;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getCompatibilityVersion()
+{
+  return m_CompatibilityVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getVendor()
+{
+  return m_Vendor;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getURL()
+{
+  return m_URL;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getLocation()
+{
+  return m_Location;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getDescription()
+{
+  QFile licenseFile(":/OrientationAnalysis/OrientationAnalysisDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getCopyright()
+{
+  return m_Copyright;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getLicense()
+{
+  QFile licenseFile(":/DREAM3D/DREAM3DLicense.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--License was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> OrientationAnalysisPlugin::getFilters()
+{
+  return m_Filters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, QString> OrientationAnalysisPlugin::getThirdPartyLicenses()
+{
+  QMap<QString, QString> licenseMap;
+  QList<QString> fileStrList;
+  fileStrList.push_back(":/ThirdParty/HDF5.txt");
+  fileStrList.push_back(":/ThirdParty/Boost.txt");
+  fileStrList.push_back(":/ThirdParty/Qt.txt");
+  fileStrList.push_back(":/ThirdParty/Qwt.txt");
+
+  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  {
+    QFile file(*iter);
+    QFileInfo licenseFileInfo(file);
+
+    if ( licenseFileInfo.exists() )
+    {
+      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      {
+        QTextStream in(&file);
+        licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
+      }
+    }
+  }
+
+  return licenseMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool OrientationAnalysisPlugin::getDidLoad()
+{
+  return m_DidLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationAnalysisPlugin::setDidLoad(bool didLoad)
+{
+  m_DidLoad = didLoad;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationAnalysisPlugin::setLocation(QString filePath)
+{
+  m_Location = filePath;
 }
 
 // -----------------------------------------------------------------------------

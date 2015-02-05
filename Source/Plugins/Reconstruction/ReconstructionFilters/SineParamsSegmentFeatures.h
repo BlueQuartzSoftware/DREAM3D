@@ -53,7 +53,7 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 #include "Reconstruction/ReconstructionConstants.h"

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SecondOrderPolynomialWidget</class>
+ <widget class="QWidget" name="SecondOrderPolynomialWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1349</width>
+    <height>307</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <property name="margin">
+    <number>2</number>
+   </property>
+   <item row="1" column="12">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>*y + </string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="c20"/>
+   </item>
+   <item row="1" column="7">
+    <widget class="QLineEdit" name="c11">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Property</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QLineEdit" name="c02"/>
+   </item>
+   <item row="1" column="10">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>*x + </string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="13">
+    <widget class="QLineEdit" name="c00"/>
+   </item>
+   <item row="1" column="11">
+    <widget class="QLineEdit" name="c01"/>
+   </item>
+   <item row="1" column="5">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>*y^2 + </string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="8">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>*x^2 + </string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="8">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>*xy + </string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="9">
+    <widget class="QLineEdit" name="c10"/>
+   </item>
+   <item row="1" column="14">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>c20</tabstop>
+  <tabstop>c02</tabstop>
+  <tabstop>c11</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 ClearDataMask::ClearDataMask() :
   AbstractFilter(),
-  m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_Mask(NULL)
 {
   setupFilterParameters();
@@ -96,10 +96,10 @@ void ClearDataMask::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_MaskArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
   if( NULL == m)
   {
-    QString ss = QObject::tr("VolumeDataContainer was NULL");
+    QString ss = QObject::tr("DataContainer was NULL");
     notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
     return;
@@ -123,6 +123,12 @@ void ClearDataMask::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +142,7 @@ void ClearDataMask::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_MaskArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
   int64_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
 
   //get list of array names

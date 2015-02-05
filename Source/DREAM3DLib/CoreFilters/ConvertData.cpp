@@ -257,7 +257,7 @@ void ConvertData::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-//  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
 //  if(getErrorCondition() < 0 || NULL == m) { return; }
 
 

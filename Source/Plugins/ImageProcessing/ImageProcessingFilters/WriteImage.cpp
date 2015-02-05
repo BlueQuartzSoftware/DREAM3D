@@ -71,7 +71,7 @@ class WriteImagePrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(WriteImage* filter, VolumeDataContainer* m, QString attrMatName, IDataArray::Pointer inputDataArray, QString outputFile)
+    void static Execute(WriteImage* filter, DataContainer::Pointer m, QString attrMatName, IDataArray::Pointer inputDataArray, QString outputFile)
     {
       typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(inputDataArray);
 
@@ -245,7 +245,7 @@ void WriteImage::dataCheck()
 
   //pass empty dimensions to allow any size
   QVector<size_t> compDims;
-  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayPath(), compDims);
+  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter>()(this, getSelectedCellArrayPath(), compDims);
   if(NULL != m_SelectedCellArrayPtr.lock().get())
   {
     m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
@@ -294,6 +294,12 @@ void WriteImage::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -305,7 +311,7 @@ void WriteImage::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get input data

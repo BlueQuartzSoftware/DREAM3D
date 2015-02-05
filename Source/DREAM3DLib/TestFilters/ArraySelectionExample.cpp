@@ -44,7 +44,7 @@
 ArraySelectionExample::ArraySelectionExample() :
   AbstractFilter()
   //  m_SelectedArrayName(""),
-  //  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
+  //  m_DataContainerName(DREAM3D::Defaults::DataContainerName)
 {
   setupFilterParameters();
 }

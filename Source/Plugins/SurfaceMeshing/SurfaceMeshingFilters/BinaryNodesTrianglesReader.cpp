@@ -41,7 +41,7 @@
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/Geometry/MeshStructs.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "BinaryNodesTrianglesReader.h"
@@ -51,7 +51,7 @@
 // -----------------------------------------------------------------------------
 BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
@@ -165,7 +165,7 @@ void BinaryNodesTrianglesReader::dataCheck()
 
   QVector<size_t> dims(1, 1);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
@@ -173,11 +173,10 @@ void BinaryNodesTrianglesReader::dataCheck()
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
-  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
+  SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(1);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(1, vertices, DREAM3D::Geometry::TriangleGeometry);
+  sm->setGeometry(triangleGeom);
 
-  sm->setVertices(vertices);
-  sm->setFaces(triangles);
   dims[0] = 2;
   tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName() );
   m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -233,7 +232,8 @@ int BinaryNodesTrianglesReader::read()
   int err = 0;
   setErrorCondition(err);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   AttributeMatrix::Pointer vertAttrMat = sm->getAttributeMatrix(getVertexAttributeMatrixName());
   AttributeMatrix::Pointer faceAttrMat = sm->getAttributeMatrix(getFaceAttributeMatrixName());
 
@@ -257,6 +257,7 @@ int BinaryNodesTrianglesReader::read()
   {
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after nodes count.'%2'").arg(getNameOfClass()).arg(m_BinaryNodesFile);
     setErrorCondition(787);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
   {
@@ -269,6 +270,7 @@ int BinaryNodesTrianglesReader::read()
   {
     QString ss = QObject::tr("%1: Error opening Triangles file '%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
     setErrorCondition(788);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
 
@@ -281,12 +283,11 @@ int BinaryNodesTrianglesReader::read()
   fLength = ftell(triFile);
   if(0 != fLength)
   {
-
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after triangles count.'%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
     setErrorCondition(789);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
-
 
   {
     QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: %1").arg(nTriangles);
@@ -294,13 +295,12 @@ int BinaryNodesTrianglesReader::read()
   }
 
   // Allocate all the nodes
-  VertexArray::Pointer m_NodeListPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
-  VertexArray::Vert_t* m_NodeList = m_NodeListPtr->getPointer(0);
+  triangleGeom->resizeVertexList(nNodes);
+  float* m_NodeList = triangleGeom->getVertexPointer(0);
 
   QVector<size_t> tDims(1, nNodes);
   vertAttrMat->resizeAttributeArrays(tDims);
   updateVertexInstancePointers();
-
   {
     QString ss  = QObject::tr("Reading Nodes file into Memory");
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -315,10 +315,9 @@ int BinaryNodesTrianglesReader::read()
     {
       break;
     }
-    VertexArray::Vert_t& node = m_NodeList[nRecord.nodeId];
-    node.pos[0] = nRecord.x;
-    node.pos[1] = nRecord.y;
-    node.pos[2] = nRecord.z;
+    m_NodeList[i*3] = nRecord.x;
+    m_NodeList[i*3+1] = nRecord.y;
+    m_NodeList[i*3+2] = nRecord.z;
     m_SurfaceMeshNodeTypes[nRecord.nodeId] = nRecord.nodeKind;
   }
 
@@ -328,10 +327,9 @@ int BinaryNodesTrianglesReader::read()
   }
 
   // Allocate all the Triangle Objects
-  FaceArray::Pointer m_TriangleListPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces, m_NodeListPtr.get());
-
-  FaceArray::Face_t* m_TriangleList = m_TriangleListPtr->getPointer(0);
-  ::memset(m_TriangleList, 0xAB, sizeof(FaceArray::Face_t) * nTriangles);
+  triangleGeom->resizeTriList(nTriangles);
+  triangleGeom->getTriangles()->initializeWithValue(0xABABABABABABABAB);
+  int64_t* m_TriangleList = triangleGeom->getTriPointer(0);
 
   tDims[0] = nTriangles;
   faceAttrMat->resizeAttributeArrays(tDims);
@@ -346,18 +344,12 @@ int BinaryNodesTrianglesReader::read()
     {
       break;
     }
-
-    FaceArray::Face_t& triangle = m_TriangleList[tRecord.triId];
-
-    triangle.verts[0] = tRecord.nodeId_0;
-    triangle.verts[1] = tRecord.nodeId_1;
-    triangle.verts[2] = tRecord.nodeId_2;
+    m_TriangleList[i*3] = tRecord.nodeId_0;
+    m_TriangleList[i*3+1] = tRecord.nodeId_1;
+    m_TriangleList[i*3+2] = tRecord.nodeId_2;
     m_FaceLabels[tRecord.triId * 2] = tRecord.label_0;
     m_FaceLabels[tRecord.triId * 2 + 1] = tRecord.label_1;
   }
-
-  sm->setVertices(m_NodeListPtr);
-  sm->setFaces(m_TriangleListPtr);
 
   // The ScopedFileMonitor classes will take care of closing the files
 

@@ -48,6 +48,8 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 #-----------------------------------------------------
 # Include any extra Widgets that this plugin needs
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
+# -- Include all the resources
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 
@@ -168,6 +170,8 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
   ${${PLUGIN_NAME}_GEN_HDRS}
+  # -- Add in the miscellaneous resources (license, plugin info, ...)
+  ${${PLUGIN_NAME}_Generated_RC_SRCS}
 )
 
 # --------------------------------------------------------------------
@@ -201,4 +205,7 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
+## This has a command line program to run EMMPM but it requires libTIFF which
+# is not supported any more.
+# add_subdirectory(${PROJECT_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 

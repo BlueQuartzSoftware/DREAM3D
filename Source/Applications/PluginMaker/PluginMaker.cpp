@@ -220,6 +220,138 @@ void PluginMaker::setupGui()
           this, SLOT(generationError(const QString&)));
 
 
+  F_res = new PMGeneratorTreeItem(F_main);
+  F_res->setText(0, tr("Resources"));
+
+  PMGeneratorTreeItem* resources_sourceList = new PMGeneratorTreeItem(F_res);
+  resources_sourceList->setText(0, tr("SourceList.cmake"));
+  {
+    pathTemplate = "@PluginName@/Resources/";
+
+    QString resourceTemplate( generateFileSystemPath("/Template/Resources/SourceList.cmake.in") );
+    PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
+                                               pathTemplate,
+                                               QString("SourceList.cmake"),
+                                               resourceTemplate,
+                                               resources_sourceList,
+                                               this);
+
+    resources_sourceList->setFileGenPtr(gen);
+    connect(m_PluginName, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(pluginNameChanged(const QString&)));
+    connect(m_OutputDir, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(outputDirChanged(const QString&)));
+    // For "Directories" this probably isn't needed
+    connect(generateButton, SIGNAL(clicked()),
+            gen, SLOT(generateOutput()));
+    connect(gen, SIGNAL(outputError(const QString&)),
+            this, SLOT(generationError(const QString&)));
+    gen->setDoesGenerateOutput(true);
+  }
+
+  PMGeneratorTreeItem* resources_qrc = new PMGeneratorTreeItem(F_res);
+  resources_qrc->setText(0, tr("Unknown Plugin Name"));
+  {
+    pathTemplate = "@PluginName@/Resources/";
+
+    QString resourceTemplate( generateFileSystemPath("/Template/Resources/Filter.qrc.in") );
+    PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
+                                               pathTemplate,
+                                               QString(""),
+                                               resourceTemplate,
+                                               resources_qrc,
+                                               this);
+
+    resources_qrc->setFileGenPtr(gen);
+    gen->setNameChangeable(true);
+    gen->setDisplaySuffix(".qrc");
+    connect(m_PluginName, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(pluginNameChanged(const QString&)));
+    connect(m_OutputDir, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(outputDirChanged(const QString&)));
+    // For "Directories" this probably isn't needed
+    connect(generateButton, SIGNAL(clicked()),
+            gen, SLOT(generateOutput()));
+    connect(gen, SIGNAL(outputError(const QString&)),
+            this, SLOT(generationError(const QString&)));
+    gen->setDoesGenerateOutput(true);
+  }
+
+  F_res_sub = new PMGeneratorTreeItem(F_res);
+  F_res_sub->setText(0, tr("Unknown Plugin Name"));
+  {
+    pathTemplate = "@PluginName@/Resources/";
+    QString resourceTemplate("");
+    PMDirGenerator* gen = new PMDirGenerator(m_OutputDir->text(),
+                                             pathTemplate,
+                                             QString(""),
+                                             resourceTemplate,
+                                             F_res_sub,
+                                             this);
+    gen->setDoesGenerateOutput(false);
+    gen->setNameChangeable(true);
+    connect(m_PluginName, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(pluginNameChanged(const QString&)));
+  }
+
+  PMGeneratorTreeItem* resources_license = new PMGeneratorTreeItem(F_res_sub);
+  resources_license->setText(0, tr("Unknown Plugin Name"));
+  {
+    pathTemplate = "@PluginName@/Resources/@PluginName@/";
+
+    QString resourceTemplate( generateFileSystemPath("/Template/Resources/FilterLicense.txt.in") );
+    PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
+                                               pathTemplate,
+                                               QString(""),
+                                               resourceTemplate,
+                                               resources_license,
+                                               this);
+
+    resources_license->setFileGenPtr(gen);
+    gen->setNameChangeable(true);
+    gen->setDoesGenerateOutput(true);
+    gen->setDisplaySuffix("License.txt");
+    connect(m_PluginName, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(pluginNameChanged(const QString&)));
+    connect(m_OutputDir, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(outputDirChanged(const QString&)));
+    // For "Directories" this probably isn't needed
+    connect(generateButton, SIGNAL(clicked()),
+            gen, SLOT(generateOutput()));
+    connect(gen, SIGNAL(outputError(const QString&)),
+            this, SLOT(generationError(const QString&)));
+    gen->setDoesGenerateOutput(true);
+  }
+
+  PMGeneratorTreeItem* resources_description = new PMGeneratorTreeItem(F_res_sub);
+  resources_description->setText(0, tr("Unknown Plugin Name"));
+  {
+    pathTemplate = "@PluginName@/Resources/@PluginName@/";
+
+    QString resourceTemplate( generateFileSystemPath("/Template/Resources/FilterDescription.txt.in") );
+    PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
+                                               pathTemplate,
+                                               QString(""),
+                                               resourceTemplate,
+                                               resources_description,
+                                               this);
+
+    resources_description->setFileGenPtr(gen);
+    gen->setNameChangeable(true);
+    gen->setDoesGenerateOutput(true);
+    gen->setDisplaySuffix("Description.txt");
+    connect(m_PluginName, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(pluginNameChanged(const QString&)));
+    connect(m_OutputDir, SIGNAL(textChanged(const QString&)),
+            gen, SLOT(outputDirChanged(const QString&)));
+    // For "Directories" this probably isn't needed
+    connect(generateButton, SIGNAL(clicked()),
+            gen, SLOT(generateOutput()));
+    connect(gen, SIGNAL(outputError(const QString&)),
+            this, SLOT(generationError(const QString&)));
+    gen->setDoesGenerateOutput(true);
+  }
+
 
   F_doc = new PMGeneratorTreeItem(F_main);
   F_doc->setText(0, tr("Documentation"));

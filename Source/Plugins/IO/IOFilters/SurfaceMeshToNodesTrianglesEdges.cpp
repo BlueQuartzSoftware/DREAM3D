@@ -53,8 +53,8 @@ SurfaceMeshToNodesTrianglesEdges::SurfaceMeshToNodesTrianglesEdges() :
   m_OutputNodesFile(""),
   m_OutputEdgesFile(""),
   m_OutputTrianglesFile(""),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
@@ -148,18 +148,38 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
     notifyErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", getErrorCondition());
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  if (sm->getFaces().get() == NULL)
+
+  IGeometry::Pointer geom = sm->getGeometry();
+  if(NULL == geom.get())
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    setErrorCondition(-385);
+    QString ss = QObject::tr("DataContainer Geometry is missing.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
-  if (sm->getVertices().get() == NULL)
+
+  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
+  if(NULL == triangles.get())
   {
     setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Vertices", getErrorCondition());
+    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
+  {
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+  }
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
+  {
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
@@ -204,13 +224,14 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
 
-  VertexArray::Pointer nodes = sm->getVertices();
-  FaceArray::Pointer triangles = sm->getFaces();
+  TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
+  float* nodes = triangleGeom->getVertexPointer(0);
+  int64_t* triangles = triangleGeom->getTriPointer(0);
 
-  qint64 numNodes = nodes->getNumberOfTuples();
-  qint64 numTriangles = triangles->getNumberOfTuples();
+  qint64 numNodes = triangleGeom->getNumberOfVertices();
+  int64_t numTriangles = triangleGeom->getNumberOfTris();
 
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
@@ -242,10 +263,9 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   }
 
   fprintf(nodesFile, "%lld\n", numNodes);
-  VertexArray::Vert_t* v = nodes->getPointer(0);
   for (int i = 0; i < numNodes; i++)
   {
-    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(m_SurfaceMeshNodeType[i]), v[i].pos[0], v[i].pos[1], v[i].pos[2]);
+    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(m_SurfaceMeshNodeType[i]), nodes[i*3], nodes[i*3+1], nodes[i*3+2]);
   }
   fclose(nodesFile);
 
@@ -323,14 +343,13 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   }
 
   fprintf(triFile, "%lld\n", numTriangles);
-  FaceArray::Face_t* t = triangles->getPointer(0);
 
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
   for (int64_t j = 0; j < numTriangles; ++j)
   {
-    n1 = t[j].verts[0];
-    n2 = t[j].verts[1];
-    n3 = t[j].verts[2];
+    n1 = triangles[j*3];
+    n2 = triangles[j*3+1];
+    n3 = triangles[j*3+2];
 
 #if WRITE_EDGES_FILE
     e1 = t[j].e_id[0];
@@ -339,7 +358,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     <<< <<< <<< < #error FIX THIS CODE BELOW. WE PROBABLY NEED TO GENERATE THE EDGE INFORMATION IF NEEDED
 #endif
 
-    fprintf(triFile, "%10lld    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, m_SurfaceMeshFaceLabels[j * 2], m_SurfaceMeshFaceLabels[j * 2 + 1]);
+    fprintf(triFile, "%10lld    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", (long long int)(j), n1, n2, n3, e1, e2, e3, m_SurfaceMeshFaceLabels[j * 2], m_SurfaceMeshFaceLabels[j * 2 + 1]);
   }
 
   fclose(triFile);

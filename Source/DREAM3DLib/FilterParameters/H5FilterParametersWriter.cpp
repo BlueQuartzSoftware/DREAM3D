@@ -423,6 +423,42 @@ int H5FilterParametersWriter::writeValue(const QString name, FloatVec21_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t v)
+{
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 6 };
+  err = QH5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, Float3rdOrderPoly_t v)
+{
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 21 };
+  err = QH5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, Float4thOrderPoly_t v)
+{
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 21 };
+  err = QH5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
 {
   int err = 0;

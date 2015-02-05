@@ -66,11 +66,11 @@ class AlignSectionsPhaseCorrelationPrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(AlignSectionsPhaseCorrelation* filter, IDataArray::Pointer inputArray, VolumeDataContainer* m, QString attrMatName, QVector<int>& xshifts, QVector<int>& yshifts)
+    void static Execute(AlignSectionsPhaseCorrelation* filter, IDataArray::Pointer inputArray, DataContainer::Pointer m, QString attrMatName, QVector<int>& xshifts, QVector<int>& yshifts)
     {
       //get volume dimensions
       size_t udims[3] = {0, 0, 0};
-      m->getDimensions(udims);
+      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
       typedef int32_t DimType;
 #else
@@ -220,7 +220,7 @@ void AlignSectionsPhaseCorrelation::dataCheck()
 
   //check for required arrays
   QVector<size_t> compDims(1, 1);
-  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayPath(), compDims);
+  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter>()(this, getSelectedCellArrayPath(), compDims);
   if(NULL != m_SelectedCellArrayPtr.lock().get())
   {
     m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
@@ -239,6 +239,12 @@ void AlignSectionsPhaseCorrelation::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -305,7 +311,7 @@ void AlignSectionsPhaseCorrelation::execute()
 void AlignSectionsPhaseCorrelation::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
 {
   //get volume container
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get input data

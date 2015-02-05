@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/Geometry/MeshStructs.h"
 
 #include "IO/IOConstants.h"
 
@@ -172,6 +172,12 @@ void NodesTrianglesToStl::preflight()
   dataCheck(true);
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 
@@ -242,11 +248,9 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
-  VertexArray::Pointer nodesPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
-  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
-
-  //  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
-  //  int8_t* nodeKindArray = nodeKindPtr->getPointer(0);
+  QVector<size_t> cDims(1, 3);
+  SharedVertexList::Pointer nodesPtr = SharedVertexList::CreateArray(nNodes, cDims, DREAM3D::VertexData::SurfaceMeshNodes);
+  float* nodes = nodesPtr->getPointer(0);
 
   for (int i = 0; i < nNodes; i++)
   {
@@ -257,9 +261,9 @@ void NodesTrianglesToStl::execute()
     }
     nodeIdToIndex[nodeId] = i;
     // nodeKindArray[nodeId] = nodeKind;
-    nodes[nodeId].pos[0] = pos[0];
-    nodes[nodeId].pos[1] = pos[1];
-    nodes[nodeId].pos[2] = pos[2];
+    nodes[nodeId*3] = pos[0];
+    nodes[nodeId*3+1] = pos[1];
+    nodes[nodeId*3+2] = pos[2];
   }
 
   // column 1 = triangle id, starts from zero
@@ -268,8 +272,8 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  FaceArray::Pointer trianglePtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces, nodesPtr.get());
-  FaceArray& triangles = *(trianglePtr.get());
+  SharedTriList::Pointer trianglePtr = SharedTriList::CreateArray(nTriangles, cDims, DREAM3D::Geometry::TriangleGeometry);
+  int64_t* triangles = trianglePtr->getPointer(0);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->getPointer(0);
@@ -280,9 +284,9 @@ void NodesTrianglesToStl::execute()
   {
     // Read from the Input Triangles Temp File
     nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
-    triangles[i].verts[0] = tData[1];
-    triangles[i].verts[1] = tData[2];
-    triangles[i].verts[2] = tData[3];
+    triangles[i*3] = tData[1];
+    triangles[i*3+1] = tData[2];
+    triangles[i*3+2] = tData[3];
     faceLabels[i * 2] = tData[7];
     faceLabels[i * 2 + 1] = tData[8];
     uniqueSpins.insert(tData[7]);
@@ -336,13 +340,13 @@ void NodesTrianglesToStl::execute()
     for(int t = 0; t < nTriangles; ++t)
     {
       // Get the true indices of the 3 nodes
-      int nId0 = nodeIdToIndex[triangles[t].verts[0]];
-      int nId1 = nodeIdToIndex[triangles[t].verts[1]];
-      int nId2 = nodeIdToIndex[triangles[t].verts[2]];
+      int nId0 = nodeIdToIndex[triangles[t*3]];
+      int nId1 = nodeIdToIndex[triangles[t*3+1]];
+      int nId2 = nodeIdToIndex[triangles[t*3+2]];
 
-      vert1[0] = static_cast<float>(nodes[nId0].pos[0]);
-      vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
-      vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
+      vert1[0] = static_cast<float>(nodes[nId0*3]);
+      vert1[1] = static_cast<float>(nodes[nId0*3+1]);
+      vert1[2] = static_cast<float>(nodes[nId0*3+2]);
 
       if (faceLabels[t * 2] == spin)
       {
@@ -361,13 +365,13 @@ void NodesTrianglesToStl::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = static_cast<float>(nodes[nId1].pos[0]);
-      vert2[1] = static_cast<float>(nodes[nId1].pos[1]);
-      vert2[2] = static_cast<float>(nodes[nId1].pos[2]);
+      vert2[0] = static_cast<float>(nodes[nId1*3]);
+      vert2[1] = static_cast<float>(nodes[nId1*3+1]);
+      vert2[2] = static_cast<float>(nodes[nId1*3+2]);
 
-      vert3[0] = static_cast<float>(nodes[nId2].pos[0]);
-      vert3[1] = static_cast<float>(nodes[nId2].pos[1]);
-      vert3[2] = static_cast<float>(nodes[nId2].pos[2]);
+      vert3[0] = static_cast<float>(nodes[nId2*3]);
+      vert3[1] = static_cast<float>(nodes[nId2*3+1]);
+      vert3[2] = static_cast<float>(nodes[nId2*3+2]);
 
       //
       // Compute the normal

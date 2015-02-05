@@ -420,7 +420,7 @@ void TestDataContainerReader()
   for(int i=(dcsToRead.size()-1); i>=0; i--)
   {
     DataContainerProxy& dcProxy = dcsToRead[i];
-    if (dcProxy.name.compare(DREAM3D::Defaults::VolumeDataContainerName) != 0) { dcProxy.flag = Qt::Unchecked; }
+    if (dcProxy.name.compare(DREAM3D::Defaults::DataContainerName) != 0) { dcProxy.flag = Qt::Unchecked; }
     else
     {
       QMap<QString, AttributeMatrixProxy>& attrMatsToRead = dcProxy.attributeMatricies;
@@ -764,7 +764,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 void TestArrayCreation()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   QList<QString> nameList;
 
   _arrayCreation<int8_t, Int8ArrayType>(m);
@@ -824,7 +824,7 @@ void TestDataContainer()
   std::cout << "Number of Entries for Feature Id[5]: " << neighborList->getListSize(5) << std::endl;
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
-  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
+  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New(DREAM3D::Defaults::DataContainerName);
   dataContainer->addCellData("NeighborList", iDataArray);
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );

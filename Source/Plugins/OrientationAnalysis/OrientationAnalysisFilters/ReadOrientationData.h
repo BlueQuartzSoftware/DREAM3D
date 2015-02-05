@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -222,7 +222,7 @@ class ReadOrientationData : public AbstractFilter
         latticeConstants->setComponent(phaseID, 5, lc[5]);
 
       }
-      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
       if(NULL == vdc) { return -1;}
       AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
       if(NULL == attrMatrix.get() ) { return -2; }

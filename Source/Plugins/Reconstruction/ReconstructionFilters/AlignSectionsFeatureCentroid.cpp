@@ -64,7 +64,7 @@ AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
   AlignSections(),
   m_ReferenceSlice(0),
   m_UseReferenceSlice(false),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL)
 {
@@ -155,6 +155,12 @@ void AlignSectionsFeatureCentroid::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -179,7 +185,7 @@ void AlignSectionsFeatureCentroid::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   ofstream outFile;
   if (getWriteAlignmentShifts() == true)
@@ -187,7 +193,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int>& xshifts, std::v
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -206,8 +212,8 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int>& xshifts, std::v
   int slice = 0;
   int64_t point;
   //  int xspot, yspot;
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
+  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
   std::vector<float> xCentroid(dims[2], 0.0);
   std::vector<float> yCentroid(dims[2], 0.0);
 

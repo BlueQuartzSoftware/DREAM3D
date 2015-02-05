@@ -253,6 +253,12 @@ void FindProjectedImageStatistics::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -268,9 +274,9 @@ void FindProjectedImageStatistics::execute()
   QString amName = m_SelectedArrayPath.getAttributeMatrixName();
   QString daName = m_SelectedArrayPath.getDataArrayName();
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcName);
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
 
-  if(m->getXPoints() <= 1 && m->getYPoints() <= 1 && m->getZPoints() <= 1)
+  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() <= 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() <= 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() <= 1)
   {
     setErrorCondition(-999);
     notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
@@ -295,7 +301,7 @@ void FindProjectedImageStatistics::execute()
 #endif
 
   size_t xP, yP, zP;
-  m->getDimensions(xP, yP, zP);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
 
   Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "startingPoints");
   int32_t* startPoints;

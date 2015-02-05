@@ -54,7 +54,7 @@
 AddOrientationNoise::AddOrientationNoise() :
   AbstractFilter(),
   m_Magnitude(1.0f),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL)
 {
@@ -126,6 +126,12 @@ void AddOrientationNoise::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -156,14 +162,14 @@ void  AddOrientationNoise::add_orientation_noise()
   notifyStatusMessage(getHumanLabel(), "Adding Orientation Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellEulerAnglesArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName());
 
   //float ea1, ea2, ea3;
   float g[3][3];
   float newg[3][3];
   float rot[3][3];
   float w, n1, n2, n3;
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
     float ea1 = m_CellEulerAngles[3 * i + 0];

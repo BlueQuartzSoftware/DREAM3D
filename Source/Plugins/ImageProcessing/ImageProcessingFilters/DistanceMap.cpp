@@ -68,7 +68,7 @@ class FindMaximaPrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(FindMaxima* filter, IDataArray::Pointer inputArray, double MinValue, bool* outputData, VolumeDataContainer* m, QString attrMatName)
+    void static Execute(FindMaxima* filter, IDataArray::Pointer inputArray, double MinValue, bool* outputData, DataContainer::Pointer m, QString attrMatName)
     {
       typename DataArrayType::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArrayType>(inputArray);
 
@@ -186,7 +186,7 @@ void FindMaxima::dataCheck()
 
   //check for required arrays
   QVector<size_t> compDims(1, 1);
-  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayPath(), compDims);
+  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter>()(this, getSelectedCellArrayPath(), compDims);
   if(NULL != m_SelectedCellArrayPtr.lock().get())
   {
     m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
@@ -196,9 +196,9 @@ void FindMaxima::dataCheck()
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
 
-  VolumeDataContainer* dataContiner = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName() );
+DataContainer::Pointer dataContiner = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName() );
   AttributeMatrix::Pointer attrMatrix = dataContiner->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayPath().getAttributeMatrixName(), 80000);
-  IDataArray::Pointer redArrayptr = attrMatrix->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath().getDataArrayName(), 80000);
+  IDataArray::Pointer redArrayptr = attrMatrix->getPrereqIDataArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath().getDataArrayName(), 80000);
 
   //create new boolean array
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
@@ -220,6 +220,12 @@ void FindMaxima::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -238,7 +244,7 @@ void FindMaxima::execute()
   }
 
   //get volume container
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get input data

@@ -156,7 +156,7 @@ class RotateSampleRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_RotationAngle(0.0),
   m_SliceBySlice(false)
 {
@@ -251,7 +251,7 @@ void RotateSampleRefFrame::preflight()
 
   if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
   if (getErrorCondition() < 0) { setInPreflight(false); return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
   if (getErrorCondition() < 0) { setInPreflight(false); return; }
@@ -264,12 +264,12 @@ void RotateSampleRefFrame::preflight()
   float xResNew, yResNew, zResNew;
   RotateSampleRefFrameImplArg_t params;
 
-  xp = static_cast<int32_t>(m->getXPoints());
-  xRes = m->getXRes();
-  yp = static_cast<int32_t>(m->getYPoints());
-  yRes = m->getYRes();
-  zp = static_cast<int32_t>(m->getZPoints());
-  zRes = m->getZRes();
+  xp = static_cast<int32_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints());
+  xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  yp = static_cast<int32_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints());
+  yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  zp = static_cast<int32_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints());
+  zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
   params.xp = xp;
   params.xRes = xRes;
@@ -343,8 +343,8 @@ void RotateSampleRefFrame::preflight()
   params.zResNew = zResNew;
   params.zMinNew = zMin;
 
-  m->setResolution(params.xResNew, params.yResNew, params.zResNew);
-  m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(params.xResNew, params.yResNew, params.zResNew);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
   setInPreflight(false);
 }
 
@@ -357,7 +357,7 @@ void RotateSampleRefFrame::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
@@ -367,12 +367,12 @@ void RotateSampleRefFrame::execute()
   float xResNew, yResNew, zResNew;
   RotateSampleRefFrameImplArg_t params;
 
-  xp = static_cast<int32_t>(m->getXPoints());
-  xRes = m->getXRes();
-  yp = static_cast<int32_t>(m->getYPoints());
-  yRes = m->getYRes();
-  zp = static_cast<int32_t>(m->getZPoints());
-  zRes = m->getZRes();
+  xp = static_cast<int32_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints());
+  xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+  yp = static_cast<int32_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints());
+  yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  zp = static_cast<int32_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints());
+  zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
 
   params.xp = xp;
   params.xRes = xRes;
@@ -521,8 +521,9 @@ void RotateSampleRefFrame::execute()
     }
     m->getAttributeMatrix(attrMatName)->addAttributeArray(*iter, data);
   }
-  m->setResolution(params.xResNew, params.yResNew, params.zResNew);
-  m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(params.xResNew, params.yResNew, params.zResNew);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, zMin);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
