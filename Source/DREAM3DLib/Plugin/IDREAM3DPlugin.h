@@ -42,7 +42,7 @@
 #include <QtCore/QtPlugin>
 #include <QtCore/QString>
 
-
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
