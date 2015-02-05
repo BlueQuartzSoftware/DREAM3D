@@ -55,6 +55,7 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     FilterListDockWidget(QWidget* parent = NULL);
     virtual ~FilterListDockWidget();
 
+	QList<QString> serializeString(QString string, char token);
 
   public slots:
 
