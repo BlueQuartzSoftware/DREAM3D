@@ -12,9 +12,8 @@
 
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
+  message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
 endif()
-
-message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
 
 project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
@@ -303,8 +302,8 @@ set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 
 # --------------------------------------------------------------------
 # Generate our ReadMe and License Files
-configure_file(${PROJECT_SOURCE_DIR}/License.txt
-                ${PROJECT_BINARY_DIR}/License.txt )
+configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
+                ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt )
 configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
                 ${PROJECT_BINARY_DIR}/ReadMe.md )
 install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md

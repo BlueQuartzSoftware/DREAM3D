@@ -177,14 +177,6 @@ QString SurfaceMeshingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SurfaceMeshingPlugin::getFilters()
-{
-  return m_Filters;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> SurfaceMeshingPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

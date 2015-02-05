@@ -176,14 +176,6 @@ QString StatisticsPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> StatisticsPlugin::getFilters()
-{
-  return m_Filters;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> StatisticsPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

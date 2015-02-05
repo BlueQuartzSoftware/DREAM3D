@@ -147,14 +147,6 @@ QString SamplingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SamplingPlugin::getFilters()
-{
-  return m_Filters;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> SamplingPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

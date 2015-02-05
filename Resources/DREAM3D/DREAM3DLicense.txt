@@ -31,12 +31,12 @@ SOFTWARE should be clearly marked, so as not to confuse it with the
 version available from the US Air Force Research Laboratories or
 BlueQuartz Software.
 
-Copyright (c) 2009-2013 Michael A. Jackson, All rights reserved.
-BlueQuartz Software
+Copyright (c) 2009-2015 BlueQuartz Software, LLC, All rights reserved.
+BlueQuartz Software, LLC
 400 S. Pioneer Blvd.
 Springboro, Ohio 45066
 
-Copyright (c) 2009-2013 Michael A. Groeber, All rights reserved.
+Copyright (c) 2009-2015 US Air Force, All rights reserved.
 U.S. Air Force Research Laboratory
 2230 Tenth St., Ste. 1
 Wright-Patterson AFB, OH 45433-7817
@@ -59,7 +59,7 @@ list of conditions and the following disclaimer.
 this list of conditions and the following disclaimer in the documentation
 and/or other materials provided with the distribution.
 
-3) Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+3) Neither the name of the US Air Force,
 BlueQuartz Software nor the names of its contributors may be used to endorse
 or promote products derived from this software without specific prior written
 permission.
@@ -76,19 +76,11 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre>
 
-<h2>PUBLIC RELEASE INFORMATION</h2>
-
-<pre>
-The SOFTWARE has been approved for release with associated Case Number
-  88ABW-2011-2288, granted by US Air Force Public Affairs.
-</pre
-
 <h2>Other Licenses</h2>
 <pre>
 Other Licenses apply to third party software frameworks that are used to create
 this software product. Each of those license files can be found included with
 this software product.
-
 </pre>
 </body>
 </html>

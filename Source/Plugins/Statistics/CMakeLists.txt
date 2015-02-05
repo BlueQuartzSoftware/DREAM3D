@@ -57,6 +57,12 @@ set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 file(APPEND ${AllFiltersHeaderFile} "\n#endif\n")
 file(APPEND ${RegisterKnownFiltersFile} "\n }\n")
 
+#-----------------------------------------------------
+# Add function to return all filter names in a list
+file(APPEND ${RegisterKnownFiltersFile} "\nQList<QString> ${PLUGIN_NAME}Plugin::getFilters()\n{\n")
+ADD_FILTER_LIST()
+file(APPEND ${RegisterKnownFiltersFile} "\n}\n\n")
+
 cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h
                           NEW_FILE_PATH  ${AllFiltersHeaderFile} )
 cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/RegisterKnownFilters.cpp

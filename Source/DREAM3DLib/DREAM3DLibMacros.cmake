@@ -121,3 +121,17 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPat
 
     endif()
 endmacro()
+
+#-------------------------------------------------------------------------------
+# Macro ADD_FILTER_LIST
+macro(ADD_FILTER_LIST)
+
+        file(APPEND ${RegisterKnownFiltersFile} "\tQList<QString> pluginList;\n\n")
+
+    foreach(f ${_PublicFilters} )
+        file(APPEND ${RegisterKnownFiltersFile} "\tpluginList.append(\"${f}\");\n")
+    endforeach()
+
+    file(APPEND ${RegisterKnownFiltersFile} "\n\treturn pluginList;")
+
+endmacro()

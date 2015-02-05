@@ -177,14 +177,6 @@ QString SyntheticBuildingPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SyntheticBuildingPlugin::getFilters()
-{
-  return m_Filters;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> SyntheticBuildingPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;

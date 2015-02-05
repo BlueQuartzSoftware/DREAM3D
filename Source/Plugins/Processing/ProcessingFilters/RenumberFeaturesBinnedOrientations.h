@@ -53,7 +53,7 @@
  * @class RenumberFeaturesBinnedOrientations RenumberFeaturesBinnedOrientations.h /Processing/RenumberFeaturesBinnedOrientations.h
  * @brief
  * @author Joseph C. Tucker
- * @date Jan 30, 2015
+ * @date Feb 5, 2015
  * @version 5.1
  */
 class RenumberFeaturesBinnedOrientations : public AbstractFilter
@@ -68,8 +68,8 @@ class RenumberFeaturesBinnedOrientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, BinExtents)
-    Q_PROPERTY(FloatVec3_t BinExtents READ getBinExtents WRITE setBinExtents)
+    DREAM3D_FILTER_PARAMETER(int, BinWidth)
+    Q_PROPERTY(int BinWidth READ getBinWidth WRITE setBinWidth)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

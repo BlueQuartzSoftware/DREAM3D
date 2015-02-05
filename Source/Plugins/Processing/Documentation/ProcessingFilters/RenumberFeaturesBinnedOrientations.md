@@ -5,16 +5,15 @@ Renumber Features (Binned Orientations) {#renumberfeaturesbinnedorientations}
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter bins into **ParentIds** according to orientation bins prescribed by **BinExtents** in Bunge convention.
+This Filter bins into **ParentIds** according to orientation bins prescribed by **BinWidth** in degrees.  The bins are established in homochoric Rodriguez space for equal area consideration/
 
 
 ## Parameters ##
  
 | Name | Type |
 |------|------|
-| Phi1 Bin Extent | Float |
-| PHI Bin Extent | Float |
-| Phi12 Bin Extent | Float |
+| Bin Width | Int |
+
 
 ## Required Data Containers ##
 Volume

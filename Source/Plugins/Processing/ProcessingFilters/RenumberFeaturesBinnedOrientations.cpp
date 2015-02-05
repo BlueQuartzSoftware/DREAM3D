@@ -49,7 +49,7 @@
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.cpp"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-	
+
 using namespace DREAM3D;
 using namespace Detail;
 
@@ -58,26 +58,24 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 RenumberFeaturesBinnedOrientations::RenumberFeaturesBinnedOrientations() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_ParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_ParentIds(NULL),
-  m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
+  m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CrystalStructuresArrayPath(Defaults::StatsGenerator, Defaults::CellEnsembleAttributeMatrixName, EnsembleData::CrystalStructures),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_BinWidth(5)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsQVector();
-  m_BinExtents.x = 9.0f;
-  m_BinExtents.y = 9.0f;
-  m_BinExtents.z = 3.0f;
   setupFilterParameters();
 }
 
@@ -94,7 +92,7 @@ RenumberFeaturesBinnedOrientations::~RenumberFeaturesBinnedOrientations()
 void RenumberFeaturesBinnedOrientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Bunge Euler Angles Bin Extents", "BinExtents", FilterParameterWidgetType::FloatVec3Widget, getBinExtents(), false, "Degrees"));
+  parameters.push_back(FilterParameter::New("Bin Width", "BinWidth", FilterParameterWidgetType::IntWidget, getBinWidth(), false, "Degrees"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
@@ -109,8 +107,8 @@ void RenumberFeaturesBinnedOrientations::setupFilterParameters()
 void RenumberFeaturesBinnedOrientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixPath( reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
-  setBinExtents( reader->readFloatVec3("BinExtents", getBinExtents() ) );
+  setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
+  setBinWidth(reader->readValue("BinWidth", getBinWidth() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setParentIdsArrayName(reader->readString("ParentIdsArrayName", getParentIdsArrayName() ) );
   setFeatureEulerAnglesArrayPath(reader->readDataArrayPath("FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath() ) );
@@ -125,8 +123,9 @@ void RenumberFeaturesBinnedOrientations::readFilterParameters(AbstractFilterPara
 int RenumberFeaturesBinnedOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BinExtents)
+  DREAM3D_FILTER_WRITE_PARAMETER(BinWidth)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ParentIdsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
@@ -146,7 +145,7 @@ void RenumberFeaturesBinnedOrientations::dataCheck()
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || m == NULL) { return; }
   AttributeMatrix::Pointer AttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || AttrMat == NULL) { return; }
@@ -164,7 +163,7 @@ DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<Abstr
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  
+
   dims[0] = 1;
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -198,12 +197,6 @@ void RenumberFeaturesBinnedOrientations::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -217,7 +210,7 @@ void RenumberFeaturesBinnedOrientations::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-DataContainer::Pointer CellDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellFeatureAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer CellDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellFeatureAttributeMatrixPath().getDataContainerName());
 
   if(NULL == CellDataContainer || getErrorCondition() < 0)
   {
@@ -240,32 +233,37 @@ DataContainer::Pointer CellDataContainer = getDataContainerArray()->getPrereqDat
   float dim[3];
   float bins[3];
   float step[3];
+  float binFactor = 0.0f;
   // hardcoded for hexagonal for now
+  // defaulted at 5 degree bins
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
   dim[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
-  bins[0] = m_BinExtents.x;
-  bins[1] = m_BinExtents.y;
-  bins[2] = m_BinExtents.z;
+
+  binFactor = float(m_BinWidth) * 0.2f;
+
+  step[0] = HexDim1StepValue * binFactor;
+  step[1] = HexDim2StepValue * binFactor;
+  step[2] = HexDim3StepValue * binFactor;
+  bins[0] = 36.0f / binFactor;
+  bins[1] = 36.0f / binFactor;
+  bins[2] = 12.0f / binFactor;
   for (size_t i = 0; i < totalFeatures; i++)
   {
-	binid[i] = 0;
+  binid[i] = 0;
   }
 
   // now bin orientation space
   for (size_t i = 1; i < totalFeatures; i++)
   {
-	ea1 = m_FeatureEulerAngles[3 * i];
-	ea2 = m_FeatureEulerAngles[3 * i + 1];
-	ea3 = m_FeatureEulerAngles[3 * i + 2];
-	OrientationMath::EulertoRod(ea1, ea2, ea3, r1, r2, r3);
-	OrientationMath::RodtoHomochoric(r1, r2, r3);
-	// had to reproduce the below function since it is protected in OrientationOps
-	binid[i] = calcODFBin(dim, bins, step, r1, r2, r3);
-	m_ParentIds[i] = binid[i];
+  ea1 = m_FeatureEulerAngles[3 * i];
+  ea2 = m_FeatureEulerAngles[3 * i + 1];
+  ea3 = m_FeatureEulerAngles[3 * i + 2];
+  OrientationMath::EulertoRod(ea1, ea2, ea3, r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  // had to reproduce the below function since it is protected in OrientationOps
+  binid[i] = calcODFBin(dim, bins, step, r1, r2, r3);
+  m_ParentIds[i] = binid[i];
   }
 
   notifyStatusMessage(getHumanLabel(), "Completed");
