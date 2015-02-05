@@ -125,6 +125,7 @@ void RenumberFeaturesBinnedOrientations::readFilterParameters(AbstractFilterPara
 int RenumberFeaturesBinnedOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(BinExtents)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)

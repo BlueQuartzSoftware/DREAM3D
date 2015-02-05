@@ -109,6 +109,7 @@ void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParam
 int LocalDislocationDensityCalculator::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(EdgeDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)

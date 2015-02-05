@@ -199,6 +199,7 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageVarArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageStdArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageAvgArrayName)

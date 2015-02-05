@@ -114,6 +114,7 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgMisorientationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(MisorientationListArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)

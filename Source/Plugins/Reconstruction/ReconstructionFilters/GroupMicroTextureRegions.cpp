@@ -161,6 +161,7 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 {
   GroupFeatures::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)

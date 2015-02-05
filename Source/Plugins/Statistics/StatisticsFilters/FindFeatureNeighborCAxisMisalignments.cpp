@@ -119,6 +119,7 @@ void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterP
 int FindFeatureNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxisMisalignmentsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)

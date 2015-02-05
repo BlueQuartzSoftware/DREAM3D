@@ -149,6 +149,7 @@ void FindLocalAverageCAxisMisalignments::readFilterParameters(AbstractFilterPara
 int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayPath)

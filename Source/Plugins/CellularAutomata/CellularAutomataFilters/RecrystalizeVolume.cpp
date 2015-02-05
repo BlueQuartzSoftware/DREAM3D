@@ -390,6 +390,7 @@ void RecrystalizeVolume::readFilterParameters(AbstractFilterParametersReader* re
 int RecrystalizeVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NucleationRate)
   DREAM3D_FILTER_WRITE_PARAMETER(Neighborhood)
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)

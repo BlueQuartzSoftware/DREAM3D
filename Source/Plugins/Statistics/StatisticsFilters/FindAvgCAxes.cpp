@@ -98,6 +98,7 @@ void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)

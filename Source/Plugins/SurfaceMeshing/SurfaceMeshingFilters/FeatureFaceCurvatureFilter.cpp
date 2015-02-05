@@ -161,6 +161,7 @@ void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRe
 int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(EdgeAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)

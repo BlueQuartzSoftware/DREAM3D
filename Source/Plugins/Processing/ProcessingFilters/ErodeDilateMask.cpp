@@ -116,6 +116,7 @@ void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reade
 int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(Direction)
   DREAM3D_FILTER_WRITE_PARAMETER(NumIterations)

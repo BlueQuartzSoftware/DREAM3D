@@ -95,6 +95,7 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(Magnitude)
   writer->closeFilterGroup();

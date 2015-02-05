@@ -403,6 +403,7 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
