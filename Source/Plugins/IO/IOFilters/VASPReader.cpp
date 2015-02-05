@@ -100,6 +100,7 @@ void VASPReader::readFilterParameters(AbstractFilterParametersReader* reader, in
 int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
   writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) ;
   DREAM3D_FILTER_WRITE_PARAMETER(AtomTypesArrayName)

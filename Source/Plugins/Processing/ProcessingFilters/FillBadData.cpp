@@ -106,6 +106,7 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
 int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)

@@ -57,7 +57,7 @@ PluginDetails::~PluginDetails() {}
 // -----------------------------------------------------------------------------
 void PluginDetails::setupGui()
 {
-  QString wt = "Plugin Details of " + m_PluginName;
+  QString wt = "'" + m_PluginName + "' Details";
   setWindowTitle(wt);
 
   loadPluginDetails();

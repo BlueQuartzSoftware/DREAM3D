@@ -101,6 +101,7 @@ void FindAvgScalarValueForFeatures::readFilterParameters(AbstractFilterParameter
 int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(NewFeatureArrayArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)

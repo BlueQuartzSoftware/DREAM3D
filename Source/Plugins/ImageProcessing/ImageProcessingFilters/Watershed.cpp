@@ -95,6 +95,7 @@ void Watershed::readFilterParameters(AbstractFilterParametersReader* reader, int
 int Watershed::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->writeValue( "SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->writeValue( "FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->writeValue( "Threshold", getThreshold() );

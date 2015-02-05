@@ -212,6 +212,7 @@ void WriteImage::readFilterParameters(AbstractFilterParametersReader* reader, in
 int WriteImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->writeValue( "SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->writeValue( "OutputFileName", getOutputFileName() );
   writer->closeFilterGroup();

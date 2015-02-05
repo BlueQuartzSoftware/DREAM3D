@@ -112,6 +112,7 @@ void FindKernelAvgMisorientations::readFilterParameters(AbstractFilterParameters
 int FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(KernelAverageMisorientationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)

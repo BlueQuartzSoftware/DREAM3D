@@ -102,6 +102,7 @@ void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* r
 int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NodesFile)
   DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)

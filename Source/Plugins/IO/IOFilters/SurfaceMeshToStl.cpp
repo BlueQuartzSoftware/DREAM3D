@@ -105,6 +105,7 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFacePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputStlDirectory)

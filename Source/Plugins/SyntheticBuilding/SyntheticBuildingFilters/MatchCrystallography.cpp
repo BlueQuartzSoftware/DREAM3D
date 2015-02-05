@@ -150,6 +150,7 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
   DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)

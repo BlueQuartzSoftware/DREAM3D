@@ -98,6 +98,7 @@ void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* 
 int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureDataFile)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteNeighborListData)

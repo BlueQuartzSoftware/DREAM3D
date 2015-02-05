@@ -141,6 +141,7 @@ void TriangleAreaFilter::readFilterParameters(AbstractFilterParametersReader* re
 int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayName)
   writer->closeFilterGroup();

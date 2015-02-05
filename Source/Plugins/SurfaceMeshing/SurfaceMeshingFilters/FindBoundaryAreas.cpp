@@ -63,6 +63,7 @@ void FindBoundaryAreas::readFilterParameters(AbstractFilterParametersReader* rea
 int FindBoundaryAreas::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceFeatureAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayPath)

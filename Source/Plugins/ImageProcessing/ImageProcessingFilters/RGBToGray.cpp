@@ -179,6 +179,7 @@ void RGBToGray::readFilterParameters(AbstractFilterParametersReader* reader, int
 int RGBToGray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ColorWeights)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
