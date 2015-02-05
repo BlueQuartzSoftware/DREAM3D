@@ -37,7 +37,7 @@
 #define _DREAM3DPlugin_H_
 
 #include <QtCore/QObject>
-
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "IDREAM3DPlugin.h"
 
 
@@ -48,7 +48,7 @@
 * @date
 * @version 1.0
 */
-class DREAM3DPlugin : public QObject
+class DREAM3DLib_EXPORT DREAM3DPlugin : public QObject
 {
 	Q_OBJECT
 

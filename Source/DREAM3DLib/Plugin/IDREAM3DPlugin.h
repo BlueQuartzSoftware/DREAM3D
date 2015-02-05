@@ -140,7 +140,7 @@ class FilterWidgetManager;
  *
  * @section details Details
  */
-class IDREAM3DPlugin
+class DREAM3DLib_EXPORT IDREAM3DPlugin
 {
   public:
     DREAM3D_SHARED_POINTERS(IDREAM3DPlugin)
