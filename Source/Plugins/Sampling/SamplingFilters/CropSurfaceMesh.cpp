@@ -312,7 +312,7 @@ void CropSurfaceMesh::execute()
   Int64ArrayType::Pointer newNodeNumbers = Int64ArrayType::CreateArray(numVerts, "newNumbers");
   newNodeNumbers->initializeWithValue(-1);
   int64_t* newNNumbers = newNodeNumbers->getPointer(0);
-  for (int64_t i = 0; i < numVerts; i++)
+  for (size_t i = 0; i < numVerts; i++)
   {
     badNode = false;
     if(vertex[i].pos[0] < m_XMin || vertex[i].pos[0] > m_XMax) { badNode = true; }
@@ -347,7 +347,7 @@ void CropSurfaceMesh::execute()
   Int64ArrayType::Pointer newFaceNumbers = Int64ArrayType::CreateArray(numFaces, "newNumbers");
   newFaceNumbers->initializeWithValue(-1);
   int64_t* newFNumbers = newFaceNumbers->getPointer(0);
-  for (int64_t i = 0; i < numFaces; i++)
+  for (size_t i = 0; i < numFaces; i++)
   {
     badFace = false;
     node1 = face[i].verts[0];
@@ -401,7 +401,7 @@ void CropSurfaceMesh::execute()
     }
 
     // Find the unique set of feature ids
-    for (int64_t i = 0; i < numFaces; ++i)
+    for (size_t i = 0; i < numFaces; ++i)
     {
       int32_t currentFeatureId = m_FeatureIds[i];
       if (currentFeatureId < totalFeatures)
