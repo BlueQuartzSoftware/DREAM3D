@@ -172,6 +172,7 @@ void GrayToRGB::readFilterParameters(AbstractFilterParametersReader* reader, int
 int GrayToRGB::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(RedArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(GreenArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(BlueArrayPath)

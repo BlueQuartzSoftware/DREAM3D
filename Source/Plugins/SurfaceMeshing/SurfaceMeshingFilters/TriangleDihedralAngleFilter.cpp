@@ -166,6 +166,7 @@ void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersR
 int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleDihedralAnglesArrayName)
   writer->closeFilterGroup();

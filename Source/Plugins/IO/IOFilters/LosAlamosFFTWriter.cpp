@@ -110,6 +110,7 @@ void LosAlamosFFTWriter::readFilterParameters(AbstractFilterParametersReader* re
 int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)

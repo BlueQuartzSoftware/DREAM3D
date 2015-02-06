@@ -90,6 +90,7 @@ void FindCAxisLocations::readFilterParameters(AbstractFilterParametersReader* re
 int FindCAxisLocations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisLocationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   writer->closeFilterGroup();

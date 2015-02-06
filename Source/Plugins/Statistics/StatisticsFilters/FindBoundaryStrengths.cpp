@@ -125,6 +125,7 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
 int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshmPrimesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshF7sArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshF1sptsArrayName)

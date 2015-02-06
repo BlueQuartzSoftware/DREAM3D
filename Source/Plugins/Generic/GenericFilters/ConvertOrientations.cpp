@@ -423,6 +423,7 @@ void ConvertOrientations::readFilterParameters(AbstractFilterParametersReader* r
 int ConvertOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(InputType)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputType)
   DREAM3D_FILTER_WRITE_PARAMETER(EulerAnglesArrayName)

@@ -74,6 +74,7 @@ class GenerateFeatureIds : public AbstractFilter
     int writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
     {
       writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
       writer->closeFilterGroup();
       return ++index; // we want to return the next index that was just written to
     }
@@ -170,6 +171,7 @@ class CreateVolumeDataContainer : public AbstractFilter
     int writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
     {
       writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
       writer->closeFilterGroup();
       return ++index; // we want to return the next index that was just written to
     }

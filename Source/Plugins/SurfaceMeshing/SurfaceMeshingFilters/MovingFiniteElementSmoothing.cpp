@@ -186,6 +186,7 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
   DREAM3D_FILTER_WRITE_PARAMETER(NodeConstraints)

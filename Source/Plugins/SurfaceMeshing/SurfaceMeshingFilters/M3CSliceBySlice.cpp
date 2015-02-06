@@ -391,6 +391,7 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)

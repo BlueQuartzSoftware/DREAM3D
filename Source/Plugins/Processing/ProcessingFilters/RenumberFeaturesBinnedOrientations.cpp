@@ -72,12 +72,10 @@ RenumberFeaturesBinnedOrientations::RenumberFeaturesBinnedOrientations() :
   m_FeaturePhases(NULL),
   m_CrystalStructuresArrayPath(Defaults::StatsGenerator, Defaults::CellEnsembleAttributeMatrixName, EnsembleData::CrystalStructures),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_BinWidth(5)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsQVector();
-  m_BinExtents.x = 9.0f;
-  m_BinExtents.y = 9.0f;
-  m_BinExtents.z = 3.0f;
   setupFilterParameters();
 }
 
@@ -94,7 +92,7 @@ RenumberFeaturesBinnedOrientations::~RenumberFeaturesBinnedOrientations()
 void RenumberFeaturesBinnedOrientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Bunge Euler Angles Bin Extents", "BinExtents", FilterParameterWidgetType::FloatVec3Widget, getBinExtents(), false, "Degrees"));
+  parameters.push_back(FilterParameter::New("Bin Width", "BinWidth", FilterParameterWidgetType::IntWidget, getBinWidth(), false, "Degrees"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
@@ -109,8 +107,8 @@ void RenumberFeaturesBinnedOrientations::setupFilterParameters()
 void RenumberFeaturesBinnedOrientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixPath( reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
-  setBinExtents( reader->readFloatVec3("BinExtents", getBinExtents() ) );
+  setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
+  setBinWidth(reader->readValue("BinWidth", getBinWidth() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setParentIdsArrayName(reader->readString("ParentIdsArrayName", getParentIdsArrayName() ) );
   setFeatureEulerAnglesArrayPath(reader->readDataArrayPath("FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath() ) );
@@ -125,8 +123,9 @@ void RenumberFeaturesBinnedOrientations::readFilterParameters(AbstractFilterPara
 int RenumberFeaturesBinnedOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BinExtents)
+  DREAM3D_FILTER_WRITE_PARAMETER(BinWidth)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ParentIdsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
@@ -234,16 +233,21 @@ void RenumberFeaturesBinnedOrientations::execute()
   float dim[3];
   float bins[3];
   float step[3];
+  float binFactor = 0.0f;
   // hardcoded for hexagonal for now
+  // defaulted at 5 degree bins
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
   dim[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
-  bins[0] = m_BinExtents.x;
-  bins[1] = m_BinExtents.y;
-  bins[2] = m_BinExtents.z;
+
+  binFactor = float(m_BinWidth) * 0.2f;
+
+  step[0] = HexDim1StepValue * binFactor;
+  step[1] = HexDim2StepValue * binFactor;
+  step[2] = HexDim3StepValue * binFactor;
+  bins[0] = 36.0f / binFactor;
+  bins[1] = 36.0f / binFactor;
+  bins[2] = 12.0f / binFactor;
   for (size_t i = 0; i < totalFeatures; i++)
   {
 	binid[i] = 0;

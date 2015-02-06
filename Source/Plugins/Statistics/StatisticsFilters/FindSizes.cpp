@@ -101,6 +101,7 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 int FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(NumCellsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayName)

@@ -66,6 +66,7 @@ void BinaryWatershed::readFilterParameters(AbstractFilterParametersReader* reade
 int BinaryWatershed::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(PeakTolerance)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)

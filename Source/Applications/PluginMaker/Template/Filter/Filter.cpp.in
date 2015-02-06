@@ -177,6 +177,12 @@ void @ClassName@::execute()
 
   /* Place all your code to execute your filter here. */
 
+  if (getCancel() == true)
+  {
+    /* Gracefully clean up your filter before exiting. */
+    return;
+  }
+
   /* If some error occurs this code snippet can report the error up the call chain*/
   if (err < 0)
   {

@@ -170,6 +170,7 @@ void ManualThresholdTemplate::readFilterParameters(AbstractFilterParametersReade
 int ManualThresholdTemplate::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)

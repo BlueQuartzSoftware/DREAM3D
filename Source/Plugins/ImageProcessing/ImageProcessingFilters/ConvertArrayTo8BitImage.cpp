@@ -88,6 +88,7 @@ void ConvertArrayTo8BitImage::readFilterParameters(AbstractFilterParametersReade
 int ConvertArrayTo8BitImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NewArrayArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
   writer->closeFilterGroup();

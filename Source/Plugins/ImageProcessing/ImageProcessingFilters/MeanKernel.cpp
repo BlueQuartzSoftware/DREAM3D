@@ -104,6 +104,7 @@ void MeanKernel::readFilterParameters(AbstractFilterParametersReader* reader, in
 int MeanKernel::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)

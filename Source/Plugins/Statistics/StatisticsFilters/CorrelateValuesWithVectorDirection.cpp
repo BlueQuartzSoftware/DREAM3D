@@ -95,6 +95,7 @@ void CorrelateValuesWithVectorDirection::readFilterParameters(AbstractFilterPara
 int CorrelateValuesWithVectorDirection::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->writeValue("VectorDataArrayPath", getVectorDataArrayPath() );
   writer->writeValue("CorrelatedDataArrayPath", getCorrelatedDataArrayPath() );
   writer->closeFilterGroup();
