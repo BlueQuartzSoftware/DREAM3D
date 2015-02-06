@@ -34,7 +34,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
 
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

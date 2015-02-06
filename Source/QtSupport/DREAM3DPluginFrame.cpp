@@ -39,8 +39,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include <QtGui/QLineEdit>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMessageBox>
 
 // -----------------------------------------------------------------------------
 //

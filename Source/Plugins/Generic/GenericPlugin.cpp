@@ -45,7 +45,7 @@
 
 #include "Generic/moc_GenericPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(GenericPlugin, GenericPlugin)
+
 
 namespace Detail
 {

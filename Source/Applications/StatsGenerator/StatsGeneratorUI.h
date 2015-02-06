@@ -44,8 +44,8 @@
 
 #include <QtCore/QObject>
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMessageBox>
 
 #include "SGWidget.h"
 #include "PrimaryPhaseWidget.h"

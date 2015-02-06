@@ -49,7 +49,16 @@ sss</string>
     </size>
    </property>
    <layout class="QGridLayout" name="widgetLayout">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -128,8 +137,8 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>638</width>
-             <height>535</height>
+             <width>607</width>
+             <height>544</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -213,7 +222,7 @@ border: 2px solid;
      <x>0</x>
      <y>0</y>
      <width>1060</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -259,8 +268,8 @@ border: 2px solid;
     <addaction name="separator"/>
     <addaction name="actionCheck_For_Updates"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout"/>
-    <addaction name="actionAbout_Plugins"/>
+    <addaction name="actionAbout_DREAM3D"/>
+    <addaction name="actionPlugin_Information"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -398,7 +407,7 @@ border: 2px solid;
     <string>Show License</string>
    </property>
   </action>
-  <action name="actionAbout">
+  <action name="actionAbout_DREAM3D">
    <property name="text">
     <string>About DREAM3D</string>
    </property>
@@ -461,9 +470,15 @@ border: 2px solid;
     <string>Ctrl+Backspace</string>
    </property>
   </action>
-  <action name="actionAbout_Plugins">
+  <action name="actionPlugin_Information">
    <property name="text">
-    <string>About Plugins</string>
+    <string>Plugin Information...</string>
+   </property>
+   <property name="iconText">
+    <string>Plugin Information</string>
+   </property>
+   <property name="toolTip">
+    <string>Plugin Information</string>
    </property>
   </action>
  </widget>

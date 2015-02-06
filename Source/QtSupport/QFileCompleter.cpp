@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "QFileCompleter.h"
-#include <QtGui/QDirModel>
+#include <QtWidgets/QDirModel>
 
 // -----------------------------------------------------------------------------
 // use same QDirModel for all completers

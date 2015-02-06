@@ -40,7 +40,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 class QGraphicsPixmapItem;
 

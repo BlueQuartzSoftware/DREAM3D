@@ -48,8 +48,8 @@
 #include <QtCore/QVector>
 #include <QtCore/QRunnable>
 #include <QtCore/QThreadPool>
-#include <QtCore/QtConcurrentRun>
-#include <QtGui/QMessageBox>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QtWidgets/QMessageBox>
 
 
 //-- Qwt Includes

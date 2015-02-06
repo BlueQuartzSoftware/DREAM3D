@@ -140,7 +140,7 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
   }
 
   // Create the output file to dump some data into
-  FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.toAscii().data(), "wb");
+  FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.toLatin1().data(), "wb");
 
   // If junkPlacement is set to START or BOTH, write junk to file
   size_t numWritten = 0;

@@ -44,13 +44,13 @@
 #include <QtCore/QStateMachine>
 
 #include <QtGui/QPixmap>
-#include <QtGui/QGraphicsPixmapItem>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QGraphicsPixmapItem>
+#include <QtWidgets/QPushButton>
 #include <QtGui/QColor>
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
-#include <QtGui/QMenu>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMessageBox>
 
 
 #include "DREAM3DLib/DataContainers/DataContainer.h"

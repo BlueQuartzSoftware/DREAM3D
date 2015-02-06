@@ -38,10 +38,10 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QStyleOptionViewItemV4>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QStyleOptionViewItemV4>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QDoubleValidator>
-#include <QtGui/QComboBox>
+#include <QtWidgets/QComboBox>
 #include <QtGui/QPainter>
 
 #include "DREAM3DWidgetsLib/moc_ComparisonSelectionItemDelegate.cpp"

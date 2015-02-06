@@ -37,7 +37,7 @@
 #define _QFilterLibraryDockWidget_H_
 
 
-#include <QtGui/QDockWidget>
+#include <QtWidgets/QDockWidget>
 
 #include "DREAM3DLib/Common/FilterManager.h"
 

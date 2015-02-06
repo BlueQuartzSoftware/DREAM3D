@@ -117,7 +117,7 @@ class FilterWidgetManager;
  *    @endcode
  *    The programmer will also need to add the following macros to their implementation file.
  *    @code
- *    Q_EXPORT_PLUGIN2(MyPlugin, MyPlugin);
+ *    ;
  *    @endcode
  *
  *    At this point the developer is ready to implement each of the virtual functions in the

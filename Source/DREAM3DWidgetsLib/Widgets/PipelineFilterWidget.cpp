@@ -41,12 +41,14 @@
 #include <QtCore/QTimer>
 #include <QtCore/QResource>
 #include <QtCore/QDir>
+#include <QtCore/QMimeData>
 
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QVBoxLayout>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
-#include <QtGui/QFileDialog>
+#include <QtGui/QDrag>
+#include <QtWidgets/QFileDialog>
 
 
 
@@ -596,7 +598,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 #elif defined(Q_WS_MAC)
   style.append("font: 100 italic 12pt \"Arial\";");
 #else
-  style.append("font: 85 italic 9pt \"Arial\";");
+  style.append("font: 100 italic 12pt \"Arial\";");
 #endif
   style.append("font-weight: bold; ");
   if (m_HasPreflightErrors == true)
@@ -678,7 +680,7 @@ void PipelineFilterWidget::mouseMoveEvent(QMouseEvent* event)
   }
   // The user is dragging the filter widget so we should set it as selected.
   setIsSelected(true);
-  QPixmap pixmap = QPixmap::grabWidget(this);
+  QPixmap pixmap = grab();
 
   // Create new picture for transparent
   QPixmap transparent(pixmap.size());

@@ -99,32 +99,32 @@ namespace DataContainerIOTest
 
   QString TestDir()
   {
-    return UnitTest::TestTempDir + QString::fromAscii("/DataContainerIOTest");
+    return UnitTest::TestTempDir + QString::fromLatin1("/DataContainerIOTest");
   }
 
   QString TestFile()
   {
-    return TestDir() + QString::fromAscii("/DataContainerIOTest.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerIOTest.h5");
   }
 
   QString TestFile2()
   {
-    return TestDir() + QString::fromAscii("/DataContainerIOTest_Rewrite.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerIOTest_Rewrite.h5");
   }
 
   QString TestFile3()
   {
-    return TestDir() + QString::fromAscii("/DataContainerIOTest_Subset.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerIOTest_Subset.h5");
   }
 
   QString IniFile()
   {
-    return TestDir() + QString::fromAscii("/DataContainerProxyTest.ini");
+    return TestDir() + QString::fromLatin1("/DataContainerProxyTest.ini");
   }
 
   QString H5File()
   {
-    return TestDir() + QString::fromAscii("/DataContainerProxyTest.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerProxyTest.h5");
   }
 }
 
@@ -248,7 +248,7 @@ void PopulateVolumeDataContainer(DataContainer::Pointer dc, QVector<size_t> tupl
   dc->addAttributeMatrix(attrMat->getName(), attrMat);
 
 
-  QString autoAddName = name + QString::fromAscii("_Auto");
+  QString autoAddName = name + QString::fromLatin1("_Auto");
   AttributeMatrix::Pointer autoAttrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(NULL, autoAddName, tupleDims, DREAM3D::AttributeMatrixType::Cell);
   compDims.resize(0);
   compDims.push_back(1);

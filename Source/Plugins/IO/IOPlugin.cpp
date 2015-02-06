@@ -46,7 +46,7 @@
 
 #include "IO/moc_IOPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(IOPlugin, IOPlugin)
+
 
 namespace Detail
 {

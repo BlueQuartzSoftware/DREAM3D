@@ -81,7 +81,7 @@ void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContain
     {
       std::cout << "Data Container:" << dataContainerName.toStdString() << std::endl;
     }
-    hid_t containerGid = H5Gopen(dcArrayGroupId, dataContainerName.toAscii().constData(), H5P_DEFAULT);
+    hid_t containerGid = H5Gopen(dcArrayGroupId, dataContainerName.toLatin1().constData(), H5P_DEFAULT);
     if (containerGid < 0)
     {
       continue;

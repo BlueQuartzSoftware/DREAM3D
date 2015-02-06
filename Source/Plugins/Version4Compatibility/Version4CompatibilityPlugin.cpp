@@ -15,7 +15,7 @@
 
 #include "Version4Compatibility/moc_Version4CompatibilityPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(Version4CompatibilityPlugin, Version4CompatibilityPlugin)
+
 
 namespace Detail
 {

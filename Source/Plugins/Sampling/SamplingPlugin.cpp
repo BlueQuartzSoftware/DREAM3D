@@ -16,7 +16,7 @@
 
 #include "moc_SamplingPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(SamplingPlugin, SamplingPlugin)
+
 
 namespace Detail
 {

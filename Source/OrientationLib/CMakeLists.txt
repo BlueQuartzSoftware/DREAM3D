@@ -237,7 +237,7 @@ endif()
 if(QT4_FOUND)
   set(OrientationLib_LINK_LIBRARIES
      ${OrientationLib_LINK_LIBRARIES}
-     ${QT_QTCORE_LIBRARY}
+     Qt5::Core
     )
 endif()
 

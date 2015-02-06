@@ -33,7 +33,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QUrl>
-#include <QtGui/QWidget>
+#include <QtCore/QMimeData>
+#include <QtWidgets/QWidget>
 #include <QtGui/QDragEnterEvent>
 
 

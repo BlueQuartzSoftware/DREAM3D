@@ -12,7 +12,7 @@
 #///////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( EbsdLib )
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
 	# CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
@@ -243,7 +243,7 @@ endif()
 if(QT4_FOUND)
 	set(EBSDLib_LINK_LIBRARIES
 		${EBSDLib_LINK_LIBRARIES}
-		 ${QT_QTCORE_LIBRARY}
+		 Qt5::Core
 		)
 endif()
 

@@ -37,7 +37,7 @@
 #ifndef _EDITPHASEDIALOG_H_
 #define _EDITPHASEDIALOG_H_
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QtGui/QDoubleValidator>
 #include "ui_EditPhaseDialog.h"
 

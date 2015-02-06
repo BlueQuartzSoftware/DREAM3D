@@ -15,8 +15,6 @@
 
 #include "@PluginName@/moc_@PluginName@Plugin.cpp"
 
-Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin)
-
 namespace Detail
 {
   const QString @PluginName@PluginFile("@PluginName@Plugin");
@@ -148,14 +146,6 @@ QString @PluginName@Plugin::getLicense()
     }
   }
   return text;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QList<QString> @PluginName@Plugin::getFilters()
-{
-  return m_Filters;
 }
 
 // -----------------------------------------------------------------------------

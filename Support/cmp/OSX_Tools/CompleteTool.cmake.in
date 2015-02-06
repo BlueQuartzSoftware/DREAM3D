@@ -1,16 +1,16 @@
 # -----------------------------------------------------------------------------------
-# This file was auto generated from the template file "CompleteBundle.cmake.in", if you 
-# need to make changes edit the template file NOT this one. Your changes will be 
+# This file was auto generated from the template file "CompleteBundle.cmake.in", if you
+# need to make changes edit the template file NOT this one. Your changes will be
 # lost the next time CMake is run. You have been warned.
 #   This file is called from CMake's installation generated scripts. It is added
-# via a CMake call 
+# via a CMake call
 #   install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}")
 # which can be sometime found in the macro 'MakeOSXBundleApp' which is sometimes located
 # in the file OSX_BundleTools.cmake
 # -----------------------------------------------------------------------------------
 
 message (STATUS "#------------ Starting OS X Tool Fixup --------------------------")
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 #-- Need this for link line stuff?
 if(COMMAND cmake_policy)
@@ -61,7 +61,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
     set(path "@executable_path/../plugins")
     set(overridden 1)
   endif(item MATCHES "\\.so$")
-  
+
   # Embed frameworks in the embedded "Frameworks" directory (sibling of MacOS):
   #
   if(NOT overridden)
@@ -83,7 +83,7 @@ endfunction(gp_item_default_embedded_path_override)
 
 # -- Run the BundleUtilities cmake code
 include(BundleUtilities)
-#fixup_bundle("${CMAKE_INSTALL_PREFIX}/tools/@osx_app_name@" 
+#fixup_bundle("${CMAKE_INSTALL_PREFIX}/tools/@osx_app_name@"
              # Plugins to Install
 #             "@app_plugin_list@"
              # Directories to Search for Libraries
@@ -93,7 +93,7 @@ include(BundleUtilities)
 list(APPEND @osx_app_name@archs "@CMAKE_OSX_ARCHITECTURES@" )
 list(LENGTH @osx_app_name@archs @osx_app_name@archLength )
 message(STATUS "@osx_app_name@archLength: ${@osx_app_name@archLength}")
-if (@osx_app_name@archLength EQUAL 1)    
+if (@osx_app_name@archLength EQUAL 1 OR @osx_app_name@archLength EQUAL 0)
     # Move the frameworks from the contents of the .app bundle out to top level of the install directory
     execute_process(COMMAND /bin/bash @OPTIMIZE_BUNDLE_SHELL_SCRIPT@ ${CMAKE_INSTALL_PREFIX})
 endif()

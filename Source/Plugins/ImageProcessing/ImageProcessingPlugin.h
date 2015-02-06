@@ -50,8 +50,9 @@
 class ImageProcessingPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.ImageProcessingPlugin")
+
 
   public:
     ImageProcessingPlugin();

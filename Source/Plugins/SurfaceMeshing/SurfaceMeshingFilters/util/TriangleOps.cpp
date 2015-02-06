@@ -65,8 +65,6 @@ QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triang
 
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
-  #warning Check for Triangle Neighbors if they actually exist
-
   // Get the Triangle Neighbor Structure
   CellDynamicList::Pointer triNeighbors = triangles->getCellNeighbors();
   if(NULL == triNeighbors.get())

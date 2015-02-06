@@ -39,11 +39,11 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtGui/QFrame>
+#include <QtWidgets/QFrame>
 #include <QtCore/QSettings>
-#include <QtGui/QStatusBar>
+#include <QtWidgets/QStatusBar>
 #include <QtGui/QIcon>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #include "DREAM3DLib/Common/PipelineMessage.h"
 

@@ -46,7 +46,7 @@
 
 #include "moc_SyntheticBuildingPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(SyntheticBuildingPlugin, SyntheticBuildingPlugin)
+
 
 namespace Detail
 {

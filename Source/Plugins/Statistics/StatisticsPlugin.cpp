@@ -45,7 +45,7 @@
 
 #include "moc_StatisticsPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(StatisticsPlugin, StatisticsPlugin)
+
 
 namespace Detail
 {

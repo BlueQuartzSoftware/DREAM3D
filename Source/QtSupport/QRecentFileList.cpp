@@ -34,7 +34,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtGui/QMenu>
+#include <QtWidgets/QMenu>
 
 #include <iostream>
 

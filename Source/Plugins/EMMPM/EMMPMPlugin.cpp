@@ -15,7 +15,7 @@
 
 #include "EMMPM/moc_EMMPMPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(EMMPMPlugin, EMMPMPlugin)
+
 
 namespace Detail
 {

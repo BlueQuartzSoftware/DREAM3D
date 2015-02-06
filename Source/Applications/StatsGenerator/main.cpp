@@ -40,7 +40,7 @@
 #include "SGApplication.h"
 
 //-- Qt Headers
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 /**
  * @brief The Main entry point for the application

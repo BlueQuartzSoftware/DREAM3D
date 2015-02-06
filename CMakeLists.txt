@@ -16,7 +16,7 @@ if(NOT "${DREAM3D_SDK}" STREQUAL "")
 endif()
 
 project(DREAM3DProj)
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
@@ -26,10 +26,7 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0042 OLD)
 
   # CMake 3.1 introduces if() policies on dereferencing variables in quotes
-  if(${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0.2") 
-    cmake_policy(SET CMP0054 NEW)
-  endif()
-
+  cmake_policy(SET CMP0054 NEW)
 endif()
 
 
@@ -106,7 +103,7 @@ set(DREAM3D_REMOVE_TEST_FILES "1")
 # calculate how many commits since the last "tag" was applied to the repository.
 # this basically gives us an always incrementing number for the patch level
 # and we can set the Major and Minor versions as we see fit.
-set(CMP_VERSION_MAJOR "5.1")
+set(CMP_VERSION_MAJOR "5.2")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
@@ -124,45 +121,65 @@ if(BUILD_SHARED_LIBS)
         list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
                                     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
     endif()
+
+else()
+  message(FATAL_ERROR "BUILD_SHARED_LIBS Must be set to ON in order to build properly.")
 endif(BUILD_SHARED_LIBS)
 
 # ------------------------------------------------------------------------------
-#  Qt 4 Section
+#  Qt 5 Section
 # ------------------------------------------------------------------------------
-# by default only QtCore and QtGui modules are enabled
-# other modules must be enabled like this:
-if(WIN32)
-   set(QT_USE_QTMAIN TRUE)
-ENDif(WIN32)
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Find the QtWidgets library
+set(Qt5_COMPONENTS Core Widgets Network Gui Concurrent Script Svg Xml OpenGL PrintSupport)
+find_package(Qt5 COMPONENTS ${Qt5_COMPONENTS})
+if(NOT Qt5_FOUND)
+  message(FATAL_ERROR "Qt5 is Required for DREAM3D to build. Please install it.")
+endif()
+# We need the location of QMake for later on in order to find the plugins directory
+get_target_property(QtQMake_location Qt5::qmake LOCATION)
+execute_process(COMMAND "${QtQMake_location}" -query QT_INSTALL_PREFIX OUTPUT_VARIABLE QM_QT_INSTALL_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
+message(STATUS "Qt5 Location: ${QM_QT_INSTALL_PREFIX}")
+execute_process(COMMAND "${QtQMake_location}" -query QT_VERSION OUTPUT_VARIABLE QM_QT_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+message(STATUS "Qt5 Version: ${QM_QT_VERSION} ")
 
-# this command finds Qt4 libraries and sets all required variables
-# note that it's Qt4, not QT4 or qt4
-FIND_PACKAGE( Qt4 REQUIRED )
-if(QT4_FOUND)
-   CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
-   CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
-else()
-  message(FATAL_ERROR "Qt version 4.8 is REQUIRED to build DREAM3D")
+# This is really just needed for Windows
+CopyQt5RunTimeLibraries( LIBRARIES ${Qt5_COMPONENTS})
+# This is pretty much needed on all the platforms.
+AddQt5LibraryInstallRule( LIBRARIES ${Qt5_COMPONENTS})
+
+#-- Let CMake determine which files need to have 'moc' run on them
+set(CMAKE_AUTOMOC TRUE)
+#-- Make sure we include the proper Qt5 include directories
+foreach(qtlib ${Qt5_COMPONENTS})
+  include_directories( ${Qt5${qtlib}_INCLUDE_DIRS})
+endforeach()
+
+
+set(QT_PLUGINS_FILE_TEMPLATE "${DREAM3DProj_BINARY_DIR}/Qt_Plugins.cmake.in")
+set(QT_PLUGINS_FILE "${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt")
+
+file(WRITE ${QT_PLUGINS_FILE_TEMPLATE} "")
+file(WRITE ${QT_PLUGINS_FILE} "")
+
+AddQt5Plugins(PLUGIN_NAMES QDDS QGif QICNS QICO QJp2 QJpeg QMng QTga QTiff QWbmp QWebp
+              PLUGIN_FILE "${QT_PLUGINS_FILE}"
+              PLUGIN_FILE_TEMPLATE "${QT_PLUGINS_FILE_TEMPLATE}"
+              LIBRARY_SEARCH_FILE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
+              PLUGIN_SUFFIX Plugin
+              PLUGIN_TYPE imageformats)
+if(NOT APPLE)
+  AddQt5Plugins(PLUGIN_NAMES AccessibleFactory
+              PLUGIN_FILE "${QT_PLUGINS_FILE}"
+              PLUGIN_FILE_TEMPLATE "${QT_PLUGINS_FILE_TEMPLATE}"
+              LIBRARY_SEARCH_FILE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
+              PLUGIN_TYPE accessible)
 endif()
 
-set(QT_USE_QTCORE "TRUE")
-set(QT_USE_QTGUI "TRUE")
-set(QT_USE_QTNETWORK "TRUE")
-set(CMAKE_AUTOMOC TRUE)
 
-# add some useful macros and variables
-# (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
-# contains a path to CMake script)
-INCLUDE( ${QT_USE_FILE} )
-
-
-# --------------------------------------------------------------------
-# We need the Qt Image Plugins (Most likley) for either the DREAM3D application
-# or the pipeline runner which might load images through one of the plugins
-# so we are just going to look for the plugins here and include them.
-FindQt4Plugins("qgif;qjpeg;qtiff" "${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt"
-                "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
-                "imageformats" )
+# Append the locations of the Qt libraries to our Library Search Paths
+list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
 
 # Append the locations of the Qt libraries to our Library Search Paths
 list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )

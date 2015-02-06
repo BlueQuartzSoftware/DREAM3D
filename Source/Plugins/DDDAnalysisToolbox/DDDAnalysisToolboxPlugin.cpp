@@ -15,7 +15,7 @@
 
 #include "DDDAnalysisToolbox/moc_DDDAnalysisToolboxPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(DDDAnalysisToolboxPlugin, DDDAnalysisToolboxPlugin)
+
 
 namespace Detail
 {

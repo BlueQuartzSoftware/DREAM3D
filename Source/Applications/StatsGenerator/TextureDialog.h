@@ -39,7 +39,7 @@
 
 #include <vector>
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 #include "ui_TextureDialog.h"
 

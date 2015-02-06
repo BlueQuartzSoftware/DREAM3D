@@ -37,7 +37,7 @@
 #ifndef _STATSGENMDFWIDGET_H_
 #define _STATSGENMDFWIDGET_H_
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include "ui_StatsGenMDFWidget.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"

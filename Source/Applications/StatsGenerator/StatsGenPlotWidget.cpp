@@ -45,8 +45,8 @@
 #include <limits>
 
 //-- Qt Includes
-#include <QtGui/QMessageBox>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAbstractItemDelegate>
 
 //-- Qwt Includes
 #include <qwt.h>
@@ -390,7 +390,7 @@ void StatsGenPlotWidget::setupGui()
 
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
-  headerView->setResizeMode(QHeaderView::Interactive);
+  headerView->sectionResizeMode(QHeaderView::Interactive);
   m_TableView->setHorizontalHeader(headerView);
   headerView->show();
 

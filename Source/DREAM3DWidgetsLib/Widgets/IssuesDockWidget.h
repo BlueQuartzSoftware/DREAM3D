@@ -37,7 +37,7 @@
 #define _IssuesDockWidget_H_
 
 
-#include <QtGui/QDockWidget>
+#include <QtWidgets/QDockWidget>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/IObserver.h"

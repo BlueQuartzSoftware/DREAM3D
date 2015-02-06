@@ -16,7 +16,7 @@ set(DREAM3DLib_DataContainers_Moc_HDRS
 )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-#QT4_WRAP_CPP( DREAM3DLib_DataContainers_Generated_MOC_SRCS ${DREAM3DLib_DataContainers_Moc_HDRS})
+#QT5_WRAP_CPP( DREAM3DLib_DataContainers_Generated_MOC_SRCS ${DREAM3DLib_DataContainers_Moc_HDRS})
 
 set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_DataContainers_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files

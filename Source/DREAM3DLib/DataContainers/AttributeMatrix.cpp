@@ -92,7 +92,7 @@ void AttributeMatrix::ReadAttributeMatrixStructure(hid_t containerId, DataContai
       {
         std::cout << "    AttributeMatrix: " << attributeMatrixName.toStdString()  << std::endl;
       }
-      hid_t attrMatGid = H5Gopen(containerId, attributeMatrixName.toAscii().constData(), H5P_DEFAULT);
+      hid_t attrMatGid = H5Gopen(containerId, attributeMatrixName.toLatin1().constData(), H5P_DEFAULT);
       if (attrMatGid < 0)
       {
         continue;

@@ -152,10 +152,10 @@ cmp_IDE_GENERATED_PROPERTIES("StatsGenerator/UI_Files" "${StatsGenerator_UIS}" "
 # and finally any resource files
 SET(StatsGenerator_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
-QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
+QT5_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
-QT4_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
+QT5_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${Generated_UI_HDRS}" "")
@@ -213,10 +213,9 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES  H5Support EbsdLib DREAM3DLib OrientationLib ${QT_LIBRARIES} QtSupport ${QWT_LIBRARY}
+    LINK_LIBRARIES  H5Support EbsdLib DREAM3DLib OrientationLib QtSupport ${QWT_LIBRARY}
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-#    QT_PLUGINS    ${QT_PLUGINS}
-#    OTHER_PLUGINS ${OTHER_PLUGINS}
+    QT5_MODULES   ${Qt5_COMPONENTS}
     COMPONENT     Applications
     INSTALL_DEST  ${DEST_DIR}
 )

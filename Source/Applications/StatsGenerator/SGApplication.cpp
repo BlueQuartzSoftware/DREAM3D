@@ -38,7 +38,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-#include <QtGui/QDesktopWidget>
+#include <QtWidgets/QDesktopWidget>
 
 // -----------------------------------------------------------------------------
 //

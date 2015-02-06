@@ -44,10 +44,10 @@
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 #include <QtGui/QDesktopServices>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QProgressDialog>
 
 
 #include "H5Support/H5Utilities.h"
@@ -1077,7 +1077,7 @@ void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
   {
     //  qDebug() << "Could not open URL: " << url.path() << "\n";
     displayDialogBox(("Error Opening Help File"),
-                     QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
+                     QString::fromLatin1("DREAM3D could not open the help file path ") + url.path(),
                      QMessageBox::Critical);
   }
 }

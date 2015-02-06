@@ -46,7 +46,7 @@
 
 #include "OrientationAnalysis/moc_OrientationAnalysisPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(OrientationAnalysisPlugin, OrientationAnalysisPlugin)
+
 
 namespace Detail
 {

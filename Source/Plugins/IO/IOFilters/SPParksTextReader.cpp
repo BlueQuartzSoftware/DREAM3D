@@ -363,7 +363,7 @@ int  SPParksTextReader::readFile()
   bool didAllocate = false;
   for (qint32 i = 2; i < size; ++i)
   {
-    QString name = QString::fromAscii(tokens[i]);
+    QString name = QString::fromLatin1(tokens[i]);
     pType = getPointerType(name);
 
     // We don't need to parse the X, Y & Z or id values into arrays.

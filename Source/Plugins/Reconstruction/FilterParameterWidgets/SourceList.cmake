@@ -73,7 +73,7 @@ set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRC
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
-QT4_WRAP_UI( ${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS ${${PLUGIN_NAME}_ParameterWidgets_UIS} )
+QT5_WRAP_UI( ${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS ${${PLUGIN_NAME}_ParameterWidgets_UIS} )
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs

@@ -45,7 +45,7 @@
 
 #include "moc_ProcessingPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(ProcessingPlugin, ProcessingPlugin)
+
 
 namespace Detail
 {

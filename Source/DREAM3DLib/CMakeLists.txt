@@ -13,7 +13,7 @@
 
 # set project's name
 PROJECT( DREAM3DLib )
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
     # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
@@ -145,7 +145,7 @@ include_directories( ${DREAM3DLib_BINARY_DIR} )
 
 #-- Add a library for the DREAM3DLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} H5Support ${QT_QTCORE_LIBRARY} ${TBB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} H5Support Qt5::Core ${TBB_LIBRARIES})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

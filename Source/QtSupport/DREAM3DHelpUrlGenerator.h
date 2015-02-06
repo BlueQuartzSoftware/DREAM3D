@@ -41,7 +41,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QString>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 
 /**

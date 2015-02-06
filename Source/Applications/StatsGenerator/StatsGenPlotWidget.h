@@ -37,7 +37,7 @@
 #ifndef _STATSGENPLOTWIDGET_H_
 #define _STATSGENPLOTWIDGET_H_
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 #include "ui_StatsGenPlotWidget.h"
 

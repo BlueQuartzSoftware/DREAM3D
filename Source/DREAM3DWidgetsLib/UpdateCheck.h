@@ -38,6 +38,7 @@
 #ifndef _UPDATECHECK_H_
 #define _UPDATECHECK_H_
 
+#include <QtCore/QObject>
 #include <QtCore/QUrl>
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"

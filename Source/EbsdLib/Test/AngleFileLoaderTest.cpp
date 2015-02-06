@@ -71,7 +71,7 @@ void makeTestFile(const QString delim, const QString& outputFile)
   int count = 1000;
   float e0, e1, e2;
 
-  FILE* f = fopen(outputFile.toAscii().data(), "wb");
+  FILE* f = fopen(outputFile.toLatin1().data(), "wb");
 
   fprintf(f, "%d\n", count);
 
@@ -80,7 +80,7 @@ void makeTestFile(const QString delim, const QString& outputFile)
     e0 = static_cast<float>(i) * 0.1;
     e1 = static_cast<float>(i) * 0.25;
     e2 = static_cast<float>(i) * 0.58;
-    fprintf(f, "%0.6f%s%0.6f%s%0.6f\n", e0, delim.toAscii().data(), e1, delim.toAscii().data(), e2);
+    fprintf(f, "%0.6f%s%0.6f%s%0.6f\n", e0, delim.toLatin1().data(), e1, delim.toLatin1().data(), e2);
   }
   fclose(f);
 }

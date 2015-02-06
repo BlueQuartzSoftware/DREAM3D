@@ -372,7 +372,7 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure(con
   //    std::cout << DREAM3D::HDF5::FileVersionName.toStdString() << ":" << fileVersion.toStdString() << std::endl;
   //  }
 
-  hid_t dcArrayGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toAscii().constData(), H5P_DEFAULT);
+  hid_t dcArrayGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().constData(), H5P_DEFAULT);
   if (dcArrayGroupId < 0)
   {
     QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerGroupName);
@@ -458,7 +458,7 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArray::Pointer dca)
 {
   int err = 0;
-  hid_t dcbGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toAscii().constData(), H5P_DEFAULT);
+  hid_t dcbGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toLatin1().constData(), H5P_DEFAULT);
   if (dcbGroupId < 0)
   {
     // NO Bundles are available to read so just return.

@@ -38,8 +38,8 @@
 
 #include <iostream>
 
-#include <QtGui/QLabel>
-#include <QtGui/QTableWidgetItem>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QTableWidgetItem>
 
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
@@ -70,12 +70,12 @@ IssuesDockWidget::~IssuesDockWidget()
 // -----------------------------------------------------------------------------
 void IssuesDockWidget::setupGui()
 {
-  errorTableWidget->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
-  errorTableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::Interactive);
+  errorTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+  errorTableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
   errorTableWidget->horizontalHeader()->resizeSection(1, 250);
-  errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
-  errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  errorTableWidget->setShown(true);
+  errorTableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+  errorTableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+  //errorTableWidget->setShown(true);
   errorTableWidget->setVisible(true);
 }
 
@@ -196,10 +196,6 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
     default:
       return;
   }
-
-
-  //errorTableWidget->resizeRowsToContents();
-
 }
 
 // -----------------------------------------------------------------------------
