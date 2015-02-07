@@ -109,6 +109,11 @@ void FindBoundaryCells::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getBoundaryCellsArrayName() );
   m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -126,12 +131,6 @@ void FindBoundaryCells::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -145,9 +144,9 @@ void FindBoundaryCells::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  int xPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints());
-  int yPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints());
-  int zPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints());
+  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
   int neighpoints[6];
   neighpoints[0] = -xPoints * yPoints;

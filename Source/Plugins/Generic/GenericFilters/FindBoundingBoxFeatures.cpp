@@ -127,6 +127,11 @@ void FindBoundingBoxFeatures::dataCheck()
   m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   dims[0] = 1;
   m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -162,12 +167,6 @@ void FindBoundingBoxFeatures::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 // -----------------------------------------------------------------------------
 //
@@ -181,8 +180,8 @@ void FindBoundingBoxFeatures::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
 
-  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_boundingboxfeatures(); }
-  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_boundingboxfeatures2D(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_boundingboxfeatures(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_boundingboxfeatures2D(); }
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -214,11 +213,11 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
   {
     //reset boundbox for each phase
     boundbox[1] = 0;
-    boundbox[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
+    boundbox[2] = m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getXRes();
     boundbox[3] = 0;
-    boundbox[4] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+    boundbox[4] = m->getGeometryAs<ImageGeom>()->getYPoints() * m->getGeometryAs<ImageGeom>()->getYRes();
     boundbox[5] = 0;
-    boundbox[6] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+    boundbox[6] = m->getGeometryAs<ImageGeom>()->getZPoints() * m->getGeometryAs<ImageGeom>()->getZRes();
     for (size_t i = 1; i < size; i++)
     {
       if(m_SurfaceFeatures[i] == true && (m_CalcByPhase == false || m_Phases[i] == iter))
@@ -287,26 +286,26 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   int xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f;
 
-  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
-    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-    xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
-    yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+    xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getYRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
-    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-    xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
-    yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
-    xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-    xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-    yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-    yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   }
 
   boundbox[1] = 0;
