@@ -150,6 +150,10 @@ void SaveImages::dataCheck()
     if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getColorsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 
@@ -166,12 +170,6 @@ void SaveImages::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -188,7 +186,7 @@ void SaveImages::execute()
 
   /* Place all your code to execute your filter here. */
   size_t dims[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   size_t index = 0;
   uint8_t* slice = NULL;
