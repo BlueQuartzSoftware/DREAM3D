@@ -226,7 +226,6 @@ void SampleSurfaceMesh::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
   //pull down faces
-  int64_t* faces = triangleGeom->getTriPointer(0);
   int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   //create array to hold bounding vertices for each face

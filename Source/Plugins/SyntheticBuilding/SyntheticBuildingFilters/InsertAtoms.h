@@ -129,7 +129,7 @@ class InsertAtoms : public AbstractFilter
     */
     void dataCheck();
 
-    virtual void assign_points(QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature);
+    virtual void assign_points(QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)

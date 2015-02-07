@@ -439,8 +439,12 @@ void PackPrimaryPhases::dataCheck()
   // This is for convenience
 
   // Make sure we have our input DataContainer with the proper Ensemble data
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   //Input Ensemble Data That we require
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
@@ -779,7 +783,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   size_t udims[3] =
   { 0, 0, 0 };
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -792,12 +796,12 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     static_cast<DimType>(udims[2]),
   };
 
-  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
-  sizex = dims[0] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  sizey = dims[1] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-  sizez = dims[2] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
+  sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
+  sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
   totalvol = sizex * sizey * sizez;
 
   double totalprimaryvolTEMP = 0;
@@ -809,7 +813,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     if(m_FeatureIds[i] <= 0) { totalprimaryvolTEMP++; }
   }
   float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
-  totalprimaryvol = totalprimaryvol * (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes());
+  totalprimaryvol = totalprimaryvol * (m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes());
 
   // float change1, change2;
   float change = 0.0f;
@@ -1371,9 +1375,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  m_PackingRes[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * 2.0f;
-  m_PackingRes[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * 2.0f;
-  m_PackingRes[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes() * 2.0f;
+  m_PackingRes[0] = m->getGeometryAs<ImageGeom>()->getXRes() * 2.0f;
+  m_PackingRes[1] = m->getGeometryAs<ImageGeom>()->getYRes() * 2.0f;
+  m_PackingRes[2] = m->getGeometryAs<ImageGeom>()->getZRes() * 2.0f;
 
   m_HalfPackingRes[0] = m_PackingRes[0] * 0.5;
   m_HalfPackingRes[1] = m_PackingRes[1] * 0.5;
@@ -1387,9 +1391,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
   m_OneOverPackingRes[1] = 1.0f / m_PackingRes[1];
   m_OneOverPackingRes[2] = 1.0f / m_PackingRes[2];
 
-  m_PackingPoints[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() / 2;
-  m_PackingPoints[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() / 2;
-  m_PackingPoints[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() / 2;
+  m_PackingPoints[0] = m->getGeometryAs<ImageGeom>()->getXPoints() / 2;
+  m_PackingPoints[1] = m->getGeometryAs<ImageGeom>()->getYPoints() / 2;
+  m_PackingPoints[2] = m->getGeometryAs<ImageGeom>()->getZPoints() / 2;
 
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
 
@@ -2109,7 +2113,7 @@ void PackPrimaryPhases::assign_voxels()
   int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   DimType dims[3] =
   {
@@ -2130,9 +2134,9 @@ void PackPrimaryPhases::assign_voxels()
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
-  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
@@ -2307,9 +2311,9 @@ void PackPrimaryPhases::assign_gaps_only()
   int good;
   int neighbor;
 
-  int xPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints());
-  int yPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints());
-  int zPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints());
+  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
@@ -2321,7 +2325,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 
@@ -2427,7 +2431,7 @@ void PackPrimaryPhases::cleanup_features()
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   size_t udims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -2469,7 +2473,7 @@ void PackPrimaryPhases::cleanup_features()
     gsizes[i] = 0;
   }
 
-  float resConst = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+  float resConst = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
   const double k_PiOver6 = M_PI / 6.0;
   for (size_t i = 0; i < totalPoints; i++)
   {

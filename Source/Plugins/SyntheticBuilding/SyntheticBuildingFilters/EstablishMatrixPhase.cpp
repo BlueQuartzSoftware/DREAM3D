@@ -153,8 +153,12 @@ void EstablishMatrixPhase::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   //Input Ensemble Data That we require
   //typedef DataArray<unsigned int> PhaseTypeArrayType;
 
@@ -185,10 +189,10 @@ DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<Abstr
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
   tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
 
   //Feature Data
   tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
@@ -213,12 +217,6 @@ void EstablishMatrixPhase::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -253,7 +251,7 @@ void  EstablishMatrixPhase::establish_matrix()
 
   size_t udims[3] =
   { 0, 0, 0 };
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -266,9 +264,9 @@ void  EstablishMatrixPhase::establish_matrix()
     static_cast<DimType>(udims[2]),
   };
 
-  sizex = dims[0] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  sizey = dims[1] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-  sizez = dims[2] * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+  sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
+  sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
+  sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
   totalvol = sizex * sizey * sizez;
 
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();

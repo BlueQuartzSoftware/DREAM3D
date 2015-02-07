@@ -411,8 +411,12 @@ void TesselateFarFieldGrains::dataCheck()
   // This is for convenience
 
   // Make sure we have our input DataContainer with the proper Ensemble data
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   //Input Ensemble Data That we require
 
   QVector<size_t> dims(1, 1);
@@ -603,8 +607,8 @@ void  TesselateFarFieldGrains::load_features()
   size_t currentFeature = 1;
   size_t xDim, yDim, zDim;
   float xRes, yRes, zRes;
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(xDim, yDim, zDim);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
+  m->getGeometryAs<ImageGeom>()->getDimensions(xDim, yDim, zDim);
+  m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
   float xShift = xRes * float(xDim / 2.0);
   float yShift = yRes * float(yDim / 2.0);
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -764,7 +768,7 @@ void TesselateFarFieldGrains::assign_voxels()
   int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   DimType dims[3] =
   {
@@ -785,9 +789,9 @@ void TesselateFarFieldGrains::assign_voxels()
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
-  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
@@ -937,9 +941,9 @@ void TesselateFarFieldGrains::assign_gaps_only()
   int good;
   int neighbor;
 
-  int xPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints());
-  int yPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints());
-  int zPoints = static_cast<int>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints());
+  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
@@ -951,7 +955,7 @@ void TesselateFarFieldGrains::assign_gaps_only()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 
