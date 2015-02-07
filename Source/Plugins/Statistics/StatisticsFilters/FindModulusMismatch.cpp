@@ -134,10 +134,7 @@ void FindModulusMismatch::dataCheckSurfaceMesh()
   setErrorCondition(0);
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-
-  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == triangles.get()) { return; }
+  if(getErrorCondition() < 0 || NULL == sm.get()) { return; }
 
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

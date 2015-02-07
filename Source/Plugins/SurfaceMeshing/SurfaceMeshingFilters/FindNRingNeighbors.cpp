@@ -81,7 +81,7 @@ FindNRingNeighbors::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels)
+int FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels)
 {
   int64_t* triangles = triangleGeom->getTriPointer(0);
   int err = 0;
@@ -92,8 +92,7 @@ void FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* f
     err = triangleGeom->findCellsContainingVert();
     if(err < 0)
     {
-      //FIXME: We need to set some sort of error code.
-      return;
+      return err;
     }
     node2TrianglePtr = triangleGeom->getCellsContainingVert();
   }
@@ -107,7 +106,7 @@ void FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* f
   {
     qDebug() << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << "\n";
     qDebug() << "Region Ids are: " << faceLabels[m_TriangleId * 2] << " & " << faceLabels[m_TriangleId * 2 + 1] << "\n";
-    return;
+    return err;
   }
 #endif
 
@@ -146,5 +145,6 @@ void FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* f
       }
     }
   }
+  return err;
 
 }

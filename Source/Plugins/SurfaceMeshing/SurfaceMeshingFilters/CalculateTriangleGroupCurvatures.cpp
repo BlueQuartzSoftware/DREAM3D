@@ -119,6 +119,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
 //  FaceArray::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
 //  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
+  int err = 0;
+
   // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
 
@@ -153,7 +155,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setRegionId0(feature0);
     nRingNeighborAlg->setRegionId1(feature1);
     nRingNeighborAlg->setRing(m_NRing);
-    nRingNeighborAlg->generate(m_TrianglesPtr, faceLabels);
+    err = nRingNeighborAlg->generate(m_TrianglesPtr, faceLabels);
+    BOOST_ASSERT(err >= 0);
 
     UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);

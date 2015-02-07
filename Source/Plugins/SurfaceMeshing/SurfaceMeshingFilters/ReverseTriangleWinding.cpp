@@ -151,23 +151,8 @@ void ReverseTriangleWinding::dataCheck()
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  IGeometry::Pointer geom = sm->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
-  if(NULL == triangles.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
   // We MUST have Triangles defined also.
   if (NULL == triangles->getTriangles().get())

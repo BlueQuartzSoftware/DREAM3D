@@ -91,7 +91,7 @@ class FindNRingNeighbors
      * "value" for each key is a QSet that is the set of triangle ids that that particular
      * node is a part of.
      */
-    void generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels);
+    int generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels);
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)

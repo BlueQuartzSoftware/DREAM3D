@@ -171,8 +171,6 @@ void QuickSurfaceMesh::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-
-
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -189,24 +187,8 @@ void QuickSurfaceMesh::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   // Validate we have an ImageGeom Object
-  IGeometry::Pointer geom = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getGeometryAs<ImageGeom>();
-  if(NULL == image.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
@@ -214,10 +196,10 @@ void QuickSurfaceMesh::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
 
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == faceAttrMat.get()) { return; }
 
   // Create a Triangle Geometry
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(1);

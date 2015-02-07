@@ -17,9 +17,6 @@ set(_PublicFilters
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
   GenerateFaceSchuhMisorientationColoring
-
-#  M3CSliceBySlice
-#  MovingFiniteElementSmoothing
   QuickSurfaceMesh
   ReverseTriangleWinding
   SharedFeatureFaceFilter
@@ -27,8 +24,11 @@ set(_PublicFilters
   TriangleCentroidFilter
   TriangleDihedralAngleFilter
   TriangleNormalFilter
+# These filters require extensive updates to comply with the IGeometry design
+#  M3CSliceBySlice
+#  MovingFiniteElementSmoothing
 
-# These filters rely on Unique Edges which does not work.
+# These filters rely on Unique Edges which does not work in current IGeometry design
 #  LaplacianSmoothing
 #  VerifyTriangleWinding
 )

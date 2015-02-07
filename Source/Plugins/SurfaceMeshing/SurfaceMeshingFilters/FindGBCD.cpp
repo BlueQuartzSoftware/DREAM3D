@@ -428,8 +428,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, m_CrystalStructuresPtr.lock()->getNumberOfTuples());
   AttributeMatrix::Pointer faceEnsembleAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::FaceEnsemble);
-  if(getErrorCondition() < 0) { return; }
-
+  if(getErrorCondition() < 0 || NULL == faceEnsembleAttrMat.get()) { return; }
 
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -458,7 +457,6 @@ void FindGBCD::dataCheckSurfaceMesh()
   m_GBCDPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
 
 // -----------------------------------------------------------------------------
@@ -480,7 +478,6 @@ void FindGBCD::dataCheckVoxel()
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
 
 // -----------------------------------------------------------------------------
@@ -496,12 +493,6 @@ void FindGBCD::preflight()
   if (getErrorCondition() >= 0) { dataCheckSurfaceMesh(); }
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
