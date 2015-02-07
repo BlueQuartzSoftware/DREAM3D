@@ -176,11 +176,14 @@ void EBSDSegmentFeatures::dataCheck()
   //Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
 
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   QVector<size_t> dims(1, 1);
   if(m_UseGoodVoxels == true)
@@ -224,12 +227,6 @@ void EBSDSegmentFeatures::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -276,7 +273,7 @@ void EBSDSegmentFeatures::execute()
   // By default we randomize grains
   if (true == getRandomizeFeatureIds() && getCancel() == false)
   {
-    totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
 

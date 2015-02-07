@@ -195,7 +195,7 @@ void GroupMicroTextureRegions::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer newCellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
@@ -256,12 +256,6 @@ void GroupMicroTextureRegions::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

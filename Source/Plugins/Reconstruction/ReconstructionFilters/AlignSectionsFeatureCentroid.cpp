@@ -142,6 +142,10 @@ void AlignSectionsFeatureCentroid::dataCheck()
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getGoodVoxelsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 // -----------------------------------------------------------------------------
@@ -155,12 +159,6 @@ void AlignSectionsFeatureCentroid::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -193,7 +191,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int>& xshifts, std::v
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
   size_t udims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -212,8 +210,8 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int>& xshifts, std::v
   int slice = 0;
   int64_t point;
   //  int xspot, yspot;
-  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   std::vector<float> xCentroid(dims[2], 0.0);
   std::vector<float> yCentroid(dims[2], 0.0);
 

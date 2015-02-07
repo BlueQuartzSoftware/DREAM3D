@@ -323,11 +323,14 @@ void IdentifyMicroTextureRegions::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_CAxisLocationsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_CAxisLocationsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer newCellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == newCellFeatureAttrMat.get()) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   QVector<size_t> dims(1, 3);
   // Cell Data
@@ -368,12 +371,6 @@ void IdentifyMicroTextureRegions::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -392,9 +389,9 @@ void IdentifyMicroTextureRegions::execute()
   size_t dcDims[3] = { 0, 0, 0};
   float xRes, yRes, zRes;
   float m_Origin[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(m_Origin);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
+  m->getGeometryAs<ImageGeom>()->getOrigin(m_Origin);
 
   //Find number of original cells in radius of patch
   IntVec3_t critDim;
@@ -430,9 +427,9 @@ void IdentifyMicroTextureRegions::execute()
   //Create temporary DataContainer and AttributeMatrix for holding the patch data
   DataContainer::Pointer tmpDC = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "PatchDataContainer(Temp)");
   if(getErrorCondition() < 0) { return; }
-  /* FIXME: ImageGeom */ tmpDC->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(newDimX), static_cast<size_t>(newDimY), static_cast<size_t>(newDimZ));
-  /* FIXME: ImageGeom */ tmpDC->getGeometryAs<ImageGeom>()->setResolution(critRes.x, critRes.y, critRes.z);
-  /* FIXME: ImageGeom */ tmpDC->getGeometryAs<ImageGeom>()->setOrigin(m_Origin[0], m_Origin[1], m_Origin[2]);
+  tmpDC->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(newDimX), static_cast<size_t>(newDimY), static_cast<size_t>(newDimZ));
+  tmpDC->getGeometryAs<ImageGeom>()->setResolution(critRes.x, critRes.y, critRes.z);
+  tmpDC->getGeometryAs<ImageGeom>()->setOrigin(m_Origin[0], m_Origin[1], m_Origin[2]);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = newDimX;
@@ -585,7 +582,7 @@ void IdentifyMicroTextureRegions::execute()
   // By default we randomize grains
   if (true == getRandomizeMTRIds() && getCancel() == false)
   {
-    totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
 
