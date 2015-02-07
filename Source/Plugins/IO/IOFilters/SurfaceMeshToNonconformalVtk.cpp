@@ -77,8 +77,8 @@ void SurfaceMeshToNonconformalVtk::setupFilterParameters()
   parameters.push_back(FileSystemFilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), false));
   parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Mesh Node Type", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -126,23 +126,9 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  IGeometry::Pointer geom = sm->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
-  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
-  if(NULL == triangles.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   // We MUST have Nodes
   if (NULL == triangles->getVertices().get())
   {

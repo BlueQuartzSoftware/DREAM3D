@@ -135,7 +135,7 @@ void ReadStlToSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Stl File", "StlFilePath", FilterParameterWidgetType::InputFileWidget, getStlFilePath(), false, "", "*.stl", "STL File"));
-  parameters.push_back(FilterParameter::New("Surface Mesh Data Container Name", "SurfaceMeshDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDataContainerName(), false));
+  parameters.push_back(FilterParameter::New("Data Container Name", "SurfaceMeshDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDataContainerName(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("SurfaceMeshTriangleNormals", "SurfaceMeshTriangleNormalsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleNormalsArrayName(), true, ""));
@@ -193,7 +193,7 @@ void ReadStlToSurfaceMesh::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Stl File Path is Not set correctly", -1003);
   }
 
-  //// Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
+  // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
@@ -204,7 +204,7 @@ void ReadStlToSurfaceMesh::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == faceAttrMat.get()) { return; }
 
   QVector<size_t> dims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getSurfaceMeshTriangleNormalsArrayName() );
@@ -224,12 +224,6 @@ void ReadStlToSurfaceMesh::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -274,19 +268,11 @@ void ReadStlToSurfaceMesh::readFile()
   fread(h, sizeof(int), 20, f);
   fread(&triCount, sizeof(int), 1, f);
 
-  //create the nodes and triangles array for the surface mesh
-//  VertexArray::Pointer vertices = VertexArray::CreateArray(triCount * 3, DREAM3D::VertexData::SurfaceMeshNodes);
-//  FaceArray::Pointer triangles = FaceArray::CreateArray(triCount, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
-//  VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
-//  FaceArray::Face_t* triangle = triangles.get()->getPointer(0);
-
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   triangleGeom->resizeTriList(triCount);
   triangleGeom->resizeVertexList(triCount*3);
   float* nodes = triangleGeom->getVertexPointer(0);
   int64_t* triangles = triangleGeom->getTriPointer(0);
-
-  sm->setGeometry(triangleGeom);
 
   //Resize the triangle attribute matrix to hold the normals and update the normals pointer
   QVector<size_t> tDims(1, triCount);
@@ -355,13 +341,6 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   int64_t nNodes = triangleGeom->getNumberOfVertices();
   int64_t* triangles = triangleGeom->getTriPointer(0);
   int64_t nTriangles = triangleGeom->getNumberOfTris();
-
-//  VertexArray::Pointer nodesPtr = sm->getVertices();
-//  int nNodes = nodesPtr->getNumberOfTuples();
-//  VertexArray::Vert_t* vertex = nodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
-//  FaceArray::Pointer facesPtr = sm->getFaces();
-//  int nTriangles = facesPtr->getNumberOfTuples();
-//  FaceArray::Face_t* triangle = facesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   float stepX = (m_maxXcoord - m_minXcoord) / 100.0;
   float stepY = (m_maxYcoord - m_minYcoord) / 100.0;

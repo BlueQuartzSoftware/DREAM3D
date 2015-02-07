@@ -128,23 +128,9 @@ void SurfaceMeshToStl::dataCheck()
   DataContainer::Pointer sm  = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == sm) { return; }
 
-  IGeometry::Pointer geom = sm->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
-  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
-  if(NULL == triangles.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   // We MUST have Nodes
   if (NULL == triangles->getVertices().get())
   {
@@ -157,6 +143,7 @@ void SurfaceMeshToStl::dataCheck()
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
+
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -180,12 +167,6 @@ void SurfaceMeshToStl::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

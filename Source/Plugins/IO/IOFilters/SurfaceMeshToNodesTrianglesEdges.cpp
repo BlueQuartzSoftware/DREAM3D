@@ -90,8 +90,8 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 #endif
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Mesh Node Type", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -151,24 +151,9 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
+  TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
-  IGeometry::Pointer geom = sm->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
-  if(NULL == triangles.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   // We MUST have Nodes
   if (NULL == triangles->getVertices().get())
   {
@@ -181,6 +166,7 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
+
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
   if (edges.get() == NULL)

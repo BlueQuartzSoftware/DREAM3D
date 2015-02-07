@@ -209,15 +209,21 @@ void YSChoiAbaqusReader::dataCheck()
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
+
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
   tDims.resize(1);
   tDims[0] = 0;
+
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -260,8 +266,8 @@ void YSChoiAbaqusReader::dataCheck()
         ypoints = tokens[2].toInt(&ok, 10);
         zpoints = tokens[3].toInt(&ok, 10);
         size_t dims[3] = { static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints) };
-        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims);
-        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
+        m->getGeometryAs<ImageGeom>()->setDimensions(dims);
+        m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
       }
       if (RES == word)
       {
@@ -270,7 +276,7 @@ void YSChoiAbaqusReader::dataCheck()
         resy = tokens[2].toInt(&ok, 10);
         resz = tokens[3].toInt(&ok, 10);
         float res[3] = {resx, resy, resz};
-        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(res);
+        m->getGeometryAs<ImageGeom>()->setResolution(res);
       }
     }
   }
@@ -303,7 +309,7 @@ void YSChoiAbaqusReader::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-//typedef DataArray<unsigned int> XTalStructArrayType;
+  //typedef DataArray<unsigned int> XTalStructArrayType;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -318,13 +324,8 @@ void YSChoiAbaqusReader::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
+
 void YSChoiAbaqusReader::execute()
 {
   dataCheck();
@@ -360,8 +361,8 @@ void YSChoiAbaqusReader::execute()
       zpoints = tokens[3].toInt(&ok, 10);
       totalpoints = xpoints * ypoints * zpoints;
       size_t dims[3] = { static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints) };
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims);
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
+      m->getGeometryAs<ImageGeom>()->setDimensions(dims);
+      m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
 
     }
     if (buf.startsWith(RES))
@@ -371,7 +372,7 @@ void YSChoiAbaqusReader::execute()
       resy = tokens[2].toInt(&ok, 10);
       resz = tokens[3].toInt(&ok, 10);
       float res[3] = {resx, resy, resz};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(res);
+      m->getGeometryAs<ImageGeom>()->setResolution(res);
     }
     if (buf.startsWith(LOOKUP))
     {
@@ -379,7 +380,7 @@ void YSChoiAbaqusReader::execute()
       word = QString(buf);
     }
   }
-  // Read header from grian info file to figure out how many features there are
+  // Read header from grain info file to figure out how many features there are
 
   QFile in2(getInputFeatureInfoFile());
   if (!in2.open(QIODevice::ReadOnly | QIODevice::Text))

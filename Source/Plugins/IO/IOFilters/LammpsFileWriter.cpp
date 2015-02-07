@@ -115,25 +115,8 @@ void LammpsFileWriter::dataCheck(bool preflight)
   DataContainer::Pointer v = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_VertexDataContainerName);
   if(getErrorCondition() < 0) { return; }
 
-
-  IGeometry::Pointer geom = v->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  VertexGeom::Pointer vertices = v->getGeometryAs<VertexGeom>();
-  if(NULL == vertices.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
+  VertexGeom::Pointer vertices = v->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
   if(NULL == vertices->getVertices().get())
@@ -225,7 +208,7 @@ void LammpsFileWriter::execute()
   for (int64_t i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
-    fprintf(lammpsFile, "%d %d %f %f %f %d %d %d\n", i, atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file
+    fprintf(lammpsFile, "%lld %d %f %f %f %d %d %d\n", i, atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file
   }
 
   fprintf(lammpsFile, "\n");

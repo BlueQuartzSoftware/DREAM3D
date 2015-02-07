@@ -114,13 +114,13 @@ int SPParksTextReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-      DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-      DREAM3D_FILTER_WRITE_PARAMETER(OneBasedArrays)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(OneBasedArrays)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -141,13 +141,12 @@ void SPParksTextReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void SPParksTextReader::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -165,8 +164,6 @@ void SPParksTextReader::dataCheck()
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   m->setGeometry(image);
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
@@ -178,7 +175,7 @@ void SPParksTextReader::dataCheck()
     {
       QString msg = QObject::tr("SPParks file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-102);
-      notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     }
     else
     {
@@ -341,12 +338,12 @@ int  SPParksTextReader::readFile()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   // The readHeader() function should have set the dimensions correctly
-  size_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   QVector<size_t> tDims(3, 0);
-  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
@@ -446,8 +443,8 @@ int  SPParksTextReader::readFile()
   }
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;

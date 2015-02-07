@@ -357,13 +357,11 @@ int DxReader::readFile()
   finished_data = false;
   size_t index = 0;
 
-  //int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
-
   // Reseize the Cell Attribute Matrix based on the number of points about to be read.
   QVector<size_t> tDims(3, 0);
-  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
@@ -382,7 +380,7 @@ int DxReader::readFile()
     buf = buf.simplified();
     QList<QByteArray> tokens = buf.split(' ');
 
-    int64_t total = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    int64_t total = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
     if( index == total || ( finished_header && tokens.size() != 0 && tokens[0] == "attribute") )
     {
       finished_data = true;
@@ -403,9 +401,9 @@ int DxReader::readFile()
     buf = m_InStream.readLine();
   }
 
-  if(index != static_cast<size_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples()))
+  if(index != static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples()))
   {
-    QString ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
+    QString ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
     setErrorCondition(-495);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     m_InStream.close();

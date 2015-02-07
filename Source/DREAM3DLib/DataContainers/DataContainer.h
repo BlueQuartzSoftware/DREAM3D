@@ -320,16 +320,28 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     template<typename GeometryType, typename Filter>
     typename GeometryType::Pointer getPrereqGeometry(Filter* filter)
     {
-      typename GeometryType::Pointer geom = getGeometryAs<GeometryType>();
+      typename GeometryType::Pointer geom = GeometryType::NullPointer();
+      IGeometry::Pointer igeom = getGeometry();
+      if (NULL == igeom.get())
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-385);
+          QString ss = QObject::tr("DataContainer Geometry is missing.");
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return geom;
+      }
+      geom = getGeometryAs<GeometryType>();
       if (NULL == geom.get())
       {
         if (filter)
         {
-          filter->setErrorCondition(-999);
-          QString ss = "The Geometry object was not available.";
-          PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
-          filter->broadcastPipelineMessage(em);
+          filter->setErrorCondition(-384);
+          QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(igeom->getGeometryTypeAsString());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
+        return geom;
       }
       return geom;
     }

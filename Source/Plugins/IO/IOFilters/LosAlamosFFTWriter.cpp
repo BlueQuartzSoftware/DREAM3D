@@ -125,6 +125,12 @@ void LosAlamosFFTWriter::dataCheck()
 {
   setErrorCondition(0);
 
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
+  if (getErrorCondition() < 0 || NULL == dc.get()) { return; }
+
+  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   if(getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
@@ -156,12 +162,6 @@ void LosAlamosFFTWriter::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -184,13 +184,13 @@ int LosAlamosFFTWriter::writeFile()
   int err = 0;
   size_t dims[3] =
   { 0, 0, 0 };
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   float res[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
+  m->getGeometryAs<ImageGeom>()->getResolution(res);
 
   float origin[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(origin);
+  m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

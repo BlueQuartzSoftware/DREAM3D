@@ -153,7 +153,7 @@ void PhReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   m->setGeometry(image);
@@ -261,7 +261,6 @@ int PhReader::readHeader()
   int ny = 0;
   int nz = 0;
 
-
   // Read Line #1 which has the dimensions
   fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
   m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
@@ -283,12 +282,12 @@ int  PhReader::readFile()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
-  size_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   QVector<size_t> tDims(3, 0);
-  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
@@ -305,8 +304,8 @@ int  PhReader::readFile()
   }
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;

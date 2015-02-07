@@ -129,14 +129,13 @@ void EddyCurrentDataReader::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
   tDims.resize(1);
   tDims[0] = 1;
   AttributeMatrix::Pointer metaAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getMetaDataAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::MetaData);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == metaAttrMat.get()) { return; }
 
   m_InStream.setFileName(getInputFile());
   if (getInputFile().isEmpty() == true)

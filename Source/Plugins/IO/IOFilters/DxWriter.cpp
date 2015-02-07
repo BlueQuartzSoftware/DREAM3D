@@ -112,6 +112,12 @@ void DxWriter::dataCheck()
 {
   setErrorCondition(0);
 
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
+  if (getErrorCondition() < 0 || NULL == dc.get()) { return; }
+
+  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr( ": The output file must be set before executing this filter.");
@@ -171,7 +177,7 @@ int DxWriter::writeFile()
   int err = 0;
   size_t udims[3] =
   { 0, 0, 0 };
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else

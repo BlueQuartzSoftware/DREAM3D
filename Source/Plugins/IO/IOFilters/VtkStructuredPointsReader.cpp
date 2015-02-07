@@ -84,9 +84,9 @@ void VtkStructuredPointsReader::setupFilterParameters()
   linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadCellData(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("PointData Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("CellData Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
   setFilterParameters(parameters);
 }
@@ -146,7 +146,6 @@ void VtkStructuredPointsReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-
   // First shot Sanity Checks.
   if(!getReadCellData() && !getReadPointData())
   {
@@ -155,10 +154,8 @@ void VtkStructuredPointsReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-
   // Last chance sanity check
   if(getErrorCondition() < 0) { return; }
-
 
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
@@ -171,7 +168,6 @@ void VtkStructuredPointsReader::dataCheck()
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-
 
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
@@ -187,7 +183,6 @@ void VtkStructuredPointsReader::dataCheck()
   tDims[2] = 0;
   AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-
 
   // Scan through the file
   readFile();

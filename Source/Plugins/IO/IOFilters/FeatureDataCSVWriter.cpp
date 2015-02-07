@@ -111,6 +111,10 @@ int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* 
 void FeatureDataCSVWriter::dataCheck()
 {
   setErrorCondition(0);
+  int err = 0;
+
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), err);
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
 
   if (getFeatureDataFile().isEmpty() == true)
   {
@@ -143,12 +147,6 @@ void FeatureDataCSVWriter::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

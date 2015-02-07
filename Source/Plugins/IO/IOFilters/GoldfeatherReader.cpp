@@ -198,9 +198,9 @@ void GoldfeatherReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == vertAttrMat.get()) { return; }
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == faceAttrMat.get()) { return; }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)

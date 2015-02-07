@@ -133,11 +133,10 @@ void VASPReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims (1, 0);
   AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
 
-  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, DREAM3D::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(1, DREAM3D::Geometry::VertexGeometry);
   m->setGeometry(vertex);
-
 
   QFileInfo fi(getInputFile());
 
@@ -302,6 +301,7 @@ int VASPReader::readHeader()
     atomNumbers[i] = tokens[i].toInt(&ok, 10);
     totalAtoms += tokens[i].toInt(&ok, 10);
   }
+
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, DREAM3D::VertexData::SurfaceMeshNodes);
   m->setGeometry(vertices);
 

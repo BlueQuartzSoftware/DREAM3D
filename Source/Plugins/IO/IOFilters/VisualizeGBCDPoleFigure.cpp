@@ -175,23 +175,9 @@ void VisualizeGBCDPoleFigure::dataCheckSurfaceMesh()
     setOutputFile(getOutputFile().append(".dx"));
   }
 
-   IGeometry::Pointer geom = sm->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
-  TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
-  if(NULL == triangles.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   // We MUST have Nodes
   if (NULL == triangles->getVertices().get())
   {
@@ -236,12 +222,6 @@ void VisualizeGBCDPoleFigure::preflight()
   dataCheckSurfaceMesh();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -254,8 +234,6 @@ void VisualizeGBCDPoleFigure::execute()
 
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
-
-  //DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_GBCDArrayPath.getDataContainerName());
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
@@ -281,11 +259,6 @@ void VisualizeGBCDPoleFigure::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-
-  //VertexArray::Pointer nodesPtr = sm->getVertices();
-
-  //FaceArray::Pointer trianglesPtr = sm->getFaces();
-  //size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();
