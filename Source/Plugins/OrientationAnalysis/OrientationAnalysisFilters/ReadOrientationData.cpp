@@ -93,8 +93,6 @@ ReadOrientationData::~ReadOrientationData()
 void ReadOrientationData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  /*   For an input file use this code*/
   parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.ang *.ctf"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
@@ -130,7 +128,6 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
   return ++index; // we want to return the next index that was just written to
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -141,10 +138,10 @@ void ReadOrientationData::dataCheck()
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
   // Create the Image Geometry
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   m->setGeometry(image);
-
 
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
@@ -183,9 +180,9 @@ void ReadOrientationData::dataCheck()
       dims[0] = reader.getXDimension();
       dims[1] = reader.getYDimension();
       dims[2] = 1; // We are reading a single slice
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+      m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+      m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+      m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
       //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(dims);
       AngFields angfeatures;
@@ -212,16 +209,16 @@ void ReadOrientationData::dataCheck()
       dims[0] = reader.getXCells();
       dims[1] = reader.getYCells();
       dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+      m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
       if (reader.getZStep() != 0.0f)
       {
-        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
+        m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
       }
       else
       {
-        /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+        m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       }
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+      m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
       //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(dims);
       CtfFields ctffeatures;
@@ -247,9 +244,9 @@ void ReadOrientationData::dataCheck()
       dims[0] = reader.getXDimension();
       dims[1] = reader.getYDimension();
       dims[2] = 1; // We are reading a single slice
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+      m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+      m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+      m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
       //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(dims);
       MicFields micfeatures;
@@ -313,12 +310,6 @@ void ReadOrientationData::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -380,9 +371,9 @@ void ReadOrientationData::readAngFile()
   ebsdAttrMat->setTupleDimensions(tDims);
 
   QVector<size_t> cDims(1, 1);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+  m->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
+  m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+  m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
   err = loadInfo<AngReader, AngPhase>(&reader);
 
@@ -394,12 +385,12 @@ void ReadOrientationData::readAngFile()
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
 
-  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   //// Adjust the values of the 'phase' data to correct for invalid values
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ang::PhaseData));
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       if (phasePtr[i] < 1)
       {
@@ -420,7 +411,7 @@ void ReadOrientationData::readAngFile()
     fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
@@ -483,16 +474,16 @@ void ReadOrientationData::readCtfFile()
   dims[0] = reader.getXCells();
   dims[1] = reader.getYCells();
   dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
   if (reader.getZStep() != 0.0f)
   {
-    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
+    m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
   }
   else
   {
-    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+    m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
   }
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+  m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
   err = loadInfo<CtfReader, CtfPhase>(&reader);
 
@@ -504,12 +495,12 @@ void ReadOrientationData::readCtfFile()
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
 
-  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
   QVector<size_t> tDims(3, 0);
-  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMat->resizeAttributeArrays(tDims);
   {
     /* Take from H5CtfVolumeReader.cpp
@@ -523,7 +514,7 @@ void ReadOrientationData::readCtfFile()
     * if there is a single phase in the OIM data.
     */
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ctf::Phase));
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       if (phasePtr[i] < 1)
       {
@@ -544,7 +535,7 @@ void ReadOrientationData::readCtfFile()
     float* cellEulerAngles = fArray->getPointer(0);
     int* cellPhases = iArray->getPointer(0);
 
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
@@ -614,9 +605,9 @@ void ReadOrientationData::readMicFile()
   dims[0] = reader.getXDimension();
   dims[1] = reader.getYDimension();
   dims[2] = 1; // We are reading a single slice
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+  m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+  m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
   err = loadInfo<MicReader, MicPhase>(&reader);
 
@@ -627,12 +618,12 @@ void ReadOrientationData::readMicFile()
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
   QVector<size_t> tDims(3, 0);
-  tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-  tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-  tDims[2] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMat->resizeAttributeArrays(tDims);
 
   float x, y;
@@ -640,18 +631,18 @@ void ReadOrientationData::readMicFile()
   float yMin = 10000000;
   f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::X));
   f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Y));
-  for (int64_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
     x = f1[i];
     y = f2[i];
     if(x < xMin) { xMin = x; }
     if(y < yMin) { yMin = y; }
   }
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, 0.0);
+  m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, 0.0);
 
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Mic::Phase));
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       if (phasePtr[i] < 1)
       {
@@ -671,7 +662,7 @@ void ReadOrientationData::readMicFile()
     f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler3));
     fArray = FloatArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
