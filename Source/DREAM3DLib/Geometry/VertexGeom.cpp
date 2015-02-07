@@ -127,6 +127,14 @@ CellDynamicList::Pointer VertexGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VertexGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VertexGeom::deleteCellsContainingVert()
 {
   return;
@@ -151,6 +159,14 @@ CellDynamicList::Pointer VertexGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VertexGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VertexGeom::deleteCellNeighbors()
 {
   return;
@@ -170,6 +186,14 @@ int VertexGeom::findCellCentroids()
 FloatArrayType::Pointer VertexGeom::getCellCentroids()
 {
   return FloatArrayType::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VertexGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+{
+  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -263,6 +287,18 @@ int VertexGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   setVertices(vertices);
 
   return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry::Pointer VertexGeom::deepCopy()
+{
+  VertexGeom::Pointer vertexCopy = VertexGeom::CreateGeometry(getVertices(), getName());
+
+  vertexCopy->setSpatialDimensionality(getSpatialDimensionality());
+
+  return vertexCopy;
 }
 
 // -----------------------------------------------------------------------------

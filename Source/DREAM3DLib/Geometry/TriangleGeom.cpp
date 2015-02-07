@@ -145,6 +145,14 @@ CellDynamicList::Pointer TriangleGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TriangleGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+{
+  m_TrianglesContainingVert = cellsContaingVert;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriangleGeom::deleteCellsContainingVert()
 {
   m_TrianglesContainingVert = CellDynamicList::NullPointer();
@@ -180,6 +188,14 @@ CellDynamicList::Pointer TriangleGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TriangleGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+{
+  m_TriangleNeighbors = cellNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriangleGeom::deleteCellNeighbors()
 {
   m_TriangleNeighbors = CellDynamicList::NullPointer();
@@ -206,6 +222,14 @@ int TriangleGeom::findCellCentroids()
 FloatArrayType::Pointer TriangleGeom::getCellCentroids()
 {
   return m_TriangleCentroids;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+{
+  m_TriangleCentroids = cellCentroids;
 }
 
 // -----------------------------------------------------------------------------
@@ -410,6 +434,21 @@ int TriangleGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   }
 
   return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry::Pointer TriangleGeom::deepCopy()
+{
+  TriangleGeom::Pointer triCopy = TriangleGeom::CreateGeometry(getTriangles(), getVertices(), getName());
+
+  triCopy->setCellsContaingVert(getCellsContainingVert());
+  triCopy->setCellNeighbors(getCellNeighbors());
+  triCopy->setCellCentroids(getCellCentroids());
+  triCopy->setSpatialDimensionality(getSpatialDimensionality());
+
+  return triCopy;
 }
 
 // -----------------------------------------------------------------------------

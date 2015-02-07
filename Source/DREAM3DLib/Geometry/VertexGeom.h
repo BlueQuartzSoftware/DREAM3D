@@ -266,9 +266,33 @@ class DREAM3DLib_EXPORT VertexGeom : public IGeometry
      */
     virtual int readGeometryFromHDF5(hid_t parentId, bool preflight);
 
+    /**
+     * @brief deepCopy
+     * @return
+     */
+    virtual IGeometry::Pointer deepCopy();
+
   protected:
 
     VertexGeom();
+
+    /**
+     * @brief setCellsContaingVert
+     * @param cellsContaingVert
+     */
+    virtual void setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert);
+
+    /**
+     * @brief setCellNeighbors
+     * @param cellNeighbors
+     */
+    virtual void setCellNeighbors(CellDynamicList::Pointer cellNeighbors);
+
+    /**
+     * @brief setCellCentroids
+     * @param cellCentroids
+     */
+    virtual void setCellCentroids(FloatArrayType::Pointer cellCentroids);
 
   private:
 

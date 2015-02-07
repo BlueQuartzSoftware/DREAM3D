@@ -223,9 +223,35 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
     virtual int readGeometryFromHDF5(hid_t parentId, bool preflight) = 0;
 
     /**
+     * @brief deepCopy
+     * @return
+     */
+    virtual Pointer deepCopy() = 0;
+
+    /**
      * @brief initializeWithZeros
      */
     virtual void initializeWithZeros() = 0;
+
+  protected:
+
+    /**
+     * @brief setCellsContaingVert
+     * @param cellsContaingVert
+     */
+    virtual void setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert) = 0;
+
+    /**
+     * @brief setCellNeighbors
+     * @param cellNeighbors
+     */
+    virtual void setCellNeighbors(CellDynamicList::Pointer cellNeighbors) = 0;
+
+    /**
+     * @brief setCellCentroids
+     * @param cellCentroids
+     */
+    virtual void setCellCentroids(FloatArrayType::Pointer cellCentroids) = 0;
 
   private:
 

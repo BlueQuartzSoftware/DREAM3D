@@ -118,6 +118,14 @@ CellDynamicList::Pointer ImageGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImageGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImageGeom::deleteCellsContainingVert()
 {
   return;
@@ -142,6 +150,14 @@ CellDynamicList::Pointer ImageGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImageGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImageGeom::deleteCellNeighbors()
 {
   return;
@@ -161,6 +177,14 @@ int ImageGeom::findCellCentroids()
 FloatArrayType::Pointer ImageGeom::getCellCentroids()
 {
   return FloatArrayType::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImageGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+{
+  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -243,7 +267,7 @@ int ImageGeom::writeXdmf(QTextStream &out, QString dcName, QString hdfFileName)
 int ImageGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
   int err = 0;
-  int64_t volDims[3] =
+  size_t volDims[3] =
   { 0, 0, 0 };
   float spacing[3] =
   { 1.0f, 1.0f, 1.0f };
@@ -263,7 +287,31 @@ int ImageGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImageGeom::gatherMetaData(hid_t parentId, int64_t volDims[3], float spacing[3], float origin[3], unsigned int spatialDims, QString geomName)
+IGeometry::Pointer ImageGeom::deepCopy()
+{
+  ImageGeom::Pointer imageCopy = ImageGeom::CreateGeometry(getName());
+
+  size_t volDims[3] =
+  { 0, 0, 0 };
+  float spacing[3] =
+  { 1.0f, 1.0f, 1.0f };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
+  getDimensions(volDims);
+  getResolution(spacing);
+  getOrigin(origin);
+  imageCopy->setDimensions(volDims);
+  imageCopy->setResolution(spacing);
+  imageCopy->setOrigin(origin);
+  imageCopy->setSpatialDimensionality(getSpatialDimensionality());
+
+  return imageCopy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ImageGeom::gatherMetaData(hid_t parentId, size_t volDims[3], float spacing[3], float origin[3], unsigned int spatialDims, QString geomName)
 {
   int err = QH5Lite::readPointerDataset(parentId, H5_DIMENSIONS, volDims);
   if(err < 0)

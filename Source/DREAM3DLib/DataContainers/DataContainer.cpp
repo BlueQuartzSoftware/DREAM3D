@@ -364,6 +364,12 @@ DataContainer::Pointer DataContainer::deepCopy()
   DataContainer::Pointer dcCopy = DataContainer::New(getName());
   dcCopy->setName(getName());
 
+  if (m_Geometry.get() != NULL)
+  {
+    IGeometry::Pointer geomCopy = m_Geometry->deepCopy();
+    dcCopy->setGeometry(geomCopy);
+  }
+
   for (AttributeMatrixMap_t::iterator iter = getAttributeMatrices().begin(); iter != getAttributeMatrices().end(); ++iter)
   {
     AttributeMatrix::Pointer attrMat = (*iter)->deepCopy();

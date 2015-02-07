@@ -145,6 +145,14 @@ CellDynamicList::Pointer QuadGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QuadGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+{
+  m_QuadsContainingVert = cellsContaingVert;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QuadGeom::deleteCellsContainingVert()
 {
   m_QuadsContainingVert = CellDynamicList::NullPointer();
@@ -180,6 +188,14 @@ CellDynamicList::Pointer QuadGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QuadGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+{
+  m_QuadNeighbors = cellNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QuadGeom::deleteCellNeighbors()
 {
   m_QuadNeighbors = CellDynamicList::NullPointer();
@@ -206,6 +222,14 @@ int QuadGeom::findCellCentroids()
 FloatArrayType::Pointer QuadGeom::getCellCentroids()
 {
   return m_QuadCentroids;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+{
+  m_QuadCentroids = cellCentroids;
 }
 
 // -----------------------------------------------------------------------------
@@ -410,6 +434,21 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   }
 
   return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry::Pointer QuadGeom::deepCopy()
+{
+  QuadGeom::Pointer quadCopy = QuadGeom::CreateGeometry(getQuads(), getVertices(), getName());
+
+  quadCopy->setCellsContaingVert(getCellsContainingVert());
+  quadCopy->setCellNeighbors(getCellNeighbors());
+  quadCopy->setCellCentroids(getCellCentroids());
+  quadCopy->setSpatialDimensionality(getSpatialDimensionality());
+
+  return quadCopy;
 }
 
 // -----------------------------------------------------------------------------

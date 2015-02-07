@@ -145,6 +145,14 @@ CellDynamicList::Pointer EdgeGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EdgeGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+{
+  m_EdgesContainingVert = cellsContaingVert;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EdgeGeom::deleteCellsContainingVert()
 {
   m_EdgesContainingVert = CellDynamicList::NullPointer();
@@ -180,6 +188,14 @@ CellDynamicList::Pointer EdgeGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EdgeGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+{
+  m_EdgeNeighbors = cellNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EdgeGeom::deleteCellNeighbors()
 {
   m_EdgeNeighbors = CellDynamicList::NullPointer();
@@ -206,6 +222,14 @@ int EdgeGeom::findCellCentroids()
 FloatArrayType::Pointer EdgeGeom::getCellCentroids()
 {
   return m_EdgeCentroids;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+{
+  m_EdgeCentroids = cellCentroids;
 }
 
 // -----------------------------------------------------------------------------
@@ -397,6 +421,21 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   }
 
   return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry::Pointer EdgeGeom::deepCopy()
+{
+  EdgeGeom::Pointer edgeCopy = EdgeGeom::CreateGeometry(getEdges(), getVertices(), getName());
+
+  edgeCopy->setCellsContaingVert(getCellsContainingVert());
+  edgeCopy->setCellNeighbors(getCellNeighbors());
+  edgeCopy->setCellCentroids(getCellCentroids());
+  edgeCopy->setSpatialDimensionality(getSpatialDimensionality());
+
+  return edgeCopy;
 }
 
 // -----------------------------------------------------------------------------

@@ -214,6 +214,12 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
      */
     virtual int readGeometryFromHDF5(hid_t parentId, bool preflight);
 
+    /**
+     * @brief deepCopy
+     * @return
+     */
+    virtual IGeometry::Pointer deepCopy();
+
   protected:
 
     ImageGeom();
@@ -226,7 +232,25 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
      * @param origin
      * @return
      */
-    virtual int gatherMetaData(hid_t parentid, int64_t volDims[3], float spacing[3], float origin[3], unsigned int spatialDims, QString geomName);
+    virtual int gatherMetaData(hid_t parentid, size_t volDims[3], float spacing[3], float origin[3], unsigned int spatialDims, QString geomName);
+
+    /**
+     * @brief setCellsContaingVert
+     * @param cellsContaingVert
+     */
+    virtual void setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert);
+
+    /**
+     * @brief setCellNeighbors
+     * @param cellNeighbors
+     */
+    virtual void setCellNeighbors(CellDynamicList::Pointer cellNeighbors);
+
+    /**
+     * @brief setCellCentroids
+     * @param cellCentroids
+     */
+    virtual void setCellCentroids(FloatArrayType::Pointer cellCentroids);
 
   private:
 
