@@ -111,16 +111,19 @@ void RegularizeZSpacing::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
   if (getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
   if (getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
-  for (size_t iter = 0; iter < /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() + 1; iter++)
+  for (size_t iter = 0; iter < m->getGeometryAs<ImageGeom>()->getZPoints() + 1; iter++)
   {
     inFile >> zval;
   }
@@ -129,10 +132,10 @@ DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<Abstr
 
   if(preflight == true)
   {
-    /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints(), /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints(), zP);
+    m->getGeometryAs<ImageGeom>()->setDimensions(m->getGeometryAs<ImageGeom>()->getXPoints(), m->getGeometryAs<ImageGeom>()->getYPoints(), zP);
     QVector<size_t> tDims(3, 0);
-    tDims[0] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-    tDims[1] = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
+    tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+    tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
     tDims[2] = zP;
     cellAttrMat->resizeAttributeArrays(tDims);
   }
@@ -151,12 +154,6 @@ void RegularizeZSpacing::preflight()
   dataCheck(true);
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -173,7 +170,7 @@ void RegularizeZSpacing::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   size_t dims[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -187,8 +184,8 @@ void RegularizeZSpacing::execute()
   }
   inFile.close();
 
-  float xRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
 
   float sizez = zboundvalues[dims[2]];
   size_t m_XP = dims[0];
@@ -250,8 +247,8 @@ void RegularizeZSpacing::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(xRes, yRes, m_NewZRes);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(xRes, yRes, m_NewZRes);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 

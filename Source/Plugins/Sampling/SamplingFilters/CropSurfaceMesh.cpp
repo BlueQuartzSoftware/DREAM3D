@@ -161,11 +161,11 @@ void CropSurfaceMesh::dataCheck()
 {
   if(getErrorCondition() < 0) { return; }
 
-DataContainer::Pointer srcSurfDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixPath().getDataContainerName());
-  if (NULL == srcSurfDataContainer)
-  {
-    return;
-  }
+  DataContainer::Pointer srcSurfDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixPath().getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
+  TriangleGeom::Pointer triangles = srcSurfDataContainer->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == triangles.get()) { return; }
 
   AttributeMatrix::Pointer nodeAttrMat = AttributeMatrix::NullPointer();
   AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::NullPointer();
@@ -186,6 +186,9 @@ DataContainer::Pointer srcSurfDataContainer = getDataContainerArray()->getPrereq
   if (m_SaveAsNewDataContainer == true)
   {
     destSurfDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
+
+    IGeometry::Pointer triangleCopy = triangles->deepCopy();
+    destSurfDataContainer->setGeometry(triangleCopy);
 
     if(m_HasNodeData == true)
     {
@@ -234,12 +237,6 @@ void CropSurfaceMesh::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -260,23 +257,8 @@ void CropSurfaceMesh::execute()
   AttributeMatrix::Pointer nodeAttrMat = AttributeMatrix::NullPointer();
   AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::NullPointer();
 
-  IGeometry::Pointer geom = srcSurfDataContainer->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  TriangleGeom::Pointer triangleGeom = srcSurfDataContainer->getGeometryAs<TriangleGeom>();
-  if(NULL == triangleGeom.get())
-  {
-    setErrorCondition(-384);
-    QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  TriangleGeom::Pointer triangleGeom = srcSurfDataContainer->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
   if(m_HasNodeData == true)
   {
@@ -294,6 +276,9 @@ void CropSurfaceMesh::execute()
   if (m_SaveAsNewDataContainer == true)
   {
     destSurfDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
+
+    IGeometry::Pointer triangleCopy = triangleGeom->deepCopy();
+    destSurfDataContainer->setGeometry(triangleCopy);
 
     if(m_HasNodeData == true)
     {
@@ -316,7 +301,6 @@ void CropSurfaceMesh::execute()
   {
     return;
   }
-
 
   // No matter where the AM is (same DC or new DC), we have the correct DC and AM pointers...now it's time to crop
   //SharedVertexList::Pointer vertices = triangles->getVertices();

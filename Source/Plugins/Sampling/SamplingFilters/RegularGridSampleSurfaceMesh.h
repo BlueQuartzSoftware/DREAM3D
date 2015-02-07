@@ -128,7 +128,7 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     */
     void dataCheck();
 
-    virtual VertexArray::Pointer generate_points();
+    virtual VertexGeom::Pointer generate_points();
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:

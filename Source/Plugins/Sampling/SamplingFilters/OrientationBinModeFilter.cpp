@@ -144,7 +144,14 @@ void OrientationBinModeFilter::updateCellInstancePointers()
 void OrientationBinModeFilter::dataCheck()
 {
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName()); }
+  if(m_SaveAsNewDataContainer == false)
+  {
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+
+    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  }
   else
   {
     getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
@@ -179,17 +186,17 @@ void OrientationBinModeFilter::preflight()
   else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
 
   size_t dims[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  float sizey = (dims[1]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-  float sizez = (dims[2]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+  float sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
+  float sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
+  float sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
 
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -222,9 +229,9 @@ void OrientationBinModeFilter::execute()
   if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
   else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
 
-  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() == m_Resolution.x
-      && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() == m_Resolution.y
-      && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes() == m_Resolution.z)
+  if(m->getGeometryAs<ImageGeom>()->getXRes() == m_Resolution.x
+      && m->getGeometryAs<ImageGeom>()->getYRes() == m_Resolution.y
+      && m->getGeometryAs<ImageGeom>()->getZRes() == m_Resolution.z)
   {
     return;
   }
@@ -232,11 +239,11 @@ void OrientationBinModeFilter::execute()
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
 
   size_t dims[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-  float sizey = (dims[1]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-  float sizez = (dims[2]) * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+  float sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
+  float sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
+  float sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
@@ -250,7 +257,7 @@ void OrientationBinModeFilter::execute()
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
-    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints()) * 100);
+    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getGeometryAs<ImageGeom>()->getZPoints()) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int j = 0; j < m_YP; j++)
     {
@@ -259,10 +266,10 @@ void OrientationBinModeFilter::execute()
         x = (k * m_Resolution.x);
         y = (j * m_Resolution.y);
         z = (i * m_Resolution.z);
-        col = int(x / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes());
-        row = int(y / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes());
-        plane = int(z / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes());
-        index_old = (plane * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints()) + (row * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()) + col;
+        col = int(x / m->getGeometryAs<ImageGeom>()->getXRes());
+        row = int(y / m->getGeometryAs<ImageGeom>()->getYRes());
+        plane = int(z / m->getGeometryAs<ImageGeom>()->getZRes());
+        index_old = (plane * m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) + (row * m->getGeometryAs<ImageGeom>()->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         newindicies[index] = index_old;
       }
@@ -300,15 +307,15 @@ void OrientationBinModeFilter::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)
   {
-    totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
     QVector<bool> activeObjects(totalFeatures, false);

@@ -53,14 +53,14 @@
 
 class SampleSurfaceMeshImpl
 {
-    FaceArray::Pointer m_Faces;
-    Int32DynamicListArray::Pointer m_FaceIds;
-    VertexArray::Pointer m_FaceBBs;
-    VertexArray::Pointer m_Points;
+    TriangleGeom::Pointer m_Faces;
+    Int32Int32DynamicListArray::Pointer m_FaceIds;
+    VertexGeom::Pointer m_FaceBBs;
+    VertexGeom::Pointer m_Points;
     int32_t* m_PolyIds;
 
   public:
-    SampleSurfaceMeshImpl(FaceArray::Pointer faces, Int32DynamicListArray::Pointer faceIds, VertexArray::Pointer faceBBs, VertexArray::Pointer points, int32_t* polyIds) :
+    SampleSurfaceMeshImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, VertexGeom::Pointer points, int32_t* polyIds) :
       m_Faces(faces),
       m_FaceIds(faceIds),
       m_FaceBBs(faceBBs),
@@ -72,9 +72,10 @@ class SampleSurfaceMeshImpl
     void checkPoints(size_t start, size_t end) const
     {
       float radius;
-      int numPoints = m_Points->count();
-      VertexArray::Vert_t ll, ur;
-      VertexArray::Vert_t point;
+      int64_t numPoints = m_Points->getNumberOfVertices();
+      float* ll;
+      float* ur;
+      float* point;
       char code;
 
       for(int iter = start; iter < end; iter++)
@@ -84,9 +85,9 @@ class SampleSurfaceMeshImpl
         GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
         //check points in vertex array to see if they are in the bounding box of the feature
-        for(int i = 0; i < numPoints; i++)
+        for(int64_t i = 0; i < numPoints; i++)
         {
-          point = m_Points->getVert(i);
+          point = m_Points->getVertexPointer(i);
           if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
           {
             code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius);
@@ -161,18 +162,21 @@ int SampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::dataCheck()
 {
-DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+
+  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
+  if(triangles->getVertices().get() == NULL)
   {
     setErrorCondition(-384);
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  if(triangles->getTriangles().get() == NULL)
   {
     setErrorCondition(-385);
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
@@ -197,12 +201,6 @@ void SampleSurfaceMesh::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -225,19 +223,22 @@ void SampleSurfaceMesh::execute()
 
   setErrorCondition(0);
 
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
+
   //pull down faces
-  FaceArray::Pointer faces = sm->getFaces();
-  int numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
+  int64_t* faces = triangleGeom->getTriPointer(0);
+  int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   //create array to hold bounding vertices for each face
-  VertexArray::Vert_t ll, ur;
+  float* ll;
+  float* ur;
   //VertexArray::Vert_t point;
-  VertexArray::Pointer faceBBs = VertexArray::CreateArray(2 * numFaces, "faceBBs");
+  VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "faceBBs");
 
   //walk through faces to see how many features there are
   int g1, g2;
   int maxFeatureId = 0;
-  for(int i = 0; i < numFaces; i++)
+  for(int64_t i = 0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
@@ -248,8 +249,8 @@ void SampleSurfaceMesh::execute()
   int numFeatures = maxFeatureId + 1;
 
   //create a dynamic list array to hold face lists
-  Int32DynamicListArray::Pointer faceLists = Int32DynamicListArray::New();
-  std::vector<int32_t> linkCount(numFeatures, 0);
+  Int32Int32DynamicListArray::Pointer faceLists = Int32Int32DynamicListArray::New();
+  std::vector<size_t> linkCount(numFeatures, 0);
   int32_t* linkLoc;
 
   // fill out lists with number of references to cells
@@ -260,7 +261,7 @@ void SampleSurfaceMesh::execute()
   ::memset(linkLoc, 0, numFaces * sizeof(int32_t));
 
   // traverse data to determine number of faces belonging to each feature
-  for (int i = 0; i < numFaces; i++)
+  for (int64_t i = 0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
@@ -272,21 +273,21 @@ void SampleSurfaceMesh::execute()
   faceLists->allocateLists(linkCount);
 
   // traverse data again to get the faces belonging to each feature
-  for (int i = 0; i < numFaces; i++)
+  for (int64_t i = 0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
     if(g1 > 0) { faceLists->insertCellReference(g1, (linkLoc[g1])++, i); }
     if(g2 > 0) { faceLists->insertCellReference(g2, (linkLoc[g2])++, i); }
     //find bounding box for each face
-    GeometryMath::FindBoundingBoxOfFace(faces, i, ll, ur);
-    faceBBs->setCoords(2 * i, ll.pos);
-    faceBBs->setCoords(2 * i + 1, ur.pos);
+    GeometryMath::FindBoundingBoxOfFace(triangleGeom, i, ll, ur);
+    faceBBs->setCoords(2 * i, ll);
+    faceBBs->setCoords(2 * i + 1, ur);
   }
 
   //generate the list of sampling points fom subclass
-  VertexArray::Pointer points = generate_points();
-  int numPoints = points->count();
+  VertexGeom::Pointer points = generate_points();
+  int64_t numPoints = points->getNumberOfVertices();
 
   //create array to hold which polyhedron (feature) each point falls in
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
@@ -298,12 +299,12 @@ void SampleSurfaceMesh::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures),
-                      SampleSurfaceMeshImpl(faces, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
+                      SampleSurfaceMeshImpl(triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    SampleSurfaceMeshImpl serial(faces, faceLists, faceBBs, points, polyIds);
+    SampleSurfaceMeshImpl serial(triangleGeom, faceLists, faceBBs, points, polyIds);
     serial.checkPoints(0, numFeatures);
   }
 
@@ -315,9 +316,9 @@ void SampleSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexArray::Pointer SampleSurfaceMesh::generate_points()
+VertexGeom::Pointer SampleSurfaceMesh::generate_points()
 {
-  return VertexArray::CreateArray(0, "error");
+  return VertexGeom::CreateGeometry(0, "error");
 }
 
 // -----------------------------------------------------------------------------

@@ -162,7 +162,14 @@ int WarpRegularGrid::writeFilterParameters(AbstractFilterParametersWriter* write
 void WarpRegularGrid::dataCheck()
 {
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName()); }
+  if(m_SaveAsNewDataContainer == false)
+  {
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+
+    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  }
   else
   {
     getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
@@ -183,12 +190,6 @@ void WarpRegularGrid::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -211,10 +212,10 @@ void WarpRegularGrid::execute()
   AttributeMatrix::Pointer newCellAttrMat = cellAttrMat->deepCopy();
 
   size_t dims[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
   float res[3];
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
-  size_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   float x, y, z;
   float newX, newY;

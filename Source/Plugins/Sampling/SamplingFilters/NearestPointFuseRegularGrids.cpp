@@ -101,9 +101,15 @@ int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParameters
 void NearestPointFuseRegularGrids::dataCheck()
 {
   int err = 0;
-  AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_ReferenceCellAttributeMatrixPath, err);
-  AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_SamplingCellAttributeMatrixPath, err);
+  AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_ReferenceCellAttributeMatrixPath, 80000);
+  AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_SamplingCellAttributeMatrixPath, 80000);
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer imageRef = getDataContainerArray()->getDataContainer(getReferenceCellAttributeMatrixPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == imageRef.get()) { return; }
+
+  ImageGeom::Pointer imageSample = getDataContainerArray()->getDataContainer(getSamplingCellAttributeMatrixPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == imageSample.get()) { return; }
 
   //create arrays on the reference grid to hold data present on the sampling grid
   QList<QString> voxelArrayNames = sampleAttrMat->getAttributeArrayNames();
@@ -131,12 +137,6 @@ void NearestPointFuseRegularGrids::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -162,12 +162,12 @@ void NearestPointFuseRegularGrids::execute()
   float sampleRes[3];
   float refOrigin[3];
   float sampleOrigin[3];
-  /* FIXME: ImageGeom */ refDC->getGeometryAs<ImageGeom>()->getDimensions(refDims);
-  /* FIXME: ImageGeom */ sampleDC->getGeometryAs<ImageGeom>()->getDimensions(sampleDims);
-  /* FIXME: ImageGeom */ refDC->getGeometryAs<ImageGeom>()->getResolution(refRes);
-  /* FIXME: ImageGeom */ sampleDC->getGeometryAs<ImageGeom>()->getResolution(sampleRes);
-  /* FIXME: ImageGeom */ refDC->getGeometryAs<ImageGeom>()->getOrigin(refOrigin);
-  /* FIXME: ImageGeom */ sampleDC->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
+  refDC->getGeometryAs<ImageGeom>()->getDimensions(refDims);
+  sampleDC->getGeometryAs<ImageGeom>()->getDimensions(sampleDims);
+  refDC->getGeometryAs<ImageGeom>()->getResolution(refRes);
+  sampleDC->getGeometryAs<ImageGeom>()->getResolution(sampleRes);
+  refDC->getGeometryAs<ImageGeom>()->getOrigin(refOrigin);
+  sampleDC->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
 
   size_t numRefTuples = refDims[0]*refDims[1]*refDims[2];
 
