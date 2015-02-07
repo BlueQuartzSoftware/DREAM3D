@@ -134,6 +134,11 @@ void MinNeighbors::dataCheck()
   m_NumNeighborsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumNeighborsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getNumNeighborsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   if(m_ApplyToSinglePhase == true)
   {
     m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -192,7 +197,7 @@ void MinNeighbors::assign_badpoints()
 
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t udims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -322,7 +327,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 
   bool good = false;
 
-  size_t totalPoints = static_cast<size_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
+  size_t totalPoints = static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
   size_t totalFeatures = static_cast<size_t>(m_NumNeighborsPtr.lock()->getNumberOfTuples());
 
   QVector<bool> activeObjects(totalFeatures, true);

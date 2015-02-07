@@ -164,21 +164,21 @@ void ClearData::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -5556);
     setErrorCondition(-5556);
   }
-  if (getXMax() > (static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()) - 1))
+  if (getXMax() > (static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints()) - 1))
   {
-    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()) - 1);
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints()) - 1);
     notifyErrorMessage(getHumanLabel(), ss, -5557);
     setErrorCondition(-5557);
   }
-  if (getYMax() > (static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints()) - 1))
+  if (getYMax() > (static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints()) - 1))
   {
-    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints()) - 1);
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints()) - 1);
     notifyErrorMessage(getHumanLabel(), ss, -5558);
     setErrorCondition(-5558);
   }
-  if (getZMax() > (static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints()) - 1))
+  if (getZMax() > (static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints()) - 1))
   {
-    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints()) - 1);
+    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints()) - 1);
     notifyErrorMessage(getHumanLabel(), ss, -5559);
     setErrorCondition(-5559);
   }
@@ -196,12 +196,6 @@ void ClearData::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -219,7 +213,7 @@ void ClearData::execute()
 
   size_t udims[3] =
   { 0, 0, 0 };
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
