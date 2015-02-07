@@ -126,6 +126,11 @@ void FindLargestCrossSections::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getLargestCrossSectionsArrayName() );
   m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_LargestCrossSectionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -144,13 +149,8 @@ void FindLargestCrossSections::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -162,7 +162,7 @@ void FindLargestCrossSections::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  if(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_crosssections(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_crosssections(); }
   else
   {
     setErrorCondition(-999);
@@ -192,30 +192,30 @@ void FindLargestCrossSections::find_crosssections()
 
   if(m_Plane == 0)
   {
-    outPlane = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
-    inPlane1 = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-    inPlane2 = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-    res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+    outPlane = m->getGeometryAs<ImageGeom>()->getZPoints();
+    inPlane1 = m->getGeometryAs<ImageGeom>()->getXPoints();
+    inPlane2 = m->getGeometryAs<ImageGeom>()->getYPoints();
+    res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes();
     stride1 = inPlane1 * inPlane2;
     stride2 = 1;
     stride3 = inPlane1;
   }
   if(m_Plane == 1)
   {
-    outPlane = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-    inPlane1 = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-    inPlane2 = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
-    res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+    outPlane = m->getGeometryAs<ImageGeom>()->getYPoints();
+    inPlane1 = m->getGeometryAs<ImageGeom>()->getXPoints();
+    inPlane2 = m->getGeometryAs<ImageGeom>()->getZPoints();
+    res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getZRes();
     stride1 = inPlane1;
     stride2 = 1;
     stride3 = inPlane1 * inPlane2;
   }
   if(m_Plane == 2)
   {
-    outPlane = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-    inPlane1 = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-    inPlane2 = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
-    res_scalar = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+    outPlane = m->getGeometryAs<ImageGeom>()->getXPoints();
+    inPlane1 = m->getGeometryAs<ImageGeom>()->getYPoints();
+    inPlane2 = m->getGeometryAs<ImageGeom>()->getZPoints();
+    res_scalar = m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
     stride1 = 1;
     stride2 = inPlane1;
     stride3 = inPlane1 * inPlane2;

@@ -159,12 +159,6 @@ void FindAvgScalarValueForFeatures::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -221,19 +215,19 @@ void FindAvgScalarValueForFeatures::execute()
     return;
   }
 
-	QVector<size_t> dims = inputData->getComponentDimensions();
-	int numComp = dims[0];
-	for (int i = 1; i < dims.size(); i++)
-	{
-		numComp *= dims[i];
-	}
-	if (numComp > 1)
-	{
-		ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedCellArrayPath.getDataArrayName());
-		setErrorCondition(-11003);
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
+  QVector<size_t> dims = inputData->getComponentDimensions();
+  int numComp = dims[0];
+  for (int i = 1; i < dims.size(); i++)
+  {
+    numComp *= dims[i];
+  }
+  if (numComp > 1)
+  {
+    ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedCellArrayPath.getDataArrayName());
+    setErrorCondition(-11003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   QString dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();

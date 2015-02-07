@@ -84,7 +84,7 @@ class FindEuclideanMap
     void operator()() const
     {
       // qDebug() << "  FindEuclideanMap: Loop = " << loop << "\n";
-      int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+      int64_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
       int euclideanDistance = 0;
       size_t count = 1;
@@ -94,12 +94,12 @@ class FindEuclideanMap
       size_t neighpoint;
       int nearestneighbor;
       int64_t neighbors[6];
-      int64_t xpoints = static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints());
-      int64_t ypoints = static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints());
-      int64_t zpoints = static_cast<int64_t>(/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints());
-      double resx = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes();
-      double resy = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
-      double resz = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZRes();
+      int64_t xpoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+      int64_t ypoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+      int64_t zpoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+      double resx = m->getGeometryAs<ImageGeom>()->getXRes();
+      double resy = m->getGeometryAs<ImageGeom>()->getYRes();
+      double resz = m->getGeometryAs<ImageGeom>()->getZRes();
 
       neighbors[0] = -xpoints * ypoints;
       neighbors[1] = -xpoints;
@@ -355,6 +355,10 @@ void FindEuclideanDistMap::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   if(m_DoBoundaries == true)
   {
@@ -407,12 +411,6 @@ void FindEuclideanDistMap::preflight()
   }
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -463,7 +461,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   std::vector<int> coordination;
 
   size_t udims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -484,9 +482,9 @@ void FindEuclideanDistMap::find_euclideandistmap()
   neighbors[4] = dims[0];
   neighbors[5] = dims[0] * dims[1];
 
-  size_t xPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints();
-  size_t yPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints();
-  size_t zPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints();
+  size_t xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+  size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+  size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
 
 
   for (int64_t a = 0; a < totalPoints; ++a)

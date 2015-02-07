@@ -153,6 +153,11 @@ void FindNeighbors::dataCheck()
   m_FeatureIdsPtr = dca->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayPath, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getBoundaryCellsArrayName() );
   if(m_StoreBoundaryCells == true)
   {
@@ -204,12 +209,6 @@ void FindNeighbors::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -226,7 +225,7 @@ void FindNeighbors::execute()
   size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
 
   size_t udims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -301,16 +300,16 @@ void FindNeighbors::execute()
     feature = m_FeatureIds[j];
     if(feature > 0)
     {
-      column = static_cast<float>( j % /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() );
-      row = static_cast<float>( (j / /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints()) % /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() );
-      plane = static_cast<float>( j / (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints()) );
+      column = static_cast<float>( j % m->getGeometryAs<ImageGeom>()->getXPoints() );
+      row = static_cast<float>( (j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints() );
+      plane = static_cast<float>( j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) );
       if(m_StoreSurfaceFeatures == true)
       {
-        if((column == 0 || column == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() - 1) || row == 0 || row == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() - 1) || plane == 0 || plane == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() != 1)
+        if((column == 0 || column == (m->getGeometryAs<ImageGeom>()->getXPoints() - 1) || row == 0 || row == (m->getGeometryAs<ImageGeom>()->getYPoints() - 1) || plane == 0 || plane == (m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) && m->getGeometryAs<ImageGeom>()->getZPoints() != 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
-        if((column == 0 || column == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() - 1) || row == 0 || row == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() - 1)) && /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+        if((column == 0 || column == (m->getGeometryAs<ImageGeom>()->getXPoints() - 1) || row == 0 || row == (m->getGeometryAs<ImageGeom>()->getYPoints() - 1)) && m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
@@ -320,11 +319,11 @@ void FindNeighbors::execute()
         good = 1;
         neighbor = static_cast<int>( j + neighpoints[k] );
         if(k == 0 && plane == 0) { good = 0; }
-        if(k == 5 && plane == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) { good = 0; }
+        if(k == 5 && plane == (m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) { good = 0; }
         if(k == 1 && row == 0) { good = 0; }
-        if(k == 4 && row == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYPoints() - 1)) { good = 0; }
+        if(k == 4 && row == (m->getGeometryAs<ImageGeom>()->getYPoints() - 1)) { good = 0; }
         if(k == 2 && column == 0) { good = 0; }
-        if(k == 3 && column == (/* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) { good = 0; }
+        if(k == 3 && column == (m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) { good = 0; }
         if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
         {
           onsurf++;
@@ -372,7 +371,7 @@ void FindNeighbors::execute()
     {
       int neigh = iter.key(); // get the neighbor feature
       int number = iter.value(); // get the number of voxels
-      float area = number * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getXRes() * /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getYRes();
+      float area = number * m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes();
 
       // Push the neighbor feature id back onto the list so we stay synced up
       neighborlist[i].push_back(neigh);
