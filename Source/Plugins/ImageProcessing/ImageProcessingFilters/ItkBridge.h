@@ -99,15 +99,15 @@ class Dream3DToItkImageConversion
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
+      m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
       origin[2] = sampleOrigin[2];    // Z coordinate
-      /* FIXME: ImageGeom */ importFilter->setOrigin( origin );
+      importFilter->SetOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
+      m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction
@@ -171,15 +171,15 @@ class ItkBridge2
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
+      m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
       origin[2] = sampleOrigin[2];    // Z coordinate
-      /* FIXME: ImageGeom */ importFilter->getGeometryAs<ImageGeom>()->setOrigin( origin );
+      importFilter->getGeometryAs<ImageGeom>()->setOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
+      m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction
@@ -238,15 +238,15 @@ class CreateItkWrapperForDataPointer
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
+      m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
       origin[2] = sampleOrigin[2];    // Z coordinate
-      importFilter->setOrigin( origin );
+      importFilter->SetOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
+      m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction
@@ -339,7 +339,7 @@ class ItkBridge
       importFilter->SetRegion( region );
 
       float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
+      m->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
       double origin[ ImageProcessing::ImageDimension ];
       origin[0] = sampleOrigin[0];    // X coordinate
       origin[1] = sampleOrigin[1];    // Y coordinate
@@ -347,7 +347,7 @@ class ItkBridge
       importFilter->SetOrigin( origin );
 
       float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
-      /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
+      m->getGeometryAs<ImageGeom>()->getResolution(voxelResolution);
       double spacing[ ImageProcessing::ImageDimension ];
       spacing[0] = voxelResolution[0];    // along X direction
       spacing[1] = voxelResolution[1];    // along Y direction

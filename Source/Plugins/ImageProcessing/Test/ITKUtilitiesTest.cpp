@@ -33,6 +33,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ImageProcessing/ImageProcessingConstants.h"
 #include "ImageProcessingFilters/ItkBridge.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 
 /**
@@ -50,7 +51,9 @@ void TestDream3DtoITKImportFilter()
   ImageProcessing::DefaultImageType::Pointer ptr;
 
 
-  DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
+  DataContainer::Pointer m = DataContainer::New();
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
   QString attrMatName("CellData");
   ImageProcessing::DefaultPixelType* data = NULL;
 
@@ -65,7 +68,9 @@ void TestDream3DtoITKImportFilter()
 void TestCreateItkWrapperForDataPointer()
 {
   ImageProcessing::DefaultImageType::Pointer imagePtr;
-  DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
+  DataContainer::Pointer m = DataContainer::New();
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
   QString attrMatName("CellData");
 
   ImageProcessing::DefaultPixelType* data = NULL;

@@ -288,10 +288,9 @@ void ReadImage::dataCheck()
   createdPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName() );
 
   m = getDataContainerArray()->getDataContainer(getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
   bool createAttributeMatrix = false;
 
-  if( NULL == m) //datacontainer doesn't exist->create
+  if(NULL == m.get()) //datacontainer doesn't exist->create
   {
     m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
@@ -312,7 +311,15 @@ void ReadImage::dataCheck()
   else   //datacontainer exists, check if attribute matrix exists
   {
     bool dcExists = m->doesAttributeMatrixExist(getCellAttributeMatrixName());
-    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(getErrorCondition() < 0) { return; }
+
+    size_t iDims[3] = { 0, 0, 0 };
+    float iRes[3] = { 0.0f, 0.0f, 0.0f };
+    float iOrigin[4] = { 0.0f, 0.0f, 0.0f };
+    image->getDimensions(iDims);
+    image->getResolution(iRes);
+    image->getOrigin(iOrigin);
 
     if(dcExists &&  NULL != image.get())//attribute matrix exists, check compatibility
     {
@@ -322,14 +329,14 @@ void ReadImage::dataCheck()
 
       //check dimension compatibility
       QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
-      if(tDims[0] != xdim)
+      if(tDims[0] != xdim || iDims[0] != xdim)
       {
         QString message = QObject::tr("The x size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(xdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[0]);
         setErrorCondition(-4);
         notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
         return;
       }
-      if(tDims[1] != ydim)
+      if(tDims[1] != ydim || iDims[1] != ydim)
       {
         QString message = QObject::tr("The y size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(ydim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[1]);
         setErrorCondition(-5);
@@ -338,7 +345,7 @@ void ReadImage::dataCheck()
       }
       if(3 == numDimensions)
       {
-        if(tDims[2] != zdim)
+        if(tDims[2] != zdim || iDims[2] != zdim)
         {
           QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[2]);
           setErrorCondition(-6);
@@ -348,7 +355,7 @@ void ReadImage::dataCheck()
       }
       else
       {
-        if(tDims[2] != 1)
+        if(tDims[2] != 1 || iDims[2] != 1)
         {
           QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (1)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName());
           setErrorCondition(-7);
@@ -480,12 +487,6 @@ void ReadImage::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

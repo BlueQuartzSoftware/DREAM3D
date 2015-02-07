@@ -105,14 +105,14 @@ void ConvertArrayTo8BitImage::dataCheck()
   if(m_SelectedArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "An array from the DataContainer must be selected.", getErrorCondition());
   }
   else
   {
     IDataArray::Pointer inputData = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName())->getAttributeMatrix(m_SelectedArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedArrayPath.getDataArrayName());
     if (NULL == inputData.get())
     {
-      QString ss = QObject::tr("Data array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedArrayPath.getDataArrayName());
+      QString ss = QObject::tr("Data array '%1' does not exist in the DataContainer. Was it spelled correctly?").arg(m_SelectedArrayPath.getDataArrayName());
       setErrorCondition(-11001);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -121,7 +121,7 @@ void ConvertArrayTo8BitImage::dataCheck()
     {
       if(inputData->getNumberOfComponents() > 1)
       {
-        QString ss = QObject::tr("Data array '%1' cannot have more than 1 component").arg(m_SelectedArrayPath.getDataArrayName());
+        QString ss = QObject::tr("Data Array '%1' cannot have more than 1 component").arg(m_SelectedArrayPath.getDataArrayName());
         setErrorCondition(-11002);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
@@ -131,6 +131,10 @@ void ConvertArrayTo8BitImage::dataCheck()
       m_NewArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_NewArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_NewArray = m_NewArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      if(getErrorCondition() < 0) { return; }
+
+      ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+      if(getErrorCondition() < 0 || NULL == image.get()) { return; }
     }
   }
 }
@@ -146,12 +150,6 @@ void ConvertArrayTo8BitImage::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

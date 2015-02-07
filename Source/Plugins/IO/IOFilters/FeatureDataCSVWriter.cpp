@@ -111,9 +111,8 @@ int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* 
 void FeatureDataCSVWriter::dataCheck()
 {
   setErrorCondition(0);
-  int err = 0;
 
-  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), err);
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), 80000);
   if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
 
   if (getFeatureDataFile().isEmpty() == true)

@@ -210,12 +210,14 @@ void GrayToRGB::dataCheck()
   tempPath.update(getRedArrayPath().getDataContainerName(), getRedArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
 
-DataContainer::Pointer redDC = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getRedArrayPath().getDataContainerName() );
+  DataContainer::Pointer redDC = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getRedArrayPath().getDataContainerName() );
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer redAM = redDC->getPrereqAttributeMatrix<AbstractFilter>(this, getRedArrayPath().getAttributeMatrixName(), 80000);
   if(getErrorCondition() < 0) { return; }
   IDataArray::Pointer redArrayptr = redAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, getRedArrayPath().getDataArrayName(), 80000);
   if(getErrorCondition() < 0) { return; }
+  ImageGeom::Pointer image = redDC->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   //create new array of same type
   compDims[0] = 3;
@@ -238,12 +240,6 @@ void GrayToRGB::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------

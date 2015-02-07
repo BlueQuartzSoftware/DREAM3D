@@ -107,7 +107,6 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 void VtkRectilinearGridWriter::dataCheck()
 {
   setErrorCondition(0);
-  int err = 0;
 
   if(m_OutputFile.isEmpty() == true)
   {
@@ -116,7 +115,7 @@ void VtkRectilinearGridWriter::dataCheck()
     setErrorCondition(-1);
   }
 
-  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSelectedAttributeMatrixPath(), err);
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSelectedAttributeMatrixPath(), 80000);
   if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
 
   ImageGeom::Pointer image =  getDataContainerArray()->getDataContainer(getSelectedAttributeMatrixPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
