@@ -40,6 +40,8 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
@@ -51,7 +53,6 @@
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "Generic/GenericConstants.h"
 

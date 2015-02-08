@@ -42,10 +42,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 class QwtPlotZoomer;
 class QwtPlotPicker;
 class QwtPlotPanner;

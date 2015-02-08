@@ -35,10 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsGenODFWidget.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 //-- C++ Includes
 #include <iostream>
 
@@ -56,6 +52,16 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QProgressDialog>
+
+
+#include <qwt.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
 
 
 #include "EbsdLib/TSL/AngConstants.h"

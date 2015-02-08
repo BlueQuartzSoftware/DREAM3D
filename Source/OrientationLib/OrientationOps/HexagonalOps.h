@@ -40,10 +40,10 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 
 
 /**
@@ -148,6 +148,7 @@ class OrientationLib_EXPORT HexagonalOps : public OrientationOps
      * an image object from other libraries and written out to disk.
      */
     virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config);
+
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[12], int numsym,

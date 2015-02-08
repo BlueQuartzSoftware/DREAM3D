@@ -38,9 +38,10 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"

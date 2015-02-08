@@ -59,6 +59,8 @@
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+
 #include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
@@ -71,7 +73,6 @@
 #include "OrientationLib/OrientationOps/TetragonalLowOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "QtSupport/PoleFigureImageUtilities.h"

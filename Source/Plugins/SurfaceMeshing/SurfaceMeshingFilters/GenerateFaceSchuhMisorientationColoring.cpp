@@ -44,8 +44,7 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-//#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
-//#include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
@@ -58,7 +57,7 @@
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+
 
 
 class CalculateFaceSchuhMisorientationColorsImpl

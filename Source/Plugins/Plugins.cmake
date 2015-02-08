@@ -21,7 +21,7 @@ function(DREAM3D_COMPILE_PLUGIN)
 
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        # message(STATUS "${PLUG_PLUGIN_NAME}: Configuring Plugin ....")
+        message(STATUS "Plugin  [ENABLED]: ${PLUG_PLUGIN_NAME}")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
         #- Now set up the dependency between the main application and each of the plugins so that
         #- things like Visual Studio are forced to rebuild the plugins when launching
@@ -30,7 +30,7 @@ function(DREAM3D_COMPILE_PLUGIN)
             add_dependencies(DREAM3D ${p})
         endif()
     else()
-        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")
+        message(STATUS "Plugin [DISABLED]: ${PLUG_PLUGIN_NAME}")
     endif()
 endfunction()
 
@@ -50,7 +50,7 @@ function(DREAM3D_ADD_PLUGINS)
     # and the user will have to put the entire path into CMake manually.
     foreach(d3dPlugin ${PLUG_PLUGIN_NAMES})
 
-      message(STATUS "Adding Plugin: ${d3dPlugin}...")
+      # message(STATUS "Evaluating Plugin: ${d3dPlugin}...")
 
       if(DEFINED ${d3dPlugin}_SOURCE_DIR AND "${${d3dPlugin}_SOURCE_DIR}" STREQUAL "")
         set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${d3dPlugin})

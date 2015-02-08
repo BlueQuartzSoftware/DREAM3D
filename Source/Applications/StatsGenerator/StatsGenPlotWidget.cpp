@@ -36,10 +36,6 @@
 
 #include "StatsGenPlotWidget.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 //-- C++ Includes
 #include <iostream>
 #include <limits>
@@ -51,18 +47,17 @@
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>
-#include <qwt_plot_grid.h>
-#if QWT_VERSION >= 0x060000
-#include <qwt_series_data.h>
-#else
-#include <qwt_interval_data.h>
-#endif
-#include <qwt_painter.h>
-#include <qwt_scale_map.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_plot_grid.h>
+#include <qwt_symbol.h>
+#include <qwt_series_data.h>
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"

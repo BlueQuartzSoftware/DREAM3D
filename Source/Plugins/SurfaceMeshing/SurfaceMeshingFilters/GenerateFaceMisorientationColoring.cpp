@@ -44,8 +44,6 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-//#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
-//#include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
 
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"

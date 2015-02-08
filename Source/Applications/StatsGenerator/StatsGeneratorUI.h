@@ -36,11 +36,6 @@
 #ifndef _STATSGENERATOR_H_
 #define _STATSGENERATOR_H_
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
-#include <ui_StatsGeneratorUI.h>
 
 #include <QtCore/QObject>
 
@@ -53,6 +48,8 @@
 #include "MatrixPhaseWidget.h"
 #include "BoundaryPhaseWidget.h"
 #include "TransformationPhaseWidget.h"
+
+#include <ui_StatsGeneratorUI.h>
 
 class HelpDialog;
 

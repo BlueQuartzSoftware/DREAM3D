@@ -39,7 +39,6 @@
 #define _IdentifyMicroTextureRegions_H_
 
 #include <vector>
-#include <QtCore/QString>
 
 ///Boost Random Number generator stuff
 #include <boost/random/mersenne_twister.hpp>
@@ -50,11 +49,16 @@ typedef boost::uniform_int<int> NumberDistribution;
 typedef boost::mt19937 RandomNumberGenerator;
 typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
+#include <QtCore/QString>
+#include <QtCore/QDateTime>
+
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
+
 #include "Reconstruction/ReconstructionConstants.h"
 
 /**
