@@ -280,7 +280,7 @@ int EnsembleInfoReader::readFile()
 		{
 			m_CrystalStructures[pnum] = m_crystruct;
 		}
-		if (m_crystruct == -1)
+		if (m_ptype == -1)
 		{
 			QString ss = QObject::tr("Incorrect phase type name '%1'").arg(values.at(1)); // The phase type name read from the file was not found in the lookup table
 			setErrorCondition(-10007);

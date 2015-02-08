@@ -7,8 +7,8 @@ IO Filters (Input)
 This filter reads in information about the Crystal Structure and Phases of
  all the **Features** that are contained in a **Cell** based volume. These
  values are needed to allow the calculation of statistics on the volume.
- The format of that file is a simple text file where the first line is the
- number of phases that are contained in the volume and subsequent lines in
+ The format of that file is a simple text file with the extension .ini or .txt. 
+ The first group in the file  is the name [EnsembleInfo] in square brackets with the key Number_Phases=number of phases that are contained in the volume and subsequent groups in
  the file list the __Phase Number__, __Crystal Structure__ and __Phase Type__.
  The proper values for the crystal structure and phase type come from internal
  constants within DREAM3D and are listed here:
@@ -29,13 +29,23 @@ This filter reads in information about the Crystal Structure and Phases of
 - MatrixPhase = 3
 - BoundaryPhase = 4
 - UnknownPhaseType = 999
+
+**Example**
+
 __Phase numbering starts at One (1). Phase Zero (0) is reserved for internal use in DREAM3D.__
 For example if you have a structure that has 2 phases that consist of a Cubic Primary phase and a Hexagonal Matrix phase the file would be the following:
 
 
-    2
-    1  1  0
-    2  0  3
+ [EnsembleInfo]  
+Number_Phases=2
+
+[1]  
+CrystalStructure=Cubic  
+PhaseType=PrimaryPhase
+
+[2]  
+CrystalStructure=Hexagonal  
+PhaseType=MatrixPhase
 
 
 ## Parameters ##
