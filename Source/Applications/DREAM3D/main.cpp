@@ -51,14 +51,14 @@
 
 int main(int argc, char* argv[])
 {
-#ifdef Q_WS_X11
+#ifdef Q_OS_X11
   // Using motif style gives us test failures (and its ugly).
   // Using cleanlooks style gives us errors when using valgrind (Trolltech's bug #179200)
   // let's just use plastique for now
   QApplication::setStyle(new QPlastiqueStyle);
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
   // Some where Visual Studio wants to set the Current Working Directory (cwd)
   // to the subfolder BUILD/Applications/DREAM3D instead of our true binary
   // directory where everything is built. This wreaks havoc on the prebuilt
@@ -70,8 +70,8 @@ int main(int argc, char* argv[])
 
   if (absPathExe != cwd)
   {
-	  QDir::setCurrent(absPathExe);
-	  qDebug() << "setting cwd: " << absPathExe;
+    QDir::setCurrent(absPathExe);
+    qDebug() << "setting cwd: " << absPathExe;
   }
   cwd = QDir::currentPath();
   qDebug() << "        cwd: " << cwd;
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationName("BlueQuartz Software");
 
   QApplication qtapp(argc, argv);
-#if defined( Q_WS_MAC )
+#if defined( Q_OS_MAC )
   //Needed for typical Mac program behavior.
   qtapp.setQuitOnLastWindowClosed( true );
 #endif //APPLE

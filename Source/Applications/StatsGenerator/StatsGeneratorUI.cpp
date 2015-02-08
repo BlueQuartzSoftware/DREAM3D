@@ -955,7 +955,7 @@ void StatsGeneratorUI::adjustWindowTitle()
   setWindowModified(true);
 
   QString windowTitle("*");
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   windowTitle = QString("");
 #endif
   windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");

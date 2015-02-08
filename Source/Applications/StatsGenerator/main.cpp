@@ -51,7 +51,7 @@ int main (int argc, char* argv[])
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("StatsGeneratorUI");
-#if defined( Q_WS_MAC )
+#if defined( Q_OS_MAC )
   //Needed for typical Mac program behavior.
   app.setQuitOnLastWindowClosed( true );
 #endif //APPLE
