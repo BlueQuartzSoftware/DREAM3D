@@ -48,9 +48,13 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 
+#include "OrientationLib/OrientationLib.h"
 
 
-class DREAM3DLib_EXPORT TexturePreset
+/**
+ * @brief The TexturePreset class
+ */
+class OrientationLib_EXPORT TexturePreset
 {
   public:
     DREAM3D_SHARED_POINTERS(TexturePreset)
@@ -88,8 +92,10 @@ class DREAM3DLib_EXPORT TexturePreset
 };
 
 
-
-class DREAM3DLib_EXPORT CubicTexturePresets
+/**
+ * @brief The CubicTexturePresets class
+ */
+class OrientationLib_EXPORT CubicTexturePresets
 {
   public:
     virtual ~CubicTexturePresets();
@@ -103,8 +109,10 @@ class DREAM3DLib_EXPORT CubicTexturePresets
     void operator=(const CubicTexturePresets&); // Operator '=' Not Implemented
 };
 
-
-class DREAM3DLib_EXPORT HexTexturePresets
+/**
+ * @brief The HexTexturePresets class
+ */
+class OrientationLib_EXPORT HexTexturePresets
 {
   public:
     virtual ~HexTexturePresets();

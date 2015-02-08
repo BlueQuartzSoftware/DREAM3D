@@ -46,9 +46,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+
 
 typedef float real;
 

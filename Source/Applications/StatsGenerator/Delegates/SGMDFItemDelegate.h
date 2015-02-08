@@ -46,7 +46,7 @@
 #include <QtGui/QDoubleValidator>
 #include <QtWidgets/QStyledItemDelegate>
 
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 #include "StatsGenerator/TableModels/SGMDFTableModel.h"
 
 /**

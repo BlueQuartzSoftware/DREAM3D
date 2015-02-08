@@ -83,7 +83,7 @@ class Texture
     * @param normalize Should the ODF data be normalized by the totalWeight value
     * before returning.
     * @param odf (OUT) Pointer to the ODF array that is generated from this function. NOTE: The memory
-    * for this MUST have already been allocated. Use CubicOps::k_OdfSize to allocate the proper amount
+    * for this MUST have already been allocated. Use ops.getODFSize() to allocate the proper amount
     * @param numEntries The number of entries of Angle/Weight/Sigmas
     */
     template<typename T>
@@ -98,7 +98,7 @@ class Texture
 
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = float(3 * CubicOps::k_OdfSize);
+      float totalweight = float(3 * ops.getODFSize());
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -113,7 +113,7 @@ class Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (int i = 0; i < CubicOps::k_OdfSize; i++)
+      for (int i = 0; i < ops.getODFSize(); i++)
       {
         odf[i] = 0;
       }
@@ -165,13 +165,13 @@ class Texture
       if(totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (int i = 0; i < CubicOps::k_OdfSize; i++)
+        for (int i = 0; i < ops.getODFSize(); i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
-      for (int i = 0; i < CubicOps::k_OdfSize; i++)
+      for (int i = 0; i < ops.getODFSize(); i++)
       {
         remainingweight = remainingweight - odf[i];
       }
@@ -193,7 +193,7 @@ class Texture
       if(normalize == true)
       {
         // Normalize the odf
-        for (int i = 0; i < CubicOps::k_OdfSize; i++)
+        for (int i = 0; i < ops.getODFSize(); i++)
         {
           odf[i] = odf[i] / totalweight;
         }
@@ -219,12 +219,13 @@ class Texture
     template<typename T>
     static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
     {
+      HexagonalOps hexOps;
       DREAM3D_RANDOMNG_NEW()
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = 3 * HexagonalOps::k_OdfSize;
+      float totalweight = 3 * hexOps.getODFSize();
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -240,7 +241,7 @@ class Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
+      for (int i = 0; i < hexOps.getODFSize(); i++)
       {
         odf[i] = 0;
       }
@@ -292,13 +293,13 @@ class Texture
       if(totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
+        for (int i = 0; i < hexOps.getODFSize(); i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
-      for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
+      for (int i = 0; i < hexOps.getODFSize(); i++)
       {
         remainingweight = remainingweight - odf[i];
       }
@@ -320,7 +321,7 @@ class Texture
       if(normalize == true)
       {
         // Normalize the odf
-        for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
+        for (int i = 0; i < hexOps.getODFSize(); i++)
         {
           odf[i] = odf[i] / totalweight;
         }
@@ -346,18 +347,18 @@ class Texture
     template<typename T>
     static void CalculateOrthoRhombicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
     {
+      OrthoRhombicOps ops;
       DREAM3D_RANDOMNG_NEW()
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = 3 * OrthoRhombicOps::k_OdfSize;
+      float totalweight = 3 * ops.getODFSize();
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
       float dist, fraction;
       float r1 = 0, r2 = 0, r3 = 0;
-      OrthoRhombicOps ops;
       for (size_t i = 0; i < numEntries; i++)
       {
         OrientationMath::EulertoRod(e1s[i], e2s[i], e3s[i], r1, r2, r3);
@@ -366,7 +367,7 @@ class Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+      for (int i = 0; i < ops.getODFSize(); i++)
       {
         odf[i] = 0;
       }
@@ -418,13 +419,13 @@ class Texture
       if(totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+        for (int i = 0; i < ops.getODFSize(); i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
-      for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+      for (int i = 0; i < ops.getODFSize(); i++)
       {
         remainingweight = remainingweight - odf[i];
       }
@@ -446,7 +447,7 @@ class Texture
       if (normalize == true)
       {
         // Normalize the odf
-        for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+        for (int i = 0; i < ops.getODFSize(); i++)
         {
           odf[i] = odf[i] / totalweight;
         }

@@ -48,7 +48,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 #include "StatsGenerator/TableModels/SGRDFTableModel.h"
 
 /**

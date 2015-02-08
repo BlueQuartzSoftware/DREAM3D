@@ -41,16 +41,16 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/Texture.hpp"
 
+#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.cpp"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
+#include "Processing/ProcessingConstants.h"
+
 using namespace DREAM3D;
-using namespace Detail;
 
 // -----------------------------------------------------------------------------
 //
@@ -235,15 +235,16 @@ void RenumberFeaturesBinnedOrientations::execute()
   float binFactor = 0.0f;
   // hardcoded for hexagonal for now
   // defaulted at 5 degree bins
-  dim[0] = HexDim1InitValue;
-  dim[1] = HexDim2InitValue;
-  dim[2] = HexDim3InitValue;
+  HexagonalOps hexOps;
+  hexOps.getInitializedODFBinDimensions(dim);
 
   binFactor = float(m_BinWidth) * 0.2f;
 
-  step[0] = HexDim1StepValue * binFactor;
-  step[1] = HexDim2StepValue * binFactor;
-  step[2] = HexDim3StepValue * binFactor;
+  hexOps.getOdfBinStepSize(step);
+
+  step[0] *= binFactor;
+  step[1] *= binFactor;
+  step[2] *= binFactor;
   bins[0] = 36.0f / binFactor;
   bins[1] = 36.0f / binFactor;
   bins[2] = 12.0f / binFactor;
@@ -300,6 +301,14 @@ const QString RenumberFeaturesBinnedOrientations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString RenumberFeaturesBinnedOrientations::getHumanLabel()
 { return "Renumber Features (Binned Orientations)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenumberFeaturesBinnedOrientations::getSubGroupName()
+{
+ return DREAM3D::FilterSubGroups::CleanupFilters;
+}
 
 // -----------------------------------------------------------------------------
 //

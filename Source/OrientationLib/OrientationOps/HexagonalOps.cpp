@@ -35,7 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "HexagonalOps.h"
 
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -45,16 +44,15 @@
 #include <tbb/task.h>
 #endif
 
-
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
+//#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+//#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/ColorUtilities.h"
 
+#include "OrientationLib/Math/OrientationMath.h"
 
 namespace Detail
 {
@@ -165,7 +163,7 @@ static const float HexMatSym[12][3][3] =
   }
 };
 
-
+// Use a namespace for some detail that only this class needs
 using namespace Detail;
 
 // -----------------------------------------------------------------------------
@@ -173,10 +171,7 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 HexagonalOps::HexagonalOps()
 {
-  float junk1 =  HexDim1StepValue * 1.0f;
-  float junk2 = junk1 / HexDim2StepValue;
-  float junk3 = junk2 / HexDim3StepValue;
-  junk1 = junk3 / junk2;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -401,7 +396,7 @@ void HexagonalOps::randomizeEulerAngles(float& synea1, float& synea2, float& syn
   QuatF q;
   QuatF qc;
   OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
-  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+  size_t symOp = getRandomSymmetryOperatorIndex(getNumSymOps());
   QuaternionMathF::Multiply(q, HexQuatSym[symOp], qc);
   OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
 }
@@ -446,6 +441,26 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
   bins[2] = 12.0f;
 
   return _calcODFBin(dim, bins, step, r1, r2, r3);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HexagonalOps::getInitializedODFBinDimensions(float dims[3])
+{
+  dims[0] = HexDim1InitValue;
+  dims[1] = HexDim2InitValue;
+  dims[2] = HexDim3InitValue;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HexagonalOps::getOdfBinStepSize(float step[3])
+{
+  step[0] = HexDim1StepValue;
+  step[1] = HexDim2StepValue;
+  step[2] = HexDim3StepValue;
 }
 
 void HexagonalOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
@@ -771,7 +786,7 @@ void HexagonalOps::getSchmidFactorAndSS(float load[3], float plane[3], float dir
   directionMag *= loadMag;
 
   //loop over symmetry operators finding highest schmid factor
-  for(int i = 0; i < k_NumSymQuats; i++)
+  for(int i = 0; i < getNumSymOps(); i++)
   {
     //compute slip system
     float slipPlane[3] = {0};

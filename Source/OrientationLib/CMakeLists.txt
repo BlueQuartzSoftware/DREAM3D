@@ -182,6 +182,7 @@ include_directories(${OrientationLib_SOURCE_DIR}/..)
 include( ${OrientationLib_SOURCE_DIR}/OrientationOps/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/Math/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/IO/SourceList.cmake)
+include( ${OrientationLib_SOURCE_DIR}/Texture/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/Utilities/SourceList.cmake)
 
 set(OrientationLib_SRCS
@@ -214,6 +215,8 @@ set(OrientationLib_PROJECT_SRCS
     ${OrientationLib_IO_SRCS}
     ${OrientationLib_Utilities_HDRS}
     ${OrientationLib_Utilities_SRCS}
+    ${OrientationLib_Texture_HDRS}
+    ${OrientationLib_Texture_SRCS}
     #-- Our Generated Header Files
     ${OrientationLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
     ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_CONFIGURATION_FILE_NAME}

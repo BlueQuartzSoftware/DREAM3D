@@ -46,7 +46,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TexturePreset.h"
+
+#include "OrientationLib/Texture/TexturePreset.h"
 
 /**
  * @class TextureDialog TextureDialog.h StatsGenerator/TextureDialog.h

@@ -51,7 +51,6 @@
 
 // DREAM3D Includes
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"

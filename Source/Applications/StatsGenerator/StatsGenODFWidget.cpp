@@ -71,8 +71,8 @@
 
 
 
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/IO/AngleFileLoader.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"

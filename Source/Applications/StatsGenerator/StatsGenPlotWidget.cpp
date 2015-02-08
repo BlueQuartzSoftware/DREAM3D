@@ -65,7 +65,7 @@
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 
 #define SG_ERROR_CHECK(name)\
   qDebug() << "Error writing HDF5 data to " << name << "\n";\

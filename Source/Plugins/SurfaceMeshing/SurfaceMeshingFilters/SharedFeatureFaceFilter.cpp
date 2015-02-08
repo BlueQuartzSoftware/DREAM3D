@@ -210,7 +210,7 @@ void SharedFeatureFaceFilter::execute()
   std::vector< std::pair<int, int> > faceLabelMap;
   faceLabelMap.push_back( std::pair<int, int>(0, 0) );
   // Loop through all the Triangles and figure out how many triangles we have in each one.
-  for(size_t t = 0; t < totalPoints; ++t)
+  for(int64_t t = 0; t < totalPoints; ++t)
   {
     fl0 = m_SurfaceMeshFaceLabels[t * 2];
     fl1 = m_SurfaceMeshFaceLabels[t * 2 + 1];

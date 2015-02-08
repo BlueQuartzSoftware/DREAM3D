@@ -345,7 +345,7 @@ void WritePoleFigure::execute()
   {
     // First find out how many voxels we are going to have. This is probably faster to loop twice than to
     // keep allocating memory everytime we find one.
-    for(int64_t i = 0; i < numPoints; ++i)
+    for(size_t i = 0; i < numPoints; ++i)
     {
       if (m_CellPhases[i] == phase)
       {

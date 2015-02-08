@@ -74,6 +74,9 @@ class OrientationLib_EXPORT HexagonalOps : public OrientationOps
     virtual int getNumSymOps() { return k_NumSymQuats; }
     QString getSymmetryName() { return "Hexagonal-High 6/mmm"; }
 
+    virtual void getInitializedODFBinDimensions(float dims[3]);
+    virtual void getOdfBinStepSize(float step[3]);
+
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
     virtual void getQuatSymOp(int i, QuatF& q);
     virtual void getRodSymOp(int i, float* r);

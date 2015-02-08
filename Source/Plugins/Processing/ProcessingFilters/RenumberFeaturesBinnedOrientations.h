@@ -44,11 +44,10 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
-#include "Processing/ProcessingConstants.h"
+
 /**
  * @class RenumberFeaturesBinnedOrientations RenumberFeaturesBinnedOrientations.h /Processing/RenumberFeaturesBinnedOrientations.h
  * @brief
@@ -80,16 +79,16 @@ class RenumberFeaturesBinnedOrientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
-  DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  virtual const QString getCompiledLibraryName();
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -118,7 +117,7 @@ class RenumberFeaturesBinnedOrientations : public AbstractFilter
     void preflightExecuted();
 
   protected:
-  int calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
+    int calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
 
     RenumberFeaturesBinnedOrientations();
 
@@ -126,7 +125,7 @@ class RenumberFeaturesBinnedOrientations : public AbstractFilter
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, ParentIds)
-  DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 

@@ -305,9 +305,9 @@ void CropSurfaceMesh::execute()
   // No matter where the AM is (same DC or new DC), we have the correct DC and AM pointers...now it's time to crop
   //SharedVertexList::Pointer vertices = triangles->getVertices();
   float* vertex = triangleGeom->getVertexPointer(0);
-  size_t numVerts = triangleGeom->getNumberOfVertices();
+  int64_t numVerts = triangleGeom->getNumberOfVertices();
   int64_t* face = triangleGeom->getTriPointer(0);
-  size_t numFaces = triangleGeom->getNumberOfTris();
+  int64_t numFaces = triangleGeom->getNumberOfTris();
 
   QList<QString> nodeArrayNames;
   if(m_HasNodeData == true) { nodeArrayNames = nodeAttrMat->getAttributeArrayNames(); }

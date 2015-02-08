@@ -66,11 +66,12 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/MatrixStatsData.h"
+
+#include "OrientationLib/Texture/StatsGen.hpp"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\

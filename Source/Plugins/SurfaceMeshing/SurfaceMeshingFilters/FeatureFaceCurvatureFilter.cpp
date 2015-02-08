@@ -320,13 +320,13 @@ void FeatureFaceCurvatureFilter::execute()
   SharedFeatureFaces_t sharedFeatureFaces;
 
   int maxFaceId = 0;
-  for(size_t t = 0; t < numTriangles; ++t)
+  for(int64_t t = 0; t < numTriangles; ++t)
   {
     if(m_SurfaceMeshFeatureFaceIds[t] > maxFaceId) { maxFaceId = m_SurfaceMeshFeatureFaceIds[t]; }
   }
   QVector<int> faceSizes(maxFaceId, 0);
   // Loop through all the Triangles and assign each one to a unique Feature Face Id.
-  for(size_t t = 0; t < numTriangles; ++t)
+  for(int64_t t = 0; t < numTriangles; ++t)
   {
     faceSizes[m_SurfaceMeshFeatureFaceIds[t]]++;
   }
@@ -340,7 +340,7 @@ void FeatureFaceCurvatureFilter::execute()
   }
 
   // Loop through all the Triangles and assign each one to a unique Feature Face Id.
-  for(size_t t = 0; t < numTriangles; ++t)
+  for(int64_t t = 0; t < numTriangles; ++t)
   {
     sharedFeatureFaces[m_SurfaceMeshFeatureFaceIds[t]].push_back(t);
   }

@@ -45,8 +45,8 @@
 #include <vector>
 
 
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 
 #define POPULATE_DATA(i, e1, e2, e3, w, s)\
   e1s[i] = e1;\

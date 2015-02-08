@@ -43,9 +43,15 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+
+#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationOps/CubicOps.h"
+#include "OrientationLib/OrientationOps/HexagonalOps.h"
+#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+
+
 
 #include "IO/IOConstants.h"
 

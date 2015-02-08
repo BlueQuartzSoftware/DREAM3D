@@ -67,12 +67,12 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/Texture.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 #include "QtSupport/PoleFigureImageUtilities.h"
