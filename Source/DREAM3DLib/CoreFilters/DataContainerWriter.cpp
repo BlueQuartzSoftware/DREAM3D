@@ -259,11 +259,11 @@ void DataContainerWriter::execute()
   hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), H5P_DEFAULT );
   scopedFileSentinel.addGroupId(&dcaGid);
 
-  unsigned int dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   QList<QString> dcNames = getDataContainerArray()->getDataContainerNames();
   for(size_t iter = 0; iter < getDataContainerArray()->getNumDataContainers(); iter++)
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcNames[iter]);
+    IGeometry::Pointer geometry = dc->getGeometry();
     err = H5Utilities::createGroupsFromPath(dcNames[iter].toLatin1().data(), dcaGid);
     if (err < 0)
     {
@@ -271,13 +271,6 @@ void DataContainerWriter::execute()
       setErrorCondition(-60);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
-    }
-
-    dcType = dc->getDCType();
-    err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::StringConstants::DataContainerType, dcType);
-    if (err < 0)
-    {
-      qDebug() << "Error Writing DataContainerType attribute for " << dcNames[iter] << "\n";
     }
 
     hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
@@ -297,7 +290,7 @@ void DataContainerWriter::execute()
       notifyErrorMessage(getHumanLabel(), "Error Writing DataContainer Mesh", -804);
       return;
     }
-    if (m_WriteXdmfFile == true)
+    if (m_WriteXdmfFile == true && geometry.get() != NULL)
     {
       QString hdfFileName = QH5Utilities::fileNameFromFileId(m_FileId);
 

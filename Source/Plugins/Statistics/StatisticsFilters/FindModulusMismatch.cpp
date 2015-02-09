@@ -59,8 +59,8 @@ class FindModulusMismatchImpl
 // -----------------------------------------------------------------------------
 FindModulusMismatch::FindModulusMismatch()  :
   AbstractFilter(),
-  m_ModuliArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "ElasticModuli"),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_ModuliArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "ElasticModuli"),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshDeltaModulusArrayName("SurfaceMeshDeltaModulus"),
   m_ModuliArrayName("ElasticModuli"),
   m_Moduli(NULL),
@@ -105,7 +105,6 @@ void FindModulusMismatch::readFilterParameters(AbstractFilterParametersReader* r
 int FindModulusMismatch::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshDeltaModulusArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ModuliArrayPath)
@@ -134,6 +133,9 @@ void FindModulusMismatch::dataCheckSurfaceMesh()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  if(getErrorCondition() < 0 || NULL == sm.get()) { return; }
+
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -158,6 +160,7 @@ void FindModulusMismatch::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

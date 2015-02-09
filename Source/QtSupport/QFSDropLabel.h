@@ -31,7 +31,7 @@
 #ifndef _QFSDropLabel_H
 #define _QFSDropLabel_H
 
-#include <QtGui/QLabel>
+#include <QtWidgets/QLabel>
 
 
 

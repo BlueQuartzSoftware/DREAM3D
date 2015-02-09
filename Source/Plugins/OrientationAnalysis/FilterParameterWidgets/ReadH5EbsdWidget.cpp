@@ -30,9 +30,9 @@
 
 #include "ReadH5EbsdWidget.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QMessageBox>
-#include <QtGui/QComboBox>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QComboBox>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"

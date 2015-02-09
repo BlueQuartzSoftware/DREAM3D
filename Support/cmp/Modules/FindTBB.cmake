@@ -271,7 +271,7 @@ if(TBB_INCLUDE_DIR)
         ENDif(TBB_LIBRARY_DEBUG)
         set(TBB_IS_SHARED "TRUE")
         set(TBB_MALLOC_IS_SHARED "TRUE")
-        message(STATUS "Found Intel TBB - ${_TBB_INSTALL_DIR}")
+        message(STATUS "Intel TBB Location: ${_TBB_INSTALL_DIR}")
     endif(TBB_LIBRARY)
 endif(TBB_INCLUDE_DIR)
 

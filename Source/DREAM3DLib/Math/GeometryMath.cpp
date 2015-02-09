@@ -78,9 +78,9 @@ float GeometryMath::AngleBetweenVectors(float a[3], float b[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GeometryMath::PointInBox(const VertexArray::Vert_t& p, const VertexArray::Vert_t& ll, const VertexArray::Vert_t& ur)
+bool GeometryMath::PointInBox(const float* p, const float* ll, const float* ur)
 {
-  if((ll.pos[0] <= p.pos[0]) && (p.pos[0] <= ur.pos[0]) && (ll.pos[1] <= p.pos[1]) && (p.pos[1] <= ur.pos[1]) && (ll.pos[2] <= p.pos[2]) && (p.pos[2] <= ur.pos[2]))
+  if((ll[0] <= p[0]) && (p[0] <= ur[0]) && (ll[1] <= p[1]) && (p[1] <= ur[1]) && (ll[2] <= p[2]) && (p[2] <= ur[2]))
   {
     return true;
   }
@@ -93,32 +93,32 @@ bool GeometryMath::PointInBox(const VertexArray::Vert_t& p, const VertexArray::V
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GeometryMath::RayIntersectsBox(const VertexArray::Vert_t& p,
-                                    const VertexArray::Vert_t& q,
-                                    const VertexArray::Vert_t& ll,
-                                    const VertexArray::Vert_t& ur)
+bool GeometryMath::RayIntersectsBox(const float* p,
+                                    const float* q,
+                                    const float* ll,
+                                    const float* ur)
 {
-  if((ll.pos[0] > p.pos[0]) && (ll.pos[0] > q.pos[0]))
+  if((ll[0] > p[0]) && (ll[0] > q[0]))
   {
     return false;
   }
-  else if((ur.pos[0] < p.pos[0]) && (ur.pos[0] < q.pos[0]))
+  else if((ur[0] < p[0]) && (ur[0] < q[0]))
   {
     return false;
   }
-  else if((ll.pos[1] > p.pos[1]) && (ll.pos[1] > q.pos[1]))
+  else if((ll[1] > p[1]) && (ll[1] > q[1]))
   {
     return false;
   }
-  else if((ur.pos[1] < p.pos[1]) && (ur.pos[1] < q.pos[1]))
+  else if((ur[1] < p[1]) && (ur[1] < q[1]))
   {
     return false;
   }
-  else if((ll.pos[2] > p.pos[2]) && (ll.pos[2] > q.pos[2]))
+  else if((ll[2] > p[2]) && (ll[2] > q[2]))
   {
     return false;
   }
-  else if((ur.pos[2] < p.pos[2]) && (ur.pos[2] < q.pos[2]))
+  else if((ur[2] < p[2]) && (ur[2] < q[2]))
   {
     return false;
   }
@@ -128,31 +128,31 @@ bool GeometryMath::RayIntersectsBox(const VertexArray::Vert_t& p,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t& p,
-                                     const VertexArray::Vert_t& q,
-                                     const VertexArray::Vert_t& ll,
-                                     const VertexArray::Vert_t& ur)
+float GeometryMath::LengthOfRayInBox(const float* p,
+                                     const float* q,
+                                     const float* ll,
+                                     const float* ur)
 {
   float length = 0.0;
   float frac = 0.0;
 
-  float x1 = p.pos[0];
-  float y1 = p.pos[1];
-  float z1 = p.pos[2];
-  float x2 = q.pos[0];
-  float y2 = q.pos[1];
-  float z2 = q.pos[2];
+  float x1 = p[0];
+  float y1 = p[1];
+  float z1 = p[2];
+  float x2 = q[0];
+  float y2 = q[1];
+  float z2 = q[2];
 
   float delX = x2 - x1;
   float delY = y2 - y1;
   float delZ = z2 - z1;
 
-  float c1x = ll.pos[0];
-  float c1y = ll.pos[1];
-  float c1z = ll.pos[2];
-  float c2x = ur.pos[0];
-  float c2y = ur.pos[1];
-  float c2z = ur.pos[2];
+  float c1x = ll[0];
+  float c1y = ll[1];
+  float c1z = ll[2];
+  float c2x = ur[0];
+  float c2y = ur[1];
+  float c2z = ur[2];
 
   //clip ray by min x face of box
   if(x1 < c1x && x2 > c1x)
@@ -300,42 +300,42 @@ void GeometryMath::GenerateRandomRay(float length, float ray[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+void GeometryMath::FindBoundingBoxOfVertices(VertexGeom::Pointer verts, float* ll, float* ur)
 {
-  ll.pos[0] = 100000000.0;
-  ll.pos[1] = 100000000.0;
-  ll.pos[2] = 100000000.0;
-  ur.pos[0] = 0.0;
-  ur.pos[1] = 0.0;
-  ur.pos[2] = 0.0;
+  ll[0] = 100000000.0;
+  ll[1] = 100000000.0;
+  ll[2] = 100000000.0;
+  ur[0] = 0.0;
+  ur[1] = 0.0;
+  ur[2] = 0.0;
 
-  VertexArray::Vert_t* v = verts->getPointer(0);
-  int numVerts = verts->count();
+  float* v = verts->getVertexPointer(0);
+  int64_t numVerts = verts->getNumberOfVertices();
   for(int i = 0; i < numVerts; i++)
   {
-    if(v[i].pos[0] < ll.pos[0])
+    if(v[i] < ll[0])
     {
-      ll.pos[0] = v[i].pos[0];
+      ll[0] = v[i];
     }
-    if(v[i].pos[0] > ur.pos[0])
+    if(v[i] > ur[0])
     {
-      ur.pos[0] = v[i].pos[0];
+      ur[0] = v[i];
     }
-    if(v[i].pos[1] < ll.pos[1])
+    if(v[i+1] < ll[1])
     {
-      ll.pos[1] = v[i].pos[1];
+      ll[1] = v[i+1];
     }
-    if(v[i].pos[1] > ur.pos[1])
+    if(v[i+1] > ur[1])
     {
-      ur.pos[1] = v[i].pos[1];
+      ur[1] = v[i+1];
     }
-    if(v[i].pos[2] < ll.pos[2])
+    if(v[i+2] < ll[2])
     {
-      ll.pos[2] = v[i].pos[2];
+      ll[2] = v[i+2];
     }
-    if(v[i].pos[2] > ur.pos[2])
+    if(v[i+2] > ur[2])
     {
-      ur.pos[2] = v[i].pos[2];
+      ur[2] = v[i+2];
     }
   }
 }
@@ -343,271 +343,271 @@ void GeometryMath::FindBoundingBoxOfVertices(VertexArray::Pointer verts, VertexA
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+void GeometryMath::FindBoundingBoxOfFaces(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::ElementList faceIds, float* ll, float* ur)
 {
-  ll.pos[0] = 100000000.0;
-  ll.pos[1] = 100000000.0;
-  ll.pos[2] = 100000000.0;
-  ur.pos[0] = 0.0;
-  ur.pos[1] = 0.0;
-  ur.pos[2] = 0.0;
+  ll[0] = 100000000.0;
+  ll[1] = 100000000.0;
+  ll[2] = 100000000.0;
+  ur[0] = 0.0;
+  ur[1] = 0.0;
+  ur[2] = 0.0;
 
-  VertexArray::Vert_t facell, faceur;
+  float facell[3], faceur[3];
 
   int numFaces = faceIds.ncells;
   int32_t* faceId = faceIds.cells;
   for(int i = 0; i < numFaces; i++)
   {
     FindBoundingBoxOfFace(faces, faceId[i], facell, faceur);
-    if(facell.pos[0] < ll.pos[0])
+    if(facell[0] < ll[0])
     {
-      ll.pos[0] = facell.pos[0];
+      ll[0] = facell[0];
     }
-    if(facell.pos[1] < ll.pos[1])
+    if(facell[1] < ll[1])
     {
-      ll.pos[1] = facell.pos[1];
+      ll[1] = facell[1];
     }
-    if(facell.pos[2] < ll.pos[2])
+    if(facell[2] < ll[2])
     {
-      ll.pos[2] = facell.pos[2];
+      ll[2] = facell[2];
     }
-    if(faceur.pos[0] > ur.pos[0])
+    if(faceur[0] > ur[0])
     {
-      ur.pos[0] = faceur.pos[0];
+      ur[0] = faceur[0];
     }
-    if(faceur.pos[1] > ur.pos[1])
+    if(faceur[1] > ur[1])
     {
-      ur.pos[1] = faceur.pos[1];
+      ur[1] = faceur[1];
     }
-    if(faceur.pos[2] > ur.pos[2])
+    if(faceur[2] > ur[2])
     {
-      ur.pos[2] = faceur.pos[2];
+      ur[2] = faceur[2];
     }
   }
 
   if(faceIds.ncells == 0)
   {
-    ll.pos[0] = 0.0;
-    ll.pos[1] = 0.0;
-    ll.pos[2] = 0.0;
-    ur.pos[0] = 0.0;
-    ur.pos[1] = 0.0;
-    ur.pos[2] = 0.0;
+    ll[0] = 0.0;
+    ll[1] = 0.0;
+    ll[2] = 0.0;
+    ur[0] = 0.0;
+    ur[1] = 0.0;
+    ur[2] = 0.0;
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindBoundingBoxOfRotatedFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, float g[3][3], VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+void GeometryMath::FindBoundingBoxOfRotatedFaces(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::ElementList faceIds, float g[3][3], float* ll, float* ur)
 {
-  ll.pos[0] = 100000000.0;
-  ll.pos[1] = 100000000.0;
-  ll.pos[2] = 100000000.0;
-  ur.pos[0] = 0.0;
-  ur.pos[1] = 0.0;
-  ur.pos[2] = 0.0;
+  ll[0] = 100000000.0;
+  ll[1] = 100000000.0;
+  ll[2] = 100000000.0;
+  ur[0] = 0.0;
+  ur[1] = 0.0;
+  ur[2] = 0.0;
 
-  VertexArray::Vert_t facell, faceur;
+  float facell[3], faceur[3];
 
   int numFaces = faceIds.ncells;
   int32_t* faceId = faceIds.cells;
   for(int i = 0; i < numFaces; i++)
   {
     FindBoundingBoxOfRotatedFace(faces, faceId[i], g, facell, faceur);
-    if(facell.pos[0] < ll.pos[0])
+    if(facell[0] < ll[0])
     {
-      ll.pos[0] = facell.pos[0];
+      ll[0] = facell[0];
     }
-    if(facell.pos[1] < ll.pos[1])
+    if(facell[1] < ll[1])
     {
-      ll.pos[1] = facell.pos[1];
+      ll[1] = facell[1];
     }
-    if(facell.pos[2] < ll.pos[2])
+    if(facell[2] < ll[2])
     {
-      ll.pos[2] = facell.pos[2];
+      ll[2] = facell[2];
     }
-    if(faceur.pos[0] > ur.pos[0])
+    if(faceur[0] > ur[0])
     {
-      ur.pos[0] = faceur.pos[0];
+      ur[0] = faceur[0];
     }
-    if(faceur.pos[1] > ur.pos[1])
+    if(faceur[1] > ur[1])
     {
-      ur.pos[1] = faceur.pos[1];
+      ur[1] = faceur[1];
     }
-    if(faceur.pos[2] > ur.pos[2])
+    if(faceur[2] > ur[2])
     {
-      ur.pos[2] = faceur.pos[2];
+      ur[2] = faceur[2];
     }
   }
 
   if(numFaces == 0)
   {
-    ll.pos[0] = 0.0;
-    ll.pos[1] = 0.0;
-    ll.pos[2] = 0.0;
-    ur.pos[0] = 0.0;
-    ur.pos[1] = 0.0;
-    ur.pos[2] = 0.0;
+    ll[0] = 0.0;
+    ll[1] = 0.0;
+    ll[2] = 0.0;
+    ur[0] = 0.0;
+    ur[1] = 0.0;
+    ur[2] = 0.0;
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindBoundingBoxOfFace(FaceArray::Pointer faces, int faceId, VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+void GeometryMath::FindBoundingBoxOfFace(TriangleGeom::Pointer faces, int faceId, float* ll, float* ur)
 {
-  VertexArray::Vert_t a, b, c;
+  float a[3], b[3], c[3];
 
-  faces->getVertObjects(faceId, a, b, c);
-  ll.pos[0] = a.pos[0];
-  ur.pos[0] = a.pos[0];
-  ll.pos[1] = a.pos[1];
-  ur.pos[1] = a.pos[1];
-  ll.pos[2] = a.pos[2];
-  ur.pos[2] = a.pos[2];
-  if(b.pos[0] < ll.pos[0])
+  faces->getVertCoordsAtTri(faceId, a, b, c);
+  ll[0] = a[0];
+  ur[0] = a[0];
+  ll[1] = a[1];
+  ur[1] = a[1];
+  ll[2] = a[2];
+  ur[2] = a[2];
+  if(b[0] < ll[0])
   {
-    ll.pos[0] = b.pos[0];
+    ll[0] = b[0];
   }
-  if(b.pos[0] > ur.pos[0])
+  if(b[0] > ur[0])
   {
-    ur.pos[0] = b.pos[0];
+    ur[0] = b[0];
   }
-  if(b.pos[1] < ll.pos[1])
+  if(b[1] < ll[1])
   {
-    ll.pos[1] = b.pos[1];
+    ll[1] = b[1];
   }
-  if(b.pos[1] > ur.pos[1])
+  if(b[1] > ur[1])
   {
-    ur.pos[1] = b.pos[1];
+    ur[1] = b[1];
   }
-  if(b.pos[2] < ll.pos[2])
+  if(b[2] < ll[2])
   {
-    ll.pos[2] = b.pos[2];
+    ll[2] = b[2];
   }
-  if(b.pos[2] > ur.pos[2])
+  if(b[2] > ur[2])
   {
-    ur.pos[2] = b.pos[2];
+    ur[2] = b[2];
   }
-  if(c.pos[0] < ll.pos[0])
+  if(c[0] < ll[0])
   {
-    ll.pos[0] = c.pos[0];
+    ll[0] = c[0];
   }
-  if(c.pos[0] > ur.pos[0])
+  if(c[0] > ur[0])
   {
-    ur.pos[0] = c.pos[0];
+    ur[0] = c[0];
   }
-  if(c.pos[1] < ll.pos[1])
+  if(c[1] < ll[1])
   {
-    ll.pos[1] = c.pos[1];
+    ll[1] = c[1];
   }
-  if(c.pos[1] > ur.pos[1])
+  if(c[1] > ur[1])
   {
-    ur.pos[1] = c.pos[1];
+    ur[1] = c[1];
   }
-  if(c.pos[2] < ll.pos[2])
+  if(c[2] < ll[2])
   {
-    ll.pos[2] = c.pos[2];
+    ll[2] = c[2];
   }
-  if(c.pos[2] > ur.pos[2])
+  if(c[2] > ur[2])
   {
-    ur.pos[2] = c.pos[2];
+    ur[2] = c[2];
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindBoundingBoxOfRotatedFace(FaceArray::Pointer faces, int faceId, float g[3][3], VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+void GeometryMath::FindBoundingBoxOfRotatedFace(TriangleGeom::Pointer faces, int faceId, float g[3][3], float* ll, float* ur)
 {
-  VertexArray::Vert_t a, b, c;
+  float a[3], b[3], c[3];
   float p1[3], p2[3], p3[3];
   float p1r[3], p2r[3], p3r[3];
 
-  faces->getVertObjects(faceId, a, b, c);
-  p1[0] = a.pos[0];
-  p1[1] = a.pos[1];
-  p1[2] = a.pos[2];
-  p2[0] = b.pos[0];
-  p2[1] = b.pos[1];
-  p2[2] = b.pos[2];
-  p3[0] = c.pos[0];
-  p3[1] = c.pos[1];
-  p3[2] = c.pos[2];
+  faces->getVertCoordsAtTri(faceId, a, b, c);
+  p1[0] = a[0];
+  p1[1] = a[1];
+  p1[2] = a[2];
+  p2[0] = b[0];
+  p2[1] = b[1];
+  p2[2] = b[2];
+  p3[0] = c[0];
+  p3[1] = c[1];
+  p3[2] = c[2];
   MatrixMath::Multiply3x3with3x1(g, p1, p1r);
   MatrixMath::Multiply3x3with3x1(g, p2, p2r);
   MatrixMath::Multiply3x3with3x1(g, p3, p3r);
-  ll.pos[0] = p1r[0];
-  ur.pos[0] = p1r[0];
-  ll.pos[1] = p1r[1];
-  ur.pos[1] = p1r[1];
-  ll.pos[2] = p1r[2];
-  ur.pos[2] = p1r[2];
-  if(p2r[0] < ll.pos[0])
+  ll[0] = p1r[0];
+  ur[0] = p1r[0];
+  ll[1] = p1r[1];
+  ur[1] = p1r[1];
+  ll[2] = p1r[2];
+  ur[2] = p1r[2];
+  if(p2r[0] < ll[0])
   {
-    ll.pos[0] = p2r[0];
+    ll[0] = p2r[0];
   }
-  if(p2r[0] > ur.pos[0])
+  if(p2r[0] > ur[0])
   {
-    ur.pos[0] = p2r[0];
+    ur[0] = p2r[0];
   }
-  if(p2r[1] < ll.pos[1])
+  if(p2r[1] < ll[1])
   {
-    ll.pos[1] = p2r[1];
+    ll[1] = p2r[1];
   }
-  if(p2r[1] > ur.pos[1])
+  if(p2r[1] > ur[1])
   {
-    ur.pos[1] = p2r[1];
+    ur[1] = p2r[1];
   }
-  if(p2r[2] < ll.pos[2])
+  if(p2r[2] < ll[2])
   {
-    ll.pos[2] = p2r[2];
+    ll[2] = p2r[2];
   }
-  if(p2r[2] > ur.pos[2])
+  if(p2r[2] > ur[2])
   {
-    ur.pos[2] = p2r[2];
+    ur[2] = p2r[2];
   }
-  if(p3r[0] < ll.pos[0])
+  if(p3r[0] < ll[0])
   {
-    ll.pos[0] = p3r[0];
+    ll[0] = p3r[0];
   }
-  if(p3r[0] > ur.pos[0])
+  if(p3r[0] > ur[0])
   {
-    ur.pos[0] = p3r[0];
+    ur[0] = p3r[0];
   }
-  if(p3r[1] < ll.pos[1])
+  if(p3r[1] < ll[1])
   {
-    ll.pos[1] = p3r[1];
+    ll[1] = p3r[1];
   }
-  if(p3r[1] > ur.pos[1])
+  if(p3r[1] > ur[1])
   {
-    ur.pos[1] = p3r[1];
+    ur[1] = p3r[1];
   }
-  if(p3r[2] < ll.pos[2])
+  if(p3r[2] < ll[2])
   {
-    ll.pos[2] = p3r[2];
+    ll[2] = p3r[2];
   }
-  if(p3r[2] > ur.pos[2])
+  if(p3r[2] > ur[2])
   {
-    ur.pos[2] = p3r[2];
+    ur[2] = p3r[2];
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindPlaneNormalVector(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float n[3])
+void GeometryMath::FindPlaneNormalVector(const float* a, const float* b, const float* c, float n[3])
 {
   float ab[3], ac[3];
 
-  ab[0] = b.pos[0] - a.pos[0];
-  ab[1] = b.pos[1] - a.pos[1];
-  ab[2] = b.pos[2] - a.pos[2];
+  ab[0] = b[0] - a[0];
+  ab[1] = b[1] - a[1];
+  ab[2] = b[2] - a[2];
 
-  ac[0] = c.pos[0] - a.pos[0];
-  ac[1] = c.pos[1] - a.pos[1];
-  ac[2] = c.pos[2] - a.pos[2];
+  ac[0] = c[0] - a[0];
+  ac[1] = c[1] - a[1];
+  ac[2] = c[2] - a[2];
 
   MatrixMath::CrossProduct(ab, ac, n);
 }
@@ -615,48 +615,48 @@ void GeometryMath::FindPlaneNormalVector(const VertexArray::Vert_t& a, const Ver
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindPlaneCoefficients(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float n[3], float& d)
+void GeometryMath::FindPlaneCoefficients(const float* a, const float* b, const float* c, float n[3], float& d)
 {
   FindPlaneNormalVector(a, b, c, n);
 
-  d = (a.pos[0] * n[0]) + (a.pos[1] * n[1]) + (a.pos[2] * n[2]);
+  d = (a[0] * n[0]) + (a[1] * n[1]) + (a[2] * n[2]);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindDistanceBetweenPoints(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, float& distance)
+void GeometryMath::FindDistanceBetweenPoints(const float* a, const float* b, float& distance)
 {
-  float dx = b.pos[0] - a.pos[0];
-  float dy = b.pos[1] - a.pos[1];
-  float dz = b.pos[2] - a.pos[2];
+  float dx = b[0] - a[0];
+  float dy = b[1] - a[1];
+  float dz = b[2] - a[2];
   distance = sqrt((dx * dx) + (dy * dy) + (dz * dz));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindTriangleArea(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float& area)
+void GeometryMath::FindTriangleArea(const float* a, const float* b, const float* c, float& area)
 {
-  area = ((b.pos[0] - a.pos[0]) * (c.pos[1] - a.pos[1])) - ((c.pos[0] - a.pos[0]) * (b.pos[1] - a.pos[1]));
+  area = ((b[0] - a[0]) * (c[1] - a[1])) - ((c[0] - a[0]) * (b[1] - a[1]));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindTetrahedronVolume(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& d, float& volume)
+void GeometryMath::FindTetrahedronVolume(const float* a, const float* b, const float* c, const float* d, float& volume)
 {
   float axdx, aydy, azdz, bxdx, bydy, bzdz, cxdx, cydy, czdz;
 
-  axdx = a.pos[0] - d.pos[0];
-  aydy = a.pos[1] - d.pos[1];
-  azdz = a.pos[2] - d.pos[2];
-  bxdx = b.pos[0] - d.pos[0];
-  bydy = b.pos[1] - d.pos[1];
-  bzdz = b.pos[2] - d.pos[2];
-  cxdx = c.pos[0] - d.pos[0];
-  cydy = c.pos[1] - d.pos[1];
-  czdz = c.pos[2] - d.pos[2];
+  axdx = a[0] - d[0];
+  aydy = a[1] - d[1];
+  azdz = a[2] - d[2];
+  bxdx = b[0] - d[0];
+  bydy = b[1] - d[1];
+  bzdz = b[2] - d[2];
+  cxdx = c[0] - d[0];
+  cydy = c[1] - d[1];
+  czdz = c[2] - d[2];
 
   volume = (azdz * ((bxdx * cydy) - (bydy * cxdx))) + (aydy * ((bzdz * cxdx) - (bxdx * czdz))) + (axdx * ((bydy * czdz) - (bzdz * cydy)));
 }
@@ -664,7 +664,7 @@ void GeometryMath::FindTetrahedronVolume(const VertexArray::Vert_t& a, const Ver
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::RayIntersectsTriangle(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r, VertexArray::Vert_t& p)
+char GeometryMath::RayIntersectsTriangle(const float* a, const float* b, const float* c, const float* q, const float* r, float* p)
 {
   char code = '?';
   int m = -1;
@@ -700,7 +700,7 @@ char GeometryMath::RayIntersectsTriangle(const VertexArray::Vert_t& a, const Ver
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::RayIntersectsPlane(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r, VertexArray::Vert_t& p, int& m)
+char GeometryMath::RayIntersectsPlane(const float* a, const float* b, const float* c, const float* q, const float* r, float* p, int& m)
 {
   float n[3];
   float rq[3];
@@ -708,10 +708,10 @@ char GeometryMath::RayIntersectsPlane(const VertexArray::Vert_t& a, const Vertex
 
   FindPlaneCoefficients(a, b, c, n, d);
 
-  num = d - ((q.pos[0] * n[0]) + (q.pos[1] * n[1]) + (q.pos[2] * n[2]));
-  rq[0] =  r.pos[0] - q.pos[0];
-  rq[1] =  r.pos[1] - q.pos[1];
-  rq[2] =  r.pos[2] - q.pos[2];
+  num = d - ((q[0] * n[0]) + (q[1] * n[1]) + (q[2] * n[2]));
+  rq[0] =  r[0] - q[0];
+  rq[1] =  r[1] - q[1];
+  rq[2] =  r[2] - q[2];
   denom = (rq[0] * n[0]) + (rq[1] * n[1]) + (rq[2] * n[2]);
   m = MatrixMath::FindIndexOfMaxVal3x1(n);
 
@@ -731,7 +731,7 @@ char GeometryMath::RayIntersectsPlane(const VertexArray::Vert_t& a, const Vertex
     t = num / denom;
     for(int i = 0; i < 3; i++)
     {
-      p.pos[i] = q.pos[i] + (t * (r.pos[i] - q.pos[i]));
+      p[i] = q[i] + (t * (r[i] - q[i]));
     }
     if(t > 0.0 && t < 1.0)
     {
@@ -755,19 +755,19 @@ char GeometryMath::RayIntersectsPlane(const VertexArray::Vert_t& a, const Vertex
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::PointInTriangle3D(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, int m, const VertexArray::Vert_t& p)
+char GeometryMath::PointInTriangle3D(const float* a, const float* b, const float* c, int m, const float* p)
 {
-  VertexArray::Vert_t pp, aP, bP, cP;
+  float pp[3], aP[3], bP[3], cP[3];
 
   int j = 0;
   for(int i = 0; i < 3; i++)
   {
     if(i != m)
     {
-      pp.pos[j] = p.pos[i];
-      aP.pos[j] = a.pos[i];
-      bP.pos[j] = b.pos[i];
-      cP.pos[j] = c.pos[i];
+      pp[j] = p[i];
+      aP[j] = a[i];
+      bP[j] = b[i];
+      cP[j] = c[i];
       j++;
     }
   }
@@ -777,7 +777,7 @@ char GeometryMath::PointInTriangle3D(const VertexArray::Vert_t& a, const VertexA
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::PointInTriangle2D(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& p)
+char GeometryMath::PointInTriangle2D(const float* a, const float* b, const float* c, const float* p)
 {
   float area0, area1, area2;
 
@@ -814,7 +814,7 @@ char GeometryMath::PointInTriangle2D(const VertexArray::Vert_t& a, const VertexA
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::RayCrossesTriangle(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r)
+char GeometryMath::RayCrossesTriangle(const float* a, const float* b, const float* c, const float* q, const float* r)
 {
   float vol0, vol1, vol2;
 
@@ -851,20 +851,22 @@ char GeometryMath::RayCrossesTriangle(const VertexArray::Vert_t& a, const Vertex
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::PointInPolyhedron(const FaceArray::Pointer faces,
-                                     const Int32DynamicListArray::ElementList& faceIds,
-                                     const VertexArray::Pointer faceBBs,
-                                     const VertexArray::Vert_t& q,
-                                     const VertexArray::Vert_t& ll,
-                                     const VertexArray::Vert_t& ur,
+char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
+                                     const Int32Int32DynamicListArray::ElementList& faceIds,
+                                     const VertexGeom::Pointer faceBBs,
+                                     const float* q,
+                                     const float* ll,
+                                     const float* ur,
                                      float radius)
 {
   float ray[3];  /* Ray */
-  VertexArray::Vert_t r;  /* Ray endpoint. */
-  VertexArray::Vert_t p;  /* Intersection point; not used. */
+  float r[3];  /* Ray endpoint. */
+  float p[3];  /* Intersection point; not used. */
   int f, k = 0, crossings = 0;
   char code = '?';
-  VertexArray::Vert_t a, b, c;
+  float a[3];
+  float b[3];
+  float c[3];
 
   //* If query point is outside bounding box, finished. */
   if(PointInBox(q, ll, ur) == false)
@@ -875,11 +877,10 @@ char GeometryMath::PointInPolyhedron(const FaceArray::Pointer faces,
   int numFaces = faceIds.ncells;
   int32_t* faceId = faceIds.cells;
 
-  p.pos[0] = 0;
-  p.pos[1] = 0;
-  p.pos[2] = 0;
+  p[0] = 0;
+  p[1] = 0;
+  p[2] = 0;
 
-  VertexArray::Vert_t* faceBBsPtr = faceBBs->getPointer(0);
 LOOP:
   while( k++ < numFaces )
   {
@@ -887,23 +888,23 @@ LOOP:
 
     //Generate and add ray to point to find other end
     GenerateRandomRay(radius, ray);
-    r.pos[0] = q.pos[0] + ray[0];
-    r.pos[1] = q.pos[1] + ray[1];
-    r.pos[2] = q.pos[2] + ray[2];
+    r[0] = q[0] + ray[0];
+    r[1] = q[1] + ray[1];
+    r[2] = q[2] + ray[2];
 
     for ( f = 0; f < numFaces; f++ )
     {
       /* Begin check each face */
       int32_t idx = 2 * faceId[f];
-      VertexArray::Vert_t v0 = faceBBsPtr[idx];
-      VertexArray::Vert_t v1 = faceBBsPtr[idx + 1];
+      float* v0 = faceBBs->getVertexPointer(idx);
+      float* v1 = faceBBs->getVertexPointer(idx+1);
       if( RayIntersectsBox(q, r, v0, v1) == false )
       {
         code = '0';
       }
       else
       {
-        faces->getVertObjects(faceId[f], a, b, c);
+        faces->getVertCoordsAtTri(faceId[f], a, b, c);
         code = RayIntersectsTriangle(a, b, c, q, r, p);
       }
 

@@ -44,8 +44,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 /**
  * @class InsertAtoms InsertAtoms.h DREAM3DLib/SyntheticBuilderFilters/InsertAtoms.h
@@ -129,7 +129,7 @@ class InsertAtoms : public AbstractFilter
     */
     void dataCheck();
 
-    virtual void assign_points(QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature);
+    virtual void assign_points(QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)

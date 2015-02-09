@@ -62,8 +62,8 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 
     virtual ~FeatureFaceCurvatureFilter();
 
-    typedef QVector<int> FaceIds_t;
-    typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
+    typedef std::vector<int64_t> FaceIds_t;
+    typedef std::map<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
     DREAM3D_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
     Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)

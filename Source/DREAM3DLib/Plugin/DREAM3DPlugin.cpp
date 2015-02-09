@@ -36,7 +36,7 @@
 
 #include "DREAM3DPlugin.h"
 
-Q_EXPORT_PLUGIN2(DREAM3DPlugin, DREAM3DPlugin)
+
 
 // -----------------------------------------------------------------------------
 //

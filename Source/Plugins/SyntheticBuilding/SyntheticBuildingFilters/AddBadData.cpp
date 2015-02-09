@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
   AbstractFilter(),
-  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
+  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
   m_PoissonNoise(false),
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),
@@ -102,7 +102,6 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(PoissonNoise)
   DREAM3D_FILTER_WRITE_PARAMETER(PoissonVolFraction)
@@ -124,6 +123,10 @@ void AddBadData::dataCheck()
   m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 // -----------------------------------------------------------------------------
@@ -165,13 +168,13 @@ void  AddBadData::add_noise()
   notifyStatusMessage(getHumanLabel(), "Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getGBEuclideanDistancesArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName());
 
   QString attMatName = getGBEuclideanDistancesArrayPath().getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attMatName)->getAttributeArrayNames();
 
   float random = 0.0;
-  int64_t totalPoints = m->getTotalPoints();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
     if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)

@@ -56,9 +56,9 @@
 // -----------------------------------------------------------------------------
 LosAlamosFFTWriter::LosAlamosFFTWriter() :
   FileWriter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -110,7 +110,6 @@ void LosAlamosFFTWriter::readFilterParameters(AbstractFilterParametersReader* re
 int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
@@ -125,6 +124,12 @@ int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void LosAlamosFFTWriter::dataCheck()
 {
   setErrorCondition(0);
+
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
+  if (getErrorCondition() < 0 || NULL == dc.get()) { return; }
+
+  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   if(getOutputFile().isEmpty() == true)
   {
@@ -174,18 +179,18 @@ int LosAlamosFFTWriter::writeFile()
 {
   dataCheck();
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
   int err = 0;
   size_t dims[3] =
   { 0, 0, 0 };
-  m->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   float res[3];
-  m->getResolution(res);
+  m->getGeometryAs<ImageGeom>()->getResolution(res);
 
   float origin[3];
-  m->getOrigin(origin);
+  m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

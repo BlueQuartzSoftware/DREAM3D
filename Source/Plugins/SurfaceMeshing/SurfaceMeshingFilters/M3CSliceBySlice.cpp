@@ -331,13 +331,13 @@ class FeatureChecker
 // -----------------------------------------------------------------------------
 M3CSliceBySlice::M3CSliceBySlice() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshNodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_DeleteTempFiles(true),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -391,7 +391,6 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
@@ -467,9 +466,9 @@ void M3CSliceBySlice::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
 
   QString nodesFile = QDir::tempPath() + Detail::NodesFile;
   SMTempFile::Pointer nodesTempFile = SMTempFile::New();
@@ -500,9 +499,9 @@ void M3CSliceBySlice::execute()
   float res[3];
   float origin[3];
 
-  m->getDimensions(dims);
-  m->getResolution(res);
-  m->getOrigin(origin);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   int wrappedDims[3] = { static_cast<int>(dims[0]), static_cast<int>(dims[1]), static_cast<int>(dims[2]) };
 
@@ -715,7 +714,7 @@ void M3CSliceBySlice::execute()
 bool M3CSliceBySlice::volumeHasGhostLayer()
 {
   size_t fileDim[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getDimensions(fileDim);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
   size_t index = 0;
   int32_t* p = m_FeatureIds;
   bool p_value = false;
@@ -746,8 +745,8 @@ bool M3CSliceBySlice::volumeHasGhostLayer()
 int32_t M3CSliceBySlice::volumeHasFeatureValuesOfZero()
 {
   size_t fileDim[3];
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-  m->getDimensions(fileDim);
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
 
   int32_t count = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
@@ -789,8 +788,8 @@ int32_t M3CSliceBySlice::volumeHasFeatureValuesOfZero()
 void M3CSliceBySlice::renumberVoxelFeatureIds(int32_t gid)
 {
   size_t fileDim[3];
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-  m->getDimensions(fileDim);
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
 
   int32_t count = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 

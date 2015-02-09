@@ -199,7 +199,6 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageVarArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageStdArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageAvgArrayName)
@@ -240,6 +239,10 @@ void FindProjectedImageStatistics::dataCheck()
   m_ProjectedImageVarPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 
@@ -269,9 +272,9 @@ void FindProjectedImageStatistics::execute()
   QString amName = m_SelectedArrayPath.getAttributeMatrixName();
   QString daName = m_SelectedArrayPath.getDataArrayName();
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcName);
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
 
-  if(m->getXPoints() <= 1 && m->getYPoints() <= 1 && m->getZPoints() <= 1)
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getYPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getZPoints() <= 1)
   {
     setErrorCondition(-999);
     notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
@@ -296,7 +299,7 @@ void FindProjectedImageStatistics::execute()
 #endif
 
   size_t xP, yP, zP;
-  m->getDimensions(xP, yP, zP);
+  m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
 
   Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "startingPoints");
   int32_t* startPoints;

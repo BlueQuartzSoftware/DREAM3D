@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
-#include <QtGui/QListWidgetItem>
+#include <QtWidgets/QListWidgetItem>
 
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"

@@ -36,11 +36,19 @@
 
 #include "AboutDREAM3D.h"
 
+#include "DREAM3DLib/DREAM3DLib.h"
+
 #include <boost/version.hpp>
-#include <Eigen/src/Core/util/Macros.h>
 #include <H5public.h>
 #include <qwt_global.h>
+
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/tbb_stddef.h>
+#endif
+
+#if DREAM3D_USE_EIGEN
+#include <Eigen/src/Core/util/Macros.h>
+#endif
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -74,29 +82,35 @@ void AboutDREAM3D::readVersions()
   QTableWidgetItem* qtwi1 = new QTableWidgetItem(QString("Version"), QTableWidgetItem::Type);
   version->setHorizontalHeaderItem(1, qtwi1);
 
+  version->setItem(0, 1, new QTableWidgetItem(DREAM3DLib::Version::Package()));
+  version->setItem(1, 1, new QTableWidgetItem(BOOST_LIB_VERSION));
+  version->setItem(2, 1, new QTableWidgetItem(QT_VERSION_STR));
+
 	QString strH5 = QString::number(H5_VERS_MAJOR);
 	strH5.append(".");
 	strH5.append(QString::number(H5_VERS_MINOR));
 	strH5.append(".");
 	strH5.append(QString::number(H5_VERS_RELEASE));
 
+  version->setItem(4, 1, new QTableWidgetItem(strH5));
+
+#if DREAM3D_USE_EIGEN
   QString strEigen = QString::number(EIGEN_WORLD_VERSION);
   strEigen.append(".");
   strEigen.append(QString::number(EIGEN_MAJOR_VERSION));
   strEigen.append(".");
   strEigen.append(QString::number(EIGEN_MINOR_VERSION));
+  version->setItem(5, 1, new QTableWidgetItem(strEigen));
+#endif
 
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
   QString strTBB = QString::number(TBB_VERSION_MAJOR);
   strTBB.append(".");
   strTBB.append(QString::number(TBB_VERSION_MINOR));
+  version->setItem(6, 1, new QTableWidgetItem(strTBB));
+#endif
 
-  version->setItem(0, 1, new QTableWidgetItem(DREAM3DLib::Version::PackageComplete().toLatin1().data()));
-  version->setItem(1, 1, new QTableWidgetItem(BOOST_LIB_VERSION));
-  version->setItem(2, 1, new QTableWidgetItem(QT_VERSION_STR));
   version->setItem(3, 1, new QTableWidgetItem(QWT_VERSION_STR));
-  version->setItem(4, 1, new QTableWidgetItem(strH5));
-  version->setItem(5, 1, new QTableWidgetItem(strEigen));
-	version->setItem(6, 1, new QTableWidgetItem(strTBB));
 
   labelVersion->setText(DREAM3DLib::Version::PackageComplete().toLatin1().data());
 }

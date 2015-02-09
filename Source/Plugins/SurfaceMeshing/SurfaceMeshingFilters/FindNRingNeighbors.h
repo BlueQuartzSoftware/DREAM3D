@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
@@ -59,6 +59,9 @@ class FindNRingNeighbors
     DREAM3D_TYPE_MACRO(FindNRingNeighbors)
 
     virtual ~FindNRingNeighbors();
+
+    typedef std::set<int64_t> UniqueFaceIds_t;
+
 
     DREAM3D_INSTANCE_PROPERTY(int, TriangleId)
 
@@ -80,7 +83,7 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(int, Ring)
 
 
-    FaceArray::UniqueFaceIds_t& getNRingTriangles();
+    UniqueFaceIds_t& getNRingTriangles();
 
     /**
      * @brief generate
@@ -88,7 +91,7 @@ class FindNRingNeighbors
      * "value" for each key is a QSet that is the set of triangle ids that that particular
      * node is a part of.
      */
-    void generate(FaceArray::Pointer trianglesPtr, int32_t* faceLabels);
+    int generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels);
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
@@ -99,7 +102,7 @@ class FindNRingNeighbors
 
 
   private:
-    FaceArray::UniqueFaceIds_t  m_NRingTriangles;
+    UniqueFaceIds_t  m_NRingTriangles;
 
     FindNRingNeighbors(const FindNRingNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNRingNeighbors&); // Operator '=' Not Implemented

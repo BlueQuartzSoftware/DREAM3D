@@ -48,9 +48,9 @@
 // -----------------------------------------------------------------------------
 FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_SelectedCellArrayPath("", "", ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_NewFeatureArrayArrayName(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
@@ -101,7 +101,6 @@ void FindAvgScalarValueForFeatures::readFilterParameters(AbstractFilterParameter
 int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(NewFeatureArrayArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
@@ -203,7 +202,7 @@ void FindAvgScalarValueForFeatures::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedCellArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedCellArrayPath.getDataContainerName());
 
   QString ss;
 
@@ -216,19 +215,19 @@ void FindAvgScalarValueForFeatures::execute()
     return;
   }
 
-	QVector<size_t> dims = inputData->getComponentDimensions();
-	int numComp = dims[0];
-	for (int i = 1; i < dims.size(); i++)
-	{
-		numComp *= dims[i];
-	}
-	if (numComp > 1)
-	{
-		ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedCellArrayPath.getDataArrayName());
-		setErrorCondition(-11003);
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
+  QVector<size_t> dims = inputData->getComponentDimensions();
+  int numComp = dims[0];
+  for (int i = 1; i < dims.size(); i++)
+  {
+    numComp *= dims[i];
+  }
+  if (numComp > 1)
+  {
+    ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedCellArrayPath.getDataArrayName());
+    setErrorCondition(-11003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   QString dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();

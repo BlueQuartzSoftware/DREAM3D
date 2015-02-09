@@ -158,7 +158,7 @@ herr_t QH5Lite::writeStringAttribute(hid_t loc_id,
                                      const QString& attrName,
                                      const QString& data )
 {
-  return H5Lite::writeStringAttribute(loc_id, objName.toStdString(), attrName.toStdString(), data.size() + 1, data.toAscii().data() );
+  return H5Lite::writeStringAttribute(loc_id, objName.toStdString(), attrName.toStdString(), data.size() + 1, data.toLatin1().data() );
 }
 
 // -----------------------------------------------------------------------------

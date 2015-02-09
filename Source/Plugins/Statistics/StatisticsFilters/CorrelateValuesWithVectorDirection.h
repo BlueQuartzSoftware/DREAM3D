@@ -47,7 +47,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 /**

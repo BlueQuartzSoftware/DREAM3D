@@ -104,7 +104,7 @@ void MicPhase::parseBasisAtoms(QByteArray& data)
 // -----------------------------------------------------------------------------
 void MicPhase::parseZandCoordinates(QByteArray& data)
 {
-  m_ZandCoordinates.push_back(QString::fromAscii(data));
+  m_ZandCoordinates.push_back(QString::fromLatin1(data));
 }
 // -----------------------------------------------------------------------------
 //

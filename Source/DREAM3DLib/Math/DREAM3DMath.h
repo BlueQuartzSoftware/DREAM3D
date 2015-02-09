@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _DREAM3D_MATH_H_
 #define _DREAM3D_MATH_H_
-/** @file EMMath.h
+/** @file DREAM3DMath.h
  * @brief This file performs the necessary including of <math.h> with certain
  * define constants (like M_PI) defined on all platforms.
  */
@@ -58,10 +58,11 @@
    BSD and Linux at least and other code may expect these).
 
    Microsoft doesn't define M_2PI ever, other compilers may lack some of these
-   too, hence the sequence as it is: load math.h, then see what's
-lacking still.
+   too, hence the sequence as it is: load math.h, then see what's lacking still.
 */
-//#define _USE_MATH_DEFINES 1
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES 1
+#endif
 #endif
 
 #include <stddef.h>

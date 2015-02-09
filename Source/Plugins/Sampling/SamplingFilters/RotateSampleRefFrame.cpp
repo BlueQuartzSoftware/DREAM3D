@@ -156,7 +156,7 @@ class RotateSampleRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_RotationAngle(0.0),
   m_SliceBySlice(false)
 {
@@ -221,7 +221,6 @@ void RotateSampleRefFrame::readFilterParameters(AbstractFilterParametersReader* 
 int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(RotationAxis)
   DREAM3D_FILTER_WRITE_PARAMETER(RotationAngle)
@@ -252,10 +251,13 @@ void RotateSampleRefFrame::preflight()
 
   if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
   if (getErrorCondition() < 0) { setInPreflight(false); return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
-  if (getErrorCondition() < 0) { setInPreflight(false); return; }
+  if (getErrorCondition() < 0 || NULL == cellAttrMat.get()) { setInPreflight(false); return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
@@ -265,12 +267,12 @@ void RotateSampleRefFrame::preflight()
   float xResNew, yResNew, zResNew;
   RotateSampleRefFrameImplArg_t params;
 
-  xp = static_cast<int32_t>(m->getXPoints());
-  xRes = m->getXRes();
-  yp = static_cast<int32_t>(m->getYPoints());
-  yRes = m->getYRes();
-  zp = static_cast<int32_t>(m->getZPoints());
-  zRes = m->getZRes();
+  xp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  yp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  zp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+  zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   params.xp = xp;
   params.xRes = xRes;
@@ -344,8 +346,8 @@ void RotateSampleRefFrame::preflight()
   params.zResNew = zResNew;
   params.zMinNew = zMin;
 
-  m->setResolution(params.xResNew, params.yResNew, params.zResNew);
-  m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
+  m->getGeometryAs<ImageGeom>()->setResolution(params.xResNew, params.yResNew, params.zResNew);
+  m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
   setInPreflight(false);
 }
 
@@ -358,7 +360,7 @@ void RotateSampleRefFrame::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
@@ -368,12 +370,12 @@ void RotateSampleRefFrame::execute()
   float xResNew, yResNew, zResNew;
   RotateSampleRefFrameImplArg_t params;
 
-  xp = static_cast<int32_t>(m->getXPoints());
-  xRes = m->getXRes();
-  yp = static_cast<int32_t>(m->getYPoints());
-  yRes = m->getYRes();
-  zp = static_cast<int32_t>(m->getZPoints());
-  zRes = m->getZRes();
+  xp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  yp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  zp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+  zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   params.xp = xp;
   params.xRes = xRes;
@@ -475,7 +477,7 @@ void RotateSampleRefFrame::execute()
     serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
   }
 
-  // This could technically be parallelized also where each thred takes an array to adjust. Except
+  // This could technically be parallelized also where each thread takes an array to adjust. Except
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.
   QString attrMatName = getCellAttributeMatrixPath().getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
@@ -504,14 +506,14 @@ void RotateSampleRefFrame::execute()
       newIndicies_I = newindicies[i];
       if(newIndicies_I >= 0)
       {
-				source = p->getVoidPointer((nComp * newIndicies_I));
-				if (NULL == source)
-				{
-					QString ss = QObject::tr("The index is outside the bounds of the source array");
-					setErrorCondition(-11004);
-					notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-					return;
-				}
+        source = p->getVoidPointer((nComp * newIndicies_I));
+        if (NULL == source)
+        {
+          QString ss = QObject::tr("The index is outside the bounds of the source array");
+          setErrorCondition(-11004);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          return;
+        }
         destination = data->getVoidPointer((data->getNumberOfComponents() * i));
         ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
       }
@@ -522,9 +524,9 @@ void RotateSampleRefFrame::execute()
     }
     m->getAttributeMatrix(attrMatName)->addAttributeArray(*iter, data);
   }
-  m->setResolution(params.xResNew, params.yResNew, params.zResNew);
-  m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
-  m->setOrigin(xMin, yMin, zMin);
+  m->getGeometryAs<ImageGeom>()->setResolution(params.xResNew, params.yResNew, params.zResNew);
+  m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
+  m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, zMin);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }

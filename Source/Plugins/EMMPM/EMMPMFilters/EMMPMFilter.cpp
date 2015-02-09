@@ -110,7 +110,6 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
 int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
 
   DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
@@ -141,7 +140,10 @@ void EMMPMFilter::dataCheck()
   m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_InputImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_InputImage = m_InputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
 
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this,  getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_OutputImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -201,7 +203,7 @@ void EMMPMFilter::execute()
        initFunction = UserDefinedAreasInitialization::New();
        break;
      default:
-	   initFunction = BasicInitialization::New();
+     initFunction = BasicInitialization::New();
        break;
    }
 
@@ -209,7 +211,7 @@ void EMMPMFilter::execute()
    data->in_beta = getExchangeEnergy();
    data->emIterations = getHistogramLoops();
    data->mpmIterations = getSegmentationLoops();
-   
+
    data->colorTable[0] = qRgb(255, 0, 255);
    data->colorTable[1] = qRgb(255, 255, 255);
 
@@ -229,7 +231,7 @@ void EMMPMFilter::execute()
    data->rows = tDims[1];
    data->dims = 1; // We operate on a single channel | single component "image".
    data->inputImageChannels = cDims[0];
-   
+
    data->simulatedAnnealing = (char)(getUseSimulatedAnnealing());
    data->useGradientPenalty = getUseGradientPenalty();
    data->beta_e = getGradientPenalty();
@@ -257,7 +259,7 @@ void EMMPMFilter::execute()
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
   connect(emmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-			this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+      this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   emmpm->execute();
 

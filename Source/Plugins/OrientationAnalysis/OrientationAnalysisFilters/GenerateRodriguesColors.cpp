@@ -40,6 +40,8 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
@@ -51,7 +53,6 @@
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "Generic/GenericConstants.h"
 
@@ -61,10 +62,10 @@
 // -----------------------------------------------------------------------------
 GenerateRodriguesColors::GenerateRodriguesColors() :
   AbstractFilter(),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_CellRodriguesColorsArrayName(DREAM3D::CellData::RodriguesColor),
   m_UseGoodVoxels(false),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -128,7 +129,6 @@ void GenerateRodriguesColors::readFilterParameters(AbstractFilterParametersReade
 int GenerateRodriguesColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
   DREAM3D_FILTER_WRITE_PARAMETER(CellRodriguesColorsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)

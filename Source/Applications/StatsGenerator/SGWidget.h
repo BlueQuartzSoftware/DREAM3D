@@ -36,11 +36,11 @@
 #ifndef _SGWIDGET_H_
 #define _SGWIDGET_H_
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;

@@ -49,8 +49,8 @@
 // -----------------------------------------------------------------------------
 WarpRegularGrid::WarpRegularGrid() :
   AbstractFilter(),
-  m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_PolyOrder(0),
   m_SaveAsNewDataContainer(false)
 {
@@ -143,7 +143,6 @@ void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reade
 int WarpRegularGrid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SecondOrderACoeff)
@@ -162,12 +161,19 @@ int WarpRegularGrid::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::dataCheck()
 {
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName()); }
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer == false)
+  {
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+
+    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  }
   else
   {
     getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
-    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
   }
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
@@ -198,18 +204,18 @@ void WarpRegularGrid::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
+  else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
 
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   AttributeMatrix::Pointer newCellAttrMat = cellAttrMat->deepCopy();
 
   size_t dims[3];
-  m->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
   float res[3];
-  m->getResolution(res);
-  size_t totalPoints = m->getTotalPoints();
+  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   float x, y, z;
   float newX, newY;

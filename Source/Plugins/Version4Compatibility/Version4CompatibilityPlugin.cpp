@@ -15,7 +15,7 @@
 
 #include "Version4Compatibility/moc_Version4CompatibilityPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(Version4CompatibilityPlugin, Version4CompatibilityPlugin)
+
 
 namespace Detail
 {
@@ -34,6 +34,7 @@ m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Copyright(DREAM3D::BlueQuartz::Copyright),
+m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 
@@ -140,6 +141,14 @@ QString Version4CompatibilityPlugin::getLicense()
     }
   }
   return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> Version4CompatibilityPlugin::getFilters()
+{
+  return m_Filters;
 }
 
 // -----------------------------------------------------------------------------

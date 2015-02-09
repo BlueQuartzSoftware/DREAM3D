@@ -56,7 +56,7 @@
 // -----------------------------------------------------------------------------
 EstablishShapeTypes::EstablishShapeTypes() :
   AbstractFilter(),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes)
 {
   setupFilterParameters();
@@ -105,7 +105,6 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
 int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ShapeTypesArrayName)
   writer->writeValue("ShapeTypeData", getShapeTypeData().d );
@@ -129,7 +128,7 @@ void EstablishShapeTypes::dataCheck()
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Get the DataContainer first - same as phase types
-  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getInputPhaseTypesArrayPath().getDataContainerName());
+  DataContainer::Pointer m = dca->getPrereqDataContainer<AbstractFilter>(this, getInputPhaseTypesArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - sme as phase types
@@ -206,11 +205,6 @@ int EstablishShapeTypes::getPhaseCount()
   }
   return phaseCount;
 }
-
-
-
-
-
 
 // -----------------------------------------------------------------------------
 //

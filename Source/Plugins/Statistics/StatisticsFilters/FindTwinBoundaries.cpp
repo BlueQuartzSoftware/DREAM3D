@@ -131,7 +131,7 @@ class CalculateTwinBoundaryImpl
             QuaternionMathF::Conjugate(q2);
             QuaternionMathF::Multiply(q2, q1, misq);
             OrientationMath::QuattoMat(q1, g1);
-          
+
             if(m_FindCoherence)
               MatrixMath::Multiply3x3with3x1(g1, normal, xstl_norm);
 
@@ -144,7 +144,7 @@ class CalculateTwinBoundaryImpl
               if(m_FindCoherence)
                 OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
               //QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm);
-              
+
               for (int k = 0; k < nsym; k++)
               {
                 //calculate the symmetric misorienation
@@ -191,11 +191,11 @@ FindTwinBoundaries::FindTwinBoundaries()  :
   m_AxisTolerance(0.0),
   m_AngleTolerance(0.0),
   m_FindCoherence(true),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTwinBoundaryArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundary),
   m_SurfaceMeshTwinBoundaryIncoherenceArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundaryIncoherence),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
@@ -268,7 +268,6 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
 int FindTwinBoundaries::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryIncoherenceArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
@@ -316,7 +315,7 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  
+
   if(getFindCoherence())
   {
     dims[0] = 3;
@@ -353,6 +352,7 @@ void FindTwinBoundaries::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -50,7 +50,7 @@ SaveImages::SaveImages() :
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
-  m_ColorsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor)
+  m_ColorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor)
 {
   setupFilterParameters();
 }
@@ -110,7 +110,6 @@ void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, in
 int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ColorsArrayPath)
@@ -151,6 +150,10 @@ void SaveImages::dataCheck()
     if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getColorsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 
@@ -179,11 +182,11 @@ void SaveImages::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_ColorsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ColorsArrayPath.getDataContainerName());
 
   /* Place all your code to execute your filter here. */
   size_t dims[3];
-  m->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   size_t index = 0;
   uint8_t* slice = NULL;

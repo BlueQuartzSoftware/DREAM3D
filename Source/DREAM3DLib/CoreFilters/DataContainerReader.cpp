@@ -255,15 +255,15 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
   {
     QH5Utilities::closeFile(fileId);
     fileId = QH5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
-    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::Defaults::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::Defaults::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::Defaults::DataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::Defaults::DataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
     err = QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, "5.0");
     QH5Utilities::closeFile(fileId);
     fileId = QH5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
   }
-  if(fVersion < 6.0)
+  if(fVersion < 7.0)
   {
-    ss = QObject::tr(": File unable to be read - file structure older than 6.0 '%1'").arg(ClassName());
+    ss = QObject::tr(": File unable to be read - file structure older than 7.0 '%1'").arg(ClassName());
     setErrorCondition(-250);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -372,7 +372,7 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure(con
   //    std::cout << DREAM3D::HDF5::FileVersionName.toStdString() << ":" << fileVersion.toStdString() << std::endl;
   //  }
 
-  hid_t dcArrayGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toAscii().constData(), H5P_DEFAULT);
+  hid_t dcArrayGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().constData(), H5P_DEFAULT);
   if (dcArrayGroupId < 0)
   {
     QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerGroupName);
@@ -458,7 +458,7 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArray::Pointer dca)
 {
   int err = 0;
-  hid_t dcbGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toAscii().constData(), H5P_DEFAULT);
+  hid_t dcbGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toLatin1().constData(), H5P_DEFAULT);
   if (dcbGroupId < 0)
   {
     // NO Bundles are available to read so just return.

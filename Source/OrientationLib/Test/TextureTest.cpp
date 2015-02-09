@@ -38,7 +38,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "DREAM3DLib/Common/Texture.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 
 
@@ -59,15 +59,19 @@ int main(int argc, char** argv)
   QVector<float> sigmas;
   QVector<float> odf;
 
+  CubicOps cubicOps;
+  HexagonalOps hexagonalOps;
+  OrthoRhombicOps orthOps;
+
   size_t numEntries = e1s.size();
-  odf.resize(CubicOps::k_OdfSize);
+  odf.resize(cubicOps.getODFSize());
   Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-  odf.resize(HexagonalOps::k_OdfSize);
+  odf.resize(hexagonalOps.getODFSize());
   Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
                                odf.data(), numEntries);
 
 
-  odf.resize(OrthoRhombicOps::k_OdfSize);
+  odf.resize(orthOps.getODFSize());
   Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
                                         odf.data(), numEntries);
 

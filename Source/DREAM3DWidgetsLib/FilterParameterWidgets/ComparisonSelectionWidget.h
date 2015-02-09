@@ -39,7 +39,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 
 #include "QtSupport/FaderWidget.h"

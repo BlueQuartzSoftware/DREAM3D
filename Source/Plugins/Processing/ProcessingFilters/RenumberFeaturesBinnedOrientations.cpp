@@ -40,18 +40,17 @@
 #include <QtCore/QMap>
 
 #include "DREAM3DLib/Common/Constants.h"
-
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/Texture.hpp"
 
+#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.cpp"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-	
+
+#include "Processing/ProcessingConstants.h"
+
 using namespace DREAM3D;
-using namespace Detail;
 
 // -----------------------------------------------------------------------------
 //
@@ -145,7 +144,7 @@ void RenumberFeaturesBinnedOrientations::dataCheck()
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || m == NULL) { return; }
   AttributeMatrix::Pointer AttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || AttrMat == NULL) { return; }
@@ -163,7 +162,7 @@ void RenumberFeaturesBinnedOrientations::dataCheck()
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  
+
   dims[0] = 1;
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -210,7 +209,7 @@ void RenumberFeaturesBinnedOrientations::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* CellDataContainer = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellFeatureAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer CellDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellFeatureAttributeMatrixPath().getDataContainerName());
 
   if(NULL == CellDataContainer || getErrorCondition() < 0)
   {
@@ -236,34 +235,35 @@ void RenumberFeaturesBinnedOrientations::execute()
   float binFactor = 0.0f;
   // hardcoded for hexagonal for now
   // defaulted at 5 degree bins
-  dim[0] = HexDim1InitValue;
-  dim[1] = HexDim2InitValue;
-  dim[2] = HexDim3InitValue;
+  HexagonalOps hexOps;
+  hexOps.getInitializedODFBinDimensions(dim);
 
   binFactor = float(m_BinWidth) * 0.2f;
 
-  step[0] = HexDim1StepValue * binFactor;
-  step[1] = HexDim2StepValue * binFactor;
-  step[2] = HexDim3StepValue * binFactor;
+  hexOps.getOdfBinStepSize(step);
+
+  step[0] *= binFactor;
+  step[1] *= binFactor;
+  step[2] *= binFactor;
   bins[0] = 36.0f / binFactor;
   bins[1] = 36.0f / binFactor;
   bins[2] = 12.0f / binFactor;
   for (size_t i = 0; i < totalFeatures; i++)
   {
-	binid[i] = 0;
+  binid[i] = 0;
   }
 
   // now bin orientation space
   for (size_t i = 1; i < totalFeatures; i++)
   {
-	ea1 = m_FeatureEulerAngles[3 * i];
-	ea2 = m_FeatureEulerAngles[3 * i + 1];
-	ea3 = m_FeatureEulerAngles[3 * i + 2];
-	OrientationMath::EulertoRod(ea1, ea2, ea3, r1, r2, r3);
-	OrientationMath::RodtoHomochoric(r1, r2, r3);
-	// had to reproduce the below function since it is protected in OrientationOps
-	binid[i] = calcODFBin(dim, bins, step, r1, r2, r3);
-	m_ParentIds[i] = binid[i];
+  ea1 = m_FeatureEulerAngles[3 * i];
+  ea2 = m_FeatureEulerAngles[3 * i + 1];
+  ea3 = m_FeatureEulerAngles[3 * i + 2];
+  OrientationMath::EulertoRod(ea1, ea2, ea3, r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  // had to reproduce the below function since it is protected in OrientationOps
+  binid[i] = calcODFBin(dim, bins, step, r1, r2, r3);
+  m_ParentIds[i] = binid[i];
   }
 
   notifyStatusMessage(getHumanLabel(), "Completed");
@@ -301,6 +301,14 @@ const QString RenumberFeaturesBinnedOrientations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString RenumberFeaturesBinnedOrientations::getHumanLabel()
 { return "Renumber Features (Binned Orientations)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenumberFeaturesBinnedOrientations::getSubGroupName()
+{
+ return DREAM3D::FilterSubGroups::CleanupFilters;
+}
 
 // -----------------------------------------------------------------------------
 //

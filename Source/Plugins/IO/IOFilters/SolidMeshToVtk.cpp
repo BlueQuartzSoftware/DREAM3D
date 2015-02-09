@@ -104,7 +104,6 @@ void SolidMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader
 int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
   writer->closeFilterGroup();
@@ -125,11 +124,11 @@ void SolidMeshToVtk::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-  VolumeDataContainer* sm = getVolumeDataContainer();
+  DataContainer::Pointer sm = getDataContainer();
   if (NULL == sm)
   {
     setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "DataContainer is missing", getErrorCondition());
   }
   else
   {

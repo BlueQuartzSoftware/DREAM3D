@@ -41,14 +41,8 @@
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -62,7 +56,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 AlignSectionsFeature::AlignSectionsFeature() :
   AlignSections(),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL)
 {
@@ -106,7 +100,6 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 {
   AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -134,6 +127,10 @@ void AlignSectionsFeature::dataCheck()
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getGoodVoxelsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +168,7 @@ void AlignSectionsFeature::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   ofstream outFile;
   if (getWriteAlignmentShifts() == true)
@@ -179,7 +176,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int>& xshifts, std::vector<in
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else

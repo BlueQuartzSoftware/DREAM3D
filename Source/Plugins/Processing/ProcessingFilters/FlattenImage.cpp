@@ -91,7 +91,7 @@ class FlattenImageImpl
 FlattenImage::FlattenImage() :
   AbstractFilter(),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
-  m_ImageDataArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
+  m_ImageDataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_ImageData(NULL),
   m_FlatImageData(NULL)
@@ -149,7 +149,6 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FlatImageDataArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FlattenMethod)
@@ -167,10 +166,13 @@ void FlattenImage::dataCheck()
 
   int numImageComp = 1;
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ImageDataArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(m_ImageDataArrayPath.getDataArrayName());
   if(getErrorCondition() < 0) { return; }

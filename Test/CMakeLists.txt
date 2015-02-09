@@ -77,7 +77,7 @@ ADD_DREAM3D_TEST(StructArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(FilterPipelineTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(DataArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(ErrorMessageTest  "DREAM3DLib")
-QT4_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
+QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
 set_source_files_properties(${RemoveArraysObserver_MOC} PROPERTIES HEADER_FILE_ONLY TRUE)
 ADD_DREAM3D_TEST_2(MoveDataTest  "DREAM3DLib" "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
 
@@ -105,7 +105,7 @@ endif()
 # ReplaceText Program
 # --------------------------------------------------------------------------
 add_executable(ReplaceText ${DREAM3DTest_SOURCE_DIR}/ReplaceText.cpp)
-target_link_libraries(ReplaceText ${QT_QTCORE_LIBRARY})
+target_link_libraries(ReplaceText Qt5::Core)
 set_target_properties(ReplaceText PROPERTIES FOLDER Test)
 
 # --------
@@ -128,7 +128,7 @@ set_target_properties(RNGTest PROPERTIES FOLDER Test)
 
 # --------
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
-target_link_libraries(ResFixer ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib)
+target_link_libraries(ResFixer Qt5::Core EbsdLib DREAM3DLib)
 set_target_properties(ResFixer PROPERTIES FOLDER Test)
 
 
@@ -137,7 +137,7 @@ if(0)
 # THis is just a quick test to make sure that the latest HDF5 can actually write data
 # sets that are larger than 4GB in size
 add_executable(BigHDF5DatasetTest ${DREAM3DTest_SOURCE_DIR}/BigHDF5DatasetTest.cpp)
-target_link_libraries(BigHDF5DatasetTest H5Support ${QT_QTCORE_LIBRARY})
+target_link_libraries(BigHDF5DatasetTest H5Support Qt5::Core)
 set_target_properties(BigHDF5DatasetTest PROPERTIES FOLDER Test)
 add_test(BigHDF5DatasetTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BigHDF5DatasetTest)
 
@@ -192,7 +192,7 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
                ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 
 add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
-target_link_libraries(PipelineRunnerTest ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib)
+target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib DREAM3DLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER Test)
 
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )

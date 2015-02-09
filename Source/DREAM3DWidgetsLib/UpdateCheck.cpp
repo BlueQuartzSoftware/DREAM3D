@@ -38,8 +38,8 @@
 #include <QtCore/QDate>
 #include <QtCore/QSettings>
 
-#include <QtGui/QMessageBox>
-#include <QtGui/QWidget>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QWidget>
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>

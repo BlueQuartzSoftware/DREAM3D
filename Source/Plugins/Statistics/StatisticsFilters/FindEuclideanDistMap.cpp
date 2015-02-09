@@ -52,7 +52,7 @@
 
 class FindEuclideanMap
 {
-    VolumeDataContainer* m;
+    DataContainer::Pointer m;
     int32_t* m_FeatureIds;
     int32_t* m_NearestNeighbors;
     bool m_OnlyManhattan;
@@ -66,7 +66,7 @@ class FindEuclideanMap
      * @brief
      * @param datacontainer
      */
-    FindEuclideanMap(VolumeDataContainer* datacontainer, int32_t* fIds, int32_t* nearNeighs, bool calcManhattanOnly, float* gbDists, float* tjDists, float* qpDists, int type) :
+    FindEuclideanMap(DataContainer::Pointer datacontainer,int32_t* fIds, int32_t* nearNeighs, bool calcManhattanOnly, float* gbDists, float* tjDists, float* qpDists, int type) :
       m(datacontainer),
       m_FeatureIds(fIds),
       m_NearestNeighbors(nearNeighs),
@@ -84,7 +84,7 @@ class FindEuclideanMap
     void operator()() const
     {
       // qDebug() << "  FindEuclideanMap: Loop = " << loop << "\n";
-      int64_t totalPoints = m->getTotalPoints();
+      int64_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
       int euclideanDistance = 0;
       size_t count = 1;
@@ -94,12 +94,12 @@ class FindEuclideanMap
       size_t neighpoint;
       int nearestneighbor;
       int64_t neighbors[6];
-      int64_t xpoints = static_cast<int64_t>(m->getXPoints());
-      int64_t ypoints = static_cast<int64_t>(m->getYPoints());
-      int64_t zpoints = static_cast<int64_t>(m->getZPoints());
-      double resx = m->getXRes();
-      double resy = m->getYRes();
-      double resz = m->getZRes();
+      int64_t xpoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+      int64_t ypoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+      int64_t zpoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+      double resx = m->getGeometryAs<ImageGeom>()->getXRes();
+      double resy = m->getGeometryAs<ImageGeom>()->getYRes();
+      double resz = m->getGeometryAs<ImageGeom>()->getZRes();
 
       neighbors[0] = -xpoints * ypoints;
       neighbors[1] = -xpoints;
@@ -247,7 +247,7 @@ class FindEuclideanMap
 // -----------------------------------------------------------------------------
 FindEuclideanDistMap::FindEuclideanDistMap() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
   m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
@@ -329,7 +329,6 @@ void FindEuclideanDistMap::readFilterParameters(AbstractFilterParametersReader* 
 int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NearestNeighborsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(QPEuclideanDistancesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(TJEuclideanDistancesArrayName)
@@ -356,6 +355,10 @@ void FindEuclideanDistMap::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   if(m_DoBoundaries == true)
   {
@@ -402,7 +405,7 @@ void FindEuclideanDistMap::preflight()
   }
   if(m_SaveNearestNeighbors == false)
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
     attrMat->removeAttributeArray(getNearestNeighborsArrayName());
   }
@@ -423,7 +426,7 @@ void FindEuclideanDistMap::execute()
 
   if(m_SaveNearestNeighbors == false)
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
     attrMat->removeAttributeArray(getNearestNeighborsArrayName());
   }
@@ -437,7 +440,7 @@ void FindEuclideanDistMap::execute()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::find_euclideandistmap()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
@@ -458,7 +461,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   std::vector<int> coordination;
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -479,9 +482,9 @@ void FindEuclideanDistMap::find_euclideandistmap()
   neighbors[4] = dims[0];
   neighbors[5] = dims[0] * dims[1];
 
-  size_t xPoints = m->getXPoints();
-  size_t yPoints = m->getYPoints();
-  size_t zPoints = m->getZPoints();
+  size_t xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+  size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+  size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
 
 
   for (int64_t a = 0; a < totalPoints; ++a)

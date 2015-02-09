@@ -37,7 +37,7 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Test)
 # ANG Data File Testing
 # --------------------------------------------------------------------------
 add_executable(AngImportTest ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
-target_link_libraries(AngImportTest ${QT_QTCORE_LIBRARY} EbsdLib)
+target_link_libraries(AngImportTest Qt5::Core EbsdLib)
 set_target_properties(AngImportTest PROPERTIES FOLDER Test)
 add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
 

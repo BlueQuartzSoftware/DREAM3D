@@ -170,7 +170,7 @@ int readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
 // -----------------------------------------------------------------------------
 RawBinaryReader::RawBinaryReader() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ScalarType(0),
   m_Endian(0),
@@ -353,12 +353,12 @@ void RawBinaryReader::dataCheck(bool preflight)
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  VolumeDataContainer* m = NULL;
+  DataContainer::Pointer m = DataContainer::NullPointer();
   AttributeMatrix::Pointer attrMat;
 
   if (getAddToExistingAttributeMatrix() )
   {
-    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
     if(getErrorCondition() < 0)
     {
       return;
@@ -372,7 +372,7 @@ void RawBinaryReader::dataCheck(bool preflight)
   }
   else
   {
-    m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
     if(getErrorCondition() < 0)
     {
       return;
@@ -464,9 +464,11 @@ void RawBinaryReader::dataCheck(bool preflight)
       notifyWarningMessage(getHumanLabel(), ss, RBR_FILE_TOO_BIG);
     }
 
-    m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
-    m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry("BinaryImage");
+    image->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
+    image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    m->setGeometry(image);
   }
 }
 
@@ -498,7 +500,9 @@ void RawBinaryReader::execute()
   {
     return;
   }
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry("BinaryImage");
+  m->setGeometry(image);
 
   setErrorCondition(0);
 
@@ -506,10 +510,10 @@ void RawBinaryReader::execute()
   size_t voxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
   if (m_OverRideOriginResolution == true)
   {
-    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-    m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   }
-  m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
+  image->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
   if(getAddToExistingAttributeMatrix() == false)
   {

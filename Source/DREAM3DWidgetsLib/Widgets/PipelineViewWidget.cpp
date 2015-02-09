@@ -42,20 +42,21 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDir>
 #include <QtCore/QTemporaryFile>
+#include <QtCore/QMimeData>
 
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDropEvent>
 #include <QtGui/QDragEnterEvent>
 #include <QtGui/QDragLeaveEvent>
 #include <QtGui/QDragMoveEvent>
-#include <QtGui/QLabel>
+#include <QtWidgets/QLabel>
 #include <QtGui/QPixmap>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QScrollArea>
-#include <QtGui/QScrollBar>
-#include <QtGui/QProgressDialog>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QScrollBar>
+#include <QtWidgets/QProgressDialog>
+#include <QtWidgets/QMessageBox>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -360,8 +361,8 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString& na
     QFile f(filePath);
     if (f.remove() == false)
     {
-      QMessageBox::warning ( this, QString::fromAscii("Pipeline Save Error"),
-                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
+      QMessageBox::warning ( this, QString::fromLatin1("Pipeline Save Error"),
+                             QString::fromLatin1("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
       return;
     }
   }

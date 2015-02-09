@@ -53,7 +53,7 @@ NeighborCICorrelation::NeighborCICorrelation() :
   AbstractFilter(),
   m_MinConfidence(0.1f),
   m_Loop(false),
-  m_ConfidenceIndexArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
+  m_ConfidenceIndexArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
   m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
   m_ConfidenceIndex(NULL)
 {
@@ -95,7 +95,6 @@ void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader*
 int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
   DREAM3D_FILTER_WRITE_PARAMETER(Loop)
@@ -114,6 +113,10 @@ void NeighborCICorrelation::dataCheck()
   m_ConfidenceIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getConfidenceIndexArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ConfidenceIndexPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ConfidenceIndex = m_ConfidenceIndexPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getConfidenceIndexArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 
@@ -140,11 +143,11 @@ void NeighborCICorrelation::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_ConfidenceIndexArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
   int64_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else

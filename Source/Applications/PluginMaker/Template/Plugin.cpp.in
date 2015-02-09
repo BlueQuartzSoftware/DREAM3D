@@ -15,8 +15,6 @@
 
 #include "@PluginName@/moc_@PluginName@Plugin.cpp"
 
-Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin)
-
 namespace Detail
 {
   const QString @PluginName@PluginFile("@PluginName@Plugin");
@@ -33,7 +31,9 @@ m_CompatibilityVersion("Compatibility Version Number"), // Initialize @PluginNam
 m_Vendor("Vendor Name"),                                // Initialize @PluginName@'s Vendor Name Here
 m_URL("URL"),                                           // Initialize Company URL Here
 m_Location("Location"),                                 // Initialize Company Location Here
+m_Description("Description"),                           // Initialize @PluginName@'s Description Here
 m_Copyright("Copyright"),                               // Initialize @PluginName@'s Copyright Here
+m_Filters(QList<QString>()),                        // Initialize @PluginName@'s List of Dependencies Here
 m_DidLoad(false)
 {
 

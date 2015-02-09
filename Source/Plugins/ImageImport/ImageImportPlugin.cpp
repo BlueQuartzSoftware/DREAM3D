@@ -45,7 +45,7 @@
 
 #include "ImageImport/moc_ImageImportPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(ImageImportPlugin, ImageImportPlugin)
+
 
 namespace Detail
 {

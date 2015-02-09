@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDir>
 
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 
 #include "QtSupport/QFileCompleter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"

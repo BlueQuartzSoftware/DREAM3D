@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 SPParksTextReader::SPParksTextReader() :
   FileReader(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_OneBasedArrays(false),
@@ -113,7 +113,6 @@ void SPParksTextReader::readFilterParameters(AbstractFilterParametersReader* rea
 int SPParksTextReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
@@ -132,8 +131,8 @@ void SPParksTextReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
 
-//  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-//  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  //  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  //  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -142,13 +141,12 @@ void SPParksTextReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void SPParksTextReader::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -164,14 +162,8 @@ void SPParksTextReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-//  QVector<size_t> dims(1, 1);
-//  tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
-//  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-//  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-//  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
@@ -183,7 +175,7 @@ void SPParksTextReader::dataCheck()
     {
       QString msg = QObject::tr("SPParks file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-102);
-      notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     }
     else
     {
@@ -289,7 +281,7 @@ int SPParksTextReader::readHeader()
   ITEM: ATOMS id type x y z
   */
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
   int oneBase = 0;
   if(getOneBasedArrays())
@@ -335,11 +327,7 @@ int SPParksTextReader::readHeader()
     notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return -100;
   }
-  m->setDimensions(nx, ny, nz);
-
-
-
-
+  m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
   return 0;
 }
 
@@ -348,14 +336,14 @@ int SPParksTextReader::readHeader()
 // -----------------------------------------------------------------------------
 int  SPParksTextReader::readFile()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   // The readHeader() function should have set the dimensions correctly
-  size_t totalPoints = m->getTotalPoints();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   QVector<size_t> tDims(3, 0);
-  tDims[0] = m->getXPoints();
-  tDims[1] = m->getYPoints();
-  tDims[2] = m->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
@@ -372,7 +360,7 @@ int  SPParksTextReader::readFile()
   bool didAllocate = false;
   for (qint32 i = 2; i < size; ++i)
   {
-    QString name = QString::fromAscii(tokens[i]);
+    QString name = QString::fromLatin1(tokens[i]);
     pType = getPointerType(name);
 
     // We don't need to parse the X, Y & Z or id values into arrays.
@@ -455,8 +443,8 @@ int  SPParksTextReader::readFile()
   }
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
@@ -492,7 +480,7 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
 
   // Calculate the offset into the actual array based on the x, y & z values from the data line we just read
   size_t offset = (dims[1] * dims[0] * zIdx) + (dims[0] * yIdx) + xIdx;
-// BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
+  // BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
 
   QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
   while (iter.hasNext())
@@ -503,9 +491,9 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
     // if the SPParks users actually wanted to read in the matching XYZ lattice site for the data then actually
     // parsing and storing the data _may_ be of interest to them
     if(dparser->getColumnName().compare("x") == 0
-        || dparser->getColumnName().compare("y") == 0
-        || dparser->getColumnName().compare("z") == 0
-        || dparser->getColumnName().compare("id") == 0)
+       || dparser->getColumnName().compare("y") == 0
+       || dparser->getColumnName().compare("z") == 0
+       || dparser->getColumnName().compare("id") == 0)
     {
       continue;
     }

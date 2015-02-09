@@ -8,12 +8,15 @@
 #ifndef _BoundaryPhaseWidget_H_
 #define _BoundaryPhaseWidget_H_
 
-#include "SGWidget.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
+
+#include "StatsGenerator/SGWidget.h"
+#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
+
 #include "ui_BoundaryPhaseWidget.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
 class QwtPlotPicker;

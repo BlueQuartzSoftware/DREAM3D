@@ -102,7 +102,6 @@ void CalculateArrayHistogram::readFilterParameters(AbstractFilterParametersReade
 int CalculateArrayHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
   DREAM3D_FILTER_WRITE_PARAMETER(Normalize)
@@ -146,13 +145,13 @@ void CalculateArrayHistogram::dataCheck()
     return;
   }
 
-	if (m_NewDataContainer && m_NewDataContainerName.isEmpty() == true)
-	{
-		setErrorCondition(-11014);
-		QString ss = QObject::tr("The New Data Container name can not be empty. Please set a value.");
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
+  if (m_NewDataContainer && m_NewDataContainerName.isEmpty() == true)
+  {
+    setErrorCondition(-11014);
+    QString ss = QObject::tr("The New Data Container name can not be empty. Please set a value.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   if (m_NumberOfBins <= 0)
   {
@@ -177,22 +176,22 @@ void CalculateArrayHistogram::dataCheck()
 
   if (m_NewDataContainer) // create a new data container
   {
-    VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
     if (getErrorCondition() < 0) { return; }
     AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Generic);
-    if (getErrorCondition() < 0) { return; }
+    if (getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
     tempPath.update(getNewDataContainerName(), getNewAttributeMatrixName(), newArrayName);
   }
   else // use existing data container
   {
-    VolumeDataContainer* dc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedArrayPath.getDataContainerName());
+    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
     if (getErrorCondition() < 0) { return; }
     AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Generic);
-    if (getErrorCondition() < 0) { return; }
+    if (getErrorCondition() < 0 || NULL == attrMat.get())  { return; }
     tempPath.update(dc->getName(), getNewAttributeMatrixName(), newArrayName);
   }
 
-	// histogram array
+  // histogram array
   m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_NewDataArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
@@ -275,8 +274,8 @@ void CalculateArrayHistogram::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-	QString ss;
-	VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedArrayPath.getDataContainerName());
+  QString ss;
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedArrayPath.getDataArrayName());
   if (NULL == inputData.get())

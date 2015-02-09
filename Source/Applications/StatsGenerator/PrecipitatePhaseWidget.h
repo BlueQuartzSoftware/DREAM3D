@@ -12,11 +12,10 @@
 #include "Applications/StatsGenerator/ui_PrecipitatePhaseWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
+#ifndef QwtArray
+#define QwtArray QVector
 #endif
 
 class QwtPlotZoomer;

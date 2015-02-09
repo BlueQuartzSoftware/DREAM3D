@@ -38,7 +38,7 @@
 #ifndef _FILTERBUNDLER_H_
 #define _FILTERBUNDLER_H_
 
-#include <QtGui/QTreeWidgetItem>
+#include <QtWidgets/QTreeWidgetItem>
 #include "PMFilterGenerator.h"
 
 class FilterBundler

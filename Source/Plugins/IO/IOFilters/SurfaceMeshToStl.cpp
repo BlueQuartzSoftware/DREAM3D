@@ -54,8 +54,8 @@ SurfaceMeshToStl::SurfaceMeshToStl() :
   AbstractFilter(),
   m_OutputStlDirectory(""),
   m_OutputStlPrefix(""),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFacePhasesArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFacePhases),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFacePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFacePhases),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
@@ -105,7 +105,6 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFacePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputStlDirectory)
@@ -126,19 +125,25 @@ void SurfaceMeshToStl::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm  = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer sm  = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == sm) { return; }
 
-  if (sm->getFaces().get() == NULL)
+  TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
+
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
-  if (sm->getVertices().get() == NULL)
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
+
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -174,7 +179,7 @@ void SurfaceMeshToStl::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -188,16 +193,17 @@ void SurfaceMeshToStl::execute()
     return;
   }
 
-  VertexArray& nodes = *(sm->getVertices());
-  FaceArray& triangles = *(sm->getFaces());
+  TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
+  float* nodes = triangleGeom->getVertexPointer(0);
+  int64_t* triangles = triangleGeom->getTriPointer(0);
+  int64_t nTriangles = triangleGeom->getNumberOfTris();
 
-  int nTriangles = triangles.getNumberOfTuples();
 
   // Store all the unique Spins
   QMap<int, int> uniqueGrainIdtoPhase;
   if (m_GroupByPhase == true)
   {
-    for (int i = 0; i < nTriangles; i++)
+    for (int64_t i = 0; i < nTriangles; i++)
     {
       uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2], m_SurfaceMeshFacePhases[i * 2]);
       uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2 + 1], m_SurfaceMeshFacePhases[i * 2 + 1]);
@@ -242,7 +248,6 @@ void SurfaceMeshToStl::execute()
     }
     filename = filename + QString("Grain_") + QString::number(spin) + ".stl";
     FILE* f = fopen(filename.toLatin1().data(), "wb");
-
     {
       QString ss = QObject::tr("Writing STL for Feature Id ").arg(spin);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -264,13 +269,13 @@ void SurfaceMeshToStl::execute()
     {
       //char winding = 2; // 2 = Do NOT write this triangle
       // Get the true indices of the 3 nodes
-      int nId0 = triangles[t].verts[0];
-      int nId1 = triangles[t].verts[1];
-      int nId2 = triangles[t].verts[2];
+      int nId0 = triangles[t*3];
+      int nId1 = triangles[t*3+1];
+      int nId2 = triangles[t*3+2];
 
-      vert1[0] = static_cast<float>(nodes[nId0].pos[0]);
-      vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
-      vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
+      vert1[0] = static_cast<float>(nodes[nId0*3]);
+      vert1[1] = static_cast<float>(nodes[nId0*3+1]);
+      vert1[2] = static_cast<float>(nodes[nId0*3+2]);
 
       if (m_SurfaceMeshFaceLabels[t * 2] == spin)
       {
@@ -289,13 +294,13 @@ void SurfaceMeshToStl::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = static_cast<float>(nodes[nId1].pos[0]);
-      vert2[1] = static_cast<float>(nodes[nId1].pos[1]);
-      vert2[2] = static_cast<float>(nodes[nId1].pos[2]);
+      vert2[0] = static_cast<float>(nodes[nId1*3]);
+      vert2[1] = static_cast<float>(nodes[nId1*3+1]);
+      vert2[2] = static_cast<float>(nodes[nId1*3+2]);
 
-      vert3[0] = static_cast<float>(nodes[nId2].pos[0]);
-      vert3[1] = static_cast<float>(nodes[nId2].pos[1]);
-      vert3[2] = static_cast<float>(nodes[nId2].pos[2]);
+      vert3[0] = static_cast<float>(nodes[nId2*3]);
+      vert3[1] = static_cast<float>(nodes[nId2*3+1]);
+      vert3[2] = static_cast<float>(nodes[nId2*3+2]);
 
       //
       // Compute the normal

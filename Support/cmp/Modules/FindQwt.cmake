@@ -25,9 +25,8 @@ endif()
 # Look for the header file.
 SET(QWT_INCLUDE_SEARCH_DIRS
   ${QWT_INSTALL}/include/qwt
-  ${QWT_INSTALL}/include/qwt5
+  ${QWT_INSTALL}/include/qwt6
   ${QWT_INSTALL}/include
-  /usr/include/qwt5
   ${QWT_INSTALL}/lib/qwt.framework/Headers
 )
 
@@ -46,10 +45,10 @@ FIND_PATH(QWT_INCLUDE_DIR
 )
 
 if(WIN32 AND NOT MINGW)
-    set(QWT_SEARCH_DEBUG_NAMES "qwt_debug;libqwt_debug")
+    set(QWT_SEARCH_DEBUG_NAMES "qwtd;libqwtd")
     set(QWT_SEARCH_RELEASE_NAMES "qwt;libqwt")
 ELSE (WIN32 AND NOT MINGW)
-    set(QWT_SEARCH_DEBUG_NAMES "qwt_debug")
+    set(QWT_SEARCH_DEBUG_NAMES "qwt_debug;qwtd")
     set(QWT_SEARCH_RELEASE_NAMES "qwt")
 ENDif(WIN32 AND NOT MINGW)
 
@@ -67,16 +66,16 @@ FIND_LIBRARY(QWT_LIBRARY_RELEASE
 )
 
 if( QWT_CMAKE_DEBUG )
-message(STATUS "QWT_INCLUDE_SEARCH_DIRS: ${QWT_INCLUDE_SEARCH_DIRS}")
-message(STATUS "QWT_LIB_SEARCH_DIRS: ${QWT_LIB_SEARCH_DIRS}")
-message(STATUS "QWT_BIN_SEARCH_DIRS: ${QWT_BIN_SEARCH_DIRS}")
-message(STATUS "QWT_SEARCH_DEBUG_NAMES: ${QWT_SEARCH_DEBUG_NAMES}")
-message(STATUS "QWT_SEARCH_RELEASE_NAMES: ${QWT_SEARCH_RELEASE_NAMES}")
+  message(STATUS "QWT_INCLUDE_SEARCH_DIRS: ${QWT_INCLUDE_SEARCH_DIRS}")
+  message(STATUS "QWT_LIB_SEARCH_DIRS: ${QWT_LIB_SEARCH_DIRS}")
+  message(STATUS "QWT_BIN_SEARCH_DIRS: ${QWT_BIN_SEARCH_DIRS}")
+  message(STATUS "QWT_SEARCH_DEBUG_NAMES: ${QWT_SEARCH_DEBUG_NAMES}")
+  message(STATUS "QWT_SEARCH_RELEASE_NAMES: ${QWT_SEARCH_RELEASE_NAMES}")
 
-MESSAGE(STATUS "QWT_INCLUDE_DIR: ${QWT_INCLUDE_DIR}")
-MESSAGE(STATUS "QWT_LIBRARY_DEBUG: ${QWT_LIBRARY_DEBUG}")
-MESSAGE(STATUS "QWT_LIBRARY_RELEASE: ${QWT_LIBRARY_RELEASE}")
-MESSAGE(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+  MESSAGE(STATUS "QWT_INCLUDE_DIR: ${QWT_INCLUDE_DIR}")
+  MESSAGE(STATUS "QWT_LIBRARY_DEBUG: ${QWT_LIBRARY_DEBUG}")
+  MESSAGE(STATUS "QWT_LIBRARY_RELEASE: ${QWT_LIBRARY_RELEASE}")
+  MESSAGE(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 endif()
 
 # include the macro to adjust libraries
@@ -118,26 +117,37 @@ if(NOT QWT_FOUND)
   ENDif(NOT QWT_FIND_QUIETLY)
 ENDif(NOT QWT_FOUND)
 
-if(QWT_FOUND)
-  INCLUDE(CheckSymbolExists)
-  #############################################
-  # Find out if QWT was build using dll's
-  #############################################
-  # Save required variable
-  SET(CMAKE_REQUIRED_INCLUDES_SAVE ${CMAKE_REQUIRED_INCLUDES})
-  SET(CMAKE_REQUIRED_FLAGS_SAVE    ${CMAKE_REQUIRED_FLAGS})
-  # Add QWT_INCLUDE_DIR to CMAKE_REQUIRED_INCLUDES
-  SET(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QWT_INCLUDE_DIRS}")
 
-  CHECK_SYMBOL_EXISTS(QWT_BUILT_AS_DYNAMIC_LIB "QWTLib.h" HAVE_QWT_DLL)
 
-  if(HAVE_QWT_DLL STREQUAL "1")
-    set(QWT_IS_SHARED 1 CACHE INTERNAL "Qwt Built as DLL or Shared Library")
-  endif(HAVE_QWT_DLL STREQUAL "1")
 
-  # Restore CMAKE_REQUIRED_INCLUDES and CMAKE_REQUIRED_FLAGS variables
-  SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVE})
-  SET(CMAKE_REQUIRED_FLAGS    ${CMAKE_REQUIRED_FLAGS_SAVE})
-  #
-  #############################################
+set(TYPES Debug Release)
+set(SUPPORT_LIB_OPTION 1)
+if(MSVC_IDE)
+  set(SUPPORT_LIB_OPTION 0)
+elseif(APPLE) # Apple systems do NOT need this so just skip this entirely
+  set(SUPPORT_LIB_OPTION 2)
+elseif(UNIX AND NOT MSVC)
+  set(SUPPORT_LIB_OPTION 3)
 endif()
+if( ${SUPPORT_LIB_OPTION} EQUAL 1)
+  set(TYPES ${CMAKE_BUILD_TYPE})
+endif()
+
+FOREACH(BTYPE ${TYPES})
+
+ # message(STATUS "Looking for ${BTYPE} DLL Version of Qwt")
+  STRING(TOUPPER ${BTYPE} TYPE)
+  get_filename_component(lib_path ${QWT_LIBRARY_${TYPE}} PATH)
+  get_filename_component(lib_name ${QWT_LIBRARY_${TYPE}} NAME_WE)
+ 
+
+  find_file(QWT_LIBRARY_DLL_${TYPE}
+              NAMES ${lib_name}.dll
+              PATHS  ${lib_path}/../bin ${lib_path}/.. ${lib_path}/ ${${upperlib}_BIN_DIR}
+              NO_DEFAULT_PATH )
+  mark_as_advanced(QWT_LIBRARY_DLL_${TYPE})
+  # message(STATUS "QWT_LIBRARY_DLL_${TYPE}: ${QWT_LIBRARY_DLL_${TYPE}}")
+
+endforeach()
+
+

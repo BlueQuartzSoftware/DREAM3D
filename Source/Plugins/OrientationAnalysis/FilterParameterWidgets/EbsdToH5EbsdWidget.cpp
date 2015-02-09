@@ -44,12 +44,12 @@
 #include <QtCore/QUrl>
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QListWidget>
-#include <QtGui/QListWidgetItem>
-#include <QtGui/QButtonGroup>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QListWidgetItem>
+#include <QtWidgets/QButtonGroup>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"

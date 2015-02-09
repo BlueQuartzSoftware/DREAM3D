@@ -209,7 +209,7 @@ void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dc
     // the DataContainerArray
     if (dcProxy.flag == state)
     {
-      DataContainer::Pointer ptr = dca->removeDataContainer(dcProxy.name); // Remove it out
+      dca->removeDataContainer(dcProxy.name); // Remove it out
       continue; // Continue to the next DataContainer
     }
     QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
@@ -231,7 +231,7 @@ void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dc
       // Check to see if this AttributeMatrix is checked, if not then remove it from the DataContainer and go to the next loop
       if(attrProxy.flag == state)
       {
-        AttributeMatrix::Pointer ptr = dcItem->removeAttributeMatrix(amName);
+        dcItem->removeAttributeMatrix(amName);
         continue;
       }
       // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
@@ -253,7 +253,7 @@ void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dc
         // Check to see if the user selected this item
         if(daProxy.flag == state)
         {
-          IDataArray::Pointer ptr = amItem->removeAttributeArray(daName);
+          amItem->removeAttributeArray(daName);
           continue;
         }
       }

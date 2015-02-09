@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtGui/QStandardItemModel>
-#include <QtGui/QItemSelectionModel>
+#include <QtCore/QItemSelectionModel>
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

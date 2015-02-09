@@ -184,14 +184,14 @@ void MoveData::dataCheck()
   else if( getWhatToMove() == k_MoveDataArray )
   {
     AttributeMatrix::Pointer daSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(daSrcPath);
-    IDataArray::Pointer daSrcDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<IDataArray, AbstractFilter>(this, daSrcPath);
+    IDataArray::Pointer daSrcDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, daSrcPath);
 
     if (getErrorCondition() < 0)
     {
       return;
     }
 
-    AttributeMatrix::Pointer daDestAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer>(this, amDestPath, -11013);
+    AttributeMatrix::Pointer daDestAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, amDestPath, -11013);
 
     if (getErrorCondition() < 0)
     {

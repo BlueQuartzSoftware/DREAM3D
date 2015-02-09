@@ -86,8 +86,7 @@ void TestDataBundleCommonPaths()
   cDims[0] = 3;
   cDims[1] = 3;
 
-  VolumeDataContainer::Pointer dc0 = VolumeDataContainer::New();
-  dc0->setName("DC 0");
+  DataContainer::Pointer dc0 = DataContainer::New("DC 0");
   AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, "CellAttributeMatrix", DREAM3D::AttributeMatrixType::Cell);
   AddDataArray<uint8_t>(am, "Uint8 Array", tDims, cDims);
   AddDataArray<float>(am, "Float Array", tDims, cDims);

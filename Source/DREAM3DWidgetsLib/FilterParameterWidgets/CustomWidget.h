@@ -40,7 +40,7 @@
 
 
 #include <QtCore/QObject>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"

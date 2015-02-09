@@ -41,12 +41,14 @@
 #include <QtCore/QTimer>
 #include <QtCore/QResource>
 #include <QtCore/QDir>
+#include <QtCore/QMimeData>
 
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QVBoxLayout>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
-#include <QtGui/QFileDialog>
+#include <QtGui/QDrag>
+#include <QtWidgets/QFileDialog>
 
 
 
@@ -61,11 +63,6 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
-
-// -----------------------------------------------------------------------------
-// Include the "moc" file that was generated for this file
-// -----------------------------------------------------------------------------
-//#include "DREAM3DWidgetsLib/moc_PipelineFilterWidget.cpp"
 
 #define PADDING 5
 #define BORDER 2
@@ -105,8 +102,6 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObserver* observer, QWidget* parent) :
   QFrame(parent),
-  //  m_CurrentBorderColorFactor(0),
-  //  m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
@@ -535,14 +530,7 @@ bool PipelineFilterWidget::isSelected()
 void PipelineFilterWidget::changeStyle()
 {
   QString style;
-  //  int m_CurrentBorderColorFactor = 0;
-  //  int m_BorderIncrement = 16;
 
-  /*  if (m_HasPreflightErrors == true)
-  {
-    style.append("border: 2px solid rgb(255, 0, 0);");
-  }
-  else*/
   if(m_HasPreflightWarnings)
   {
     style.append("border: 2px solid rgb(172, 168, 0);");
@@ -550,7 +538,6 @@ void PipelineFilterWidget::changeStyle()
   else if(m_IsSelected == true )
   {
     style.append("border: 3px solid purple;");
-    //  style.append("background-color: palette(highlight);");
   }
   else
   {
@@ -578,7 +565,6 @@ void PipelineFilterWidget::updateWidgetStyle()
   else
   {
     style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
-    //   style.append("background-color: rgb(147, 184, 149);");
   }
 
   style.append("background-position: top ;\n background-repeat: repeat-x;");
@@ -591,12 +577,12 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   style.append("QLabel\n {\n");
 
-#if defined(Q_WS_WIN)
+#if defined(Q_OS_WIN)
   style.append("font: 9pt \"Arial\";");
-#elif defined(Q_WS_MAC)
+#elif defined(Q_OS_MAC)
   style.append("font: 100 italic 12pt \"Arial\";");
 #else
-  style.append("font: 85 italic 9pt \"Arial\";");
+  style.append("font: 100 italic 12pt \"Arial\";");
 #endif
   style.append("font-weight: bold; ");
   if (m_HasPreflightErrors == true)
@@ -678,7 +664,7 @@ void PipelineFilterWidget::mouseMoveEvent(QMouseEvent* event)
   }
   // The user is dragging the filter widget so we should set it as selected.
   setIsSelected(true);
-  QPixmap pixmap = QPixmap::grabWidget(this);
+  QPixmap pixmap = grab();
 
   // Create new picture for transparent
   QPixmap transparent(pixmap.size());

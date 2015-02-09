@@ -33,8 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 
 #include <QtCore/QPluginLoader>
 
@@ -90,10 +90,10 @@ AboutPlugins::~AboutPlugins()
 void AboutPlugins::setupGui()
 {
   // Resize the column widths so that all text is showing
-  pluginsTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  pluginsTable->horizontalHeader()->setResizeMode(NAME_INDEX, QHeaderView::ResizeToContents);
-  pluginsTable->horizontalHeader()->setResizeMode(CHECKBOX_INDEX, QHeaderView::ResizeToContents);
-  pluginsTable->horizontalHeader()->setResizeMode(STATUS_INDEX, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+  pluginsTable->horizontalHeader()->setSectionResizeMode(NAME_INDEX, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setSectionResizeMode(CHECKBOX_INDEX, QHeaderView::ResizeToContents);
+  pluginsTable->horizontalHeader()->setSectionResizeMode(STATUS_INDEX, QHeaderView::ResizeToContents);
 
   // Set selection behavior so that only full rows can be selected
   pluginsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -138,9 +138,9 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
     if ( managerNames.contains(proxyName) == false )
     {
       qDebug() << "The plugin " << proxyName << " was not found in the PluginManager.";
-	  DREAM3DPlugin* plugin = new DREAM3DPlugin();
-	  plugin->setPluginName(proxyName);
-	  plugin->setStatus(NOT_FOUND_STRING);
+    DREAM3DPlugin* plugin = new DREAM3DPlugin();
+    plugin->setPluginName(proxyName);
+    plugin->setStatus(NOT_FOUND_STRING);
       addPlaceHolderToTable(plugin, 0);
     }
   }
@@ -151,7 +151,7 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
 // -----------------------------------------------------------------------------
 void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
 {
-	QColor defaultColor(Qt::white);
+  QColor defaultColor(Qt::white);
 
   // Add name of plugin to the row
   QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
@@ -183,11 +183,11 @@ void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
   // Add load status information
   if (plugin->getDidLoad() == true)
   {
-	  statusItem = new QTableWidgetItem("Enabled");
+    statusItem = new QTableWidgetItem("Enabled");
   }
   else
   {
-	  statusItem = new QTableWidgetItem("Disabled");
+    statusItem = new QTableWidgetItem("Disabled");
   }
   statusItem->setBackgroundColor(Qt::white);
   pluginsTable->setItem(row, STATUS_INDEX, statusItem);
@@ -203,35 +203,35 @@ void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
 // -----------------------------------------------------------------------------
 void AboutPlugins::addPlaceHolderToTable(DREAM3DPlugin* plugin, int row)
 {
-	// Insert the empty row
-	pluginsTable->insertRow(row);
+  // Insert the empty row
+  pluginsTable->insertRow(row);
 
-	// Create bold font
-	QFont errorFont;
-	errorFont.setBold(true);
-	QColor errorColor(240, 165, 179);
+  // Create bold font
+  QFont errorFont;
+  errorFont.setBold(true);
+  QColor errorColor(240, 165, 179);
 
-	// Add name of plugin to the row
-	QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
-	nameItem->setFont(errorFont);
-	nameItem->setBackgroundColor(errorColor);
-	pluginsTable->setItem(row, NAME_INDEX, nameItem);
+  // Add name of plugin to the row
+  QTableWidgetItem* nameItem = new QTableWidgetItem(plugin->getPluginName());
+  nameItem->setFont(errorFont);
+  nameItem->setBackgroundColor(errorColor);
+  pluginsTable->setItem(row, NAME_INDEX, nameItem);
 
-	// Add empty checkbox item to the row
-	QTableWidgetItem* enabledItem = new QTableWidgetItem();
-	enabledItem->setBackgroundColor(errorColor);
-	pluginsTable->setItem(row, ENABLED_INDEX, enabledItem);
+  // Add empty checkbox item to the row
+  QTableWidgetItem* enabledItem = new QTableWidgetItem();
+  enabledItem->setBackgroundColor(errorColor);
+  pluginsTable->setItem(row, ENABLED_INDEX, enabledItem);
 
-	// Add status to the row
-	QTableWidgetItem* statusItem = new QTableWidgetItem(NOT_FOUND_STRING);
-	statusItem->setBackgroundColor(errorColor);
-	statusItem->setFont(errorFont);
-	pluginsTable->setItem(row, STATUS_INDEX, statusItem);
+  // Add status to the row
+  QTableWidgetItem* statusItem = new QTableWidgetItem(NOT_FOUND_STRING);
+  statusItem->setBackgroundColor(errorColor);
+  statusItem->setFont(errorFont);
+  pluginsTable->setItem(row, STATUS_INDEX, statusItem);
 
-	// Add version information
-	QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
-	versionItem->setBackgroundColor(errorColor);
-	pluginsTable->setItem(row, VERSION_INDEX, versionItem);
+  // Add version information
+  QTableWidgetItem* versionItem = new QTableWidgetItem(plugin->getVersion());
+  versionItem->setBackgroundColor(errorColor);
+  pluginsTable->setItem(row, VERSION_INDEX, versionItem);
 }
 
 // -----------------------------------------------------------------------------
@@ -260,14 +260,14 @@ void AboutPlugins::on_detailsBtn_clicked()
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_pluginsTable_cellClicked(int row, int column)
 {
-	if (pluginsTable->item(row, STATUS_INDEX)->text() == NOT_FOUND_STRING)
-	{
-		detailsBtn->setDisabled(true);
-	}
-	else
-	{
-		detailsBtn->setEnabled(true);
-	}
+  if (pluginsTable->item(row, STATUS_INDEX)->text() == NOT_FOUND_STRING)
+  {
+    detailsBtn->setDisabled(true);
+  }
+  else
+  {
+    detailsBtn->setEnabled(true);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -275,7 +275,7 @@ void AboutPlugins::on_pluginsTable_cellClicked(int row, int column)
 // -----------------------------------------------------------------------------
 void AboutPlugins::setLoadPreferencesFlag()
 {
-	setLoadPreferencesFlag(0);
+  setLoadPreferencesFlag(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -283,7 +283,7 @@ void AboutPlugins::setLoadPreferencesFlag()
 // -----------------------------------------------------------------------------
 void AboutPlugins::setLoadPreferencesFlag(int state)
 {
-	m_loadPreferencesDidChange = true;
+  m_loadPreferencesDidChange = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -291,16 +291,16 @@ void AboutPlugins::setLoadPreferencesFlag(int state)
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_addPluginBtn_pressed()
 {
-	QString pluginPath = QFileDialog::getOpenFileName(this, tr("Open Plugin File Path"), "", tr("Plugin Files (*.plugin)"));
-	QFileInfo fileInfo(pluginPath);
-	if (fileInfo.suffix() == "plugin")
-	{
-		addPlugin(pluginPath);
-	}
-	else
-	{
-		qDebug() << "Could not add plugin because " << pluginPath << " does not have the 'plugin' file extension!";
-	}
+  QString pluginPath = QFileDialog::getOpenFileName(this, tr("Open Plugin File Path"), "", tr("Plugin Files (*.plugin)"));
+  QFileInfo fileInfo(pluginPath);
+  if (fileInfo.suffix() == "plugin")
+  {
+    addPlugin(pluginPath);
+  }
+  else
+  {
+    qDebug() << "Could not add plugin because " << pluginPath << " does not have the 'plugin' file extension!";
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -308,42 +308,42 @@ void AboutPlugins::on_addPluginBtn_pressed()
 // -----------------------------------------------------------------------------
 void AboutPlugins::addPlugin(QString pluginPath)
 {
-	PluginManager* pluginManager = PluginManager::Instance();
-	FilterManager* fm = FilterManager::Instance();
-	FilterWidgetManager*  fwm = FilterWidgetManager::Instance();
+  PluginManager* pluginManager = PluginManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
+  FilterWidgetManager*  fwm = FilterWidgetManager::Instance();
 
-	QApplication::instance()->processEvents();
-	QPluginLoader* loader = new QPluginLoader(pluginPath);
-	QFileInfo fi(pluginPath);
-	QString fileName = fi.fileName();
-	QObject* plugin = loader->instance();
-	if (plugin)
-	{
-		IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
-		if (ipPlugin)
-		{
-			QString pluginName = ipPlugin->getPluginName();
-			
-			ipPlugin->registerFilterWidgets(fwm);
-			ipPlugin->registerFilters(fm);
-			ipPlugin->setDidLoad(true);
+  QApplication::instance()->processEvents();
+  QPluginLoader* loader = new QPluginLoader(pluginPath);
+  QFileInfo fi(pluginPath);
+  QString fileName = fi.fileName();
+  QObject* plugin = loader->instance();
+  if (plugin)
+  {
+    IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
+    if (ipPlugin)
+    {
+      QString pluginName = ipPlugin->getPluginName();
 
-			ipPlugin->setLocation(pluginPath);
-			pluginManager->addPlugin(ipPlugin);
+      ipPlugin->registerFilterWidgets(fwm);
+      ipPlugin->registerFilters(fm);
+      ipPlugin->setDidLoad(true);
 
-			addPluginToTable(ipPlugin, 0);
-			setLoadPreferencesFlag();
-		}
-	}
-	else
-	{
-		QString message("The plugin did not load with the following error\n");
-		message.append(loader->errorString());
-		QMessageBox::critical(this, "DREAM3D Plugin Load Error",
-			message,
-			QMessageBox::Ok | QMessageBox::Default);
-		delete loader;
-	}
+      ipPlugin->setLocation(pluginPath);
+      pluginManager->addPlugin(ipPlugin);
+
+      addPluginToTable(ipPlugin, 0);
+      setLoadPreferencesFlag();
+    }
+  }
+  else
+  {
+    QString message("The plugin did not load with the following error\n");
+    message.append(loader->errorString());
+    QMessageBox::critical(this, "DREAM3D Plugin Load Error",
+      message,
+      QMessageBox::Ok | QMessageBox::Default);
+    delete loader;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -351,25 +351,25 @@ void AboutPlugins::addPlugin(QString pluginPath)
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_removePluginBtn_pressed()
 {
-	QTableWidgetItem* nameItem = pluginsTable->item(pluginsTable->currentRow(), NAME_INDEX);
+  QTableWidgetItem* nameItem = pluginsTable->item(pluginsTable->currentRow(), NAME_INDEX);
 
-	if (NULL != nameItem)
-	{
-		QString pluginName = nameItem->text();
+  if (NULL != nameItem)
+  {
+    QString pluginName = nameItem->text();
 
-		QMessageBox confirm;
-		confirm.setText("Are you sure that you want to remove '" + pluginName + "'?");
-		confirm.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-		confirm.setDefaultButton(QMessageBox::Yes);
-		confirm.setWindowTitle("Remove Plugin");
-		int answer = confirm.exec();
+    QMessageBox confirm;
+    confirm.setText("Are you sure that you want to remove '" + pluginName + "'?");
+    confirm.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    confirm.setDefaultButton(QMessageBox::Yes);
+    confirm.setWindowTitle("Remove Plugin");
+    int answer = confirm.exec();
 
-		if (answer == QMessageBox::Yes)
-		{
-			deletePlugin(nameItem);
-			m_loadPreferencesDidChange = true;
-		}
-	}
+    if (answer == QMessageBox::Yes)
+    {
+      deletePlugin(nameItem);
+      m_loadPreferencesDidChange = true;
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -377,26 +377,26 @@ void AboutPlugins::on_removePluginBtn_pressed()
 // -----------------------------------------------------------------------------
 void AboutPlugins::deletePlugin(QTableWidgetItem* nameItem)
 {
-	QString pluginName = nameItem->text();
+  QString pluginName = nameItem->text();
 
 #if defined (Q_OS_MAC)
-	QSettings::Format format = QSettings::NativeFormat;
+  QSettings::Format format = QSettings::NativeFormat;
 #else
-	QSettings::Format format = QSettings::IniFormat;
+  QSettings::Format format = QSettings::IniFormat;
 #endif
-	QString filePath;
+  QString filePath;
 
-	QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 
-	filePath = prefs.fileName();
+  filePath = prefs.fileName();
 
-	// Remove plugin from cache
-	prefs.beginGroup("PluginPreferences");
-	prefs.remove(pluginName);
-	prefs.endGroup();
+  // Remove plugin from cache
+  prefs.beginGroup("PluginPreferences");
+  prefs.remove(pluginName);
+  prefs.endGroup();
 
-	// Remove entry from plugin table
-	pluginsTable->removeRow( nameItem->row() );
+  // Remove entry from plugin table
+  pluginsTable->removeRow( nameItem->row() );
 }
 
 // -----------------------------------------------------------------------------
@@ -425,10 +425,10 @@ void AboutPlugins::writePluginCache()
     QString filePath = (*proxyIter)->getFilePath();
     bool enabled = (*proxyIter)->getEnabled();
 
-	prefs.beginGroup(pluginName);
-	prefs.setValue(QString::number(PATH_INDEX), filePath);
-	prefs.setValue(QString::number(ENABLED_INDEX), enabled);
-	prefs.endGroup();
+  prefs.beginGroup(pluginName);
+  prefs.setValue(QString::number(PATH_INDEX), filePath);
+  prefs.setValue(QString::number(ENABLED_INDEX), enabled);
+  prefs.endGroup();
   }
 
   prefs.endGroup();
@@ -462,12 +462,12 @@ void AboutPlugins::readCheckState(QCheckBox* checkBox, QString pluginName)
 // -----------------------------------------------------------------------------
 void AboutPlugins::displayDetailsWindow(QTableWidgetItem* item)
 {
-	QTableWidgetItem* statusItem = pluginsTable->item(item->row(), STATUS_INDEX);
+  QTableWidgetItem* statusItem = pluginsTable->item(item->row(), STATUS_INDEX);
 
-	if (NULL != statusItem && statusItem->text() != NOT_FOUND_STRING)
-	{
-		on_detailsBtn_clicked();
-	}
+  if (NULL != statusItem && statusItem->text() != NOT_FOUND_STRING)
+  {
+    on_detailsBtn_clicked();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -576,7 +576,13 @@ bool AboutPlugins::getLoadPreferencesDidChange()
   return m_loadPreferencesDidChange;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutPlugins::togglePluginState(int state)
+{
 
+}
 
 
 

@@ -34,9 +34,9 @@
 #include <iostream>
 
 #include <QtCore/QVector>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QGraphicsItem>
-#include <QtGui/QRubberBand>
+#include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QGraphicsItem>
+#include <QtWidgets/QRubberBand>
 
 
 class UserInitArea;

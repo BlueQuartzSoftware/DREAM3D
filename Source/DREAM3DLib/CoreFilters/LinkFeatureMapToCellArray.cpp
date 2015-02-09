@@ -118,8 +118,8 @@ void LinkFeatureMapToCellArray::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m)
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m.get())
   {
     return;
   }
@@ -170,7 +170,7 @@ void LinkFeatureMapToCellArray::execute()
     return;
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName());
   int64_t totalPoints = m_SelectedCellDataPtr.lock()->getNumberOfTuples();
 
   int maxIndex = 0;

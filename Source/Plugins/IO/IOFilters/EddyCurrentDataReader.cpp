@@ -54,7 +54,7 @@
 // -----------------------------------------------------------------------------
 EddyCurrentDataReader::EddyCurrentDataReader() :
   AbstractFilter(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_MetaDataAttributeMatrixName(DREAM3D::StringConstants::MetaData),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_HasMultipleValues("False"),
@@ -108,12 +108,11 @@ void EddyCurrentDataReader::readFilterParameters(AbstractFilterParametersReader*
 int EddyCurrentDataReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(MetaDataAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(MetaDataAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -124,15 +123,19 @@ void EddyCurrentDataReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
+
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
   tDims.resize(1);
   tDims[0] = 1;
   AttributeMatrix::Pointer metaAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getMetaDataAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::MetaData);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == metaAttrMat.get()) { return; }
 
   m_InStream.setFileName(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -205,7 +208,7 @@ void shuffleArray(IDataArray::Pointer inputData, IDataArray::Pointer inputDataCo
     size_t newPos = (row*xDim) + col;
     copyPtr[newPos] = inPtr[i];
   }
- }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -224,7 +227,7 @@ void EddyCurrentDataReader::execute()
 // -----------------------------------------------------------------------------
 int EddyCurrentDataReader::readHeader(QFile &reader)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   AttributeMatrix::Pointer metaAttrMat = m->getAttributeMatrix(getMetaDataAttributeMatrixName());
 
@@ -306,7 +309,7 @@ int EddyCurrentDataReader::readHeader(QFile &reader)
   }
 
   //resize the attribute matrix with the number of points (which we now know from reading the header
-  //Note that the tDims should actually be a vector of 3 for the x, y and z dims....but this will atleast 
+  //Note that the tDims should actually be a vector of 3 for the x, y and z dims....but this will atleast
   //size the arrays to the right size and we will figure out the x, y and z dims later
   tDims[0] = m_DataPointCount;
   cellAttrMat->resizeAttributeArrays(tDims);
@@ -338,7 +341,7 @@ int EddyCurrentDataReader::readHeader(QFile &reader)
 // -----------------------------------------------------------------------------
 int EddyCurrentDataReader::readFile(QFile &reader)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   AttributeMatrix::Pointer metaAttrMat = m->getAttributeMatrix(getMetaDataAttributeMatrixName());
 
@@ -477,9 +480,9 @@ int EddyCurrentDataReader::readFile(QFile &reader)
   xStep = (xMax-xMin)/float(xDim-1);
   yStep = (yMax-yMin)/float(yDim-1);
 
-  m->setDimensions(xDim, yDim, 1);
-  m->setResolution(xStep, yStep, ((xStep+yStep)/2.0));
-  m->setOrigin(xMin, yMin, 0.0);
+  m->getGeometryAs<ImageGeom>()->setDimensions(xDim, yDim, 1);
+  m->getGeometryAs<ImageGeom>()->setResolution(xStep, yStep, ((xStep+yStep)/2.0));
+  m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, 0.0);
 
   QVector<size_t> tDims(3,0);
   tDims[0] = xDim;

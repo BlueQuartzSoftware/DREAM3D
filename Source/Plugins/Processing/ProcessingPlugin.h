@@ -53,8 +53,9 @@
 class ProcessingPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.ProcessingPlugin")
+
 
   public:
     ProcessingPlugin();
@@ -163,6 +164,7 @@ class ProcessingPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     ProcessingPlugin(const ProcessingPlugin&); // Copy Constructor Not Implemented

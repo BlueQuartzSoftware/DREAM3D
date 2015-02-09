@@ -39,16 +39,16 @@
 #include <iostream>
 
 #include <QtCore/QModelIndex>
-#include <QtGui/QComboBox>
+#include <QtWidgets/QComboBox>
 #include <QtGui/QPainter>
-#include <QtGui/QStyleOptionViewItemV4>
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QStyleOptionViewItemV4>
+#include <QtWidgets/QLineEdit>
 #include <QtGui/QDoubleValidator>
-#include <QtGui/QStyledItemDelegate>
+#include <QtWidgets/QStyledItemDelegate>
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 /**

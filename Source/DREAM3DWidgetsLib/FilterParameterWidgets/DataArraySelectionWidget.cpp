@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
-#include <QtGui/QListWidgetItem>
+#include <QtWidgets/QListWidgetItem>
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"

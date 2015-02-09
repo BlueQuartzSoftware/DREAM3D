@@ -43,7 +43,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 #include <QtCore/QUrl>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 
 
 // -----------------------------------------------------------------------------

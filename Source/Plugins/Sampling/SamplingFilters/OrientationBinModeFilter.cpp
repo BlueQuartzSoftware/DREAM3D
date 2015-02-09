@@ -50,12 +50,12 @@
 // -----------------------------------------------------------------------------
 OrientationBinModeFilter::OrientationBinModeFilter() :
   AbstractFilter(),
-  m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -116,7 +116,6 @@ void OrientationBinModeFilter::readFilterParameters(AbstractFilterParametersRead
 int OrientationBinModeFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
@@ -144,12 +143,19 @@ void OrientationBinModeFilter::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void OrientationBinModeFilter::dataCheck()
 {
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName()); }
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer == false)
+  {
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+
+    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  }
   else
   {
     getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
-    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
   }
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
@@ -175,22 +181,22 @@ void OrientationBinModeFilter::preflight()
 
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
+  else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
 
   size_t dims[3];
-  m->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * m->getXRes();
-  float sizey = (dims[1]) * m->getYRes();
-  float sizez = (dims[2]) * m->getZRes();
+  float sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
+  float sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
+  float sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
 
-  m->setDimensions(m_XP, m_YP, m_ZP);
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -219,13 +225,13 @@ void OrientationBinModeFilter::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
+  DataContainer::Pointer m;
+  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
+  else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
 
-  if(m->getXRes() == m_Resolution.x
-      && m->getYRes() == m_Resolution.y
-      && m->getZRes() == m_Resolution.z)
+  if(m->getGeometryAs<ImageGeom>()->getXRes() == m_Resolution.x
+      && m->getGeometryAs<ImageGeom>()->getYRes() == m_Resolution.y
+      && m->getGeometryAs<ImageGeom>()->getZRes() == m_Resolution.z)
   {
     return;
   }
@@ -233,11 +239,11 @@ void OrientationBinModeFilter::execute()
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
 
   size_t dims[3];
-  m->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * m->getXRes();
-  float sizey = (dims[1]) * m->getYRes();
-  float sizez = (dims[2]) * m->getZRes();
+  float sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
+  float sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
+  float sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
@@ -251,7 +257,7 @@ void OrientationBinModeFilter::execute()
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
-    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getZPoints()) * 100);
+    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getGeometryAs<ImageGeom>()->getZPoints()) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int j = 0; j < m_YP; j++)
     {
@@ -260,10 +266,10 @@ void OrientationBinModeFilter::execute()
         x = (k * m_Resolution.x);
         y = (j * m_Resolution.y);
         z = (i * m_Resolution.z);
-        col = int(x / m->getXRes());
-        row = int(y / m->getYRes());
-        plane = int(z / m->getZRes());
-        index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
+        col = int(x / m->getGeometryAs<ImageGeom>()->getXRes());
+        row = int(y / m->getGeometryAs<ImageGeom>()->getYRes());
+        plane = int(z / m->getGeometryAs<ImageGeom>()->getZRes());
+        index_old = (plane * m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) + (row * m->getGeometryAs<ImageGeom>()->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         newindicies[index] = index_old;
       }
@@ -301,15 +307,15 @@ void OrientationBinModeFilter::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)
   {
-    totalPoints = m->getTotalPoints();
+    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
     QVector<bool> activeObjects(totalFeatures, false);

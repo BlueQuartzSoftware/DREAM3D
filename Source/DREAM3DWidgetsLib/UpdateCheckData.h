@@ -38,7 +38,7 @@
 #ifndef _UPDATECHECKDATA_H_
 #define _UPDATECHECKDATA_H_
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 #if defined (QT_CORE_LIB)
 #include <QtCore/QMetaType>

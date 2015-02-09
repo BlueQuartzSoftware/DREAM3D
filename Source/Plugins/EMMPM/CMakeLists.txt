@@ -7,11 +7,10 @@ project(EMMPM)
 set(PLUGIN_NAME EMMPM)
 
 # --------------------------------------------------------------------
-# Look for Qt 4 as we need it for the plugin GUI to be generated
-if(NOT QT4_FOUND)
-    message(FATAL_ERROR "Qt 4 is Needed for this ${PLUGIN_NAME}Plugin.")
+# Look for Qt 5 as we need it for the plugin GUI to be generated
+if(NOT Qt5Core_FOUND)
+    message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
-include( ${QT_USE_FILE} )
 
 add_subdirectory(${EMMPM_SOURCE_DIR}/EMMPMLib ${EMMPM_BINARY_DIR}/EMMPMLib)
 
@@ -190,14 +189,15 @@ endif()
 
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
-                    ${QT_QTCORE_LIBRARY}
+                    Qt5::Core
                     EMMPMLib
                     DREAM3DLib
-                    ${QT_QTGUI_LIBRARY}
+                    Qt5::Gui Qt5::Widgets
                     QtSupport
                     DREAM3DWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+qt5_use_modules(${PROJECT_NAME} Core Gui Widgets)
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name

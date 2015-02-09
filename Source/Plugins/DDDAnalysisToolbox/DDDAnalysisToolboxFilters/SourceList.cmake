@@ -15,7 +15,7 @@ START_FILTER_GROUP(${DDDAnalysisToolbox_BINARY_DIR} "${_filterGroupName}" "DDDAn
 set(_PublicFilters
   LocalDislocationDensityCalculator
   IdentifyDislocationSegments
-
+  ParaDisReader
 )
 
 

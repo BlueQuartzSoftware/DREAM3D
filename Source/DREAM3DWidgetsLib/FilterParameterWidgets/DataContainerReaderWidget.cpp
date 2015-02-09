@@ -39,11 +39,11 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include <QtGui/QLabel>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QFileDialog>
 #include <QtGui/QStandardItemModel>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QListWidget>
+#include <QtCore/QItemSelectionModel>
+#include <QtWidgets/QListWidget>
 
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 

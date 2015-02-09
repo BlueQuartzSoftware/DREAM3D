@@ -6,9 +6,9 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QStandardItemModel>
-#include <QtGui/QItemSelectionModel>
+#include <QtCore/QItemSelectionModel>
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"

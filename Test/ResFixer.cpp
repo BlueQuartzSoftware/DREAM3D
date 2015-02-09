@@ -147,12 +147,12 @@ int AngResFixer::fixFile()
   err = fixHeaderValues(in, headerLines);
 
 
-  FILE* out = fopen(m_OutputFileName.toAscii().data(), "wb");
+  FILE* out = fopen(m_OutputFileName.toLatin1().data(), "wb");
 
   // Write out the header
   for (QVector<QString>::iterator hline = headerLines.begin(); hline != headerLines.end(); ++hline )
   {
-    fprintf(out, "%s", (*hline).toAscii().data());
+    fprintf(out, "%s", (*hline).toLatin1().data());
   }
 
   float* p1 = reader.getPhi1Pointer();

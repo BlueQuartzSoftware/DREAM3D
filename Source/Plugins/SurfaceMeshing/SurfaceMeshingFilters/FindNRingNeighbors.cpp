@@ -73,7 +73,7 @@ void FindNRingNeighbors::setRegionIds(int g, int r)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FaceArray::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
+FindNRingNeighbors::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 {
   return m_NRingTriangles;
 }
@@ -81,16 +81,20 @@ FaceArray::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::generate(FaceArray::Pointer trianglesPtr, int32_t* faceLabels)
+int FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels)
 {
-  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
-
+  int64_t* triangles = triangleGeom->getTriPointer(0);
+  int err = 0;
   // Make sure we have the proper connectivity built
-  Int32DynamicListArray::Pointer node2TrianglePtr = trianglesPtr->getFacesContainingVert();
+  CellDynamicList::Pointer node2TrianglePtr = triangleGeom->getCellsContainingVert();
   if (node2TrianglePtr.get() == NULL)
   {
-    trianglesPtr->findFacesContainingVert();
-    node2TrianglePtr = trianglesPtr->getFacesContainingVert();
+    err = triangleGeom->findCellsContainingVert();
+    if(err < 0)
+    {
+      return err;
+    }
+    node2TrianglePtr = triangleGeom->getCellsContainingVert();
   }
 
   // Figure out these boolean values for a sanity check
@@ -102,7 +106,7 @@ void FindNRingNeighbors::generate(FaceArray::Pointer trianglesPtr, int32_t* face
   {
     qDebug() << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << "\n";
     qDebug() << "Region Ids are: " << faceLabels[m_TriangleId * 2] << " & " << faceLabels[m_TriangleId * 2 + 1] << "\n";
-    return;
+    return err;
   }
 #endif
 
@@ -114,18 +118,18 @@ void FindNRingNeighbors::generate(FaceArray::Pointer trianglesPtr, int32_t* face
   {
     // Make a copy of the 1 Ring Triangles that we just found so that we can use those triangles as the
     // seed triangles for the 2 Ring triangles
-    FaceArray::UniqueFaceIds_t lcvTriangles(m_NRingTriangles);
+    UniqueFaceIds_t lcvTriangles(m_NRingTriangles);
 
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
-    for(FaceArray::UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
+    for(UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
-      FaceArray::Face_t& face = triangles[*triIter];
+      int64_t triangleIdx = *triIter;
       // For each node, get the triangle ids that the node belongs to
       for(int i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        uint16_t tCount = node2TrianglePtr->getNumberOfElements(face.verts[i]);
-        int32_t* data = node2TrianglePtr->getElementListPointer(face.verts[i]);
+        uint16_t tCount = node2TrianglePtr->getNumberOfElements(triangles[triangleIdx*3+i]);
+        int64_t* data = node2TrianglePtr->getElementListPointer(triangles[triangleIdx*3+i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
         for(uint16_t t = 0; t < tCount; ++t)
@@ -141,5 +145,6 @@ void FindNRingNeighbors::generate(FaceArray::Pointer trianglesPtr, int32_t* face
       }
     }
   }
+  return err;
 
 }

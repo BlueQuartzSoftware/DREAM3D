@@ -44,10 +44,9 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
-
 
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 
 /*

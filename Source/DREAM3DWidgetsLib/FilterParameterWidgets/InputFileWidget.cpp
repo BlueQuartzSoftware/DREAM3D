@@ -38,8 +38,8 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDir>
 
-#include <QtGui/QLabel>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QFileDialog>
 
 #include "QtSupport/QFileCompleter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"

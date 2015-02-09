@@ -866,7 +866,7 @@ herr_t testReadPointer2DArrayDataset(hid_t file_id)
   herr_t retErr = 0;
   hid_t did = -1;
   /* Open the dataset. */
-  if ( (did = H5Dopen( file_id, dsetName.toAscii().data(), H5P_DEFAULT )) < 0 )
+  if ( (did = H5Dopen( file_id, dsetName.toLatin1().data(), H5P_DEFAULT )) < 0 )
   {
     return -2;
   }
@@ -1056,7 +1056,7 @@ void QH5LiteTest()
 // herr_t err = -1;
   hid_t   file_id = 0;
   /* Create a new file using default properties. */
-  file_id = H5Fcreate( UnitTest::H5LiteTest::FileName.toAscii().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+  file_id = H5Fcreate( UnitTest::H5LiteTest::FileName.toLatin1().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
   DREAM3D_REQUIRE(file_id > 0);
   //Create the Extra Groups
   hid_t sintGid = H5Gcreate(file_id, "Signed Int", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
@@ -1179,7 +1179,7 @@ void TestLargeFileSupport()
   // herr_t err = -1;
   hid_t file_id;
   /* Create a new file using default properties. */
-  file_id = H5Fcreate(UnitTest::H5LiteTest::LargeFile.toAscii().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+  file_id = H5Fcreate(UnitTest::H5LiteTest::LargeFile.toLatin1().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
   DREAM3D_REQUIRE(file_id > 0);
   QVector<int > buffer(1000000); // Create a 4 MegaByte Buffer
   int32_t rank = 1;

@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( DREAM3DTools )
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
@@ -64,7 +64,7 @@ function(COMPILE_TOOL)
         VERSION_MINOR ${D3DTOOL_DREAM3D_VER_MINOR}
         VERSION_PATCH ${D3DTOOL_DREAM3D_VER_PATCH}
         BINARY_DIR    ${D3DTOOL_BINARY_DIR}
-        LINK_LIBRARIES ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib "${D3DTOOL_LINK_LIBRARIES}"
+        LINK_LIBRARIES Qt5::Core EbsdLib DREAM3DLib "${D3DTOOL_LINK_LIBRARIES}"
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
@@ -127,13 +127,13 @@ COMPILE_TOOL(
 #    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
 #    COMPONENT     Applications
 #    INSTALL_DEST  "${install_dir}"
-#    LINK_LIBRARIES ${QT_QTGUI_LIBRARY}
+#    LINK_LIBRARIES Qt5::Gui Qt5::Widgets
 #)
 
 
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-#QT4_WRAP_CPP( DREAM3DFileStructure_Generated_MOC_SRCS ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.h)
+#QT5_WRAP_CPP( DREAM3DFileStructure_Generated_MOC_SRCS ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.h)
 COMPILE_TOOL(
     TARGET DREAM3DFileStructure
     SOURCES ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.cpp
@@ -145,7 +145,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES ${QT_QTGUI_LIBRARY}
+    LINK_LIBRARIES Qt5::Gui Qt5::Widgets
 )
 
 # Create a Command line tool for the DocsToPdf
@@ -165,7 +165,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
+    LINK_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets
 )
 endif()
 

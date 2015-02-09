@@ -38,8 +38,8 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
 
-#include <QtGui/QComboBox>
-#include <QtGui/QLabel>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QLabel>
 
 #include "DREAM3DLib/Common/ShapeType.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"

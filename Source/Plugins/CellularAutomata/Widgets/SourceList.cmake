@@ -47,7 +47,7 @@ set_source_files_properties( ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS} PROPER
 
 # --------------------------------------------------------------------
 # -- Run UIC on the necessary files
-QT4_WRAP_UI( ${PLUGIN_NAME}_Widgets_Generated_UI_HDRS ${${PLUGIN_NAME}_Widgets_UIS} )
+QT5_WRAP_UI( ${PLUGIN_NAME}_Widgets_Generated_UI_HDRS ${${PLUGIN_NAME}_Widgets_UIS} )
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs
@@ -57,7 +57,7 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${${PLUGIN_NAME}_Widgets_Generate
 # --------------------------------------------------------------------
 # If you are doing more advanced Qt programming where you are including resources you will have to enable this section
 # with your own cmake codes to include your resource file (.qrc) and any other needed files
-# QT4_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS ""  )
+# QT5_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS ""  )
 # cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRCS}" "" "0")
 
 

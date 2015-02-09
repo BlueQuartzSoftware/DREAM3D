@@ -151,7 +151,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
 #endif
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
-        //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
+        //qWarning(aPluginDir.absoluteFilePath(fileName).toLatin1(), "%s");
         //qDebug() << "Adding " << aPluginDir.absoluteFilePath(fileName)() << "\n";
       }
     }

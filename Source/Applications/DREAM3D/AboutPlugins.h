@@ -36,7 +36,7 @@
 #ifndef ABOUTPLUGINS_H
 #define ABOUTPLUGINS_H
 
-#include <QtGui/QCheckBox>
+#include <QtWidgets/QCheckBox>
 
 #include <QtCore/QObject>
 
@@ -60,7 +60,7 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
     void setupGui();
 
     void addPluginToTable(IDREAM3DPlugin* plugin, int row);
-	void addPlaceHolderToTable(DREAM3DPlugin* plugin, int row);
+    void addPlaceHolderToTable(DREAM3DPlugin* plugin, int row);
 
     void loadPlugins(QList<PluginProxy::Pointer> proxies);
 
@@ -69,24 +69,25 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
     QList<PluginProxy::Pointer> getPluginCheckBoxSettingsFromGUI();
     static QList<PluginProxy::Pointer> readPluginCache();
 
-	void writePluginCache();
+    void writePluginCache();
 
     bool getLoadPreferencesDidChange();
 
-	void deletePlugin(QTableWidgetItem* nameItem);
+    void deletePlugin(QTableWidgetItem* nameItem);
 
-	void addPlugin(QString pluginPath);
+    void addPlugin(QString pluginPath);
 
-	void setLoadPreferencesFlag();
+    void setLoadPreferencesFlag();
 
   public slots:
     void on_closeBtn_clicked();
     void on_detailsBtn_clicked();
-	void on_addPluginBtn_pressed();
-	void on_removePluginBtn_pressed();
-	void on_pluginsTable_cellClicked(int row, int column);
+    void on_addPluginBtn_pressed();
+    void on_removePluginBtn_pressed();
+    void on_pluginsTable_cellClicked(int row, int column);
     void displayDetailsWindow(QTableWidgetItem* item);
-	void setLoadPreferencesFlag(int state);
+    void setLoadPreferencesFlag(int state);
+    void togglePluginState(int state);
 
   private:
     bool m_loadPreferencesDidChange;

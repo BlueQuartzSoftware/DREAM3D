@@ -39,7 +39,7 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QString>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 class QCheckBox;
 

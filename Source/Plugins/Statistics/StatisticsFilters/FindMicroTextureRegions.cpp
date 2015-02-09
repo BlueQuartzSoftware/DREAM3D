@@ -45,8 +45,8 @@
 // -----------------------------------------------------------------------------
 FindMicroTextureRegions::FindMicroTextureRegions() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_MicroTextureRegionNumCellsArrayName(DREAM3D::FeatureData::MicroTextureRegionNumCells),
   m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FeatureData::MicroTextureRegionFractionOccupied),
   m_MicroTextureRegionNumCells(NULL),
@@ -95,7 +95,6 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
 int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(MicroTextureRegionFractionOccupiedArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(MicroTextureRegionNumCellsArrayName)
@@ -117,6 +116,10 @@ void FindMicroTextureRegions::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   // Feature Data
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionNumCellsArrayName() );
@@ -142,6 +145,7 @@ void FindMicroTextureRegions::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -160,7 +164,7 @@ void FindMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::find_microtextureregions()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t nummicrotextureregions = m_MicroTextureRegionNumCellsPtr.lock()->getNumberOfTuples();
@@ -181,12 +185,12 @@ void FindMicroTextureRegions::find_microtextureregions()
   double* microtextureregionzmins = m_MicroTextureRegionZMins->getPointer(0);
   double* microtextureregionzmaxs = m_MicroTextureRegionZMaxs->getPointer(0);
 
-  float xPoints = m->getXPoints();
-  float yPoints = m->getYPoints();
-  float zPoints = m->getZPoints();
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+  float yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+  float zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   // Initialize every element to 0.0 or max Dimension
   for (size_t i = 0; i < nummicrotextureregions * 1; i++)

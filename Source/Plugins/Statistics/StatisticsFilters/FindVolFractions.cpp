@@ -46,8 +46,8 @@
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
@@ -93,7 +93,6 @@ void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* read
 int FindVolFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(VolFractionsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)

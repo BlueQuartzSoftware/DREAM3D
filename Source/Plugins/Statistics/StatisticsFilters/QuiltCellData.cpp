@@ -45,7 +45,7 @@
 QuiltCellData::QuiltCellData() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
-  m_OutputDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
+  m_OutputDataContainerName(DREAM3D::Defaults::NewDataContainerName),
   m_OutputAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputArrayName("Quilt_Data"),
   m_OutputArray(NULL)
@@ -105,7 +105,6 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
@@ -175,19 +174,24 @@ void QuiltCellData::dataCheck()
     return;
   }
 
-
   // Next check the existing DataContainer/AttributeMatrix
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   //Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3] = { 0, 0, 0};
-  m->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  float res[3] = {m_QuiltStep.x* m->getXRes(), m_QuiltStep.y* m->getYRes(), m_QuiltStep.z* m->getZRes()};
+  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  float res[3] = {m_QuiltStep.x * m->getGeometryAs<ImageGeom>()->getXRes(), m_QuiltStep.y * m->getGeometryAs<ImageGeom>()->getYRes(), m_QuiltStep.z * m->getGeometryAs<ImageGeom>()->getZRes()};
 
   // Create a new DataContainer
-  VolumeDataContainer* m2 = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName());
+  DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer newImage = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m2->setGeometry(newImage);
 
   int newDimX = int(dcDims[0] / m_QuiltStep.x);
   int newDimY = int(dcDims[1] / m_QuiltStep.y);
@@ -196,17 +200,17 @@ void QuiltCellData::dataCheck()
   if(dcDims[1] == 1) { newDimY = 1; }
   if(dcDims[2] == 1) { newDimZ = 1; }
 
-  m2->setDimensions(newDimX, newDimY, newDimZ);
-  m2->setResolution(res);
-  m2->setOrigin(0.0f, 0.0f, 0.0f);
+  m2->getGeometryAs<ImageGeom>()->setDimensions(newDimX, newDimY, newDimZ);
+  m2->getGeometryAs<ImageGeom>()->setResolution(res);
+  m2->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
   //Create the cell attrMat in the new data container
   QVector<size_t> tDims(3, 0);
-  tDims[0] = m2->getXPoints();
-  tDims[1] = m2->getYPoints();
-  tDims[2] = m2->getZPoints();
+  tDims[0] = m2->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m2->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m2->getGeometryAs<ImageGeom>()->getZPoints();
   AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == newCellAttrMat.get()) { return; }
 
   //Get the name and create the array in the new data attrMat
   QVector<size_t> dims(1, 1);
@@ -282,13 +286,13 @@ void QuiltCellData::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedCellArrayPath.getDataContainerName());
-  VolumeDataContainer* m2 = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedCellArrayPath.getDataContainerName());
+  DataContainer::Pointer m2 = getDataContainerArray()->getDataContainer(getOutputDataContainerName());
 
   size_t dcDims[3];
-  m->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
   size_t dc2Dims[3];
-  m2->getDimensions(dc2Dims[0], dc2Dims[1], dc2Dims[2]);
+  m2->getGeometryAs<ImageGeom>()->getDimensions(dc2Dims[0], dc2Dims[1], dc2Dims[2]);
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
   if (NULL == inputData.get())

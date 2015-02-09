@@ -23,7 +23,7 @@ set(_PublicFilters
   ThresholdExample
   ArraySelectionExample
   GenericExample
-  MakeVolumeDataContainer
+  MakeDataContainer
 )
 
 

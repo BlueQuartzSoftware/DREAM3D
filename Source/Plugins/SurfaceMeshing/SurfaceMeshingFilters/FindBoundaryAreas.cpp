@@ -11,9 +11,9 @@
 // -----------------------------------------------------------------------------
 FindBoundaryAreas::FindBoundaryAreas() :
   AbstractFilter(),
-  m_FaceFeatureAttributeMatrixPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, ""),
-  m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
-  m_SurfaceMeshFeatureFaceIdsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FaceFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, ""),
+  m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
+  m_SurfaceMeshFeatureFaceIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_SurfaceMeshBoundaryAreasArrayName("BoundaryAreas"),
   m_SurfaceMeshTriangleAreas(NULL),
   m_SurfaceMeshFeatureFaceIds(NULL),
@@ -63,7 +63,6 @@ void FindBoundaryAreas::readFilterParameters(AbstractFilterParametersReader* rea
 int FindBoundaryAreas::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceFeatureAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayPath)
@@ -88,11 +87,10 @@ void FindBoundaryAreas::dataCheck()
   if( NULL != m_SurfaceMeshTriangleAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
   if(m_FaceFeatureAttributeMatrixPath.isEmpty() == true)
   {
     setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), "An Attribute Matrix from the Surface Mesh DataContainer must be selected.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "An Attribute Matrix from the DataContainer must be selected.", getErrorCondition());
     return;
   }
   if(m_SurfaceMeshBoundaryAreasArrayName.isEmpty() == true)

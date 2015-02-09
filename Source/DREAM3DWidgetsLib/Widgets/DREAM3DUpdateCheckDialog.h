@@ -40,8 +40,8 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QSettings>
 
-#include <QtGui/QWidget>
-#include <QtGui/QDialog>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QDialog>
 
 
 #include "ui_DREAM3DUpdateCheckDialog.h"

@@ -56,18 +56,18 @@ cmp_IDE_GENERATED_PROPERTIES("DREAM3DWidgetsLib/Widgets/UI_Files" "${DREAM3DWidg
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT4_WRAP_CPP( DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_Widgets_HDRS} )
+#QT5_WRAP_CPP( DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_Widgets_HDRS} )
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
 set_source_files_properties( ${DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # -- Run MOC and UIC on the necessary files
-# QT4_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
+# QT5_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
-QT4_WRAP_UI( DREAM3DWidgetsLib_Widgets_Generated_UI_HDRS ${DREAM3DWidgetsLib_Widgets_UIS} )
+QT5_WRAP_UI( DREAM3DWidgetsLib_Widgets_Generated_UI_HDRS ${DREAM3DWidgetsLib_Widgets_UIS} )
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs

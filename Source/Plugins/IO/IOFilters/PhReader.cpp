@@ -56,7 +56,7 @@
 // -----------------------------------------------------------------------------
 PhReader::PhReader() :
   FileReader(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -121,7 +121,6 @@ void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
@@ -150,11 +149,14 @@ void PhReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, PhReader>(this, getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -176,8 +178,8 @@ void PhReader::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
@@ -253,16 +255,15 @@ void PhReader::execute()
 // -----------------------------------------------------------------------------
 int PhReader::readHeader()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
   int nx = 0;
   int ny = 0;
   int nz = 0;
 
-
   // Read Line #1 which has the dimensions
   fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
-  m->setDimensions(nx, ny, nz);
+  m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
 
   char buf[BUF_SIZE];
   // Read Line #2 and dump it
@@ -279,14 +280,14 @@ int PhReader::readHeader()
 // -----------------------------------------------------------------------------
 int  PhReader::readFile()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
-  size_t totalPoints = m->getTotalPoints();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   QVector<size_t> tDims(3, 0);
-  tDims[0] = m->getXPoints();
-  tDims[1] = m->getYPoints();
-  tDims[2] = m->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
@@ -303,8 +304,8 @@ int  PhReader::readFile()
   }
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;

@@ -59,6 +59,8 @@
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+
 #include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
@@ -71,7 +73,6 @@
 #include "OrientationLib/OrientationOps/TetragonalLowOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "QtSupport/PoleFigureImageUtilities.h"
@@ -95,10 +96,10 @@ WritePoleFigure::WritePoleFigure() :
   m_LambertSize(32),
   m_NumColors(32),
   m_ImageLayout(DREAM3D::Layout::Square),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -196,7 +197,6 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
 int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
@@ -249,6 +249,10 @@ void WritePoleFigure::dataCheck()
     m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() < 0) { return; }
+
+    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCellPhasesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
     //typedef DataArray<unsigned int> XTalStructArrayType;
     m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -308,11 +312,11 @@ void WritePoleFigure::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellPhasesArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellPhasesArrayPath.getDataContainerName());
 
   /* Place all your code to execute your filter here. */
   size_t dims[3];
-  m->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -333,7 +337,7 @@ void WritePoleFigure::execute()
     missingGoodVoxels = false;
   }
   // Find how many phases we have by getting the number of Crystal Structures
-  int64_t numPoints = m->getTotalPoints();
+  size_t numPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   int numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t count = 0;
   // Loop over all the voxels gathering the Eulers for a specific phase into an array
@@ -341,7 +345,7 @@ void WritePoleFigure::execute()
   {
     // First find out how many voxels we are going to have. This is probably faster to loop twice than to
     // keep allocating memory everytime we find one.
-    for(int64_t i = 0; i < numPoints; ++i)
+    for(size_t i = 0; i < numPoints; ++i)
     {
       if (m_CellPhases[i] == phase)
       {
@@ -358,7 +362,7 @@ void WritePoleFigure::execute()
 
     // Now loop through the eulers again and this time add them to the subEulers Array
     count = 0;
-    for(int64_t i = 0; i < numPoints; ++i)
+    for(size_t i = 0; i < numPoints; ++i)
     {
       if (m_CellPhases[i] == phase)
       {

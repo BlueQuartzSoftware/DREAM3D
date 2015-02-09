@@ -21,8 +21,9 @@
 class SamplingPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.SamplingPlugin")
+
 
   public:
     SamplingPlugin();
@@ -132,6 +133,7 @@ class SamplingPlugin : public QObject, public IDREAM3DPlugin
     QString             m_Location;
     QString             m_Description;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     SamplingPlugin(const SamplingPlugin&); // Copy Constructor Not Implemented

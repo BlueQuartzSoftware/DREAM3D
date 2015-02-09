@@ -38,7 +38,7 @@
 #define _HELPDIALOG_H_
 
 #include <QtCore/QSharedPointer>
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 //-- UIC generated Header
 #include <ui_HelpDialog.h>

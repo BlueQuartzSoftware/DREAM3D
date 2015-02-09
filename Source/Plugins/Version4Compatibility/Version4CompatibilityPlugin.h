@@ -21,8 +21,9 @@
 class Version4CompatibilityPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.Version4CompatibilityPlugin")
+
 
   public:
     Version4CompatibilityPlugin();
@@ -131,6 +132,7 @@ class Version4CompatibilityPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     Version4CompatibilityPlugin(const Version4CompatibilityPlugin&); // Copy Constructor Not Implemented

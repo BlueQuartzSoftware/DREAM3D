@@ -57,7 +57,7 @@
 // -----------------------------------------------------------------------------
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData)
 {
@@ -121,7 +121,6 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayName)
@@ -149,8 +148,11 @@ void ImportImageStack::dataCheck()
     setErrorCondition(-13);
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, ImportImageStack>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
 
   bool hasMissingFiles = false;
   bool orderAscending = false;
@@ -206,9 +208,9 @@ void ImportImageStack::dataCheck()
     }
     /* ************ End Sanity Check *************************** */
 
-    m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
-    m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+    m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
     QVector<size_t> tDims(3, 0);
     for(int i = 0; i < 3; i++)
@@ -216,7 +218,7 @@ void ImportImageStack::dataCheck()
       tDims[i] = dims[i];
     }
     AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
     QVector<size_t> arraydims(1, 1);
     // This would be for a gray scale image
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName() );
@@ -250,10 +252,10 @@ void ImportImageStack::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
@@ -305,7 +307,7 @@ void ImportImageStack::execute()
     // This is the first image so we need to create our block of data to store the data
     if (z ==  m_InputFileListInfo.StartIndex)
     {
-      m->setDimensions(width, height, fileList.size());
+      m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size());
       if (image.format() == QImage::Format_Indexed8)
       {
         pixelBytes = 1;

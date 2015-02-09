@@ -16,7 +16,7 @@ if(NOT "${DREAM3D_SDK}" STREQUAL "")
 endif()
 
 project(DREAM3DProj)
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
@@ -26,10 +26,7 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0042 OLD)
 
   # CMake 3.1 introduces if() policies on dereferencing variables in quotes
-  if(${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0.2") 
-    cmake_policy(SET CMP0054 NEW)
-  endif()
-
+  cmake_policy(SET CMP0054 NEW)
 endif()
 
 
@@ -106,12 +103,12 @@ set(DREAM3D_REMOVE_TEST_FILES "1")
 # calculate how many commits since the last "tag" was applied to the repository.
 # this basically gives us an always incrementing number for the patch level
 # and we can set the Major and Minor versions as we see fit.
-set(CMP_VERSION_MAJOR "5.1")
+set(CMP_VERSION_MAJOR "5.2")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
 # directory first
-set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} ${Qt5_DIR})
 
 # Build shared libraries
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
@@ -122,127 +119,41 @@ if(BUILD_SHARED_LIBS)
     list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
     if(MSVC)
         list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
-                                    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
+                                        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
     endif()
+
+else()
+  message(FATAL_ERROR "BUILD_SHARED_LIBS Must be set to ON in order to build properly.")
 endif(BUILD_SHARED_LIBS)
 
-# ------------------------------------------------------------------------------
-#  Qt 4 Section
-# ------------------------------------------------------------------------------
-# by default only QtCore and QtGui modules are enabled
-# other modules must be enabled like this:
-if(WIN32)
-   set(QT_USE_QTMAIN TRUE)
-ENDif(WIN32)
 
-# this command finds Qt4 libraries and sets all required variables
-# note that it's Qt4, not QT4 or qt4
-FIND_PACKAGE( Qt4 REQUIRED )
-if(QT4_FOUND)
-   CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
-   CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
-else()
-  message(FATAL_ERROR "Qt version 4.8 is REQUIRED to build DREAM3D")
-endif()
-
-set(QT_USE_QTCORE "TRUE")
-set(QT_USE_QTGUI "TRUE")
-set(QT_USE_QTNETWORK "TRUE")
-set(CMAKE_AUTOMOC TRUE)
-
-# add some useful macros and variables
-# (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
-# contains a path to CMake script)
-INCLUDE( ${QT_USE_FILE} )
+# ---------- Find and Use the Qt5 Libraries -----------------------
+include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
 
 
-# --------------------------------------------------------------------
-# We need the Qt Image Plugins (Most likley) for either the DREAM3D application
-# or the pipeline runner which might load images through one of the plugins
-# so we are just going to look for the plugins here and include them.
-FindQt4Plugins("qgif;qjpeg;qtiff" "${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt"
-                "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
-                "imageformats" )
-
-# Append the locations of the Qt libraries to our Library Search Paths
-list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
+# ---------- Find HDF5 Headers/Libraries -----------------------
+# HDF5 now comes with everything that is needed for CMake to load
+# up the targets (Exported) that it needs. We just need to find where
+# HDF5 is installed.
+include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
 
 # ---------- Find Boost Headers/Libraries -----------------------
 #set(Boost_FIND_REQUIRED FALSE)
 set(Boost_DEBUG FALSE)
 set(Boost_USE_MULTITHREADED TRUE)
 set(Boost_USE_STATIC_LIBS TRUE)
-set(Boost_ADDITIONAL_VERSIONS 1.55.0)
+set(Boost_ADDITIONAL_VERSIONS 1.57)
 set(Boost_FIND_COMPONENTS "")
 set(Boost_NO_BOOST_CMAKE 1)
 FIND_PACKAGE(Boost)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
-# ---------- Find HDF5 Headers/Libraries -----------------------
-# HDF5 now comes with everything that is needed for CMake to load
-# up the targets (Exported) that it needs. We just need to find where
-# HDF5 is installed.
-
-if("${HDF5_INSTALL}" STREQUAL "")
-    set(HDF5_INSTALL  $ENV{HDF5_INSTALL})
-endif()
-
-if( "${HDF5_INSTALL}" STREQUAL "")
-  message(FATAL_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
-                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")
-endif()
-
-
-if(WIN32)
-    set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/cmake/hdf5")
-    set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
-    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/cmake/hdf5 ${CMAKE_MODULE_PATH})
-else()
-    set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/share/cmake")
-    set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
-    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake/hdf5 ${CMAKE_MODULE_PATH})
-endif()
-
-if(0)
-message(STATUS "      HDF5_INSTALL: ${HDF5_INSTALL}")
-message(STATUS "HDF5_ROOT_DIR_HINT: $ENV{HDF5_ROOT_DIR_HINT}")
-message(STATUS "         HDF5_ROOT: $ENV{HDF5_ROOT}")
-endif()
-
-find_package(HDF5)
-if(HDF5_FOUND)
-  file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
-  include_directories(${HDF5_INCLUDE_DIRS} )
-  list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
-
-  message(STATUS "Found HDF5: ${HDF5_INSTALL}")
-  message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
-  if(MSVC_IDE)
-    set(BUILD_TYPES Debug Release)
-  else()
-    set(BUILD_TYPES "${CMAKE_BUILD_TYPE}")
-    if("${BUILD_TYPES}" STREQUAL "")
-        set(BUILD_TYPES "Debug")
-    endif()
-  endif()
-  if(NOT APPLE)
-    AddHDF5CopyInstallRules(LIBVAR HDF5_LIB
-                        LIBNAME hdf5
-                        TYPES ${BUILD_TYPES})
-    AddHDF5CopyInstallRules(LIBVAR HDF5_CPP_LIB
-                        LIBNAME hdf5_cpp
-                        TYPES ${BUILD_TYPES})
-  endif()
-ELSE(HDF5_FOUND)
-    MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
-ENDif(HDF5_FOUND)
-
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set(DREAM3D_USE_PARALLEL_ALGORITHMS "")
-option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" ON)
+option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
 if(DREAM3D_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if(TBB_FOUND)
@@ -261,12 +172,14 @@ endif()
 # --------------------------------------------------------------------
 # DREAM3D needs the Eigen library for Least Squares fit and Eigen
 # value/vector calculations.
+set(DREAM3D_USE_EIGEN "")
 Find_Package(Eigen REQUIRED)
 if(EIGEN_FOUND)
   message(STATUS "Found Eigen Library")
   include_directories( ${EIGEN_INCLUDE_DIRS} )
+  set(DREAM3D_USE_EIGEN "1")
 else()
-  message(WARNING "The Eigen Library is required for parallel algorithms. The Eigen Library could not be located so these algorithms will be compiled in serial mode.")
+  message(WARNING "The Eigen Library is required for some algorithms to execute. These algorithms will be disabled.")
 endif()
 
 # --------------------------------------------------------------------
@@ -280,18 +193,9 @@ endif()
 
 
 # ------------------------------------------------------------------------------
-#  Qwt Section
+#  Qwt Section. Find Qwt and setup copy and install rules
 # ------------------------------------------------------------------------------
-find_package(Qwt)
-if(QWT_FOUND)
-#   message(STATUS "QWT_INCLUDE_DIR: ${QWT_INCLUDE_DIR}")
-    include_directories(${QWT_INCLUDE_DIR})
-#    include_directories(${QWT_INCLUDE_DIR}/qwt)
-    CMP_COPY_DEPENDENT_LIBRARIES("qwt")
-    CMP_LIBRARIES_INSTALL_RULES("qwt" "./")
-else()
-    message(FATAL_ERROR "Qwt is required for this project")
-endif()
+include(${CMP_SOURCE_DIR}/ExtLib/QwtSupport.cmake)
 
 # --------------------------------------------------------------------
 # Now that we have found all of our required libraries and packages we can start the all

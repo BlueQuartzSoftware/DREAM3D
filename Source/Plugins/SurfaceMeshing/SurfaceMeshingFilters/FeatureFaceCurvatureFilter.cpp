@@ -64,10 +64,10 @@ FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter() :
   m_ComputeMeanCurvature(false),
   m_ComputeGaussianCurvature(false),
   m_UseNormalsForCurveFitting(true),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFeatureFaceIdsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
-  m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_SurfaceMeshTriangleCentroidsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceCentroids),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFeatureFaceIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
+  m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshTriangleCentroidsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceCentroids),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
@@ -161,7 +161,6 @@ void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRe
 int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(EdgeAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
@@ -191,17 +190,26 @@ void FeatureFaceCurvatureFilter::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer edgeAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Edge);
+  if(getErrorCondition() < 0 || NULL == edgeAttrMat.get()) { return; }
+
+  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
   if(getErrorCondition() < 0) { return; }
 
-  // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
   {
-    setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+  }
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
+  {
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
 
   // We do not know the size of the array so we can not use the macro so we just manually call
@@ -292,33 +300,33 @@ void FeatureFaceCurvatureFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   // Get our Reference counted Array of Face Structures
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
   // Just to double check we have everything.
-  size_t numTriangles = trianglesPtr->getNumberOfTuples();
+  int64_t numTriangles = triangleGeom->getNumberOfTris();
 
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  Int32DynamicListArray::Pointer vertLinks = trianglesPtr->getFacesContainingVert();
+  CellDynamicList::Pointer vertLinks = triangleGeom->getCellsContainingVert();
   if (NULL == vertLinks.get())
   {
-    trianglesPtr->findFacesContainingVert();
+    triangleGeom->findCellsContainingVert();
   }
 
   // get the QMap from the SharedFeatureFaces filter
   SharedFeatureFaces_t sharedFeatureFaces;
 
   int maxFaceId = 0;
-  for(size_t t = 0; t < numTriangles; ++t)
+  for(int64_t t = 0; t < numTriangles; ++t)
   {
     if(m_SurfaceMeshFeatureFaceIds[t] > maxFaceId) { maxFaceId = m_SurfaceMeshFeatureFaceIds[t]; }
   }
   QVector<int> faceSizes(maxFaceId, 0);
   // Loop through all the Triangles and assign each one to a unique Feature Face Id.
-  for(size_t t = 0; t < numTriangles; ++t)
+  for(int64_t t = 0; t < numTriangles; ++t)
   {
     faceSizes[m_SurfaceMeshFeatureFaceIds[t]]++;
   }
@@ -332,7 +340,7 @@ void FeatureFaceCurvatureFilter::execute()
   }
 
   // Loop through all the Triangles and assign each one to a unique Feature Face Id.
-  for(size_t t = 0; t < numTriangles; ++t)
+  for(int64_t t = 0; t < numTriangles; ++t)
   {
     sharedFeatureFaces[m_SurfaceMeshFeatureFaceIds[t]].push_back(t);
   }
@@ -365,14 +373,14 @@ void FeatureFaceCurvatureFilter::execute()
 
   for(SharedFeatureFaceIterator_t iter = sharedFeatureFaces.begin(); iter != sharedFeatureFaces.end(); ++iter)
   {
-    FaceIds_t& triangleIds = iter.value();
+    FaceIds_t& triangleIds = (*iter).second;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
                                               m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
                                               m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(),
-                                              m_SurfaceMeshGaussianCurvaturesPtr.lock(), m_SurfaceMeshMeanCurvaturesPtr.lock(), trianglesPtr,
+                                              m_SurfaceMeshGaussianCurvaturesPtr.lock(), m_SurfaceMeshMeanCurvaturesPtr.lock(), triangleGeom,
                                               m_SurfaceMeshFaceLabelsPtr.lock(),
                                               m_SurfaceMeshFaceNormalsPtr.lock(),
                                               m_SurfaceMeshTriangleCentroidsPtr.lock(),
@@ -384,7 +392,7 @@ void FeatureFaceCurvatureFilter::execute()
       CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
                                                  m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
                                                  m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(),
-                                                 m_SurfaceMeshGaussianCurvaturesPtr.lock(), m_SurfaceMeshMeanCurvaturesPtr.lock(), trianglesPtr,
+                                                 m_SurfaceMeshGaussianCurvaturesPtr.lock(), m_SurfaceMeshMeanCurvaturesPtr.lock(), triangleGeom,
                                                  m_SurfaceMeshFaceLabelsPtr.lock(),
                                                  m_SurfaceMeshFaceNormalsPtr.lock(),
                                                  m_SurfaceMeshTriangleCentroidsPtr.lock(),

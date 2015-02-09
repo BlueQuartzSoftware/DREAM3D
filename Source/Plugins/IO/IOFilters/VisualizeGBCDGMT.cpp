@@ -44,7 +44,11 @@
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Math/MatrixMath.h"
+
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationOps/CubicOps.h"
+#include "OrientationLib/OrientationOps/HexagonalOps.h"
+#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "IO/IOConstants.h"
 
@@ -56,7 +60,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   AbstractFilter(),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
-  m_GBCDArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
+  m_GBCDArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
@@ -130,7 +134,6 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(MisorientationRotation)
@@ -146,7 +149,7 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getGBCDArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if(getCrystalStructure() == Ebsd::CrystalStructure::UnknownCrystalStructure)
@@ -184,18 +187,20 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
     setOutputFile(absPath);
   }
 
-  // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
-  {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-  }
+  TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
-  // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  // We MUST have Nodes
+  if (NULL == triangles->getVertices().get())
   {
-    setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+  }
+  // We MUST have Triangles defined also.
+  if (NULL == triangles->getTriangles().get())
+  {
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   else
   {
@@ -242,7 +247,7 @@ void VisualizeGBCDGMT::execute()
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getGBCDArrayPath().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getGBCDArrayPath().getDataContainerName());
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
@@ -268,11 +273,6 @@ void VisualizeGBCDGMT::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  // size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();

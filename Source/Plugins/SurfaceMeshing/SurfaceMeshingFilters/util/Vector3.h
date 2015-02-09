@@ -9,8 +9,6 @@
 
 #include <iostream>
 
-#include "DREAM3DLib/DataContainers/VertexArray.h"
-
 template <typename T>
 struct Vector3
 {
@@ -20,7 +18,7 @@ struct Vector3
   //##################RUCTORS ##################//
   Vector3();
   Vector3(double x_, double y_, double z_);
-  Vector3(VertexArray::Vert_t& node);
+  Vector3(float* node);
 
   //################## PUBLIC OPERATORS ##################//
   Vector3& operator+=(Vector3& rhs);
@@ -34,7 +32,7 @@ struct Vector3
   double distance(Vector3& rhs);
   double distance_squared(Vector3& rhs);
   double dot(Vector3& rhs);
-  double dot(VertexArray::Vert_t& rhs);
+  double dot(float* rhs);
   double length();
   double length_squared();
   Vector3& negate();

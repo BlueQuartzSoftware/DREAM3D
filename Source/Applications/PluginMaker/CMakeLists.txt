@@ -1,14 +1,12 @@
 project(PluginMaker)
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
-# ------------------------------------------------------------------------------
-#  Qt 4 Section
-# ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    include( ${QT_USE_FILE} )
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
+
+# --------------------------------------------------------------------
+# Look for Qt 5 as we need it for the plugin GUI to be generated
+if(NOT Qt5Core_FOUND)
+    message(FATAL_ERROR "Qt 5 is Needed for this project")
+endif()
 
 
 # Set the GUI type for different platforms
@@ -69,13 +67,13 @@ cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
 SET(PluginMaker_RCS "")
 
 # -- Run MOC and UIC on the necessary files
-QT4_ADD_RESOURCES( PluginMaker_Generated_RC_SRCS ${PluginMaker_RCS} ${QRC_LICENSE_FILES})
+QT5_ADD_RESOURCES( PluginMaker_Generated_RC_SRCS ${PluginMaker_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
-QT4_WRAP_UI( PluginMaker_Generated_UI_HDRS ${PluginMaker_UIS} )
+QT5_WRAP_UI( PluginMaker_Generated_UI_HDRS ${PluginMaker_UIS} )
 
 # and finally this will run moc:
-#QT4_WRAP_CPP( PluginMaker_Generated_MOC_SRCS ${PluginMaker_MOC_HDRS} )
+#QT5_WRAP_CPP( PluginMaker_Generated_MOC_SRCS ${PluginMaker_MOC_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${PluginMaker_Generated_UI_HDRS}" "")
@@ -103,9 +101,9 @@ if(APPLE)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
 endif(APPLE)
 
-if(Q_WS_WIN)
+if(WIN32)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/${PROJECT_NAME}.ico)
-ENDif(Q_WS_WIN)
+ENDif(WIN32)
 
 set(DEST_DIR ".")
 if(UNIX AND NOT APPLE)
@@ -121,10 +119,9 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES ${QT_LIBRARIES} QtSupport
+    LINK_LIBRARIES QtSupport
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-#    QT_PLUGINS    ${QT_PLUGINS}
-#    OTHER_PLUGINS ${OTHER_PLUGINS}
+    QT5_MODULES   ${Qt5_COMPONENTS}
     COMPONENT     Applications
     INSTALL_DEST  ${DEST_DIR}
 )

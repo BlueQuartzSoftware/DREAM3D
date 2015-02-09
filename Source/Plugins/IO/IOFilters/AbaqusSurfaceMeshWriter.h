@@ -134,7 +134,7 @@ class  AbaqusSurfaceMeshWriter : public AbstractFilter
     void dataCheck();
 
   private:
-    int writeHeader(FILE* f, int nodeCount, int triCount, int featureCount);
+    int writeHeader(FILE* f, int64_t nodeCount, int64_t triCount, int featureCount);
     int writeNodes(FILE* f);
     int writeTriangles(FILE* f);
     int writeFeatures(FILE* f);

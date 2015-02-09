@@ -61,14 +61,14 @@ class CalculateTriangleGroupCurvatures
 {
   public:
     CalculateTriangleGroupCurvatures(int nring,
-                                     QVector<int> triangleIds, bool useNormalsForCurveFitting,
+                                     std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting,
                                      DoubleArrayType::Pointer principleCurvature1,
                                      DoubleArrayType::Pointer principleCurvature2,
                                      DoubleArrayType::Pointer principleDirection1,
                                      DoubleArrayType::Pointer principleDirection2,
                                      DoubleArrayType::Pointer gaussianCurvature,
                                      DoubleArrayType::Pointer meanCurvature,
-                                     FaceArray::Pointer trianglesPtr,
+                                     TriangleGeom::Pointer trianglesGeom,
                                      DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
                                      DataArray<double>::Pointer surfaceMeshFaceNormals,
                                      DataArray<double>::Pointer surfaceMeshTriangleCentroids,
@@ -77,6 +77,8 @@ class CalculateTriangleGroupCurvatures
     virtual ~CalculateTriangleGroupCurvatures();
 
     void operator()() const;
+
+  typedef std::set<int64_t> UniqueFaceIds_t;
 
   protected:
     CalculateTriangleGroupCurvatures();
@@ -89,12 +91,12 @@ class CalculateTriangleGroupCurvatures
      * @param name The name of the data array being used.
      * @return
      */
-    DataArray<double>::Pointer extractPatchData(int triId, FaceArray::UniqueFaceIds_t& triPatch,
+    DataArray<double>::Pointer extractPatchData(int64_t triId, UniqueFaceIds_t& triPatch,
                                                 double* data,
                                                 const QString& name) const;
   private:
     int m_NRing;
-    QVector<int> m_TriangleIds;
+    std::vector<int64_t> m_TriangleIds;
     bool m_UseNormalsForCurveFitting;
     DoubleArrayType::Pointer m_PrincipleCurvature1;
     DoubleArrayType::Pointer m_PrincipleCurvature2;
@@ -102,7 +104,7 @@ class CalculateTriangleGroupCurvatures
     DoubleArrayType::Pointer m_PrincipleDirection2;
     DoubleArrayType::Pointer m_GaussianCurvature;
     DoubleArrayType::Pointer m_MeanCurvature;
-    FaceArray::Pointer m_TrianglesPtr;
+    TriangleGeom::Pointer m_TrianglesPtr;
     DataArray<int32_t>::Pointer m_SurfaceMeshFaceLabels;
     DataArray<double>::Pointer m_SurfaceMeshFaceNormals;
     DataArray<double>::Pointer m_SurfaceMeshTriangleCentroids;

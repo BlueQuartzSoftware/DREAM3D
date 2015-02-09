@@ -45,13 +45,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
-#include <QtGui/QWidget>
-#include <QtGui/QFileDialog>
-#include <QtGui/QTreeWidgetItem>
-#include <QtGui/QProgressBar>
-#include <QtGui/QMessageBox>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QApplication>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QTreeWidgetItem>
+#include <QtWidgets/QProgressBar>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QApplication>
 #include <QtCore/QSize>
 
 #include "DREAM3D/License/PluginMakerLicenseFiles.h"

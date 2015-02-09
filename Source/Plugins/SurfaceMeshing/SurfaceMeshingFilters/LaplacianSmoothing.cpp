@@ -51,7 +51,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/Geometry/MeshStructs.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 
 /**
@@ -150,9 +150,9 @@ class LaplacianSmoothingImpl
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_IterationSteps(1),
   m_Lambda(0.1f),
   m_SurfacePointLambda(0.0f),
@@ -220,7 +220,6 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
   DREAM3D_FILTER_WRITE_PARAMETER(Lambda)
   DREAM3D_FILTER_WRITE_PARAMETER(TripleLineLambda)
@@ -239,7 +238,7 @@ int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::dataCheck()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
+DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -287,6 +286,12 @@ void LaplacianSmoothing::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -364,7 +369,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 {
   int err = 0;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   //
   VertexArray::Pointer nodesPtr = sm->getVertices();
   int nvert = nodesPtr->getNumberOfTuples();
@@ -469,7 +474,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 {
   int err = 0;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
   // Convert the 32 bit float Nodes into 64 bit floating point nodes.
   VertexArray::Pointer vertsPtr = sm->getVertices();
@@ -566,7 +571,7 @@ namespace Detail
 void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
 {
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  /* Place all your code to execute your filter here. */
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());  /* Place all your code to execute your filter here. */
   VertexArray& nodes = *(sm->getVertices());
   int nNodes = nodes.getNumberOfTuples();
   bool m_WriteBinaryFile = true;

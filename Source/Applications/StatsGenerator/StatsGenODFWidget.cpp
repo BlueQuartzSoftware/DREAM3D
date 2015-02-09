@@ -35,16 +35,12 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsGenODFWidget.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 //-- C++ Includes
 #include <iostream>
 
 //-- Qt Includes
 #include <QtCore/QVector>
-#include <QtCore/QtConcurrentMap>
+#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -52,10 +48,20 @@
 #include <QtCore/QSettings>
 
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
-#include <QtGui/QAbstractItemDelegate>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QProgressDialog>
+
+
+#include <qwt.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
 
 
 #include "EbsdLib/TSL/AngConstants.h"
@@ -65,8 +71,8 @@
 
 
 
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/IO/AngleFileLoader.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
@@ -338,7 +344,7 @@ void StatsGenODFWidget::setupGui()
 {
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_ODFTableView);
-  headerView->setResizeMode(QHeaderView::Interactive);
+  headerView->sectionResizeMode(QHeaderView::Interactive);
   m_ODFTableView->setHorizontalHeader(headerView);
   headerView->show();
 

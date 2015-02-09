@@ -40,6 +40,7 @@
 
 
 #include <QtCore/QtDebug>
+#include <QtCore/QMimeData>
 
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDropEvent>
