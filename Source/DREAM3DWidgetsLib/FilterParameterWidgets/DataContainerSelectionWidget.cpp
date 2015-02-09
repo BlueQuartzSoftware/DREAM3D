@@ -226,11 +226,9 @@ void DataContainerSelectionWidget::populateComboBoxes()
   if(dcIndex < 0 && dcName.isEmpty() == false)
   {
     dataContainerList->addItem(dcName);
-    //qDebug() << "[2] Adding " << dcName;
-  } // the string was not found so just set it to the first index
+  }
   else
   {
-    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
   }
   if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
