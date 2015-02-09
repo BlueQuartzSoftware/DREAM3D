@@ -51,15 +51,15 @@
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_InputFile(""),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_CrystalStructures(NULL),
   m_PhaseTypes(NULL),
-	m_crystruct(999),
-	m_ptype(999)
+  m_crystruct(999),
+  m_ptype(999)
 {
   setupFilterParameters();
 }
@@ -139,7 +139,7 @@ void EnsembleInfoReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
@@ -158,13 +158,13 @@ void EnsembleInfoReader::dataCheck()
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-	QString ext = fi.suffix();
-	if (ext != "ini" && ext != "txt")
-	{
-		QString ss = QObject::tr("Incorrect file extension in '%1'. The file extension must be .ini or .txt").arg(getInputFile());
-		setErrorCondition(-10018);
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-	}
+  QString ext = fi.suffix();
+  if (ext != "ini" && ext != "txt")
+  {
+    QString ss = QObject::tr("Incorrect file extension in '%1'. The file extension must be .ini or .txt").arg(getInputFile());
+    setErrorCondition(-10018);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   QVector<size_t> dims(1, 1);
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
@@ -203,201 +203,201 @@ int EnsembleInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 int EnsembleInfoReader::readFile()
 {
-	dataCheck();
+  dataCheck();
 
-	VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-	AttributeMatrix::Pointer cellensembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+  AttributeMatrix::Pointer cellensembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
-	QFileInfo fi(getInputFile());
-	QDir parentPath = fi.path();
-	if (!parentPath.mkpath("."))
-	{
-		QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-		setErrorCondition(-8005);
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return -1;
-	}
+  QFileInfo fi(getInputFile());
+  QDir parentPath = fi.path();
+  if (!parentPath.mkpath("."))
+  {
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+    setErrorCondition(-8005);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
 
-	int numphases = 0;
+  int numphases = 0;
   int pnum = 0;
 
-	QSettings settings(getInputFile(), QSettings::IniFormat); // The .ini or .txt input file
-	settings.beginGroup("EnsembleInfo");
-	numphases = settings.value("Number_Phases").toInt(); // read number of phases from input file
-	settings.endGroup();
+  QSettings settings(getInputFile(), QSettings::IniFormat); // The .ini or .txt input file
+  settings.beginGroup("EnsembleInfo");
+  numphases = settings.value("Number_Phases").toInt(); // read number of phases from input file
+  settings.endGroup();
 
-	if (0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases 
-	{
-		QString ss = QObject::tr("Check the group name EnsembleInfo or Number_Phases");
-		setErrorCondition(-10003);
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return -1;
-	}
+  if (0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
+  {
+    QString ss = QObject::tr("Check the group name EnsembleInfo or Number_Phases");
+    setErrorCondition(-10003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
 
-	QVector<size_t> tDims(1, numphases + 1);
-	cellensembleAttrMat->resizeAttributeArrays(tDims);
-	updateEnsembleInstancePointers();
+  QVector<size_t> tDims(1, numphases + 1);
+  cellensembleAttrMat->resizeAttributeArrays(tDims);
+  updateEnsembleInstancePointers();
 
-	// Read the crystal structure and the phase type for each group phase number
-	Q_FOREACH(QString group, settings.childGroups())
-	{
-		if (group == "EnsembleInfo") // Ensemble Info group only has the phase number information, ignore
-			continue;
-		settings.beginGroup(group);
-		const QStringList childKeys = settings.childKeys();
-		QStringList values;
-		foreach(const QString &childKey, childKeys)
-		{
-			values << settings.value(childKey).toString(); // Values should contain the crystal structure and the phase type
-		}
+  // Read the crystal structure and the phase type for each group phase number
+  Q_FOREACH(QString group, settings.childGroups())
+  {
+    if (group == "EnsembleInfo") // Ensemble Info group only has the phase number information, ignore
+      continue;
+    settings.beginGroup(group);
+    const QStringList childKeys = settings.childKeys();
+    QStringList values;
+    foreach(const QString &childKey, childKeys)
+    {
+      values << settings.value(childKey).toString(); // Values should contain the crystal structure and the phase type
+    }
 
-		if (values.size() != 2) // There are not two values for that group read from the file
-		{
-			QString ss = QObject::tr("The Crystal Structure and the Phase Type must be entered for each Phase Number in the .ini or .txt file");
-			setErrorCondition(-10004);
-			notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-			return -1;				
-		}
+    if (values.size() != 2) // There are not two values for that group read from the file
+    {
+      QString ss = QObject::tr("The Crystal Structure and the Phase Type must be entered for each Phase Number in the .ini or .txt file");
+      setErrorCondition(-10004);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
 
-		if (group.toInt() != pnum + 1) // The group number must match the output array index
-		{
-			QString ss = QObject::tr("One of the phase group numbers is incorrect in the .ini or .txt file");
-			setErrorCondition(-10005);
-			notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-			return -1;
-		}
+    if (group.toInt() != pnum + 1) // The group number must match the output array index
+    {
+      QString ss = QObject::tr("One of the phase group numbers is incorrect in the .ini or .txt file");
+      setErrorCondition(-10005);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
 
-		ensembleLookup(values); // Lookup number for the crystal number string and the phase type string read from the file
+    ensembleLookup(values); // Lookup number for the crystal number string and the phase type string read from the file
 
-		if (m_crystruct == -1) // The crystal structure name read from the file was not found in the lookup table
-		{
-			QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(values.at(0));
-			setErrorCondition(-10006);
-			notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-			return -1;
-		}
-		else
-		{
-			m_CrystalStructures[pnum] = m_crystruct;
-		}
-		if (m_ptype == -1)
-		{
-			QString ss = QObject::tr("Incorrect phase type name '%1'").arg(values.at(1)); // The phase type name read from the file was not found in the lookup table
-			setErrorCondition(-10007);
-			notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-			return -1;
-		}
-		else
-		{
-			m_PhaseTypes[pnum] = m_ptype; 
-		}
-		pnum++;
-		settings.endGroup();
-	}	
-	if (pnum != numphases)
-	{
-		QString ss = QObject::tr("The Number_Phases '%1' is incorrect in the .ini or .txt file").arg(numphases); // numphases does not match group phases enter in the file
-		setErrorCondition(-10008);
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return -1;
-	}
+    if (m_crystruct == -1) // The crystal structure name read from the file was not found in the lookup table
+    {
+      QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(values.at(0));
+      setErrorCondition(-10006);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+    else
+    {
+      m_CrystalStructures[pnum] = m_crystruct;
+    }
+    if (m_ptype == -1)
+    {
+      QString ss = QObject::tr("Incorrect phase type name '%1'").arg(values.at(1)); // The phase type name read from the file was not found in the lookup table
+      setErrorCondition(-10007);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+    else
+    {
+      m_PhaseTypes[pnum] = m_ptype;
+    }
+    pnum++;
+    settings.endGroup();
+  }
+  if (pnum != numphases)
+  {
+    QString ss = QObject::tr("The Number_Phases '%1' is incorrect in the .ini or .txt file").arg(numphases); // numphases does not match group phases enter in the file
+    setErrorCondition(-10008);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
   notifyStatusMessage(getHumanLabel(), "Complete");
-	return 0;
+  return 0;
 }
 
-		// -----------------------------------------------------------------------------
-		//
-		// -----------------------------------------------------------------------------
-		void EnsembleInfoReader::ensembleLookup(QStringList list)
-		{
-			// assign the corresponding number to the crystal structure string read from the input file
-			if (QString::compare(list.at(0), "Hexagonal", Qt::CaseInsensitive) == 0) {
-				m_crystruct = 0;
-			}
-			else if (QString::compare(list.at(0), "Cubic", Qt::CaseInsensitive) == 0) {
-				m_crystruct = 1;
-			}
-			else if (QString::compare(list.at(0), "OrthoRhombic", Qt::CaseInsensitive) == 0) {
-				m_crystruct = 2;
-			}
-			else if (QString::compare(list.at(0), "AxisOrthoRhombic", Qt::CaseInsensitive) == 0) {
-				m_crystruct = 3;
-			}
-			else if (QString::compare(list.at(0), "UnknownCrystalStructure", Qt::CaseInsensitive) == 0) {
-				m_crystruct = 999;
-			}
-			else{
-				m_crystruct = -1; // no match for crystal structure name read from file
-			}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void EnsembleInfoReader::ensembleLookup(QStringList list)
+    {
+      // assign the corresponding number to the crystal structure string read from the input file
+      if (QString::compare(list.at(0), "Hexagonal", Qt::CaseInsensitive) == 0) {
+        m_crystruct = 0;
+      }
+      else if (QString::compare(list.at(0), "Cubic", Qt::CaseInsensitive) == 0) {
+        m_crystruct = 1;
+      }
+      else if (QString::compare(list.at(0), "OrthoRhombic", Qt::CaseInsensitive) == 0) {
+        m_crystruct = 2;
+      }
+      else if (QString::compare(list.at(0), "AxisOrthoRhombic", Qt::CaseInsensitive) == 0) {
+        m_crystruct = 3;
+      }
+      else if (QString::compare(list.at(0), "UnknownCrystalStructure", Qt::CaseInsensitive) == 0) {
+        m_crystruct = 999;
+      }
+      else{
+        m_crystruct = -1; // no match for crystal structure name read from file
+      }
 
-			// assign the corresponding number to the phase type string read from the input file
-			if (QString::compare(list.at(1), "PrimaryPhase", Qt::CaseInsensitive) == 0) {
-				m_ptype = 0;
-			}
-			else if (QString::compare(list.at(1), "PrecipitatePhase", Qt::CaseInsensitive) == 0) {
-				m_ptype = 1;
-			}
-			else if (QString::compare(list.at(1), "TransformationPhase", Qt::CaseInsensitive) == 0) {
-				m_ptype = 2;
-			}
-			else if (QString::compare(list.at(1), "MatrixPhase", Qt::CaseInsensitive) == 0) {
-				m_ptype = 3;
-			}
-			else if (QString::compare(list.at(1), "BoundaryPhase", Qt::CaseInsensitive) == 0) {
-				m_ptype = 4;
-			}
-			else if (QString::compare(list.at(1), "UnknownPhaseType", Qt::CaseInsensitive) == 0) {
-				m_ptype = 999;
-			}
-			else{
-				m_ptype = -1; // no match for phase type name read from file
-			}
-		}
-
-
-		// -----------------------------------------------------------------------------
-		//
-		// -----------------------------------------------------------------------------
-		AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters)
-		{
-			EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
-			if (true == copyFilterParameters)
-			{
-				copyFilterParameterInstanceVariables(filter.get());
-			}
-			return filter;
-		}
-
-		// -----------------------------------------------------------------------------
-		//
-		// -----------------------------------------------------------------------------
-		const QString EnsembleInfoReader::getCompiledLibraryName()
-		{
-			return IO::IOBaseName;
-		}
+      // assign the corresponding number to the phase type string read from the input file
+      if (QString::compare(list.at(1), "PrimaryPhase", Qt::CaseInsensitive) == 0) {
+        m_ptype = 0;
+      }
+      else if (QString::compare(list.at(1), "PrecipitatePhase", Qt::CaseInsensitive) == 0) {
+        m_ptype = 1;
+      }
+      else if (QString::compare(list.at(1), "TransformationPhase", Qt::CaseInsensitive) == 0) {
+        m_ptype = 2;
+      }
+      else if (QString::compare(list.at(1), "MatrixPhase", Qt::CaseInsensitive) == 0) {
+        m_ptype = 3;
+      }
+      else if (QString::compare(list.at(1), "BoundaryPhase", Qt::CaseInsensitive) == 0) {
+        m_ptype = 4;
+      }
+      else if (QString::compare(list.at(1), "UnknownPhaseType", Qt::CaseInsensitive) == 0) {
+        m_ptype = 999;
+      }
+      else{
+        m_ptype = -1; // no match for phase type name read from file
+      }
+    }
 
 
-		// -----------------------------------------------------------------------------
-		//
-		// -----------------------------------------------------------------------------
-		const QString EnsembleInfoReader::getGroupName()
-		{
-			return DREAM3D::FilterGroups::IOFilters;
-		}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters)
+    {
+      EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
+      if (true == copyFilterParameters)
+      {
+        copyFilterParameterInstanceVariables(filter.get());
+      }
+      return filter;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    const QString EnsembleInfoReader::getCompiledLibraryName()
+    {
+      return IO::IOBaseName;
+    }
 
 
-		// -----------------------------------------------------------------------------
-		//
-		// -----------------------------------------------------------------------------
-		const QString EnsembleInfoReader::getSubGroupName()
-		{
-			return DREAM3D::FilterSubGroups::InputFilters;
-		}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    const QString EnsembleInfoReader::getGroupName()
+    {
+      return DREAM3D::FilterGroups::IOFilters;
+    }
 
-		// -----------------------------------------------------------------------------
-		//
-		// -----------------------------------------------------------------------------
-		const QString EnsembleInfoReader::getHumanLabel()
-		{
-			return "Read Ensemble Info File";
-		}
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    const QString EnsembleInfoReader::getSubGroupName()
+    {
+      return DREAM3D::FilterSubGroups::InputFilters;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    const QString EnsembleInfoReader::getHumanLabel()
+    {
+      return "Read Ensemble Info File";
+    }
