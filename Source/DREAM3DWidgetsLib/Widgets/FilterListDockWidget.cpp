@@ -295,7 +295,6 @@ QList<QString> FilterListDockWidget::serializeString(QString string, char token)
     list.push_back(strPart);
     string = string.remove(currentIndex, spaceIndex + 1);
     stringString = string.toStdString();
-    qDebug() << string;
   }
 
   return list;
@@ -333,15 +332,12 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
 
       if (m_ActionSearchFilterHumanName->isChecked() && filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true)
       {
-        //  qDebug() << "   " << filterHumanLabel;
-
         match = true;
       }
 
       QString filterClassName = filter->getNameOfClass();
       if (m_ActionSearchFilterClassName->isChecked() && filterClassName.contains(keyword, Qt::CaseInsensitive) == true)
       {
-        //   qDebug() << "   " << filterClassName;
         match = true;
       }
 
@@ -350,17 +346,14 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
       QString compileLibrary = filter->getCompiledLibraryName();
       if (m_ActionSearchGroupName->isChecked() && groupName.contains(keyword, Qt::CaseInsensitive) == true)
       {
-        //   qDebug() << "       " << option->getPropertyName();
         match = true;
       }
       if (m_ActionSearchSubGroupName->isChecked() && subGroupName.contains(keyword, Qt::CaseInsensitive) == true)
       {
-        //   qDebug() << "       " << option->getPropertyName();
         match = true;
       }
       if (m_ActionSearchPluginName->isChecked() && compileLibrary.contains(keyword, Qt::CaseInsensitive) == true)
       {
-        //   qDebug() << "       " << option->getPropertyName();
         match = true;
       }
       // Get a list of all the filterParameters from the filter.
@@ -371,12 +364,10 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
         FilterParameter* option = (*iter).get();
         if (m_ActionSearchParameterName->isChecked() && option->getHumanLabel().contains(keyword, Qt::CaseInsensitive) == true)
         {
-          //  qDebug() << "       " << option->getHumanLabel();
           match = true;
         }
         if (m_ActionSearchParameterPropertyName->isChecked() && option->getPropertyName().contains(keyword, Qt::CaseInsensitive) == true)
         {
-          //   qDebug() << "       " << option->getPropertyName();
           match = true;
         }
 
@@ -387,7 +378,7 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
         filterCount++;
         addItemToList(filter);
       }
-      else if (match && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0)
+	  else if (match && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0 && filterCache.contains(filter) == false)
       {
         filterCount++;
         filterCache.push_back(filter);
