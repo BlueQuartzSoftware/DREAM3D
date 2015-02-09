@@ -26,6 +26,8 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 ## List of Code Contributors (CC) and Vision Contributors (VC) ###
 
 ### Air Force Research Laboratory (AFRL) ###
+
+
 + Dr. Michael A. Groeber (VC, CC)
 + Dr. Adam Pilchak (VC, CC)
 + Dr. Megna Shah (VC, CC)
@@ -34,12 +36,18 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 + Dr. Dennis Dimiduk (VC)
 
 ### BlueQuartz Software ###
+
+
 + Mr. Michael A. Jackson (VC, CC)
 
 ### Ohio State University/Johns Hopkins University ###
+
+
 + Dr. Somnath Ghosh (VC)
 
 ### Carnegie Mellon University ###
+
+
 + Dr. Tony Rollett (VC, CC)
 + Dr. Greg Rohrer (CC)
 + Dr. Marc De Graef (CC)
@@ -54,9 +62,13 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 + Dr. Shlomo Taasan (CC)
 
 ### Navy Research Laboratory (NRL) ###
+
+
 + Dr. Dave Rowenhorst (VC, CC)
 
 ### Other Institutions ###
+
+
 + Mr. Joey Kleingers (CC) (SOCHE)
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
 
