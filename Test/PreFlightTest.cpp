@@ -386,6 +386,33 @@ void TestNewInstanceAvailable()
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrintFilterInfo()
+{
+  qDebug() << "-------------- PrintFilterInfo ------------------------------";
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+  FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
+  int err = 0;
+  while (factoryMapIter != factories.constEnd())
+  {
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    if(factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+
+      std::cout << filter->getNameOfClass().toStdString() << "\t"
+                << filter->getCompiledLibraryName().toStdString() << "\t"
+                << filter->getHumanLabel().toStdString() << std::endl;
+    }
+    factoryMapIter++;
+  }
+}
+
+
+// -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
@@ -411,13 +438,14 @@ int main(int argc, char** argv)
 
   //// These functions are just to verify that the filters have certain signals and properties available.
 //  verifyPreflightEmitsProperly();
-  verifySignals();
-  verifyFilterParameters();
+ verifySignals();
+ verifyFilterParameters();
 
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
-  DREAM3D_REGISTER_TEST( TestPreflight() )
-  DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
+ DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
+ DREAM3D_REGISTER_TEST( TestPreflight() )
+ DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
+//  DREAM3D_REGISTER_TEST( PrintFilterInfo() )
   PRINT_TEST_SUMMARY();
 
 //  GenerateCopyCode();
