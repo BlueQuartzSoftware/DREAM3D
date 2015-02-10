@@ -49,10 +49,10 @@
  */
 class ReverseWindingImpl
 {
-    FaceArray::Pointer m_Triangles;
+    SharedTriList::Pointer m_Triangles;
 
   public:
-    ReverseWindingImpl(FaceArray::Pointer triangles) :
+    ReverseWindingImpl(SharedTriList::Pointer triangles) :
       m_Triangles(triangles)
     {}
     virtual ~ReverseWindingImpl() {}
@@ -64,16 +64,16 @@ class ReverseWindingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      FaceArray::Face_t* triangles = m_Triangles->getPointer(0);
+      int64_t* triangles = m_Triangles->getPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
         // Swap the indices
-        int nId0 = triangles[i].verts[0];
-        int nId2 = triangles[i].verts[2];
+        int nId0 = triangles[i*3+0];
+        int nId2 = triangles[i*3+2];
 
-        triangles[i].verts[0] = nId2;
-        triangles[i].verts[2] = nId0;
+        triangles[i*3+0] = nId2;
+        triangles[i*3+2] = nId0;
       }
     }
 
@@ -99,7 +99,7 @@ class ReverseWindingImpl
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName)
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName)
 {
   setupFilterParameters();
 }
@@ -138,7 +138,6 @@ void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader
 int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -149,21 +148,17 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::dataCheck()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
-  // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
-  {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-  }
+  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0) { return; }
 
   // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  if (NULL == triangles->getTriangles().get())
   {
-    setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
 }
 
@@ -191,31 +186,28 @@ void ReverseTriangleWinding::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
 #endif
 
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t totalTriangles = trianglesPtr->getNumberOfTuples();
-
-  // Run the data check to allocate the memory for the centroid array
-  dataCheck();
+  // No check because datacheck() made sure we can do the next line.
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalTriangles),
-                      ReverseWindingImpl(trianglesPtr), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
+                      ReverseWindingImpl(triangleGeom->getTriangles()), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    ReverseWindingImpl serial(trianglesPtr);
-    serial.generate(0, totalTriangles);
+    ReverseWindingImpl serial(triangleGeom->getTriangles());
+    serial.generate(0, triangleGeom->getNumberOfTris());
   }
 
 
@@ -261,5 +253,5 @@ const QString ReverseTriangleWinding::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getHumanLabel()
-{ return "Reverse Triangle Winding Filter"; }
+{ return "Reverse Triangle Winding"; }
 

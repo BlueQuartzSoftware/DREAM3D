@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
-#include <QtGui/QListWidgetItem>
+#include <QtWidgets/QListWidgetItem>
 
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
@@ -226,11 +226,9 @@ void DataContainerSelectionWidget::populateComboBoxes()
   if(dcIndex < 0 && dcName.isEmpty() == false)
   {
     dataContainerList->addItem(dcName);
-    //qDebug() << "[2] Adding " << dcName;
-  } // the string was not found so just set it to the first index
+  }
   else
   {
-    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
   }
   if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }

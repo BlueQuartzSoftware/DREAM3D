@@ -36,33 +36,28 @@
 
 #include "StatsGenPlotWidget.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 //-- C++ Includes
 #include <iostream>
 #include <limits>
 
 //-- Qt Includes
-#include <QtGui/QMessageBox>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAbstractItemDelegate>
 
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>
-#include <qwt_plot_grid.h>
-#if QWT_VERSION >= 0x060000
-#include <qwt_series_data.h>
-#else
-#include <qwt_interval_data.h>
-#endif
-#include <qwt_painter.h>
-#include <qwt_scale_map.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_plot_grid.h>
+#include <qwt_symbol.h>
+#include <qwt_series_data.h>
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
@@ -70,7 +65,7 @@
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 
 #define SG_ERROR_CHECK(name)\
   qDebug() << "Error writing HDF5 data to " << name << "\n";\
@@ -390,7 +385,7 @@ void StatsGenPlotWidget::setupGui()
 
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
-  headerView->setResizeMode(QHeaderView::Interactive);
+  headerView->sectionResizeMode(QHeaderView::Interactive);
   m_TableView->setHorizontalHeader(headerView);
   headerView->show();
 

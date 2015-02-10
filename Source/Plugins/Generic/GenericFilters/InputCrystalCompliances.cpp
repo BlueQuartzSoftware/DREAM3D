@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 InputCrystalCompliances::InputCrystalCompliances() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_CrystalCompliancesArrayName("CrystalCompliances"),
   m_CrystalCompliances(NULL)
 {
@@ -119,7 +119,6 @@ void InputCrystalCompliances::readFilterParameters(AbstractFilterParametersReade
 int InputCrystalCompliances::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(Compliances)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalCompliancesArrayName)

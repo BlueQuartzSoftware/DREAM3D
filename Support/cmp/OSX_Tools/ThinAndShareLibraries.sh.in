@@ -7,12 +7,10 @@ DEBUG=0
 # -----------------------------------------------------------------------------
 function printStatus()
 {
-	if [ "x$DEBUG" = "x1" ]; then
-	    echo "${1}" 
-	fi	
+  if [ "x$DEBUG" = "x1" ]; then
+      echo "${1}"
+  fi
 }
-
-
 
 InstallPrefix="${1}"
 printStatus "InstallPrefix = ${InstallPrefix}"
@@ -25,8 +23,9 @@ OSX_App="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/@osx_app_name@.app"
 arch=@CMAKE_OSX_ARCHITECTURES@
 logFile=/tmp/ThinAndShareLibraries.log
 
-echo "Starting Fix up of application @osx_app_name@.app to share the frameworks and thin to a single arch" 
-
+echo "# -----------------------------------------------------------------------------"
+echo "  Starting Fix up of application @osx_app_name@.app to share the frameworks and thin to a single arch"
+echo "# -----------------------------------------------------------------------------"
 
 # -----------------------------------------------------------------------------
 # Frameworks
@@ -47,7 +46,7 @@ do
     printStatus "Moving $f to external shared frameworks directory"
     cp -r $f ${InstallPrefix}/Frameworks/$f/
   fi
-  
+
   # Remove the actual compiled framework file but leave the directory structure in tact.
   printStatus "rm -rf ${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks/$file"
   rm -rf "${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks/$file"
@@ -59,11 +58,11 @@ do
   printStatus "ln -s ../../Frameworks/$file $file"
   ln -s ../../../../../../Frameworks/$file $file
 
-  printStatus "Thinning Framework $f to arch $arch"
-  cd ${InstallPrefix}/Frameworks
-  printStatus "lipo $file -thin $arch -output $file  > ${logFile} 2> ${logFile}"
-  lipo $file -thin $arch -output $file  > ${logFile} 2> ${logFile}
-  
+ # printStatus "Thinning Framework $f to arch $arch"
+ # cd ${InstallPrefix}/Frameworks
+ # printStatus "lipo $file -thin $arch -output $file  > ${logFile} 2> ${logFile}"
+ # lipo $file -thin $arch -output $file  > ${logFile} 2> ${logFile}
+
 done
 
 # -----------------------------------------------------------------------------
@@ -98,8 +97,8 @@ done
 
 # All the plugins should be out of the directory, move up one directory and create a symlink
 cd ../
-rm -rf Plugins
-ln -s ../../Plugins Plugins
+# rm -rf Plugins
+# ln -s ../../Plugins Plugins
 
 # remove the actual frameworks directory and create a symlink to the external Frameworks directory
 cd "${InstallPrefix}"
@@ -111,7 +110,7 @@ cd "${InstallPrefix}"
 # Now create the 'lib' shared directory
 mkdir -p ${InstallPrefix}/lib
 if [ -d  ${InstallPrefix}/${ProjectBinaryDir}/Contents/lib ]; then
-  
+
   cd ${InstallPrefix}/${ProjectBinaryDir}/Contents/lib
   frameworks=`find . -type f -name "*.dylib"`
   for f in ${frameworks}
@@ -126,14 +125,14 @@ if [ -d  ${InstallPrefix}/${ProjectBinaryDir}/Contents/lib ]; then
 
     printStatus "Creating Symlink to external Shared lib directory for $f"
     ln -s ../../../lib/$f .
-  
-    printStatus "Thinning dylib to arch $arch"
-  
-    lipo ${InstallPrefix}/lib/$f -thin $arch -output ${InstallPrefix}/lib/$f > ${logFile} 2> ${logFile}
+
+    # printStatus "Thinning dylib to arch $arch"
+
+    # lipo ${InstallPrefix}/lib/$f -thin $arch -output ${InstallPrefix}/lib/$f > ${logFile} 2> ${logFile}
   done
 
 fi
-# remove the actual frameworks direction and create a symlink to the external Frameworks directory
+# remove the actual frameworks directory and create a symlink to the external Frameworks directory
 cd "${InstallPrefix}"
 
 

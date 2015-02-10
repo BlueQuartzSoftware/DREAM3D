@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 VASPReader::VASPReader() :
   FileReader(),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
+  m_VertexDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
   m_AtomVelocitiesArrayName(DREAM3D::VertexData::AtomVelocities),
@@ -100,7 +100,6 @@ void VASPReader::readFilterParameters(AbstractFilterParametersReader* reader, in
 int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
   writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) ;
   DREAM3D_FILTER_WRITE_PARAMETER(AtomTypesArrayName)
@@ -130,11 +129,14 @@ void VASPReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-  VertexDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VertexDataContainer, AbstractFilter>(this, getVertexDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims (1, 0);
   AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
+
+  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(1, DREAM3D::Geometry::VertexGeometry);
+  m->setGeometry(vertex);
 
   QFileInfo fi(getInputFile());
 
@@ -245,7 +247,7 @@ int VASPReader::readHeader()
 {
   QString ss;
 
-  VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
   AttributeMatrix::Pointer vertexAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
 
   int error = 0;
@@ -299,8 +301,9 @@ int VASPReader::readHeader()
     atomNumbers[i] = tokens[i].toInt(&ok, 10);
     totalAtoms += tokens[i].toInt(&ok, 10);
   }
-  VertexArray::Pointer vertices = VertexArray::CreateArray(totalAtoms, DREAM3D::VertexData::SurfaceMeshNodes);
-  m->setVertices(vertices);
+
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, DREAM3D::VertexData::SurfaceMeshNodes);
+  m->setGeometry(vertices);
 
   QVector<size_t> tDims(1, totalAtoms);
   vertexAttrMat->resizeAttributeArrays(tDims);
@@ -314,13 +317,13 @@ int VASPReader::readHeader()
 // -----------------------------------------------------------------------------
 int VASPReader::readFile()
 {
-  VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
 
   QByteArray buf;
   QList<QByteArray> tokens; /* vector to store the split data */
 
-  VertexArray::Pointer verticesPtr = m->getVertices();
-  VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
+  VertexGeom::Pointer verticesPtr = m->getGeometryAs<VertexGeom>();
+  float* vertex = verticesPtr->getVertexPointer(0);
 
   //read the blank line
   buf = m_InStream.readLine();
@@ -343,9 +346,9 @@ int VASPReader::readFile()
       pos[1] = tokens[1].toFloat(&ok);
       pos[2] = tokens[2].toFloat(&ok);
       MatrixMath::Multiply3x3with3x1(latticeVectors, pos, posMod);
-      vertex[index].pos[0] = posMod[0];
-      vertex[index].pos[1] = posMod[1];
-      vertex[index].pos[2] = posMod[2];
+      vertex[index*3] = posMod[0];
+      vertex[index*3+1] = posMod[1];
+      vertex[index*3+2] = posMod[2];
       m_AtomTypes[index] = i;
       index++;
     }

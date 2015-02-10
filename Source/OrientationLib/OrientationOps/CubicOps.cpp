@@ -35,7 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CubicOps.h"
 
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -45,17 +44,15 @@
 #include <tbb/task.h>
 #endif
 
-
-
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ColorUtilities.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
 
+#include "OrientationLib/Math/OrientationMath.h"
 
 namespace Detail
 {

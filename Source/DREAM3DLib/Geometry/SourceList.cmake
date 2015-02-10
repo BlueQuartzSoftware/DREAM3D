@@ -1,0 +1,42 @@
+#--////////////////////////////////////////////////////////////////////////////
+#--
+#--  Copyright (c) 2011, Michael A. Jackson. BlueQuartz Software
+#--  Copyright (c) 2011, Michael Groeber, US Air Force Research Laboratory
+#--  All rights reserved.
+#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#--
+#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
+#--
+#--////////////////////////////////////////////////////////////////////////////
+
+set(DREAM3DLib_Geometry_HDRS
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/IGeometry.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ImageGeom.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/VertexGeom.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/EdgeGeom.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/TriangleGeom.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/QuadGeom.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/MeshStructs.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/GeometryHelpers.hpp
+)
+
+set(DREAM3DLib_Geometry_SRCS
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/IGeometry.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ImageGeom.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/VertexGeom.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/EdgeGeom.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/TriangleGeom.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/QuadGeom.cpp
+)
+
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Geometry" "${DREAM3DLib_Geometry_HDRS}" "${DREAM3DLib_Geometry_SRCS}" "0")
+
+set(DREAM3DLib_Geometry_HDRS
+  ${DREAM3DLib_Geometry_HDRS}
+)
+
+if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
+    INSTALL (FILES ${DREAM3DLib_Geometry_HDRS}
+            DESTINATION include/DREAM3D/Geometry
+            COMPONENT Headers   )
+endif()

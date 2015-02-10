@@ -48,7 +48,9 @@
 
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Geometry/ImageGeom.h"
 
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -97,32 +99,32 @@ namespace DataContainerIOTest
 
   QString TestDir()
   {
-    return UnitTest::TestTempDir + QString::fromAscii("/DataContainerIOTest");
+    return UnitTest::TestTempDir + QString::fromLatin1("/DataContainerIOTest");
   }
 
   QString TestFile()
   {
-    return TestDir() + QString::fromAscii("/DataContainerIOTest.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerIOTest.h5");
   }
 
   QString TestFile2()
   {
-    return TestDir() + QString::fromAscii("/DataContainerIOTest_Rewrite.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerIOTest_Rewrite.h5");
   }
 
   QString TestFile3()
   {
-    return TestDir() + QString::fromAscii("/DataContainerIOTest_Subset.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerIOTest_Subset.h5");
   }
 
   QString IniFile()
   {
-    return TestDir() + QString::fromAscii("/DataContainerProxyTest.ini");
+    return TestDir() + QString::fromLatin1("/DataContainerProxyTest.ini");
   }
 
   QString H5File()
   {
-    return TestDir() + QString::fromAscii("/DataContainerProxyTest.h5");
+    return TestDir() + QString::fromLatin1("/DataContainerProxyTest.h5");
   }
 }
 
@@ -226,7 +228,7 @@ void FillAttributeMatrix(AttributeMatrix::Pointer attrMat, QVector<size_t> compD
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PopulateVolumeDataContainer(VolumeDataContainer* dc, QVector<size_t> tupleDims, const QString& name)
+void PopulateVolumeDataContainer(DataContainer::Pointer dc, QVector<size_t> tupleDims, const QString& name)
 {
   // Create the attribute matrix with the dimensions and name
   AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tupleDims, name, DREAM3D::AttributeMatrixType::Cell);
@@ -246,7 +248,7 @@ void PopulateVolumeDataContainer(VolumeDataContainer* dc, QVector<size_t> tupleD
   dc->addAttributeMatrix(attrMat->getName(), attrMat);
 
 
-  QString autoAddName = name + QString::fromAscii("_Auto");
+  QString autoAddName = name + QString::fromLatin1("_Auto");
   AttributeMatrix::Pointer autoAttrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(NULL, autoAddName, tupleDims, DREAM3D::AttributeMatrixType::Cell);
   compDims.resize(0);
   compDims.push_back(1);
@@ -277,40 +279,40 @@ void TestDataContainerWriter()
   size_t nz = DataContainerIOTest::ZSize;
 
 
-  VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
-  dc->setName("VolumeDataContainer_TEST");
-  dc->setDimensions(nx, ny, nz);
+  DataContainer::Pointer dc = DataContainer::New("DataContainer_TEST");
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry("ImageGeom_TEST");
+  image->setDimensions(nx, ny, nz);
+  dc->setGeometry(image);
 
 
   // 1D VolumeDataContainer
   tupleDims.push_back(nx);
   {
-    VolumeDataContainer* dc = dca->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, "1D_VolumeDataContainer");
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(NULL, "1D_VolumeDataContainer");
     PopulateVolumeDataContainer(dc, tupleDims, "1D_AttributeMatrix");
   }
 
   // 2D VolumeDataContainer
   tupleDims.push_back(ny);
   {
-    VolumeDataContainer* dc = dca->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, "2D_VolumeDataContainer");
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(NULL, "2D_VolumeDataContainer");
     PopulateVolumeDataContainer(dc, tupleDims, "2D_AttributeMatrix");
   }
 
   // 3D VolumeDataContainer
   tupleDims.push_back(nz);
   {
-    VolumeDataContainer* dc = dca->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, "3D_VolumeDataContainer");
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(NULL, "3D_VolumeDataContainer");
     PopulateVolumeDataContainer(dc, tupleDims, "3D_AttributeMatrix");
   }
 
 
 
   // A DataContainer that mimics some real data
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::DataContainerName);
   dca->addDataContainer(m);
+  m->setGeometry(image);
 
-  m->setDimensions(nx, ny, nz);
   AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(tupleDims, getCellFeatureAttributeMatrixName(), DREAM3D::AttributeMatrixType::CellFeature);
   m->addAttributeMatrix(getCellFeatureAttributeMatrixName(), attrMatrix);
 
@@ -418,7 +420,7 @@ void TestDataContainerReader()
   for(int i=(dcsToRead.size()-1); i>=0; i--)
   {
     DataContainerProxy& dcProxy = dcsToRead[i];
-    if (dcProxy.name.compare(DREAM3D::Defaults::VolumeDataContainerName) != 0) { dcProxy.flag = Qt::Unchecked; }
+    if (dcProxy.name.compare(DREAM3D::Defaults::DataContainerName) != 0) { dcProxy.flag = Qt::Unchecked; }
     else
     {
       QMap<QString, AttributeMatrixProxy>& attrMatsToRead = dcProxy.attributeMatricies;
@@ -464,7 +466,7 @@ void TestDataContainerReader()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void insertDeleteArray(VolumeDataContainer::Pointer m)
+void insertDeleteArray(DataContainer::Pointer m)
 {
   // This should fail because there is no attribute matrix
   AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
@@ -584,7 +586,7 @@ void TestDataContainerArrayProxy()
 // -----------------------------------------------------------------------------
 void TestInsertDelete()
 {
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
+  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::DataContainerName);
 
   QList<QString> nameList;
 
@@ -762,7 +764,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 void TestArrayCreation()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   QList<QString> nameList;
 
   _arrayCreation<int8_t, Int8ArrayType>(m);
@@ -822,7 +824,7 @@ void TestDataContainer()
   std::cout << "Number of Entries for Feature Id[5]: " << neighborList->getListSize(5) << std::endl;
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
-  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
+  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New(DREAM3D::Defaults::DataContainerName);
   dataContainer->addCellData("NeighborList", iDataArray);
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );

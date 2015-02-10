@@ -53,7 +53,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
   AbstractFilter(),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_InputFile(""),
   m_NewZRes(1.0f)
 {
@@ -97,7 +97,6 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(NewZRes)
@@ -112,16 +111,19 @@ void RegularizeZSpacing::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
   if (getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
   if (getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
-  for (size_t iter = 0; iter < m->getZPoints() + 1; iter++)
+  for (size_t iter = 0; iter < m->getGeometryAs<ImageGeom>()->getZPoints() + 1; iter++)
   {
     inFile >> zval;
   }
@@ -130,10 +132,10 @@ void RegularizeZSpacing::dataCheck(bool preflight)
 
   if(preflight == true)
   {
-    m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
+    m->getGeometryAs<ImageGeom>()->setDimensions(m->getGeometryAs<ImageGeom>()->getXPoints(), m->getGeometryAs<ImageGeom>()->getYPoints(), zP);
     QVector<size_t> tDims(3, 0);
-    tDims[0] = m->getXPoints();
-    tDims[1] = m->getYPoints();
+    tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+    tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
     tDims[2] = zP;
     cellAttrMat->resizeAttributeArrays(tDims);
   }
@@ -165,10 +167,10 @@ void RegularizeZSpacing::execute()
   if(getErrorCondition() < 0) { return; }
 
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   size_t dims[3];
-  m->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -182,8 +184,8 @@ void RegularizeZSpacing::execute()
   }
   inFile.close();
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
 
   float sizez = zboundvalues[dims[2]];
   size_t m_XP = dims[0];
@@ -245,8 +247,8 @@ void RegularizeZSpacing::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  m->setResolution(xRes, yRes, m_NewZRes);
-  m->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(xRes, yRes, m_NewZRes);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 

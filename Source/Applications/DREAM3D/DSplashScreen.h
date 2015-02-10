@@ -45,7 +45,7 @@
 #include <QtCore/QString>
 
 #include <QtGui/QColor>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 #include <QtGui/QPixmap>
 
 

@@ -60,8 +60,8 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::SyntheticVolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_InputStatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_EstimateNumberOfFeatures(false),
   m_EstimatedPrimaryFeatures(0)
 {
@@ -140,7 +140,6 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
 int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
@@ -162,8 +161,11 @@ void InitializeSyntheticVolume::dataCheck()
   setErrorCondition(0);
 
   // Create the output Data Container
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
 
   // Sanity Check the Dimensions and Resolution
   INIT_SYNTH_VOLUME_CHECK(Dimensions.x, -5000);
@@ -173,9 +175,9 @@ void InitializeSyntheticVolume::dataCheck()
   INIT_SYNTH_VOLUME_CHECK(Resolution.y, -5004);
   INIT_SYNTH_VOLUME_CHECK(Resolution.z, -5005);
   // Set teh Dimensions, Resolution and Origin of the output data container
-  m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   // Create our output Cell and Ensemble Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
@@ -222,14 +224,14 @@ void InitializeSyntheticVolume::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
   // Resize the Cell AttributeMatrix to have the correct Tuple Dimensions.
   QVector<size_t> tDims(3, 0);
-  tDims[0] = m->getXPoints();
-  tDims[1] = m->getYPoints();
-  tDims[2] = m->getZPoints();
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMat->resizeAttributeArrays(tDims);
 
   // If there is an error set this to something negative and also set a message

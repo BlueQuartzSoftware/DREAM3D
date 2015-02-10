@@ -42,19 +42,24 @@
 #include <sstream>
 #include <list>
 
-
 #include <QtCore/QSet>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QMap>
 
 #include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/Geometry/ImageGeom.h"
+#include "DREAM3DLib/Geometry/VertexGeom.h"
+#include "DREAM3DLib/Geometry/EdgeGeom.h"
+#include "DREAM3DLib/Geometry/TriangleGeom.h"
+#include "DREAM3DLib/Geometry/QuadGeom.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
@@ -66,8 +71,8 @@
 class DREAM3DLib_EXPORT DataContainer : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS (DataContainer)
-    DREAM3D_STATIC_NEW_MACRO (DataContainer)
+    DREAM3D_SHARED_POINTERS(DataContainer)
+    DREAM3D_STATIC_NEW_MACRO(DataContainer)
     DREAM3D_TYPE_MACRO_SUPER(DataContainer, Observable)
 
     virtual ~DataContainer();
@@ -90,6 +95,11 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     }
 
     /**
+    * @brief Creates a new data container
+    */
+    virtual Pointer createNewDataContainer(const QString &name);
+
+    /**
      * @brief ReadDataContainerStructure
      * @param dcArrayGroupId
      * @param proxy
@@ -100,13 +110,24 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     /**
     * @brief Sets the name of the data container
     */
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QString, Name)
+    virtual void setName(const QString &name);
 
     /**
-     * @brief getDCType
+    * @brief Gets the name of the data container
+    */
+    virtual QString getName();
+
+    /**
+     * @brief Sets the geometry of the data container
+     * @param geometry
+     */
+    virtual void setGeometry(IGeometry::Pointer geometry);
+
+    /**
+     * @brief Returns the geometry of the data container
      * @return
      */
-    virtual unsigned int getDCType() {return DREAM3D::DataContainerType::UnknownDataContainer;}
+    virtual IGeometry::Pointer getGeometry();
 
     /**
     * @brief Adds/overwrites the data for a named array
@@ -165,7 +186,6 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     * @return
     */
     virtual int getNumAttributeMatrices();
-
 
     /**
      * @brief getAllDataArrayPaths
@@ -251,7 +271,17 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         if(filter)
         {
           filter->setErrorCondition(-10001);
-          ss = QObject::tr("The name of the array was empty. Please provide a name for this array.");
+          ss = QObject::tr("The name of the Attribute Matrix was empty. Please provide a name for this Attribute Matrix.");
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return attributeMatrix;
+      }
+      if (attributeMatrixName.compare(DREAM3D::Geometry::Geometry) == 0)
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-10001);
+          ss = QObject::tr("%1 is a protected name.  Please provide a different name for this Attribute Matrix.").arg(DREAM3D::Geometry::Geometry);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeMatrix;
@@ -265,13 +295,56 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
       else if(filter) // If the filter object is NOT null (is valid) then set the error condition and send an error message
       {
         filter->setErrorCondition(-10002);
-        ss = QObject::tr("An Attribute Matrix already exists with the name %1").arg(attributeMatrixName);
+        ss = QObject::tr("An Attribute Matrix already exists with the name %1.").arg(attributeMatrixName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
       return attributeMatrix;
     }
 
+    /**
+     * @brief Returns the geometry as the templated type
+     * @return
+     */
+    template<typename GeometryType>
+    typename GeometryType::Pointer getGeometryAs()
+    {
+      typename GeometryType::Pointer geom = boost::dynamic_pointer_cast<GeometryType>(getGeometry());
+      return geom;
+    }
 
+    /**
+     * @brief Returns the prerequisite geometry as the templated type
+     * @param filter
+     * @return
+     */
+    template<typename GeometryType, typename Filter>
+    typename GeometryType::Pointer getPrereqGeometry(Filter* filter)
+    {
+      typename GeometryType::Pointer geom = GeometryType::NullPointer();
+      IGeometry::Pointer igeom = getGeometry();
+      if (NULL == igeom.get())
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-385);
+          QString ss = QObject::tr("DataContainer Geometry is missing.");
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return geom;
+      }
+      geom = getGeometryAs<GeometryType>();
+      if (NULL == geom.get())
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-384);
+          QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(igeom->getGeometryTypeAsString());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return geom;
+      }
+      return geom;
+    }
 
     /**
      * @brief Creates an AttributeMatrix and automatically adds it to the DataContainer. NO Checks are done if the AttributeMatrix
@@ -326,12 +399,17 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 
   protected:
+
+    virtual void writeXdmfFooter(QTextStream& xdmf);
+
     DataContainer();
     explicit DataContainer(const QString name);
 
   private:
 
     AttributeMatrixMap_t   m_AttributeMatrices;
+    IGeometry::Pointer m_Geometry;
+    QString m_Name;
 
     DataContainer(const DataContainer&); // Copy Constructor Not Implemented
     void operator=(const DataContainer&); // Operator '=' Not Implemented

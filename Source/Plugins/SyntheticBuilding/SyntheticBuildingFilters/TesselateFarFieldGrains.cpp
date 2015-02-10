@@ -258,7 +258,7 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
@@ -346,7 +346,6 @@ void TesselateFarFieldGrains::readFilterParameters(AbstractFilterParametersReade
 int TesselateFarFieldGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
@@ -412,8 +411,12 @@ void TesselateFarFieldGrains::dataCheck()
   // This is for convenience
 
   // Make sure we have our input DataContainer with the proper Ensemble data
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   //Input Ensemble Data That we require
 
   QVector<size_t> dims(1, 1);
@@ -562,7 +565,7 @@ void TesselateFarFieldGrains::execute()
   assign_gaps_only();
   if (getCancel() == true) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
   cellFeatureAttrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   cellFeatureAttrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -582,7 +585,7 @@ void TesselateFarFieldGrains::execute()
 void  TesselateFarFieldGrains::load_features()
 {
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
 
@@ -604,8 +607,8 @@ void  TesselateFarFieldGrains::load_features()
   size_t currentFeature = 1;
   size_t xDim, yDim, zDim;
   float xRes, yRes, zRes;
-  m->getDimensions(xDim, yDim, zDim);
-  m->getResolution(xRes, yRes, zRes);
+  m->getGeometryAs<ImageGeom>()->getDimensions(xDim, yDim, zDim);
+  m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
   float xShift = xRes * float(xDim / 2.0);
   float yShift = yRes * float(yDim / 2.0);
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -760,12 +763,12 @@ void TesselateFarFieldGrains::assign_voxels()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   DimType dims[3] =
   {
@@ -786,9 +789,9 @@ void TesselateFarFieldGrains::assign_voxels()
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
@@ -926,7 +929,7 @@ void TesselateFarFieldGrains::assign_gaps_only()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   int featurename, feature;
   int current = 0;
@@ -938,9 +941,9 @@ void TesselateFarFieldGrains::assign_gaps_only()
   int good;
   int neighbor;
 
-  int xPoints = static_cast<int>(m->getXPoints());
-  int yPoints = static_cast<int>(m->getYPoints());
-  int zPoints = static_cast<int>(m->getZPoints());
+  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
@@ -952,7 +955,7 @@ void TesselateFarFieldGrains::assign_gaps_only()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getTotalPoints(), "Neighbors");
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 

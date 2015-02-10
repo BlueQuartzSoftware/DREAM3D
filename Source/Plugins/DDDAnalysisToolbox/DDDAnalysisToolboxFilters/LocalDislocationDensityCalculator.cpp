@@ -45,8 +45,8 @@
 // -----------------------------------------------------------------------------
 LocalDislocationDensityCalculator::LocalDislocationDensityCalculator() :
   AbstractFilter(),
-  m_EdgeDataContainerName(DREAM3D::Defaults::EdgeDataContainerName),
-  m_OutputDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
+  m_EdgeDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_OutputDataContainerName(DREAM3D::Defaults::NewDataContainerName),
   m_OutputAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputArrayName("DislocationLineDensity"),
   m_OutputArray(NULL)
@@ -109,7 +109,6 @@ void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParam
 int LocalDislocationDensityCalculator::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(EdgeDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
@@ -165,7 +164,7 @@ void LocalDislocationDensityCalculator::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   // Next check the existing DataContainer/AttributeMatrix
-  EdgeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<EdgeDataContainer, AbstractFilter>(this, getEdgeDataContainerName());
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getEdgeDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Vertices defined.
@@ -182,7 +181,7 @@ void LocalDislocationDensityCalculator::dataCheck()
   }
 
   // Create a new DataContainer
-  VolumeDataContainer* m2 = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName());
+  DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   //Create the cell attrMat in the new data container
@@ -209,6 +208,12 @@ void LocalDislocationDensityCalculator::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -221,8 +226,8 @@ void LocalDislocationDensityCalculator::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  EdgeDataContainer* edc = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
-  VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  DataContainer::Pointer edc = getDataContainerArray()->getDataContainer(getEdgeDataContainerName());
+  DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getOutputDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = vdc->getAttributeMatrix(getOutputAttributeMatrixName());
 
   VertexArray::Pointer nodesPtr = edc->getVertices();
@@ -262,13 +267,13 @@ void LocalDislocationDensityCalculator::execute()
   quarterCellSize.y = (m_CellSize.y / 4.0);
   quarterCellSize.z = (m_CellSize.z / 4.0);
 
-  vdc->setOrigin(xMin, yMin, zMin);
+  /* FIXME: ImageGeom */ vdc->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, zMin);
   size_t dcDims[3];
   dcDims[0] = size_t((xMax - xMin) / halfCellSize.x);
   dcDims[1] = size_t((yMax - yMin) / halfCellSize.y);
   dcDims[2] = size_t((zMax - zMin) / halfCellSize.z);
-  vdc->setDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  vdc->setResolution(m_CellSize.x / 2.0, m_CellSize.y / 2.0, m_CellSize.z / 2.0);
+  /* FIXME: ImageGeom */ vdc->getGeometryAs<ImageGeom>()->setDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  /* FIXME: ImageGeom */ vdc->getGeometryAs<ImageGeom>()->setResolution(m_CellSize.x / 2.0, m_CellSize.y / 2.0, m_CellSize.z / 2.0);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = dcDims[0];

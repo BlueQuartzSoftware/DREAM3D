@@ -70,18 +70,18 @@ cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/FilterParameterWidgets/UI_Files" "$
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT4_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_HDRS} )
+#QT5_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_HDRS} )
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
 set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # -- Run MOC and UIC on the necessary files
-# QT4_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
+# QT5_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
-QT4_WRAP_UI( ${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS ${${PLUGIN_NAME}_ParameterWidgets_UIS} )
+QT5_WRAP_UI( ${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS ${${PLUGIN_NAME}_ParameterWidgets_UIS} )
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs

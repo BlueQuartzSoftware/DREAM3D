@@ -180,7 +180,6 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
 int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(MotionDirectionArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(Plane)
@@ -206,6 +205,10 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 
@@ -231,9 +234,9 @@ void FindRelativeMotionBetweenSlices::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
 
-  if(m->getXPoints() <= 1 && m->getYPoints() <= 1 && m->getZPoints() <= 1)
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getYPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getZPoints() <= 1)
   {
     setErrorCondition(-999);
     notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
@@ -262,7 +265,7 @@ void FindRelativeMotionBetweenSlices::execute()
 #endif
 
   size_t xP, yP, zP;
-  m->getDimensions(xP, yP, zP);
+  m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
   size_t totalPoints = xP * yP * zP;
 
   int32_t buffer1 = (m_PSize1 / 2) + (m_SSize1 / 2);
@@ -577,9 +580,9 @@ void FindRelativeMotionBetweenSlices::execute()
   }
 
   float v[3];
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
   for(size_t i = 0; i < totalPoints; i++)
   {
     v[0] = m_MotionDirection[3 * i + 0] * xRes;

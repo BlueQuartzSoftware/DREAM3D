@@ -669,7 +669,7 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
         flat << dIter.value().name;
       }
       QString data = flat.join(QString('\n'));
-      err = QH5Lite::writeStringDataset(amGid, QString::fromAscii("Arrays"), data);
+      err = QH5Lite::writeStringDataset(amGid, QString::fromLatin1("Arrays"), data);
 
       H5Gclose(amGid);
     }

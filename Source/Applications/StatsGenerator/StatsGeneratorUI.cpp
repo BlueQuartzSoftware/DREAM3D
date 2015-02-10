@@ -44,10 +44,10 @@
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 #include <QtGui/QDesktopServices>
-#include <QtGui/QProgressDialog>
+#include <QtWidgets/QProgressDialog>
 
 
 #include "H5Support/H5Utilities.h"
@@ -55,7 +55,6 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
@@ -647,7 +646,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   int nPhases = phaseTabs->count() + 1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::StatsGenerator);
+  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::StatsGenerator);
   dca->addDataContainer(m);
   QVector<size_t> tDims(1, nPhases);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
@@ -816,7 +815,7 @@ int StatsGeneratorUI::openFile(QString h5file)
   phaseTabs->clear();
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::StatsGenerator);
+  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::StatsGenerator);
   dca->addDataContainer(m);
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
@@ -956,7 +955,7 @@ void StatsGeneratorUI::adjustWindowTitle()
   setWindowModified(true);
 
   QString windowTitle("*");
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   windowTitle = QString("");
 #endif
   windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
@@ -1078,7 +1077,7 @@ void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
   {
     //  qDebug() << "Could not open URL: " << url.path() << "\n";
     displayDialogBox(("Error Opening Help File"),
-                     QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
+                     QString::fromLatin1("DREAM3D could not open the help file path ") + url.path(),
                      QMessageBox::Critical);
   }
 }

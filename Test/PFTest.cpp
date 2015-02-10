@@ -39,7 +39,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QDir>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QImage>
 
 #include "EbsdLib/EbsdLib.h"

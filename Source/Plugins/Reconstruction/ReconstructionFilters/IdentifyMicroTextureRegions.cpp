@@ -37,6 +37,7 @@
 
 #include "IdentifyMicroTextureRegions.h"
 
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -46,17 +47,16 @@
 #include <tbb/task_group.h>
 #endif
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
 #include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
 
 //included so we can call under the hood to segment the patches found in this filter
 #include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
@@ -219,9 +219,9 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_MinMTRSize(1.0f),
   m_MinVolFrac(1.0f),
   m_RandomizeMTRIds(false),
-  m_CAxisLocationsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CAxisLocation),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_CAxisLocationsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CAxisLocation),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_MTRIdsArrayName(DREAM3D::CellData::ParentIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_MTRIds(NULL),
@@ -292,7 +292,6 @@ void IdentifyMicroTextureRegions::readFilterParameters(AbstractFilterParametersR
 int IdentifyMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(MTRIdsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisLocationsArrayPath)
@@ -324,11 +323,14 @@ void IdentifyMicroTextureRegions::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_CAxisLocationsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_CAxisLocationsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer newCellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == newCellFeatureAttrMat.get()) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   QVector<size_t> dims(1, 3);
   // Cell Data
@@ -380,16 +382,16 @@ void IdentifyMicroTextureRegions::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCAxisLocationsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCAxisLocationsArrayPath().getDataContainerName());
   int64_t totalPoints = m_MTRIdsPtr.lock()->getNumberOfTuples();
 
   //calculate dimensions of DIC-like grid
   size_t dcDims[3] = { 0, 0, 0};
   float xRes, yRes, zRes;
   float m_Origin[3];
-  m->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  m->getResolution(xRes, yRes, zRes);
-  m->getOrigin(m_Origin);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
+  m->getGeometryAs<ImageGeom>()->getOrigin(m_Origin);
 
   //Find number of original cells in radius of patch
   IntVec3_t critDim;
@@ -423,18 +425,18 @@ void IdentifyMicroTextureRegions::execute()
   size_t totalPatches = (newDimX * newDimY * newDimZ);
 
   //Create temporary DataContainer and AttributeMatrix for holding the patch data
-  VolumeDataContainer* tmpDC = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, "PatchDataContainer(Temp)");
+  DataContainer::Pointer tmpDC = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "PatchDataContainer(Temp)");
   if(getErrorCondition() < 0) { return; }
-  tmpDC->setDimensions(static_cast<size_t>(newDimX), static_cast<size_t>(newDimY), static_cast<size_t>(newDimZ));
-  tmpDC->setResolution(critRes.x, critRes.y, critRes.z);
-  tmpDC->setOrigin(m_Origin[0], m_Origin[1], m_Origin[2]);
+  tmpDC->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(newDimX), static_cast<size_t>(newDimY), static_cast<size_t>(newDimZ));
+  tmpDC->getGeometryAs<ImageGeom>()->setResolution(critRes.x, critRes.y, critRes.z);
+  tmpDC->getGeometryAs<ImageGeom>()->setOrigin(m_Origin[0], m_Origin[1], m_Origin[2]);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = newDimX;
   tDims[1] = newDimY;
   tDims[2] = newDimZ;
-  AttributeMatrix::Pointer tempPatchAttrMat = tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "PatchAM(Temp)", tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+//  AttributeMatrix::Pointer tempPatchAttrMat = tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "PatchAM(Temp)", tDims, DREAM3D::AttributeMatrixType::Cell);
+//  if(getErrorCondition() < 0) { return; }
 
   DataArrayPath tempPath;
   tDims[0] = totalPatches;
@@ -580,7 +582,7 @@ void IdentifyMicroTextureRegions::execute()
   // By default we randomize grains
   if (true == getRandomizeMTRIds() && getCancel() == false)
   {
-    totalPoints = m->getTotalPoints();
+    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
 

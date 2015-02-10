@@ -355,7 +355,7 @@ int CtfReader::readData(QFile& in)
   bool didAllocate = false;
   for (qint32 i = 0; i < size; ++i)
   {
-    QString name = QString::fromAscii(tokens[i]);
+    QString name = QString::fromLatin1(tokens[i]);
     pType = getPointerType(name);
     if(Ebsd::Int32 == pType)
     {

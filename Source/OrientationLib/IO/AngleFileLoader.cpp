@@ -150,7 +150,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     {
       buf = buf.simplified();
     }
-    tokens = buf.split( *(getDelimiter().toAscii().data()));
+    tokens = buf.split( *(getDelimiter().toLatin1().data()));
 
 
     if (m_AngleRepresentation == EulerAngles)

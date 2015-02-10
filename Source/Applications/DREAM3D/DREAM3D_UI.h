@@ -45,10 +45,10 @@
 #include <QtCore/QList>
 #include <QtCore/QVector>
 #include <QtCore/QSettings>
-#include <QtGui/QWidget>
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QMainWindow>
 #include <QtGui/QResizeEvent>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QToolBar>
 
 
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -146,8 +146,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     // Help Menu
     void on_actionCheck_For_Updates_triggered();
     void on_actionLicense_Information_triggered();
-    void on_actionAbout_triggered();
-    void on_actionAbout_Plugins_triggered();
+    void on_actionAbout_DREAM3D_triggered();
+    void on_actionPlugin_Information_triggered();
     void on_actionShow_User_Manual_triggered();
 
     // Buttons and other widgets that send signals that we want to catch

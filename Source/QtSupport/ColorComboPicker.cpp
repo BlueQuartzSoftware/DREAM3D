@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "ColorComboPicker.h"
 
@@ -51,7 +51,8 @@ ColorComboPicker::ColorComboPicker(QWidget* widget) :
 // -----------------------------------------------------------------------------
 QColor ColorComboPicker::color() const
 {
-  return qVariantValue<QColor > (itemData(currentIndex(), Qt::DecorationRole));
+  QColor c = itemData(currentIndex(), Qt::DecorationRole).value<QColor>();
+  return c;
 }
 // -----------------------------------------------------------------------------
 //

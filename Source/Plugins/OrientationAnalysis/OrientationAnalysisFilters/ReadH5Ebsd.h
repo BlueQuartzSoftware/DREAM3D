@@ -52,8 +52,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -149,7 +148,7 @@ class ReadH5Ebsd : public AbstractFilter
     ReadH5Ebsd();
     void dataCheck();
 
-    int initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m);
+    int initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m);
     void readVolumeInfo();
 
     H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
@@ -172,7 +171,7 @@ class ReadH5Ebsd : public AbstractFilter
     template<typename EbsdReader, typename EbsdPhase>
     int loadInfo(EbsdReader* reader)
     {
-      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
       if(NULL == vdc) { return -1;}
       AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
       if(NULL == attrMatrix.get() ) { return -2; }

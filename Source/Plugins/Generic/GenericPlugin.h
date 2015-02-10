@@ -52,8 +52,9 @@
 class GenericPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.GenericPlugin")
+
 
   public:
     GenericPlugin();
@@ -162,6 +163,7 @@ class GenericPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     GenericPlugin(const GenericPlugin&); // Copy Constructor Not Implemented

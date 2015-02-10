@@ -53,13 +53,13 @@
  */
 class CalculateNormalsImpl
 {
-    VertexArray::Pointer m_Nodes;
-    FaceArray::Pointer m_Triangles;
+    SharedVertexList::Pointer m_Nodes;
+    SharedTriList::Pointer m_Triangles;
     double* m_Normals;
 
   public:
-    CalculateNormalsImpl(VertexArray::Pointer nodes,
-                         FaceArray::Pointer triangles,
+    CalculateNormalsImpl(SharedVertexList::Pointer nodes,
+                         SharedTriList::Pointer triangles,
                          double* normals) :
       m_Nodes(nodes),
       m_Triangles(triangles),
@@ -69,17 +69,22 @@ class CalculateNormalsImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting FaceArray::Face_t Index
-     * @param end The ending FaceArray::Face_t Index
+     * @param start The starting Index
+     * @param end The ending Index
      */
     void generate(size_t start, size_t end) const
     {
-      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
-      FaceArray::Face_t* triangles = m_Triangles->getPointer(0);
+      float* nodes = m_Nodes->getPointer(0);
+      int64_t* triangles = m_Triangles->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
-        // Get the true indices of the 3 nodes
-        VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].verts[0]], nodes[triangles[i].verts[1]], nodes[triangles[i].verts[2]]);
+        // Get the true indices of the 3 nodes. We need the actual pointers to
+        // the front of the 3xFloat vectors
+        float* n0 = &(nodes[triangles[i*3]]);
+        float* n1 = &(nodes[triangles[i*3+1]]);
+        float* n2 = &(nodes[triangles[i*3+2]]);
+
+        VectorType normal = TriangleOps::computeNormal(n0, n1, n2);
         m_Normals[i * 3 + 0] = normal.x;
         m_Normals[i * 3 + 1] = normal.y;
         m_Normals[i * 3 + 2] = normal.z;
@@ -100,14 +105,12 @@ class CalculateNormalsImpl
 
 };
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 TriangleNormalFilter::TriangleNormalFilter() :
   SurfaceMeshFilter(),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
+  m_FaceAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
   m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTriangleNormals(NULL)
 {
@@ -151,7 +154,6 @@ void TriangleNormalFilter::readFilterParameters(AbstractFilterParametersReader* 
 int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleNormalsArrayName)
   writer->closeFilterGroup();
@@ -163,22 +165,26 @@ int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::dataCheck()
 {
+  setErrorCondition(0);
+
   DataArrayPath tempPath;
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName(), false);
+  if(getErrorCondition() < 0) { return; }
+
+  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
+  if (NULL == triangles->getVertices().get())
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
-
   // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  if (NULL == triangles->getTriangles().get())
   {
-    setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   else
   {
@@ -214,33 +220,29 @@ void TriangleNormalFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getFaceAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getFaceAttributeMatrixName().getDataContainerName());
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
+
+  // No check because datacheck() made sure we can do the next line.
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t numTriangles = trianglesPtr->getNumberOfTuples();
-
-  // Run the data check to allocate the memory for the centroid array
-  dataCheck();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
-                      CalculateNormalsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
+                      CalculateNormalsImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    CalculateNormalsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals);
-    serial.generate(0, numTriangles);
+    CalculateNormalsImpl serial(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleNormals);
+    serial.generate(0, triangleGeom->getNumberOfTris());
   }
 
   /* Let the GUI know we are done with this filter */

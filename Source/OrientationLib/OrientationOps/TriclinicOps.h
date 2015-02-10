@@ -37,14 +37,13 @@
 #ifndef _TriclinicOPS_H_
 #define _TriclinicOPS_H_
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 
 
 /**

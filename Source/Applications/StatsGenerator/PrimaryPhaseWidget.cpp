@@ -33,11 +33,6 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 #include "PrimaryPhaseWidget.h"
 
 
@@ -49,20 +44,19 @@
 #include <QtCore/QVector>
 #include <QtCore/QRunnable>
 #include <QtCore/QThreadPool>
-#include <QtCore/QtConcurrentRun>
-#include <QtGui/QMessageBox>
-#include <QtGui/QProgressDialog>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 
 
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
-#if QWT_VERSION >= 0x060000
 #include <qwt_series_data.h>
-#else
-#include <qwt_interval_data.h>
-#endif
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 #include <qwt_painter.h>
 #include <qwt_scale_map.h>
 #include <qwt_plot_zoomer.h>
@@ -72,11 +66,13 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+
+#include "OrientationLib/Texture/StatsGen.hpp"
+
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/PrimaryEquiaxedPreset.h"

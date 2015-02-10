@@ -257,7 +257,7 @@ void ConvertData::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-//  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
 //  if(getErrorCondition() < 0 || NULL == m) { return; }
 
 
@@ -281,7 +281,7 @@ void ConvertData::dataCheck(bool preflight)
   if (true == preflight)
   {
 
-    AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, m_SelectedCellArrayPath, -301);
+    AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_SelectedCellArrayPath, -301);
     if(getErrorCondition() < 0 || NULL == cellAttrMat.get() )
     {
       return;

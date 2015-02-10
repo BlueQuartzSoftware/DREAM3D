@@ -42,7 +42,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -156,7 +155,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     void readData(bool preflight, DataContainerArrayProxy& proxy, DataContainerArray::Pointer dca);
 
-  private:    
+  private:
     DataContainerArrayProxy         m_InputFileDataContainerArrayProxy;
 
     QString                         m_InputFile;

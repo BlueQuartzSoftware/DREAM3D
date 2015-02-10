@@ -53,8 +53,9 @@
 class SyntheticBuildingPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.SyntheticBuildingPlugin")
+
 
   public:
     SyntheticBuildingPlugin();
@@ -163,6 +164,7 @@ class SyntheticBuildingPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     SyntheticBuildingPlugin(const SyntheticBuildingPlugin&); // Copy Constructor Not Implemented

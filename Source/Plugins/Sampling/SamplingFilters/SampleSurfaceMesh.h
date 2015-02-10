@@ -44,8 +44,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 /**
@@ -110,7 +110,7 @@ class SampleSurfaceMesh : public AbstractFilter
     */
     void dataCheck();
 
-    virtual VertexArray::Pointer generate_points();
+    virtual VertexGeom::Pointer generate_points();
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:

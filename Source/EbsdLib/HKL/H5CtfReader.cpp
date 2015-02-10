@@ -84,7 +84,7 @@ int H5CtfReader::readHeaderOnly()
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     qDebug() << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'";
@@ -117,7 +117,7 @@ int H5CtfReader::readFile()
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     qDebug() << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'";
@@ -148,7 +148,7 @@ int H5CtfReader::readHeader(hid_t parId)
   QString sBuf;
   QTextStream ss(&sBuf);
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     qDebug() << "H5CtfReader Error: Could not open 'Header' Group";
@@ -173,7 +173,7 @@ int H5CtfReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toAscii().data(), H5P_DEFAULT);
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toLatin1().data(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
     qDebug() << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?";
@@ -195,7 +195,7 @@ int H5CtfReader::readHeader(hid_t parId)
   for (int p = 0; p < names.size(); ++p)
   {
     QString phaseGroupName = names[p];
-    hid_t pid = H5Gopen(phasesGid, phaseGroupName.toAscii().data(), H5P_DEFAULT);
+    hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
 
     READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, float, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
@@ -259,7 +259,7 @@ int H5CtfReader::readData(hid_t parId)
 
 
 
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toAscii(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open 'Data' Group" << std::endl;

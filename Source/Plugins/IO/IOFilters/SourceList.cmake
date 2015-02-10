@@ -29,7 +29,6 @@ set(_PublicFilters
   LosAlamosFFTWriter
   NodesTrianglesToStl
   NodesTrianglesToVtk
-  ParaDisReader
   PhReader
   PhWriter
   ReadStlToSurfaceMesh
@@ -45,6 +44,7 @@ set(_PublicFilters
   VtkStructuredPointsReader
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
+  GoldfeatherReader
 )
 
 
@@ -62,7 +62,6 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-    GoldfeatherReader
     V4DataContainerReader
 )
 

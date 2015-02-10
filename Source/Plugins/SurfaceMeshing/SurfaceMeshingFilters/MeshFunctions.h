@@ -39,7 +39,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/Geometry/MeshStructs.h"
+#include "DREAM3DLib/Geometry/VertexGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 
@@ -82,11 +83,11 @@ class EdgeFunctions
   public:
     virtual ~EdgeFunctions() {}
 
-    static T Length(typename VertexArray::Pointer nodes, EdgeArray::Edge_t* e)
+    static T Length(typename VertexGeom::Pointer nodes, int64_t e[2])
     {
-      int nid0 = e->verts[0];
-      int nid1 = e->verts[1];
-      return NodeFunctions<Node, T>::Distance( *(nodes->getPointer(nid0)), *(nodes->getPointer(nid1)) );
+      int nid0 = e[0];
+      int nid1 = e[1];
+      return NodeFunctions<Node, T>::Distance( *(nodes->getVertexPointer(nid0)), *(nodes->getVertexPointer(nid1)) );
     }
 
   protected:

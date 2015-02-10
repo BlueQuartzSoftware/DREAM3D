@@ -21,8 +21,9 @@
 class EMMPMPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.EMMPMPlugin")
+
 
   public:
     EMMPMPlugin();
@@ -132,6 +133,7 @@ class EMMPMPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     EMMPMPlugin(const EMMPMPlugin&); // Copy Constructor Not Implemented

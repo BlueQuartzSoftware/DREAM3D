@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 ClearDataMask::ClearDataMask() :
   AbstractFilter(),
-  m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_Mask(NULL)
 {
   setupFilterParameters();
@@ -84,7 +84,6 @@ void ClearDataMask::readFilterParameters(AbstractFilterParametersReader* reader,
 int ClearDataMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -97,10 +96,10 @@ void ClearDataMask::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_MaskArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
   if( NULL == m)
   {
-    QString ss = QObject::tr("VolumeDataContainer was NULL");
+    QString ss = QObject::tr("DataContainer was NULL");
     notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
     return;
@@ -137,7 +136,7 @@ void ClearDataMask::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_MaskArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
   int64_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
 
   //get list of array names

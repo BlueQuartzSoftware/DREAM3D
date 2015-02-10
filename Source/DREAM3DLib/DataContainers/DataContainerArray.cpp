@@ -293,7 +293,6 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
 {
   int err = 0;
   QList<DataContainerProxy> dcsToRead = dcaProxy.list;
-  uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   QListIterator<DataContainerProxy> dcIter(dcsToRead);
   while (dcIter.hasNext()) // DataContainerLevel
   {
@@ -311,40 +310,9 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
       }
       return -198745600;
     }
-    err = QH5Lite::readScalarAttribute(dcaGid, dcProxy.name, DREAM3D::StringConstants::DataContainerType, dcType);
-    if (err < 0)
-    {
-      if(NULL != obs)
-      {
-        QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcProxy.name);
-        obs->notifyErrorMessage(getNameOfClass(), ss, -198745601);
-      }
-      return -198745601;
-    }
-    if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
-    {
-      VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
-      dc->setName(dcProxy.name);
-      this->addDataContainer(dc);
-    }
-    if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
-    {
-      SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
-      dc->setName(dcProxy.name);
-      this->addDataContainer(dc);
-    }
-    if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
-    {
-      EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
-      dc->setName(dcProxy.name);
-      this->addDataContainer(dc);
-    }
-    if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
-    {
-      VertexDataContainer::Pointer dc = VertexDataContainer::New();
-      dc->setName(dcProxy.name);
-      this->addDataContainer(dc);
-    }
+    DataContainer::Pointer dc = DataContainer::New();
+    dc->setName(dcProxy.name);
+    this->addDataContainer(dc);
 
     // Now open the DataContainer Group in the HDF5 file
     hid_t dcGid = H5Gopen(dcaGid, dcProxy.name.toLatin1().data(), H5P_DEFAULT );

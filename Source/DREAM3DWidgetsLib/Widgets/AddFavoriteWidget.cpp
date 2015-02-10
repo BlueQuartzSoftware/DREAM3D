@@ -40,7 +40,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 AddFavoriteWidget::AddFavoriteWidget(QString prompt, QString parentPath, QWidget* parent)
 {

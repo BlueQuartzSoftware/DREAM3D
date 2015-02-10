@@ -38,9 +38,11 @@
 
 //-- Qt Includes
 #include <QtCore/QDir>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Geometry/ImageGeom.h"
+
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 #include "QtSupport/QFileCompleter.h"

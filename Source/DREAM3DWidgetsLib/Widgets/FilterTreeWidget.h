@@ -38,7 +38,7 @@
 #define _FilterTreeWidget_H_
 
 #include <QtCore/QPoint>
-#include <QtGui/QTreeWidget>
+#include <QtWidgets/QTreeWidget>
 
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"

@@ -33,17 +33,19 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+#include <limits>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+
 #include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+
 #include "TestFileLocations.h"
-#include <limits>
+
 
 
 // -----------------------------------------------------------------------------

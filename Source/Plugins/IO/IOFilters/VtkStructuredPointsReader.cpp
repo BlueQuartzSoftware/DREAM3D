@@ -49,10 +49,10 @@
 VtkStructuredPointsReader::VtkStructuredPointsReader() :
   AbstractFilter(),
   m_ReadCellData(true),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
+  m_VertexDataContainerName("PointData DataContainer"),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ReadPointData(true),
-  m_VolumeDataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_VolumeDataContainerName("CellData DataContainer"),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
   m_Comment(""),
@@ -84,9 +84,9 @@ void VtkStructuredPointsReader::setupFilterParameters()
   linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadCellData(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("PointData Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("CellData Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
   setFilterParameters(parameters);
 }
@@ -114,7 +114,6 @@ void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersRea
 int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
@@ -147,7 +146,6 @@ void VtkStructuredPointsReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-
   // First shot Sanity Checks.
   if(!getReadCellData() && !getReadPointData())
   {
@@ -156,33 +154,35 @@ void VtkStructuredPointsReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-
   // Last chance sanity check
   if(getErrorCondition() < 0) { return; }
 
-
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  VolumeDataContainer* verDc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkStructuredPointsReader>(this, getVertexDataContainerName());
-  if(getErrorCondition() < 0 && NULL == verDc) { return; }
+  DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
+  if(getErrorCondition() < 0 && NULL == pointData_DataContainer) { return; }
+
+  ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName());
+  pointData_DataContainer->setGeometry(pointDataGeom);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer pointAttrMat = verDc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-
 
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  VolumeDataContainer* volDc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkStructuredPointsReader>(this, getVolumeDataContainerName());
-  if(getErrorCondition() < 0 && NULL == volDc) { return; }
+  DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
+  if(getErrorCondition() < 0 && NULL == cellData_DataContainer) { return; }
+
+  ImageGeom::Pointer cellDataGeom = ImageGeom::CreateGeometry(getVolumeDataContainerName());
+  cellData_DataContainer->setGeometry(cellDataGeom);
 
   tDims.resize(3);
   tDims[0] = 0;
   tDims[1] = 0;
   tDims[2] = 0;
-  AttributeMatrix::Pointer cellAttrMat = volDc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-
 
   // Scan through the file
   readFile();
@@ -484,14 +484,15 @@ char* VtkStructuredPointsReader::lowerCase(char* str, const size_t len)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkStructuredPointsReader::readFile()
+int VtkStructuredPointsReader:: readFile()
 {
   int err = 0;
 
-  VolumeDataContainer* volDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  DataContainer::Pointer volDc = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   AttributeMatrix::Pointer volAm = volDc->getAttributeMatrix(getCellAttributeMatrixName());
 
-  VolumeDataContainer* vertDc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
+
+  DataContainer::Pointer vertDc = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
   AttributeMatrix::Pointer vertAm = vertDc->getAttributeMatrix(getVertexAttributeMatrixName());
 
   std::ifstream in(getInputFile().toLatin1().constData(), std::ios_base::in | std::ios_base::binary);
@@ -554,14 +555,14 @@ int VtkStructuredPointsReader::readFile()
   tDims[1] = dims[1];
   tDims[2] = dims[2];
   vertAm->setTupleDimensions(tDims);
-  vertDc->setDimensions(dims.data());
+  vertDc->getGeometryAs<ImageGeom>()->setDimensions(dims.data());
 
 
   tDims[0] = dims[0] - 1;
   tDims[1] = dims[1] - 1;
   tDims[2] = dims[2] - 1;
   volAm->setTupleDimensions(tDims);
-  volDc->setDimensions(tDims.data());
+  volDc->getGeometryAs<ImageGeom>()->setDimensions(tDims.data());
 
 
   err = readLine(in, buffer, kBufferSize); // Read Line 7 which is the Scaling values
@@ -571,8 +572,8 @@ int VtkStructuredPointsReader::readFile()
   resolution[1] = tokens[2].toFloat(&ok);
   resolution[2] = tokens[3].toFloat(&ok);
 
-  volDc->setResolution(resolution);
-  vertDc->setResolution(resolution);
+  volDc->getGeometryAs<ImageGeom>()->setResolution(resolution);
+  vertDc->getGeometryAs<ImageGeom>()->setResolution(resolution);
 
 
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the Origin values
@@ -582,8 +583,8 @@ int VtkStructuredPointsReader::readFile()
   origin[1] = tokens[2].toFloat(&ok);
   origin[2] = tokens[3].toFloat(&ok);
 
-  volDc->setOrigin(origin);
-  vertDc->setOrigin(origin);
+  volDc->getGeometryAs<ImageGeom>()->setOrigin(origin);
+  vertDc->getGeometryAs<ImageGeom>()->setOrigin(origin);
 
   // Read the first key word which should be POINT_DATA or CELL_DATA
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the first type of data we are going to read
@@ -595,7 +596,7 @@ int VtkStructuredPointsReader::readFile()
 
   if ( word.startsWith("CELL_DATA") )
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
     ncells = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumTuples() != ncells)
@@ -608,7 +609,7 @@ int VtkStructuredPointsReader::readFile()
   }
   else if ( word.startsWith("POINT_DATA") )
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
     npts = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumTuples() != npts)
@@ -763,14 +764,14 @@ int VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int numValu
       {
         if(nextKeyWord.compare("cell_data") == 0)
         {
-          VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+          DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
           m_CurrentAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
           int ncells = QString(line).toInt(&ok);
           this->readDataTypeSection(in, ncells, "point_data");
         }
         else if(nextKeyWord.compare("point_data") == 0)
         {
-          VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVertexDataContainerName());
+          DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
           m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
           int npts = QString(line).toInt(&ok);
           this->readDataTypeSection(in, npts, "cell_data");

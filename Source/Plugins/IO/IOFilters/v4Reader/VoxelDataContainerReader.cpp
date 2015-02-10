@@ -96,7 +96,6 @@ void VoxelDataContainerReader::readFilterParameters(AbstractFilterParametersRead
 int VoxelDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */
@@ -172,9 +171,9 @@ void VoxelDataContainerReader::execute()
   { 1.0f, 1.0f, 1.0f };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  m->setDimensions(volDims[0], volDims[1], volDims[2]);
-  m->setResolution(spacing);
-  m->setOrigin(origin);
+  m->getGeometryAs<ImageGeom>()->setDimensions(volDims[0], volDims[1], volDims[2]);
+  m->getGeometryAs<ImageGeom>()->setResolution(spacing);
+  m->getGeometryAs<ImageGeom>()->setOrigin(origin);
 
   if(m_VertexArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadVertexData = false; }
   if(m_EdgeArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadEdgeData = false; }
@@ -307,9 +306,9 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    m->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
-    m->setResolution(spacing);
-    m->setOrigin(origin);
+    m->getGeometryAs<ImageGeom>()->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
+    m->getGeometryAs<ImageGeom>()->setResolution(spacing);
+    m->getGeometryAs<ImageGeom>()->setOrigin(origin);
   }
 
   if(m_ReadVertexData == true)

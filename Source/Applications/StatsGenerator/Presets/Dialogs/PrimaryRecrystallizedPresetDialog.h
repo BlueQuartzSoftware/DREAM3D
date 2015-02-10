@@ -37,7 +37,7 @@
 #ifndef _PrimaryRecrystallizedPresetDialog_H_
 #define _PrimaryRecrystallizedPresetDialog_H_
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 class QLineEdit;
 

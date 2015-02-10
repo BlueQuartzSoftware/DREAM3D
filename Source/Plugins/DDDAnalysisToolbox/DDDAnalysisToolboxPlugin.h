@@ -21,8 +21,9 @@
 class DDDAnalysisToolboxPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.DDDAnalysisToolboxPlugin")
+
 
   public:
     DDDAnalysisToolboxPlugin();
@@ -131,6 +132,7 @@ class DDDAnalysisToolboxPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     DDDAnalysisToolboxPlugin(const DDDAnalysisToolboxPlugin&); // Copy Constructor Not Implemented

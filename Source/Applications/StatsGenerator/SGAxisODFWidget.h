@@ -39,21 +39,11 @@
 
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QImage>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 #include "ui_SGAxisODFWidget.h"
 
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
@@ -64,6 +54,9 @@
 
 class SGODFTableModel;
 class StatsGenMDFWidget;
+class QwtPlot;
+class QwtPlotCurve;
+class QwtPlotMarker;
 
 
 /**

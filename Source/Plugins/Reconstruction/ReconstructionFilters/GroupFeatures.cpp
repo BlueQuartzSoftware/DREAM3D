@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 GroupFeatures::GroupFeatures() :
   AbstractFilter(),
-  m_ContiguousNeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
-  m_NonContiguousNeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborhoodList),
+  m_ContiguousNeighborListArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
+  m_NonContiguousNeighborListArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborhoodList),
   m_UseNonContiguousNeighbors(false),
   m_PatchGrouping(false)
 {
@@ -106,7 +106,6 @@ void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader,
 int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(UseNonContiguousNeighbors)
   DREAM3D_FILTER_WRITE_PARAMETER(ContiguousNeighborListArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NonContiguousNeighborListArrayPath)

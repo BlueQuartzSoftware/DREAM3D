@@ -38,17 +38,12 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
-
-
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -60,7 +55,7 @@
 // -----------------------------------------------------------------------------
 SegmentFeatures::SegmentFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName)
 {
 
 }
@@ -88,7 +83,6 @@ void SegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reade
 int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -124,11 +118,11 @@ void SegmentFeatures::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t udims[3] =
   { 0, 0, 0 };
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else

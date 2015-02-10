@@ -42,14 +42,14 @@
 #include "DSplashScreen.h"
 
 
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextCursor>
 #include <QtCore/QDebug>
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 class DSplashScreenPrivate
 {

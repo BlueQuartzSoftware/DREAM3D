@@ -42,13 +42,10 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -102,7 +99,6 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -121,6 +117,12 @@ void AlignSectionsList::dataCheck()
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
+
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 // -----------------------------------------------------------------------------
@@ -145,7 +147,7 @@ void AlignSectionsList::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   AlignSections::execute();
 
@@ -159,13 +161,13 @@ void AlignSectionsList::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else

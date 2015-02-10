@@ -57,8 +57,7 @@ class DataContainerProxy
      */
     DataContainerProxy() :
       flag(Qt::Unchecked),
-      name(""),
-      dcType(DREAM3D::DataContainerType::UnknownDataContainer)
+      name("")
     {}
 
     /**
@@ -67,10 +66,10 @@ class DataContainerProxy
      * @param read_dc
      * @param dc_type
      */
-    DataContainerProxy(QString dc_name, uint8_t read_dc = Qt::Checked, unsigned int dc_type = DREAM3D::DataContainerType::UnknownDataContainer) :
+    DataContainerProxy(QString dc_name, uint8_t read_dc = Qt::Checked) :
       flag(read_dc),
-      name(dc_name),
-      dcType(dc_type) {}
+      name(dc_name)
+      {}
 
     /**
     * @brief Copy Constructor

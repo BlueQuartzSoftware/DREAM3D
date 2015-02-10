@@ -37,7 +37,7 @@
 #define _R3DFILECOMPLETER_H_
 
 #include <QtCore/QObject>
-#include <QtGui/QCompleter>
+#include <QtWidgets/QCompleter>
 
 class QFileCompleter : public QCompleter
 {

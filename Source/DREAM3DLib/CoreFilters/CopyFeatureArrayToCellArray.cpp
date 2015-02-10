@@ -43,7 +43,7 @@
 CopyFeatureArrayToCellArray::CopyFeatureArrayToCellArray() :
   AbstractFilter(),
   m_SelectedFeatureArrayPath("", "", ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -124,13 +124,13 @@ void CopyFeatureArrayToCellArray::dataCheck()
     return;
   }
 
-  AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, getFeatureIdsArrayPath(), -303);
+  AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getFeatureIdsArrayPath(), -303);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() )
   {
     return;
   }
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, getSelectedFeatureArrayPath(), -302);
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSelectedFeatureArrayPath(), -302);
   if(getErrorCondition() < 0)
   {
     return;
@@ -246,10 +246,7 @@ void CopyFeatureArrayToCellArray::execute()
 
   QString ss;
 
-
-  IDataArray::Pointer inputData = getDataContainerArray()->getExistingPrereqArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedFeatureArrayPath());
-
-  //IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
+  IDataArray::Pointer inputData = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedFeatureArrayPath());
 
   if (NULL == inputData.get())
   {

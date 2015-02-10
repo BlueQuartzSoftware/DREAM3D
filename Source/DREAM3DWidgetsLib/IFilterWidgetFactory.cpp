@@ -36,7 +36,7 @@
 
 #include "IFilterWidgetFactory.h"
 
-#include <QtGui/QWidget>
+#include <QtWidgets/QWidget>
 
 
 

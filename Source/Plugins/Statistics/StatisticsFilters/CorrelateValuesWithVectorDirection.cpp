@@ -50,7 +50,7 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   m_MaxCoord(sqrt(DREAM3D::Constants::k_2Pi)/2.0),
   m_Dimension(72),
   m_StepSize(sqrt(DREAM3D::Constants::k_2Pi)/72.0),
-  m_VectorDataArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
+  m_VectorDataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
   m_VectorDataArrayName(DREAM3D::CellData::VectorData),
   m_VectorData(NULL),
   m_CorrelatedDataArrayPath("", "", "")
@@ -95,7 +95,6 @@ void CorrelateValuesWithVectorDirection::readFilterParameters(AbstractFilterPara
 int CorrelateValuesWithVectorDirection::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->writeValue("VectorDataArrayPath", getVectorDataArrayPath() );
   writer->writeValue("CorrelatedDataArrayPath", getCorrelatedDataArrayPath() );
   writer->closeFilterGroup();

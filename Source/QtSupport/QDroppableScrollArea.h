@@ -36,7 +36,7 @@
 #ifndef _QDROPPABLEWIDGET_H_
 #define _QDROPPABLEWIDGET_H_
 
-#include <QtGui/QScrollArea>
+#include <QtWidgets/QScrollArea>
 
 /*
  *

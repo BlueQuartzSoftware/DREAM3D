@@ -53,7 +53,7 @@
 // -----------------------------------------------------------------------------
 FeatureDataCSVWriter::FeatureDataCSVWriter() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureDataFile(""),
   m_WriteNeighborListData(false),
   m_Delimiter(',')
@@ -98,7 +98,6 @@ void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* 
 int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureDataFile)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteNeighborListData)
@@ -112,6 +111,9 @@ int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* 
 void FeatureDataCSVWriter::dataCheck()
 {
   setErrorCondition(0);
+
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), 80000);
+  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
 
   if (getFeatureDataFile().isEmpty() == true)
   {

@@ -46,7 +46,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 /**
  * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h DREAM3DLib/IOFilters/AvizoUniformCoordinateWriter.h
@@ -59,6 +59,7 @@ class  AvizoUniformCoordinateWriter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
+
     DREAM3D_SHARED_POINTERS(AvizoUniformCoordinateWriter)
     DREAM3D_STATIC_NEW_MACRO(AvizoUniformCoordinateWriter)
     DREAM3D_TYPE_MACRO_SUPER(AvizoUniformCoordinateWriter, AbstractFilter)
@@ -67,9 +68,11 @@ class  AvizoUniformCoordinateWriter : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

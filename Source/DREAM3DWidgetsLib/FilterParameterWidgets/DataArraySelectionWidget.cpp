@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
-#include <QtGui/QListWidgetItem>
+#include <QtWidgets/QListWidgetItem>
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -255,10 +255,9 @@ void DataArraySelectionWidget::populateComboBoxes()
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
   int amIndex = attributeMatrixList->findText(amName);
-  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
+  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); }
   else
   {
-    if(amIndex < 0) { amIndex = 0; }
     attributeMatrixList->setCurrentIndex(amIndex);
     populateAttributeArrayList();
   }

@@ -46,7 +46,7 @@ AbaqusHexahedronWriter::AbaqusHexahedronWriter() :
   AbstractFilter(),
   m_OutputPath(""),
   m_FilePrefix("default"),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_HourglassStiffness(250),
   m_JobName(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -96,7 +96,6 @@ void AbaqusHexahedronWriter::readFilterParameters(AbstractFilterParametersReader
 int AbaqusHexahedronWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
@@ -124,27 +123,24 @@ void AbaqusHexahedronWriter::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  // Now make sure we have a VolumeDataContainer
-  VolumeDataContainer* dc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
-  if (NULL == dc)
-  {
-    setErrorCondition(-12002);
-    QString ss = QObject::tr("The selected DataContainer is not a 'Volume DataContainer' type. Please select an array that has as its parent a VolumeDataContainer.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
+  if (getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if (getErrorCondition() < 0) { return; }
 
   if(NULL != m_FeatureIdsPtr.lock().get() && NULL != dc )
   {
     size_t volDims[3] = { 0, 0, 0};
-    dc->getDimensions(volDims);
+    image->getDimensions(volDims);
     size_t volTuples = volDims[0] * volDims[1] * volDims[2];
 
     if (volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples() )
     {
       setErrorCondition(-12000);
       QString ss = QObject::tr("The number of tuples for the selected volume '%1' does not match the number of tuples for the selected data array '%2'.\
-      Did you select an Attribute Matrix that holds data for each voxel? These AttributeMatrices are usually called 'CellData'.").arg(volTuples).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+                               Did you select an Attribute Matrix that holds data for each voxel? These AttributeMatrices are usually called 'CellData'.").arg(volTuples).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+                                                                                                  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 }
@@ -183,16 +179,16 @@ void AbaqusHexahedronWriter::execute()
     return;
   }
 
-  VolumeDataContainer* r = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer r = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t cDims[3] = { 0, 0, 0 };
-  r->getDimensions(cDims);
+  r->getGeometryAs<ImageGeom>()->getDimensions(cDims);
   size_t pDims[3] = { cDims[0] + 1, cDims[1] + 1, cDims[2] + 1 };
   float origin[3] = { 0.0f, 0.0f, 0.0f };
-  r->getOrigin(origin);
+  r->getGeometryAs<ImageGeom>()->getOrigin(origin);
   float spacing[3] = { 0.0f, 0.0f, 0.0f };
-  r->getResolution(spacing);
-  size_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
+  r->getGeometryAs<ImageGeom>()->getResolution(spacing);
+  size_t totalPoints = r->getGeometryAs<ImageGeom>()->getXPoints() * r->getGeometryAs<ImageGeom>()->getYPoints() * r->getGeometryAs<ImageGeom>()->getZPoints();
 
   // Create file names
   QString nodesFile = m_OutputPath + QDir::separator() + m_FilePrefix + "_nodes.inp";

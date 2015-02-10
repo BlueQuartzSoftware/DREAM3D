@@ -52,8 +52,9 @@
 class OrientationAnalysisPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
-
     Q_INTERFACES(IDREAM3DPlugin)
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.OrientationAnalysisPlugin")
+
 
   public:
     OrientationAnalysisPlugin();
@@ -162,6 +163,7 @@ class OrientationAnalysisPlugin : public QObject, public IDREAM3DPlugin
     QString             m_URL;
     QString             m_Location;
     QString             m_Copyright;
+    QList<QString>      m_Filters;
     bool                m_DidLoad;
 
     OrientationAnalysisPlugin(const OrientationAnalysisPlugin&); // Copy Constructor Not Implemented

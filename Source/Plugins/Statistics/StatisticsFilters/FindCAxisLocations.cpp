@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 FindCAxisLocations::FindCAxisLocations() :
   AbstractFilter(),
-  m_QuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
+  m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
@@ -90,7 +90,6 @@ void FindCAxisLocations::readFilterParameters(AbstractFilterParametersReader* re
 int FindCAxisLocations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisLocationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   writer->closeFilterGroup();

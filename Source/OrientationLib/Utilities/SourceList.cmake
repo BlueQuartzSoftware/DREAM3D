@@ -20,7 +20,7 @@ set(OrientationLib_Utilities_SRCS
 cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/Utilities" "${OrientationLib_Utilities_HDRS}" "${OrientationLib_Utilities_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${OrientationLib_Utilities_HDRS}
-            DESTINATION include/DREAM3D/Utilities
+            DESTINATION include/OrientationLib/Utilities
             COMPONENT Headers   )
 endif()
 

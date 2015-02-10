@@ -46,7 +46,7 @@
 
 #include "moc_SyntheticBuildingPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(SyntheticBuildingPlugin, SyntheticBuildingPlugin)
+
 
 namespace Detail
 {
@@ -65,6 +65,7 @@ m_Vendor(DREAM3D::BlueQuartz::VendorName),
 m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Copyright(DREAM3D::BlueQuartz::Copyright),
+m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 

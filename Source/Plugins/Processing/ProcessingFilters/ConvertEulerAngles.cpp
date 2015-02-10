@@ -83,7 +83,7 @@ class ConvertEulerAnglesImpl
 ConvertEulerAngles::ConvertEulerAngles() :
   AbstractFilter(),
   m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL)
 {
@@ -138,7 +138,6 @@ void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* re
 int ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
   writer->closeFilterGroup();

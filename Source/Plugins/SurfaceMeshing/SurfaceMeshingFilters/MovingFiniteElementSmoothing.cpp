@@ -55,10 +55,10 @@
 #include <limits>
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
-#include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Geometry/MeshStructs.h"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshFunctions.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 
@@ -135,7 +135,7 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   m_ConstrainSurfaceNodes(true),
   m_ConstrainQuadPoints(true),
   m_SmoothTripleLines(true),
-  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL)
 {
@@ -186,7 +186,6 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
   DREAM3D_FILTER_WRITE_PARAMETER(NodeConstraints)
@@ -204,7 +203,7 @@ void MovingFiniteElementSmoothing::dataCheck()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
+DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -252,6 +251,12 @@ void MovingFiniteElementSmoothing::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -264,7 +269,7 @@ void MovingFiniteElementSmoothing::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshNodeTypeArrayPath().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshNodeTypeArrayPath().getDataContainerName());
 
   VertexArray::Pointer floatNodesPtr = sm->getVertices();
   FaceArray::Pointer trianglesPtr = sm->getFaces();

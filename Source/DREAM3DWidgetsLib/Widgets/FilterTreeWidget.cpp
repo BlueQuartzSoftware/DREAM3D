@@ -37,9 +37,10 @@
 #include "FilterTreeWidget.h"
 
 #include <QtGui/QMouseEvent>
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
+#include <QtCore/QMimeData>
+#include <QtGui/QDrag>
 
-// #include "DREAM3DWidgetsLib/moc_FilterTreeWidget.cpp"
 
 
 // -----------------------------------------------------------------------------

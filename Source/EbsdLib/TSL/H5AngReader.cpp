@@ -90,7 +90,7 @@ int H5AngReader::readFile()
     return err;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     qDebug() << "H5AngReader Error: Could not open path '" << m_HDF5Path << "'";
@@ -147,14 +147,14 @@ int H5AngReader::readHeaderOnly()
     return -1;
   }
 
-  hid_t fileId = QH5Utilities::openFile(getFileName().toAscii().data(), true);
+  hid_t fileId = QH5Utilities::openFile(getFileName().toLatin1().data(), true);
   if (fileId < 0)
   {
     qDebug() << "H5AngReader Error: Could not open HDF5 file '" << getFileName() << "'";
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     qDebug() << "H5AngReader Error: Could not open path '" << m_HDF5Path << "'";
@@ -175,7 +175,7 @@ int H5AngReader::readHeaderOnly()
 int H5AngReader::readHeader(hid_t parId)
 {
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     setErrorCode(-90008);
@@ -198,7 +198,7 @@ int H5AngReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, SampleID, Ebsd::Ang::SampleId)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, ScanID, Ebsd::Ang::ScanId)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toAscii().data(), H5P_DEFAULT);
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toLatin1().data(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
     setErrorCode(-90007);
@@ -223,7 +223,7 @@ int H5AngReader::readHeader(hid_t parId)
   foreach(QString phaseGroupName, names)
   //for (QStringList<QString>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
   {
-    hid_t pid = H5Gopen(phasesGid, phaseGroupName.toAscii().data(), H5P_DEFAULT);
+    hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
     AngPhase::Pointer m_CurrentPhase = AngPhase::New();
     READ_PHASE_HEADER_DATA("H5AngReader", pid, int, Ebsd::Ang::Phase, PhaseIndex, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
@@ -235,7 +235,7 @@ int H5AngReader::readHeader(hid_t parId)
 
     if (m_CurrentPhase->getNumberFamilies() > 0)
     {
-      hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.toAscii().data(), H5P_DEFAULT);
+      hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.toLatin1().data(), H5P_DEFAULT);
       // Only read the HKL Families if they are there. Trying to open the group will tell us if there
       // are any families to read
 
@@ -279,7 +279,7 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   {
     QString dsetName = QString::number(i);
 
-    dataset = H5Dopen(hklGid, dsetName.toAscii().data(), H5P_DEFAULT);
+    dataset = H5Dopen(hklGid, dsetName.toLatin1().data(), H5P_DEFAULT);
 
     memtype = H5Tcreate (H5T_COMPOUND, sizeof (HKLFamily_t));
     status = H5Tinsert(memtype, "H", HOFFSET (HKLFamily_t, h), H5T_NATIVE_INT);
@@ -382,7 +382,7 @@ int H5AngReader::readData(hid_t parId)
   }
 
 
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     setErrorMessage("H5AngReader Error: Could not open 'Data' Group");

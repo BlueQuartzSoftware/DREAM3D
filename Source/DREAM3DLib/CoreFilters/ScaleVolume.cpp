@@ -51,12 +51,12 @@
  */
 class UpdateVerticesImpl
 {
-    VertexArray::Pointer m_Nodes;
+    float* m_Nodes;
     float* m_Min;
     FloatVec3_t m_ScaleFactor;
 
   public:
-    UpdateVerticesImpl(VertexArray::Pointer nodes, float* min, FloatVec3_t scale) :
+    UpdateVerticesImpl(float* nodes, float* min, FloatVec3_t scale) :
       m_Nodes(nodes),
       m_Min(min),
       m_ScaleFactor(scale)
@@ -66,12 +66,11 @@ class UpdateVerticesImpl
 
     void generate(size_t start, size_t end) const
     {
-      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
-        nodes[i].pos[0] = m_Min[0] + (nodes[i].pos[0] - m_Min[0]) * m_ScaleFactor.x;
-        nodes[i].pos[1] = m_Min[1] + (nodes[i].pos[1] - m_Min[1]) * m_ScaleFactor.y;
-        nodes[i].pos[2] = m_Min[2] + (nodes[i].pos[2] - m_Min[2]) * m_ScaleFactor.z;
+        m_Nodes[3*i] = m_Min[0] + (m_Nodes[3*i] - m_Min[0]) * m_ScaleFactor.x;
+        m_Nodes[3*i+1] = m_Min[1] + (m_Nodes[3*i+1] - m_Min[1]) * m_ScaleFactor.y;
+        m_Nodes[3*i+2] = m_Min[2] + (m_Nodes[3*i+2] - m_Min[2]) * m_ScaleFactor.z;
       }
     }
 
@@ -90,8 +89,8 @@ class UpdateVerticesImpl
 // -----------------------------------------------------------------------------
 ScaleVolume::ScaleVolume() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_ApplyToVoxelVolume(true),
   m_ApplyToSurfaceMesh(true)
 {
@@ -166,25 +165,31 @@ void ScaleVolume::dataCheck()
   setErrorCondition(0);
   if (m_ApplyToVoxelVolume == true)
   {
-    getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
     if(getErrorCondition() < 0)
     {
       return;
+    }
+    ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(image.get() == NULL)
+    {
+      setErrorCondition(-384);
+      notifyErrorMessage(getHumanLabel(), "DataContainer missing ImageGeom (voxel) geometry", getErrorCondition());
     }
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+    DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
     if(getErrorCondition() < 0)
     {
       return;
     }
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
+    VertexGeom::Pointer vertices = sm->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
+    if(vertices.get() == NULL)
     {
       setErrorCondition(-384);
-      notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "DataContainer missing VertexGeom (nodes) geometry", getErrorCondition());
     }
   }
 }
@@ -218,14 +223,15 @@ void ScaleVolume::execute()
 
   if (m_ApplyToVoxelVolume == true)
   {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
 
     float resolution[3];
-    m->getResolution(resolution);
+    image->getResolution(resolution);
     resolution[0] *= m_ScaleFactor.x;
     resolution[1] *= m_ScaleFactor.y;
     resolution[2] *= m_ScaleFactor.z;
-    m->setResolution(resolution);
+    image->setResolution(resolution);
   }
 
   if (m_ApplyToSurfaceMesh == true)
@@ -252,41 +258,41 @@ void ScaleVolume::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
-  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
+  VertexGeom::Pointer nodesPtr = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName())->getGeometryAs<VertexGeom>();
+  float* nodes = nodesPtr->getVertexPointer(0);
 
   // First get the min/max coords.
 
   float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
   float max[3] = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
 
-  size_t count = nodesPtr->getNumberOfTuples();
+  size_t count = nodesPtr->getNumberOfVertices();
   for (size_t i = 0; i < count; i++)
   {
-    if (nodes[i].pos[0] > max[0])
+    if (nodes[3*i] > max[0])
     {
-      max[0] = nodes[i].pos[0];
+      max[0] = nodes[3*i];
     }
-    if (nodes[i].pos[1] > max[1])
+    if (nodes[3*i+1] > max[1])
     {
-      max[1] = nodes[i].pos[1];
+      max[1] = nodes[3*i+1];
     }
-    if (nodes[i].pos[2] > max[2])
+    if (nodes[3*i+2] > max[2])
     {
-      max[2] = nodes[i].pos[2];
+      max[2] = nodes[3*i+2];
     }
 
-    if (nodes[i].pos[0] < min[0])
+    if (nodes[3*i] < min[0])
     {
-      min[0] = nodes[i].pos[0];
+      min[0] = nodes[3*i];
     }
-    if (nodes[i].pos[1] < min[1])
+    if (nodes[3*i+1] < min[1])
     {
-      min[1] = nodes[i].pos[1];
+      min[1] = nodes[3*i+1];
     }
-    if (nodes[i].pos[2] < min[2])
+    if (nodes[3*i+2] < min[2])
     {
-      min[2] = nodes[i].pos[2];
+      min[2] = nodes[3*i+2];
     }
   }
 
@@ -294,12 +300,12 @@ void ScaleVolume::updateSurfaceMesh()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                      UpdateVerticesImpl(nodesPtr, min, m_ScaleFactor), tbb::auto_partitioner());
+                      UpdateVerticesImpl(nodes, min, m_ScaleFactor), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    UpdateVerticesImpl serial(nodesPtr, min, m_ScaleFactor);
+    UpdateVerticesImpl serial(nodes, min, m_ScaleFactor);
     serial.generate(0, count);
   }
 }

@@ -36,7 +36,7 @@
 #ifndef _PrimaryRolledPresetDialog_H_
 #define _PrimaryRolledPresetDialog_H_
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 class QLineEdit;
 

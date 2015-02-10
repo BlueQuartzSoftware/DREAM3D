@@ -51,8 +51,8 @@
 IdentifyDislocationSegments::IdentifyDislocationSegments() :
   AbstractFilter(),
   m_EdgeFeatureAttributeMatrixName(DREAM3D::Defaults::EdgeFeatureAttributeMatrixName),
-  m_BurgersVectorsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::BurgersVectors),
-  m_SlipPlaneNormalsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::SlipPlaneNormals),
+  m_BurgersVectorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::BurgersVectors),
+  m_SlipPlaneNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::SlipPlaneNormals),
   m_DislocationIdsArrayName(DREAM3D::EdgeData::DislocationIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_BurgersVectorsArrayName(DREAM3D::EdgeData::BurgersVectors),
@@ -110,7 +110,6 @@ void IdentifyDislocationSegments::readFilterParameters(AbstractFilterParametersR
 int IdentifyDislocationSegments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(EdgeFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(DislocationIdsArrayName)
@@ -141,7 +140,7 @@ void IdentifyDislocationSegments::dataCheck()
   setErrorCondition(0);
 
   // Next check the existing DataContainer/AttributeMatrix
-  EdgeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<EdgeDataContainer, AbstractFilter>(this, getBurgersVectorsArrayPath().getDataContainerName());
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getBurgersVectorsArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer edgeFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::EdgeFeature);
@@ -190,6 +189,12 @@ void IdentifyDislocationSegments::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +207,7 @@ void IdentifyDislocationSegments::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  EdgeDataContainer* edc = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getBurgersVectorsArrayPath().getDataContainerName());
+  DataContainer::Pointer edc = getDataContainerArray()->getDataContainer(getBurgersVectorsArrayPath().getDataContainerName());
   AttributeMatrix::Pointer edgeFeatureAttrMat = edc->getAttributeMatrix(getEdgeFeatureAttributeMatrixName());
 
   VertexArray::Pointer nodesPtr = edc->getVertices();

@@ -56,7 +56,7 @@
 // -----------------------------------------------------------------------------
 VTKFileReader::VTKFileReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_InputFile("")
 {
 }
@@ -204,7 +204,7 @@ int VTKFileReader::readHeader()
     return -1;
   }
 
-  if (NULL == getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()))
+  if (NULL == getDataContainerArray()->getDataContainer(getDataContainerName()).get())
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
@@ -286,9 +286,17 @@ int VTKFileReader::readHeader()
   }
 
   size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setDimensions(dcDims);
-
-
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getDataContainerName());
+  if (dc.get() == NULL)
+  {
+    return -1;
+  }
+  ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
+  if (image.get() == NULL)
+  {
+    return -1;
+  }
+  image->setDimensions(dcDims);
 
   buf = in.readLine(); // Read Line 6 which is the Origin values
   float origin[3];
@@ -296,8 +304,7 @@ int VTKFileReader::readHeader()
   origin[0] = tokens[1].toFloat(&ok);
   origin[1] = tokens[2].toFloat(&ok);
   origin[2] = tokens[3].toFloat(&ok);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setOrigin(origin);
-
+  image->setOrigin(origin);
 
   buf = in.readLine(); // Read Line 7 which is the Scaling values
   float resolution[3];
@@ -305,8 +312,7 @@ int VTKFileReader::readHeader()
   resolution[0] = tokens[1].toFloat(&ok);
   resolution[1] = tokens[2].toFloat(&ok);
   resolution[2] = tokens[3].toFloat(&ok);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setResolution(resolution);
-
+  image->setResolution(resolution);
 
   return err;
 

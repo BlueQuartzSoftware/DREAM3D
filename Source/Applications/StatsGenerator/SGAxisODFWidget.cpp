@@ -36,16 +36,12 @@
 
 #include "SGAxisODFWidget.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 //-- C++ Includes
 #include <iostream>
 
 //-- Qt Includes
-#include <QtGui/QAbstractItemDelegate>
-#include <QtCore/QtConcurrentMap>
+#include <QtWidgets/QAbstractItemDelegate>
+#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -53,18 +49,30 @@
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 
+#include <qwt.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
+#include <qwt_series_data.h>
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/Texture.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
+#include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 #include "QtSupport/PoleFigureImageUtilities.h"
@@ -279,7 +287,7 @@ void SGAxisODFWidget::setupGui()
 
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_ODFTableView);
-  headerView->setResizeMode(QHeaderView::Interactive);
+  headerView->sectionResizeMode(QHeaderView::Interactive);
   m_ODFTableView->setHorizontalHeader(headerView);
   headerView->show();
 

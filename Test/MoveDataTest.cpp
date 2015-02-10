@@ -89,9 +89,9 @@ enum ErrorCodes
 DataContainerArray::Pointer createDataContainerArray()
 {
     DataContainerArray::Pointer dca = DataContainerArray::New();
-    VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New("DataContainer1");
-    VolumeDataContainer::Pointer dc2 = VolumeDataContainer::New("DataContainer2");
-    VolumeDataContainer::Pointer dc3 = VolumeDataContainer::New("DataContainer3");
+    DataContainer::Pointer dc1 = DataContainer::New("DataContainer1");
+    DataContainer::Pointer dc2 = DataContainer::New("DataContainer2");
+    DataContainer::Pointer dc3 = DataContainer::New("DataContainer3");
     AttributeMatrix::Pointer am1 = AttributeMatrix::New(QVector<size_t>(3,2), "AttributeMatrix1", 0);
     AttributeMatrix::Pointer am2 = AttributeMatrix::New(QVector<size_t>(7,2), "AttributeMatrix2", 0);
     AttributeMatrix::Pointer am3 = AttributeMatrix::New(QVector<size_t>(4,3), "AttributeMatrix3", 0);

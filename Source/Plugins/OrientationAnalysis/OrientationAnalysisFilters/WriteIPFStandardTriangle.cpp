@@ -141,7 +141,6 @@ void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersRead
 int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
@@ -203,7 +202,6 @@ void WriteIPFStandardTriangle::execute()
 
   QImage image = generateCubicHighTriangle();
   writeImage(image);
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

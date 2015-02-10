@@ -63,29 +63,29 @@ namespace GenericFilterTest
 {
   QString TestDir()
   {
-    return UnitTest::TestTempDir + QString::fromAscii("/GenericFilterTest");
+    return UnitTest::TestTempDir + QString::fromLatin1("/GenericFilterTest");
   }
 
   QString TestTSLPipelineFile()
   {
-    return TestDir() + QString::fromAscii("/ReadH5Ebsd_AngFileExample.ini");
+    return TestDir() + QString::fromLatin1("/ReadH5Ebsd_AngFileExample.ini");
   }
 
   QString TestHKLPipelineFile()
   {
-    return TestDir() + QString::fromAscii("/ReadH5Ebsd_HklFileExample.ini");
+    return TestDir() + QString::fromLatin1("/ReadH5Ebsd_HklFileExample.ini");
   }
 
   QString DREAM3DFile()
   {
-    return TestDir() + QString::fromAscii("/SmallIN100.dream3d");
+    return TestDir() + QString::fromLatin1("/SmallIN100.dream3d");
   }
 
   //// ****************** This file is a reference file from the DREAM3D Data Directory
   /// ******************** DO NOT FREAKING DELETE IT!!!!!!!!!!
   QString SmallIN100File()
   {
-    return UnitTest::DataDir + QString::fromAscii("/SmallIN100/SmallIN100.h5ebsd");
+    return UnitTest::DataDir + QString::fromLatin1("/SmallIN100/SmallIN100.h5ebsd");
   }
 
 }

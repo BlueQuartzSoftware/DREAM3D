@@ -42,10 +42,6 @@
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
-#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/DataContainers/IDataContainerBundle.h"
 #include "DREAM3DLib/DataContainers/DataContainerBundle.h"
@@ -187,13 +183,11 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     */
     IDataContainerBundle::Pointer getDataContainerBundle(const QString& name);
 
-    template<typename T>
-    T* getDataContainerBundleAs(const QString& name)
+    template<typename BundleType>
+    typename BundleType::Pointer getDataContainerBundleAs(const QString& name)
     {
-      IDataContainerBundle::Pointer dc = getDataContainerBundle(name);
-      if(NULL == dc.get()) { return NULL; }
-      T* m = T::SafePointerDownCast(dc.get());
-      return m;
+      typename BundleType::Pointer dcb = boost::dynamic_pointer_cast<BundleType>(getDataContainerBundle(name));
+      return dcb;
     }
 
     /**
@@ -223,45 +217,31 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     void removeDataContainerFromBundles(const QString& name);
 
     /**
-     * @brief getDataContainerAs
-     * @param name
-     * @return
-     */
-    template<typename T>
-    T* getDataContainerAs(const QString& name)
-    {
-      DataContainer::Pointer dc = getDataContainer(name);
-      if(NULL == dc.get()) { return NULL; }
-      T* m = T::SafePointerDownCast(dc.get());
-      return m;
-    }
-
-    /**
      * @brief getPrereqDataContainer
      * @param name
      * @param createIfNotExists
      * @return
      */
-    template<typename DataContainerType, typename Filter>
-    DataContainerType* getPrereqDataContainer(Filter* filter, const QString& name, bool createIfNotExists = false)
+    template<typename Filter>
+    DataContainer::Pointer getPrereqDataContainer(Filter* filter, const QString& name, bool createIfNotExists = false)
     {
-      DataContainerType* dc = getDataContainerAs<DataContainerType>(name);
-      if(NULL == dc && createIfNotExists == false)
+      DataContainer::Pointer dc = getDataContainer(name);
+      if(NULL == dc.get() && createIfNotExists == false)
       {
         if (filter)
         {
           filter->setErrorCondition(-999);
-          QString ss = "The DataContainer Object with the specific name " + name + " was not available.";
+          QString ss = "The DataContainer Object with the specific name '" + name + "' was not available.";
           PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
           filter->broadcastPipelineMessage(em);
         }
-        return NULL;
+        return dc;
       }
       else if(NULL != dc && createIfNotExists == true)
       {
-        typename DataContainerType::Pointer dataContainer = DataContainerType::New(name); // Create a new Data Container
+        DataContainer::Pointer dataContainer = DataContainer::New(name); // Create a new Data Container
         addDataContainer(dataContainer); // Put the new DataContainer into the array
-        return dataContainer.get(); // Return the wrapped pointer
+        return dataContainer; // Return the wrapped pointer
       }
       // The DataContainer we asked for was present and NON Null so return that.
       return dc;
@@ -272,8 +252,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @param dataContainerName The name of the DataContainer. Must not be empty or this method will ASSERT()
      * @return
      */
-    template<class DataContainerType, typename Filter>
-    DataContainerType* createNonPrereqDataContainer(Filter* filter, const QString& dataContainerName)
+    template<typename Filter>
+    DataContainer::Pointer createNonPrereqDataContainer(Filter* filter, const QString& dataContainerName)
     {
       Q_ASSERT(dataContainerName.isEmpty() == false);
       if(doesDataContainerExist(dataContainerName) == true)
@@ -281,15 +261,14 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         if (filter)
         {
           filter->setErrorCondition(-888);
-          QString ss = "The DataContainer Object with the specific name " + dataContainerName + " already exists.";
+          QString ss = "The DataContainer Object with the specific name '" + dataContainerName + "' already exists.";
           PipelineMessage em(filter->getHumanLabel(), ss, filter->getErrorCondition(), PipelineMessage::Error);
           filter->broadcastPipelineMessage(em);
-          return (getPrereqDataContainer<DataContainerType, Filter>(filter, dataContainerName));
         }
       }
-      typename DataContainerType::Pointer dataContainer = DataContainerType::New(dataContainerName);
+      DataContainer::Pointer dataContainer = DataContainer::New(dataContainerName);
       addDataContainer(dataContainer);
-      return dataContainer.get();
+      return dataContainer;
     }
 
 
@@ -301,12 +280,12 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @param err The error code to display to the user
      * @return
      */
-    template<typename DataContainerType, typename Filter>
+    template<typename Filter>
     AttributeMatrix::Pointer getPrereqAttributeMatrixFromPath(Filter* filter, DataArrayPath path, int err)
     {
       // First try to get the Parent DataContainer. If an error occurs the error message will have been set
       // so just return a NULL shared pointer
-      DataContainer* dc = getPrereqDataContainer<DataContainerType, Filter>(filter, path.getDataContainerName(), false);
+      DataContainer::Pointer dc = getPrereqDataContainer<Filter>(filter, path.getDataContainerName(), false);
       if(NULL == dc) { return AttributeMatrix::NullPointer(); }
 
       // Now just return what ever the DataContainer gives us. if the AttributeMatrix was not available then an
@@ -384,13 +363,13 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     }
 
     /**
-    * @brief getExistingPrereqArrayFromPath
+    * @brief getPrereqIDataArrayFromPath
     * @param filter
     * @param path
     * @return
     */
     template<class ArrayType, class Filter>
-    typename ArrayType::Pointer getExistingPrereqArrayFromPath(Filter* filter, const DataArrayPath& path)
+    typename ArrayType::Pointer getPrereqIDataArrayFromPath(Filter* filter, const DataArrayPath& path)
     {
 
       QString ss;
@@ -447,7 +426,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         return dataArray;
       }
 
-      dataArray = attrMat->getExistingPrereqArray<ArrayType, Filter>(filter, daName, -90002); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      dataArray = attrMat->getPrereqIDataArray<ArrayType, Filter>(filter, daName, -90002); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       return dataArray;
     }
 

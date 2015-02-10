@@ -60,6 +60,8 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "OrientationLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
@@ -71,7 +73,6 @@
 #include "OrientationLib/OrientationOps/TetragonalLowOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "QtSupport/PoleFigureImageUtilities.h"
@@ -89,11 +90,11 @@
 WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile() :
   AbstractFilter(),
   m_OutputFile(""),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CellPhases),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CellPhases),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_ConvertToDegrees(true),
   m_UseGoodVoxels(false),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels)
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels)
 {
   setupFilterParameters();
 }
@@ -148,7 +149,6 @@ void WriteStatsGenOdfAngleFile::readFilterParameters(AbstractFilterParametersRea
 int WriteStatsGenOdfAngleFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(ConvertToDegrees)
   DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)

@@ -251,10 +251,10 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
-  m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
-  m_InputShapeTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
-  m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_InputStatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_InputShapeTypesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
+  m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_UseMask(false),
   m_HaveFeatures(false),
   m_FeatureInputFile(""),
@@ -381,7 +381,6 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
@@ -440,8 +439,12 @@ void PackPrimaryPhases::dataCheck()
   // This is for convenience
 
   // Make sure we have our input DataContainer with the proper Ensemble data
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+
+  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   //Input Ensemble Data That we require
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
@@ -613,7 +616,7 @@ void PackPrimaryPhases::execute()
     write_goal_attributes();
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
   cellFeatureAttrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   cellFeatureAttrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -697,7 +700,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusionZo
 void  PackPrimaryPhases::load_features()
 {
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
 
   std::ifstream inFile;
@@ -769,7 +772,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
@@ -780,7 +783,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   size_t udims[3] =
   { 0, 0, 0 };
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -793,12 +796,12 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     static_cast<DimType>(udims[2]),
   };
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-  sizex = dims[0] * m->getXRes();
-  sizey = dims[1] * m->getYRes();
-  sizez = dims[2] * m->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
+  sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
+  sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
   totalvol = sizex * sizey * sizez;
 
   double totalprimaryvolTEMP = 0;
@@ -810,7 +813,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     if(m_FeatureIds[i] <= 0) { totalprimaryvolTEMP++; }
   }
   float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
-  totalprimaryvol = totalprimaryvol * (m->getXRes() * m->getYRes() * m->getZRes());
+  totalprimaryvol = totalprimaryvol * (m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes());
 
   // float change1, change2;
   float change = 0.0f;
@@ -1370,11 +1373,11 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 // -----------------------------------------------------------------------------
 Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  m_PackingRes[0] = m->getXRes() * 2.0f;
-  m_PackingRes[1] = m->getYRes() * 2.0f;
-  m_PackingRes[2] = m->getZRes() * 2.0f;
+  m_PackingRes[0] = m->getGeometryAs<ImageGeom>()->getXRes() * 2.0f;
+  m_PackingRes[1] = m->getGeometryAs<ImageGeom>()->getYRes() * 2.0f;
+  m_PackingRes[2] = m->getGeometryAs<ImageGeom>()->getZRes() * 2.0f;
 
   m_HalfPackingRes[0] = m_PackingRes[0] * 0.5;
   m_HalfPackingRes[1] = m_PackingRes[1] * 0.5;
@@ -1388,9 +1391,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
   m_OneOverPackingRes[1] = 1.0f / m_PackingRes[1];
   m_OneOverPackingRes[2] = 1.0f / m_PackingRes[2];
 
-  m_PackingPoints[0] = m->getXPoints() / 2;
-  m_PackingPoints[1] = m->getYPoints() / 2;
-  m_PackingPoints[2] = m->getZPoints() / 2;
+  m_PackingPoints[0] = m->getGeometryAs<ImageGeom>()->getXPoints() / 2;
+  m_PackingPoints[1] = m->getGeometryAs<ImageGeom>()->getYPoints() / 2;
+  m_PackingPoints[2] = m->getGeometryAs<ImageGeom>()->getZPoints() / 2;
 
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
 
@@ -1542,7 +1545,7 @@ void PackPrimaryPhases::move_feature(size_t gnum, float xc, float yc, float zc)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   float x, y, z;
   float xn, yn, zn;
@@ -1582,7 +1585,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
   // Optimized Code
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1753,7 +1756,7 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
 // -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_sizedisterror(Feature* feature)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -2105,12 +2108,12 @@ void PackPrimaryPhases::assign_voxels()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   DimType dims[3] =
   {
@@ -2131,9 +2134,9 @@ void PackPrimaryPhases::assign_voxels()
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
@@ -2296,7 +2299,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   int featurename, feature;
   int current = 0;
@@ -2308,9 +2311,9 @@ void PackPrimaryPhases::assign_gaps_only()
   int good;
   int neighbor;
 
-  int xPoints = static_cast<int>(m->getXPoints());
-  int yPoints = static_cast<int>(m->getYPoints());
-  int zPoints = static_cast<int>(m->getZPoints());
+  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
@@ -2322,7 +2325,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getTotalPoints(), "Neighbors");
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 
@@ -2421,14 +2424,14 @@ void PackPrimaryPhases::cleanup_features()
 {
   notifyStatusMessage(getHumanLabel(), "Cleaning Up Features");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
@@ -2470,7 +2473,7 @@ void PackPrimaryPhases::cleanup_features()
     gsizes[i] = 0;
   }
 
-  float resConst = m->getXRes() * m->getYRes() * m->getZRes();
+  float resConst = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
   const double k_PiOver6 = M_PI / 6.0;
   for (size_t i = 0; i < totalPoints; i++)
   {
@@ -2601,7 +2604,7 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
   // This is for convenience
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
   DataArray<uint32_t>* phaseType = m_PhaseTypesPtr.lock().get();
@@ -2695,7 +2698,7 @@ void PackPrimaryPhases::write_goal_attributes()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 

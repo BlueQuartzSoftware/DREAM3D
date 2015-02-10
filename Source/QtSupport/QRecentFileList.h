@@ -35,7 +35,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
 #include <QtCore/QList>
-#include <QtGui/QAction>
+#include <QtWidgets/QAction>
 
 class QMenu;
 

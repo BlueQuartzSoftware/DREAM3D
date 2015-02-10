@@ -31,7 +31,7 @@
 #ifndef _QFSDropLineEdit_H
 #define _QFSDropLineEdit_H
 
-#include <QtGui/QLineEdit>
+#include <QtWidgets/QLineEdit>
 
 
 /**

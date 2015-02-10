@@ -19,10 +19,10 @@
 // -----------------------------------------------------------------------------
 FindDirectionalModuli::FindDirectionalModuli() :
   AbstractFilter(),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalCompliancesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, "CrystalCompliances"),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalCompliancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, "CrystalCompliances"),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_DirectionalModuliArrayName("DirectionalModuli"),
   m_DirectionalModuli(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -89,7 +89,6 @@ void FindDirectionalModuli::readFilterParameters(AbstractFilterParametersReader*
 int FindDirectionalModuli::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(LoadingDirection)
   DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
@@ -180,7 +179,7 @@ void FindDirectionalModuli::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
-//#include<windows.h>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -38,10 +38,10 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 
+#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
@@ -150,7 +150,6 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
   DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
@@ -183,6 +182,11 @@ void MatchCrystallography::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   dims[0] = 3;
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getCellEulerAnglesArrayName());
   m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath, 0, dims);
@@ -347,7 +351,7 @@ void MatchCrystallography::initializeArrays(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
@@ -362,7 +366,7 @@ void MatchCrystallography::determine_volumes()
   {
     m_Volumes[m_FeatureIds[i]]++;
   }
-  float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+  float res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
   for (size_t i = 1; i < totalFeatures; i++)
   {
     m_Volumes[i] = m_Volumes[i] * res_scalar;
@@ -425,6 +429,9 @@ void MatchCrystallography::assign_eulers(int ensem)
 
   int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
+  CubicOps cOps;
+  HexagonalOps hOps;
+
   for (int64_t i = 1; i < totalFeatures; i++)
   {
     phase = m_FeaturePhases[i];
@@ -432,8 +439,8 @@ void MatchCrystallography::assign_eulers(int ensem)
     {
       random = static_cast<float>( rg.genrand_res53() );
 
-      if( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase] ) { numbins = CubicOps::k_OdfSize; };
-      if( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase] ) { numbins = HexagonalOps::k_OdfSize; }
+      if( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase] ) { numbins = cOps.getODFSize(); };
+      if( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase] ) { numbins = hOps.getODFSize(); }
 
       choose = pick_euler(random, numbins);
 

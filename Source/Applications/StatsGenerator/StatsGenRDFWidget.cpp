@@ -35,16 +35,12 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsGenRDFWidget.h"
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
-
 //-- C++ Includes
 #include <iostream>
 
 //-- Qt Includes
-#include <QtGui/QAbstractItemDelegate>
-#include <QtCore/QtConcurrentMap>
+#include <QtWidgets/QAbstractItemDelegate>
+#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -52,18 +48,22 @@
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 
 
+#include <qwt.h>
 #include <qwt_plot.h>
-#include <qwt_plot_grid.h>
-#include <qwt_plot_marker.h>
 #include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
-
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
+#include <qwt_series_data.h>
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 
 
 #include "DREAM3DLib/Math/RadialDistributionFunction.h"

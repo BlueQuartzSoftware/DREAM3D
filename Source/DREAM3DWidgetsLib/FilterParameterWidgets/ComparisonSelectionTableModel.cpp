@@ -38,8 +38,8 @@
 
 #include <QtCore/QDebug>
 #include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QStyleOptionComboBox>
+#include <QtWidgets/QAbstractItemDelegate>
 
 #include "ComparisonSelectionItemDelegate.h"
 

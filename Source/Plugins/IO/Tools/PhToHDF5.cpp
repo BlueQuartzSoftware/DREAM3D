@@ -88,7 +88,7 @@ class EulerSet
 int  ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
   dca->pushBack(m);
 
   FilterManager::Pointer fm = FilterManager::Instance();
@@ -221,10 +221,10 @@ int writePhDataToHDF5File(const QString& h5File, QVector<int>& data, int& nx, in
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData(DREAM3D::Defaults::VolumeDataContainerName, data, DREAM3D::CellData::FeatureIds, numComp, rank, dims);
+  err = writeScalarData(DREAM3D::Defaults::DataContainerName, data, DREAM3D::CellData::FeatureIds, numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::FeatureIds << "' to " << DREAM3D::Defaults::VolumeDataContainerName;
+    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::FeatureIds << "' to " << DREAM3D::Defaults::DataContainerName;
     return err;
   }
   // Close the file when we are done with it.
@@ -240,10 +240,10 @@ int writeEulerDataToHDF5File(const QString& h5File, QVector<float>& data, int nu
   int err = 0;
   err = openHDF5File(h5File, true);
 
-  err = writeScalarData(DREAM3D::Defaults::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles, numComp, rank, dims);
+  err = writeScalarData(DREAM3D::Defaults::DataContainerName, data, DREAM3D::CellData::EulerAngles, numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles << "' to " << DREAM3D::Defaults::VolumeDataContainerName;
+    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles << "' to " << DREAM3D::Defaults::DataContainerName;
     return err;
   }
   // Close the file when we are done with it.

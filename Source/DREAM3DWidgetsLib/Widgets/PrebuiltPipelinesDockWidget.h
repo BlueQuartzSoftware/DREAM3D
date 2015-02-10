@@ -39,7 +39,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 
-#include <QtGui/QDockWidget>
+#include <QtWidgets/QDockWidget>
 
 #include "DREAM3DLib/Common/Constants.h"
 

@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 /**
  * @class FindBoundingBoxFeatures FindBoundingBoxFeatures.h DREAM3DLib/GenericFilters/FindBoundingBoxFeatures.h

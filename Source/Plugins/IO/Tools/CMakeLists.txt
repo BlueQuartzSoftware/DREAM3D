@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( DREAM3DTools )
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
@@ -41,7 +41,7 @@ function(COMPILE_TOOL)
         VERSION_MINOR ${D3DTOOL_DREAM3D_VER_MINOR}
         VERSION_PATCH ${D3DTOOL_DREAM3D_VER_PATCH}
         BINARY_DIR    ${D3DTOOL_BINARY_DIR}
-        LINK_LIBRARIES ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib "${D3DTOOL_LINK_LIBRARIES}"
+        LINK_LIBRARIES Qt5::Core EbsdLib DREAM3DLib "${D3DTOOL_LINK_LIBRARIES}"
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"

@@ -41,8 +41,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QVector>
-#include <QtGui/QMainWindow>
-#include <QtGui/QTreeWidgetItem>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QTreeWidgetItem>
 #include <QtGui/QCloseEvent>
 #include <QtCore/QSettings>
 

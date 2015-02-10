@@ -37,7 +37,7 @@
 #ifndef _PMGENERATORTREEITEM_H_
 #define _PMGENERATORTREEITEM_H_
 
-#include <QtGui/QTreeWidgetItem>
+#include <QtWidgets/QTreeWidgetItem>
 #include "PMDirGenerator.h"
 
 class PMGeneratorTreeItem : public QTreeWidgetItem

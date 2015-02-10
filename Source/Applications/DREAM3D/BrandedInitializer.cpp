@@ -41,9 +41,9 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QtGui/QBitmap>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 
 #include "DSplashScreen.h"
@@ -119,7 +119,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   this->Splash->show();
 
   QDir dir(QApplication::applicationDirPath());
-  
+
 #if defined (Q_OS_MAC)
   dir.cdUp();
   dir.cd("Plugins");
@@ -253,7 +253,7 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
 #endif
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
-        //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
+        //qWarning(aPluginDir.absoluteFilePath(fileName).toLatin1(), "%s");
         //qDebug() << "Adding " << aPluginDir.absoluteFilePath(fileName)() << "\n";
       }
     }
@@ -276,8 +276,6 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
     loadingMap.insert(proxy->getPluginName(), proxy->getEnabled());
   }
 
-  fm->printFactoryNames();
-
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
@@ -287,7 +285,7 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
     QPluginLoader* loader = new QPluginLoader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    QObject* plugin = loader->instance(); 
+    QObject* plugin = loader->instance();
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin )
     {
@@ -321,7 +319,7 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
       QMessageBox::critical(MainWindow, "DREAM3D Plugin Load Error",
                             message,
                             QMessageBox::Ok | QMessageBox::Default);
-	  delete loader;
+    delete loader;
     }
   }
 

@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 FindSaltykovSizes::FindSaltykovSizes() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_EquivalentDiametersArrayPath(DREAM3D::FeatureData::EquivalentDiameters),
   m_SaltykovEquivalentDiametersArrayName(DREAM3D::FeatureData::SaltykovEquivalentDiameters),
   m_EquivalentDiameters(NULL),
@@ -94,7 +94,6 @@ void FindSaltykovSizes::readFilterParameters(AbstractFilterParametersReader* rea
 int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayName)
@@ -120,7 +119,6 @@ void FindSaltykovSizes::dataCheck()
   { m_SaltykovEquivalentDiameters = m_SaltykovEquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -133,6 +131,7 @@ void FindSaltykovSizes::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

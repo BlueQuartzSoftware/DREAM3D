@@ -140,7 +140,7 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
   }
 
   // Create the output file to dump some data into
-  FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.toAscii().data(), "wb");
+  FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.toLatin1().data(), "wb");
 
   // If junkPlacement is set to START or BOTH, write junk to file
   size_t numWritten = 0;
@@ -259,7 +259,7 @@ int testCase1_Execute(const QString& name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 
@@ -360,7 +360,7 @@ void testCase2_Execute(const QString& name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 
@@ -459,7 +459,7 @@ void testCase3_Execute(const QString& name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 
@@ -567,7 +567,7 @@ void testCase4_Execute(const QString& name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 
@@ -601,7 +601,7 @@ void testCase4_Execute(const QString& name, int scalarType)
 
   // Create another data container
   VolumeDataContainer::Pointer m2 = VolumeDataContainer::New();
-  m2->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m2->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca2 = DataContainerArray::New();
   dca2->pushBack(m2);
 
@@ -699,7 +699,7 @@ void testCase5_Execute(const QString& name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 
@@ -807,7 +807,7 @@ void testCase6_Execute(const QString& name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+  m->setName(DREAM3D::Defaults::DataContainerName);
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->pushBack(m);
 

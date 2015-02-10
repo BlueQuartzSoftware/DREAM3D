@@ -138,7 +138,6 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
 int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
   DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
@@ -274,11 +273,9 @@ void EbsdToH5Ebsd::execute()
   if(fileId < 0)
   {
     err = -1;
-
     QString ss = QObject::tr("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
     return;
   }
 
@@ -287,42 +284,34 @@ void EbsdToH5Ebsd::execute()
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
   if(err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Z Resolution Scalar to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, m_RefFrameZDir);
   if(err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Stacking Order Scalar to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   QString s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
   err = QH5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
   if(err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Stacking Order Name Attribute to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformation.angle);
   if(err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Sample Transformation Angle to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   int32_t rank = 1;
@@ -330,31 +319,25 @@ void EbsdToH5Ebsd::execute()
   err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5::SampleTransformationAxis, rank, dims, &(m_SampleTransformation.h));
   if(err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Sample Transformation Axis to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformation.angle);
   if(err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Euler Transformation Angle to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5::EulerTransformationAxis, rank, dims, &(m_EulerTransformation.h));
   if(err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Euler Transformation Axis to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
 //  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix)

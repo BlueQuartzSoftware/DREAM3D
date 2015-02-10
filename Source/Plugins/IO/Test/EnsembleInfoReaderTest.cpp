@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/Plugin/DREAM3DPlugin.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
@@ -97,7 +97,7 @@ void WriteTestFile(const QString& filePath, const QString& groups)
     QString ss = QObject::tr("Error writing output file '%1'\n ").arg(filePath);
     DREAM3D_REQUIRE_EQUAL(0, 1)
   }
-  fprintf(f, groups.toLatin1().data());
+  fprintf(f, "%s", groups.toLatin1().data());
   fclose(f);
 }
 
@@ -116,10 +116,10 @@ QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
   WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileTxt, groups);
   WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups);
 
-	DataContainerArray::Pointer dca = DataContainerArray::New();
-	VolumeDataContainer::Pointer vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  DataContainer::Pointer vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
 
-	// Now instantiate the EnsembleInfoReader Filter from the FilterManager
+  // Now instantiate the EnsembleInfoReader Filter from the FilterManager
   QString filtName = "EnsembleInfoReader";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
@@ -130,24 +130,24 @@ QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
     AbstractFilter::Pointer filter = filterFactory->create();
 
     QVariant var;
-		int err = 0;
+    int err = 0;
     bool propWasSet;
 
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileDoc); // should return -10018, .doc extension
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->preflight();
-		err = filter->getErrorCondition();
-		DREAM3D_REQUIRE_EQUAL(err, -10018);
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10018);
 
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
 
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileTxt); // should pass, .txt extension
     propWasSet = filter->setProperty("InputFile", var);
@@ -156,10 +156,10 @@ QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
 
     // Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
 
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni); // should pass, .ini extension
     propWasSet = filter->setProperty("InputFile", var);
@@ -181,36 +181,36 @@ QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
 // -----------------------------------------------------------------------------
 int TestEnsembleInfoReader()
 {
-	DataContainerArray::Pointer dca = DataContainerArray::New();
-	VolumeDataContainer::Pointer vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  DataContainer::Pointer vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
 
   // Now instantiate the EnsembleInfoReader Filter from the FilterManager
   QString filtName = "EnsembleInfoReader";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL != filterFactory.get())
-	{
+  {
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
     // horribly gone wrong in which case the system is going to come down quickly after this.
     AbstractFilter::Pointer filter = filterFactory->create();
-  
-    QVariant var;
-		int err;
-		bool propWasSet;
 
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    QVariant var;
+    int err;
+    bool propWasSet;
+
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni); // should pass
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
 
     QString groups;
     groups = "[EnsembleInf]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic\nPhaseType = PrimaryPhase\n\n[2]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
@@ -219,92 +219,92 @@ int TestEnsembleInfoReader()
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
-		err = filter->getErrorCondition();
-		DREAM3D_REQUIRE_EQUAL(err, -10003);
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10003);
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 1\n\n[1]\nCrystalStructure = Cubic\nPhaseType = PrimaryPhase\n\n[2]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
     WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //Number_Phases = 1, but 2 phases
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
-		err = filter->getErrorCondition();
-	  DREAM3D_REQUIRE_EQUAL(err, -10008);
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10008);
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic\n\n\n[2]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
-		WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //PhaseType missing
-		var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni); 
+    WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //PhaseType missing
+    var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
-		err = filter->getErrorCondition();
-		DREAM3D_REQUIRE_EQUAL(err, -10004);
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10004);
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic\nPhaseType = PrimaryPhase\n\n[2]\n\nPhaseType = MatrixPhase\n";
-	  WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //CrystalStructure missing
-		var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni); 
+    WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //CrystalStructure missing
+    var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
-		err = filter->getErrorCondition();
-		DREAM3D_REQUIRE_EQUAL(err, -10004);
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10004);
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
-		groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic\nPhaseType = PrimaryPase\n\n[2]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
-		WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups);  //PrimaryPhase is misspelled
-		var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
+    groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic\nPhaseType = PrimaryPase\n\n[2]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
+    WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups);  //PrimaryPhase is misspelled
+    var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
-		err = filter->getErrorCondition();
-		DREAM3D_REQUIRE_EQUAL(err, -10007);
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10007);
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
-		groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic\nPhaseType = PrimaryPhase\n\n[3]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
-		WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //Group number is incorrect
-		var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
+    groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic\nPhaseType = PrimaryPhase\n\n[3]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
+    WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //Group number is incorrect
+    var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
-		err = filter->getErrorCondition();
-		DREAM3D_REQUIRE_EQUAL(err, -10005);
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10005);
 
-		// Reset The data container array with new instances for this sub test
-		dca = DataContainerArray::New();
-		vdc = VolumeDataContainer::New(DREAM3D::Defaults::VolumeDataContainerName);
-		dca->addDataContainer(vdc);
-		filter->setDataContainerArray(dca);
-		groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubc\nPhaseType = PrimaryPhase\n\n[2]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
-		WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //Cubic is misspelled
-		var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
-		propWasSet = filter->setProperty("InputFile", var);
-		DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-			filter->execute();
-		err = filter->getErrorCondition();
-		DREAM3D_REQUIRE_EQUAL(err, -10006);
+    // Reset The data container array with new instances for this sub test
+    dca = DataContainerArray::New();
+    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    dca->addDataContainer(vdc);
+    filter->setDataContainerArray(dca);
+    groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubc\nPhaseType = PrimaryPhase\n\n[2]\nCrystalStructure = Hexagonal\nPhaseType = MatrixPhase\n";
+    WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups); //Cubic is misspelled
+    var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
+    propWasSet = filter->setProperty("InputFile", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+      filter->execute();
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, -10006);
 
   }
   else

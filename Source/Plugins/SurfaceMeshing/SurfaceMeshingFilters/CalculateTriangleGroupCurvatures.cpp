@@ -45,7 +45,7 @@
 
 #include <Eigen/Dense>
 
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
@@ -54,14 +54,14 @@
 //
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
-    QVector<int> triangleIds, bool useNormalsForCurveFitting,
+    std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting,
     DoubleArrayType::Pointer principleCurvature1,
     DoubleArrayType::Pointer principleCurvature2,
     DoubleArrayType::Pointer principleDirection1,
     DoubleArrayType::Pointer principleDirection2,
     DoubleArrayType::Pointer gaussianCurvature,
     DoubleArrayType::Pointer meanCurvature,
-    FaceArray::Pointer trianglesPtr,
+    TriangleGeom::Pointer trianglesGeom,
     DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
     DataArray<double>::Pointer surfaceMeshFaceNormals,
     DataArray<double>::Pointer surfaceMeshTriangleCentroids,
@@ -75,7 +75,7 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
   m_PrincipleDirection2(principleDirection2),
   m_GaussianCurvature(gaussianCurvature),
   m_MeanCurvature(meanCurvature),
-  m_TrianglesPtr(trianglesPtr),
+  m_TrianglesPtr(trianglesGeom),
   m_SurfaceMeshFaceLabels(surfaceMeshFaceLabels),
   m_SurfaceMeshFaceNormals(surfaceMeshFaceNormals),
   m_SurfaceMeshTriangleCentroids(surfaceMeshTriangleCentroids),
@@ -119,6 +119,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
 //  FaceArray::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
 //  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
+  int err = 0;
+
   // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
 
@@ -143,19 +145,20 @@ void CalculateTriangleGroupCurvatures::operator()() const
   bool computeDirection = (m_PrincipleDirection1.get() != NULL);
 
 
-  QVector<int>::size_type tCount = m_TriangleIds.size();
+  std::vector<int>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
   for(QVector<int>::size_type i = 0; i < tCount; ++i)
   {
     if (m_ParentFilter->getCancel() == true) { return; }
-    int triId = m_TriangleIds[i];
+    int64_t triId = m_TriangleIds[i];
     nRingNeighborAlg->setTriangleId(triId);
     nRingNeighborAlg->setRegionId0(feature0);
     nRingNeighborAlg->setRegionId1(feature1);
     nRingNeighborAlg->setRing(m_NRing);
-    nRingNeighborAlg->generate(m_TrianglesPtr, faceLabels);
+    err = nRingNeighborAlg->generate(m_TrianglesPtr, faceLabels);
+    BOOST_ASSERT(err >= 0);
 
-    FaceArray::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
+    UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("Patch_Centroids"));
@@ -297,7 +300,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, FaceArray::UniqueFaceIds_t& triPatch,
+DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int64_t triId,
+  UniqueFaceIds_t& triPatch,
     double* data,
     const QString& name) const
 {
@@ -310,11 +314,11 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
   extractedData->setComponent(i, 1, data[triId * 3 + 1]);
   extractedData->setComponent(i, 2, data[triId * 3 + 2]);
   ++i;
-  triPatch.remove(triId);
+  triPatch.erase(triId);
 
-  for(QSet<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
+  for(UniqueFaceIds_t::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {
-    int32_t t = *iter;
+    int64_t t = *iter;
     extractedData->setComponent(i, 0, data[t * 3]);
     extractedData->setComponent(i, 1, data[t * 3 + 1]);
     extractedData->setComponent(i, 2, data[t * 3 + 2]);

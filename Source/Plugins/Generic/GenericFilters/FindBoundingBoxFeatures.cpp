@@ -48,9 +48,9 @@
 FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   AbstractFilter(),
   m_CalcByPhase(false),
-  m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
-  m_PhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
+  m_CentroidsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
+  m_PhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_PhasesArrayName(DREAM3D::FeatureData::Centroids),
   m_Phases(NULL),
@@ -105,7 +105,6 @@ void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReade
 int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CalcByPhase)
   DREAM3D_FILTER_WRITE_PARAMETER(PhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(PhasesArrayName)
@@ -128,6 +127,11 @@ void FindBoundingBoxFeatures::dataCheck()
   m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+
   dims[0] = 1;
   m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -174,10 +178,10 @@ void FindBoundingBoxFeatures::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCentroidsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_boundingboxfeatures(); }
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_boundingboxfeatures2D(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_boundingboxfeatures(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_boundingboxfeatures2D(); }
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -186,7 +190,7 @@ void FindBoundingBoxFeatures::execute()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::find_boundingboxfeatures()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCentroidsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
 
   size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
   float boundbox[7];
@@ -209,11 +213,11 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
   {
     //reset boundbox for each phase
     boundbox[1] = 0;
-    boundbox[2] = m->getXPoints() * m->getXRes();
+    boundbox[2] = m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getXRes();
     boundbox[3] = 0;
-    boundbox[4] = m->getYPoints() * m->getYRes();
+    boundbox[4] = m->getGeometryAs<ImageGeom>()->getYPoints() * m->getGeometryAs<ImageGeom>()->getYRes();
     boundbox[5] = 0;
-    boundbox[6] = m->getZPoints() * m->getZRes();
+    boundbox[6] = m->getGeometryAs<ImageGeom>()->getZPoints() * m->getGeometryAs<ImageGeom>()->getZRes();
     for (size_t i = 1; i < size; i++)
     {
       if(m_SurfaceFeatures[i] == true && (m_CalcByPhase == false || m_Phases[i] == iter))
@@ -269,7 +273,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
 }
 void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCentroidsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
 
   size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
   float boundbox[5];
@@ -282,26 +286,26 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   int xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f;
 
-  if(m->getXPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
-    xPoints = m->getYPoints();
-    xRes = m->getYRes();
-    yPoints = m->getZPoints();
-    yRes = m->getZRes();
+    xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getYRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(m->getYPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
-    xPoints = m->getXPoints();
-    xRes = m->getXRes();
-    yPoints = m->getZPoints();
-    yRes = m->getZRes();
+    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(m->getZPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
-    xPoints = m->getXPoints();
-    xRes = m->getXRes();
-    yPoints = m->getYPoints();
-    yRes = m->getYRes();
+    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   }
 
   boundbox[1] = 0;

@@ -20,7 +20,7 @@ set(DREAM3DLib_Common_Moc_HDRS
 )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-#QT4_WRAP_CPP( DREAM3DLib_Common_Generated_MOC_SRCS ${DREAM3DLib_Common_Moc_HDRS})
+#QT5_WRAP_CPP( DREAM3DLib_Common_Generated_MOC_SRCS ${DREAM3DLib_Common_Moc_HDRS})
 
 
 set(DREAM3DLib_Common_HDRS
@@ -42,9 +42,6 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/Texture.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TemplateHelpers.hpp
 )
@@ -65,7 +62,6 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.cpp
 )
 

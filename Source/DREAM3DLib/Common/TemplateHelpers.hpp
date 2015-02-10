@@ -220,7 +220,7 @@ namespace TemplateHelpers
    /**
    * @brief The GetPrereqArrayFromPath class will return a pointer to a DataArray of unknown type given the path.
    */
-  template<typename FilterClass, typename DataContainerClass>
+  template<typename FilterClass>
   class GetPrereqArrayFromPath
   {
     public:
@@ -230,7 +230,7 @@ namespace TemplateHelpers
       IDataArray::WeakPointer operator()(FilterClass* f, DataArrayPath arrayPath, QVector<size_t>& compDims)
       {
         IDataArray::Pointer retPtr = IDataArray::NullPointer();
-        DataContainerClass* volDataCntr = f->getDataContainerArray()->template getPrereqDataContainer<DataContainerClass, FilterClass>(f, arrayPath.getDataContainerName(), false);
+        DataContainer::Pointer volDataCntr = f->getDataContainerArray()->template getPrereqDataContainer<FilterClass>(f, arrayPath.getDataContainerName(), false);
         if(f->getErrorCondition() < 0 || NULL == volDataCntr) {
           QString ss = QObject::tr("The Data Container '%1' does not exist").arg(arrayPath.getDataContainerName());
           f->setErrorCondition(Errors::MissingDataContainer);

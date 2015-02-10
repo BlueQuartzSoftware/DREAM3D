@@ -468,7 +468,7 @@ namespace H5Support_NAMESPACE
         //qDebug() << "HDF5 Data Type: " << QH5Lite::HDFTypeForPrimitiveAsStr(test);
         /* Open the dataset. */
 // qDebug() << "  Opening " << dsetName << " for data Retrieval.  ";
-        did = H5Dopen( loc_id, dsetName.toAscii().data(), H5P_DEFAULT);
+        did = H5Dopen( loc_id, dsetName.toLatin1().data(), H5P_DEFAULT);
         if ( did < 0 )
         {
           qDebug() << "QH5Lite::readStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")";
@@ -547,7 +547,7 @@ namespace H5Support_NAMESPACE
           return -1;
         }
         /* Open the dataset. */
-        did = H5Dopen( loc_id, dsetName.toAscii().data(), H5P_DEFAULT );
+        did = H5Dopen( loc_id, dsetName.toLatin1().data(), H5P_DEFAULT );
         if ( did < 0 )
         {
           qDebug() << "QH5Lite::readStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")";
@@ -657,14 +657,14 @@ namespace H5Support_NAMESPACE
         }
         //qDebug() << "   Reading Vector Attribute at Path '" << objName << "' with Key: '" << attrName << "'";
         /* Get the type of object */
-        err = H5Oget_info_by_name(loc_id, objName.toAscii().data(),  &statbuf, H5P_DEFAULT);
+        err = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
         if (err < 0)
         { return err; }
         /* Open the object */
         obj_id = QH5Lite::openId( loc_id, objName, statbuf.type);
         if ( obj_id >= 0)
         {
-          attr_id = H5Aopen_by_name( loc_id, objName.toAscii().data(), attrName.toAscii().data(), H5P_DEFAULT, H5P_DEFAULT );
+          attr_id = H5Aopen_by_name( loc_id, objName.toLatin1().data(), attrName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT );
           if ( attr_id >= 0 )
           {
             //Need to allocate the array size
@@ -743,14 +743,14 @@ namespace H5Support_NAMESPACE
         }
         //qDebug() << "Reading Scalar style Attribute at Path '" << objName << "' with Key: '" << attrName << "'";
         /* Get the type of object */
-        err = H5Oget_info_by_name(loc_id, objName.toAscii().data(),  &statbuf, H5P_DEFAULT);
+        err = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
         if (err < 0)
         { return err; }
         /* Open the object */
         obj_id = QH5Lite::openId( loc_id, objName, statbuf.type);
         if ( obj_id >= 0)
         {
-          attr_id = H5Aopen_by_name( loc_id, objName.toAscii().data(), attrName.toAscii().data(), H5P_DEFAULT, H5P_DEFAULT );
+          attr_id = H5Aopen_by_name( loc_id, objName.toLatin1().data(), attrName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT );
           if ( attr_id >= 0 )
           {
             err = H5Aread( attr_id, dataType, &data );
@@ -808,14 +808,14 @@ namespace H5Support_NAMESPACE
         }
         //qDebug() << "   Reading Vector Attribute at Path '" << objName << "' with Key: '" << attrName << "'";
         /* Get the type of object */
-        err = H5Oget_info_by_name(loc_id, objName.toAscii().data(),  &statbuf, H5P_DEFAULT);
+        err = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
         if (err < 0)
         { return err; }
         /* Open the object */
         obj_id = QH5Lite::openId( loc_id, objName, statbuf.type);
         if ( obj_id >= 0)
         {
-          attr_id = H5Aopen_by_name( loc_id, objName.toAscii().data(), attrName.toAscii().data(), H5P_DEFAULT, H5P_DEFAULT );
+          attr_id = H5Aopen_by_name( loc_id, objName.toLatin1().data(), attrName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT );
           if ( attr_id >= 0 )
           {
             err = H5Aread( attr_id, dataType, data);

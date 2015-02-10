@@ -294,13 +294,13 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      * @return
      */
     template<class ArrayType, class Filter>
-    typename ArrayType::Pointer getExistingPrereqArray(Filter* filter,
+    typename ArrayType::Pointer getPrereqIDataArray(Filter* filter,
                                                        QString attributeArrayName,
                                                        int err)
     {
       QString ss;
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
-      //Make sure the name is not empty for the AttributeArrayName. This would be detected below
+      // Make sure the name is not empty for the AttributeArrayName. This would be detected below
       // in the call to get either one BUT the reason for the failure would not be evident so we make these explicit checks
       // here and send back nice error messages to ther user/programmer.
       if (attributeArrayName.isEmpty() == true)

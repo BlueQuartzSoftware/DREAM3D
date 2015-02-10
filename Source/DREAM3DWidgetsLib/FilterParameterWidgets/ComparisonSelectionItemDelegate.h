@@ -42,7 +42,7 @@
 
 #include <QtCore/QModelIndex>
 #include <QtCore/QStringList>
-#include <QtGui/QStyledItemDelegate>
+#include <QtWidgets/QStyledItemDelegate>
 
 
 #include "DREAM3DLib/Common/Constants.h"
