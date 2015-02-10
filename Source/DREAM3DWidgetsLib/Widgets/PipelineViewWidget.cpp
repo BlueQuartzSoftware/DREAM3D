@@ -675,72 +675,6 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
-{
-  m_LastDragPoint = event->pos();
-
-  // If cursor is within margin boundaries, start scrolling
-  if ( shouldAutoScroll( event->pos() ) )
-  {
-    startAutoScroll();
-  }
-  // Otherwise, stop scrolling
-  else
-  {
-    stopAutoScroll();
-  }
-
-  QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
-  if(o == NULL && event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
-  {
-    int count = filterCount();
-    for (int i = 0; i < count; ++i)
-    {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-      if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
-      {
-        if(event->pos().y() < w->geometry().y())
-        {
-          m_FilterWidgetLayout->removeWidget(m_FilterBeingDragged);
-          break;
-        }
-      }
-    }
-    bool didInsert = false;
-    count = filterCount();
-    for (int i = 0; i < count; ++i)
-    {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-      if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
-      {
-        if(event->pos().y() < w->geometry().y())
-        {
-          m_FilterWidgetLayout->insertWidget(i, m_FilterBeingDragged);
-          setSelectedFilterWidget(m_FilterBeingDragged);
-          didInsert = true;
-          break;
-        }
-      }
-    }
-    // Check to see if we are trying to move it to the end
-    if (false == didInsert && count > 0)
-    {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
-      if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
-      {
-        if(event->pos().y() > w->geometry().y() + w->geometry().height())
-        {
-          m_FilterWidgetLayout->insertWidget(count - 2, m_FilterBeingDragged);
-          setSelectedFilterWidget(m_FilterBeingDragged);
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PipelineViewWidget::extractPipelineFromFile(const QString& filePath, ExtractionType type)
 {
   FilterPipeline::Pointer pipeline = H5FilterParametersReader::ReadPipelineFromFile(filePath);
@@ -854,8 +788,84 @@ int PipelineViewWidget::readPipelineFromFile(hid_t fileId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
+{
+	m_LastDragPoint = event->pos();
+
+	// If cursor is within margin boundaries, start scrolling
+	if (shouldAutoScroll(event->pos()))
+	{
+		startAutoScroll();
+	}
+	// Otherwise, stop scrolling
+	else
+	{
+		stopAutoScroll();
+	}
+
+	QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
+	if (o == NULL && event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
+	{
+		int count = filterCount();
+		for (int i = 0; i < count; ++i)
+		{
+			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
+			{
+				if (event->pos().y() < w->geometry().y())
+				{
+					m_FilterWidgetLayout->removeWidget(m_FilterBeingDragged);
+					break;
+				}
+			}
+		}
+		bool didInsert = false;
+		count = filterCount();
+		for (int i = 0; i < count; ++i)
+		{
+			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
+			{
+				/*if (event->pos().y() <= 0)
+				{
+				m_FilterWidgetLayout->insertWidget(draggedWidgetIndex, m_FilterBeingDragged);
+				setSelectedFilterWidget(m_FilterBeingDragged);
+				didInsert = true;
+				break;
+				}*/
+				if (event->pos().y() < w->geometry().y())
+				{
+					m_FilterWidgetLayout->insertWidget(i, m_FilterBeingDragged);
+					setSelectedFilterWidget(m_FilterBeingDragged);
+					reindexWidgetTitles();
+					didInsert = true;
+					break;
+				}
+			}
+		}
+		// Check to see if we are trying to move it to the end
+		if (false == didInsert && count > 0)
+		{
+			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
+			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
+			{
+				if (event->pos().y() > w->geometry().y() + w->geometry().height())
+				{
+					m_FilterWidgetLayout->insertWidget(count - 2, m_FilterBeingDragged);
+					setSelectedFilterWidget(m_FilterBeingDragged);
+					reindexWidgetTitles();
+				}
+			}
+		}
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
+
   if (event->mimeData()->hasUrls())
   {
     QList<QUrl> urlList;
