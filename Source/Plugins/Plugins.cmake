@@ -109,7 +109,6 @@ endfunction()
 set(DREAM3D_BASE_PLUGINS
   Generic
   IO
-  DDDAnalysisToolbox
   ImageImport
   OrientationAnalysis
   Processing
