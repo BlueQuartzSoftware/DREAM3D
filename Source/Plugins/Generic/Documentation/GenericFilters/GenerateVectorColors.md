@@ -5,7 +5,7 @@ Generate Vector Colors {#generatevectorcolors}
 Generic Filters (Misc)
 
 ## Description ##
-
+This filter generates a color for each cell based on the vector assigned to that cell in the input vector data array.  The color scheme assigns a unique color to all points on the unit hemisphere using a HSV-like scheme. 
 
 ### Originating Data Notes ###
 
@@ -19,18 +19,17 @@ Generic Filters (Misc)
 | UseGoodVoxels | bool |
 
 
-## Required DataContainers ##
-
-Voxel DataContainer
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 
 | Type | Default Name | Description  | Filters Known to Create Data |
 |------|--------------|------------|-----|
+| Cell | VectorData | The array that holds the vectors the colors will represent  |
 
 
 ## Created Arrays ##
-
 | Type | Name | Description |
 |------|------|-------------|
 | Cell | Colors | The RGB colors are encoded as an unsigned char triplet  |

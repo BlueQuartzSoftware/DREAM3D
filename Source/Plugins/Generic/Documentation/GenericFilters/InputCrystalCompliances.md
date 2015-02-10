@@ -12,8 +12,8 @@ The symmetry drop down menu is for convince only (the full 6x6 matrix will be sa
 ## Parameters ##
 21 single crystal compliance values (s11, s12, s13, ... , s55, s56, s66) .
 
-## Required DataContainers ##
-Ensemble
+## Required Geometry ##
+None
 
 ## Required Arrays ##
 None

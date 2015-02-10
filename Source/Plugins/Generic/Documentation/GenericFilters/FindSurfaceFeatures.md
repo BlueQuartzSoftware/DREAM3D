@@ -22,8 +22,8 @@ This algorithm works to determine the biased **Features** because all **Features
 ## Parameters ##
 None
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 

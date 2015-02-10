@@ -11,8 +11,8 @@ This filter determines the _quaternions_ for each **Cell**, given the _Euler_ an
 ## Parameters ##
 None
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 
