@@ -21,6 +21,7 @@ set(_PublicFilters
   DxWriter
   EddyCurrentDataReader
   EnsembleInfoReader
+  ExportData
   FeatureDataCSVWriter
   FeatureInfoReader
   GBCDTriangleDumper
