@@ -74,6 +74,10 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     void setInputFileDataContainerArrayProxy(DataContainerArrayProxy proxy);
     Q_PROPERTY(DataContainerArrayProxy InputFileDataContainerArrayProxy READ getInputFileDataContainerArrayProxy WRITE setInputFileDataContainerArrayProxy)
 
+	bool getIsProxyValid();
+	void setIsProxyValid(bool valid);
+	Q_PROPERTY(bool IsProxyValid READ getIsProxyValid WRITE setIsProxyValid)
+
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

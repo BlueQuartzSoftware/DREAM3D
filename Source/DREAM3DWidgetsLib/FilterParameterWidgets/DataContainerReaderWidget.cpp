@@ -359,6 +359,7 @@ void DataContainerReaderWidget::setupGui()
   if(getFilter() != NULL)
   {
     QString path = m_Filter->getInputFile();
+
     filePath->setText(path);
     on_filePath_fileDropped(path);
   }
@@ -374,6 +375,17 @@ void DataContainerReaderWidget::itemActivated(const QModelIndex& index)
 {
   m_DidCausePreflight = true;
   updateProxyFromModel();
+  m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);		// Set the new proxy into filter
+
+  if (m_DcaProxy.list.size() > 0)
+  {
+	  m_Filter->setIsProxyValid(true);
+  }
+  else
+  {
+	  m_Filter->setIsProxyValid(false);
+  }
+
   emit parametersChanged();
   m_DidCausePreflight = false;
 }
@@ -447,9 +459,6 @@ void DataContainerReaderWidget::updateModelFromProxy(DataContainerArrayProxy& pr
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::updateProxyFromModel()
 {
-  // This will only work for a single selection
-  DataContainerArrayProxy& proxy = m_DcaProxy;
-
   QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcaProxyView->model());
   if(!model)
   {
@@ -459,7 +468,7 @@ void DataContainerReaderWidget::updateProxyFromModel()
   //
   QStandardItem* rootItem = model->invisibleRootItem();
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy>& containers = proxy.list;
+  QList<DataContainerProxy>& containers = m_DcaProxy.list;
   QMutableListIterator<DataContainerProxy> containerIter(containers);
   //  QStringList dcList;
   while(containerIter.hasNext())
@@ -587,6 +596,15 @@ void DataContainerReaderWidget::filterNeedsInputParameters(AbstractFilter* filte
   m_Filter->setInputFile(filePath->text());
   updateProxyFromModel(); // Will update m_DcaProxy with the latest selections from the Model
   m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);
+
+  if (m_Filter->getInputFileDataContainerArrayProxy().list.size() > 0)
+  {
+	  m_Filter->setIsProxyValid(true);
+  }
+  else
+  {
+	  m_Filter->setIsProxyValid(false);
+  }
 }
 
 
@@ -623,6 +641,12 @@ bool DataContainerReaderWidget::verifyPathExists(QString filePath, QFSDropLabel*
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 {
+	// If we are switching files, invalidate the proxy
+	if (m_LastFileRead.isEmpty() == false && text != m_LastFileRead)
+	{
+		m_Filter->setIsProxyValid(false);
+	}
+
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
 
@@ -642,9 +666,6 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 
       if(filePath->text().isEmpty() == false)
       {
-        // We need to do this now so that the validity of the InputFileDCAProxy will be correct for the if-else statements below
-        m_Filter->setInputFile(text);
-
         DataContainerArrayProxy proxy;
         if (m_Filter->getInputFileDataContainerArrayProxy().isValid == true)
         {

@@ -94,6 +94,16 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
+
+  if (m_InputFileDataContainerArrayProxy.list.size() > 0)
+  {
+	  m_InputFileDataContainerArrayProxy.isValid = true;
+  }
+  else
+  {
+	  m_InputFileDataContainerArrayProxy.isValid = false;
+  }
+
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
   reader->closeFilterGroup();
@@ -194,8 +204,11 @@ void DataContainerReader::preflight()
   // The GUI will pick up the structure
   emit preflightAboutToExecute();
 
-  // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
-  emit updateFilterParameters(this);
+  if (m_InputFileDataContainerArrayProxy.isValid == false)
+  {
+	  // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
+	  emit updateFilterParameters(this);
+  }
 
   // to the read here because this will populate the DataContainerArray with our DataContainer
   dataCheck();
@@ -611,7 +624,6 @@ DataContainerArrayProxy DataContainerReader::getInputFileDataContainerArrayProxy
 void DataContainerReader::setInputFileDataContainerArrayProxy(DataContainerArrayProxy proxy)
 {
   m_InputFileDataContainerArrayProxy = proxy;
-  m_InputFileDataContainerArrayProxy.isValid = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -627,11 +639,23 @@ QString DataContainerReader::getInputFile()
 // -----------------------------------------------------------------------------
 void DataContainerReader::setInputFile(QString filePath)
 {
-  if (m_InputFile != filePath)
-  {
-    m_InputFileDataContainerArrayProxy.isValid = false;
-  }
-
   m_InputFile = filePath;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataContainerReader::getIsProxyValid()
+{
+	return m_InputFileDataContainerArrayProxy.isValid;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setIsProxyValid(bool valid)
+{
+	m_InputFileDataContainerArrayProxy.isValid = valid;
+}
+
 
