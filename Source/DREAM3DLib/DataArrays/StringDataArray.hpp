@@ -37,11 +37,11 @@
 #ifndef _StrignDataArray_H_
 #define _StrignDataArray_H_
 
-#include <QtCore/QString>
+#include <string>
 #include <vector>
 
 
-
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -62,7 +62,34 @@ class StringDataArray : public IDataArray
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
     DREAM3D_CLASS_VERSION(2)
 
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param name
+     * @param allocate
+     * @return
+     */
     static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate = true)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      StringDataArray* d = new StringDataArray(numTuples, name, allocate);
+      d->setName(name);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param compDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> compDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -107,6 +134,23 @@ class StringDataArray : public IDataArray
      */
     virtual bool isAllocated() { return true; }
 
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
+    virtual void setInitValue(const std::string &initValue)
+    {
+      m_InitValue = QString::fromStdString(initValue);
+    }
+
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
+    virtual void setInitValue(const QString &initValue)
+    {
+      m_InitValue = initValue;
+    }
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
@@ -333,6 +377,24 @@ class StringDataArray : public IDataArray
     }
 
     /**
+     * @brief initializeWithValue
+     * @param value
+     */
+    virtual void initializeWithValue(QString value)
+    {
+      m_Array.fill(value, m_Array.size());
+    }
+
+    /**
+     * @brief initializeWithValue
+     * @param value
+     */
+    virtual void initializeWithValue(const std::string &value)
+    {
+      m_Array.fill(QString::fromStdString(value), m_Array.size());
+    }
+
+    /**
      * @brief deepCopy
      * @param forceNoAllocate
      * @return
@@ -524,6 +586,7 @@ class StringDataArray : public IDataArray
     QString m_Name;
     size_t m_NumTuples;
     bool _ownsData;
+    QString m_InitValue;
 
     StringDataArray(const StringDataArray&); //Not Implemented
     void operator=(const StringDataArray&); //Not Implemented
