@@ -1,6 +1,7 @@
 
-
-
+if(EXISTS "${ITK_DIR}")
+  set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}" ${ITK_DIR})
+endif()
 
 # --------------------------------------------------------------------
 # find ITK libararies
