@@ -339,7 +339,7 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
           ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
           if(choiceWidget)
           {
-            choiceWidget->widgetChanged(choiceWidget->getCurrentIndex());
+            choiceWidget->widgetChanged(choiceWidget->getCurrentIndex(), false);
           }
         }
       }

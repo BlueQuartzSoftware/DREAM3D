@@ -120,7 +120,7 @@ int ChoiceWidget::getCurrentIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChoiceWidget::widgetChanged(int index)
+void ChoiceWidget::widgetChanged(int index, bool emitParametersChanged)
 {
 
   FilterParameter* fp = getFilterParameter();
@@ -135,7 +135,9 @@ void ChoiceWidget::widgetChanged(int index)
 
 
   // We emit no matter what
-  emit parametersChanged();
+  if(emitParametersChanged) {
+    emit parametersChanged();
+  }
 }
 
 // -----------------------------------------------------------------------------
