@@ -430,18 +430,20 @@ void PrecipitatePhaseWidget::updatePlots()
     progress.setMinimumDuration(2000);
 
     progress.setValue(1);
-    progress.setLabelText("[1/3] Calculating Size Distributions ...");
+    progress.setLabelText("[1/4] Calculating Size Distributions ...");
     plotSizeDistribution();
 
     progress.setValue(2);
-    progress.setLabelText("[2/3] Calculating ODF Data ...");
+    progress.setLabelText("[2/4] Calculating ODF Data ...");
     m_ODFWidget->updatePlots();
 
     progress.setValue(3);
-    progress.setLabelText("[3/3] Calculating Axis ODF Data ...");
+    progress.setLabelText("[3/4] Calculating Axis ODF Data ...");
     m_AxisODFWidget->updatePlots();
 
     progress.setValue(4);
+    progress.setLabelText("[4/4] Calculating RDF Data ...");
+    m_RdfPlot->updatePlots();
   }
 }
 
