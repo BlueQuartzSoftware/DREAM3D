@@ -483,7 +483,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
-  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
+  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, imageLayout->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
 }
