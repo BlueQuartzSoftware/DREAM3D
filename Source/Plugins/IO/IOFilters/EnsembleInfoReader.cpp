@@ -40,7 +40,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/Qsettings.h>
+#include <QtCore/QSettings>
 
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
