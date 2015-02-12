@@ -20,6 +20,7 @@ set(_PublicFilters
   FindBoundaryStrengths
   FindCAxisLocations
   FindDirectionalModuli
+  FindEllipsoidError
   FindEuclideanDistMap
   FindFeatureClustering
   FindFeatureHistogram
