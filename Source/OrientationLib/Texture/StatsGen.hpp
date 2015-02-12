@@ -179,7 +179,7 @@ class StatsGen
 
     /**
      * @brief Generates the CutOff values
-     * @param mu
+     * @param mu Must be (0.0, N] where N should be less than ?? (20)
      * @param sigma
      * @param cutoff
      * @param binstep
@@ -195,6 +195,11 @@ class StatsGen
     {
       J max, min;
       numsizebins = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binstep, max, min);
+      if(numsizebins < 0)
+      {
+        numsizebins = 0;
+        return -1;
+      }
       int err = 0;
       x.resize(2);
       y.resize(2);

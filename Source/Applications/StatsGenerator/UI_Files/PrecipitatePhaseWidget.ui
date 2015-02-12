@@ -49,7 +49,7 @@ font-size: 150%;
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="sizeDistributionTab">
       <attribute name="title">
@@ -578,15 +578,15 @@ font-size: 12px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>SGWidget</class>
    <extends>QWidget</extends>
    <header location="global">SGWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

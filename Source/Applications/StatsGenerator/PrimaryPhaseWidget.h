@@ -11,9 +11,9 @@
 #include "SGWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
-#include "ui_PrimaryPhaseWidget.h"
+#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
+#include "Applications/StatsGenerator/ui_PrimaryPhaseWidget.h"
 
 #ifndef QwtArray
 #define QwtArray QVector
@@ -26,6 +26,13 @@ class QwtPlotPanner;
 class QwtPlotGrid;
 class QwtPlotCurve;
 class QwtPlotMarker;
+class QDoubleValidator;
+
+/*
+ * LaTeX to generate the equations
+ x^{\left( \mu - max*\sigma \right) }
+
+ */
 
 /*
  *
@@ -106,6 +113,20 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
       */
     void setTabsPlotTabsEnabled(bool b);
 
+    /**
+     * @brief validateValue
+     * @param val
+     * @param lineEdit
+     * @return
+     */
+    bool validateValue(QDoubleValidator* val, QLineEdit* lineEdit);
+
+    /**
+     * @brief validateMuSigma
+     * @return
+     */
+    bool validateMuSigma();
+
   private:
     int                  m_PhaseIndex;
     unsigned int  m_CrystalStructure;
@@ -116,6 +137,9 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     QwtPlotMarker*       m_CutOffMax;
     QwtPlotGrid*         m_grid;
     AbstractMicrostructurePreset::Pointer m_MicroPreset;
+
+    QDoubleValidator* m_MuValidator;
+    QDoubleValidator* m_SigmaValidator;
 
     PrimaryPhaseWidget(const PrimaryPhaseWidget&); // Copy Constructor Not Implemented
     void operator=(const PrimaryPhaseWidget&); // Operator '=' Not Implemented

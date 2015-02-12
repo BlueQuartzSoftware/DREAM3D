@@ -47,6 +47,9 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
+#include <QtWidgets/QLineEdit>
+#include <QtGui/QIntValidator>
+#include <QtGui/QDoubleValidator>
 
 
 //-- Qwt Includes
@@ -82,20 +85,20 @@
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
-    QMessageBox::critical(this, tr("StatsGenerator"),\
-                          tr("There was an error writing the " msg " to the HDF5 file"),\
-                          QMessageBox::Ok,\
-                          QMessageBox::Ok);\
-    return err;\
+  QMessageBox::critical(this, tr("StatsGenerator"),\
+  tr("There was an error writing the " msg " to the HDF5 file"),\
+  QMessageBox::Ok,\
+  QMessageBox::Ok);\
+  return err;\
   }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
   if (err < 0) {\
-    qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-    qDebug() << "  File: " << __FILE__ << "\n";\
-    qDebug() << "  Line: " << __LINE__ << "\n";\
-    return err;\
+  qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+  qDebug() << "  File: " << __FILE__ << "\n";\
+  qDebug() << "  Line: " << __LINE__ << "\n";\
+  return err;\
   }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +115,9 @@ PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
   m_SizeDistributionCurve(NULL),
   m_CutOffMin(NULL),
   m_CutOffMax(NULL),
-  m_grid(NULL)
+  m_grid(NULL),
+  m_MuValidator(NULL),
+  m_SigmaValidator(NULL)
 {
   setupUi(this);
   setupGui();
@@ -178,6 +183,17 @@ void PrimaryPhaseWidget::setupGui()
 
   // Register the Rolled Preset
   presetFactory = RegisterPresetFactory<PrimaryRolledPresetFactory>(microstructurePresetCombo);
+
+  m_MuValidator = new QDoubleValidator(m_Mu_SizeDistribution);
+  m_MuValidator->setRange(0.0001, 10.0, 4);
+  m_Mu_SizeDistribution->setValidator(m_MuValidator);
+
+  m_SigmaValidator = new QDoubleValidator(m_Sigma_SizeDistribution);
+  m_SigmaValidator->setRange(0.0000, 1.0, 4);
+  m_Sigma_SizeDistribution->setValidator(m_SigmaValidator);
+
+  m_MinSigmaCutOff->setValidator(new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff));
+  m_MaxSigmaCutOff->setValidator(new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff));
 
 
   // Select the first Preset in the list
@@ -459,8 +475,48 @@ void PrimaryPhaseWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool PrimaryPhaseWidget::validateValue(QDoubleValidator* val, QLineEdit* lineEdit)
+{
+  QString value(lineEdit->text());
+  int not_used = 0;
+  QValidator::State state = val->validate(value, not_used);
+  if(state != QValidator::Acceptable)
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+    return false;
+  }
+  else {
+    lineEdit->setStyleSheet("");
+  }
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PrimaryPhaseWidget::validateMuSigma()
+{
+  bool muValid = validateValue(m_MuValidator, m_Mu_SizeDistribution);
+  bool sigmaValid = validateValue(m_SigmaValidator, m_Sigma_SizeDistribution);
+
+  if (muValid && sigmaValid) {
+    m_GenerateDefaultData->setEnabled(true);
+    return true;
+  }
+
+  m_NumberBinsGenerated->setText("Error");
+  m_GenerateDefaultData->setEnabled(false);
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
+  if (!validateMuSigma()) {
+    return;
+  }
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
@@ -470,6 +526,9 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& tex
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
+  if (!validateMuSigma()) {
+    return;
+  }
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
@@ -523,7 +582,14 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
 
 
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
-  m_NumberBinsGenerated->setText(QString::number(n));
+  if(err < 0)
+  {
+    m_NumberBinsGenerated->setText("Error");
+  }
+  else
+  {
+    m_NumberBinsGenerated->setText(QString::number(n));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -582,7 +648,7 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   // QwtArray<int> numfeatures;
   err = StatsGen::GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
-  return 0;
+  return err;
 }
 
 
@@ -720,13 +786,13 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
   if (err < 0)  {\
-    QString msg ("Error Writing Data ");\
-    msg.append((var));\
-    msg.append(" to the HDF5 file");\
-    QMessageBox::critical(this, tr("StatsGenerator"),\
-                          msg,\
-                          QMessageBox::Default);\
-    retErr = -1;\
+  QString msg ("Error Writing Data ");\
+  msg.append((var));\
+  msg.append(" to the HDF5 file");\
+  QMessageBox::critical(this, tr("StatsGenerator"),\
+  msg,\
+  QMessageBox::Default);\
+  retErr = -1;\
   }
 
 // -----------------------------------------------------------------------------
