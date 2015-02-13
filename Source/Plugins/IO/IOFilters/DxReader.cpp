@@ -39,9 +39,42 @@
 #include <fstream>
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QDateTime>
 
 #include "IO/IOConstants.h"
 
+
+/* ############## Start Private Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DxReaderPrivate
+{
+	Q_DISABLE_COPY(DxReaderPrivate)
+	Q_DECLARE_PUBLIC(DxReader)
+	DxReader* const q_ptr;
+	DxReaderPrivate(DxReader* ptr);
+
+	size_t m_XDim_Cache;
+	size_t m_YDim_Cache;
+	size_t m_ZDim_Cache;
+	QString m_InputFile_Cache;
+	QDateTime m_TimeStamp_Cache;
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DxReaderPrivate::DxReaderPrivate(DxReader* ptr) :
+q_ptr(ptr),
+m_InputFile_Cache(""),
+m_TimeStamp_Cache(QDateTime()),
+m_XDim_Cache(0),
+m_YDim_Cache(0),
+m_ZDim_Cache(0)
+{
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -52,7 +85,9 @@ DxReader::DxReader() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+  m_FileWasRead(false),
+  d_ptr(new DxReaderPrivate(this))
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -65,6 +100,7 @@ DxReader::DxReader() :
   m_Dims[0] = 0;
   m_Dims[1] = 0;
   m_Dims[2] = 0;
+
   setupFilterParameters();
 }
 
@@ -74,6 +110,15 @@ DxReader::DxReader() :
 DxReader::~DxReader()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, XDim_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, YDim_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, ZDim_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QString, InputFile_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QDateTime, TimeStamp_Cache)
 
 // -----------------------------------------------------------------------------
 //
@@ -134,6 +179,18 @@ void DxReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DxReader::flushCache()
+{
+	setInputFile_Cache("");
+	setXDim_Cache(0);
+	setYDim_Cache(0);
+	setZDim_Cache(0);
+	setTimeStamp_Cache(QDateTime());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DxReader::dataCheck()
 {
   DataArrayPath tempPath;
@@ -178,24 +235,45 @@ void DxReader::dataCheck()
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
-    // We need to read the header of the input file to get the dimensions
-    m_InStream.setFileName(getInputFile());
-    if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-      QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
-      setErrorCondition(-100);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
+	  QDateTime timeStamp(fi.lastModified());
 
-    int error = readHeader();
-    m_InStream.close();
-    if (error < 0)
-    {
-      setErrorCondition(error);
-      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
-      notifyErrorMessage(getHumanLabel(), ss, -11000);
-    }
+	  if (getInputFile() == getInputFile_Cache() && getTimeStamp_Cache().isValid() && getTimeStamp_Cache() >= timeStamp)
+	  {
+		  // We are reading from the cache, so set the FileWasRead flag to false
+		  m_FileWasRead = false;
+
+		  m->getGeometryAs<ImageGeom>()->setDimensions(getXDim_Cache(), getYDim_Cache(), getZDim_Cache());
+	  }
+	  else
+	  {
+		  // We are reading from the file, so set the FileWasRead flag to true
+		  m_FileWasRead = true;
+
+		  // We need to read the header of the input file to get the dimensions
+		  m_InStream.setFileName(getInputFile());
+		  if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+		  {
+			  QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
+			  setErrorCondition(-100);
+			  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+			  return;
+		  }
+
+		  int error = readHeader();
+		  m_InStream.close();
+		  if (error < 0)
+		  {
+			  setErrorCondition(error);
+			  QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+			  notifyErrorMessage(getHumanLabel(), ss, -11000);
+		  }
+
+		  QDateTime newTimeStamp(fi.lastModified());
+
+		  // Set the file path and time stamp into the cache
+		  setInputFile_Cache(getInputFile());
+		  setTimeStamp_Cache(newTimeStamp);
+	  }
   }
 }
 
@@ -261,7 +339,6 @@ int DxReader::readHeader()
   QString delimeters(", ;\t"); /* delimeters to split the data */
   QList<QByteArray> tokens; /* vector to store the split data */
 
-
   bool ok = false;
   // Process the header information and look for the QString "counts"
   // Then read the data size after that
@@ -321,7 +398,7 @@ int DxReader::readHeader()
     // in the line
     if(pos1 == 0)
     {
-      if(tokens.size() == 20)
+      if(tokens.size() == 20) 
       {
         ss = QObject::tr("ERROR: Unable to locate the last header line");
         notifyErrorMessage(getHumanLabel(), ss, -8);
@@ -337,8 +414,15 @@ int DxReader::readHeader()
     error = 0;
     // points = tokens[pos1 + 1].toInt(&ok, 10);
   }
+
+  // Set the values into the cache, so that they can be used later
+  setXDim_Cache(nx);
+  setYDim_Cache(ny);
+  setZDim_Cache(nz);
+
   m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
   //  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz ;
+
   return error;
 }
 
