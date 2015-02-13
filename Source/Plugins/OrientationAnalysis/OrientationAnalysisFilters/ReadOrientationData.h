@@ -37,6 +37,8 @@
 #define _ReadOrientationData_H_
 
 #include <QtCore/QString>
+#include <QtCore/QScopedPointer>
+#include <QtCore/QDateTime>
 
 #include "EbsdLib/EbsdReader.h"
 
@@ -49,6 +51,16 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+struct Private_Data
+{
+	QVector<size_t> dims;
+	QVector<float> resolution;
+	QVector<float> origin;
+};
+
+// our PIMPL private class
+class ReadOrientationDataPrivate;
+
 /**
  * @class ReadOrientationData ReadOrientationData.h /FilterCategoryFilters/ReadOrientationData.h
  * @brief
@@ -59,6 +71,8 @@
 class ReadOrientationData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+	Q_DECLARE_PRIVATE(ReadOrientationData)
+
   public:
     DREAM3D_SHARED_POINTERS(ReadOrientationData)
     DREAM3D_STATIC_NEW_MACRO(ReadOrientationData)
@@ -135,6 +149,10 @@ class ReadOrientationData : public AbstractFilter
     /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
+
+	DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+	DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+	DREAM3D_PIMPL_PROPERTY_DECL(Private_Data, Data)
 
 
   signals:
@@ -246,6 +264,8 @@ class ReadOrientationData : public AbstractFilter
     }
 
   private:
+	  QScopedPointer<ReadOrientationDataPrivate> const d_ptr;
+
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)

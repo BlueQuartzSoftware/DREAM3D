@@ -55,6 +55,47 @@
   m_msgType* var = var##Array.get();
 
 
+/* ############## Start Private Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class ReadOrientationDataPrivate
+{
+	Q_DISABLE_COPY(ReadOrientationDataPrivate)
+		Q_DECLARE_PUBLIC(ReadOrientationData)
+		ReadOrientationData* const q_ptr;
+	ReadOrientationDataPrivate(ReadOrientationData* ptr);
+
+	Private_Data m_Data;
+
+	//int m_XDim_Cache;
+	//int m_YDim_Cache;
+	//int m_ZDim_Cache;
+
+	//float m_XResolution_Cache;
+	//float m_YResolution_Cache;
+	//float m_ZResolution_Cache;
+
+	//float m_XOrigin_Cache;
+	//float m_YOrigin_Cache;
+	//float m_ZOrigin_Cache;
+
+	QString m_InputFile_Cache;
+	QDateTime m_TimeStamp_Cache;
+
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ReadOrientationDataPrivate::ReadOrientationDataPrivate(ReadOrientationData* ptr) :
+q_ptr(ptr),
+m_InputFile_Cache(""),
+m_TimeStamp_Cache(QDateTime())
+{
+
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -86,6 +127,13 @@ ReadOrientationData::ReadOrientationData() :
 ReadOrientationData::~ReadOrientationData()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D_PIMPL_PROPERTY_DEF(ReadOrientationData, Private_Data, Data)
+DREAM3D_PIMPL_PROPERTY_DEF(ReadOrientationData, QString, InputFile_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(ReadOrientationData, QDateTime, TimeStamp_Cache)
 
 // -----------------------------------------------------------------------------
 //
@@ -152,6 +200,7 @@ void ReadOrientationData::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
+  QDateTime timeStamp(fi.lastModified());
   if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
@@ -168,134 +217,239 @@ void ReadOrientationData::dataCheck()
 
   if (m_InputFile.isEmpty() == false) // User set a filename, so lets check it
   {
-    QVector<size_t> dims(3, 0);
+	  QVector<size_t> dims(3, 0);
 
-    QString ext = fi.suffix();
-    QVector<QString> names;
-    if(ext.compare(Ebsd::Ang::FileExt) == 0)
-    {
-      AngReader reader;
-      reader.setFileName(m_InputFile);
-      reader.readHeaderOnly();
-      dims[0] = reader.getXDimension();
-      dims[1] = reader.getYDimension();
-      dims[2] = 1; // We are reading a single slice
-      m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-      m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-      m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
-      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
-      cellAttrMat->resizeAttributeArrays(dims);
-      AngFields angfeatures;
-      names = angfeatures.getFilterFeatures<QVector<QString> > ();
-      dims.resize(1);
-      dims[0] = 1;
-      for (qint32 i = 0; i < names.size(); ++i)
-      {
-        if (reader.getPointerType(names[i]) == Ebsd::Int32)
-        {
-          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
-        }
-        else if (reader.getPointerType(names[i]) == Ebsd::Float)
-        {
-          cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
-        }
-      }
-    }
-    else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
-    {
-      CtfReader reader;
-      reader.setFileName(m_InputFile);
-      reader.readHeaderOnly();
-      dims[0] = reader.getXCells();
-      dims[1] = reader.getYCells();
-      dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
-      m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-      if (reader.getZStep() != 0.0f)
-      {
-        m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
-      }
-      else
-      {
-        m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-      }
-      m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
-      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
-      cellAttrMat->resizeAttributeArrays(dims);
-      CtfFields ctffeatures;
-      names = ctffeatures.getFilterFeatures<QVector<QString> > ();
-      QVector<size_t> dims(1, 1);
-      for (qint32 i = 0; i < names.size(); ++i)
-      {
-        if (reader.getPointerType(names[i]) == Ebsd::Int32)
-        {
-          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
-        }
-        else if (reader.getPointerType(names[i]) == Ebsd::Float)
-        {
-          cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
-        }
-      }
-    }
-    else if(ext.compare(Ebsd::Mic::FileExt) == 0)
-    {
-      MicReader reader;
-      reader.setFileName(m_InputFile);
-      reader.readHeaderOnly();
-      dims[0] = reader.getXDimension();
-      dims[1] = reader.getYDimension();
-      dims[2] = 1; // We are reading a single slice
-      m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-      m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-      m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
-      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
-      cellAttrMat->resizeAttributeArrays(dims);
-      MicFields micfeatures;
-      names = micfeatures.getFilterFeatures<QVector<QString> > ();
-      QVector<size_t> dims(1, 1);
-      for (qint32 i = 0; i < names.size(); ++i)
-      {
-        if (reader.getPointerType(names[i]) == Ebsd::Int32)
-        {
-          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
-        }
-        else if (reader.getPointerType(names[i]) == Ebsd::Float)
-        {
-          cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
-        }
-      }
-    }
-    else
-    {
-      setErrorCondition(-997);
-      QString ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang, .ctf or .mic are the only recognized file extensions").arg(ext);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
+	  QString ext = fi.suffix();
+	  QVector<QString> names;
+	  if (ext.compare(Ebsd::Ang::FileExt) == 0)
+	  {
+		  AngReader reader;
 
-    QVector<size_t> dim(1, 3);
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
-    m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    dim[0] = 1;
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName() );
-    m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+		  // Drop into this if statement if we need to read from a file
+		  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+		  {
+			  float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
+			  int zDim = 1;
 
-    //typedef DataArray<unsigned int> XTalStructArrayType;
-    tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
-    m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    dim[0] = 6;
-    tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getLatticeConstantsArrayName() );
-    m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+			  reader.setFileName(m_InputFile);
+			  reader.readHeaderOnly();
+			  dims[0] = reader.getXDimension();
+			  dims[1] = reader.getYDimension();
+			  dims[2] = zDim; // We are reading a single slice
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), DREAM3D::EnsembleData::MaterialName);
-    cellEnsembleAttrMat->addAttributeArray( DREAM3D::EnsembleData::MaterialName, materialNames);
+			  // Set Cache with values from the file
+			  {
+				  Private_Data data;
+				  data.dims = dims;
+				  data.resolution.push_back(reader.getXStep());
+				  data.resolution.push_back(reader.getYStep());
+				  data.resolution.push_back(zStep);
+				  data.origin.push_back(xOrigin);
+				  data.origin.push_back(yOrigin);
+				  data.origin.push_back(zOrigin);
+				  setData(data);
+			  }
+		  }
+
+		  // Read from cache
+		  {
+			  dims[0] = getData().dims[0];
+			  dims[1] = getData().dims[1];
+			  dims[2] = getData().dims[2];
+			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+		  }
+
+		  //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+		  cellAttrMat->resizeAttributeArrays(dims);
+		  AngFields angfeatures;
+		  names = angfeatures.getFilterFeatures<QVector<QString> >();
+		  dims.resize(1);
+		  dims[0] = 1;
+		  for (qint32 i = 0; i < names.size(); ++i)
+		  {
+			  if (reader.getPointerType(names[i]) == Ebsd::Int32)
+			  {
+				  cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
+			  }
+			  else if (reader.getPointerType(names[i]) == Ebsd::Float)
+			  {
+				  cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
+			  }
+		  }
+	  }
+	  else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
+	  {
+		  CtfReader reader;
+
+		  // Drop into this if statement if we need to read from a file
+		  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+		  {
+			  float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f, zStep = 1.0;
+			  reader.setFileName(m_InputFile);
+			  reader.readHeaderOnly();
+			  dims[0] = reader.getXCells();
+			  dims[1] = reader.getYCells();
+			  dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
+
+			  // Set Cache with values from the file
+			  {
+				  Private_Data data;
+				  data.dims = dims;
+				  data.resolution.push_back(reader.getXStep());
+				  data.resolution.push_back(reader.getYStep());
+				  if (reader.getZStep() != 0.0f)
+				  {
+					  data.resolution.push_back(reader.getZStep());
+				  }
+				  else
+				  {
+					  data.resolution.push_back(zStep);
+				  }
+				  data.origin.push_back(xOrigin);
+				  data.origin.push_back(yOrigin);
+				  data.origin.push_back(zOrigin);
+				  setData(data);
+			  }
+		  }
+
+		  // Read from cache
+		  {
+			  dims[0] = getData().dims[0];
+			  dims[1] = getData().dims[1];
+			  dims[2] = getData().dims[2];
+			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+		  }
+
+		  //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+		  cellAttrMat->resizeAttributeArrays(dims);
+		  CtfFields ctffeatures;
+		  names = ctffeatures.getFilterFeatures<QVector<QString> >();
+		  QVector<size_t> dims(1, 1);
+		  for (qint32 i = 0; i < names.size(); ++i)
+		  {
+			  if (reader.getPointerType(names[i]) == Ebsd::Int32)
+			  {
+				  cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
+			  }
+			  else if (reader.getPointerType(names[i]) == Ebsd::Float)
+			  {
+				  cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
+			  }
+		  }
+	  }
+	  else if (ext.compare(Ebsd::Mic::FileExt) == 0)
+	  {
+		  MicReader reader;
+
+		  // Drop into this if statement if we need to read from a file
+		  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+		  {
+			  int zDim = 1;
+			  float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
+
+			  reader.setFileName(m_InputFile);
+			  reader.readHeaderOnly();
+			  dims[0] = reader.getXDimension();
+			  dims[1] = reader.getYDimension();
+			  dims[2] = zDim; // We are reading a single slice
+
+			  // Set cache with values from file
+			  {
+				  Private_Data data;
+				  data.dims = dims;
+				  data.resolution.push_back(reader.getXStep());
+				  data.resolution.push_back(reader.getYStep());
+				  data.resolution.push_back(zStep);
+				  data.origin.push_back(xOrigin);
+				  data.origin.push_back(yOrigin);
+				  data.origin.push_back(zOrigin);
+				  setData(data);
+			  }
+		  }
+
+		  // Read from cache
+		  {
+			  dims[0] = getData().dims[0];
+			  dims[1] = getData().dims[1];
+			  dims[2] = getData().dims[2];
+			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+		  }
+
+		  //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+		  cellAttrMat->resizeAttributeArrays(dims);
+		  MicFields micfeatures;
+		  names = micfeatures.getFilterFeatures<QVector<QString> >();
+		  QVector<size_t> dims(1, 1);
+		  for (qint32 i = 0; i < names.size(); ++i)
+		  {
+			  if (reader.getPointerType(names[i]) == Ebsd::Int32)
+			  {
+				  cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
+			  }
+			  else if (reader.getPointerType(names[i]) == Ebsd::Float)
+			  {
+				  cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
+			  }
+		  }
+	  }
+	  else
+	  {
+		  setErrorCondition(-997);
+		  QString ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang, .ctf or .mic are the only recognized file extensions").arg(ext);
+		  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		  return;
+	  }
+
+	  QVector<size_t> dim(1, 3);
+	  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
+	  m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	  if (NULL != m_CellEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	  {
+		  m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+	  } /* Now assign the raw pointer to data from the DataArray<T> object */
+	  dim[0] = 1;
+	  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName());
+	  m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	  if (NULL != m_CellPhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	  {
+		  m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+	  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+	  //typedef DataArray<unsigned int> XTalStructArrayType;
+	  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
+	  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	  if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	  {
+		  m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+	  } /* Now assign the raw pointer to data from the DataArray<T> object */
+	  dim[0] = 6;
+	  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getLatticeConstantsArrayName());
+	  m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	  if (NULL != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	  {
+		  m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
+	  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+	  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), DREAM3D::EnsembleData::MaterialName);
+	  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+
+	  // Set the file name and time stamp into the cache, if we are reading from the file and after all the reading has been done
+	  {
+		  QFileInfo newFi(m_InputFile);
+		  QDateTime timeStamp(newFi.lastModified());
+
+		  if (m_InputFile == getInputFile_Cache() && getTimeStamp_Cache().isValid() && getTimeStamp_Cache() >= timeStamp)
+		  {
+			  setTimeStamp_Cache(timeStamp);
+			  setInputFile_Cache(m_InputFile);
+		  }
+	  }
   }
 }
 
@@ -339,6 +493,18 @@ void ReadOrientationData::execute()
     readMicFile();
   }
 
+  // Set the file name and time stamp into the cache, if we are reading from the file and after all the reading has been done
+  {
+	QFileInfo newFi(m_InputFile);
+	QDateTime timeStamp(newFi.lastModified());
+
+	if (m_InputFile == getInputFile_Cache() && getTimeStamp_Cache().isValid() && getTimeStamp_Cache() >= timeStamp)
+	{
+		setTimeStamp_Cache(timeStamp);
+		setInputFile_Cache(m_InputFile);
+	}
+  }
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -350,6 +516,8 @@ void ReadOrientationData::readAngFile()
 {
   int err = 0;
   AngReader reader;
+
+
   reader.setFileName(m_InputFile);
   err = reader.readFile();
   if (err < 0)
