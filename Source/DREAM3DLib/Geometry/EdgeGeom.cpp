@@ -115,6 +115,31 @@ void EdgeGeom::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EdgeGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data)
+{
+  if (data->getType() != 0 || data->getType() != 1)
+  {
+    // EdgeGeom can only accept vertex or edge Attribute Matrices
+    return;
+  }
+  if (data->getType() == 0 && static_cast<int64_t>(data->getNumTuples()) != getNumberOfVertices())
+  {
+    return;
+  }
+  if (data->getType() == 1 && data->getNumTuples() != getNumberOfTuples())
+  {
+    return;
+  }
+  if (data->getName().compare(name) != 0)
+  {
+    data->setName(name);
+  }
+  m_AttributeMatrices[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 size_t EdgeGeom::getNumberOfTuples()
 {
   return m_EdgeList->getNumberOfTuples();

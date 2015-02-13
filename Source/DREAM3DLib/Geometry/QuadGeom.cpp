@@ -115,6 +115,35 @@ void QuadGeom::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QuadGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data)
+{
+  if (data->getType() != 0 || data->getType() != 1 || data->getType() != 2)
+  {
+    // QuadGeom can only accept vertex, edge, or face Attribute Matrices
+    return;
+  }
+  if (data->getType() == 0 && static_cast<int64_t>(data->getNumTuples()) != getNumberOfVertices())
+  {
+    return;
+  }
+  if (data->getType() == 1 && static_cast<int64_t>(data->getNumTuples()) != getNumberOfEdges())
+  {
+    return;
+  }
+  if (data->getType() == 2 && data->getNumTuples() != getNumberOfTuples())
+  {
+    return;
+  }
+  if (data->getName().compare(name) != 0)
+  {
+    data->setName(name);
+  }
+  m_AttributeMatrices[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 size_t QuadGeom::getNumberOfTuples()
 {
   return m_QuadList->getNumberOfTuples();

@@ -97,3 +97,34 @@ unsigned int GEOM_CLASS_NAME::getSpatialDimensionality()
 {
   return m_SpatialDimensionality;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AttributeMatrix::Pointer GEOM_CLASS_NAME::getAttributeMatrix(const QString &name)
+{
+  AttributeMatrixMap_t::iterator it;
+  it = m_AttributeMatrices.find(name);
+  if ( it == m_AttributeMatrices.end() )
+  {
+    return AttributeMatrix::NullPointer();
+  }
+  return it.value();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AttributeMatrix::Pointer GEOM_CLASS_NAME::removeAttributeMatrix(const QString& name)
+{
+  QMap<QString, AttributeMatrix::Pointer>::iterator it;
+  it =  m_AttributeMatrices.find(name);
+  if ( it == m_AttributeMatrices.end() )
+  {
+    // DO NOT return a NullPointer for any reason other than "Attribute Matrix was not found"
+    return AttributeMatrix::NullPointer();
+  }
+  AttributeMatrix::Pointer p = it.value();
+  m_AttributeMatrices.erase(it);
+  return p;
+}

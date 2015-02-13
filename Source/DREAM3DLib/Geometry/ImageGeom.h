@@ -220,6 +220,25 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
      */
     virtual IGeometry::Pointer deepCopy();
 
+    /**
+     * @brief addAttributeMatrix
+     */
+    virtual void addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data);
+
+    /**
+     * @brief getAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name);
+
+    /**
+     * @brief removeAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name);
+
   protected:
 
     ImageGeom();
@@ -260,6 +279,7 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
     unsigned int m_XdmfGridType;
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
+    AttributeMatrixMap_t m_AttributeMatrices;
 
     ImageGeom(const ImageGeom&); // Copy Constructor Not Implemented
     void operator=(const ImageGeom&); // Operator '=' Not Implemented

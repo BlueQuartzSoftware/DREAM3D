@@ -103,6 +103,27 @@ void VertexGeom::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VertexGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data)
+{
+  if (data->getType() != 0)
+  {
+    // VertexGeom can only accept vertex Attribute Matrices
+    return;
+  }
+  if (data->getNumTuples() != getNumberOfTuples())
+  {
+    return;
+  }
+  if (data->getName().compare(name) != 0)
+  {
+    data->setName(name);
+  }
+  m_AttributeMatrices[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 size_t VertexGeom::getNumberOfTuples()
 {
   return m_VertexList->getNumberOfTuples();

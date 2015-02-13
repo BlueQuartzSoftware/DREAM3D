@@ -56,6 +56,7 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -79,6 +80,11 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
 
     IGeometry();
     virtual ~IGeometry();
+
+    /**
+     * @brief AttributeMatrixMap_t
+     */
+    typedef QMap<QString, AttributeMatrix::Pointer> AttributeMatrixMap_t;
 
 // -----------------------------------------------------------------------------
 // Connectivity
@@ -233,6 +239,25 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      */
     virtual void initializeWithZeros() = 0;
 
+    /**
+     * @brief addAttributeMatrix
+     */
+    virtual void addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data) = 0;
+
+    /**
+     * @brief getAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name) = 0;
+
+    /**
+     * @brief removeAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name) = 0;
+
   protected:
 
     /**
@@ -254,6 +279,14 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
     virtual void setCellCentroids(FloatArrayType::Pointer cellCentroids) = 0;
 
   private:
+
+    QString m_Name;
+    QString m_GeometryTypeName;
+    unsigned int m_GeometryType;
+    unsigned int m_XdmfGridType;
+    unsigned int m_UnitDimensionality;
+    unsigned int m_SpatialDimensionality;
+    AttributeMatrixMap_t m_AttributeMatrices;
 
     IGeometry(const IGeometry&); // Copy Constructor Not Implemented
     void operator=(const IGeometry&); // Operator '=' Not Implemented

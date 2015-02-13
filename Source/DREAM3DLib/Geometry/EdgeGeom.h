@@ -39,9 +39,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 #include "DREAM3DLib/Geometry/IGeometry.h"
-#include "DREAM3DLib/Geometry/VertexGeom.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 
 /**
@@ -340,6 +338,25 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      */
     virtual IGeometry::Pointer deepCopy();
 
+    /**
+     * @brief addAttributeMatrix
+     */
+    virtual void addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data);
+
+    /**
+     * @brief getAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name);
+
+    /**
+     * @brief removeAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name);
+
   protected:
 
     EdgeGeom();
@@ -370,6 +387,7 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
     unsigned int m_XdmfGridType;
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
+    AttributeMatrixMap_t m_AttributeMatrices;
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
     CellDynamicList::Pointer m_EdgesContainingVert;

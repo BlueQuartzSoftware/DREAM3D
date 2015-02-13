@@ -94,6 +94,27 @@ void ImageGeom::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImageGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data)
+{
+  if (data->getType() != 3)
+  {
+    // ImageGeom can only accept cell Attribute Matrices
+    return;
+  }
+  if (data->getNumTuples() != getNumberOfTuples())
+  {
+    return;
+  }
+  if (data->getName().compare(name) != 0)
+  {
+    data->setName(name);
+  }
+  m_AttributeMatrices[name] = data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 size_t ImageGeom::getNumberOfTuples()
 {
   return (m_Dimensions[0] * m_Dimensions[1] * m_Dimensions[2]);

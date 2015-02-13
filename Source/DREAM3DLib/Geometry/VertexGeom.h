@@ -272,6 +272,25 @@ class DREAM3DLib_EXPORT VertexGeom : public IGeometry
      */
     virtual IGeometry::Pointer deepCopy();
 
+    /**
+     * @brief addAttributeMatrix
+     */
+    virtual void addAttributeMatrix(const QString& name, AttributeMatrix::Pointer data);
+
+    /**
+     * @brief getAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name);
+
+    /**
+     * @brief removeAttributeMatrix
+     * @param name
+     * @return
+     */
+    virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name);
+
   protected:
 
     VertexGeom();
@@ -302,6 +321,7 @@ class DREAM3DLib_EXPORT VertexGeom : public IGeometry
     unsigned int m_XdmfGridType;
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
+    AttributeMatrixMap_t m_AttributeMatrices;
     SharedVertexList::Pointer m_VertexList;
 
     VertexGeom(const VertexGeom&); // Copy Constructor Not Implemented
