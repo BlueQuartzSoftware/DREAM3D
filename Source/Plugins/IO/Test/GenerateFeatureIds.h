@@ -129,6 +129,11 @@ class CreateDataContainer : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(CreateDataContainer)
     DREAM3D_TYPE_MACRO_SUPER(CreateDataContainer, AbstractFilter)
 
+	DREAM3D_FILTER_PARAMETER(int64_t, XDim)
+	DREAM3D_FILTER_PARAMETER(int64_t, YDim)
+	DREAM3D_FILTER_PARAMETER(int64_t, ZDim)
+
+
     virtual ~CreateDataContainer() {}
 
     /**
@@ -175,7 +180,14 @@ class CreateDataContainer : public AbstractFilter
     }
 
   protected:
-    CreateDataContainer() : AbstractFilter() {}
+    CreateDataContainer() :
+		AbstractFilter(),
+		m_XDim(0),
+		m_YDim(0),
+		m_ZDim(0)
+	{
+
+	}
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -192,9 +204,9 @@ class CreateDataContainer : public AbstractFilter
       m->setGeometry(image);
 
       m->setName(DREAM3D::Defaults::DataContainerName);
-      int64_t nx = UnitTest::FeatureIdsTest::XSize;
-      int64_t ny = UnitTest::FeatureIdsTest::YSize;
-      int64_t nz = UnitTest::FeatureIdsTest::ZSize;
+      int64_t nx = m_XDim;
+      int64_t ny = m_YDim;
+      int64_t nz = m_ZDim;
       m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
       getDataContainerArray()->addDataContainer(m);
       QVector<size_t> tDims(3, 0);

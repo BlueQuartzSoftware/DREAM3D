@@ -29,7 +29,8 @@ namespace UnitTest
 
   namespace DxIOTest
   {
-    const QString TestFile("@TEST_TEMP_DIR@/DxIOTest.ph");
+    const QString TestFile("@TEST_TEMP_DIR@/DxIOTest.dx");
+    const QString TestFile2("@TEST_TEMP_DIR@/DxIOTest2.dx");
   }
 
     namespace EnsembleInfoReaderTest
@@ -63,6 +64,10 @@ namespace UnitTest
     static const size_t YSize = 4;
     static const size_t ZSize = 5;
     static const size_t Offset = 200;
+
+    static const size_t XSize2 = 6;
+    static const size_t YSize2 = 7;
+    static const size_t ZSize2 = 8;
   }
 
   namespace VtkStructuredPointsReaderTest
