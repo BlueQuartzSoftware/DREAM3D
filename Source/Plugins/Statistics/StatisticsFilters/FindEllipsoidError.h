@@ -74,14 +74,17 @@ class FindEllipsoidError : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
-    Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+    Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AxisLengthsArrayPath)
     Q_PROPERTY(DataArrayPath AxisLengthsArrayPath READ getAxisLengthsArrayPath WRITE setAxisLengthsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AxisEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, IdealFeatureIdsArrayName)
+    Q_PROPERTY(QString IdealFeatureIdsArrayName READ getIdealFeatureIdsArrayName WRITE setIdealFeatureIdsArrayName)
 
 
     virtual const QString getCompiledLibraryName();
@@ -120,7 +123,7 @@ class FindEllipsoidError : public AbstractFilter
 
   protected:
     FindEllipsoidError();
-
+    void find_error2D();
 
 
   private:
@@ -128,7 +131,8 @@ class FindEllipsoidError : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisLengths)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, IdealFeatureIds)
 
 
     double scaleFactor;
