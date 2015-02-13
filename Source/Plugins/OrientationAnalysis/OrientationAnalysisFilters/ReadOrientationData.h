@@ -49,6 +49,10 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/HEDM/MicReader.h"
+
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 struct Private_Data
@@ -56,6 +60,12 @@ struct Private_Data
 	QVector<size_t> dims;
 	QVector<float> resolution;
 	QVector<float> origin;
+};
+
+enum READ_FLAG
+{
+	FULL_FILE,
+	HEADER_ONLY
 };
 
 // our PIMPL private class
@@ -94,6 +104,11 @@ class ReadOrientationData : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+	void populateAngData(AngReader* reader, DataContainer::Pointer m, QVector<size_t> dims, READ_FLAG = FULL_FILE);
+	void populateCtfData(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> dims, READ_FLAG = FULL_FILE);
+	void populateMicData(MicReader* reader, DataContainer::Pointer m, QVector<size_t> dims, READ_FLAG = FULL_FILE);
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

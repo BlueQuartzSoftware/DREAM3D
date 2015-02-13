@@ -44,11 +44,8 @@
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
-#include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfFields.h"
-#include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/HEDM/MicFields.h"
-#include "EbsdLib/HEDM/MicReader.h"
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -179,6 +176,229 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ReadOrientationData::populateAngData(AngReader* reader, DataContainer::Pointer m, QVector<size_t> dims, READ_FLAG flag)
+{
+	QFileInfo fi(m_InputFile);
+	QDateTime timeStamp(fi.lastModified());
+
+	// Drop into this if statement if we need to read from a file
+	if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+	{
+		float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
+		int zDim = 1;
+
+		reader->setFileName(m_InputFile);
+
+		if (flag == HEADER_ONLY)
+		{
+			int err = reader->readHeaderOnly();
+			if (err < 0)
+			{
+				setErrorCondition(err);
+				notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+				notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file header.", getErrorCondition());
+				return;
+			}
+		}
+		else
+		{
+			int err = reader->readFile();
+			if (err < 0)
+			{
+				setErrorCondition(err);
+				notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+				notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file.", getErrorCondition());
+				return;
+			}
+		}
+		dims[0] = reader->getXDimension();
+		dims[1] = reader->getYDimension();
+		dims[2] = zDim; // We are reading a single slice
+
+		// Set Cache with values from the file
+		{
+			Private_Data data;
+			data.dims = dims;
+			data.resolution.push_back(reader->getXStep());
+			data.resolution.push_back(reader->getYStep());
+			data.resolution.push_back(zStep);
+			data.origin.push_back(xOrigin);
+			data.origin.push_back(yOrigin);
+			data.origin.push_back(zOrigin);
+			setData(data);
+		}
+	}
+
+	// Read from cache
+		  {
+			  dims[0] = getData().dims[0];
+			  dims[1] = getData().dims[1];
+			  dims[2] = getData().dims[2];
+			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+		  }
+
+		  if (flag == FULL_FILE)
+		  {
+			  loadInfo<AngReader, AngPhase>(&reader);		// FIX THIS
+		  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadOrientationData::populateCtfData(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> dims, READ_FLAG flag)
+{
+	QFileInfo fi(m_InputFile);
+	QDateTime timeStamp(fi.lastModified());
+
+	// Drop into this if statement if we need to read from a file
+	if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+	{
+		float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f, zStep = 1.0;
+		reader->setFileName(m_InputFile);
+
+		if (flag == HEADER_ONLY)
+		{
+			int err = reader->readHeaderOnly();
+			if (err < 0)
+			{
+				setErrorCondition(err);
+				notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+				notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file header.", getErrorCondition());
+				return;
+			}
+		}
+		else
+		{
+			int err = reader->readFile();
+			if (err < 0)
+			{
+				setErrorCondition(err);
+				notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+				notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file.", getErrorCondition());
+				return;
+			}
+		}
+
+		dims[0] = reader->getXCells();
+		dims[1] = reader->getYCells();
+		dims[2] = reader->getZCells(); // With CTF files there can be more than a single slice
+
+		// Set Cache with values from the file
+		{
+			Private_Data data;
+			data.dims = dims;
+			data.resolution.push_back(reader->getXStep());
+			data.resolution.push_back(reader->getYStep());
+			if (reader->getZStep() != 0.0f)
+			{
+				data.resolution.push_back(reader->getZStep());
+			}
+			else
+			{
+				data.resolution.push_back(zStep);
+			}
+			data.origin.push_back(xOrigin);
+			data.origin.push_back(yOrigin);
+			data.origin.push_back(zOrigin);
+			setData(data);
+		}
+	}
+
+	// Read from cache
+		  {
+			  dims[0] = getData().dims[0];
+			  dims[1] = getData().dims[1];
+			  dims[2] = getData().dims[2];
+			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+		  }
+
+		  if (flag == FULL_FILE)
+		  {
+			  loadInfo<CtfReader, CtfPhase>(&reader);		// FIX THIS
+		  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadOrientationData::populateMicData(MicReader* reader, DataContainer::Pointer m, QVector<size_t> dims, READ_FLAG flag)
+{
+	QFileInfo fi(m_InputFile);
+	QDateTime timeStamp(fi.lastModified());
+
+	// Drop into this if statement if we need to read from a file
+	if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+	{
+		int zDim = 1;
+		float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
+
+		reader->setFileName(m_InputFile);
+
+		if (flag == HEADER_ONLY)
+		{
+			int err = reader->readHeaderOnly();
+			if (err < 0)
+			{
+				setErrorCondition(err);
+				notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+				notifyErrorMessage(getHumanLabel(), "MicReader could not read the .mic file header.", getErrorCondition());
+				return;
+			}
+		}
+		else
+		{
+			int err = reader->readFile();
+			if (err < 0)
+			{
+				setErrorCondition(err);
+				notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+				notifyErrorMessage(getHumanLabel(), "MicReader could not read the .mic file.", getErrorCondition());
+				return;
+			}
+		}
+
+		dims[0] = reader->getXDimension();
+		dims[1] = reader->getYDimension();
+		dims[2] = zDim; // We are reading a single slice
+
+		// Set cache with values from file
+		{
+			Private_Data data;
+			data.dims = dims;
+			data.resolution.push_back(reader->getXStep());
+			data.resolution.push_back(reader->getYStep());
+			data.resolution.push_back(zStep);
+			data.origin.push_back(xOrigin);
+			data.origin.push_back(yOrigin);
+			data.origin.push_back(zOrigin);
+			setData(data);
+		}
+	}
+
+	// Read from cache
+		  {
+			  dims[0] = getData().dims[0];
+			  dims[1] = getData().dims[1];
+			  dims[2] = getData().dims[2];
+			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+		  }
+
+		  if (flag == FULL_FILE)
+		  {
+			  loadInfo<MicReader, MicPhase>(&reader);		// FIX THIS
+		  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReadOrientationData::dataCheck()
 {
   DataArrayPath tempPath;
@@ -200,7 +420,6 @@ void ReadOrientationData::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
-  QDateTime timeStamp(fi.lastModified());
   if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
@@ -223,43 +442,9 @@ void ReadOrientationData::dataCheck()
 	  QVector<QString> names;
 	  if (ext.compare(Ebsd::Ang::FileExt) == 0)
 	  {
-		  AngReader reader;
+		  AngReader* reader = new AngReader();
 
-		  // Drop into this if statement if we need to read from a file
-		  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
-		  {
-			  float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
-			  int zDim = 1;
-
-			  reader.setFileName(m_InputFile);
-			  reader.readHeaderOnly();
-			  dims[0] = reader.getXDimension();
-			  dims[1] = reader.getYDimension();
-			  dims[2] = zDim; // We are reading a single slice
-
-			  // Set Cache with values from the file
-			  {
-				  Private_Data data;
-				  data.dims = dims;
-				  data.resolution.push_back(reader.getXStep());
-				  data.resolution.push_back(reader.getYStep());
-				  data.resolution.push_back(zStep);
-				  data.origin.push_back(xOrigin);
-				  data.origin.push_back(yOrigin);
-				  data.origin.push_back(zOrigin);
-				  setData(data);
-			  }
-		  }
-
-		  // Read from cache
-		  {
-			  dims[0] = getData().dims[0];
-			  dims[1] = getData().dims[1];
-			  dims[2] = getData().dims[2];
-			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
-			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
-		  }
+		  populateAngData(reader, m, dims, HEADER_ONLY);
 
 		  //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
 		  cellAttrMat->resizeAttributeArrays(dims);
@@ -269,60 +454,23 @@ void ReadOrientationData::dataCheck()
 		  dims[0] = 1;
 		  for (qint32 i = 0; i < names.size(); ++i)
 		  {
-			  if (reader.getPointerType(names[i]) == Ebsd::Int32)
+			  if (reader->getPointerType(names[i]) == Ebsd::Int32)
 			  {
 				  cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
 			  }
-			  else if (reader.getPointerType(names[i]) == Ebsd::Float)
+			  else if (reader->getPointerType(names[i]) == Ebsd::Float)
 			  {
 				  cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
 			  }
 		  }
+
+		  delete reader;
 	  }
 	  else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
 	  {
-		  CtfReader reader;
+		  CtfReader* reader = new CtfReader();
 
-		  // Drop into this if statement if we need to read from a file
-		  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
-		  {
-			  float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f, zStep = 1.0;
-			  reader.setFileName(m_InputFile);
-			  reader.readHeaderOnly();
-			  dims[0] = reader.getXCells();
-			  dims[1] = reader.getYCells();
-			  dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
-
-			  // Set Cache with values from the file
-			  {
-				  Private_Data data;
-				  data.dims = dims;
-				  data.resolution.push_back(reader.getXStep());
-				  data.resolution.push_back(reader.getYStep());
-				  if (reader.getZStep() != 0.0f)
-				  {
-					  data.resolution.push_back(reader.getZStep());
-				  }
-				  else
-				  {
-					  data.resolution.push_back(zStep);
-				  }
-				  data.origin.push_back(xOrigin);
-				  data.origin.push_back(yOrigin);
-				  data.origin.push_back(zOrigin);
-				  setData(data);
-			  }
-		  }
-
-		  // Read from cache
-		  {
-			  dims[0] = getData().dims[0];
-			  dims[1] = getData().dims[1];
-			  dims[2] = getData().dims[2];
-			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
-			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
-		  }
+		  populateCtfData(reader, m, dims, HEADER_ONLY);
 
 		  //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
 		  cellAttrMat->resizeAttributeArrays(dims);
@@ -331,55 +479,23 @@ void ReadOrientationData::dataCheck()
 		  QVector<size_t> dims(1, 1);
 		  for (qint32 i = 0; i < names.size(); ++i)
 		  {
-			  if (reader.getPointerType(names[i]) == Ebsd::Int32)
+			  if (reader->getPointerType(names[i]) == Ebsd::Int32)
 			  {
 				  cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
 			  }
-			  else if (reader.getPointerType(names[i]) == Ebsd::Float)
+			  else if (reader->getPointerType(names[i]) == Ebsd::Float)
 			  {
 				  cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
 			  }
 		  }
+
+		  delete reader;
 	  }
 	  else if (ext.compare(Ebsd::Mic::FileExt) == 0)
 	  {
-		  MicReader reader;
+		  MicReader* reader = new MicReader();
 
-		  // Drop into this if statement if we need to read from a file
-		  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
-		  {
-			  int zDim = 1;
-			  float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
-
-			  reader.setFileName(m_InputFile);
-			  reader.readHeaderOnly();
-			  dims[0] = reader.getXDimension();
-			  dims[1] = reader.getYDimension();
-			  dims[2] = zDim; // We are reading a single slice
-
-			  // Set cache with values from file
-			  {
-				  Private_Data data;
-				  data.dims = dims;
-				  data.resolution.push_back(reader.getXStep());
-				  data.resolution.push_back(reader.getYStep());
-				  data.resolution.push_back(zStep);
-				  data.origin.push_back(xOrigin);
-				  data.origin.push_back(yOrigin);
-				  data.origin.push_back(zOrigin);
-				  setData(data);
-			  }
-		  }
-
-		  // Read from cache
-		  {
-			  dims[0] = getData().dims[0];
-			  dims[1] = getData().dims[1];
-			  dims[2] = getData().dims[2];
-			  m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-			  m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
-			  m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
-		  }
+		  populateMicData(reader, m, dims, HEADER_ONLY);
 
 		  //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
 		  cellAttrMat->resizeAttributeArrays(dims);
@@ -388,15 +504,17 @@ void ReadOrientationData::dataCheck()
 		  QVector<size_t> dims(1, 1);
 		  for (qint32 i = 0; i < names.size(); ++i)
 		  {
-			  if (reader.getPointerType(names[i]) == Ebsd::Int32)
+			  if (reader->getPointerType(names[i]) == Ebsd::Int32)
 			  {
 				  cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, dims);
 			  }
-			  else if (reader.getPointerType(names[i]) == Ebsd::Float)
+			  else if (reader->getPointerType(names[i]) == Ebsd::Float)
 			  {
 				  cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
 			  }
 		  }
+
+		  delete reader;
 	  }
 	  else
 	  {
@@ -515,35 +633,16 @@ void ReadOrientationData::execute()
 void ReadOrientationData::readAngFile()
 {
   int err = 0;
-  AngReader reader;
-
-
-  reader.setFileName(m_InputFile);
-  err = reader.readFile();
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    notifyErrorMessage(getHumanLabel(), reader.getErrorMessage(), err);
-    notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file.", getErrorCondition());
-    return;
-  }
+  AngReader* reader = new AngReader();
+  QVector<size_t> tDims(3, 0);
+  QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-
-  QVector<size_t> tDims(3, 0); // Create an array for the Tuple Dimensions
-  tDims[0] = reader.getXDimension();
-  tDims[1] = reader.getYDimension();
-  tDims[2] = 1; // We are reading a single slice
 
   ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
   ebsdAttrMat->setTupleDimensions(tDims);
 
-  QVector<size_t> cDims(1, 1);
-  m->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
-  m->getGeometryAs<ImageGeom>()->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
-  m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
-
-  err = loadInfo<AngReader, AngPhase>(&reader);
+  populateAngData(reader, m, tDims, FULL_FILE);
 
   float* f1 = NULL;
   float* f2 = NULL;
