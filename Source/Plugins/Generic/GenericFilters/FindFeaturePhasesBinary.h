@@ -71,6 +71,9 @@ class  FindFeaturePhasesBinary : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();

@@ -61,7 +61,9 @@ FindEllipsoidError::FindEllipsoidError()  :
   m_AxisLengths(NULL),
   m_NumCells(NULL),
   m_IdealFeatureIds(NULL),
-  m_EllipsoidError(NULL)
+  m_EllipsoidError(NULL),
+  m_WriteIdealEllipseFeatureIds(true)
+
 
 {
 
@@ -91,8 +93,10 @@ void FindEllipsoidError::setupFilterParameters()
   parameters.push_back(FilterParameter::New("AxisLengths", "AxisLengthsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisLengthsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getIdealFeatureIdsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", FilterParameterWidgetType::StringWidget, getEllipsoidErrorArrayName(), true, ""));
+  QStringList linkedProps("IdealFeatureIdsArrayName");
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, false));
+  parameters.push_back(FilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getIdealFeatureIdsArrayName(), false, ""));
 
   setFilterParameters(parameters);
 }
@@ -111,6 +115,8 @@ void FindEllipsoidError::readFilterParameters(AbstractFilterParametersReader* re
   setAxisLengthsArrayPath(reader->readDataArrayPath("AxisLengthsArrayPath", getAxisLengthsArrayPath()));
   setIdealFeatureIdsArrayName(reader->readString("IdealFeatureIdsArrayName", getIdealFeatureIdsArrayName() ) );
   setEllipsoidErrorArrayName(reader->readString("EllipsoidErrrorArrayName", getEllipsoidErrorArrayName() ) );
+  setWriteIdealEllipseFeatureIds(reader->readValue("WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds() ) );
+
   reader->closeFilterGroup();
 }
 
@@ -128,6 +134,7 @@ int FindEllipsoidError::writeFilterParameters(AbstractFilterParametersWriter* wr
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(IdealFeatureIdsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(EllipsoidErrorArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteIdealEllipseFeatureIds)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -170,11 +177,14 @@ void FindEllipsoidError::dataCheck()
   if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0] = 1;
-  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getIdealFeatureIdsArrayName() );
-  m_IdealFeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_IdealFeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_IdealFeatureIds = m_IdealFeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if (m_WriteIdealEllipseFeatureIds == true)
+  {
+      dims[0] = 1;
+      tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getIdealFeatureIdsArrayName() );
+      m_IdealFeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if( NULL != m_IdealFeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_IdealFeatureIds = m_IdealFeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   dims[0] = 1;
   tempPath.update(m_NumCellsArrayPath.getDataContainerName(), m_NumCellsArrayPath.getAttributeMatrixName(), getEllipsoidErrorArrayName() );
@@ -220,11 +230,6 @@ void FindEllipsoidError::execute()
   if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) {  }
   if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) {find_error2D();}
 
-//  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) {  }
-//  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) {  }
-
-//  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { }
-//  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { }
 
   notifyStatusMessage(getHumanLabel(), "FindEllipsoidError Completed");
 }
