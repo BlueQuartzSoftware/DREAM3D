@@ -107,6 +107,9 @@ int TestPhWriter()
 
   // Use the helper class CreateDataContainer to generate a valid DataContainer
   CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
+  createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
+  createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
+  createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
   pipeline->pushBack(createVolumeDC);
   // Generate some "Feature Ids" inside that DataContainer
   GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
