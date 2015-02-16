@@ -65,20 +65,14 @@ class ReadOrientationDataPrivate
 
 	Private_Data m_Data;
 
-	//int m_XDim_Cache;
-	//int m_YDim_Cache;
-	//int m_ZDim_Cache;
-
-	//float m_XResolution_Cache;
-	//float m_YResolution_Cache;
-	//float m_ZResolution_Cache;
-
-	//float m_XOrigin_Cache;
-	//float m_YOrigin_Cache;
-	//float m_ZOrigin_Cache;
-
 	QString m_InputFile_Cache;
 	QDateTime m_TimeStamp_Cache;
+
+	template<typename EbsdPhase>
+	QVector<typename EbsdPhase::Pointer> getCachedPhaseVector()
+	{
+
+	}
 
 };
 
@@ -241,7 +235,7 @@ void ReadOrientationData::populateAngData(AngReader* reader, DataContainer::Poin
 
 		  if (flag == FULL_FILE)
 		  {
-			  loadInfo<AngReader, AngPhase>(&reader);		// FIX THIS
+			  loadInfo<AngReader, AngPhase>(reader);		// FIX THIS
 		  }
 }
 
