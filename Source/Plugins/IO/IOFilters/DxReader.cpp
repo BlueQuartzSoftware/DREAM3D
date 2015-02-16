@@ -237,7 +237,7 @@ void DxReader::dataCheck()
   {
 	  QDateTime timeStamp(fi.lastModified());
 
-	  if (getInputFile() == getInputFile_Cache() && getTimeStamp_Cache().isValid() && getTimeStamp_Cache() >= timeStamp)
+	  if (getInputFile() == getInputFile_Cache() && getTimeStamp_Cache().isValid() && timeStamp.msecsTo(getTimeStamp_Cache()) >= 0)
 	  {
 		  // We are reading from the cache, so set the FileWasRead flag to false
 		  m_FileWasRead = false;
