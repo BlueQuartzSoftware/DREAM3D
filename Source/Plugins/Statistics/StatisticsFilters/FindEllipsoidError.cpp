@@ -251,7 +251,7 @@ void FindEllipsoidError::find_error2D()
 
     for (size_t i=0; i<numfeatures; i++)
     {
-        theta = m_AxisEulerAngles[3*i]; //only need the first angle in 2D
+        theta = -m_AxisEulerAngles[3*i]; //only need the first angle in 2D
 
         //Get the centroids (in pixels) for the ideal ellipse
         xc = m_Centroids[3*i]/xRes;
@@ -292,7 +292,7 @@ void FindEllipsoidError::find_error2D()
         ycoord = int(k/xPoints) % yPoints;
         for (size_t i = 1; i<numfeatures; i++)
         {
-            theta = m_AxisEulerAngles[3*i]; //only need the first angle in 2D
+            theta = -m_AxisEulerAngles[3*i]; //only need the first angle in 2D
 
             //Get the centroids (in pixels) for the ideal ellipse
             xc = m_Centroids[3*i]/xRes;

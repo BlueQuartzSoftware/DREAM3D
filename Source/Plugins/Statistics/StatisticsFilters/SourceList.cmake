@@ -42,6 +42,7 @@ set(_PublicFilters
   FindSizes
   FindSaltykovSizes
   FindSlipTransmissionMetrics
+  FindSurfaceAreaToVolume
   #FindBoundaryCellFractions
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
