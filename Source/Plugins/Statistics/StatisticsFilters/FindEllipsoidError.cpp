@@ -53,13 +53,15 @@ FindEllipsoidError::FindEllipsoidError()  :
   m_AxisEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AxisEulerAngles),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_IdealFeatureIdsArrayName("IdealFeatureIds"),
+  m_EllipsoidErrorArrayName("EllipsoidError"),
   m_FeatureIds(NULL),
   m_AxisEulerAngles(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
   m_AxisLengths(NULL),
   m_NumCells(NULL),
-  m_IdealFeatureIds(NULL)
+  m_IdealFeatureIds(NULL),
+  m_EllipsoidError(NULL)
 
 {
 
@@ -90,6 +92,7 @@ void FindEllipsoidError::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getIdealFeatureIdsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", FilterParameterWidgetType::StringWidget, getEllipsoidErrorArrayName(), true, ""));
 
   setFilterParameters(parameters);
 }
@@ -107,6 +110,7 @@ void FindEllipsoidError::readFilterParameters(AbstractFilterParametersReader* re
   setNumCellsArrayPath(reader->readDataArrayPath("NumCellsArrayPath", getNumCellsArrayPath()));
   setAxisLengthsArrayPath(reader->readDataArrayPath("AxisLengthsArrayPath", getAxisLengthsArrayPath()));
   setIdealFeatureIdsArrayName(reader->readString("IdealFeatureIdsArrayName", getIdealFeatureIdsArrayName() ) );
+  setIdealFeatureIdsArrayName(reader->readString("EllipsoidErrrorArrayName", getEllipsoidErrorArrayName() ) );
 
   reader->closeFilterGroup();
 }
@@ -124,6 +128,7 @@ int FindEllipsoidError::writeFilterParameters(AbstractFilterParametersWriter* wr
   DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(IdealFeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(EllipsoidErrorArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -171,6 +176,12 @@ void FindEllipsoidError::dataCheck()
   m_IdealFeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_IdealFeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_IdealFeatureIds = m_IdealFeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  dims[0] = 1;
+  tempPath.update(m_NumCellsArrayPath.getDataContainerName(), m_NumCellsArrayPath.getAttributeMatrixName(), getEllipsoidErrorArrayName() );
+  m_EllipsoidErrorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_EllipsoidErrorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_EllipsoidError = m_EllipsoidErrorPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 }
 
@@ -243,13 +254,40 @@ void FindEllipsoidError::find_error2D()
 
     size_t totalPoints = xPoints * yPoints * zPoints;
 
-    for(size_t i=0; i < totalPoints; i++)
+    for(size_t k=0; k < totalPoints; k++)
     {
-        featureCellList[m_FeatureIds[i]].push_back(i);
+        featureCellList[m_FeatureIds[k]].push_back(k);
+
+
+        //calculate the x and y coordinate for each cell in the actual feature
+        xcoord = int(k % xPoints);
+        ycoord = int(k/xPoints) % yPoints;
+        for (size_t i = 1; i<numfeatures; i++)
+        {
+            theta = -m_AxisEulerAngles[3*i]; //only need the first angle in 2D
+
+            //Get the centroids (in pixels) for the ideal ellipse
+            xc = m_Centroids[3*i]/xRes;
+            yc = m_Centroids[3*i + 1]/yRes;
+
+            //Get the axis lengths for the ideal ellipse
+            asquared = (m_AxisLengths[3*i]*m_AxisLengths[3*i])/(xRes*xRes);
+            bsquared = m_AxisLengths[3*i+1]*m_AxisLengths[3*i+1]/(yRes*yRes);
+
+            //rotate and translate the current x, y pair into where the ideal ellipse is
+            xsquared = ((xcoord-xc)*cosf(theta)-(ycoord-yc)*sinf(theta))*((xcoord-xc)*cosf(theta)-(ycoord-yc)*sinf(theta));
+            ysquared = ((xcoord-xc)*sinf(theta)+(ycoord-yc)*cosf(theta))*((xcoord-xc)*sinf(theta)+(ycoord-yc)*cosf(theta));
+
+            if( (xsquared/asquared + ysquared/bsquared) < 1 )
+            {
+                m_IdealFeatureIds[k] = i;
+            }
+
+        }
     }
 
 
-    for (size_t i=0; i<numfeatures; i++)
+    for (size_t i=1; i<numfeatures; i++)
     {
         theta = -m_AxisEulerAngles[3*i]; //only need the first angle in 2D
 
@@ -283,35 +321,8 @@ void FindEllipsoidError::find_error2D()
 
         }
 
-    }
+        m_EllipsoidError[i] = float(numOutsideIdeal[i])/float(m_NumCells[i]);
 
-    for (size_t k = 0; k<totalPoints; k++)
-    {
-        //calculate the x and y coordinate for each cell in the actual feature
-        xcoord = int(k % xPoints);
-        ycoord = int(k/xPoints) % yPoints;
-        for (size_t i = 1; i<numfeatures; i++)
-        {
-            theta = -m_AxisEulerAngles[3*i]; //only need the first angle in 2D
-
-            //Get the centroids (in pixels) for the ideal ellipse
-            xc = m_Centroids[3*i]/xRes;
-            yc = m_Centroids[3*i + 1]/yRes;
-
-            //Get the axis lengths for the ideal ellipse
-            asquared = (m_AxisLengths[3*i]*m_AxisLengths[3*i])/(xRes*xRes);
-            bsquared = m_AxisLengths[3*i+1]*m_AxisLengths[3*i+1]/(yRes*yRes);
-
-            //rotate and translate the current x, y pair into where the ideal ellipse is
-            xsquared = ((xcoord-xc)*cosf(theta)-(ycoord-yc)*sinf(theta))*((xcoord-xc)*cosf(theta)-(ycoord-yc)*sinf(theta));
-            ysquared = ((xcoord-xc)*sinf(theta)+(ycoord-yc)*cosf(theta))*((xcoord-xc)*sinf(theta)+(ycoord-yc)*cosf(theta));
-
-            if( (xsquared/asquared + ysquared/bsquared) < 1 )
-            {
-                m_IdealFeatureIds[k] = i;
-            }
-
-        }
     }
 
 

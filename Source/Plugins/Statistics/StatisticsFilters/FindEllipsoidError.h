@@ -86,6 +86,9 @@ class FindEllipsoidError : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, IdealFeatureIdsArrayName)
     Q_PROPERTY(QString IdealFeatureIdsArrayName READ getIdealFeatureIdsArrayName WRITE setIdealFeatureIdsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(QString, EllipsoidErrorArrayName)
+    Q_PROPERTY(QString EllipsoidErrorArrayName READ getEllipsoidErrorArrayName WRITE setEllipsoidErrorArrayName)
+
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -133,6 +136,7 @@ class FindEllipsoidError : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisLengths)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, IdealFeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EllipsoidError)
 
 
     double scaleFactor;
