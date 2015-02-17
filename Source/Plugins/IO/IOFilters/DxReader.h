@@ -114,7 +114,7 @@ class  DxReader : public FileReader
 	DREAM3D_PIMPL_PROPERTY_DECL(size_t, YDim_Cache)
 	DREAM3D_PIMPL_PROPERTY_DECL(size_t, ZDim_Cache)
 	DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-	DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+	DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
   public slots:
 	void flushCache();

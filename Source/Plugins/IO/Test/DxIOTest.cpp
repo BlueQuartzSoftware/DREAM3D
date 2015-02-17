@@ -37,6 +37,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QDateTime>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -52,6 +53,16 @@
 #include "TestFileLocations.h"
 
 #include "GenerateFeatureIds.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void delay(int secs)
+{
+	QTime dieTime = QTime::currentTime().addSecs(secs);
+	while (QTime::currentTime() < dieTime)
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -407,6 +418,7 @@ int TestDxReaderCache()
 
 	// Reading the same file, but the contents changed outside the program
 	{
+		//delay(2);
 		// Change the contents of the file to be read
 		{
 			QFile file(UnitTest::DxIOTest::TestFile2);

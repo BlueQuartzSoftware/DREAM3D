@@ -59,7 +59,7 @@ class DxReaderPrivate
 	size_t m_YDim_Cache;
 	size_t m_ZDim_Cache;
 	QString m_InputFile_Cache;
-	QDateTime m_TimeStamp_Cache;
+	QDateTime m_LastRead;
 };
 
 // -----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ class DxReaderPrivate
 DxReaderPrivate::DxReaderPrivate(DxReader* ptr) :
 q_ptr(ptr),
 m_InputFile_Cache(""),
-m_TimeStamp_Cache(QDateTime()),
+m_LastRead(QDateTime()),
 m_XDim_Cache(0),
 m_YDim_Cache(0),
 m_ZDim_Cache(0)
@@ -118,7 +118,7 @@ DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, XDim_Cache)
 DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, YDim_Cache)
 DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, ZDim_Cache)
 DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QString, InputFile_Cache)
-DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QDateTime, TimeStamp_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QDateTime, LastRead)
 
 // -----------------------------------------------------------------------------
 //
@@ -185,7 +185,7 @@ void DxReader::flushCache()
 	setXDim_Cache(0);
 	setYDim_Cache(0);
 	setZDim_Cache(0);
-	setTimeStamp_Cache(QDateTime());
+	setLastRead(QDateTime());
 }
 
 // -----------------------------------------------------------------------------
@@ -235,9 +235,13 @@ void DxReader::dataCheck()
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
-	  QDateTime timeStamp(fi.lastModified());
+	  QDateTime lastModified(fi.lastModified());
 
-	  if (getInputFile() == getInputFile_Cache() && getTimeStamp_Cache().isValid() && timeStamp.msecsTo(getTimeStamp_Cache()) >= 0)
+	  QString lastRead = getLastRead().toString();
+	  bool lastReadValid = getLastRead().isValid();
+	  qint64 secs = lastModified.msecsTo(getLastRead());
+
+	  if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
 	  {
 		  // We are reading from the cache, so set the FileWasRead flag to false
 		  m_FileWasRead = false;
@@ -268,11 +272,9 @@ void DxReader::dataCheck()
 			  notifyErrorMessage(getHumanLabel(), ss, -11000);
 		  }
 
-		  QDateTime newTimeStamp(fi.lastModified());
-
 		  // Set the file path and time stamp into the cache
-		  setInputFile_Cache(getInputFile());
-		  setTimeStamp_Cache(newTimeStamp);
+		  setLastRead(QDateTime::currentDateTime());
+		  setInputFile_Cache(getInputFile()); 
 	  }
   }
 }
