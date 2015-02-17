@@ -2,29 +2,43 @@ Export Data {#exportdata}
 =====
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+IO Filters (Output)
 
 
 ## Description ##
-This filter does the following...
+This filter writes a scalar array to a file. The file extension and the maximum values per line are entered. The file delimeter is selected.
+
+**Delimeter**
+
+Choice of delimeter is as follows:
+-  , (comma)
+-  ; (semicolon)
+-    (space)
+-  : (colon) 
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Feature Array Name | String |
+| Output Path | Output File Path |
+| File Extension | String |
+| Maximum Values Per Line | Int > 0 |
+| Delimeter | Int |
+
+# Required DataContainers ##
+Any
 
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Scalar  | SomeName        
 
 
 ## Created Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Text  | ExportData          
 
 
 

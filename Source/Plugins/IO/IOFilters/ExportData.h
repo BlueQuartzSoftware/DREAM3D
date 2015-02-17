@@ -42,7 +42,6 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
@@ -77,10 +76,16 @@ class ExportData : public AbstractFilter
 		DREAM3D_FILTER_PARAMETER(QString, FileExtension)
 		Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
 
-		DREAM3D_FILTER_PARAMETER(int, MaxRecords)
-		Q_PROPERTY(int MaxRecords READ getMaxRecords WRITE setMaxRecords)
+		DREAM3D_FILTER_PARAMETER(int, MaxValPerLine)
+		Q_PROPERTY(int MaxValPerLine READ getMaxValPerLine WRITE setMaxValPerLine)
 
-
+		enum DelimeterType
+		{
+			Comma = 0,
+			Semicolon = 1,
+			Space = 2,
+			Colon = 3
+		};
 
 		/**
 		* @brief This returns the group that the filter belongs to. You can select
@@ -147,7 +152,7 @@ class ExportData : public AbstractFilter
     void dataCheck();
 
   private:
-
+		QString lookupDelimeter();
     ExportData(const ExportData&); // Copy Constructor Not Implemented
     void operator=(const ExportData&); // Operator '=' Not Implemented
 };
