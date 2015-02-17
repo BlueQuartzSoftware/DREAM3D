@@ -418,7 +418,7 @@ int TestDxReaderCache()
 
 	// Reading the same file, but the contents changed outside the program
 	{
-		//delay(2);
+		delay(1);	// This delay needs to be here to make the lastModified and lastRead logic in the reader to work for all OSes
 		// Change the contents of the file to be read
 		{
 			QFile file(UnitTest::DxIOTest::TestFile2);
