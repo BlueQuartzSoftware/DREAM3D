@@ -42,7 +42,7 @@ MultiEmmpmFilter::~MultiEmmpmFilter()
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::setupFilterParameters()
 {
-  FilterParameterVector& parameters = getFilterParameters();
+  FilterParameterVector parameters = getFilterParameters();
   parameters[0] = FilterParameter::New("Select Input AttributeMatrix", "InputAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getInputDataArrayPath());
 
 
