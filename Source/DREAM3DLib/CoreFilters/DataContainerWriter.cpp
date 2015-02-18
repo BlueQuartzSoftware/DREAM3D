@@ -99,11 +99,6 @@ DataContainerWriter::DataContainerWriter() :
 DataContainerWriter::~DataContainerWriter()
 {
   closeFile();
-
-#ifdef _WIN32
-  // Turn file permission checking off
-  qt_ntfs_permission_lookup--;
-#endif
 }
 
 // -----------------------------------------------------------------------------
