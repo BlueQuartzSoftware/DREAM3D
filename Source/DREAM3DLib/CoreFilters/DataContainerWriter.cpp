@@ -51,6 +51,9 @@
 
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 
+#ifdef _WIN32
+extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+#endif
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
@@ -96,6 +99,11 @@ DataContainerWriter::DataContainerWriter() :
 DataContainerWriter::~DataContainerWriter()
 {
   closeFile();
+
+#ifdef _WIN32
+  // Turn file permission checking off
+  qt_ntfs_permission_lookup--;
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -166,6 +174,19 @@ void DataContainerWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
+#ifdef _WIN32
+  // Turn file permission checking on
+  qt_ntfs_permission_lookup++;
+#endif
+
+  QFileInfo dirInfo(fi.path());
+
+  if (dirInfo.isWritable() == false && parentPath.exists() == true)
+  {
+	  setErrorCondition(-10002);
+	  ss = QObject::tr("The user does not have the proper permissions to write to the output file.");
+	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------
