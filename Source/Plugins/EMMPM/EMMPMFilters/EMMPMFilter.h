@@ -10,6 +10,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#include "EMMPMLib/Core/EMMPM_Constants.h"
 
 /**
  * @class EMMPMFilter EMMPMFilter.h EMMPM/EMMPMFilters/EMMPMFilter.h
@@ -70,6 +71,8 @@ class EMMPMFilter : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
     Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
+    
+    DREAM3D_INSTANCE_PROPERTY(EMMPM_InitializationType, EmmpmInitType)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -167,9 +170,18 @@ class EMMPMFilter : public AbstractFilter
     */
     void dataCheck();
 
+    /**
+     * @brief segment
+     */
+    virtual void segment(EMMPM_InitializationType initType);
+
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, InputImage)
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, OutputImage)
+    
+    
+    std::vector<float> m_PreviousMu;
+    std::vector<float> m_PreviousSigma;
 
 
     EMMPMFilter(const EMMPMFilter&); // Copy Constructor Not Implemented

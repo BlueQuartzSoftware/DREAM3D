@@ -14,7 +14,7 @@ START_FILTER_GROUP(${EMMPM_BINARY_DIR} "${_filterGroupName}" "EMMPM")
 # List your public filters here
 set(_PublicFilters
   EMMPMFilter
-
+  MultiEmmpmFilter
 )
 
 

@@ -458,8 +458,8 @@ void MPMCalculation::execute()
     EMMPMUtilities::ConvertXtToOutputImage(getData());
 
     data->currentMPMLoop = k;
-	QString ss = QString("MPM Loop %1").arg(k);
-    notifyStatusMessage(getHumanLabel(), ss);
+	  QString ss = QString("MPM Loop %1").arg(k);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     currentLoopCount = data->mpmIterations * data->currentEMLoop + data->currentMPMLoop;
     data->progress = currentLoopCount / totalLoops * 100.0;
