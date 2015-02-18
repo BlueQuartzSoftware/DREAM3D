@@ -825,9 +825,11 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
 //
 // -----------------------------------------------------------------------------
 DataContainerReaderFilterParameter::DataContainerReaderFilterParameter() :
-  FilterParameter(),
+  FileSystemFilterParameter(),
   m_DefaultFlagValue(Qt::Checked)
 {
+	setFileExtension(".dream3d");
+	setFileType("");
 }
 
 // -----------------------------------------------------------------------------
@@ -845,12 +847,14 @@ DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::
 {
   DataContainerReaderFilterParameter::Pointer ptr = DataContainerReaderFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
+  ptr->setPropertyName(ptr->getInputFileProperty());
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
   ptr->setGroupIndex(groupIndex);
+  ptr->setFileExtension(".dream3d");
+  ptr->setFileType("");
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
