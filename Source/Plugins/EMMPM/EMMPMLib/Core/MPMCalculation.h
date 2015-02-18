@@ -55,7 +55,8 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
     DREAM3D_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
-	DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+	  DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+	  DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
 
 	/**
 	* @brief This returns a string that is displayed in the GUI. It should be readable

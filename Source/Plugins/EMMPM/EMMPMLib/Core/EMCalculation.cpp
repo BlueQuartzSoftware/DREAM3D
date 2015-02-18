@@ -32,7 +32,7 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+*/
 
 
 #include "EMCalculation.h"
@@ -83,9 +83,9 @@ EMCalculation::~EMCalculation()
 void EMCalculation::execute()
 {
 #if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
-    tbb::task_scheduler_init init;
+  tbb::task_scheduler_init init;
   //  int threads = init.default_num_threads();
- //   std::cout << "TBB Thread Count: " << threads << std::endl;
+  //   std::cout << "TBB Thread Count: " << threads << std::endl;
 #endif
   EMMPM_Data* data = m_Data.get();
   int k;
@@ -109,10 +109,10 @@ void EMCalculation::execute()
   // If we are using Sim Anneal then create a ramped beta
   if (data->simulatedAnnealing != 0 && data->emIterations > 1)
   {
-    simAnnealKappas=(real_t*)(malloc(sizeof(real_t)*data->emIterations));
+    simAnnealKappas = (real_t*)(malloc(sizeof(real_t)*data->emIterations));
     for (int i = 0; i < data->emIterations; ++i)
     {
-      simAnnealKappas[i] = data->workingKappa + pow(i/(data->emIterations-1.0), 8) * (10.0*data->workingKappa - data->workingKappa);
+      simAnnealKappas[i] = data->workingKappa + pow(i / (data->emIterations - 1.0), 8) * (10.0*data->workingKappa - data->workingKappa);
     }
     data->workingKappa = simAnnealKappas[0];
   }
@@ -135,23 +135,24 @@ void EMCalculation::execute()
   /* After curveLoopDelay iterations, begin calculating curvature costs */
   if (k >= ccostLoopDelay && data->useCurvaturePenalty)
   {
-	notifyStatusMessage(getHumanLabel(), "Performing Morphological Filter on input data");
+    notifyStatusMessage(getHumanLabel(), "Performing Morphological Filter on input data");
     morphFilt->multiSE(data);
   }
 
   // Zero out the Mean, Variance and N values for both the current and previous
   EMMPMUtilities::ZeroMeanVariance(data->classes, data->dims, data->prev_mu, data->prev_variance, data->N);
-  notifyStatusMessage(getHumanLabel(), "Performing Initial MPM Loop");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Performing Initial MPM Loop");
 
   /* Perform initial MPM - (Estimation) */
   MPMCalculation::Pointer acvmpm = MPMCalculation::New();
   acvmpm->setData(getData());
   acvmpm->setStatsDelegate(getStatsDelegate());
+  acvmpm->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
   connect(acvmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-	  this, SLOT(broadcastPipelineMessage(const PipelineMessage&))); 
-  
+    this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+
   acvmpm->execute();
 
 
@@ -161,6 +162,9 @@ void EMCalculation::execute()
   for (k = 0; k < emiter; k++)
   {
 
+    QString ss = QString("EM Loop %1 - Converting Xt Data to Output Image..").arg(data->currentEMLoop);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
     /* Send back the Progress Stats and the segmented image. If we never get into this loop because
     * emiter == 0 then we will still send back the stats just after the end of the EM Loops */
     EMMPMUtilities::ConvertXtToOutputImage(getData());
@@ -169,18 +173,17 @@ void EMCalculation::execute()
       m_StatsDelegate->reportProgress(getData());
     }
 
-	QString ss = QString("EM Loop %1").arg(data->currentEMLoop);
-	notifyStatusMessage(getHumanLabel(), ss);
+
 
     /* Check to see if we are canceled */
     if (data->cancel) { data->progress = 100.0; break; }
 
     data->inside_em_loop = 1;
-    data->currentEMLoop = k+1;
+    data->currentEMLoop = k + 1;
     data->currentMPMLoop = 0;
-    currentLoopCount = (float)( (data->mpmIterations * data->currentEMLoop) + data->currentMPMLoop);
+    currentLoopCount = (float)((data->mpmIterations * data->currentEMLoop) + data->currentMPMLoop);
 
-    data->progress = currentLoopCount/totalLoops * 100.0;
+    data->progress = currentLoopCount / totalLoops * 100.0;
 
     /* Check if the "Error" is less than a user defined Tolerance and if it is then
      * bail out of the loop now.
@@ -188,15 +191,22 @@ void EMCalculation::execute()
     stop = EMMPMUtilities::isStoppingConditionLessThanTolerance(getData());
     if (stop == true)
     {
-        break;
+      break;
     }
+
+    ss = QString("EM Loop %1 - Copying Current Mean & Variance Values ...").arg(data->currentEMLoop);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     /* Copy the current Mean and Variance Values to the "prev_*" variables */
     EMMPMUtilities::copyCurrentMeanVarianceValues(getData());
 
+    ss = QString("EM Loop %1 - Zeroing Mean & Variance Values...").arg(data->currentEMLoop);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     /* Reset model parameters to zero */
     EMMPMUtilities::ZeroMeanVariance(data->classes, data->dims, data->mean, data->variance, data->N);
 
+    ss = QString("EM Loop %1 - Updating Mean & Variance Values...").arg(data->currentEMLoop);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     /* Update Means and Variances */
     EMMPMUtilities::UpdateMeansAndVariances(getData());
 
@@ -209,6 +219,8 @@ void EMCalculation::execute()
 #endif
 
 #if 1
+    ss = QString("EM Loop %1 - Removing Zero Probability Classes ...").arg(data->currentEMLoop);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     /* Eliminate any classes that have zero probability */
     EMMPMUtilities::RemoveZeroProbClasses(getData());
 #endif
@@ -224,6 +236,8 @@ void EMCalculation::execute()
     /* After curveLoopDelay iterations, begin calculating curvature costs */
     if (k >= ccostLoopDelay && data->useCurvaturePenalty)
     {
+      ss = QString("EM Loop %1 - Performing Morphological filtering ...").arg(data->currentEMLoop);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       morphFilt->multiSE(data);
     }
 
@@ -231,6 +245,9 @@ void EMCalculation::execute()
     acvmpm->execute();
   } /* EM Loop End */
 
+
+  QString ss = QString("Converting Xt Data to Output final Array..");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   EMMPMUtilities::ConvertXtToOutputImage(getData());
 
   data->inside_em_loop = 0;
@@ -242,5 +259,5 @@ void EMCalculation::execute()
 // -----------------------------------------------------------------------------
 const QString EMCalculation::getHumanLabel()
 {
-	return "EMCalculation";
+  return "EMCalculation";
 }

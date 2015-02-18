@@ -241,6 +241,7 @@ void EMMPM::execute()
   EMCalculation::Pointer em = EMCalculation::New();
   em->setData(getData());
   em->setStatsDelegate(getStatsDelegate());
+  em->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
   connect(em.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
