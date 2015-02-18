@@ -668,7 +668,7 @@ class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FileSystemFilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(DataContainerReaderFilterParameter)
