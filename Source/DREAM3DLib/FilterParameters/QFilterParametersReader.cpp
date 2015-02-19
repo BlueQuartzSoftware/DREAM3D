@@ -1682,7 +1682,7 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
 
     // Now we check for the AttributeMatrix
     DataContainerProxy& dcProxy = dcaProxy.getDataContainerProxy(dap.getDataContainerName());
-    if(dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) == dcProxy.attributeMatricies.end())
+    if(dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) == dcProxy.attributeMatricies.end() && dap.getAttributeMatrixName().isEmpty() == false)
     {
       AttributeMatrixProxy attrProxy(dap.getAttributeMatrixName());
       if (attrFlag.compare("0") == 0)
@@ -1705,7 +1705,7 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
 
 
     // Now check for the data array
-    if(attrProxy.dataArrays.find(dap.getDataArrayName()) == attrProxy.dataArrays.end() )
+	if (attrProxy.dataArrays.find(dap.getDataArrayName()) == attrProxy.dataArrays.end() && dap.getDataArrayName().isEmpty() == false)
     {
       DataArrayProxy proxy(QString("%1|%2").arg(dap.getDataContainerName()).arg(dap.getAttributeMatrixName()), dap.getDataArrayName());
       if (daFlag.compare("0") == 0)
