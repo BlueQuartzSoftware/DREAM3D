@@ -33,8 +33,8 @@
 *                           FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DataArraysSelectionWidget_H_
-#define _DataArraysSelectionWidget_H_
+#ifndef _MultiDataArraySelectionWidget_H_
+#define _MultiDataArraySelectionWidget_H_
 
 
 #include <QtCore/QObject>
@@ -51,7 +51,7 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 
-#include "DREAM3DWidgetsLib/ui_DataArraysSelectionWidget.h"
+#include "DREAM3DWidgetsLib/ui_MultiDataArraySelectionWidget.h"
 
 class AbstractFilter;
 class FilterParameter;
@@ -61,7 +61,7 @@ class FilterParameter;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DataArraysSelectionWidget : public FilterParameterWidget, private Ui::DataArraysSelectionWidget
+class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterParameterWidget, private Ui::MultiDataArraySelectionWidget
 {
 	Q_OBJECT
 
@@ -72,11 +72,11 @@ public:
 	* @param filter The instance of the filter that this parameter is a part of
 	* @param parent The parent QWidget for this Widget
 	*/
-	DataArraysSelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+	MultiDataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-	DataArraysSelectionWidget(QWidget* parent = NULL);
+	MultiDataArraySelectionWidget(QWidget* parent = NULL);
 
-	virtual ~DataArraysSelectionWidget();
+	virtual ~MultiDataArraySelectionWidget();
 
 	/**
 	* @brief This method does additional GUI widget connections
@@ -133,11 +133,11 @@ private:
 	DataContainerArrayProxy m_DcaProxy;
 	DataArrayPath  m_DefaultPath;
 
-	DataArraysSelectionWidget(const DataArraysSelectionWidget&); // Copy Constructor Not Implemented
-	void operator=(const DataArraysSelectionWidget&); // Operator '=' Not Implemented
+	MultiDataArraySelectionWidget(const MultiDataArraySelectionWidget&); // Copy Constructor Not Implemented
+	void operator=(const MultiDataArraySelectionWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _DataArraysSelectionWidget_H_ */
+#endif /* _MultiDataArraySelectionWidget_H_ */
 
 

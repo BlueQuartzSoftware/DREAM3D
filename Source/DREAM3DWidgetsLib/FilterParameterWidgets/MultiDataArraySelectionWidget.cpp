@@ -33,7 +33,7 @@
 *                           FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "DataArraysSelectionWidget.h"
+#include "MultiDataArraySelectionWidget.h"
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
@@ -53,7 +53,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArraysSelectionWidget::DataArraysSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+MultiDataArraySelectionWidget::MultiDataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
 FilterParameterWidget(parameter, filter, parent),
 m_DidCausePreflight(false)
 {
@@ -64,7 +64,7 @@ m_DidCausePreflight(false)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArraysSelectionWidget::DataArraysSelectionWidget(QWidget* parent) :
+MultiDataArraySelectionWidget::MultiDataArraySelectionWidget(QWidget* parent) :
 FilterParameterWidget(NULL, NULL, parent),
 m_DidCausePreflight(false)
 {
@@ -75,15 +75,15 @@ m_DidCausePreflight(false)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArraysSelectionWidget::~DataArraysSelectionWidget()
+MultiDataArraySelectionWidget::~MultiDataArraySelectionWidget()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
+void MultiDataArraySelectionWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
-	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraysSelectionWidget::initializeWidget";
+	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::initializeWidget";
 	setFilter(filter);
 	setFilterParameter(parameter);
 	setupGui();
@@ -93,7 +93,7 @@ void DataArraysSelectionWidget::initializeWidget(FilterParameter* parameter, Abs
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::setupGui()
+void MultiDataArraySelectionWidget::setupGui()
 {
 	// Sanity Check the filter and the filter parameter
 	if (getFilter() == NULL)
@@ -155,10 +155,10 @@ void DataArraysSelectionWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::populateComboBoxes()
+void MultiDataArraySelectionWidget::populateComboBoxes()
 {
 	//qDebug() << "-----------------------------------------------";
-	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraysSelectionWidget::populateComboBoxes()";
+	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::populateComboBoxes()";
 	// Now get the DataContainerArray from the Filter instance
 	// We are going to use this to get all the current DataContainers
 	DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
@@ -261,7 +261,7 @@ void DataArraysSelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DataArraysSelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
+QString MultiDataArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
 	////qDebug() << "    checkStringValues(...)" << curDcName << "  " << filtDcName;
 	if (curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
@@ -283,9 +283,9 @@ QString DataArraysSelectionWidget::checkStringValues(QString curDcName, QString 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::populateAttributeMatrixList()
+void MultiDataArraySelectionWidget::populateAttributeMatrixList()
 {
-	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraysSelectionWidget::populateAttributeMatrixList()";
+	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::populateAttributeMatrixList()";
 
 	QString dcName = dataContainerList->currentText();
 
@@ -320,10 +320,10 @@ void DataArraysSelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
+void MultiDataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
 
-	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraysSelectionWidget::on_dataContainerList_currentIndexChanged(int index)";
+	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)";
 	populateAttributeMatrixList();
 
 	// Select the first AttributeMatrix in the list
@@ -338,10 +338,10 @@ void DataArraysSelectionWidget::on_dataContainerList_currentIndexChanged(int ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
+void MultiDataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
 #if 0
-	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraysSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
+	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
 	populateAttributeArrayList();
 
 	if (attributeArraysWidget->count() > 0)
@@ -354,7 +354,7 @@ void DataArraysSelectionWidget::on_attributeMatrixList_currentIndexChanged(int i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::populateAttributeArrayList()
+void MultiDataArraySelectionWidget::populateAttributeArrayList()
 {
 	attributeArraysWidget->blockSignals(true);
 	attributeArraysWidget->clear();
@@ -406,12 +406,12 @@ void DataArraysSelectionWidget::populateAttributeArrayList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::beforePreflight()
+void MultiDataArraySelectionWidget::beforePreflight()
 {
 	if (NULL == getFilter()) { return; }
 	if (m_DidCausePreflight == true)
 	{
-		std::cout << "***  DataArraysSelectionWidget already caused a preflight, just returning" << std::endl;
+		std::cout << "***  MultiDataArraySelectionWidget already caused a preflight, just returning" << std::endl;
 		return;
 	}
 
@@ -428,7 +428,7 @@ void DataArraysSelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::afterPreflight()
+void MultiDataArraySelectionWidget::afterPreflight()
 {
 	// std::cout << "After Preflight" << std::endl;
 }
@@ -436,7 +436,7 @@ void DataArraysSelectionWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy DataArraysSelectionWidget::generateDCAProxy()
+DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
 {
 #if 0
 	// This will only work for a single selection
@@ -463,7 +463,7 @@ DataContainerArrayProxy DataArraysSelectionWidget::generateDCAProxy()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraysSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
+void MultiDataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
 #if 0
 	// Generate the path to the AttributeArray
