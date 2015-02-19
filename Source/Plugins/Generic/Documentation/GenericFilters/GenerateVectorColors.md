@@ -5,12 +5,9 @@ Generate Vector Colors {#generatevectorcolors}
 Generic Filters (Misc)
 
 ## Description ##
-This filter generates a color for each cell based on the vector assigned to that cell in the input vector data array.  The color scheme assigns a unique color to all points on the unit hemisphere using a HSV-like scheme. 
-
-### Originating Data Notes ###
+This filter generates a color for each **Element** based on the vector assigned to that **Element** in the input vector data array.  The color scheme assigns a unique color to all points on the unit hemisphere using a HSV-like scheme. 
 
 ## Input Options ##
-
 | Option | Type |
 |-------|-------|
 | Vectors Array Path | DataArrayPath |
@@ -18,21 +15,20 @@ This filter generates a color for each cell based on the vector assigned to that
 | CellVectorColorsArrayName | QString |
 | UseGoodVoxels | bool |
 
-
 ## Required Geometry ##
-Image / Rectilinear Grid
+Not Applicable
 
 ## Required Arrays ##
 
 | Type | Default Name | Description  | Filters Known to Create Data |
 |------|--------------|------------|-----|
-| Cell | VectorData | The array that holds the vectors the colors will represent  |
+| Element | VectorData | The array that holds the vectors the colors will represent  |
 
 
 ## Created Arrays ##
 | Type | Name | Description |
 |------|------|-------------|
-| Cell | Colors | The RGB colors are encoded as an unsigned char triplet  |
+| Element | Colors | The RGB colors are encoded as an unsigned char triplet  |
 
 
 ### Authors ###

@@ -19,6 +19,8 @@ The algorithm for determining whether a **Feature** is _biased_ is as follows:
 By definition of the box, no **Feature** that intersects an outer surface of the sample can be considered _unbiased_, but it should be noted that **Features** that do not intersect the outer surfaces may still be considered _biased_ 
 This algorithm works to determine the biased **Features** because all **Features** have one (and only one) centroid, no matter their size. Generally, this method will deem more small **Features** biased than the set of **Features** that just intersect the outer surfaces - and this corrects for the increased likelihood that larger **Features** will touch an outer surface.
 
+**Filter is modification of algorithm from Dave Rowenhorst (Naval Research Laboratory)
+
 ## Parameters ##
 None
 

@@ -6,7 +6,7 @@ Generic Filters (Crystallography)
 
 ## Description ##
 
-This filter determines the _Output Orientation Representation_ for each **Cell**, given the _Input Orientation Representation_  for the **Cell**.
+This filter determines the _Output Orientation Representation_ for each **Element**, given the _Input Orientation Representation_ for the **Element**.
 
 ## Parameters ##
 | Name             | Type | Description |
@@ -14,21 +14,21 @@ This filter determines the _Output Orientation Representation_ for each **Cell**
 | Input Orientation Representation | String | Euler Angles, Quaternions, Rodrigues Vectors, or Axis-Angle pairs |
 | Output Orientation Representation | String | Euler Angles, Quaternions, Rodrigues Vectors, or Axis-Angle pairs |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
 | Type | Default Name | Description |
 |----------|-------------------|-------------|
-| Cell     | Varies            | 3 (Euler Angles, Rodrigues Vectors) or 4 (Quaternions, Axis-Angle Pairs) values (floats) defining the orientation of the **Cell** |
-| Cell     | Phases            | Phase Id (int) specifying the phase of the **Cell** |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) |
+| Element     | Varies            | 3 (Euler Angles, Rodrigues Vectors) or 4 (Quaternions, Axis-Angle Pairs) values (floats) defining the orientation of the **Element** |
+| Element     | EnsembleId            | Ensemble Id (int) specifying the phase of the **Cell** |
+| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble (Hexagonal=0, Cubic=1, Orthorhombic=2) |
 ## Created Arrays ##
 
 | Type | Default Array Name | Description |
 |------|--------------------|-------------|
-| Cell | Varies             | 3 (Euler Angles, Rodrigues Vectors) or 4 (Quaternions, Axis-Angle Pairs) values (floats) defining the orientation of the **Cell** |
+| Element | Varies             | 3 (Euler Angles, Rodrigues Vectors) or 4 (Quaternions, Axis-Angle Pairs) values (floats) defining the orientation of the **Element** |
 
 ## Default Array Names ##
 | Orientation Representation | Default Name     |

@@ -5,7 +5,7 @@ Input Crystal Compliance Values {#inputcrystalcompliances}
 Generic Filters (Crystallography)
 
 ## Description ##
-This filter determines the _Crystal Compliance Matrix_ for each **Phase**, given the single crystal properties for the **Phase**. Currently the specified values will be used for every phase present.
+This filter stores the _Crystal Compliance Matrix_ for each **Ensemble**, given the single crystal properties for the **Ensemble**. Currently the specified values will be used for every **Ensemble** present.
 
 The symmetry drop down menu is for convince only (the full 6x6 matrix will be saved for each phase regardless of crystal structure).
 
@@ -19,7 +19,6 @@ None
 None
 
 ## Created Arrays ##
-
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
 | Ensemble | CrystalCompliances | 36 values in a 6x6 matrix that specify compliance of the crystal (in the crystal reference frame) | |
