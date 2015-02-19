@@ -84,6 +84,7 @@ void DataContainerReader::setupFilterParameters()
     parameter->setInputFileProperty("InputFile");
     parameters.push_back(parameter);
   }
+
   setFilterParameters(parameters);
 }
 
