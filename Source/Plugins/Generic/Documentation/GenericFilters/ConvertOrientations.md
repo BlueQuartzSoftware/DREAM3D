@@ -18,17 +18,16 @@ This filter determines the _Output Orientation Representation_ for each **Elemen
 Not Applicable
 
 ## Required Arrays ##
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Element     | Varies            | Float | (1,3) or (1,4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
+| Element     | CellPhases            | Int | (1,1) | Specifies the **Ensemble** of the **Cell** |
+| Ensemble | CrystalStructures | Int | (1,1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
-| Type | Default Name | Description |
-|----------|-------------------|-------------|
-| Element     | Varies            | 3 (Euler Angles, Rodrigues Vectors) or 4 (Quaternions, Axis-Angle Pairs) values (floats) defining the orientation of the **Element** |
-| Element     | EnsembleId            | Ensemble Id (int) specifying the phase of the **Cell** |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble (Hexagonal=0, Cubic=1, Orthorhombic=2) |
 ## Created Arrays ##
-
-| Type | Default Array Name | Description |
-|------|--------------------|-------------|
-| Element | Varies             | 3 (Euler Angles, Rodrigues Vectors) or 4 (Quaternions, Axis-Angle Pairs) values (floats) defining the orientation of the **Element** |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Element     | Varies            | Float | (1,3) or (1,4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
 
 ## Default Array Names ##
 | Orientation Representation | Default Name     |

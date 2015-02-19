@@ -19,9 +19,9 @@ None
 None
 
 ## Created Arrays ##
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Ensemble | CrystalCompliances | 36 values in a 6x6 matrix that specify compliance of the crystal (in the crystal reference frame) | |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Ensemble | CrystalCompliances | Float | (2,6) | 6x6 matrix that specify compliance of the crystal (in the crystal reference frame) |
 
 ## Authors ##
 

@@ -29,16 +29,15 @@ Image / Rectilinear Grid
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass | Filter will calculate **Feature** centroids if not previously calculated | Find Feature Centroids (Generic) |
-| Feature | SurfaceFeatures | Boolean flag of 1 if **Feature** touches an outer surface or of 0 if it does not | Filter will determine if **Features** intersect an outer surface if not already determined | Feature Surface Features (Generic) |
+| Feature | Centroids | Float | (1,3) | X, Y, Z coordinates of **Feature** center of mass |
+| Feature | SurfaceFeatures | Boolean | (1,1) | Flag of 1 if **Feature** touches an outer surface or of 0 if it does not |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not | |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Feature | BiasedFeatures | Boolean | (1,1) | Flag of 1 if **Feature** is biased or of 0 if it is not |
 
 ## Authors ##
 

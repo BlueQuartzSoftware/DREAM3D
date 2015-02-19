@@ -17,16 +17,15 @@ None
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | SurfaceFeatures | Boolean flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. |  |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Feature | SurfaceFeatures | Boolean | (1,1) | Flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. |
 
 ## Authors ##
 

@@ -15,18 +15,16 @@ None
 Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Element | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Element** in Bunge convention (Z-X-Z) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
-| Element | EnsembleId | Ensemble Id (int) specifying the ensemble of the **Element** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Element | CellEulerAngles | Float | (1,3) | Euler angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| Element | CellPhases | Int | (1,1) | Id specifying the **Ensemble** of the **Element** |
+| Ensemble | CrystalStructures | Int | (1,1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
-
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Element | Quats | Five (5) values (floats) that specify the orientation of the **Element** in quaternion representation | The first value is a dummy value, so each **Element** has quat = {dummy, q1, q2, q3, q4} - where q1, q2, and q3 contain the axis information and q4 contains the angle information of the quaternion |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Element | Quats | Float | (1,4) | Specifies the orientation of the **Element** in quaternion representation |
 
 ## Authors ##
 

@@ -7,28 +7,26 @@ Processing Filters (Cleanup)
 ## Description ##
 This Filter compares the orientations of "*bad*" **Cells** with their neighbor **Cells**.  If the misorientation is below a user defined tolerance for a user defined number of neighbor **Cells** , then the "*bad*" **Cell** will be changed to a "*good*" **Cell**.
 
-*Note:* only the flag defining the **Cell** as "good" or "bad" is changed, not the data at **Cell**.
+*Note:* only the boolean value defining the **Cell** as "good" or "bad" is changed, not the data at **Cell**.
 
 *Note:* the filter will iteratively reduce the required number of neighbors from 6 until it reaches the user defined number. So, if the user selects a required number of neighbors of 4, then the filter will run with a required number of neighbors of 6, then 5, then 4 before finishing.  
 
 ## Parameters ##
-
 | Name | Type |
 |------|------|
 | Misorientation Tolerance (Degrees) | Float |
 | Required Number of Neighbors | Integer |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
-| Cell | GoodVoxels | Boolean values used to define "regions" to be aligned | Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions"  | Single Threshold (Cell Data) (Processing), Multi Threshold (Cell Data) (Processing) |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Cell | Quats | Float | (1,4) | Specifies the orientation of the **Cell** in quaternion representation |
+| Cell | GoodVoxels | Boolean | (1,1) | Used to define **Cells** as "good" or "bad"  |
+| Cell | CellPhases | Int | (1,1) | Specifies the **Ensemble** of the **Cell** |
+| Ensemble | CrystalStructures | Int | (1,1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
 None
