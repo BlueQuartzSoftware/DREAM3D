@@ -149,8 +149,31 @@ void MultiEmmpmFilter::dataCheck()
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
+  if(getInputAttributeMatrixPath().getDataContainerName().isEmpty())
+  {
+    setErrorCondition(-62003);
+    QString message = QObject::tr("The DataContainer name is empty for the Input AttributeMatrix Path.");
+    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+    return;
+  }
+
+  if(getInputAttributeMatrixPath().getAttributeMatrixName().isEmpty())
+  {
+    setErrorCondition(-62004);
+    QString message = QObject::tr("The AttributeMatrix name is empty for the Input AttributeMatrix Path.");
+    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+    return;
+  }
+
+  // Make sure the Data Container exists
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getInputAttributeMatrixPath().getDataContainerName());
+  if(NULL == dc.get())
+  {
+    return;
+  }
+
   // Make sure the input AttributeMatrix exists
-  AttributeMatrix::Pointer inAM = getDataContainerArray()->getDataContainer(getInputAttributeMatrixPath().getDataContainerName())->getPrereqAttributeMatrix<AbstractFilter>(this, getInputAttributeMatrixPath().getAttributeMatrixName(), 10000);
+  AttributeMatrix::Pointer inAM = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getInputAttributeMatrixPath().getAttributeMatrixName(), 10000);
   if(getErrorCondition() < 0)
   {
     return;
