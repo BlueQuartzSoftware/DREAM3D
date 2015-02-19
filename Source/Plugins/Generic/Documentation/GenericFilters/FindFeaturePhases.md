@@ -10,7 +10,6 @@ Note that it is assumed that all **Elements** belonging to a **Feature** are of 
 ## Parameters ##
 None
 
-
 ## Required Geometry ##
 Not Applicable
 

@@ -10,9 +10,6 @@ This filter generates a color for each **Element** based on the vector assigned 
 ## Input Options ##
 | Option | Type |
 |-------|-------|
-| Vectors Array Path | DataArrayPath |
-| GoodVoxles Array Path | DataArrayPath |
-| CellVectorColorsArrayName | QString |
 | UseGoodVoxels | bool |
 
 ## Required Geometry ##
@@ -23,6 +20,7 @@ Not Applicable
 | Type | Default Name | Description  | Filters Known to Create Data |
 |------|--------------|------------|-----|
 | Element | VectorData | The array that holds the vectors the colors will represent  |
+| Element | GoodVoxels | The array that holds the boolean value stating if the **Element** is a 'good' **Element**  |
 
 
 ## Created Arrays ##

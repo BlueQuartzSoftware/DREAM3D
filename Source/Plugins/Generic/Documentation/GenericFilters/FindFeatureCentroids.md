@@ -8,9 +8,7 @@ Generic Filters (Misc)
 This filter calculates the _centroid_ of each **Feature** by determining the average x, y, and z position of all the **Cells** belonging to the **Feature**.
 Note that **Features** that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the **Feature** that lies inside the sample.
 
-
 ## Parameters ##
-
 None
 
 ## Required Geometry ##
