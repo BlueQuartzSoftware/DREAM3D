@@ -10,26 +10,21 @@ This filter smoothes the interface between "good" and "bad" data. The user can s
 By default, the filter will only perform a single iteration and will not concern itself with the possibility that after one iteration, **Cells** that were acceptable may become unacceptable by the original *coordination number* criteria due to the small changes to the structure during the *coarsening*.  The user can opt to enable the "Loop Until Gone" parameter, which will continue to run until no **Cells** fail the original criteria.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| Coordination Number | Integer | Number of neighboring **Cells** that can be of opposite classification before a **Cell** will be removed |
+| Loop Until Gone | Boolean (On or Off) | Tells filter whether to run a single iteration or iterate until no "bad" **Cells" have more than the above number of "good" neighbor **Cells** |
 
-| Name | Type |
-|------|------|
-| Coordination Number | Integer |
-| Loop Until Gone | Boolean (On or Off) |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid 
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-
+| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
 None
-
-
 
 ## Authors ##
 

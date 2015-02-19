@@ -12,10 +12,10 @@ This Filter compares the orientations of "*bad*" **Cells** with their neighbor *
 *Note:* the filter will iteratively reduce the required number of neighbors from 6 until it reaches the user defined number. So, if the user selects a required number of neighbors of 4, then the filter will run with a required number of neighbors of 6, then 5, then 4 before finishing.  
 
 ## Parameters ##
-| Name | Type |
-|------|------|
-| Misorientation Tolerance (Degrees) | Float |
-| Required Number of Neighbors | Integer |
+| Name | Type | Description |
+|------|------|------|
+| Misorientation Tolerance (Degrees) | Float | Angular tolerance used to compare with neighboring **Cells** |
+| Required Number of Neighbors | Integer | Minimum number of neighbor **Cells** that must have orientations within above tolerace to allow **Cell** to be changed |
 
 ## Required Geometry ##
 Image/Rectilinear Grid

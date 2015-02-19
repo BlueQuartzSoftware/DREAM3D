@@ -5,28 +5,32 @@ Clear Data (Mask) {#cleardatamask}
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter allows the user to define a subvolume of the dataset by specifying a booling array. every **Cell** that is false in the boolean array will have its data erased by overwriting with *zeros (0)*.
-
+This filter allows the user to define a subvolume of the dataset in which the filter will erase any "true's" in the "mask" array and replace them with "false's".
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------|------|
+| X Min | Integer | Minimum X bound in voxels |
+| Y Min | Integer | Minimum Y bound in voxels |
+| Z Min | Integer | Minimum Z bound in voxels |
+| X Max | Integer | Maximum X bound in voxels |
+| Y Max | Integer | Maximum Y bound in voxels |
+| Z Max | Integer | Maximum Z bound in voxels |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-GoodVoxels
-
-
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | GoodVoxels | Boolean | (1,1) | Used to define whether the **Cells** are part of the mask  |
 
 ## Created Arrays ##
 None
 
-
-
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software), 2014 William C. Lenthe (2014)
+**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 
@@ -35,5 +39,8 @@ None
 **License:**  See the License.txt file that came with DREAM3D.
 
 
+
+
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
+
 
