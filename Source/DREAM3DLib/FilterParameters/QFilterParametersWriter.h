@@ -147,6 +147,7 @@ class DREAM3DLib_EXPORT QFilterParametersWriter : public AbstractFilterParameter
 
     virtual int writeValue(const QString name, AxisAngleInput_t v);
     virtual int writeValue(const QString name, const DataArrayPath& v);
+	virtual int writeValue(const QString name, const DataArrayPathBundle& v);
 
 
   protected:

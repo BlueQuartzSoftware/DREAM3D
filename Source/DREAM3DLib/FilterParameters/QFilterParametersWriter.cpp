@@ -892,3 +892,26 @@ int QFilterParametersWriter::writeValue(const QString name, const DataArrayPath&
   m_Prefs->setValue(name, value );
   return err;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, const DataArrayPathBundle& v)
+{
+	QString dcName = v.getDataContainerName();
+	QString amName = v.getAttributeMatrixName();
+	QSet<QString> daSet = v.getDataArrayNameSet();
+
+	int err = 0;
+	m_Prefs->setValue(name + "_dc", dcName);
+
+	err = 0;
+	m_Prefs->setValue(name + "_am", amName);
+
+	err = 0;
+	QString daNames = DataArrayPathBundle::serializeDataArrayNames(daSet, '|');
+	m_Prefs->setValue(name + "_da", daNames);
+
+	return err;
+}
