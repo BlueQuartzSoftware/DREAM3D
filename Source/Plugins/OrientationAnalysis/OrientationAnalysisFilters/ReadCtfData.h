@@ -56,6 +56,7 @@ struct Ctf_Private_Data
 	QVector<size_t> dims;
 	QVector<float> resolution;
 	QVector<float> origin;
+	QVector<CtfPhase::Pointer> phases;
 };
 
 enum CTF_READ_FLAG
@@ -198,7 +199,7 @@ protected:
 	*/
 	int loadInfo(CtfReader* reader)
 	{
-		QVector<CtfPhase::Pointer> phases = reader->getPhaseVector();
+		QVector<CtfPhase::Pointer> phases = getData().phases;
 		if (phases.size() == 0)
 		{
 			setErrorCondition(reader->getErrorCode());

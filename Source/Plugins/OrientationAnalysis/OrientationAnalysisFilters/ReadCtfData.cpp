@@ -217,6 +217,7 @@ void ReadCtfData::populateCtfData(CtfReader* reader, DataContainer::Pointer m, Q
 			data.origin.push_back(xOrigin);
 			data.origin.push_back(yOrigin);
 			data.origin.push_back(zOrigin);
+			data.phases = reader->getPhaseVector();
 			setData(data);
 		}
 	}

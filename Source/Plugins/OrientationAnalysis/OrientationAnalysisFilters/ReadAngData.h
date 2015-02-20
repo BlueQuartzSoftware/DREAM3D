@@ -56,6 +56,7 @@ struct Ang_Private_Data
 	QVector<size_t> dims;
 	QVector<float> resolution;
 	QVector<float> origin;
+	QVector<AngPhase::Pointer> phases;
 };
 
 enum ANG_READ_FLAG
@@ -198,7 +199,7 @@ protected:
 	*/
 	int loadInfo(AngReader* reader)
 	{
-		QVector<AngPhase::Pointer> phases = reader->getPhaseVector();
+		QVector<AngPhase::Pointer> phases = getData().phases;
 		if (phases.size() == 0)
 		{
 			setErrorCondition(reader->getErrorCode());

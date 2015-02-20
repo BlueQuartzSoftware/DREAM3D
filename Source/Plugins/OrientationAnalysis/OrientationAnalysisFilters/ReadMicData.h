@@ -56,6 +56,7 @@ struct Mic_Private_Data
 	QVector<size_t> dims;
 	QVector<float> resolution;
 	QVector<float> origin;
+	QVector<MicPhase::Pointer> phases;
 };
 
 enum MIC_READ_FLAG
@@ -198,7 +199,7 @@ protected:
 	*/
 	int loadInfo(MicReader* reader)
 	{
-		QVector<MicPhase::Pointer> phases = reader->getPhaseVector();
+		QVector<MicPhase::Pointer> phases = getData().phases;
 		if (phases.size() == 0)
 		{
 			setErrorCondition(reader->getErrorCode());
