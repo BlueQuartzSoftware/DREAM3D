@@ -128,6 +128,8 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
 
     virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v);
     virtual DataArrayPath readDataArrayPath(const QString& name, DataArrayPath v);
+	virtual DataArrayPathBundle readDataArrayPathBundle(const QString& name, DataArrayPathBundle v);
+
 
   protected:
     H5FilterParametersReader();

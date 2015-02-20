@@ -1743,3 +1743,32 @@ DataArrayPath QFilterParametersReader::readDataArrayPath(const QString& name, Da
   DataArrayPath path(str);
   return path;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPathBundle QFilterParametersReader::readDataArrayPathBundle(const QString& name, DataArrayPathBundle def)
+{
+	BOOST_ASSERT(m_Prefs != NULL);
+	if (m_Prefs->contains(name + "_dc") == false || m_Prefs->contains(name + "_am") == false || m_Prefs->contains(name + "_da") == false)
+	{
+		return def;
+	}
+	QString defPath("");
+	QString dcName = m_Prefs->value(name + "_dc", defPath).toString();
+	QString amName = m_Prefs->value(name + "_am", defPath).toString();
+	
+	QString daNames = m_Prefs->value(name + "_da", defPath).toString();
+	QSet<QString> daSet = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
+
+	DataArrayPathBundle bundle(dcName, amName, daSet);
+
+	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameSet().isEmpty() == false)
+	{
+		return bundle;
+	}
+	else
+	{
+		return DataArrayPathBundle();
+	}
+}

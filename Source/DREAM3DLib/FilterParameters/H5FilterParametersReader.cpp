@@ -972,3 +972,58 @@ DataArrayPath H5FilterParametersReader::readDataArrayPath(const QString& name, D
   }
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPathBundle H5FilterParametersReader::readDataArrayPathBundle(const QString& name, DataArrayPathBundle def)
+{
+	QString value, dcName, amName, daNames;
+	DataArrayPathBundle bundle;
+	int err = 0;
+
+	err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "_dc", value);
+	if (err == 0)
+	{
+		dcName = value;
+		bundle.setDataContainerName(dcName);
+	}
+	else
+	{
+		dcName = "";
+	}
+
+	err = 0;
+	err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "_am", value);
+	if (err == 0)
+	{
+		amName = value;
+		bundle.setAttributeMatrixName(amName);
+	}
+	else
+	{
+		amName = "";
+	}
+
+	err = 0;
+	err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "_da", value);
+	if (err == 0)
+	{
+		daNames = value;
+		QSet<QString> daSet = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
+		bundle.setDataArrayNameSet(daSet);
+	}
+	else
+	{
+		daNames = "";
+	}
+
+	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameSet().isEmpty() == false)
+	{
+		return bundle;
+	}
+	else
+	{
+		return DataArrayPathBundle();
+	}
+}
