@@ -5,32 +5,26 @@ Initialize Data {#initializedata}
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter allows the user to define a sub-volume of the dataset in which the filter will reset all data by writing *zeros (0)* into every **Cell** array for every element within the sub-volume.
-
+This filter allows the user to define a subvolume of the dataset in which the filter will reset all data by writing *zeros (0)* into every array for every **Cell** within the subvolume.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| X Min | Integer | Minimum X bound in voxels |
+| Y Min | Integer | Minimum Y bound in voxels |
+| Z Min | Integer | Minimum Z bound in voxels |
+| X Max | Integer | Maximum X bound in voxels |
+| Y Max | Integer | Maximum Y bound in voxels |
+| Z Max | Integer | Maximum Z bound in voxels |
 
-| Name | Type |
-|------|------|
-| X Min | Integer |
-| Y Min | Integer |
-| Z Min | Integer |
-| X Max | Integer |
-| Y Max | Integer |
-| Z Max | Integer |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
 None
 
-
-
 ## Created Arrays ##
 None
-
-
 
 ## Authors ##
 

@@ -5,24 +5,25 @@ Fill Bad Data {#fillbaddata}
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter removes small "*noise*" in the data, but keeps larger regions that are possibly features, e.g., pores or defects.
-This Filter collects the *bad* **Cells** (*GrainId = 0*) and runs the _erode_ operation from the [Erode/Dilate Bad Data Filter](OpenCloseBadData.html "") until none remain. However, contiguous groups of *bad* **Cells** that have at least as many **Cells** as the minimum defect size enter by the user will not be *eroded*.
+This Filter removes small "*noise*" in the data, but keeps larger regions that are possibly **Features**, e.g., pores or defects.
+This Filter collects the *bad* **Cells** (*FeatureId = 0*) and _erodes_ them until none remain. However, contiguous groups of *bad* **Cells** that have at least as many **Cells** as the minimum allowed defect size enter by the user will not be *eroded*.
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Minimum Allowed Defect Size | Integer |
-| Replace Bad Data | Boolean |
+| Name | Type | Decision |
+|------|------|------|
+| Minimum Allowed Defect Size | Integer | The size at which a group of "bad" **Cells** are left unfilled as a "defect" |
+| Replace Bad Data | Boolean | Tells the filter whether to replace all data or just **Feature Id** |
+| Store Defects As New Phase | Boolean | Tells the filter whether to change the phase of "defects" larger than the minimum allowed size above |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
+| Cell | CellPhases | Int | (1,1) | Specifies the phase each **Cell** - is only required if "Store Defects As New Phase" parameter is true |
 
 ## Created Arrays ##
 None
