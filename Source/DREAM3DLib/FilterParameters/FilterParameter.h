@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DLib/DataContainers/DataArrayPathBundle.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 typedef struct { int x; int y; int z; } IntVec3_t;
@@ -240,6 +241,12 @@ class DREAM3DLib_EXPORT FilterParameter
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);
+
+	static Pointer New(const QString& humanLabel, const QString& propertyName,
+					   const QString& widgetType, const DataArrayPathBundle& defaultValue,
+					   bool advanced = false,
+					   const QString& units = QString(""),
+					   int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const AxisAngleInput_t& defaultValue,
@@ -692,6 +699,34 @@ class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FileSystemFi
   private:
     DataContainerReaderFilterParameter(const DataContainerReaderFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const DataContainerReaderFilterParameter&); // Operator '=' Not Implemented
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterParameter
+{
+public:
+	DREAM3D_SHARED_POINTERS(MultiDataArraySelectionFilterParameter)
+		DREAM3D_STATIC_NEW_MACRO(MultiDataArraySelectionFilterParameter)
+		DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
+
+		static Pointer New(const QString& humanLabel, const QString& propertyName,
+		const QString& widgetType, const QVariant& defaultValue,
+		bool advanced = false,
+		int groupIndex = -1);
+
+	virtual ~MultiDataArraySelectionFilterParameter();
+
+	DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
+		DREAM3D_INSTANCE_PROPERTY(QString, InputFileProperty)
+
+protected:
+	MultiDataArraySelectionFilterParameter();
+
+private:
+	MultiDataArraySelectionFilterParameter(const MultiDataArraySelectionFilterParameter&); // Copy Constructor Not Implemented
+	void operator=(const MultiDataArraySelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
 

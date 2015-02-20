@@ -194,13 +194,14 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
 		}
 	}
 
-	// Get what is in the filter
-	DataArrayPath selectedPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+	// Get what is in the filter  
+	DataArrayPathBundle selectedPaths = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPathBundle>();
 
 	// Split the path up to make sure we have a valid path separated by the "|" character
-	QString filtDcName = selectedPath.getDataContainerName();
-	QString filtAmName = selectedPath.getAttributeMatrixName();
-	QString filtDaName = selectedPath.getDataArrayName();
+	QString filtDcName = selectedPaths.getDataContainerName();
+	QString filtAmName = selectedPaths.getAttributeMatrixName();
+	//QString filtDaName = selectedPaths.getDataArrayName();
+	QString filtDaName = "";
 
 	QString dcName;
 	QString amName;
@@ -232,14 +233,13 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
 	if (!dataContainerList->signalsBlocked()) { didBlock = true; }
 	dataContainerList->blockSignals(true);
 	int dcIndex = dataContainerList->findText(dcName);
+	dataContainerList->setCurrentIndex(dcIndex);
 	if (dcIndex < 0)
 	{
-		dataContainerList->setCurrentIndex(dcIndex);
 		attributeMatrixList->setCurrentIndex(dcIndex);
 	}
 	else
 	{
-		dataContainerList->setCurrentIndex(dcIndex);
 		populateAttributeMatrixList();
 	}
 	if (didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
@@ -340,15 +340,7 @@ void MultiDataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-#if 0
-	//qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
 	populateAttributeArrayList();
-
-	if (attributeArraysWidget->count() > 0)
-	{
-		attributeArrayList->setCurrentIndex(0);
-	}
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -438,8 +430,6 @@ void MultiDataArraySelectionWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
 {
-#if 0
-	// This will only work for a single selection
 	DataContainerArrayProxy dcaProxy(true);
 	QString dcaName = dataContainerList->currentText();
 	DataContainerProxy dcProxy(dcaName, true);
@@ -447,14 +437,27 @@ DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
 	QString amName = attributeMatrixList->currentText();
 	AttributeMatrixProxy amProxy(amName, true);
 
-	QString daName = attributeArrayList->currentText();
-	DataArrayProxy daProxy(dcaName + "|" + amName, daName, true);
-	amProxy.dataArrays.insert(daName, daProxy);
-	dcProxy.attributeMatricies.insert(amName, amProxy);
-	dcaProxy.list.push_back(dcProxy);
+	for (int i = 0; i < attributeArraysWidget->count(); i++)
+	{
+		QListWidgetItem* item = attributeArraysWidget->item(i);
+		QString daName = item->text();
+
+		bool checkState;
+		if (item->checkState() == Qt::Checked)
+		{
+			checkState = true;
+		}
+		else
+		{
+			checkState = false;
+		}
+		DataArrayProxy daProxy(dcaName + "|" + amName, daName, checkState);
+		amProxy.dataArrays.insert(daName, daProxy);
+		dcProxy.attributeMatricies.insert(amName, amProxy);
+		dcaProxy.list.push_back(dcProxy);
+	}
 
 	return dcaProxy;
-#endif // 0
 
 	return DataContainerArrayProxy();
 

@@ -39,6 +39,7 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DataContainers/DataArrayPathBundle.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -85,6 +86,9 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+
+	DREAM3D_FILTER_PARAMETER(DataArrayPathBundle, MultiArraySelections)
+	Q_PROPERTY(DataArrayPathBundle MultiArraySelections READ getMultiArraySelections WRITE setMultiArraySelections)
 
     DREAM3D_FILTER_PARAMETER(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)

@@ -92,9 +92,9 @@ void GenericExample::setupFilterParameters()
   parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget, getStlFilePrefix(), false));
 
   /*   For an output file use this code*/
-  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
+  //parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
   /*   For an output path use this code*/
-  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
+  //parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
   /*   For a simple true/false boolean use this code*/
   parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget, getWriteAlignmentShifts(), false));
 
@@ -160,9 +160,9 @@ void GenericExample::setupFilterParameters()
     /*  For a Floating point value use this code*/
     parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, getMisorientationTolerance(), false, "", 1));
     /*   For an input file use this code*/
-    parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "", "", 1));
+    //parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "", "", 1));
     /*   For an input path use this code*/
-    parameters.push_back(FileSystemFilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, getInputPath(), false, "", "", "", 2));
+    //parameters.push_back(FileSystemFilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, getInputPath(), false, "", "", "", 2));
   }
 
 
@@ -199,6 +199,8 @@ void GenericExample::setupFilterParameters()
     parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, "", 2));
   }
 
+  parameters.push_back(FilterParameter::New("Multi Data Array Test", "MultiArraySelections", FilterParameterWidgetType::MultiDataArraySelectionWidget, "", false, 0));
+
 
   setFilterParameters(parameters);
 }
@@ -211,6 +213,7 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
 
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setMultiArraySelections(reader->readDataArrayPathBundle("MultiArraySelections", getMultiArraySelections()));
   setStlFilePrefix( reader->readString("StlFilePrefix", getStlFilePrefix()) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
@@ -234,6 +237,7 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->openFilterGroup(this, index);
 
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MultiArraySelections)
   /* Place code that will write the inputs values into a file. reference the
        AbstractFilterParametersWriter class for the proper API to use. */
   DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
