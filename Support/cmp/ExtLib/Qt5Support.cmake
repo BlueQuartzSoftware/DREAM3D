@@ -255,7 +255,9 @@ function(AddQt5Plugins)
     else()
         set(QTPLUGINS ${QTPLUGINS_RELEASE})
     endif()
-  else()
+  endif()
+
+  if(NOT APPLE)
       # Create the qt.conf file so that the image plugins will be loaded correctly
       FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = Plugins")
       install(FILES ${PROJECT_BINARY_DIR}/qt.conf
