@@ -2,49 +2,51 @@ Export Data {#exportdata}
 =====
 
 ## Group (Subgroup) ##
+
 IO Filters (Output)
 
 
 ## Description ##
-This filter writes a scalar array to a file. The file extension and the maximum values per line are entered. The file delimeter is selected.
 
-**Delimeter**
 
-Choice of delimeter is as follows:
--  , (comma)
--  ; (semicolon)
--    (space)
--  : (colon) 
+This filter writes an array to a file as ASCII representations. The  The file extension and the maximum values per line are entered. The file delimiter is selected.
+
+**Delimiter**
+
+Choice of delimiter is as follows:
+
+	, (comma)
+	; (semicolon)
+	  (space)
+	: (colon) 
 
 ## Parameters ##
+
+
 | Name             | Type |
 |------------------|------|
 | Output Path | Output File Path |
 | File Extension | String |
 | Maximum Values Per Line | Int > 0 |
-| Delimeter | Int |
+| Delimiter | Int |
 
-# Required DataContainers ##
-Any
+
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Scalar  | SomeName        
+| Type | Default Array Name | Description |
+|------|--------------------|-------------|
+| Any numeric array | NONE | Any array can be selected  |  
 
 
-## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Text  | ExportData          
 
 
 
 ## Authors ##
 
-**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software)
+
+**Copyright** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 
