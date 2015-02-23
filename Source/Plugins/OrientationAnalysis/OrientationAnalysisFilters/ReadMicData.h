@@ -96,6 +96,9 @@ public:
 		DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
 		Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
+		DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+		Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+
 		DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
 		DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
@@ -163,9 +166,14 @@ public:
 		DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
 		DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
 		DREAM3D_PIMPL_PROPERTY_DECL(Mic_Private_Data, Data)
+		Q_PROPERTY(Mic_Private_Data Data READ getData WRITE setData)
 
 
-	signals:
+public slots:
+	void flushCache();
+
+
+signals:
 	void updateFilterParameters(AbstractFilter* filter);
 	void parametersChanged();
 	void preflightAboutToExecute();
@@ -277,6 +285,9 @@ private:
 		ReadMicData(const ReadMicData&); // Copy Constructor Not Implemented
 	void operator=(const ReadMicData&); // Operator '=' Not Implemented
 };
+
+Q_DECLARE_METATYPE(Mic_Private_Data)
+
 
 #endif /* _ReadMicData_H_ */
 
