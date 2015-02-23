@@ -6,6 +6,8 @@ Generic Filters (Misc)
 ## Description ##
 This filter assigns a phase number to binary data. The good voxels will be phase 1, and remaining voxels will be phase 0. It is generally for use when the cell phases weren't known ahead of time. For example, if an image is segmented into precipitates and non-precipitates, this filter will assign the precipitates to phase 1, and the non-precipitates to phase 0.
 
+Additionally, this filter creates a Cell Ensemble Attribute Matrix to hold ensemble data. 
+
 ## Parameters ##
 None
 
@@ -26,6 +28,12 @@ Image / Rectilinear Grid
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature** | Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
+
+## Created Attribute Matrix ##
+
+| Default Name | Description | Comment |
+|--------------|-------------|---------|
+| CellEnsembleData | This is created to hold any ensemble data generated in future filters based on phase data. | |
 
 ## Authors ##
 
