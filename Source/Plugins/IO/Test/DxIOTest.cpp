@@ -300,7 +300,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -338,7 +338,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -376,7 +376,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -424,7 +424,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -466,7 +466,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
