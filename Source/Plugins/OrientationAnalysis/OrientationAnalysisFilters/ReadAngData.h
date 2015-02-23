@@ -96,6 +96,9 @@ public:
 		DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
 		Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
+		DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+		Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+
 		DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
 		DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
@@ -163,6 +166,7 @@ public:
 		DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
 		DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
 		DREAM3D_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
+		Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
 
 	signals:
@@ -170,6 +174,9 @@ public:
 	void parametersChanged();
 	void preflightAboutToExecute();
 	void preflightExecuted();
+
+public slots:
+	void flushCache();
 
 protected:
 	ReadAngData();
@@ -277,6 +284,8 @@ private:
 		ReadAngData(const ReadAngData&); // Copy Constructor Not Implemented
 	void operator=(const ReadAngData&); // Operator '=' Not Implemented
 };
+
+Q_DECLARE_METATYPE(Ang_Private_Data)
 
 #endif /* _ReadAngData_H_ */
 
