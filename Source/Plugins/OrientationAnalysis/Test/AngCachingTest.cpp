@@ -53,8 +53,8 @@
 
 #include "TestFileLocations.h"
 
-const QString InputFile1(UnitTest::EbsdImportTest::TestFile1);
-const QString InputFile2(UnitTest::EbsdImportTest::TestFile2);
+const QString InputFile1(UnitTest::AngReaderTest::TestFile1);
+const QString InputFile2(UnitTest::AngReaderTest::TestFile2);
 const QString OutputFile1(UnitTest::AngCachingTest::TestFile1);
 const QString OutputFile2(UnitTest::AngCachingTest::TestFile2);
 

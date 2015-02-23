@@ -37,7 +37,7 @@ namespace UnitTest
   
   }
 
-  namespace EbsdImportTest
+  namespace AngReaderTest
   {
     const QString TestFile1("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_1.ang");
     const QString TestFile2("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_2.ang");
