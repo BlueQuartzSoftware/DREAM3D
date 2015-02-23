@@ -5,13 +5,13 @@ Find Surface Area To Volume {#findsurfaceareatovolume}
 Statistics Filters (Morphological)
 
 ## Description ##
-This filter calculates the ratio of surface area to volume for each feature. 
-
-
+This filter calculates the ratio of surface area to volume for each feature for a voxel-based structure. First all the boundary cells are found for each feature. Next the surface area for each face that is in contact with a different feature is totaled. This is divided by the volume of each feature, calculated by taking the number of cells of each feature and multiplying by the resolution. 
 
 
 ## Parameters ##
-None
+| Name             | Type | Comments |
+|------------------|------|-----|
+| SurfaceAreaVolumeRatio | String | This is the name of the data array calculated by this filter |
 
 ## Required DataContainers ##
 Voxel
@@ -20,15 +20,15 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass | Filter will calculate **Feature** centroids if not previously calculated | Find Feature Centroids (Generic) |
-| Feature | Volumes | Volume (float) in um^3 of the **Feature**. | Filter will calculate volume of each **Feature** if not already calculated | Find Feature Sizes (Statistics) | 
-| Feature | AxisEulerAngles |  |  |  |
-| Feature | AxisLengths |  |  |  |
+| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+
+| Feature | NumCells | Number of cells (int) of each **Feature**. |  | Find Feature Sizes (Statistics) | 
+
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
+| Feature | SurfaceAReaVolumeRatio | This is the ratio of surface area to volume for each feature. The units are in inverse length units (float) |  |
 
 
 ## Authors ##
