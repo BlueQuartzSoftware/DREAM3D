@@ -89,6 +89,8 @@ m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
 m_PhaseNameArrayName(""),
 m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
 m_InputFile(""),
+d_ptr(new ReadCtfDataPrivate(this)),
+m_FileWasRead(false),
 m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
 m_Manufacturer(Ebsd::UnknownManufacturer),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -162,6 +164,16 @@ int ReadCtfData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ReadCtfData::flushCache()
+{
+	setInputFile_Cache("");
+	setTimeStamp_Cache(QDateTime());
+	setData(Ctf_Private_Data());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReadCtfData::populateCtfData(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> dims, CTF_READ_FLAG flag)
 {
 	QFileInfo fi(m_InputFile);
@@ -181,7 +193,12 @@ void ReadCtfData::populateCtfData(CtfReader* reader, DataContainer::Pointer m, Q
 				setErrorCondition(err);
 				notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
 				notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file header.", getErrorCondition());
+				m_FileWasRead = false;
 				return;
+			}
+			else
+			{
+				m_FileWasRead = true;
 			}
 		}
 		else
@@ -219,7 +236,17 @@ void ReadCtfData::populateCtfData(CtfReader* reader, DataContainer::Pointer m, Q
 			data.origin.push_back(zOrigin);
 			data.phases = reader->getPhaseVector();
 			setData(data);
+
+			setInputFile_Cache(m_InputFile);
+
+			QFileInfo newFi(m_InputFile);
+			QDateTime timeStamp(newFi.lastModified());
+			setTimeStamp_Cache(timeStamp);
 		}
+	}
+	else
+	{
+		m_FileWasRead = false;
 	}
 
 	// Read from cache
@@ -243,6 +270,9 @@ void ReadCtfData::populateCtfData(CtfReader* reader, DataContainer::Pointer m, Q
 // -----------------------------------------------------------------------------
 void ReadCtfData::dataCheck()
 {
+	// Reset FileWasRead flag
+	m_FileWasRead = false;
+
 	DataArrayPath tempPath;
 	setErrorCondition(0);
 
@@ -347,18 +377,6 @@ void ReadCtfData::dataCheck()
 
 		StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), DREAM3D::EnsembleData::MaterialName);
 		cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
-
-		// Set the file name and time stamp into the cache, if we are reading from the file and after all the reading has been done
-		{
-			QFileInfo newFi(m_InputFile);
-			QDateTime timeStamp(newFi.lastModified());
-
-			if (m_InputFile == getInputFile_Cache() && getTimeStamp_Cache().isValid() && getTimeStamp_Cache() >= timeStamp)
-			{
-				setTimeStamp_Cache(timeStamp);
-				setInputFile_Cache(m_InputFile);
-			}
-		}
 	}
 }
 

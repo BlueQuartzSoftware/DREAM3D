@@ -73,3 +73,4 @@ endmacro()
 
 
 ADD_DREAM3D_TEST(AngCachingTest  "DREAM3DLib")
+ADD_DREAM3D_TEST(CtfCachingTest  "DREAM3DLib")
