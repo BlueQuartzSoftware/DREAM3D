@@ -23,8 +23,11 @@ namespace UnitTest
 
   namespace AngCachingTest
   {
-    const QString TestFile1("@TEST_TEMP_DIR@/TestOutputFile1.ang");
-    const QString TestFile2("@TEST_TEMP_DIR@/TestOutputFile2.ang");
+    const QString Test1("@TEST_TEMP_DIR@/TestFile1.ang");
+    const QString Test2("@TEST_TEMP_DIR@/TestFile2.ang");
+
+    const QString TestInputFile1("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_HeaderCache-1.ang");
+    const QString TestInputFile2("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_HeaderCache-2.ang");
   }
 
   namespace CtfCachingTest
@@ -36,17 +39,10 @@ namespace UnitTest
   {
   
   }
-
-  namespace AngReaderTest
-  {
-    const QString TestFile1("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_1.ang");
-    const QString TestFile2("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_2.ang");
-  }
-
   namespace CtfReaderTest
   {
-    const QString EuropeanInputFile1("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_European_1.ctf");
-    const QString EuropeanInputFile2("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_European_2.ctf");
+    const QString EuropeanInputFile1("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_US_1.ctf");
+    const QString EuropeanInputFile2("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_US_2.ctf");
   }
 
 }

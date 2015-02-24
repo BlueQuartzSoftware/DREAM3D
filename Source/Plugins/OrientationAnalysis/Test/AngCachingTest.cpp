@@ -53,10 +53,29 @@
 
 #include "TestFileLocations.h"
 
-const QString InputFile1(UnitTest::AngReaderTest::TestFile1);
-const QString InputFile2(UnitTest::AngReaderTest::TestFile2);
-const QString OutputFile1(UnitTest::AngCachingTest::TestFile1);
-const QString OutputFile2(UnitTest::AngCachingTest::TestFile2);
+const QString File1(UnitTest::AngCachingTest::TestInputFile1);
+const QString File2(UnitTest::AngCachingTest::TestInputFile2);
+const QString CopiedFile1(UnitTest::AngCachingTest::Test1);
+const QString CopiedFile2(UnitTest::AngCachingTest::Test2);
+
+const float xStep1 = 0.5;
+const float yStep1 = 0.5;
+const int nCols1 = 20;
+const int nRows1 = 10;
+
+const float xStep2 = 0.25;
+const float yStep2 = 0.25;
+const int nCols2 = 40;
+const int nRows2 = 4;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CopyTestFiles()
+{
+	QFile::copy(File1, CopiedFile1);
+	QFile::copy(File2, CopiedFile2);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -64,8 +83,8 @@ const QString OutputFile2(UnitTest::AngCachingTest::TestFile2);
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-	QFile::remove(OutputFile1);
-	QFile::remove(OutputFile2);
+	QFile::remove(CopiedFile1);
+	QFile::remove(CopiedFile2);
 #endif
 }
 
@@ -106,7 +125,7 @@ int TestAngReader()
 		{
 			// If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
 			angReader = filterFactory->create();		// Create the reader for the first time
-			bool propWasSet = angReader->setProperty("InputFile", InputFile1);
+			bool propWasSet = angReader->setProperty("InputFile", CopiedFile1);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				angReader->setDataContainerArray(dca);
 			angReader->preflight();
@@ -119,6 +138,16 @@ int TestAngReader()
 			qDebug() << ss;
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
+
+		Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+		// XStep, YStep -> Resolution(x, y)
+		DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
+		DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep1)
+
+		// numRows, numCols -> Dimensions (x, y)
+		DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols1)
+		DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows1)
 
 		// Check that the filter read the file
 		bool prop = angReader->property("FileWasRead").toBool();
@@ -131,7 +160,7 @@ int TestAngReader()
 
 		if (NULL != filterFactory.get())
 		{
-			bool propWasSet = angReader->setProperty("InputFile", InputFile1);
+			bool propWasSet = angReader->setProperty("InputFile", CopiedFile1);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				angReader->setDataContainerArray(dca);
 			angReader->preflight();
@@ -144,6 +173,16 @@ int TestAngReader()
 			qDebug() << ss;
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
+
+		Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+		// XStep, YStep -> Resolution(x, y)
+		DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
+			DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep1)
+
+			// numRows, numCols -> Dimensions (x, y)
+			DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols1)
+			DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows1)
 
 		// Check that the filter read from the cache this time, since we're reading from the same file
 		bool prop = angReader->property("FileWasRead").toBool();
@@ -156,7 +195,7 @@ int TestAngReader()
 
 		if (NULL != filterFactory.get())
 		{
-			bool propWasSet = angReader->setProperty("InputFile", InputFile2);
+			bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				angReader->setDataContainerArray(dca);
 			angReader->preflight();
@@ -170,6 +209,16 @@ int TestAngReader()
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
 
+		Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+		// XStep, YStep -> Resolution(x, y)
+		DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
+			DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
+
+			// numRows, numCols -> Dimensions (x, y)
+			DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
+			DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
+
 		// Check that the filter read from the file again, since we changed file names
 		bool prop = angReader->property("FileWasRead").toBool();
 		DREAM3D_REQUIRE_EQUAL(prop, true)
@@ -179,7 +228,7 @@ int TestAngReader()
 	{
 		// Change the contents of the file to be read
 		{
-			QFile file(InputFile2);
+			QFile file(CopiedFile2);
 			if (!file.open(QFile::ReadWrite | QFile::Text))
 				DREAM3D_REQUIRE_EQUAL(0, 1)
 				QTextStream out(&file);
@@ -191,7 +240,7 @@ int TestAngReader()
 
 		if (NULL != filterFactory.get())
 		{
-			bool propWasSet = angReader->setProperty("InputFile", InputFile2);
+			bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				angReader->setDataContainerArray(dca);
 			angReader->preflight();
@@ -204,6 +253,16 @@ int TestAngReader()
 			qDebug() << ss;
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
+
+		Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+		// XStep, YStep -> Resolution(x, y)
+		DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
+			DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
+
+			// numRows, numCols -> Dimensions (x, y)
+			DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
+			DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
 
 		// Check that the filter read from the file again, since we changed the contents of the file outside the program
 		bool prop = angReader->property("FileWasRead").toBool();
@@ -220,7 +279,7 @@ int TestAngReader()
 
 			if (NULL != filterFactory.get())
 			{
-				bool propWasSet = angReader->setProperty("InputFile", InputFile2);
+				bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
 				DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 					angReader->setDataContainerArray(dca);
 				angReader->preflight();
@@ -233,6 +292,16 @@ int TestAngReader()
 				qDebug() << ss;
 				DREAM3D_REQUIRE_EQUAL(0, 1)
 			}
+
+		Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+		// XStep, YStep -> Resolution(x, y)
+		DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
+			DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
+
+			// numRows, numCols -> Dimensions (x, y)
+			DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
+			DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
 
 		// Check that the filter read from the file again, since we flushed the cache
 		bool prop = angReader->property("FileWasRead").toBool();
@@ -271,10 +340,12 @@ int main(int argc, char** argv)
 	DREAM3D_REGISTER_TEST(loadFilterPlugins());
 	DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-		DREAM3D_REGISTER_TEST(TestAngReader())
+	DREAM3D_REGISTER_TEST(CopyTestFiles())
 
-		DREAM3D_REGISTER_TEST(RemoveTestFiles())
-		PRINT_TEST_SUMMARY();
+	DREAM3D_REGISTER_TEST(TestAngReader())
+
+	DREAM3D_REGISTER_TEST(RemoveTestFiles())
+	PRINT_TEST_SUMMARY();
 	return err;
 }
 
