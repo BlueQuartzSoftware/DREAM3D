@@ -36,16 +36,16 @@ __Phase numbering starts at One (1). Phase Zero (0) is reserved for internal use
 For example if you have a structure that has 2 phases that consist of a Cubic Primary phase and a Hexagonal Matrix phase the file would be the following:
 
 
- [EnsembleInfo]  
-Number_Phases=2
+	[EnsembleInfo]  
+	Number_Phases=2
 
-[1]  
-CrystalStructure=Cubic  
-PhaseType=PrimaryPhase
-
-[2]  
-CrystalStructure=Hexagonal  
-PhaseType=MatrixPhase
+	[1]  
+	CrystalStructure=Cubic  
+	PhaseType=PrimaryPhase
+	
+	[2]  
+	CrystalStructure=Hexagonal  
+	PhaseType=MatrixPhase
 
 
 ## Parameters ##
@@ -55,21 +55,26 @@ PhaseType=MatrixPhase
 | Input Ensemble Info File | Input File |
 
 ## Required DataContainers ##
-Voxel
+
+A DataContainer to create the AttributeMatrix and DataArray
 
 ## Required Arrays ##
+
+
 None
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) |  |
-| Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) |  |
+| Ensemble | CrystalStructures | Integer [See above for values] |  |  
+| Ensemble | PhaseTypes        | Integer [See above for values] |  |  
+
+
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 
