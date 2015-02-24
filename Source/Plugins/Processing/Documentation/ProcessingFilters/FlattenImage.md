@@ -5,32 +5,28 @@ Flatten Image {#flattenimage}
 Processing Filters (Image)
 
 ## Description ##
-This filter allows the user to selected a "flattening" method for turning an array of RGB or RGBa values to grayscale values.
+This filter allows the user to selected a "flattening" method for turning an array of RGB or RGBa values to grayscale values.  The options available in this filter are "Average" and "Luminosity".  If "Average" is selected, then the R, G and B values are averaged to get a single grayscale value.  If "Luminosity" is selected, then the grayscale value equals (R*0.21)+(G*0.72)+(B*0.07).
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| Flattening Method | Selection | Tells filter which method to use when flattening the RGB array.
 
-| Name | Type |
-|------|------|
-| Flattening Method | Choices |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | ImageData | This is either a 3 or 4 component array of RGB or RGBa values |  | Import Images (3D Stack) (ImageImport) |
-
+| Element | ImageData | Float | (1,3) or (1,4) | RGB or RGBa values |
 
 ## Created Arrays ##
 | Type | Default Name | Description | Comment |
 |------|--------------|---------|-------|
-| Cell | FlatImageData | This is a 1 component array of grayscale values | |
+| Element | FlatImageData | Float | (1,1) | Grayscale values |
 
 
 ## Authors ##
-
 
 **Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
 
