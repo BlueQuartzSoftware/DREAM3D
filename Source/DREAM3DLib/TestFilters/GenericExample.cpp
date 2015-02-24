@@ -199,7 +199,7 @@ void GenericExample::setupFilterParameters()
     parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, "", 2));
   }
 
-  parameters.push_back(FilterParameter::New("Multi Data Array Test", "MultiArraySelections", FilterParameterWidgetType::MultiDataArraySelectionWidget, "", false, 0));
+  parameters.push_back(FilterParameter::New("Multi Data Array Test", "SelectedMultiArrayBundle", FilterParameterWidgetType::MultiDataArraySelectionWidget, DataArrayPath("Joey", "Kleingers", ""), false, 0));
 
 
   setFilterParameters(parameters);
@@ -213,7 +213,7 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
 
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setMultiArraySelections(reader->readDataArrayPathBundle("MultiArraySelections", getMultiArraySelections()));
+  setSelectedMultiArrayBundle(reader->readDataArrayPathBundle("SelectedMultiArrayBundle", getSelectedMultiArrayBundle()));
   setStlFilePrefix( reader->readString("StlFilePrefix", getStlFilePrefix()) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
@@ -237,7 +237,7 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->openFilterGroup(this, index);
 
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MultiArraySelections)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedMultiArrayBundle)
   /* Place code that will write the inputs values into a file. reference the
        AbstractFilterParametersWriter class for the proper API to use. */
   DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)

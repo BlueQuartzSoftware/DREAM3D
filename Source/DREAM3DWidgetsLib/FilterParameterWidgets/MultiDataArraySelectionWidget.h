@@ -108,12 +108,14 @@ public:
 
 	void on_attributeMatrixList_currentIndexChanged(int index);
 
+	void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
+
 
 
 protected:
 	void populateComboBoxes();
 	void populateAttributeMatrixList();
-	void populateAttributeArrayList();
+	void populateAttributeArrayList(QMap<QString,bool> map);
 
 	/**
 	* @brief generateDCAProxy
@@ -131,7 +133,6 @@ private:
 
 
 	DataContainerArrayProxy m_DcaProxy;
-	DataArrayPath  m_DefaultPath;
 
 	MultiDataArraySelectionWidget(const MultiDataArraySelectionWidget&); // Copy Constructor Not Implemented
 	void operator=(const MultiDataArraySelectionWidget&); // Operator '=' Not Implemented

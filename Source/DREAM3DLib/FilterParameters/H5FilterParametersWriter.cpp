@@ -702,7 +702,7 @@ int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath
 {
 	QString dcName = v.getDataContainerName();
 	QString amName = v.getAttributeMatrixName();
-	QSet<QString> daSet = v.getDataArrayNameSet();
+	QMap<QString,bool> daMap = v.getDataArrayNameMap();
 
 	int err = 0;
 	err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "_dc", dcName);
@@ -711,7 +711,7 @@ int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath
 	err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "_am", amName);
 
 	err = 0;
-	QString daNames = DataArrayPathBundle::serializeDataArrayNames(daSet, '|');
+	QString daNames = DataArrayPathBundle::serializeDataArrayNames(daMap, '|');
 	err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "_da", daNames);
 
 	return err;

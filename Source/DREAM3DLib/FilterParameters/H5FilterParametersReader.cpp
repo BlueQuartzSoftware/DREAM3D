@@ -1010,15 +1010,15 @@ DataArrayPathBundle H5FilterParametersReader::readDataArrayPathBundle(const QStr
 	if (err == 0)
 	{
 		daNames = value;
-		QSet<QString> daSet = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
-		bundle.setDataArrayNameSet(daSet);
+		QMap<QString,bool> daMap = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
+		bundle.setDataArrayNameMap(daMap);
 	}
 	else
 	{
 		daNames = "";
 	}
 
-	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameSet().isEmpty() == false)
+	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameMap().isEmpty() == false)
 	{
 		return bundle;
 	}

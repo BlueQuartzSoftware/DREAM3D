@@ -50,7 +50,7 @@ class DataArrayPathBundlePrivate
 		DataArrayPathBundle* const q_ptr;
 	QString m_DataContainerName;
 	QString m_AttributeMatrixName;
-	QSet<QString> m_DataArrayNameSet;
+	QMap<QString,bool> m_DataArrayNameMap;
 
 	DataArrayPathBundlePrivate(DataArrayPathBundle* ptr);
 };
@@ -62,7 +62,7 @@ DataArrayPathBundlePrivate::DataArrayPathBundlePrivate(DataArrayPathBundle* ptr)
 q_ptr(ptr),
 m_DataContainerName(""),
 m_AttributeMatrixName(""),
-m_DataArrayNameSet(QSet<QString>())
+m_DataArrayNameMap(QMap<QString,bool>())
 {
 
 }
@@ -80,12 +80,12 @@ d_ptr(new DataArrayPathBundlePrivate(this))
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPathBundle::DataArrayPathBundle(const QString& dcName, const QString& amName, const QSet<QString>& daNameSet) :
+DataArrayPathBundle::DataArrayPathBundle(const QString& dcName, const QString& amName, const QMap<QString,bool>& daNameSet) :
 d_ptr(new DataArrayPathBundlePrivate(this))
 {
 	d_ptr->m_DataContainerName = dcName;
 	d_ptr->m_AttributeMatrixName = amName;
-	d_ptr->m_DataArrayNameSet = daNameSet;
+	d_ptr->m_DataArrayNameMap = daNameSet;
 }
 
 // -----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ d_ptr(new DataArrayPathBundlePrivate(this))
 {
 	d_ptr->m_DataContainerName = rhs.getDataContainerName();
 	d_ptr->m_AttributeMatrixName = rhs.getAttributeMatrixName();
-	d_ptr->m_DataArrayNameSet = rhs.getDataArrayNameSet();
+	d_ptr->m_DataArrayNameMap = rhs.getDataArrayNameMap();
 }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +112,7 @@ DataArrayPathBundle::~DataArrayPathBundle()
 // -----------------------------------------------------------------------------
 QList<DataArrayPath> DataArrayPathBundle::ConvertToDataArrayPaths(DataArrayPathBundle bundle)
 {
-	QSet<QString> daNameSet = bundle.getDataArrayNameSet();
+	QMap<QString,bool> daNameSet = bundle.getDataArrayNameMap();
 	QString dcName = bundle.getDataContainerName();
 	QString amName = bundle.getAttributeMatrixName();
 
@@ -129,40 +129,80 @@ QList<DataArrayPath> DataArrayPathBundle::ConvertToDataArrayPaths(DataArrayPathB
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<QString> DataArrayPathBundle::serializeDataArrayNames(QString daNames, char token)
+void DataArrayPathBundle::serialize(QString &str1, QString &str2, char token)
 {
-	QSet<QString> namesSet;
-	int start = 0;
+	QString fullString = str1;
+
 	int tokenIndex = 0;
-	QString name = "";
 
-	while (tokenIndex >= 0)
-	{
-		tokenIndex = daNames.indexOf(token, start);
-		name = daNames.mid(start, tokenIndex-start);
-		namesSet.insert(name);
-		start = tokenIndex + 1;
-	}
+	tokenIndex = fullString.indexOf(token);
+	QString result1 = fullString.mid(0, tokenIndex);
+	tokenIndex++;
+	QString result2 = fullString.mid(tokenIndex);
 
-	return namesSet;
+	str1 = result1;
+	str2 = result2;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DataArrayPathBundle::serializeDataArrayNames(QSet<QString> daSet, char token)
+QMap<QString,bool> DataArrayPathBundle::serializeDataArrayNames(QString daNames, char token)
+{
+	QMap<QString,bool> namesMap;
+	int start = 0;
+	int tokenIndex = 0;
+
+	while (tokenIndex >= 0)
+	{
+		tokenIndex = daNames.indexOf(token, start);
+		QString combo = daNames.mid(start, tokenIndex - start);
+		QString name = combo;
+		QString isCheckedStr = "";
+		serialize(name, isCheckedStr, ':');
+
+		bool isChecked = false;
+		if (isCheckedStr == "true")
+		{
+			isChecked = true;
+		}
+
+		namesMap.insert(name, isChecked);
+		start = tokenIndex + 1;
+	}
+
+	return namesMap;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataArrayPathBundle::serializeDataArrayNames(QMap<QString,bool> daMap, char token)
 {
 	QString daNames = "";
+	QString isCheckedStr = "";
 
-	QSet<QString>::iterator iter = daSet.begin();
-	while ( iter != daSet.end() )
+	QMap<QString,bool>::iterator iter = daMap.begin();
+	while ( iter != daMap.end() )
 	{
-		QString name = *iter;
+		QString name = iter.key();
+		bool isChecked = iter.value();
+
+		if (isChecked == true)
+		{
+			isCheckedStr = "true";
+		}
+		else
+		{
+			isCheckedStr = "false";
+		}
 		daNames.append(name);
+		daNames.append(':');
+		daNames.append(isCheckedStr);
 
 		iter++;
 
-		if (iter != daSet.end())
+		if (iter != daMap.end())
 		{
 			daNames.append(token);
 		}
@@ -177,7 +217,24 @@ QString DataArrayPathBundle::serializeDataArrayNames(QSet<QString> daSet, char t
 // -----------------------------------------------------------------------------
 DREAM3D_PIMPL_PROPERTY_DEF(DataArrayPathBundle, QString, DataContainerName)
 DREAM3D_PIMPL_PROPERTY_DEF(DataArrayPathBundle, QString, AttributeMatrixName)
-DREAM3D_PIMPL_PROPERTY_DEF(DataArrayPathBundle, QSet<QString>, DataArrayNameSet)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayPathBundle::setDataArrayNameMap(QMap<QString,bool> map) 
+{
+	Q_D(DataArrayPathBundle);
+	d->m_DataArrayNameMap = map;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, bool> DataArrayPathBundle::getDataArrayNameMap() const
+{
+	Q_D(const DataArrayPathBundle);
+	return d->m_DataArrayNameMap;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -186,7 +243,7 @@ void DataArrayPathBundle::operator=(const DataArrayPathBundle& rhs)
 {
 	d_ptr->m_DataContainerName = rhs.getDataContainerName();
 	d_ptr->m_AttributeMatrixName = rhs.getAttributeMatrixName();
-	d_ptr->m_DataArrayNameSet = rhs.getDataArrayNameSet();
+	d_ptr->m_DataArrayNameMap = rhs.getDataArrayNameMap();
 }
 
 // -----------------------------------------------------------------------------
@@ -196,7 +253,7 @@ bool DataArrayPathBundle::operator==(const DataArrayPathBundle& rhs)
 {
 	if (d_ptr->m_DataContainerName == rhs.getDataContainerName()
 		&& d_ptr->m_AttributeMatrixName == rhs.getAttributeMatrixName()
-		&& d_ptr->m_DataArrayNameSet == rhs.getDataArrayNameSet())
+		&& d_ptr->m_DataArrayNameMap == rhs.getDataArrayNameMap())
 	{
 		return true;
 	}
@@ -209,7 +266,7 @@ bool DataArrayPathBundle::operator==(const DataArrayPathBundle& rhs)
 // -----------------------------------------------------------------------------
 bool DataArrayPathBundle::isEmpty() const
 {
-	if (d_ptr->m_DataContainerName.isEmpty() && d_ptr->m_AttributeMatrixName.isEmpty() && d_ptr->m_DataArrayNameSet.isEmpty())
+	if (d_ptr->m_DataContainerName.isEmpty() && d_ptr->m_AttributeMatrixName.isEmpty() && d_ptr->m_DataArrayNameMap.isEmpty())
 	{
 		return true;
 	}
@@ -221,7 +278,7 @@ bool DataArrayPathBundle::isEmpty() const
 // -----------------------------------------------------------------------------
 bool DataArrayPathBundle::isValid() const
 {
-	if (d_ptr->m_DataContainerName.isEmpty() == false && d_ptr->m_AttributeMatrixName.isEmpty() == false && d_ptr->m_DataArrayNameSet.isEmpty() == false)
+	if (d_ptr->m_DataContainerName.isEmpty() == false && d_ptr->m_AttributeMatrixName.isEmpty() == false && d_ptr->m_DataArrayNameMap.isEmpty() == false)
 	{
 		return true;
 	}
@@ -231,9 +288,9 @@ bool DataArrayPathBundle::isValid() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArrayPathBundle::addDataArray(const QString& daName)
+void DataArrayPathBundle::addDataArray(const QString& daName, const bool& isChecked)
 {
-	d_ptr->m_DataArrayNameSet.insert(daName);
+	d_ptr->m_DataArrayNameMap.insert(daName, isChecked);
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +298,7 @@ void DataArrayPathBundle::addDataArray(const QString& daName)
 // -----------------------------------------------------------------------------
 void DataArrayPathBundle::removeDataArray(const QString& daName)
 {
-	d_ptr->m_DataArrayNameSet.remove(daName);
+	d_ptr->m_DataArrayNameMap.remove(daName);
 }
 
 // -----------------------------------------------------------------------------
@@ -249,8 +306,9 @@ void DataArrayPathBundle::removeDataArray(const QString& daName)
 // -----------------------------------------------------------------------------
 void DataArrayPathBundle::renameDataArray(const QString& oldName, const QString& newName)
 {
+	bool isChecked = d_ptr->m_DataArrayNameMap.value(oldName, false);
 	removeDataArray(oldName);
-	addDataArray(newName);
+	addDataArray(newName, isChecked);
 }
 
 // -----------------------------------------------------------------------------
@@ -282,7 +340,7 @@ bool DataArrayPathBundle::sameAttributeMatrix(const DataArrayPathBundle& other) 
 // -----------------------------------------------------------------------------
 bool DataArrayPathBundle::sameDataArraySet(const DataArrayPathBundle& other) const
 {
-	if ( d_ptr->m_DataArrayNameSet == other.d_ptr->m_DataArrayNameSet )
+	if ( d_ptr->m_DataArrayNameMap == other.d_ptr->m_DataArrayNameMap )
 	{
 		return true;
 	}

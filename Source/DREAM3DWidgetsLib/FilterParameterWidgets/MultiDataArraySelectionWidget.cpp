@@ -116,12 +116,6 @@ void MultiDataArraySelectionWidget::setupGui()
 		label->setText(getFilterParameter()->getHumanLabel());
 	}
 
-	// Get the default path from the Filter instance to cache
-	m_DefaultPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
-	//  dataContainerList->addItem(m_DefaultPath.getDataContainerName());
-	//  attributeMatrixList->addItem(m_DefaultPath.getAttributeMatrixName() );
-	//  attributeArrayList->addItem(m_DefaultPath.getDataArrayName() );
-
 	// Block Signals from the ComboBoxes while we clear them
 	dataContainerList->blockSignals(true);
 	attributeMatrixList->blockSignals(true);
@@ -200,16 +194,12 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
 	// Split the path up to make sure we have a valid path separated by the "|" character
 	QString filtDcName = selectedPaths.getDataContainerName();
 	QString filtAmName = selectedPaths.getAttributeMatrixName();
-	//QString filtDaName = selectedPaths.getDataArrayName();
-	QString filtDaName = "";
 
 	QString dcName;
 	QString amName;
-	QString daName;
 
 	// If EVERYTHING is empty, then try the default value
-	if (filtDcName.isEmpty() && filtAmName.isEmpty() && filtDaName.isEmpty()
-		&& curDcName.isEmpty() && curAmName.isEmpty())
+	if (filtDcName.isEmpty() && filtAmName.isEmpty() && curDcName.isEmpty() && curAmName.isEmpty())
 	{
 		DataArrayPath daPath = getFilterParameter()->getDefaultValue().value<DataArrayPath>();
 		dcName = daPath.getDataContainerName();
@@ -253,7 +243,7 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
 	else
 	{
 		attributeMatrixList->setCurrentIndex(amIndex);
-		populateAttributeArrayList();
+		populateAttributeArrayList(selectedPaths.getDataArrayNameMap());
 	}
 	if (didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 }
@@ -340,13 +330,19 @@ void MultiDataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-	populateAttributeArrayList();
+	DataArrayPathBundle bundle = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPathBundle>();
+
+	populateAttributeArrayList(bundle.getDataArrayNameMap());
+
+	m_DidCausePreflight = true;
+	emit parametersChanged();
+	m_DidCausePreflight = false;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiDataArraySelectionWidget::populateAttributeArrayList()
+void MultiDataArraySelectionWidget::populateAttributeArrayList(QMap<QString,bool> map)
 {
 	attributeArraysWidget->blockSignals(true);
 	attributeArraysWidget->clear();
@@ -383,8 +379,18 @@ void MultiDataArraySelectionWidget::populateAttributeArrayList()
 						dataArraysIter.next();
 						//DataArrayProxy daProxy = dataArraysIter.value();
 						QString daName = dataArraysIter.key();
+						bool isChecked = map.value(daName);
 						QListWidgetItem* daItem = new QListWidgetItem(daName);
-						daItem->setCheckState(Qt::Unchecked);
+
+						if (isChecked == true)
+						{
+							daItem->setCheckState(Qt::Checked);
+						}
+						else
+						{
+							daItem->setCheckState(Qt::Unchecked);
+						}
+
 						attributeArraysWidget->addItem(daItem);
 					}
 				}
@@ -393,6 +399,16 @@ void MultiDataArraySelectionWidget::populateAttributeArrayList()
 	}
 
 	attributeArraysWidget->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MultiDataArraySelectionWidget::on_attributeArraysWidget_itemChanged(QListWidgetItem* item)
+{
+	m_DidCausePreflight = true;
+	emit parametersChanged();
+	m_DidCausePreflight = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -468,11 +484,24 @@ DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-#if 0
+	QMap<QString,bool> map;
+	for (int i = 0; i < attributeArraysWidget->count(); i++)
+	{
+		QString name = attributeArraysWidget->item(i)->text();
+		bool isChecked = false;
+
+		if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
+		{
+			isChecked = true;
+		}
+
+		map.insert(name, isChecked);
+	}
+
 	// Generate the path to the AttributeArray
-	DataArrayPath path(dataContainerList->currentText(), attributeMatrixList->currentText(), attributeArrayList->currentText());
+	DataArrayPathBundle bundle(dataContainerList->currentText(), attributeMatrixList->currentText(), map);
 	QVariant var;
-	var.setValue(path);
+	var.setValue(bundle);
 	bool ok = false;
 	// Set the value into the Filter
 	ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
@@ -480,8 +509,5 @@ void MultiDataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* f
 	{
 		FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
 	}
-#endif // 0
-
-
 }
 

@@ -40,6 +40,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
+#include <QtCore/QMap>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -67,7 +68,7 @@ public:
 	* @param amName
 	* @param daName
 	*/
-	DataArrayPathBundle(const QString& dcName, const QString& amName, const QSet<QString>& daNameList);
+	DataArrayPathBundle(const QString& dcName, const QString& amName, const QMap<QString, bool>& daNameList);
 
 	/**
 	* @brief DataArrayPathBundle
@@ -78,12 +79,14 @@ public:
 
 
 	static QList<DataArrayPath> ConvertToDataArrayPaths(DataArrayPathBundle bundle);
-	static QSet<QString> serializeDataArrayNames(QString daNames, char token);
-	static QString serializeDataArrayNames(QSet<QString> daNames, char token);
+	static QMap<QString,bool> serializeDataArrayNames(QString daNames, char token);
+	static QString serializeDataArrayNames(QMap<QString,bool> daNames, char token);
 
 	DREAM3D_PIMPL_PROPERTY_DECL(QString, DataContainerName)
-		DREAM3D_PIMPL_PROPERTY_DECL(QString, AttributeMatrixName)
-		DREAM3D_PIMPL_PROPERTY_DECL(QSet<QString>, DataArrayNameSet)
+	DREAM3D_PIMPL_PROPERTY_DECL(QString, AttributeMatrixName)
+
+	void setDataArrayNameMap(QMap<QString, bool> map);
+	QMap<QString, bool> getDataArrayNameMap() const;
 
 
 		/**
@@ -116,8 +119,9 @@ public:
 	/**
 	* @brief Adds a data array to the bundle
 	* @param daName The DataArray Name
+	* @param isChecked The DataArray checkState
 	*/
-	void addDataArray(const QString& daName);
+	void addDataArray(const QString& daName, const bool& isChecked);
 
 	/**
 	* @brief Removes a data array from the bundle
@@ -162,6 +166,8 @@ public:
 
 private:
 	QScopedPointer<DataArrayPathBundlePrivate> const d_ptr;
+
+	static void serialize(QString &str1, QString &str2, char token);
 
 
 };

@@ -1759,11 +1759,11 @@ DataArrayPathBundle QFilterParametersReader::readDataArrayPathBundle(const QStri
 	QString amName = m_Prefs->value(name + "_am", defPath).toString();
 	
 	QString daNames = m_Prefs->value(name + "_da", defPath).toString();
-	QSet<QString> daSet = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
+	QMap<QString,bool> daMap = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
 
-	DataArrayPathBundle bundle(dcName, amName, daSet);
+	DataArrayPathBundle bundle(dcName, amName, daMap);
 
-	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameSet().isEmpty() == false)
+	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameMap().isEmpty() == false)
 	{
 		return bundle;
 	}
