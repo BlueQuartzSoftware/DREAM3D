@@ -32,17 +32,15 @@ namespace UnitTest
 
   namespace CtfCachingTest
   {
-    const QString TestFile1("@TEST_TEMP_DIR@/TestOutputFile1.ctf");
-    const QString TestFile2("@TEST_TEMP_DIR@/TestOutputFile2.ctf");
+    const QString Test1("@TEST_TEMP_DIR@/TestFile1.ctf");
+    const QString Test2("@TEST_TEMP_DIR@/TestFile2.ctf");
+
+    const QString TestInputFile1("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_US_1.ctf");
+    const QString TestInputFile2("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_US_2.ctf");
   }
   namespace MicCachingTest
   {
   
-  }
-  namespace CtfReaderTest
-  {
-    const QString EuropeanInputFile1("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_US_1.ctf");
-    const QString EuropeanInputFile2("C:/DREAM3D_SDK/DREAM3D_Data/EbsdTestFiles/Test_US_2.ctf");
   }
 
 }

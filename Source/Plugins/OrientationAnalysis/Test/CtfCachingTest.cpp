@@ -53,10 +53,22 @@
 
 #include "TestFileLocations.h"
 
-const QString InputFile1(UnitTest::CtfReaderTest::EuropeanInputFile1);
-const QString InputFile2(UnitTest::CtfReaderTest::EuropeanInputFile2);
-const QString OutputFile1(UnitTest::CtfCachingTest::TestFile1);
-const QString OutputFile2(UnitTest::CtfCachingTest::TestFile2);
+const QString File1(UnitTest::CtfCachingTest::TestInputFile1);
+const QString File2(UnitTest::CtfCachingTest::TestInputFile2);
+const QString CopiedFile1(UnitTest::CtfCachingTest::Test1);
+const QString CopiedFile2(UnitTest::CtfCachingTest::Test2);
+
+const int numPhases1 = 1;
+const int numPhases2 = 5;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CopyTestFiles()
+{
+	QFile::copy(File1, CopiedFile1);
+	QFile::copy(File2, CopiedFile2);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -64,8 +76,8 @@ const QString OutputFile2(UnitTest::CtfCachingTest::TestFile2);
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-	QFile::remove(OutputFile1);
-	QFile::remove(OutputFile2);
+	QFile::remove(CopiedFile1);
+	QFile::remove(CopiedFile2);
 #endif
 }
 
@@ -81,7 +93,7 @@ int TestFilterAvailability()
 	if (NULL == filterFactory.get())
 	{
 		std::stringstream ss;
-		ss << "The AngCachingTest Requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
+		ss << "The CtfCachingTest requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
 		DREAM3D_TEST_THROW_EXCEPTION(ss.str())
 	}
 	return 0;
@@ -105,7 +117,7 @@ int TestCtfReader()
 		{
 			// If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
 			ctfReader = filterFactory->create();		// Create the reader for the first time
-			bool propWasSet = ctfReader->setProperty("InputFile", InputFile1);
+			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				ctfReader->setDataContainerArray(dca);
 			ctfReader->preflight();
@@ -118,6 +130,9 @@ int TestCtfReader()
 			qDebug() << ss;
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
+
+		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases1)
 
 		// Check that the filter read the file
 		bool prop = ctfReader->property("FileWasRead").toBool();
@@ -130,7 +145,7 @@ int TestCtfReader()
 
 		if (NULL != filterFactory.get())
 		{
-			bool propWasSet = ctfReader->setProperty("InputFile", InputFile1);
+			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				ctfReader->setDataContainerArray(dca);
 			ctfReader->preflight();
@@ -143,6 +158,9 @@ int TestCtfReader()
 			qDebug() << ss;
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
+
+		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases1)
 
 		// Check that the filter read from the cache this time, since we're reading from the same file
 		bool prop = ctfReader->property("FileWasRead").toBool();
@@ -155,7 +173,7 @@ int TestCtfReader()
 
 		if (NULL != filterFactory.get())
 		{
-			bool propWasSet = ctfReader->setProperty("InputFile", InputFile2);
+			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				ctfReader->setDataContainerArray(dca);
 			ctfReader->preflight();
@@ -169,6 +187,9 @@ int TestCtfReader()
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
 
+		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
+
 		// Check that the filter read from the file again, since we changed file names
 		bool prop = ctfReader->property("FileWasRead").toBool();
 		DREAM3D_REQUIRE_EQUAL(prop, true)
@@ -178,7 +199,7 @@ int TestCtfReader()
 	{
 		// Change the contents of the file to be read
 		{
-			QFile file(InputFile2);
+			QFile file(CopiedFile2);
 			if (!file.open(QFile::ReadWrite | QFile::Text))
 				DREAM3D_REQUIRE_EQUAL(0, 1)
 				QTextStream out(&file);
@@ -190,7 +211,7 @@ int TestCtfReader()
 
 		if (NULL != filterFactory.get())
 		{
-			bool propWasSet = ctfReader->setProperty("InputFile", InputFile2);
+			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				ctfReader->setDataContainerArray(dca);
 			ctfReader->preflight();
@@ -203,6 +224,9 @@ int TestCtfReader()
 			qDebug() << ss;
 			DREAM3D_REQUIRE_EQUAL(0, 1)
 		}
+
+		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
 
 		// Check that the filter read from the file again, since we changed the contents of the file outside the program
 		bool prop = ctfReader->property("FileWasRead").toBool();
@@ -219,7 +243,7 @@ int TestCtfReader()
 
 			if (NULL != filterFactory.get())
 			{
-				bool propWasSet = ctfReader->setProperty("InputFile", InputFile2);
+				bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
 				DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 					ctfReader->setDataContainerArray(dca);
 				ctfReader->preflight();
@@ -232,6 +256,9 @@ int TestCtfReader()
 				qDebug() << ss;
 				DREAM3D_REQUIRE_EQUAL(0, 1)
 			}
+
+		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
 
 		// Check that the filter read from the file again, since we flushed the cache
 		bool prop = ctfReader->property("FileWasRead").toBool();
@@ -270,10 +297,12 @@ int main(int argc, char** argv)
 	DREAM3D_REGISTER_TEST(loadFilterPlugins());
 	DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
+	DREAM3D_REGISTER_TEST(CopyTestFiles())
+
 	DREAM3D_REGISTER_TEST(TestCtfReader())
 
-		DREAM3D_REGISTER_TEST(RemoveTestFiles())
-		PRINT_TEST_SUMMARY();
+	DREAM3D_REGISTER_TEST(RemoveTestFiles())
+	PRINT_TEST_SUMMARY();
 	return err;
 }
 
