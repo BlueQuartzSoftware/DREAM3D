@@ -20,6 +20,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       FloatVec4Widget
       AxisAngleWidget
       DataArraySelectionWidget
+      MultiDataArraySelectionWidget
       DataArrayInformationDisplayWidget
       DataContainerArrayProxyWidget
       ComparisonSelectionWidget

@@ -909,3 +909,20 @@ int QFilterParametersWriter::writeValue(const QString name, const DataArrayPath&
   m_Prefs->setValue(name, value );
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
+{
+	int err = 0;
+
+	m_Prefs->beginWriteArray(name);
+	for (int i = 0; i < v.size(); ++i) {
+		m_Prefs->setArrayIndex(i);
+		m_Prefs->setValue(DREAM3D::IO::DAPSettingsHeader, v.at(i).serialize("|"));
+	}
+	m_Prefs->endArray();
+
+	return err;
+}

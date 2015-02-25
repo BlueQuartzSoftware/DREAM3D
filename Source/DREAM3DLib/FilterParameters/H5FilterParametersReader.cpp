@@ -975,3 +975,40 @@ DataArrayPath H5FilterParametersReader::readDataArrayPath(const QString& name, D
   }
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> H5FilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
+{
+	QVector<DataArrayPath> vector;
+
+	int size;
+	int err = 0;
+	err = QH5Lite::readScalarDataset(m_CurrentGroupId, name + "/size", size);
+	if (err < 0)
+	{
+		return def;
+	}
+
+	for (int i = 0; i < size; i++)
+	{
+		QString pathStr;
+		int err = 0;
+		err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "/" + i + "/" + DREAM3D::IO::DAPSettingsHeader, pathStr);
+		if (err < 0)
+		{
+			return def;
+		}
+		DataArrayPath path = DataArrayPath::deserialize(pathStr, "|");
+		vector.push_back(path);
+	}
+
+	if (vector.isEmpty())
+	{
+		return def;
+	}
+
+	return vector;
+
+}

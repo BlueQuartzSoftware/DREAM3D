@@ -193,6 +193,30 @@ QString DataArrayPath::serialize(QString delimiter) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataArrayPath DataArrayPath::deserialize(QString str, QString delimiter)
+{
+	if (str.isEmpty())
+	{
+		return DataArrayPath();
+	}
+
+	int start = 0;
+
+	int tokenIndex = str.indexOf(delimiter, start);
+	QString dcName = str.mid(start, tokenIndex);
+	start = tokenIndex+1;
+	tokenIndex = str.indexOf(delimiter, start);
+	QString amName = str.mid(start, tokenIndex-start);
+	start = tokenIndex + 1;
+	QString daName = str.mid(start);
+
+	DataArrayPath path(dcName, amName, daName);
+	return path;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QStringList DataArrayPath::getAsStringList()
 {
   QStringList l;
@@ -293,4 +317,33 @@ bool DataArrayPath::sameDataArray(const DataArrayPath& other) const
 bool DataArrayPath::sameAttributeMatrixPath(const DataArrayPath& other) const
 {
   return(sameDataContainer(other) && sameAttributeMatrix(other));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::validateVector(const QVector<DataArrayPath>& other)
+{
+	QString dcName = "";
+	QString amName = "";
+
+	if (other.isEmpty())
+	{
+		return true;
+	}
+	else
+	{
+		dcName = other.first().getDataContainerName();
+		amName = other.first().getAttributeMatrixName();
+	}
+
+	for (int i = 0; i < other.size(); ++i)
+	{
+		if (other.at(i).getDataContainerName() != dcName || other.at(i).getAttributeMatrixName() != amName)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

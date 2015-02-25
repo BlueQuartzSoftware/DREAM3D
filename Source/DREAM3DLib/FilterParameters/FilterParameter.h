@@ -138,6 +138,7 @@ namespace FilterParameterWidgetType
   const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
   const QString DataContainerReaderWidget("DataContainerReaderWidget");
   const QString DataArraySelectionWidget("DataArraySelectionWidget");
+  const QString MultiDataArraySelectionWidget("MultiDataArraySelectionWidget");
   const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
   const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
   const QString DataBundleSelectionWidget("DataBundleSelectionWidget");
@@ -691,6 +692,33 @@ class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FileSystemFi
   private:
     DataContainerReaderFilterParameter(const DataContainerReaderFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const DataContainerReaderFilterParameter&); // Operator '=' Not Implemented
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterParameter
+{
+public:
+	DREAM3D_SHARED_POINTERS(MultiDataArraySelectionFilterParameter)
+		DREAM3D_STATIC_NEW_MACRO(MultiDataArraySelectionFilterParameter)
+		DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
+
+		static Pointer New(const QString& humanLabel, const QString& propertyName,
+		const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
+		bool advanced = false,
+		int groupIndex = -1);
+
+	virtual ~MultiDataArraySelectionFilterParameter();
+
+		DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
+
+protected:
+	MultiDataArraySelectionFilterParameter();
+
+private:
+	MultiDataArraySelectionFilterParameter(const MultiDataArraySelectionFilterParameter&); // Copy Constructor Not Implemented
+	void operator=(const MultiDataArraySelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
 

@@ -694,3 +694,20 @@ int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
+{
+	int err = 0;
+
+	for (int i = 0; i < v.size(); i++)
+	{
+		DataArrayPath path = v.at(i);
+		QString pathStr = path.serialize("|");
+		err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "/" + i + "/" + DREAM3D::IO::DAPSettingsHeader, pathStr);
+	}
+
+	return err;
+}
+
