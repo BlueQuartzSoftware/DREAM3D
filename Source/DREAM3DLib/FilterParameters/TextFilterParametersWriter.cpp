@@ -414,12 +414,11 @@ int TextFilterParametersWriter::writeValue(const QString name, const DataArrayPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const DataArrayPathBundle& v)
+int TextFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
 	int err = -1;
 
 	return err;
 }
-
 
 

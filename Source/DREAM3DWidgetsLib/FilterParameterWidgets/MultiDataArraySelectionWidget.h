@@ -115,7 +115,7 @@ public:
 protected:
 	void populateComboBoxes();
 	void populateAttributeMatrixList();
-	void populateAttributeArrayList(QMap<QString,bool> map);
+	void populateAttributeArrayList(QVector<DataArrayPath> selectedPaths);
 
 	/**
 	* @brief generateDCAProxy

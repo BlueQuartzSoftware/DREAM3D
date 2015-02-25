@@ -1747,28 +1747,25 @@ DataArrayPath QFilterParametersReader::readDataArrayPath(const QString& name, Da
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPathBundle QFilterParametersReader::readDataArrayPathBundle(const QString& name, DataArrayPathBundle def)
+QVector<DataArrayPath> QFilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
 {
 	BOOST_ASSERT(m_Prefs != NULL);
-	if (m_Prefs->contains(name + "_dc") == false || m_Prefs->contains(name + "_am") == false || m_Prefs->contains(name + "_da") == false)
+
+	QVector<DataArrayPath> vector;
+
+	int size = m_Prefs->beginReadArray(name);
+	if (size <= 0)
 	{
 		return def;
 	}
-	QString defPath("");
-	QString dcName = m_Prefs->value(name + "_dc", defPath).toString();
-	QString amName = m_Prefs->value(name + "_am", defPath).toString();
-	
-	QString daNames = m_Prefs->value(name + "_da", defPath).toString();
-	QMap<QString,bool> daMap = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
 
-	DataArrayPathBundle bundle(dcName, amName, daMap);
+	for (int i = 0; i < size; ++i) {
+		m_Prefs->setArrayIndex(i);
+		QString pathStr = m_Prefs->value(DREAM3D::IO::DAPSettingsHeader).toString();
+		DataArrayPath path = DataArrayPath::deserialize(pathStr, "|");
+		vector.append(path);
+	}
+	m_Prefs->endArray();
 
-	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameMap().isEmpty() == false)
-	{
-		return bundle;
-	}
-	else
-	{
-		return DataArrayPathBundle();
-	}
+	return vector;
 }

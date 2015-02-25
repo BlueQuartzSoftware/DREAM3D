@@ -44,7 +44,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/DataContainers/DataArrayPathBundle.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 typedef struct { int x; int y; int z; } IntVec3_t;
@@ -241,12 +240,6 @@ class DREAM3DLib_EXPORT FilterParameter
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);
-
-	static Pointer New(const QString& humanLabel, const QString& propertyName,
-					   const QString& widgetType, const DataArrayPathBundle& defaultValue,
-					   bool advanced = false,
-					   const QString& units = QString(""),
-					   int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const AxisAngleInput_t& defaultValue,

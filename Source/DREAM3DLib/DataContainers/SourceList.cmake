@@ -27,7 +27,6 @@ set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrixProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.h
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPathBundle.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/IDataContainerBundle.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerBundle.h
 )
@@ -39,7 +38,6 @@ set(DREAM3DLib_DataContainers_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrix.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.cpp
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPathBundle.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerBundle.cpp
 )
 

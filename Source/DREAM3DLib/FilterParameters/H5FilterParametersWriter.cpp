@@ -694,25 +694,19 @@ int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath
   return err;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPathBundle& v)
+int H5FilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
-	QString dcName = v.getDataContainerName();
-	QString amName = v.getAttributeMatrixName();
-	QMap<QString,bool> daMap = v.getDataArrayNameMap();
-
 	int err = 0;
-	err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "_dc", dcName);
 
-	err = 0;
-	err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "_am", amName);
-
-	err = 0;
-	QString daNames = DataArrayPathBundle::serializeDataArrayNames(daMap, '|');
-	err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "_da", daNames);
+	for (int i = 0; i < v.size(); i++)
+	{
+		DataArrayPath path = v.at(i);
+		QString pathStr = path.serialize("|");
+		err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "/" + i + "/" + DREAM3D::IO::DAPSettingsHeader, pathStr);
+	}
 
 	return err;
 }

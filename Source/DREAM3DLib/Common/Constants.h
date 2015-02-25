@@ -88,6 +88,11 @@ namespace DREAM3D
     const QString SupportedTypeList(TypeNames::Int8 + ", " + TypeNames::UInt8 + ", " + TypeNames::Int16 + ", " + TypeNames::UInt16 + ", " + TypeNames::Int32 + ", " + TypeNames::UInt32 + ", " + TypeNames::Int64 + ", " + TypeNames::UInt64 + ", " + TypeNames::Float + ", " + TypeNames::Double);
   }
 
+  namespace IO
+  {
+	  const QString DAPSettingsHeader("Path");
+  }
+
   namespace Defaults
   {
     const DREAM3D_STRING AttributeMatrixName("AttributeMatrix");

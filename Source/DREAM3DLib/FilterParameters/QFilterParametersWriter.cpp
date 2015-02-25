@@ -893,25 +893,19 @@ int QFilterParametersWriter::writeValue(const QString name, const DataArrayPath&
   return err;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, const DataArrayPathBundle& v)
+int QFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
-	QString dcName = v.getDataContainerName();
-	QString amName = v.getAttributeMatrixName();
-	QMap<QString,bool> daMap = v.getDataArrayNameMap();
-
 	int err = 0;
-	m_Prefs->setValue(name + "_dc", dcName);
 
-	err = 0;
-	m_Prefs->setValue(name + "_am", amName);
-
-	err = 0;
-	QString daNames = DataArrayPathBundle::serializeDataArrayNames(daMap, '|');
-	m_Prefs->setValue(name + "_da", daNames);
+	m_Prefs->beginWriteArray(name);
+	for (int i = 0; i < v.size(); ++i) {
+		m_Prefs->setArrayIndex(i);
+		m_Prefs->setValue(DREAM3D::IO::DAPSettingsHeader, v.at(i).serialize("|"));
+	}
+	m_Prefs->endArray();
 
 	return err;
 }

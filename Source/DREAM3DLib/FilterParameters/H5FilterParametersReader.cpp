@@ -976,54 +976,36 @@ DataArrayPath H5FilterParametersReader::readDataArrayPath(const QString& name, D
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPathBundle H5FilterParametersReader::readDataArrayPathBundle(const QString& name, DataArrayPathBundle def)
+QVector<DataArrayPath> H5FilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
 {
-	QString value, dcName, amName, daNames;
-	DataArrayPathBundle bundle;
+	QVector<DataArrayPath> vector;
+
+	int size;
 	int err = 0;
-
-	err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "_dc", value);
-	if (err == 0)
+	err = QH5Lite::readScalarDataset(m_CurrentGroupId, name + "/size", size);
+	if (err < 0)
 	{
-		dcName = value;
-		bundle.setDataContainerName(dcName);
-	}
-	else
-	{
-		dcName = "";
+		return def;
 	}
 
-	err = 0;
-	err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "_am", value);
-	if (err == 0)
+	for (int i = 0; i < size; i++)
 	{
-		amName = value;
-		bundle.setAttributeMatrixName(amName);
-	}
-	else
-	{
-		amName = "";
-	}
-
-	err = 0;
-	err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "_da", value);
-	if (err == 0)
-	{
-		daNames = value;
-		QMap<QString,bool> daMap = DataArrayPathBundle::serializeDataArrayNames(daNames, '|');
-		bundle.setDataArrayNameMap(daMap);
-	}
-	else
-	{
-		daNames = "";
+		QString pathStr;
+		int err = 0;
+		err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "/" + i + "/" + DREAM3D::IO::DAPSettingsHeader, pathStr);
+		if (err < 0)
+		{
+			return def;
+		}
+		DataArrayPath path = DataArrayPath::deserialize(pathStr, "|");
+		vector.push_back(path);
 	}
 
-	if (bundle.getDataContainerName().isEmpty() == false && bundle.getAttributeMatrixName().isEmpty() == false && bundle.getDataArrayNameMap().isEmpty() == false)
+	if (vector.isEmpty())
 	{
-		return bundle;
+		return def;
 	}
-	else
-	{
-		return DataArrayPathBundle();
-	}
+
+	return vector;
+
 }
