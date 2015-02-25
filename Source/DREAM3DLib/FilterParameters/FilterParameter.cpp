@@ -866,7 +866,7 @@ DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::
 // -----------------------------------------------------------------------------
 MultiDataArraySelectionFilterParameter::MultiDataArraySelectionFilterParameter() :
 FilterParameter(),
-m_DefaultFlagValue(Qt::Checked)
+m_DefaultPaths(QVector<DataArrayPath>())
 {}
 
 // -----------------------------------------------------------------------------
@@ -879,14 +879,14 @@ MultiDataArraySelectionFilterParameter::~MultiDataArraySelectionFilterParameter(
 //
 // -----------------------------------------------------------------------------
 MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-	const QString& widgetType, const QVariant& defaultValue,
+	const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
 	bool advanced, int groupIndex)
 {
 	MultiDataArraySelectionFilterParameter::Pointer ptr = MultiDataArraySelectionFilterParameter::New();
 	ptr->setHumanLabel(humanLabel);
 	ptr->setPropertyName(propertyName);
 	ptr->setWidgetType(widgetType);
-	ptr->setDefaultValue(defaultValue);
+	ptr->setDefaultPaths(defaultPaths);
 	ptr->setAdvanced(advanced);
 	ptr->setUnits("");
 	ptr->setGroupIndex(groupIndex);

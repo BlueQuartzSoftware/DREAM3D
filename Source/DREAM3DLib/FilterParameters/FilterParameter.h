@@ -705,14 +705,13 @@ public:
 		DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
 
 		static Pointer New(const QString& humanLabel, const QString& propertyName,
-		const QString& widgetType, const QVariant& defaultValue,
+		const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
 		bool advanced = false,
 		int groupIndex = -1);
 
 	virtual ~MultiDataArraySelectionFilterParameter();
 
-	DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
-		DREAM3D_INSTANCE_PROPERTY(QString, InputFileProperty)
+		DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
 
 protected:
 	MultiDataArraySelectionFilterParameter();

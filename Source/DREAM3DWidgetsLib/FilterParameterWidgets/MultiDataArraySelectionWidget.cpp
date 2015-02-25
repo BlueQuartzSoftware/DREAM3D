@@ -210,9 +210,14 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
 	// If EVERYTHING is empty, then try the default value
 	if (filtDcName.isEmpty() && filtAmName.isEmpty() && curDcName.isEmpty() && curAmName.isEmpty())
 	{
-		DataArrayPath daPath = getFilterParameter()->getDefaultValue().value<DataArrayPath>();
-		dcName = daPath.getDataContainerName();
-		amName = daPath.getAttributeMatrixName();
+		QVector<DataArrayPath> daPaths = dynamic_cast<MultiDataArraySelectionFilterParameter*>(getFilterParameter())->getDefaultPaths();
+		selectedPaths = daPaths;
+
+		if (daPaths.isEmpty() == false)
+		{
+			dcName = daPaths.first().getDataContainerName();
+			amName = daPaths.first().getAttributeMatrixName();
+		}
 	}
 	else
 	{
