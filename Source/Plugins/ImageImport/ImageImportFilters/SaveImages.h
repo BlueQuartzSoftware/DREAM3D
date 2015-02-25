@@ -62,13 +62,17 @@ class SaveImages : public AbstractFilter
 
     virtual ~SaveImages();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+
+		DREAM3D_FILTER_PARAMETER(int, Plane)
+		Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ColorsArrayPath)
     Q_PROPERTY(DataArrayPath ColorsArrayPath READ getColorsArrayPath WRITE setColorsArrayPath)
@@ -133,11 +137,13 @@ class SaveImages : public AbstractFilter
 
     /**
      * @brief saveImage This will do the actual saving of the data to an Image on the disk
-     * @param ipfColors
      * @param slice
-     * @return
+		 * @param dA
+		 * @param dB
+		 * @param dims
+		 * @return
      */
-    int saveImage(uint8_t* ipfColors, size_t slice, size_t* dims);
+		int saveImage(size_t slice, size_t dA, size_t dB, size_t* dims);
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
