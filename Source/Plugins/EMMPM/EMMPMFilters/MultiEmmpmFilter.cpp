@@ -43,7 +43,7 @@ MultiEmmpmFilter::~MultiEmmpmFilter()
 void MultiEmmpmFilter::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters[0] = FilterParameter::New("Select Input AttributeMatrix", "InputAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getInputDataArrayPath());
+  parameters[0] = MultiDataArraySelectionFilterParameter::New("Select Input Data Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), false);
 
 
   // Look for the OutputDataArrayPath and replace with our OutputAttributeMatrixName instead
@@ -69,7 +69,7 @@ void MultiEmmpmFilter::setupFilterParameters()
 void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputAttributeMatrixPath(reader->readDataArrayPath("InputAttributeMatrixPath", getInputAttributeMatrixPath()));
+  setInputDataArrayVector(reader->readDataArrayPathVector("InputDataArrayVector", getInputDataArrayVector()));
   setNumClasses(reader->readValue("NumClasses", getNumClasses()));
   setExchangeEnergy(reader->readValue("ExchangeEnergy", getExchangeEnergy()));
   setHistogramLoops(reader->readValue("HistogramLoops", getHistogramLoops()));
@@ -94,7 +94,7 @@ int MultiEmmpmFilter::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->openFilterGroup(this, index);
 
-  DREAM3D_FILTER_WRITE_PARAMETER(InputAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayVector)
   DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
   DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
   DREAM3D_FILTER_WRITE_PARAMETER(HistogramLoops)
@@ -149,31 +149,35 @@ void MultiEmmpmFilter::dataCheck()
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
-  if(getInputAttributeMatrixPath().getDataContainerName().isEmpty())
+  if (getInputDataArrayVector().isEmpty())
   {
-    setErrorCondition(-62003);
-    QString message = QObject::tr("The DataContainer name is empty for the Input AttributeMatrix Path.");
-    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
-    return;
+	  setErrorCondition(-62003);
+	  QString message = QObject::tr("You must select at least one data array as input for this filter.");
+	  notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+	  return;
   }
 
-  if(getInputAttributeMatrixPath().getAttributeMatrixName().isEmpty())
+  bool vResult = DataArrayPath::validateVector(getInputDataArrayVector());
+
+  if (vResult == false)
   {
-    setErrorCondition(-62004);
-    QString message = QObject::tr("The AttributeMatrix name is empty for the Input AttributeMatrix Path.");
-    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
-    return;
+	  setErrorCondition(-62004);
+	  QString message = QObject::tr("You have selected data arrays from different attribute matrices.  Please select data arrays from the same attribute matrix.");
+	  notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+	  return;
   }
+
+  DataArrayPath inputAMPath = DataArrayPath::getAttributeMatrixPath(getInputDataArrayVector());
 
   // Make sure the Data Container exists
-  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getInputAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName());
   if(NULL == dc.get())
   {
     return;
   }
 
   // Make sure the input AttributeMatrix exists
-  AttributeMatrix::Pointer inAM = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getInputAttributeMatrixPath().getAttributeMatrixName(), 10000);
+  AttributeMatrix::Pointer inAM = dc->getPrereqAttributeMatrix<AbstractFilter>(this, inputAMPath.getAttributeMatrixName(), 10000);
   if(getErrorCondition() < 0)
   {
     return;
@@ -182,21 +186,21 @@ void MultiEmmpmFilter::dataCheck()
 
   // Now create our output attributeMatrix which will contain all of our segmented images
   QVector<size_t> tDims = inAM->getTupleDimensions();
-  AttributeMatrix::Pointer outAM = getDataContainerArray()->getDataContainer(getInputAttributeMatrixPath().getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer outAM = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0)
   {
     return;
   }
 
 
-  // Get the list of the array names from the input attribute matrix
-  QList<QString> arrayNames = inAM->getAttributeArrayNames();
-  DataArrayPath path = getInputAttributeMatrixPath();
-  path.setAttributeMatrixName(getOutputAttributeMatrixName());
+  // Get the list of checked array names from the input data arrays list
+  QList<QString> arrayNames = DataArrayPath::getDataArrayNames(getInputDataArrayVector());
+
+  inputAMPath.setAttributeMatrixName(getOutputAttributeMatrixName());
   for ( int i = 0; i < arrayNames.size(); i++ )
   {
 	QString daName = getOutputArrayPrefix() + arrayNames.at(i);
-	path.setDataArrayName(daName);
+	inputAMPath.setDataArrayName(daName);
 	outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, daName, 0, cDims);
   }
 
@@ -244,8 +248,9 @@ void MultiEmmpmFilter::execute()
   if (getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
-  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(getInputAttributeMatrixPath());
-  QList<QString> arrayNames = am->getAttributeArrayNames();
+  DataArrayPath inputAMPath = DataArrayPath::getAttributeMatrixPath(getInputDataArrayVector());
+
+  QList<QString> arrayNames = DataArrayPath::getDataArrayNames(getInputDataArrayVector());
   QListIterator<QString> iter(arrayNames);
 
   QString msgPrefix = getMessagePrefix();
@@ -253,7 +258,7 @@ void MultiEmmpmFilter::execute()
   // This is the routine that sets up the EM/MPM to segment the image
   while (iter.hasNext())
   {
-    DataArrayPath arrayPath = getInputAttributeMatrixPath();
+    DataArrayPath arrayPath = inputAMPath;
     QString name = iter.next();
 
     arrayPath.setDataArrayName(name);
@@ -267,7 +272,6 @@ void MultiEmmpmFilter::execute()
 
     QString prefix = QObject::tr("%1 (Array %2 of %3)").arg(msgPrefix).arg(i).arg(arrayNames.size());
     setMessagePrefix(prefix);
-
     if ( i == 2 && getUsePreviousMuSigma())
     {
       setEmmpmInitType(EMMPM_ManualInit);
@@ -342,6 +346,7 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
   if (true == copyFilterParameters)
   {
     DREAM3D_COPY_INSTANCEVAR(InputAttributeMatrixPath)
+	DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
     DREAM3D_COPY_INSTANCEVAR(NumClasses)
     DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
     DREAM3D_COPY_INSTANCEVAR(HistogramLoops)

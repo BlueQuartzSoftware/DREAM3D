@@ -37,6 +37,9 @@ public:
 	DREAM3D_FILTER_PARAMETER(DataArrayPath, InputAttributeMatrixPath)
 	Q_PROPERTY(DataArrayPath InputAttributeMatrixPath READ getInputAttributeMatrixPath WRITE setInputAttributeMatrixPath)
 
+	DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
+	Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
+
 	DREAM3D_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
 	Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
 
