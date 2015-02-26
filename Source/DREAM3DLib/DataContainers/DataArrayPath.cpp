@@ -264,6 +264,35 @@ bool DataArrayPath::isValid() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QList<QString> DataArrayPath::getDataArrayNames(QVector<DataArrayPath> &paths)
+{
+	QList<QString> arrayNames;
+	for (int i = 0; i < paths.count(); i++)
+	{
+		arrayNames.push_back(paths.at(i).getDataArrayName());
+	}
+
+	return arrayNames;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath DataArrayPath::getAttributeMatrixPath(QVector<DataArrayPath> &paths)
+{
+	if (paths.isEmpty())
+	{
+		return DataArrayPath();
+	}
+	else
+	{
+		return DataArrayPath(paths.first().getDataContainerName(), paths.first().getAttributeMatrixName(), "");
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QStringList DataArrayPath::split(QString NOT_USED) const
 {
   QStringList l;

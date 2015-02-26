@@ -192,6 +192,19 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
 	*/
 	static bool validateVector(const QVector<DataArrayPath>& other);
 
+	/**
+	* @brief Gets the data array names from a QVector of DataArrayPaths.
+	* @return Returns the data array names from a QVector of DataArrayPaths, in a QList.
+	*/
+	static QList<QString> getDataArrayNames(QVector<DataArrayPath> &paths);
+
+	/**
+	* @brief Gets the attribute matrix path from a QVector of DataArrayPaths.
+	* @return Returns the attribute matrix path as a DataArrayPath from a QVector 
+	* of DataArrayPaths.
+	*/
+	static DataArrayPath getAttributeMatrixPath(QVector<DataArrayPath> &paths);
+
 
   protected:
 
