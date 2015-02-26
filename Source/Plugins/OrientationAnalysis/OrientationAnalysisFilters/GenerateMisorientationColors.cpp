@@ -47,7 +47,7 @@
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 
 class GenerateMisorientationColorsImpl
@@ -375,14 +375,14 @@ AbstractFilter::Pointer GenerateMisorientationColors::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString GenerateMisorientationColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateMisorientationColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------

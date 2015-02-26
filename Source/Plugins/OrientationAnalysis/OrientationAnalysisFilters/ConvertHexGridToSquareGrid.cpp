@@ -507,7 +507,7 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ConvertHexGridToSquareGrid::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

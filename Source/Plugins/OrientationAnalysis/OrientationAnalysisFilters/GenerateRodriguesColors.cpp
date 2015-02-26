@@ -54,7 +54,7 @@
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 
 // -----------------------------------------------------------------------------
@@ -274,14 +274,14 @@ AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------

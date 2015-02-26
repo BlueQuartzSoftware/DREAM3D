@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -243,14 +243,14 @@ AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------
