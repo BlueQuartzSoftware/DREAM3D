@@ -30,20 +30,24 @@ function(AddITKCopyInstallRules)
     # Get the Actual Library Path and create Install and copy rules
     set(LibPath "")
     set(LibType "STATIC_LIBRARY")
+    set(LibTargetDefined "0")
     if(TARGET ${Z_LIBNAME})
+      get_property(LibTargetDefined TARGET ${Z_LIBNAME} PROPERTY IMPORTED_LOCATION_${TYPE} DEFINED)
+      #message(STATUS "TARGET ${Z_LIBNAME} PROPERTY IMPORTED_LOCATION_${TYPE} DEFINED ${d}")
       GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} IMPORTED_LOCATION_${TYPE})
       GET_TARGET_PROPERTY(LibType ${Z_LIBNAME} TYPE)
     endif()
+
     if(0)
-    message(STATUS "Z_LIBNAME: ${Z_LIBNAME}")
-    message(STATUS "Z_TYPES: ${Z_TYPES}")
-    message(STATUS "${Z_LIBNAME}: ${LibPath}")
-    message(STATUS "BTYPE: ${BTYPE}")
-    message(STATUS "LibType: ${LibType}")
+      message(STATUS "Z_LIBNAME: ${Z_LIBNAME}")
+      message(STATUS "Z_TYPES: ${Z_TYPES}")
+      message(STATUS "${Z_LIBNAME}: ${LibPath}")
+      message(STATUS "BTYPE: ${BTYPE}")
+      message(STATUS "LibType: ${LibType}")
     endif()
 
     # Only do this for the DLL files. Static libraries are not needed
-    if(${LibType} STREQUAL "SHARED_LIBRARY")
+    if(${LibType} STREQUAL "SHARED_LIBRARY" AND ${LibTargetDefined})
 
       install(FILES ${LibPath}
         DESTINATION "${Z_INSTALL_DIR}"
@@ -51,7 +55,7 @@ function(AddITKCopyInstallRules)
         COMPONENT Applications)
 
       if(NOT TARGET ZZ_${Z_LIBNAME}_DLL_${TYPE}-Copy)
-        message(STATUS "Creating Install Rule: ${LibPath}")
+        message(STATUS "Creating Copy Rule Lib:${Z_LIBNAME} Location:${LibPath}")
         ADD_CUSTOM_TARGET(ZZ_${Z_LIBNAME}_DLL_${TYPE}-Copy ALL
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LibPath}
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
