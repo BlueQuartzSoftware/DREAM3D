@@ -219,8 +219,6 @@ int EnsembleInfoReader::readFile()
 
   QFileInfo fi(getInputFile());
 
-
-
   int numphases = 0;
 
   QSettings settings(getInputFile(), QSettings::IniFormat); // The .ini or .txt input file
@@ -236,24 +234,45 @@ int EnsembleInfoReader::readFile()
     return -1;
   }
 
+  // Figure out if we are reading contiguous groups
+  std::vector<bool> visited(numphases, false);
+  visited[0] = true; //this is DREAM3D's internal, which is always visited.
+
+
   QVector<size_t> tDims(1, numphases + 1);
   cellensembleAttrMat->resizeAttributeArrays(tDims);
   updateEnsembleInstancePointers();
   for(qint32 index = 1; index < numphases + 1; index++)
   {
-
     QString group = QString::number(index);
     settings.beginGroup(group);
 
-    QString xtalString = settings.value(DREAM3D::StringConstants::CrystalStructure, "UnknownCrystalStructure").toString();
-    QString phaseTypeString = settings.value(DREAM3D::StringConstants::PhaseType, DREAM3D::PhaseType::UnknownPhase).toString();
+    QString xtalString = settings.value(DREAM3D::StringConstants::CrystalStructure, "MissingCrystalStructure").toString();
+    QString phaseTypeString = settings.value(DREAM3D::StringConstants::PhaseType, "MissingPhaseType").toString();
+    // Checl to make sure the user has something for each of the Crystal Structure and Phase Type
+    if(xtalString.compare("MissingCrystalStructure") == 0)
+    {
+      QString ss = QObject::tr("Missing crystal structure name for phase '%1'").arg(group);
+      setErrorCondition(-10008);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
 
+    if(phaseTypeString.compare("MissingPhaseType") == 0)
+    {
+      QString ss = QObject::tr("Missing phase type for phase '%1'").arg(group);
+      setErrorCondition(-10009);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
 
+    // Past that sanity check, so we have values, lets parse them
     QStringList values;
     values << xtalString << phaseTypeString;
 
     ensembleLookup(values); // Lookup number for the crystal number string and the phase type string read from the file
 
+    // Check to see if the Crystal Structure string was valid
     if (m_crystruct == Ebsd::CrystalStructure::UnknownCrystalStructure) // The crystal structure name read from the file was not found in the lookup table
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(xtalString);
@@ -266,6 +285,7 @@ int EnsembleInfoReader::readFile()
       m_CrystalStructures[index] = m_crystruct;
     }
 
+    // now check to see if the Phase type string was valid.
     if (m_ptype == DREAM3D::PhaseType::UnknownPhaseType)
     {
       QString ss = QObject::tr("Incorrect phase type name '%1'").arg(phaseTypeString); // The phase type name read from the file was not found in the lookup table
@@ -277,7 +297,23 @@ int EnsembleInfoReader::readFile()
     {
       m_PhaseTypes[index] = m_ptype;
     }
+
+    visited[index] = true;
+    // Close up this group
     settings.endGroup();
+  }
+
+  //Make sure we visited all the groups.
+  for(std::vector<bool>::size_type i = 0; i < visited.size(); i++)
+  {
+    if(visited[i] == false)
+    {
+      QString ss = QObject::tr("Phase '%1' did not have entries in the file. Did you number the phases starting at 1 and did not skip any phases?").arg(i); // The phase type name read from the file was not found in the lookup table
+      setErrorCondition(-10005);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
