@@ -195,8 +195,9 @@ void MultiEmmpmFilter::dataCheck()
   path.setAttributeMatrixName(getOutputAttributeMatrixName());
   for ( int i = 0; i < arrayNames.size(); i++ )
   {
-    path.setDataArrayName(arrayNames.at(i));
-    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, arrayNames.at(i), 0, cDims);
+	QString daName = getOutputArrayPrefix() + arrayNames.at(i);
+	path.setDataArrayName(daName);
+	outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, daName, 0, cDims);
   }
 
   // The EM/MPM Library has a hard coded MAX Classes of 16
