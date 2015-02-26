@@ -260,6 +260,8 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
     populateAttributeArrayList(selectedPaths);
   }
   if (didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
+
+  on_attributeArraysWidget_itemChanged(new QListWidgetItem());		// Placeholder used to call the function
 }
 
 // -----------------------------------------------------------------------------
@@ -419,6 +421,43 @@ void MultiDataArraySelectionWidget::populateAttributeArrayList(QVector<DataArray
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::on_attributeArraysWidget_itemChanged(QListWidgetItem* item)
 {
+	bool checkedStateExists = false;
+	int checkedStateCount = 0;
+	bool uncheckedStateExists = false;
+	int uncheckedStateCount = 0;
+
+	for (int i = 0; i < attributeArraysWidget->count(); i++)
+	{
+		if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
+		{
+			checkedStateExists = true;
+			checkedStateCount++;
+		}
+		else
+		{
+			uncheckedStateExists = true;
+		}
+	}
+
+	if (checkedStateExists == true && uncheckedStateExists == true)
+	{
+		selectCheckBox->blockSignals(true);
+		selectCheckBox->setCheckState(Qt::PartiallyChecked);
+		selectCheckBox->blockSignals(false);
+	}
+	else if (checkedStateCount == attributeArraysWidget->count())
+	{
+		selectCheckBox->blockSignals(true);
+		selectCheckBox->setCheckState(Qt::Checked);
+		selectCheckBox->blockSignals(false);
+	}
+	else
+	{
+		selectCheckBox->blockSignals(true);
+		selectCheckBox->setCheckState(Qt::Unchecked);
+		selectCheckBox->blockSignals(false);
+	}
+
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
@@ -528,15 +567,26 @@ void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
 
 	for (int i = 0; i < attributeArraysWidget->count(); i++)
 	{
-		Qt::CheckState checkState = (Qt::CheckState)state;
-		attributeArraysWidget->item(i)->setCheckState(checkState);
+		if (state == Qt::Checked)
+		{
+			attributeArraysWidget->item(i)->setCheckState(Qt::Checked);
+		}
+		else if (state == Qt::Unchecked)
+		{
+			attributeArraysWidget->item(i)->setCheckState(Qt::Unchecked);
+		}
+		else
+		{
+			// Skip the "Partially Checked" check state when merely toggling the "Select All/Deselect All" checkbox
+			selectCheckBox->setCheckState(Qt::Checked);
+		}
 	}
 
 	attributeArraysWidget->blockSignals(false);
 
-	//m_DidCausePreflight = true;
-	//emit parametersChanged();
-	//m_DidCausePreflight = false;
+	m_DidCausePreflight = true;
+	emit parametersChanged();
+	m_DidCausePreflight = false;
 }
 
 
