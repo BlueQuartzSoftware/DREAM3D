@@ -519,3 +519,25 @@ void MultiDataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* f
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
+{
+	attributeArraysWidget->blockSignals(true);
+
+	for (int i = 0; i < attributeArraysWidget->count(); i++)
+	{
+		Qt::CheckState checkState = (Qt::CheckState)state;
+		attributeArraysWidget->item(i)->setCheckState(checkState);
+	}
+
+	attributeArraysWidget->blockSignals(false);
+
+	//m_DidCausePreflight = true;
+	//emit parametersChanged();
+	//m_DidCausePreflight = false;
+}
+
+
+

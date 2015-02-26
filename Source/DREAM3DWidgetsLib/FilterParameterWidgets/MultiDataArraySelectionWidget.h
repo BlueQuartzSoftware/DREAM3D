@@ -111,7 +111,6 @@ public:
 	void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
 
 
-
 protected:
 	void populateComboBoxes();
 	void populateAttributeMatrixList();
@@ -122,6 +121,10 @@ protected:
 	* @return
 	*/
 	DataContainerArrayProxy generateDCAProxy();
+
+protected slots:
+	void on_selectCheckBox_stateChanged(int state);
+
 
 signals:
 	void errorSettingFilterParameter(const QString& msg);
