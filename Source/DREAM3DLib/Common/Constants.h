@@ -90,7 +90,7 @@ namespace DREAM3D
 
   namespace IO
   {
-	  const QString DAPSettingsHeader("Path");
+    const QString DAPSettingsHeader("Path");
   }
 
   namespace Defaults
@@ -542,6 +542,7 @@ namespace DREAM3D
     const DREAM3D_STRING Transformation("Transformation");
     const DREAM3D_STRING Matrix("Matrix");
     const DREAM3D_STRING Boundary("Boundary");
+    const DREAM3D_STRING UnknownPhase("UnknownPhaseType");
   }
 
   namespace AlignmentMethod
