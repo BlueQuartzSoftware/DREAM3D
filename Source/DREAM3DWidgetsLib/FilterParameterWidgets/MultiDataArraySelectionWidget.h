@@ -98,6 +98,12 @@ public:
 	*/
 	void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
 
+	/**
+	* @brief This method updates the Select All checkbox, based on what items are currently
+	* selected in the list.
+	*/
+	void updateSelectAllCheckbox();
+
 
 	public slots:
 	void beforePreflight();

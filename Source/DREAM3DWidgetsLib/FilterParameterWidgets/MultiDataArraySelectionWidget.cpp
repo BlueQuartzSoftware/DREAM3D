@@ -261,7 +261,7 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
   }
   if (didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
-  on_attributeArraysWidget_itemChanged(new QListWidgetItem());		// Placeholder used to call the function
+  updateSelectAllCheckbox();
 }
 
 // -----------------------------------------------------------------------------
@@ -421,42 +421,7 @@ void MultiDataArraySelectionWidget::populateAttributeArrayList(QVector<DataArray
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::on_attributeArraysWidget_itemChanged(QListWidgetItem* item)
 {
-	bool checkedStateExists = false;
-	int checkedStateCount = 0;
-	bool uncheckedStateExists = false;
-	int uncheckedStateCount = 0;
-
-	for (int i = 0; i < attributeArraysWidget->count(); i++)
-	{
-		if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
-		{
-			checkedStateExists = true;
-			checkedStateCount++;
-		}
-		else
-		{
-			uncheckedStateExists = true;
-		}
-	}
-
-	if (checkedStateExists == true && uncheckedStateExists == true)
-	{
-		selectCheckBox->blockSignals(true);
-		selectCheckBox->setCheckState(Qt::PartiallyChecked);
-		selectCheckBox->blockSignals(false);
-	}
-	else if (checkedStateCount == attributeArraysWidget->count())
-	{
-		selectCheckBox->blockSignals(true);
-		selectCheckBox->setCheckState(Qt::Checked);
-		selectCheckBox->blockSignals(false);
-	}
-	else
-	{
-		selectCheckBox->blockSignals(true);
-		selectCheckBox->setCheckState(Qt::Unchecked);
-		selectCheckBox->blockSignals(false);
-	}
+  updateSelectAllCheckbox();
 
   m_DidCausePreflight = true;
   emit parametersChanged();
@@ -588,6 +553,52 @@ void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
 	emit parametersChanged();
 	m_DidCausePreflight = false;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MultiDataArraySelectionWidget::updateSelectAllCheckbox()
+{
+	bool checkedStateExists = false;
+	int checkedStateCount = 0;
+	bool uncheckedStateExists = false;
+	int uncheckedStateCount = 0;
+
+	for (int i = 0; i < attributeArraysWidget->count(); i++)
+	{
+		if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
+		{
+			checkedStateExists = true;
+			checkedStateCount++;
+		}
+		else
+		{
+			uncheckedStateExists = true;
+		}
+	}
+
+	if (checkedStateExists == true && uncheckedStateExists == true)
+	{
+		selectCheckBox->blockSignals(true);
+		selectCheckBox->setCheckState(Qt::PartiallyChecked);
+		selectCheckBox->blockSignals(false);
+	}
+	else if (checkedStateCount == attributeArraysWidget->count())
+	{
+		selectCheckBox->blockSignals(true);
+		selectCheckBox->setCheckState(Qt::Checked);
+		selectCheckBox->blockSignals(false);
+	}
+	else
+	{
+		selectCheckBox->blockSignals(true);
+		selectCheckBox->setCheckState(Qt::Unchecked);
+		selectCheckBox->blockSignals(false);
+	}
+}
+
+
+
 
 
 
