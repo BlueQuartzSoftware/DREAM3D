@@ -141,7 +141,7 @@ function UpdateLibraryDependencies()
 	  local i
 	  
 	  libFile="${1}"
-	  libOutFile="${TmpDir}/otool-library.out"
+	  libOutFile="${TmpDir}/@osx_app_name@-library.out"
 	  otool -L "${1}" > "${libOutFile}"
 	  i=0
 	  exec 10<"${libOutFile}"
@@ -270,7 +270,7 @@ function UpdateExecutableDependencies()
 # -----------------------------------------------------------------------------
 #  Script really starts here
 # -----------------------------------------------------------------------------
-tmpFile="${TmpDir}/otool.out"
+tmpFile="${TmpDir}/@osx_app_name@.out"
 otool -L "${ApplicationExe}" > "${tmpFile}"
 
 i=0
