@@ -699,15 +699,16 @@ int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath
 // -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
-	int err = 0;
-
-	for (int i = 0; i < v.size(); i++)
-	{
-		DataArrayPath path = v.at(i);
-		QString pathStr = path.serialize("|");
-		err = QH5Lite::writeStringDataset(m_CurrentGroupId, name + "/" + i + "/" + DREAM3D::IO::DAPSettingsHeader, pathStr);
-	}
-
-	return err;
+  int err = 0;
+  QString pathStr;
+  QTextStream ss(&pathStr);
+  char sep = '\n'; // Use a new line to separate each record.
+  for (int i = 0; i < v.size(); i++)
+  {
+    DataArrayPath path = v.at(i);
+    ss << path.serialize("|") << sep;
+  }
+  err = QH5Lite::writeStringDataset(m_CurrentGroupId, name, pathStr);
+  return err;
 }
 

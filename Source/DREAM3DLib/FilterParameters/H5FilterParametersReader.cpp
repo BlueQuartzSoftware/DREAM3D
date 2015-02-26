@@ -915,7 +915,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
     HDF5ScopedGroupSentinel sentinal_dc(&dcGid, false);
     DataContainerProxy dcProxy;
     dcProxy.name = dcName;
-	dcProxy.flag = Qt::Checked;
+  dcProxy.flag = Qt::Checked;
     // Loop over the attribute Matrices
     QList<QString> amNames;
     err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, amNames);
@@ -929,7 +929,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
       hid_t amGid = QH5Utilities::openHDF5Object(dcGid, amName);
       HDF5ScopedGroupSentinel sentinal_am(&amGid, false);
       AttributeMatrixProxy amProxy(amName, true);
-	  amProxy.flag = Qt::Checked;
+    amProxy.flag = Qt::Checked;
       QString data; // Output will be read into this object
       err = QH5Lite::readStringDataset(amGid, "Arrays", data);
       if (err < 0)
@@ -941,7 +941,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
       for(int k = 0; k < arrayNames.size(); k++)
       {
         DataArrayProxy daProxy(path, arrayNames.at(k), true);
-		daProxy.flag = Qt::Checked;
+    daProxy.flag = Qt::Checked;
         amProxy.dataArrays.insert(arrayNames.at(k), daProxy);
       }
       dcProxy.attributeMatricies.insert(amName, amProxy);
@@ -981,34 +981,25 @@ DataArrayPath H5FilterParametersReader::readDataArrayPath(const QString& name, D
 // -----------------------------------------------------------------------------
 QVector<DataArrayPath> H5FilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
 {
-	QVector<DataArrayPath> vector;
+  QVector<DataArrayPath> defPaths;
 
-	int size;
-	int err = 0;
-	err = QH5Lite::readScalarDataset(m_CurrentGroupId, name + "/size", size);
-	if (err < 0)
-	{
-		return def;
-	}
+  int err = 0;
+  QString pathStr;
+  err = QH5Lite::readStringDataset(m_CurrentGroupId, name, pathStr);
+  if(err < 0) { return def; }
+  QStringList tokens = pathStr.split('\n');
 
-	for (int i = 0; i < size; i++)
-	{
-		QString pathStr;
-		int err = 0;
-		err = QH5Lite::readStringDataset(m_CurrentGroupId, name + "/" + i + "/" + DREAM3D::IO::DAPSettingsHeader, pathStr);
-		if (err < 0)
-		{
-			return def;
-		}
-		DataArrayPath path = DataArrayPath::deserialize(pathStr, "|");
-		vector.push_back(path);
-	}
+  for (int i = 0; i < tokens.size(); i++)
+  {
+    QString str = tokens.at(i);
+    DataArrayPath path = DataArrayPath::deserialize(str, "|");
+    defPaths.push_back(path);
+  }
 
-	if (vector.isEmpty())
-	{
-		return def;
-	}
+  if (defPaths.isEmpty())
+  {
+    return def;
+  }
 
-	return vector;
-
+  return defPaths;
 }
