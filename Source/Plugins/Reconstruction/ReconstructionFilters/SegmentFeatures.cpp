@@ -183,7 +183,7 @@ void SegmentFeatures::execute()
               {
                 size = voxelslist.size();
                 voxelslist.resize(size + initialVoxelsListSize);
-                for(qint32 j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
+                for(std::vector<int64_t>::size_type j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
               }
             }
           }
