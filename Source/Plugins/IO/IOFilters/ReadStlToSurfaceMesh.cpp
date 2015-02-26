@@ -365,7 +365,7 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   //Create array to hold unique node numbers
   Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, "uniqueIds");
   int64_t* uniqueIds = uniqueIdsPtr->getPointer(0);
-  for(size_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes; i++)
   {
     uniqueIds[i] = i;
   }
