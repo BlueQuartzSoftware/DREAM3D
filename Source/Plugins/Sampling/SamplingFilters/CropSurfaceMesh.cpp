@@ -137,6 +137,7 @@ void CropSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reade
 int CropSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixPath)

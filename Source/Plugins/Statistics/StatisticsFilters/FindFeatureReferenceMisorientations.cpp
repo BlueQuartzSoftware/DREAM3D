@@ -139,6 +139,7 @@ void FindFeatureReferenceMisorientations::readFilterParameters(AbstractFilterPar
 int FindFeatureReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureReferenceMisorientationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureAvgMisorientationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)

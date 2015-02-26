@@ -120,6 +120,7 @@ void MoveData::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int MoveData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   int val = getWhatToMove();
   writer->writeValue("WhatToMove", val );
   QString val2 = getDataContainerDestination();

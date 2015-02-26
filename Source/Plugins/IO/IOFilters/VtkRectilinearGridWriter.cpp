@@ -94,6 +94,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)

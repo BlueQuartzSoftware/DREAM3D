@@ -329,6 +329,7 @@ void FindEuclideanDistMap::readFilterParameters(AbstractFilterParametersReader* 
 int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NearestNeighborsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(QPEuclideanDistancesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(TJEuclideanDistancesArrayName)

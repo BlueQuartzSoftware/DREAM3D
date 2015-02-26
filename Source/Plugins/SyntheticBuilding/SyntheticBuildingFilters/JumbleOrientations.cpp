@@ -109,6 +109,7 @@ void JumbleOrientations::readFilterParameters(AbstractFilterParametersReader* re
 int JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)

@@ -119,6 +119,7 @@ void InputCrystalCompliances::readFilterParameters(AbstractFilterParametersReade
 int InputCrystalCompliances::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(Compliances)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalCompliancesArrayName)

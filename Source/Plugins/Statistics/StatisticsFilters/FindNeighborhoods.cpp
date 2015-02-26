@@ -105,6 +105,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodListArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)

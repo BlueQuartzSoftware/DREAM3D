@@ -84,6 +84,7 @@ void CopyAttributeArray::readFilterParameters(AbstractFilterParametersReader* re
 int CopyAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NewArrayName)
   writer->closeFilterGroup();

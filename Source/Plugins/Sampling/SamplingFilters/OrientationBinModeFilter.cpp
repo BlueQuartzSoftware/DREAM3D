@@ -116,6 +116,7 @@ void OrientationBinModeFilter::readFilterParameters(AbstractFilterParametersRead
 int OrientationBinModeFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)

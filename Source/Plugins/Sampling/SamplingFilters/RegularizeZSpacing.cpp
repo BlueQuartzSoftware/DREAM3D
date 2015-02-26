@@ -97,6 +97,7 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(NewZRes)

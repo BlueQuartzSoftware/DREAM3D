@@ -237,6 +237,8 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
 int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+
 
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedMultiArrayPaths)

@@ -104,6 +104,7 @@ void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader,
 int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(AlignmentShiftFileName)
   DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)

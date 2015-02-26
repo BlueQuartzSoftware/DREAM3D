@@ -171,6 +171,7 @@ void FindOrientationFieldCurl::readFilterParameters(AbstractFilterParametersRead
 int FindOrientationFieldCurl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(DislocationTensorsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)

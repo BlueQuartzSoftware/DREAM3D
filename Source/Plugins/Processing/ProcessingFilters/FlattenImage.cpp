@@ -149,6 +149,7 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FlatImageDataArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FlattenMethod)

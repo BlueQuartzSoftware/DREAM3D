@@ -127,6 +127,7 @@ void INLWriter::readFilterParameters(AbstractFilterParametersReader* reader, int
 int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)

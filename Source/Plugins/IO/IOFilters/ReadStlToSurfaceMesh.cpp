@@ -161,6 +161,7 @@ void ReadStlToSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* 
 int ReadStlToSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(StlFilePath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)

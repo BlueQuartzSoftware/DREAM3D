@@ -153,6 +153,7 @@ void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* re
 int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(Origin)
   DREAM3D_FILTER_WRITE_PARAMETER(ApplyToVoxelVolume)
   DREAM3D_FILTER_WRITE_PARAMETER(ApplyToSurfaceMesh)

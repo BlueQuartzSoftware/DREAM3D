@@ -220,6 +220,7 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
   DREAM3D_FILTER_WRITE_PARAMETER(Lambda)
   DREAM3D_FILTER_WRITE_PARAMETER(TripleLineLambda)

@@ -108,6 +108,8 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
 int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+
 
   DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayPath)
     DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)

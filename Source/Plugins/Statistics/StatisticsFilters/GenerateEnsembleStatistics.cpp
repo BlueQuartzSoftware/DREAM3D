@@ -277,6 +277,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CalculateMorphologicalStats)
   DREAM3D_FILTER_WRITE_PARAMETER(IncludeRadialDistFunc)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)

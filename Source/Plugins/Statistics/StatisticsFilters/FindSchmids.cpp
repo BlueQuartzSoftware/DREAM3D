@@ -153,6 +153,7 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
 int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(LambdasArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(PhisArrayName)

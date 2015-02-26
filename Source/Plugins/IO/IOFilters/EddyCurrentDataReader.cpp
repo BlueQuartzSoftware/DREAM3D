@@ -108,6 +108,7 @@ void EddyCurrentDataReader::readFilterParameters(AbstractFilterParametersReader*
 int EddyCurrentDataReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(MetaDataAttributeMatrixName)
       DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
