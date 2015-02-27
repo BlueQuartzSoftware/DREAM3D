@@ -64,34 +64,35 @@ class ExportData : public AbstractFilter
 
     virtual ~ExportData();
 
-		DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-		Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-		DREAM3D_FILTER_PARAMETER(QString, OutputPath)
-		Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-		DREAM3D_FILTER_PARAMETER(int, Delimeter)
-		Q_PROPERTY(int Delimeter READ getDelimeter WRITE setDelimeter)
+    DREAM3D_FILTER_PARAMETER(int, Delimeter)
+    Q_PROPERTY(int Delimeter READ getDelimeter WRITE setDelimeter)
 
-		DREAM3D_FILTER_PARAMETER(QString, FileExtension)
-		Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
+    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
 
-		DREAM3D_FILTER_PARAMETER(int, MaxValPerLine)
-		Q_PROPERTY(int MaxValPerLine READ getMaxValPerLine WRITE setMaxValPerLine)
+    DREAM3D_FILTER_PARAMETER(int, MaxValPerLine)
+    Q_PROPERTY(int MaxValPerLine READ getMaxValPerLine WRITE setMaxValPerLine)
 
-		enum DelimeterType
-		{
-			Comma = 0,
-			Semicolon = 1,
-			Space = 2,
-			Colon = 3
-		};
+    enum DelimeterType
+    {
+      Comma = 0,
+      Semicolon = 1,
+      Space = 2,
+      Colon = 3,
+      Tab = 4
+    };
 
-		/**
-		* @brief This returns the group that the filter belongs to. You can select
-		* a different group if you want. The string returned here will be displayed
-		* in the GUI for the filter
-		*/
+    /**
+    * @brief This returns the group that the filter belongs to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -152,7 +153,10 @@ class ExportData : public AbstractFilter
     void dataCheck();
 
   private:
-		QString lookupDelimeter();
+    char lookupDelimeter();
+
+    IDataArray::WeakPointer m_SelectedArrayPtr;
+
     ExportData(const ExportData&); // Copy Constructor Not Implemented
     void operator=(const ExportData&); // Operator '=' Not Implemented
 };

@@ -35,15 +35,15 @@ namespace UnitTest
     namespace EnsembleInfoReaderTest
   {
     const QString TestFileIni("@TEST_TEMP_DIR@/EnsembleInfoTest.ini");
-	const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
-	const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
+  const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
+  const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
   }
 
   namespace ExportDataTest
   {
-    const QString TestFile("@TEST_TEMP_DIR@");
+    const QString TestTempDir("@TEST_TEMP_DIR@");
   }
-  
+
   namespace VtkGrainIdIOTest
   {
     const QString TestFile("@TEST_TEMP_DIR@/VtkGrainIdIOTest.vtk");

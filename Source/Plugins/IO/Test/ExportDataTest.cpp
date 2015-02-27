@@ -59,9 +59,9 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-	QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportArray.txt");
-	QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportTest.dream3d");
-	QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportTest.xdmf");
+//  QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportArray.txt");
+//  QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportTest.dream3d");
+//  QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportTest.xdmf");
 #endif
 }
 
@@ -89,42 +89,42 @@ int TestFilterAvailability()
 int TestExportDataWriter()
 {
 
-	DataContainerArray::Pointer dca = DataContainerArray::New();
+  DataContainerArray::Pointer dca = DataContainerArray::New();
 
-	// A DataContainer that mimics some real data
-	DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::DataContainerName);
-	dca->addDataContainer(m);
+  // A DataContainer that mimics some real data
+  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+  dca->addDataContainer(m);
 
-	AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), DREAM3D::Defaults::AttributeMatrixName, DREAM3D::AttributeMatrixType::Generic);
-	m->addAttributeMatrix(DREAM3D::Defaults::AttributeMatrixName, attrMatrix);
-	int size = 20;
-	Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::CellPhases);
-	for (int i = 0; i < size; ++i) // create an array with values 20 to 39
-	{
-		intArray->setValue(i, i + 20);
-	}
-	attrMatrix->addAttributeArray(DREAM3D::CellData::CellPhases, intArray);
+  AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), DREAM3D::Defaults::AttributeMatrixName, DREAM3D::AttributeMatrixType::Generic);
+  m->addAttributeMatrix(DREAM3D::Defaults::AttributeMatrixName, attrMatrix);
+  int size = 20;
+  Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::CellPhases);
+  for (int i = 0; i < size; ++i) // create an array with values 20 to 39
+  {
+    intArray->setValue(i, i + 20);
+  }
+  attrMatrix->addAttributeArray(DREAM3D::CellData::CellPhases, intArray);
 
-	Observer obs;
-	// Send progress messages from PipelineBuilder to this object for display
+  Observer obs;
+  // Send progress messages from PipelineBuilder to this object for display
 
-	DataContainerWriter::Pointer writer = DataContainerWriter::New();
-	writer->setDataContainerArray(dca);
-	QString exportArrayFile = UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportTest.dream3d" ;
-	writer->setOutputFile(exportArrayFile);
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setDataContainerArray(dca);
+  QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.dream3d" ;
+  writer->setOutputFile(exportArrayFile);
 
-	// Since we are NOT using the Pipeline Object to execute the filter but instead we are directly executing the filter
-	// and we want to know about any error/warning/progress messages we need to connect the filter to our Observer object
-	// manually. Normally the Pipeline Object would do this for us. We are NOT using a Pipeline Object because using the
-	// Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
-	// entire purpose of the test.
-	QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-		&obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+  // Since we are NOT using the Pipeline Object to execute the filter but instead we are directly executing the filter
+  // and we want to know about any error/warning/progress messages we need to connect the filter to our Observer object
+  // manually. Normally the Pipeline Object would do this for us. We are NOT using a Pipeline Object because using the
+  // Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
+  // entire purpose of the test.
+  QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+    &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
 
-	writer->execute();
-	int err = writer->getErrorCondition();
+  writer->execute();
+  int err = writer->getErrorCondition();
 
-	DREAM3D_REQUIRE_EQUAL(err, 0);
+  DREAM3D_REQUIRE_EQUAL(err, 0);
 
   // Now instantiate the EnsembleInfoReader Filter from the FilterManager
   QString filtName = "ExportData";
@@ -139,30 +139,30 @@ int TestExportDataWriter()
     QVariant var;
     int err = 0;
     bool propWasSet;
-		filter->setDataContainerArray(dca);
+    filter->setDataContainerArray(dca);
 
     var.setValue(2);
     propWasSet = filter->setProperty("Delimeter", var); // delimeter is a space
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-		var.setValue(10);
-		propWasSet = filter->setProperty("MaxValPerLine", var); // 10 array elements per line
-		DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    var.setValue(10);
+    propWasSet = filter->setProperty("MaxValPerLine", var); // 10 array elements per line
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-		var.setValue(UnitTest::ExportDataTest::TestFile);
-		propWasSet = filter->setProperty("OutputPath", var); // output file to write array
-		DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    var.setValue(UnitTest::ExportDataTest::TestTempDir);
+    propWasSet = filter->setProperty("OutputPath", var); // output file to write array
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-		DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-		DREAM3D::Defaults::AttributeMatrixName,
-		DREAM3D::CellData::CellPhases);
+    DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+    DREAM3D::Defaults::AttributeMatrixName,
+    DREAM3D::CellData::CellPhases);
 
-		var.setValue(path);
-		propWasSet = filter->setProperty("SelectedArrayPath", var); //array just created above
-		DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    var.setValue(path);
+    propWasSet = filter->setProperty("SelectedArrayPath", var); //array just created above
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-		filter->execute();
-		err = filter->getErrorCondition();
+    filter->execute();
+    err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0);
   }
   else
@@ -178,25 +178,23 @@ int TestExportDataWriter()
 // -----------------------------------------------------------------------------
 int TestExportDataReader()
 {
-	int num = 0;
-	FILE *f;
-	QString exportArrayFile = UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportArray.txt";
-	f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
-	if (f == NULL)
-	{
-		DREAM3D_REQUIRE_EQUAL(0, -2)
-	}
+  int num = 0;
+  FILE *f;
+  QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::CellPhases + ".txt";
+  f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+  DREAM3D_REQUIRE_VALID_POINTER(f)
 
-	for (int i = 0; i < 20; i++) // compare file to what was written in array
-	{
-		fscanf(f, "%d,", &num);
-		if (i + 20 != num)
-		{
-			DREAM3D_REQUIRE_EQUAL(0, -3)
-		}
-	}
 
-	fclose(f);
+  for (int i = 0; i < 20; i++) // compare file to what was written in array
+  {
+    fscanf(f, "%d,", &num);
+    if (i + 20 != num)
+    {
+      DREAM3D_REQUIRE_EQUAL(0, -3)
+    }
+  }
+
+  fclose(f);
   return 1;
 }
 
