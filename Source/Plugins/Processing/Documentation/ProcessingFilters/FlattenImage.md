@@ -21,8 +21,8 @@ Not Applicable
 | Element | ImageData | Float | (1,3) or (1,4) | RGB or RGBa values |
 
 ## Created Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|---------|-------|
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
 | Element | FlatImageData | Float | (1,1) | Grayscale values |
 
 

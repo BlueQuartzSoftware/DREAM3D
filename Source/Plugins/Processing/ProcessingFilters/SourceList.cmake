@@ -30,7 +30,6 @@ set(_PublicFilters
   RemoveFlaggedFeatures
   IdentifySample
   MultiThresholdObjects
-  RenumberFeaturesBinnedOrientations
 )
 
 #--------------
