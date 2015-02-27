@@ -131,6 +131,7 @@ void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader*
 int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
   DREAM3D_FILTER_WRITE_PARAMETER(ClusteringListArrayName)

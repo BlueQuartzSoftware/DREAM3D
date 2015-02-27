@@ -268,6 +268,7 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
 int FindTwinBoundaries::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryIncoherenceArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)

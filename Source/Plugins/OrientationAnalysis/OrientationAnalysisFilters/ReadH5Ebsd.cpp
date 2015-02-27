@@ -152,6 +152,7 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
@@ -873,7 +874,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
@@ -973,7 +974,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     float* cellEulerAngles = fArray->getPointer(0);
     int* cellPhases = iArray->getPointer(0);
 
-    for (int64_t i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];

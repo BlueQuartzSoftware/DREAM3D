@@ -46,12 +46,13 @@
 
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
+
+#include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 
 class GenerateIPFColorsImpl
@@ -166,8 +167,8 @@ void GenerateIPFColors::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
 
@@ -202,6 +203,7 @@ void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* rea
 int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
@@ -330,14 +332,14 @@ AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------

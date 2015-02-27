@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -111,6 +111,7 @@ void GenerateEulerColors::readFilterParameters(AbstractFilterParametersReader* r
 int GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEulerColorsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
@@ -243,14 +244,14 @@ AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------

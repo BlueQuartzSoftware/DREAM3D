@@ -109,6 +109,7 @@ void FindAvgOrientations::readFilterParameters(AbstractFilterParametersReader* r
 int FindAvgOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)

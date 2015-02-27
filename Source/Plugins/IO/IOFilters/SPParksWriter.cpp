@@ -97,6 +97,7 @@ void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader,
 int SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   writer->closeFilterGroup();
@@ -245,7 +246,9 @@ int SPParksWriter::writeFile()
       }
     }
     count++;
-    outfile << k + 1 << " " << m_FeatureIds[k] << "\n";
+    double temp0 = 0.0;
+    double temp1 = 0.0;
+    outfile << k + 1 << " " << m_FeatureIds[k] << " " << temp0 << " " << temp1 <<"\n";
   }
   outfile.close();
 

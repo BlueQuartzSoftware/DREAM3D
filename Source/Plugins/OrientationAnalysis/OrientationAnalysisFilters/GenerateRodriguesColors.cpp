@@ -54,7 +54,7 @@
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 
 // -----------------------------------------------------------------------------
@@ -129,6 +129,7 @@ void GenerateRodriguesColors::readFilterParameters(AbstractFilterParametersReade
 int GenerateRodriguesColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
   DREAM3D_FILTER_WRITE_PARAMETER(CellRodriguesColorsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
@@ -274,14 +275,14 @@ AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------

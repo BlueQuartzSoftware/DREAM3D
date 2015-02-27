@@ -119,6 +119,7 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
 int FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayName)

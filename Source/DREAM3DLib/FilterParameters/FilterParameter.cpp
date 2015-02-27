@@ -820,7 +820,6 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
 
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -861,6 +860,44 @@ DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::
   }
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MultiDataArraySelectionFilterParameter::MultiDataArraySelectionFilterParameter() :
+FilterParameter(),
+m_DefaultPaths(QVector<DataArrayPath>())
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MultiDataArraySelectionFilterParameter::~MultiDataArraySelectionFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+	const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
+	bool advanced, int groupIndex)
+{
+	MultiDataArraySelectionFilterParameter::Pointer ptr = MultiDataArraySelectionFilterParameter::New();
+	ptr->setHumanLabel(humanLabel);
+	ptr->setPropertyName(propertyName);
+	ptr->setWidgetType(widgetType);
+	ptr->setDefaultPaths(defaultPaths);
+	ptr->setAdvanced(advanced);
+	ptr->setUnits("");
+	ptr->setGroupIndex(groupIndex);
+	if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+	{
+		ptr->setReadOnly(true);
+	}
+	return ptr;
+}
+
+
 
 
 

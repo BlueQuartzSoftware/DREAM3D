@@ -137,6 +137,7 @@ void CropSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reade
 int CropSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixPath)
@@ -320,7 +321,7 @@ void CropSurfaceMesh::execute()
   Int64ArrayType::Pointer newNodeNumbers = Int64ArrayType::CreateArray(numVerts, "newNumbers");
   newNodeNumbers->initializeWithValue(-1);
   int64_t* newNNumbers = newNodeNumbers->getPointer(0);
-  for (size_t i = 0; i < numVerts; i++)
+  for (int64_t i = 0; i < numVerts; i++)
   {
     badNode = false;
     if(vertex[i*3] < m_XMin || vertex[i*3] > m_XMax) { badNode = true; }
@@ -355,7 +356,7 @@ void CropSurfaceMesh::execute()
   Int64ArrayType::Pointer newFaceNumbers = Int64ArrayType::CreateArray(numFaces, "newNumbers");
   newFaceNumbers->initializeWithValue(-1);
   int64_t* newFNumbers = newFaceNumbers->getPointer(0);
-  for (size_t i = 0; i < numFaces; i++)
+  for (int64_t i = 0; i < numFaces; i++)
   {
     badFace = false;
     node1 = face[i*3];
@@ -409,7 +410,7 @@ void CropSurfaceMesh::execute()
     }
 
     // Find the unique set of feature ids
-    for (size_t i = 0; i < numFaces; ++i)
+    for (int64_t i = 0; i < numFaces; ++i)
     {
       int32_t currentFeatureId = m_FeatureIds[i];
       if (currentFeatureId < totalFeatures)

@@ -25,6 +25,12 @@ namespace UnitTest
     static const size_t ZSize = 5;
     static const size_t Offset = 200;
   }
+
+  namespace CropVolumeTest
+  {
+    const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
+    const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
+  }
 }
 
 #endif

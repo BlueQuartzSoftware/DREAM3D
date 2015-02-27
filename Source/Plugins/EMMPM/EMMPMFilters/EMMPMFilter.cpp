@@ -108,6 +108,8 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
 int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+
 
   DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayPath)
     DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
@@ -246,7 +248,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   for(int i = 0; i < data->classes; i++)
   {
     int gray = 255 / (data->classes - 1);
-    // Generate a Gray Scale Color Table 
+    // Generate a Gray Scale Color Table
     data->colorTable[i] = qRgb(i*gray, i*gray, i*gray);
     // Hard code the minimum variance to 4.5; This could be a user option.
     data->min_variance[i] = 4.5;
@@ -320,14 +322,17 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   // into the initialization of the next Image to be Segmented
   m_PreviousMu.resize(getNumClasses() * data->dims);
   m_PreviousSigma.resize(getNumClasses() * data->dims);
-  std::cout << "--------------------------------------------------------------" << std::endl;
-  for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
+  if(0)
   {
-    std::cout << "Mu: " << data->mean[i] << " Variance: " << sqrtf(data->variance[i]) << std::endl;
-    for(unsigned int d = 0; d < data->dims; d++)
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
     {
-      m_PreviousMu[i*data->dims + d] = data->mean[i*data->dims + d];
-      m_PreviousSigma[i*data->dims + d] = data->variance[i*data->dims + d];
+      std::cout << "Mu: " << data->mean[i] << " Variance: " << sqrtf(data->variance[i]) << std::endl;
+      for(unsigned int d = 0; d < data->dims; d++)
+      {
+        m_PreviousMu[i*data->dims + d] = data->mean[i*data->dims + d];
+        m_PreviousSigma[i*data->dims + d] = data->variance[i*data->dims + d];
+      }
     }
   }
 

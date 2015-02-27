@@ -91,6 +91,7 @@ void ExtractComponentAsArray::readFilterParameters(AbstractFilterParametersReade
 int ExtractComponentAsArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CompNumber)
   DREAM3D_FILTER_WRITE_PARAMETER(NewArrayArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)

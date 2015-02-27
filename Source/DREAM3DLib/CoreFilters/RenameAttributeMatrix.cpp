@@ -83,6 +83,7 @@ void RenameAttributeMatrix::readFilterParameters(AbstractFilterParametersReader*
 int RenameAttributeMatrix::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NewAttributeMatrix)
   writer->closeFilterGroup();

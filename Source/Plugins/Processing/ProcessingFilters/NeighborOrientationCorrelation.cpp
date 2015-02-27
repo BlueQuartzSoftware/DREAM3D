@@ -117,6 +117,7 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)

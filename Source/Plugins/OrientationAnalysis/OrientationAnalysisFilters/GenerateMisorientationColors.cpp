@@ -47,7 +47,7 @@
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 
 class GenerateMisorientationColorsImpl
@@ -219,6 +219,7 @@ void GenerateMisorientationColors::readFilterParameters(AbstractFilterParameters
 int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
   DREAM3D_FILTER_WRITE_PARAMETER(MisorientationColorArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
@@ -375,14 +376,14 @@ AbstractFilter::Pointer GenerateMisorientationColors::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString GenerateMisorientationColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateMisorientationColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------

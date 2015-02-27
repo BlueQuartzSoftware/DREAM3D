@@ -105,6 +105,7 @@ void SurfaceMeshToVtk::readFilterParameters(AbstractFilterParametersReader* read
 int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)

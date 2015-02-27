@@ -225,9 +225,9 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
   }
   // Now try moving up a directory which is what should happen when running from a
   // proper distribution of DREAM3D
-// qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
+  // qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
   aPluginDir.cdUp();
-//  qDebug() << "cdUp() Linux Plugins:" << aPluginDir.absolutePath();
+  //  qDebug() << "cdUp() Linux Plugins:" << aPluginDir.absolutePath();
   if (aPluginDir.cd("Plugins"))
   {
     thePath = aPluginDir.absolutePath();
@@ -314,12 +314,16 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
     }
     else
     {
+      Splash->hide();
       QString message("The plugin did not load with the following error\n");
       message.append(loader->errorString());
-      QMessageBox::critical(MainWindow, "DREAM3D Plugin Load Error",
-                            message,
-                            QMessageBox::Ok | QMessageBox::Default);
-    delete loader;
+      QMessageBox box(QMessageBox::Critical, tr("DREAM3D Plugin Load Error"), tr(message.toStdString().c_str()));
+      box.setStandardButtons(QMessageBox::Ok | QMessageBox::Default);
+      box.setDefaultButton(QMessageBox::Ok);
+      box.setWindowFlags(box.windowFlags() | Qt::WindowStaysOnTopHint);
+      box.exec();
+      Splash->show();
+      delete loader;
     }
   }
 

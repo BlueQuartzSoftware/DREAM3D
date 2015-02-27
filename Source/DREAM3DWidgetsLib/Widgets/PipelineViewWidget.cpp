@@ -905,10 +905,11 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   }
   else
   {
+    const QMimeData* mimedata = event->mimeData();
+    QByteArray dropData = mimedata->data("text/plain");
     // This path is taken if a filter is dropped from the list of filters
-    if(event->mimeData()->hasText())
+    if(mimedata->hasText())
     {
-      QByteArray dropData = event->mimeData()->data("text/plain");
       QString name(dropData);
       // We need to figure out where it was dropped relative to other filters
       int count = filterCount() - 1;

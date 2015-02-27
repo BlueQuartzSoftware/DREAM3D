@@ -239,33 +239,33 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* op
   FileSystemFilterParameter* fsParam = dynamic_cast<FileSystemFilterParameter*>(option);
   if(fsParam)
   {
-	  DataContainerReaderFilterParameter* rParam = NULL;
-	  QString currentPath = "";
-	  QString Ftype = "";
-	  QString ext = "";
-	  if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
-	  {
-		  rParam = dynamic_cast<DataContainerReaderFilterParameter*>(fsParam);
-		  currentPath = m_Filter->property(rParam->getInputFileProperty().toLatin1().constData()).toString();
-	  }
-	  else
-	  {
-		  currentPath = m_Filter->property(fsParam->getPropertyName().toLatin1().constData()).toString();
-	  }
+    DataContainerReaderFilterParameter* rParam = NULL;
+    QString currentPath = "";
+    QString Ftype = "";
+    QString ext = "";
+    if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
+    {
+      rParam = dynamic_cast<DataContainerReaderFilterParameter*>(fsParam);
+      currentPath = m_Filter->property(rParam->getInputFileProperty().toLatin1().constData()).toString();
+    }
+    else
+    {
+      currentPath = m_Filter->property(fsParam->getPropertyName().toLatin1().constData()).toString();
+    }
     QFileInfo fi(currentPath);
 
     if (currentPath.isEmpty() == false && fi.exists() == false)
     {
-		if (NULL != rParam)
-		{
-			Ftype = rParam->getFileType();
-			ext = rParam->getFileExtension();
-		}
-		else
-		{
-			Ftype = fsParam->getFileType();
-			ext = fsParam->getFileExtension();
-		}
+    if (NULL != rParam)
+    {
+      Ftype = rParam->getFileType();
+      ext = rParam->getFileExtension();
+    }
+    else
+    {
+      Ftype = fsParam->getFileType();
+      ext = fsParam->getFileExtension();
+    }
       QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
       QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
 
@@ -300,22 +300,22 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* op
         m_OpenDialogLastDirectory = fi.path();
         m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
       }
-	  
-	  else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
-	  {
-		  QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
 
-		  QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
-		  if (true == file.isEmpty())
-		  {
-			  file = currentPath;
-		  }
-		  file = QDir::toNativeSeparators(file);
-		  // Store the last used directory into the private instance variable
-		  QFileInfo fi(file);
-		  m_OpenDialogLastDirectory = fi.path();
-		  m_Filter->setProperty(rParam->getInputFileProperty().toLatin1().constData(), file);
-	  }
+    else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
+    {
+      QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+      QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
+      if (true == file.isEmpty())
+      {
+        file = currentPath;
+      }
+      file = QDir::toNativeSeparators(file);
+      // Store the last used directory into the private instance variable
+      QFileInfo fi(file);
+      m_OpenDialogLastDirectory = fi.path();
+      m_Filter->setProperty(rParam->getInputFileProperty().toLatin1().constData(), file);
+    }
     }
   }
 }
@@ -618,7 +618,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 #elif defined(Q_OS_MAC)
   style.append("font: 100 italic 12pt \"Arial\";");
 #else
-  style.append("font: 100 italic 12pt \"Arial\";");
+  style.append("font: 100 italic 10pt \"Arial\";");
 #endif
   style.append("font-weight: bold; ");
   if (m_HasPreflightErrors == true)

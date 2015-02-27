@@ -134,6 +134,7 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(MisorientationRotation)

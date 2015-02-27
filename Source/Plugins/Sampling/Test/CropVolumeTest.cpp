@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-// #include "GenerateFeatureIds.h"
+#include "TestFileLocations.h"
 
 static const QString k_DataArrayName("Data");
 static const QString k_4CompDataArrayName("Data 4 Comp");
@@ -799,7 +799,7 @@ void TestCropVolume_3()
   require_greater_than<int, int>(err, "err", -1, "Value");
 
 
-  AbstractFilter::Pointer writer = CreateDataContainerWriter("/tmp/CropVolumeTest_3.dream3d");
+  AbstractFilter::Pointer writer = CreateDataContainerWriter(UnitTest::CropVolumeTest::CropVolumeTest_3);
   writer->setDataContainerArray(cropVolume->getDataContainerArray());
   writer->execute();
   DREAM3D_REQUIRE(writer->getErrorCondition() > -1);
@@ -922,7 +922,7 @@ void TestCropVolume_4()
   data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
   DREAM3D_REQUIRE_VALID_POINTER(data.get());
 
-  AbstractFilter::Pointer writer = CreateDataContainerWriter("/tmp/CropVolumeTest_4.dream3d");
+  AbstractFilter::Pointer writer = CreateDataContainerWriter(UnitTest::CropVolumeTest::CropVolumeTest_4);
   writer->setDataContainerArray(cropVolume->getDataContainerArray());
   writer->execute();
   DREAM3D_REQUIRE(writer->getErrorCondition() > -1);

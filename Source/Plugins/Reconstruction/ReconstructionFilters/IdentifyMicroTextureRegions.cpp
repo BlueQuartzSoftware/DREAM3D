@@ -292,6 +292,7 @@ void IdentifyMicroTextureRegions::readFilterParameters(AbstractFilterParametersR
 int IdentifyMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(MTRIdsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisLocationsArrayPath)

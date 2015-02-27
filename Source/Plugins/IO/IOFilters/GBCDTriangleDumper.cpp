@@ -107,6 +107,7 @@ void GBCDTriangleDumper::readFilterParameters(AbstractFilterParametersReader* re
 int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)

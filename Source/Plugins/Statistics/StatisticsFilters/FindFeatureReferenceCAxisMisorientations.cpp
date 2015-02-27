@@ -117,6 +117,7 @@ void FindFeatureReferenceCAxisMisorientations::readFilterParameters(AbstractFilt
 int FindFeatureReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureReferenceCAxisMisorientationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureStdevCAxisMisorientationsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureAvgCAxisMisorientationsArrayName)

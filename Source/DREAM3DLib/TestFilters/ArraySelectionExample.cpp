@@ -88,6 +88,7 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   //  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
   //  DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
   //  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayName)

@@ -103,10 +103,14 @@ endif()
 
 find_package(HDF5)
 if(HDF5_FOUND)
+  
+  GET_FILENAME_COMPONENT (HDF5_LIBRARY_DIRS "${HDF5_INCLUDE_DIRS}" PATH)
+  set(HDF5_LIBRARY_DIRS ${HDF5_LIBRARY_DIRS}/lib)
   file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
-  include_directories(${HDF5_INCLUDE_DIRS} )
-  list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
+  # Add the library directory to the file that has all the search directories stored in it.
 
+  include_directories(${HDF5_INCLUDE_DIRS} )
+  
   message(STATUS "HDF5 Location: ${HDF5_INSTALL}")
   message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
   if(MSVC_IDE)
@@ -125,6 +129,8 @@ if(HDF5_FOUND)
                         LIBNAME hdf5_cpp
                         TYPES ${BUILD_TYPES})
   endif()
+
+
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDif(HDF5_FOUND)

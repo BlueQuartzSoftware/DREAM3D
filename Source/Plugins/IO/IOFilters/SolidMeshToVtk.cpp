@@ -104,6 +104,7 @@ void SolidMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader
 int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
   writer->closeFilterGroup();

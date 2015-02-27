@@ -89,6 +89,7 @@ void GenerateGeometryConnectivity::readFilterParameters(AbstractFilterParameters
 int GenerateGeometryConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(GenerateVertexTriangleLists)
   DREAM3D_FILTER_WRITE_PARAMETER(GenerateTriangleNeighbors)

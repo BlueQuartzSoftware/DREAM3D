@@ -83,6 +83,7 @@ void SegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reade
 int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -183,7 +184,7 @@ void SegmentFeatures::execute()
               {
                 size = voxelslist.size();
                 voxelslist.resize(size + initialVoxelsListSize);
-                for(qint32 j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
+                for(std::vector<int64_t>::size_type j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
               }
             }
           }

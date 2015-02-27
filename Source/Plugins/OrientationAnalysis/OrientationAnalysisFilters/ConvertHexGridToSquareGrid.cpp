@@ -122,6 +122,7 @@ void ConvertHexGridToSquareGrid::readFilterParameters(AbstractFilterParametersRe
 int ConvertHexGridToSquareGrid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
   DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
   DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
@@ -507,7 +508,7 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ConvertHexGridToSquareGrid::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

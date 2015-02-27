@@ -1743,3 +1743,29 @@ DataArrayPath QFilterParametersReader::readDataArrayPath(const QString& name, Da
   DataArrayPath path(str);
   return path;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> QFilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
+{
+	BOOST_ASSERT(m_Prefs != NULL);
+
+	QVector<DataArrayPath> vector;
+
+	int size = m_Prefs->beginReadArray(name);
+	if (size <= 0)
+	{
+		return def;
+	}
+
+	for (int i = 0; i < size; ++i) {
+		m_Prefs->setArrayIndex(i);
+		QString pathStr = m_Prefs->value(DREAM3D::IO::DAPSettingsHeader).toString();
+		DataArrayPath path = DataArrayPath::deserialize(pathStr, "|");
+		vector.append(path);
+	}
+	m_Prefs->endArray();
+
+	return vector;
+}

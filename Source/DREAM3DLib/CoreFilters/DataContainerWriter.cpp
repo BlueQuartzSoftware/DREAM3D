@@ -130,6 +130,7 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
 int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteXdmfFile)
   writer->closeFilterGroup();

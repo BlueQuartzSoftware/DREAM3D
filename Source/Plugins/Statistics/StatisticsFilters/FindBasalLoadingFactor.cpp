@@ -111,6 +111,7 @@ void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader
 int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
