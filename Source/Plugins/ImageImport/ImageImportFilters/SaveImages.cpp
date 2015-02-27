@@ -50,6 +50,7 @@ SaveImages::SaveImages() :
   m_OutputPath(""),
   m_ImageFormat(0),
 	m_Plane(0),
+	m_FilePrefix(false),
   m_ColorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor),
 	m_Colors(NULL)
 {
@@ -70,7 +71,7 @@ void SaveImages::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("Select RGB Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getColorsArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Select Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getColorsArrayPath(), false, ""));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -94,6 +95,11 @@ void SaveImages::setupFilterParameters()
 		choices.push_back("YZ");
 		parameter->setChoices(choices);
 		parameters.push_back(parameter);
+	}
+	{
+		QStringList linkedProps;
+		linkedProps << "ImagePrefix";
+		parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, false));
 	}
   parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), false));
   parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
