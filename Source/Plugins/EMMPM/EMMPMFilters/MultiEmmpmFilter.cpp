@@ -123,6 +123,11 @@ void MultiEmmpmFilter::dataCheck()
 {
   setErrorCondition(0);
 
+  if (DataArrayPath::validateVector(getInputDataArrayVector()) == false)
+  {
+	  // Throw error?
+  }
+
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
 
 #if 0
@@ -185,7 +190,6 @@ void MultiEmmpmFilter::dataCheck()
     return;
   }
 
-
   // Now create our output attributeMatrix which will contain all of our segmented images
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
@@ -198,12 +202,19 @@ void MultiEmmpmFilter::dataCheck()
   // Get the list of checked array names from the input data arrays list
   QList<QString> arrayNames = DataArrayPath::getDataArrayNames(getInputDataArrayVector());
 
-  inputAMPath.setAttributeMatrixName(getOutputAttributeMatrixName());
   for ( int i = 0; i < arrayNames.size(); i++ )
   {
-	QString daName = getOutputArrayPrefix() + arrayNames.at(i);
+	QString daName = arrayNames.at(i);
+	QString newName = getOutputArrayPrefix() + arrayNames.at(i);
 	inputAMPath.setDataArrayName(daName);
-	outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, daName, 0, cDims);
+
+	getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
+	if (getErrorCondition() < 0)
+	{
+		return;
+	}
+
+	outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims);
   }
 
   // The EM/MPM Library has a hard coded MAX Classes of 16

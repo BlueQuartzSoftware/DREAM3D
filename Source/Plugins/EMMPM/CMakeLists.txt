@@ -215,3 +215,6 @@ endif()
 # is not supported any more.
 # add_subdirectory(${PROJECT_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 
+if(DREAM3D_BUILD_TESTING)
+  ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+endif()
