@@ -123,6 +123,9 @@ int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 void ExportData::dataCheck()
 {
+	// Make sure the weak pointer vector is cleared before we begin...
+	m_SelectedWeakPtrVector.clear();
+
   DataArrayPath tempPath;
   setErrorCondition(0);
 
