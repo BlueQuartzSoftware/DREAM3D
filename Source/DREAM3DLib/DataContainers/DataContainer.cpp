@@ -191,6 +191,20 @@ AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const DataArrayPath& path)
+{
+	QMap<QString, AttributeMatrix::Pointer>::iterator it;
+	it = m_AttributeMatrices.find(path.getAttributeMatrixName());
+	if (it == m_AttributeMatrices.end())
+	{
+		return AttributeMatrix::NullPointer();
+	}
+	return it.value();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AttributeMatrix::Pointer DataContainer::removeAttributeMatrix(const QString& name)
 {
   QMap<QString, AttributeMatrix::Pointer>::iterator it;

@@ -143,7 +143,14 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      */
     virtual AttributeMatrix::Pointer getAttributeMatrix(const QString& name);
 
-    /**
+		/**
+		* @brief Returns the array for a given named array or the equivelant to a
+		* null pointer if the name does not exist.
+		* @param name The Name of the AttributeMatrix will be extracted from the DataArratPath object
+		*/
+		virtual AttributeMatrix::Pointer getAttributeMatrix(const DataArrayPath& path);
+    
+		/**
      * @brief getAttributeMatrices
      * @return
      */
