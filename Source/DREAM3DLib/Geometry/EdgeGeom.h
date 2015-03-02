@@ -218,7 +218,7 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getElementsContainingVert();
+    virtual ElementDynamicList::Pointer getElementsContainingVert();
 
     /**
      * @brief deleteElementsContainingVert
@@ -235,7 +235,7 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getElementNeighbors();
+    virtual ElementDynamicList::Pointer getElementNeighbors();
 
     /**
      * @brief deleteElementNeighbors
@@ -365,13 +365,13 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
      * @brief setElementsContainingVert
      * @param elementsContainingVert
      */
-    virtual void setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert);
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert);
 
     /**
      * @brief setElementNeighbors
      * @param elementNeighbors
      */
-    virtual void setElementNeighbors(CellDynamicList::Pointer elementNeighbors);
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementNeighbors);
 
     /**
      * @brief setElementCentroids
@@ -390,8 +390,8 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
     AttributeMatrixMap_t m_AttributeMatrices;
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
-    CellDynamicList::Pointer m_EdgesContainingVert;
-    CellDynamicList::Pointer m_EdgeNeighbors;
+    ElementDynamicList::Pointer m_EdgesContainingVert;
+    ElementDynamicList::Pointer m_EdgeNeighbors;
     FloatArrayType::Pointer m_EdgeCentroids;
 
     EdgeGeom(const EdgeGeom&); // Copy Constructor Not Implemented

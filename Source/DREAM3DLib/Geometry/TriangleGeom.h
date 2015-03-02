@@ -283,7 +283,7 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
      * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getElementsContainingVert();
+    virtual ElementDynamicList::Pointer getElementsContainingVert();
 
     /**
      * @brief deleteElementsContainingVert
@@ -300,7 +300,7 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
      * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getElementNeighbors();
+    virtual ElementDynamicList::Pointer getElementNeighbors();
 
     /**
      * @brief deleteElementNeighbors
@@ -430,13 +430,13 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
      * @brief setElementsContainingVert
      * @param elementsContainingVert
      */
-    virtual void setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert);
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert);
 
     /**
      * @brief setElementNeighbors
      * @param elementNeighbors
      */
-    virtual void setElementNeighbors(CellDynamicList::Pointer elementNeighbors);
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementNeighbors);
 
     /**
      * @brief setElementCentroids
@@ -456,8 +456,8 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
     SharedTriList::Pointer m_TriList;
-    CellDynamicList::Pointer m_TrianglesContainingVert;
-    CellDynamicList::Pointer m_TriangleNeighbors;
+    ElementDynamicList::Pointer m_TrianglesContainingVert;
+    ElementDynamicList::Pointer m_TriangleNeighbors;
     FloatArrayType::Pointer m_TriangleCentroids;
 
     TriangleGeom(const TriangleGeom&); // Copy Constructor Not Implemented

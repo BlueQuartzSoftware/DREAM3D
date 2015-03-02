@@ -17,6 +17,7 @@ set(DREAM3DLib_Geometry_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Geometry/TriangleGeom.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/QuadGeom.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/MeshStructs.h
+  #${DREAM3DLib_SOURCE_DIR}/Geometry/DerivativeHelpers.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/GeometryHelpers.hpp
 )
 
@@ -27,6 +28,7 @@ set(DREAM3DLib_Geometry_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Geometry/EdgeGeom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/TriangleGeom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/QuadGeom.cpp
+  #${DREAM3DLib_SOURCE_DIR}/Geometry/DerivativeHelpers.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Geometry" "${DREAM3DLib_Geometry_HDRS}" "${DREAM3DLib_Geometry_SRCS}" "0")

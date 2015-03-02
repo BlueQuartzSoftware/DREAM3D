@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
      * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getElementsContainingVert();
+    virtual ElementDynamicList::Pointer getElementsContainingVert();
 
     /**
      * @brief deleteElementsContainingVert
@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
      * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getElementNeighbors();
+    virtual ElementDynamicList::Pointer getElementNeighbors();
 
     /**
      * @brief deleteElementNeighbors
@@ -257,13 +257,13 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
      * @brief setElementsContaingVert
      * @param elementsContaingVert
      */
-    virtual void setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert);
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert);
 
     /**
      * @brief setElementNeighbors
      * @param elementNeighbors
      */
-    virtual void setElementNeighbors(CellDynamicList::Pointer elementsNeighbors);
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementsNeighbors);
 
     /**
      * @brief setElementCentroids

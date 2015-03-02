@@ -131,15 +131,15 @@ int ImageGeom::findElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer ImageGeom::getElementsContainingVert()
+ElementDynamicList::Pointer ImageGeom::getElementsContainingVert()
 {
-  return CellDynamicList::NullPointer();
+  return ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
+void ImageGeom::setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert)
 {
   return;
 }
@@ -163,15 +163,15 @@ int ImageGeom::findElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer ImageGeom::getElementNeighbors()
+ElementDynamicList::Pointer ImageGeom::getElementNeighbors()
 {
-  return CellDynamicList::NullPointer();
+  return ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
+void ImageGeom::setElementNeighbors(ElementDynamicList::Pointer elementNeighbors)
 {
   return;
 }

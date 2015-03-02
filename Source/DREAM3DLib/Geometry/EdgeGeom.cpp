@@ -49,8 +49,8 @@ EdgeGeom::EdgeGeom()
   m_SpatialDimensionality = 3;
   m_VertexList = EdgeGeom::CreateSharedVertexList(0);
   m_EdgeList = EdgeGeom::CreateSharedEdgeList(0);
-  m_EdgesContainingVert = CellDynamicList::NullPointer();
-  m_EdgeNeighbors = CellDynamicList::NullPointer();
+  m_EdgesContainingVert = ElementDynamicList::NullPointer();
+  m_EdgeNeighbors = ElementDynamicList::NullPointer();
   m_EdgeCentroids = FloatArrayType::NullPointer();
 }
 
@@ -150,7 +150,7 @@ size_t EdgeGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 int EdgeGeom::findElementsContainingVert()
 {
-  m_EdgesContainingVert = CellDynamicList::New();
+  m_EdgesContainingVert = ElementDynamicList::New();
   GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, getNumberOfVertices());
   if (m_EdgesContainingVert.get() == NULL)
   {
@@ -162,7 +162,7 @@ int EdgeGeom::findElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer EdgeGeom::getElementsContainingVert()
+ElementDynamicList::Pointer EdgeGeom::getElementsContainingVert()
 {
   return m_EdgesContainingVert;
 }
@@ -170,7 +170,7 @@ CellDynamicList::Pointer EdgeGeom::getElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
+void EdgeGeom::setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert)
 {
   m_EdgesContainingVert = elementsContainingVert;
 }
@@ -180,7 +180,7 @@ void EdgeGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContai
 // -----------------------------------------------------------------------------
 void EdgeGeom::deleteElementsContainingVert()
 {
-  m_EdgesContainingVert = CellDynamicList::NullPointer();
+  m_EdgesContainingVert = ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -193,7 +193,7 @@ int EdgeGeom::findElementNeighbors()
   {
     return -1;
   }
-  m_EdgeNeighbors = CellDynamicList::New();
+  m_EdgeNeighbors = ElementDynamicList::New();
   err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, m_EdgeNeighbors);
   if (m_EdgeNeighbors.get() == NULL)
   {
@@ -205,7 +205,7 @@ int EdgeGeom::findElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer EdgeGeom::getElementNeighbors()
+ElementDynamicList::Pointer EdgeGeom::getElementNeighbors()
 {
   return m_EdgeNeighbors;
 }
@@ -213,7 +213,7 @@ CellDynamicList::Pointer EdgeGeom::getElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
+void EdgeGeom::setElementNeighbors(ElementDynamicList::Pointer elementNeighbors)
 {
   m_EdgeNeighbors = elementNeighbors;
 }
@@ -223,7 +223,7 @@ void EdgeGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
 // -----------------------------------------------------------------------------
 void EdgeGeom::deleteElementNeighbors()
 {
-  m_EdgeNeighbors = CellDynamicList::NullPointer();
+  m_EdgeNeighbors = ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -384,13 +384,13 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer edgeNeighbors = CellDynamicList::New();
+      ElementDynamicList::Pointer edgeNeighbors = ElementDynamicList::New();
       m_EdgeNeighbors = edgeNeighbors;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgesContainingVert, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer edgesContainingVert = CellDynamicList::New();
+      ElementDynamicList::Pointer edgesContainingVert = ElementDynamicList::New();
       m_EdgesContainingVert = edgesContainingVert;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeCentroids, dims, type_class, type_size);
@@ -418,7 +418,7 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       {
         return err;
       }
-      CellDynamicList::Pointer edgeNeighbors = CellDynamicList::New();
+      ElementDynamicList::Pointer edgeNeighbors = ElementDynamicList::New();
       edgeNeighbors->deserializeLinks(buffer, numEdges);
       m_EdgeNeighbors = edgeNeighbors;
     }
@@ -432,7 +432,7 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       {
         return err;
       }
-      CellDynamicList::Pointer edgesContainingVert = CellDynamicList::New();
+      ElementDynamicList::Pointer edgesContainingVert = ElementDynamicList::New();
       edgesContainingVert->deserializeLinks(buffer, numEdges);
       m_EdgesContainingVert = edgesContainingVert;
     }

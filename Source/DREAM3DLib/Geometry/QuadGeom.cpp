@@ -49,8 +49,8 @@ QuadGeom::QuadGeom()
   m_VertexList = QuadGeom::CreateSharedVertexList(0);
   m_QuadList = QuadGeom::CreateSharedQuadList(0);
   m_EdgeList = SharedEdgeList::NullPointer();
-  m_QuadsContainingVert = CellDynamicList::NullPointer();
-  m_QuadNeighbors = CellDynamicList::NullPointer();
+  m_QuadsContainingVert = ElementDynamicList::NullPointer();
+  m_QuadNeighbors = ElementDynamicList::NullPointer();
   m_QuadCentroids = FloatArrayType::NullPointer();
 }
 
@@ -154,7 +154,7 @@ size_t QuadGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 int QuadGeom::findElementsContainingVert()
 {
-  m_QuadsContainingVert = CellDynamicList::New();
+  m_QuadsContainingVert = ElementDynamicList::New();
   GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
   if (m_QuadsContainingVert.get() == NULL)
   {
@@ -166,7 +166,7 @@ int QuadGeom::findElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer QuadGeom::getElementsContainingVert()
+ElementDynamicList::Pointer QuadGeom::getElementsContainingVert()
 {
   return m_QuadsContainingVert;
 }
@@ -174,7 +174,7 @@ CellDynamicList::Pointer QuadGeom::getElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
+void QuadGeom::setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert)
 {
   m_QuadsContainingVert = elementsContainingVert;
 }
@@ -184,7 +184,7 @@ void QuadGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContai
 // -----------------------------------------------------------------------------
 void QuadGeom::deleteElementsContainingVert()
 {
-  m_QuadsContainingVert = CellDynamicList::NullPointer();
+  m_QuadsContainingVert = ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -197,7 +197,7 @@ int QuadGeom::findElementNeighbors()
   {
     return -1;
   }
-  m_QuadNeighbors = CellDynamicList::New();
+  m_QuadNeighbors = ElementDynamicList::New();
   err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
   if (m_QuadNeighbors.get() == NULL)
   {
@@ -209,7 +209,7 @@ int QuadGeom::findElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer QuadGeom::getElementNeighbors()
+ElementDynamicList::Pointer QuadGeom::getElementNeighbors()
 {
   return m_QuadNeighbors;
 }
@@ -217,7 +217,7 @@ CellDynamicList::Pointer QuadGeom::getElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
+void QuadGeom::setElementNeighbors(ElementDynamicList::Pointer elementNeighbors)
 {
   m_QuadNeighbors = elementNeighbors;
 }
@@ -227,7 +227,7 @@ void QuadGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
 // -----------------------------------------------------------------------------
 void QuadGeom::deleteElementNeighbors()
 {
-  m_QuadNeighbors = CellDynamicList::NullPointer();
+  m_QuadNeighbors = ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -267,6 +267,14 @@ void QuadGeom::setElementCentroids(FloatArrayType::Pointer elementCentroids)
 void QuadGeom::deleteElementCentroids()
 {
   m_QuadCentroids = FloatArrayType::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::findDerivatives(FloatArrayType::Pointer field, FloatArrayType::Pointer derivatives, float pCoords[3], int dim)
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -399,13 +407,13 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadNeighbors, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
+      ElementDynamicList::Pointer quadNeighbors = ElementDynamicList::New();
       m_QuadNeighbors = quadNeighbors;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadsContainingVert, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
+      ElementDynamicList::Pointer quadsContainingVert = ElementDynamicList::New();
       m_QuadsContainingVert = quadsContainingVert;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadCentroids, dims, type_class, type_size);
@@ -434,7 +442,7 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       {
         return err;
       }
-      CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
+      ElementDynamicList::Pointer quadNeighbors = ElementDynamicList::New();
       quadNeighbors->deserializeLinks(buffer, numQuads);
       m_QuadNeighbors = quadNeighbors;
     }
@@ -448,7 +456,7 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       {
         return err;
       }
-      CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
+      ElementDynamicList::Pointer quadsContainingVert = ElementDynamicList::New();
       quadsContainingVert->deserializeLinks(buffer, numQuads);
       m_QuadsContainingVert = quadsContainingVert;
     }

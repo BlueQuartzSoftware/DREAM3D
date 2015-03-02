@@ -140,15 +140,15 @@ int VertexGeom::findElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer VertexGeom::getElementsContainingVert()
+ElementDynamicList::Pointer VertexGeom::getElementsContainingVert()
 {
-  return CellDynamicList::NullPointer();
+  return ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
+void VertexGeom::setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert)
 {
   return;
 }
@@ -172,15 +172,15 @@ int VertexGeom::findElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer VertexGeom::getElementNeighbors()
+ElementDynamicList::Pointer VertexGeom::getElementNeighbors()
 {
-  return CellDynamicList::NullPointer();
+  return ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
+void VertexGeom::setElementNeighbors(ElementDynamicList::Pointer elementNeighbors)
 {
   return;
 }

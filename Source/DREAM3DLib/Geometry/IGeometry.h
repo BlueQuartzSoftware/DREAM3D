@@ -67,7 +67,7 @@ typedef FloatArrayType SharedVertexList;
 typedef Int64ArrayType SharedEdgeList;
 typedef Int64ArrayType SharedTriList;
 typedef Int64ArrayType SharedQuadList;
-typedef UInt16Int64DynamicListArray CellDynamicList;
+typedef UInt16Int64DynamicListArray ElementDynamicList;
 
 /**
  * @brief The IGeometry class
@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getElementsContainingVert() = 0;
+    virtual ElementDynamicList::Pointer getElementsContainingVert() = 0;
 
     /**
      * @brief deleteElementsContainingVert
@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getElementNeighbors() = 0;
+    virtual ElementDynamicList::Pointer getElementNeighbors() = 0;
 
     /**
      * @brief deleteElementNeighbors
@@ -264,13 +264,13 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      * @brief setElementsContaingVert
      * @param elementsContaingVert
      */
-    virtual void setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert) = 0;
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert) = 0;
 
     /**
      * @brief setElementNeighbors
      * @param elementNeighbors
      */
-    virtual void setElementNeighbors(CellDynamicList::Pointer elementsNeighbors) = 0;
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementsNeighbors) = 0;
 
     /**
      * @brief setElementCentroids

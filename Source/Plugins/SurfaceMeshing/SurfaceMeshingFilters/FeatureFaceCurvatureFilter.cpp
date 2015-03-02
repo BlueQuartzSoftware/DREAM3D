@@ -311,7 +311,7 @@ void FeatureFaceCurvatureFilter::execute()
 
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  CellDynamicList::Pointer vertLinks = triangleGeom->getElementsContainingVert();
+  ElementDynamicList::Pointer vertLinks = triangleGeom->getElementsContainingVert();
   if (NULL == vertLinks.get())
   {
     triangleGeom->findElementsContainingVert();

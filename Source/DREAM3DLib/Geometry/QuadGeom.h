@@ -284,7 +284,7 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getElementsContainingVert();
+    virtual ElementDynamicList::Pointer getElementsContainingVert();
 
     /**
      * @brief deleteElementsContainingVert
@@ -301,7 +301,7 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getElementNeighbors();
+    virtual ElementDynamicList::Pointer getElementNeighbors();
 
     /**
      * @brief deleteElementNeighbors
@@ -324,6 +324,15 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @brief deleteElementCentroids
      */
     virtual void deleteElementCentroids();
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     * @param pCoords
+     * @param dim
+     */
+    virtual void findDerivatives(FloatArrayType::Pointer field, FloatArrayType::Pointer derivatives, float pCoords[3], int dim);
 
     /**
      * @brief setName
@@ -431,13 +440,13 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @brief setElementsContainingVert
      * @param elementsContainingVert
      */
-    virtual void setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert);
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert);
 
     /**
      * @brief setElementNeighbors
      * @param elementNeighbors
      */
-    virtual void setElementNeighbors(CellDynamicList::Pointer elementNeighbors);
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementNeighbors);
 
     /**
      * @brief setElementCentroids
@@ -457,8 +466,8 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
     SharedQuadList::Pointer m_QuadList;
-    CellDynamicList::Pointer m_QuadsContainingVert;
-    CellDynamicList::Pointer m_QuadNeighbors;
+    ElementDynamicList::Pointer m_QuadsContainingVert;
+    ElementDynamicList::Pointer m_QuadNeighbors;
     FloatArrayType::Pointer m_QuadCentroids;
 
     QuadGeom(const QuadGeom&); // Copy Constructor Not Implemented
