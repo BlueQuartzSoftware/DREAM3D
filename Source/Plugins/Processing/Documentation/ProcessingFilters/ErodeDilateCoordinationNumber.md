@@ -13,7 +13,7 @@ By default, the filter will only perform a single iteration and will not concern
 | Name | Type | Description |
 |------|------|------|
 | Coordination Number | Integer | Number of neighboring **Cells** that can be of opposite classification before a **Cell** will be removed |
-| Loop Until Gone | Boolean (On or Off) | Tells filter whether to run a single iteration or iterate until no "bad" **Cells" have more than the above number of "good" neighbor **Cells** |
+| Loop Until Gone | Boolean | Tells filter whether to run a single iteration or iterate until no "bad" **Cells" have more than the above number of "good" neighbor **Cells** |
 
 ## Required Geometry ##
 Image/Rectilinear Grid 

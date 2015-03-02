@@ -9,29 +9,30 @@ Often when performing a serial-sectioning experiment (especially in the FIB-SEM)
 
 1. Search for the largest contiguous set of "good" **Cells**. (This is assumed to be the sample)  
 2. Change all other "good" **Cells**  to be "bad" **Cells**.  (This removes the "speckling" of what was *thresheld* as "good" data in the outer border region).
+
+If "Fill Holes" is set to *true*
 3. Search for the largest contiguous set of "bad" **Cells**. (This is assumed to be the outer border region)
 4. Change all other "bad" **Cells**  to be "good" **Cells**.  (This removes the "speckling" of what was *thresheld* as "bad" data inside of the sample).
 
-Note: if there are in fact "holes" in the sample, then this filter will "close" them by calling all the **Cells** "inside" the sample "good".  If the user wants to reidentify those holes, then use the [MultiThreshold Cells Filter](multithresholdcells.html) and use criteria of *GoodVoxels = 1* and whatever other criteria would identify the "holes", as this will limit applying those criteria to within the sample and not the outer border region.
+Note: if there are in fact "holes" in the sample, then this filter will "close" them (if Fill Holes is set to true) by calling all the **Cells** "inside" the sample "good".  If the user wants to reidentify those holes, then reuse the threshold filter with the criteria of *GoodVoxels = 1* and whatever original criteria identified the "holes", as this will limit applying those original criteria to within the sample and not the outer border region.
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------|------|
+| Fill Holes | Boolean | Tells filter whether to fill holes within sample after it is identified |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GoodVoxels |  |  | Single Threshold (Cell Data) (Processing), Multi Threshold (Cell Data) (Processing) |
-
+| Cell | GoodVoxels | Boolean | (1,1) | This is the "thresheld" array defining what is sample and what is not |
 
 ## Created Arrays ##
 None
 
 ## Authors ##
-
 
 **Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
 

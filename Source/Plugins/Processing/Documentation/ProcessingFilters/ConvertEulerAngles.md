@@ -20,7 +20,7 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Element | CellEulerAngles | Float | (1,3) | Euler angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
+| Element | CellEulerAngles | Float | (1,3) | Euler angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
 
 ## Created Arrays ##
 None

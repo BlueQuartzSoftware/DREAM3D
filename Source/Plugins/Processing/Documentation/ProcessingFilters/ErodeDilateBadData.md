@@ -12,7 +12,7 @@ If the bad data is _dilated_, the filter grows the bad data by one **Cell** in a
 
 If the bad data is _eroded_, the filter shrinks the bad data by one **Cell** in an iterative sequence for a user defined number of iterations.  During the *erode* process the _FeatureId_ of the *bad* **Cell** is changed from *0* to the _FeatureId_ of the majority of its neighbors. If there is a tie between two _FeatureIds_, then one of the *FeatureIds*, chosen randomly, will be assigned to the *bad* **Cell**.
 
-If _Replace Bad Data_ is selected all attribute arrays will be replaced with their neighbor's value during erosion/dilation (instead of only _FeatureId_
+If _Replace Bad Data_ is selected all attribute arrays will be replaced with their neighbor's value during erosion/dilation (instead of only _FeatureId_)
 
 The filter also offers the option(s) to turn on/off the erosion or dilation in specific directions (x, y or z).
 

@@ -1,29 +1,35 @@
-Fill Bad Data {#findrelativemotionbetweenslices}
+Find Relative Motion Between Slices {#findrelativemotionbetweenslices}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters (Cleanup)
+Processing Filters (Image)
 
 ## Description ##
-
+This filter assigns a direction "moved" to each **Cell** by extracting a patch of *user defined* size, centered at each **Cell**, moving it up a *user defined* number of "slices" and translating it while looking for the minimum mean squared distance between the patch and the slice to which it was shifted.  The center of the patch when it has the minimum mean squared difference is said to be the point to which the **Cell** moved.  A vector is drawn from the **Cell** to the point where the **Cell** moved and that vector is normalized and stored as a unit vector on the **Cell**.
+The filter allows the user to chose which plane the patches are extracted from and moved perpendicular to when moving "slices".
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| Plane of Interest | Selection | Tells the filter which plane (XY, XZ, YZ) to project perpendicular to |
+| Patch Size 1 (Voxels) | Int | Size of the patch centered on each pixel in the first dimension of the plane of interest |
+| Patch Size 2 (Voxels) | Int | Size of the patch centered on each pixel in the second dimension of the plane of interest |
+| Search Size 1 (Voxels) | Int | Size of the search window centered on each pixel in the first dimension of the plane of interest |
+| Search Size 2 (Voxels) | Int | Size of the search window centered on each pixel in the first dimension of the plane of interest |
+| Slice Step (Voxels) | Int | Number of slices to move up perpendicular to the plane of interest |
 
-| Name | Type |
-|------|------|
-| Minimum Allowed Defect Size | Integer |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | None | Any, except Boolean | (1,1) | Any scalar array the user would like to use to track *motion* of **Features** through slices |
 
 ## Created Arrays ##
-None
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | MotionDirection | Float | (1,3) | Specifies the direction, as a unit vector, that the extracted patch *moved* |
 
 ## Authors ##
 

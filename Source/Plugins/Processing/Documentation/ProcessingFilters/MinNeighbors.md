@@ -5,31 +5,30 @@ Minimum Number of Neighbors Filter {#minneighbors}
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter sets the minimum number (an integer) of contiguous neighboring **Features** a **Feature** must have to remain in the structure. Entering zero results in nothing changing.  Entering a number larger than the maximum number of neighbors of any **Feature** generates an _error_ (since all **Features** would be removed). The user needs to proceed conservatively here when choosing the value for the minimum to avoid accidentally exceeding the maximum.
+This Filter sets the minimum number of contiguous neighboring **Features** a **Feature** must have to remain in the structure. Entering zero results in nothing changing.  Entering a number larger than the maximum number of neighbors of any **Feature** generates an _error_ (since all **Features** would be removed). The user needs to proceed conservatively here when choosing the value for the minimum to avoid accidentally exceeding the maximum.
+After **Features** are removed for not having enough neighbors, the remaining **Features** are _coarsened_ iteratively, one **Cell** per iteration, until the gaps left by the removed **Features** are filled.  Effectively, this is an isotropic **Feature** growth in the regions around removed **Features**.
+The filter can be run in a mode where the minimum number of neighbors is applied to a single ensemble.  The user can select to apply the minimum to one ensemble and specify which ensemble that is.
 
-After **Features** are removed for not having enough neighbors, the remaining **Features** are _coarsened_ iteratively, one **Cell** per iteration, until the gaps left by the removed **Features** are filled.  Effectively, this is an isotropic grain growth in the regions around removed **Features**.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| Minimum Number Neighbors | Int | This is the number of neighbors a **Feature** must have to remain as a **Feature** |
+| Apply to Single Phase | Boolean | Tells the filter whether to apply minimum to single ensemble or all ensembles |
+| Phase Number to Run Min Size Filter on | Int | Tells filter which ensemble to apply minimum to (if apply to single phase is set to true) |
 
-| Name | Type |
-|------|------|
-| Minimum Number Neighbors | Integer |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature | NumNeighbors | Value (int) equal to the number of contiguous neighboring **Features** for a given **Feature** |  | Find Feature Neighbors (Statistics) |
+| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
+| Feature | NumNeighbors | Int | (1,1) | Array holding number of contiguous neighboring **Features** for each **Feature** |
+| Feature | FeaturePhases | Int | (1,1) | Specifies the **Ensemble** of the **Feature** - only required if Apply to Single Phase is true  |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | Active | Boolean value specifying if the **Feature** is still in the sample (1 if the **Feature** is in the sample and 0 if it is not) | At the end of the filter, all **Features** will be "Active" as the "Inactive" **Features** will have been removed.  |
+None
 
 ## Authors ##
 
