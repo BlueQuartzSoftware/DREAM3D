@@ -123,7 +123,7 @@ size_t ImageGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImageGeom::findCellsContainingVert()
+int ImageGeom::findElementsContainingVert()
 {
   return -1;
 }
@@ -131,7 +131,7 @@ int ImageGeom::findCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer ImageGeom::getCellsContainingVert()
+CellDynamicList::Pointer ImageGeom::getElementsContainingVert()
 {
   return CellDynamicList::NullPointer();
 }
@@ -139,7 +139,7 @@ CellDynamicList::Pointer ImageGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+void ImageGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
 {
   return;
 }
@@ -147,7 +147,7 @@ void ImageGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::deleteCellsContainingVert()
+void ImageGeom::deleteElementsContainingVert()
 {
   return;
 }
@@ -155,7 +155,7 @@ void ImageGeom::deleteCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImageGeom::findCellNeighbors()
+int ImageGeom::findElementNeighbors()
 {
   return -1;
 }
@@ -163,7 +163,7 @@ int ImageGeom::findCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer ImageGeom::getCellNeighbors()
+CellDynamicList::Pointer ImageGeom::getElementNeighbors()
 {
   return CellDynamicList::NullPointer();
 }
@@ -171,7 +171,7 @@ CellDynamicList::Pointer ImageGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+void ImageGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
 {
   return;
 }
@@ -179,7 +179,7 @@ void ImageGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::deleteCellNeighbors()
+void ImageGeom::deleteElementNeighbors()
 {
   return;
 }
@@ -187,7 +187,7 @@ void ImageGeom::deleteCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImageGeom::findCellCentroids()
+int ImageGeom::findElementCentroids()
 {
   return -1;
 }
@@ -195,7 +195,7 @@ int ImageGeom::findCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatArrayType::Pointer ImageGeom::getCellCentroids()
+FloatArrayType::Pointer ImageGeom::getElementCentroids()
 {
   return FloatArrayType::NullPointer();
 }
@@ -203,7 +203,7 @@ FloatArrayType::Pointer ImageGeom::getCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+void ImageGeom::setElementCentroids(FloatArrayType::Pointer elementsCentroids)
 {
   return;
 }
@@ -211,7 +211,7 @@ void ImageGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::deleteCellCentroids()
+void ImageGeom::deleteElementCentroids()
 {
   return;
 }

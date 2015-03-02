@@ -148,7 +148,7 @@ size_t EdgeGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeGeom::findCellsContainingVert()
+int EdgeGeom::findElementsContainingVert()
 {
   m_EdgesContainingVert = CellDynamicList::New();
   GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, getNumberOfVertices());
@@ -162,7 +162,7 @@ int EdgeGeom::findCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer EdgeGeom::getCellsContainingVert()
+CellDynamicList::Pointer EdgeGeom::getElementsContainingVert()
 {
   return m_EdgesContainingVert;
 }
@@ -170,15 +170,15 @@ CellDynamicList::Pointer EdgeGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+void EdgeGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
 {
-  m_EdgesContainingVert = cellsContaingVert;
+  m_EdgesContainingVert = elementsContainingVert;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::deleteCellsContainingVert()
+void EdgeGeom::deleteElementsContainingVert()
 {
   m_EdgesContainingVert = CellDynamicList::NullPointer();
 }
@@ -186,7 +186,7 @@ void EdgeGeom::deleteCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeGeom::findCellNeighbors()
+int EdgeGeom::findElementNeighbors()
 {
   int err = 0;
   if (m_EdgesContainingVert.get() == NULL)
@@ -205,7 +205,7 @@ int EdgeGeom::findCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer EdgeGeom::getCellNeighbors()
+CellDynamicList::Pointer EdgeGeom::getElementNeighbors()
 {
   return m_EdgeNeighbors;
 }
@@ -213,15 +213,15 @@ CellDynamicList::Pointer EdgeGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+void EdgeGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
 {
-  m_EdgeNeighbors = cellNeighbors;
+  m_EdgeNeighbors = elementNeighbors;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::deleteCellNeighbors()
+void EdgeGeom::deleteElementNeighbors()
 {
   m_EdgeNeighbors = CellDynamicList::NullPointer();
 }
@@ -229,7 +229,7 @@ void EdgeGeom::deleteCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeGeom::findCellCentroids()
+int EdgeGeom::findElementCentroids()
 {
   QVector<size_t> cDims(1, 3);
   m_EdgeCentroids = FloatArrayType::CreateArray(getNumberOfEdges(), cDims, DREAM3D::StringConstants::EdgeCentroids);
@@ -244,7 +244,7 @@ int EdgeGeom::findCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatArrayType::Pointer EdgeGeom::getCellCentroids()
+FloatArrayType::Pointer EdgeGeom::getElementCentroids()
 {
   return m_EdgeCentroids;
 }
@@ -252,15 +252,15 @@ FloatArrayType::Pointer EdgeGeom::getCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+void EdgeGeom::setElementCentroids(FloatArrayType::Pointer elementCentroids)
 {
-  m_EdgeCentroids = cellCentroids;
+  m_EdgeCentroids = elementCentroids;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::deleteCellCentroids()
+void EdgeGeom::deleteElementCentroids()
 {
   m_EdgeCentroids = FloatArrayType::NullPointer();
 }
@@ -455,9 +455,9 @@ IGeometry::Pointer EdgeGeom::deepCopy()
 {
   EdgeGeom::Pointer edgeCopy = EdgeGeom::CreateGeometry(getEdges(), getVertices(), getName());
 
-  edgeCopy->setCellsContaingVert(getCellsContainingVert());
-  edgeCopy->setCellNeighbors(getCellNeighbors());
-  edgeCopy->setCellCentroids(getCellCentroids());
+  edgeCopy->setElementsContainingVert(getElementsContainingVert());
+  edgeCopy->setElementNeighbors(getElementNeighbors());
+  edgeCopy->setElementCentroids(getElementCentroids());
   edgeCopy->setSpatialDimensionality(getSpatialDimensionality());
 
   return edgeCopy;

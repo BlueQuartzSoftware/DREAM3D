@@ -132,7 +132,7 @@ size_t VertexGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexGeom::findCellsContainingVert()
+int VertexGeom::findElementsContainingVert()
 {
   return -1;
 }
@@ -140,7 +140,7 @@ int VertexGeom::findCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer VertexGeom::getCellsContainingVert()
+CellDynamicList::Pointer VertexGeom::getElementsContainingVert()
 {
   return CellDynamicList::NullPointer();
 }
@@ -148,7 +148,7 @@ CellDynamicList::Pointer VertexGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+void VertexGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
 {
   return;
 }
@@ -156,7 +156,7 @@ void VertexGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::deleteCellsContainingVert()
+void VertexGeom::deleteElementsContainingVert()
 {
   return;
 }
@@ -164,7 +164,7 @@ void VertexGeom::deleteCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexGeom::findCellNeighbors()
+int VertexGeom::findElementNeighbors()
 {
   return -1;
 }
@@ -172,7 +172,7 @@ int VertexGeom::findCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer VertexGeom::getCellNeighbors()
+CellDynamicList::Pointer VertexGeom::getElementNeighbors()
 {
   return CellDynamicList::NullPointer();
 }
@@ -180,7 +180,7 @@ CellDynamicList::Pointer VertexGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+void VertexGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
 {
   return;
 }
@@ -188,7 +188,7 @@ void VertexGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::deleteCellNeighbors()
+void VertexGeom::deleteElementNeighbors()
 {
   return;
 }
@@ -196,7 +196,7 @@ void VertexGeom::deleteCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexGeom::findCellCentroids()
+int VertexGeom::findElementCentroids()
 {
   return -1;
 }
@@ -204,7 +204,7 @@ int VertexGeom::findCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatArrayType::Pointer VertexGeom::getCellCentroids()
+FloatArrayType::Pointer VertexGeom::getElementCentroids()
 {
   return FloatArrayType::NullPointer();
 }
@@ -212,7 +212,7 @@ FloatArrayType::Pointer VertexGeom::getCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+void VertexGeom::setElementCentroids(FloatArrayType::Pointer elementCentroids)
 {
   return;
 }
@@ -220,7 +220,7 @@ void VertexGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::deleteCellCentroids()
+void VertexGeom::deleteElementCentroids()
 {
   return;
 }

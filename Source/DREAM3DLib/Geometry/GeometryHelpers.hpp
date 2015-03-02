@@ -333,15 +333,15 @@ namespace GeometryHelpers
        * @brief FindCellCentroids
        * @param cellList
        * @param vertices
-       * @param cellCentroids
+       * @param elementCentroids
        */
       template<typename T>
-      static void FindCellCentroids(typename DataArray<T>::Pointer cellList, FloatArrayType::Pointer vertices, FloatArrayType::Pointer cellCentroids)
+      static void FindCellCentroids(typename DataArray<T>::Pointer cellList, FloatArrayType::Pointer vertices, FloatArrayType::Pointer elementCentroids)
       {
         size_t numCells = cellList->getNumberOfTuples();
         size_t numVertsPerCell = cellList->getNumberOfComponents();
         size_t numDims = 3;
-        float* cellCntrds = cellCentroids->getPointer(0);
+        float* cellCntrds = elementCentroids->getPointer(0);
         float* vertex = vertices->getPointer(0);
 
         for (size_t i = 0; i < numDims; i++)
@@ -422,7 +422,7 @@ namespace GeometryHelpers
 
         K* vertArray = inVertexArray->getPointer(0);
         float* cellArray = outCellArray->getPointer(0);
-        float* cellCentroids = centroids->getPointer(0);
+        float* elementCentroids = centroids->getPointer(0);
         float* vertex = vertices->getPointer(0);
 
         size_t numCells = outCellArray->getNumberOfTuples();
@@ -440,7 +440,7 @@ namespace GeometryHelpers
           {
             for (size_t k=0;k<numDims;k++)
             {
-              vertCentDist[numVertsPerCell*i+j] += (vertex[numDims*Cell[j]+k] - cellCentroids[numDims*i+k]) * (vertex[numDims*Cell[j]+k] - cellCentroids[numDims*i+k]);
+              vertCentDist[numVertsPerCell*i+j] += (vertex[numDims*Cell[j]+k] - elementCentroids[numDims*i+k]) * (vertex[numDims*Cell[j]+k] - elementCentroids[numDims*i+k]);
             }
             vertCentDist[numVertsPerCell*i+j] = sqrt(vertCentDist[numVertsPerCell*i+j]);
           }

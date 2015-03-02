@@ -152,7 +152,7 @@ size_t QuadGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuadGeom::findCellsContainingVert()
+int QuadGeom::findElementsContainingVert()
 {
   m_QuadsContainingVert = CellDynamicList::New();
   GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
@@ -166,7 +166,7 @@ int QuadGeom::findCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer QuadGeom::getCellsContainingVert()
+CellDynamicList::Pointer QuadGeom::getElementsContainingVert()
 {
   return m_QuadsContainingVert;
 }
@@ -174,15 +174,15 @@ CellDynamicList::Pointer QuadGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+void QuadGeom::setElementsContainingVert(CellDynamicList::Pointer elementsContainingVert)
 {
-  m_QuadsContainingVert = cellsContaingVert;
+  m_QuadsContainingVert = elementsContainingVert;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteCellsContainingVert()
+void QuadGeom::deleteElementsContainingVert()
 {
   m_QuadsContainingVert = CellDynamicList::NullPointer();
 }
@@ -190,7 +190,7 @@ void QuadGeom::deleteCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuadGeom::findCellNeighbors()
+int QuadGeom::findElementNeighbors()
 {
   int err = 0;
   if (m_QuadsContainingVert.get() == NULL)
@@ -209,7 +209,7 @@ int QuadGeom::findCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer QuadGeom::getCellNeighbors()
+CellDynamicList::Pointer QuadGeom::getElementNeighbors()
 {
   return m_QuadNeighbors;
 }
@@ -217,15 +217,15 @@ CellDynamicList::Pointer QuadGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+void QuadGeom::setElementNeighbors(CellDynamicList::Pointer elementNeighbors)
 {
-  m_QuadNeighbors = cellNeighbors;
+  m_QuadNeighbors = elementNeighbors;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteCellNeighbors()
+void QuadGeom::deleteElementNeighbors()
 {
   m_QuadNeighbors = CellDynamicList::NullPointer();
 }
@@ -233,7 +233,7 @@ void QuadGeom::deleteCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuadGeom::findCellCentroids()
+int QuadGeom::findElementCentroids()
 {
   QVector<size_t> cDims(1, 3);
   m_QuadCentroids = FloatArrayType::CreateArray(getNumberOfQuads(), cDims, DREAM3D::StringConstants::QuadCentroids);
@@ -248,7 +248,7 @@ int QuadGeom::findCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatArrayType::Pointer QuadGeom::getCellCentroids()
+FloatArrayType::Pointer QuadGeom::getElementCentroids()
 {
   return m_QuadCentroids;
 }
@@ -256,15 +256,15 @@ FloatArrayType::Pointer QuadGeom::getCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+void QuadGeom::setElementCentroids(FloatArrayType::Pointer elementCentroids)
 {
-  m_QuadCentroids = cellCentroids;
+  m_QuadCentroids = elementCentroids;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteCellCentroids()
+void QuadGeom::deleteElementCentroids()
 {
   m_QuadCentroids = FloatArrayType::NullPointer();
 }
@@ -472,9 +472,9 @@ IGeometry::Pointer QuadGeom::deepCopy()
 {
   QuadGeom::Pointer quadCopy = QuadGeom::CreateGeometry(getQuads(), getVertices(), getName());
 
-  quadCopy->setCellsContaingVert(getCellsContainingVert());
-  quadCopy->setCellNeighbors(getCellNeighbors());
-  quadCopy->setCellCentroids(getCellCentroids());
+  quadCopy->setElementsContainingVert(getElementsContainingVert());
+  quadCopy->setElementNeighbors(getElementNeighbors());
+  quadCopy->setElementCentroids(getElementCentroids());
   quadCopy->setSpatialDimensionality(getSpatialDimensionality());
 
   return quadCopy;

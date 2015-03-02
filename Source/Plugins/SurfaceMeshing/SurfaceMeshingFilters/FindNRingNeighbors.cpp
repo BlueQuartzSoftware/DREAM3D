@@ -86,15 +86,15 @@ int FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* fa
   int64_t* triangles = triangleGeom->getTriPointer(0);
   int err = 0;
   // Make sure we have the proper connectivity built
-  CellDynamicList::Pointer node2TrianglePtr = triangleGeom->getCellsContainingVert();
+  CellDynamicList::Pointer node2TrianglePtr = triangleGeom->getElementsContainingVert();
   if (node2TrianglePtr.get() == NULL)
   {
-    err = triangleGeom->findCellsContainingVert();
+    err = triangleGeom->findElementsContainingVert();
     if(err < 0)
     {
       return err;
     }
-    node2TrianglePtr = triangleGeom->getCellsContainingVert();
+    node2TrianglePtr = triangleGeom->getElementsContainingVert();
   }
 
   // Figure out these boolean values for a sanity check
