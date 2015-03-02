@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>711</width>
-    <height>173</height>
+    <width>758</width>
+    <height>177</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -32,7 +32,7 @@
    <item row="1" column="2">
     <widget class="QComboBox" name="dataContainerList">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -80,7 +80,7 @@
    <item row="1" column="3">
     <widget class="QComboBox" name="attributeMatrixList">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
