@@ -38,9 +38,10 @@
 #ifndef _PhReader_H_
 #define _PhReader_H_
 
-
+#include <QtCore/QObject>
 #include <stdio.h>
 #include <QtCore/QString>
+#include <QtCore/QScopedPointer>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -48,6 +49,9 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
 #include "DREAM3DLib/Common/Constants.h"
+
+// our PIMPL private class
+class PhReaderPrivate;
 
 /**
  * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
@@ -59,6 +63,9 @@
 class  PhReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+		Q_DECLARE_PRIVATE(PhReader)
+
+
   public:
     DREAM3D_SHARED_POINTERS(PhReader)
     DREAM3D_STATIC_NEW_MACRO(PhReader)
@@ -76,6 +83,9 @@ class  PhReader : public FileReader
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+
+	DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+	Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
@@ -102,6 +112,13 @@ class  PhReader : public FileReader
     virtual void preflight();
     virtual void execute();
 
+	DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
+		DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+		DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+
+  public slots:
+	void flushCache();
+
   signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
@@ -118,6 +135,8 @@ class  PhReader : public FileReader
     void updateCellInstancePointers();
 
   private:
+	  QScopedPointer<PhReaderPrivate> const d_ptr;
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     size_t m_Dims[3];
     FILE* m_InStream;
