@@ -24,7 +24,7 @@ namespace UnitTest
 
   namespace EMMPMSegmentationTest
   {
-    const QString TestFile("@DREAM3D_DATA_DIR@/EMMPMTestFiles/Test.tif");
+    const QString TestFile("@TEST_TEMP_DIR@/TestImage.tif");
   }
 
 }

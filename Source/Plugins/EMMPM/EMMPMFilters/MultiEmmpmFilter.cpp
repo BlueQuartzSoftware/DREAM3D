@@ -94,8 +94,6 @@ int MultiEmmpmFilter::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-
-
   DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayVector)
   DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
   DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
@@ -358,7 +356,6 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
   if (true == copyFilterParameters)
   {
-    DREAM3D_COPY_INSTANCEVAR(InputAttributeMatrixPath)
 	DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
     DREAM3D_COPY_INSTANCEVAR(NumClasses)
     DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)

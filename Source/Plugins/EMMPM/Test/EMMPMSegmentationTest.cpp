@@ -52,6 +52,22 @@
 
 #include "TestFileLocations.h"
 
+enum ErrorCodes
+{
+	NO_ERROR = 0,
+	COMPONENTS_DONT_MATCH = -503
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
+#if REMOVE_TEST_FILES
+	QFile::remove(UnitTest::EMMPMSegmentationTest::TestFile);
+#endif
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -106,7 +122,7 @@ void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString input
 		bool propWasSet;
 
 		var.setValue(inputFile);
-		propWasSet = filter->setProperty("InputFile", var);
+		propWasSet = filter->setProperty("InputFileName", var);
 		DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
 			pipeline->pushBack(filter);
@@ -157,7 +173,7 @@ void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, D
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath input, DataArrayPath output, DataContainerArray::Pointer ptr = DataContainerArray::NullPointer())
+void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath input, DataArrayPath output)
 {
 	QString filtName = "EMMPMFilter";
 	FilterManager* fm = FilterManager::Instance();
@@ -168,7 +184,6 @@ void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath inp
 		// If we get this far, the Factory is good so creating the filter should not fail unless something has
 		// horribly gone wrong in which case the system is going to come down quickly after this.
 		AbstractFilter::Pointer filter = filterFactory->create();
-		filter->setDataContainerArray(ptr);
 
 		QVariant var;
 		int err = 0;
@@ -194,41 +209,68 @@ void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath inp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void createAndAddMultiEMMPMFilter(FilterPipeline::Pointer pipeline, QVector<DataArrayPath> input)
+{
+	QString filtName = "MultiEmmpmFilter";
+	FilterManager* fm = FilterManager::Instance();
+	IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+
+	if (NULL != filterFactory.get())
+	{
+		// If we get this far, the Factory is good so creating the filter should not fail unless something has
+		// horribly gone wrong in which case the system is going to come down quickly after this.
+		AbstractFilter::Pointer filter = filterFactory->create();
+
+		QVariant var;
+		int err = 0;
+		bool propWasSet;
+
+		var.setValue(input);
+		propWasSet = filter->setProperty("InputDataArrayVector", var);
+		DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+			pipeline->pushBack(filter);
+	}
+	else
+	{
+		QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+		DREAM3D_REQUIRE_EQUAL(0, 1)
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TestEMMPMSegmentation()
 {
-	DataArrayPath input("Zeiss Axio Vision Montage", "Tile AttributeMatrix", "MNML_5_500x_101-Raw_p00");
-	DataArrayPath output("Zeiss Axio Vision Montage", "Tile AttributeMatrix", "Test");
-	QImage image(100, 100, QImage::Format_ARGB32);
-	image.save(UnitTest::EMMPMSegmentationTest::TestFile);
+	QImage inputImage(100, 100, QImage::Format_ARGB32);
+	bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
+	DREAM3D_REQUIRE_EQUAL(saveResult, true)
 
 	FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 	{
 
 		createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-		createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Test");
-		createAndAddEMMPMFilter(pipeline, input, output);
+		createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+		createAndAddEMMPMFilter(pipeline, DataArrayPath("DataContainer", "CellData", "Gray"), DataArrayPath("DataContainer", "CellData", "Test"));
 
 		pipeline->execute();
-		DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), 0)
+		DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
 	}
 
 	pipeline->clear();
 
 	{
-		DataContainerArray::Pointer dca = createAndAddZeissImportFilter(pipeline, TestFile, false);
-		createAndAddEMMPMFilter(pipeline, input, output, dca);
-		pipeline->execute();
-		DREAM3D_REQUIRE(pipeline->getErrorCondition(), <, 0)
+		createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
+		//createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+		createAndAddEMMPMFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), DataArrayPath("DataContainer", "CellData", "Test"));
 
-			pipeline->clear();
-
-		createAndAddEMMPMFilter(pipeline, input, output, dca);
 		pipeline->execute();
-		DREAM3D_REQUIRE(pipeline->getErrorCondition(), <, 0)
+		DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
 	}
 
-		return 1;
+		return EXIT_SUCCESS;
 }
 
 // -----------------------------------------------------------------------------
@@ -236,7 +278,38 @@ int TestEMMPMSegmentation()
 // -----------------------------------------------------------------------------
 int TestMultiEMMPMSegmentation()
 {
-	return 0;
+	QImage inputImage(100, 100, QImage::Format_ARGB32);
+	bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
+	DREAM3D_REQUIRE_EQUAL(saveResult, true)
+
+	FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+	{
+		createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
+		createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+
+		QVector<DataArrayPath> vector;
+		vector.push_back(DataArrayPath("DataContainer", "CellData", "Gray"));
+		createAndAddMultiEMMPMFilter(pipeline, vector);
+		pipeline->execute();
+		DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
+	}
+
+	pipeline->clear();
+
+	{
+		createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
+		createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+
+		QVector<DataArrayPath> vector;
+		vector.push_back(DataArrayPath("DataContainer", "CellData", "Gray"));
+		vector.push_back(DataArrayPath("DataContainer", "CellData", "ImageData"));
+		createAndAddMultiEMMPMFilter(pipeline, vector);
+		pipeline->execute();
+		DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
+	}
+
+	return EXIT_SUCCESS;
 }
 
 // -----------------------------------------------------------------------------
@@ -271,6 +344,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST(TestEMMPMSegmentation())
   DREAM3D_REGISTER_TEST(TestMultiEMMPMSegmentation())
 
+  DREAM3D_REGISTER_TEST(RemoveTestFiles())
   PRINT_TEST_SUMMARY();
 
   return err;
