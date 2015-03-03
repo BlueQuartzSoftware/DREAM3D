@@ -155,6 +155,14 @@ void ExportData::dataCheck()
 
   QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
+  if (DataArrayPath::validateVector(paths) == false)
+  {
+	  setErrorCondition(-11004);
+	  QString ss = QObject::tr("There are data arrays selected that are not contained in the same attribute matrix.  Please select only arrays from the same attribute matrix.");
+	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+	  return;
+  }
+
   for (int i = 0; i < paths.count(); i++)
   {
 	  DataArrayPath path = paths.at(i);
