@@ -422,7 +422,7 @@ int TestDxReaderCache()
 		// Change the contents of the file to be read
 		{
 			QFile file(UnitTest::DxIOTest::TestFile2);
-			if (!file.open(QFile::ReadWrite | QFile::Text))
+			if (!file.open(QFile::ReadWrite | QFile::Append))
 				DREAM3D_REQUIRE_EQUAL(0, 1)
 			QTextStream out(&file);
 			out << "This test string should force the filter to read from the file instead of the cache.";
