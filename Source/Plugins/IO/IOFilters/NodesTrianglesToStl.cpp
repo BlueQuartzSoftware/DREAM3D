@@ -114,7 +114,7 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToStl::dataCheck(bool preflight)
+void NodesTrianglesToStl::dataCheck()
 {
   setErrorCondition(0);
 
@@ -128,7 +128,7 @@ void NodesTrianglesToStl::dataCheck(bool preflight)
   else if (fi.exists() == false)
   {
 
-    if (preflight == true)
+    if (getInPreflight())
     { notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
     else
     {
@@ -146,7 +146,7 @@ void NodesTrianglesToStl::dataCheck(bool preflight)
   else if (fii.exists() == false)
   {
 
-    if (preflight == true)
+    if (getInPreflight())
     { notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
     else
     {
@@ -170,7 +170,7 @@ void NodesTrianglesToStl::preflight()
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
-  dataCheck(true);
+  dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
@@ -183,7 +183,7 @@ void NodesTrianglesToStl::execute()
 {
   //int err = 0;
 
-  dataCheck(false);
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

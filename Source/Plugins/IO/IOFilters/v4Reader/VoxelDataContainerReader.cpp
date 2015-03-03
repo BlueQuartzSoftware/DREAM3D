@@ -124,7 +124,7 @@ void VoxelDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t f
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
-  else if (preflight == true)
+  else if (getInPreflight())
   {
     int err = gatherData(preflight);
     if (err < 0)

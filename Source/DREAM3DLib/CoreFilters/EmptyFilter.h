@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT EmptyFilter : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight);
+    void dataCheck();
 
   private:
     QString m_HumanLabel;

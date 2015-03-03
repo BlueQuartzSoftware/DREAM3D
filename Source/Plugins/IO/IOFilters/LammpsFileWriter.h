@@ -131,7 +131,7 @@ class  LammpsFileWriter : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight);
+    void dataCheck();
 
   private:
 

@@ -43,7 +43,7 @@ namespace GeometryHelpers
         H5T_class_t type_class;
         size_t type_size;
         typename ListType::Pointer mesh = ListType::CreateArray(0, listName);
-        if (true == preflight)
+		if (preflight == true)
         {
           err = QH5Lite::getDatasetInfo(parentId, listName, dims, type_class, type_size);
           if (err < 0)

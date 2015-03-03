@@ -103,7 +103,7 @@ int LammpsFileWriter::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LammpsFileWriter::dataCheck(bool preflight)
+void LammpsFileWriter::dataCheck()
 {
   setErrorCondition(0);
 
@@ -135,7 +135,7 @@ void LammpsFileWriter::preflight()
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
-  dataCheck(true);
+  dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
@@ -147,7 +147,7 @@ void LammpsFileWriter::execute()
 {
   //int err = 0;
 
-  dataCheck(false);
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());

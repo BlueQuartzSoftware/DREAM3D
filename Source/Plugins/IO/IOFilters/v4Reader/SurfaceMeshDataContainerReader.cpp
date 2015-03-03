@@ -124,7 +124,7 @@ void SurfaceMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, si
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
-  else if (preflight == true)
+  else if (getInPreflight())
   {
     int err = gatherData(preflight);
     if (err < 0)
@@ -256,7 +256,7 @@ int SurfaceMeshDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight
   H5T_class_t type_class;
   size_t type_size;
 
-  if (true == preflight)
+  if (getInPreflight())
   {
     err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
     if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
@@ -298,7 +298,7 @@ int SurfaceMeshDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
   std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;
-  if (true == preflight)
+  if (getInPreflight())
   {
     err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
     if (err >= 0)
@@ -339,7 +339,7 @@ int SurfaceMeshDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 //  H5T_class_t type_class;
 //  size_t type_size;
 
-//  if (true == preflight)
+//  if (getInPreflight())
 //  {
 //    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
 //    if (err >= 0)

@@ -108,7 +108,7 @@ int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::dataCheck(bool preflight)
+void RegularizeZSpacing::dataCheck()
 {
   setErrorCondition(0);
 
@@ -131,7 +131,7 @@ void RegularizeZSpacing::dataCheck(bool preflight)
   size_t zP = static_cast<size_t>(zval / getNewZRes());
   if(zP == 0) { zP = 1; }
 
-  if(preflight == true)
+  if(getInPreflight())
   {
     m->getGeometryAs<ImageGeom>()->setDimensions(m->getGeometryAs<ImageGeom>()->getXPoints(), m->getGeometryAs<ImageGeom>()->getYPoints(), zP);
     QVector<size_t> tDims(3, 0);
@@ -152,7 +152,7 @@ void RegularizeZSpacing::preflight()
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
-  dataCheck(true);
+  dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
@@ -164,7 +164,7 @@ void RegularizeZSpacing::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  dataCheck(false);
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DREAM3D_RANDOMNG_NEW()

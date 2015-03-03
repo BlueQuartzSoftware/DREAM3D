@@ -109,7 +109,7 @@ class RegularizeZSpacing : public AbstractFilter
 
 
   private:
-    void dataCheck(bool preflight);
+    void dataCheck();
 
     RegularizeZSpacing(const RegularizeZSpacing&); // Copy Constructor Not Implemented
     void operator=(const RegularizeZSpacing&); // Operator '=' Not Implemented

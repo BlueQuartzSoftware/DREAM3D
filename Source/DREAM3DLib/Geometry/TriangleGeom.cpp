@@ -394,7 +394,7 @@ int TriangleGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   triangles = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedTriList>(DREAM3D::Geometry::SharedTriList, parentId, preflight);
   QVector<size_t> cDims(1, 0);
   FloatArrayType::Pointer triCentroids = FloatArrayType::CreateArray(cDims, cDims, DREAM3D::StringConstants::TriangleCentroids);
-  if (true == preflight)
+  if (preflight == true)
   {
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TriangleNeighbors, dims, type_class, type_size);
     if (err >= 0)
