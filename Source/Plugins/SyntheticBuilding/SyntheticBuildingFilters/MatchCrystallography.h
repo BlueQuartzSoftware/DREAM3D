@@ -106,6 +106,7 @@ class MatchCrystallography : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, AvgQuatsArrayName)
     Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
+
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
@@ -170,6 +171,7 @@ class MatchCrystallography : public AbstractFilter
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, SyntheticCrystalStructures)
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
