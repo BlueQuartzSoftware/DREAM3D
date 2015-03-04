@@ -192,9 +192,9 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
   int numBins = numBinsLE->text().toInt(&ok);
 
   std::vector<float> boxDims(3);
-  boxDims[0] = 100;
-  boxDims[1] = 100;
-  boxDims[2] = 100;
+  boxDims[0] = BoxSizeXLE->text().toFloat(&ok);
+  boxDims[1] = BoxSizeYLE->text().toFloat(&ok);
+  boxDims[2] = BoxSizeZLE->text().toFloat(&ok);
   std::vector<float> boxRes(3);
   boxRes[0] = 0.1f;
   boxRes[1] = 0.1f;
@@ -298,13 +298,40 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
 {
   bool ok = false;
   RdfData::Pointer rdf = RdfData::New();
+  QVector<float> qRdfDataFinal(numBinsLE->text().toInt(&ok));
+
+  std::vector<float> boxDims(3);
+  boxDims[0] = BoxSizeXLE->text().toFloat(&ok);
+  boxDims[1] = BoxSizeYLE->text().toFloat(&ok);
+  boxDims[2] = BoxSizeZLE->text().toFloat(&ok);
+  std::vector<float> boxRes(3);
+  boxRes[0] = 0.1f;
+  boxRes[1] = 0.1f;
+  boxRes[2] = 0.1f;
 
   rdf->setMinDistance(minDistLE->text().toFloat(&ok));
   rdf->setMaxDistance(maxDistLE->text().toFloat(&ok));
 
-  QVector<float> qRdfData = m_RDFTableModel->getData(SGRDFTableModel::Frequency);
+  //Here we want to take whatever the user entered in and normalize
+  //it by what it would look like if a large number of particles were
+  //randomly thrown in the same size box.
+  //So, for example, if the user chooses a random distribution to start with
+  //the actual values they would store would be very close to 1.0, signifying that
+  //in each bin, it is about 1.0x above a random distribution.
+  //The user will not see the normalized by random values in the StatsGen Widget table,
+  //but they will be stored normalized by random in the HDF5 file
 
-  rdf->setFrequencies(qRdfData.toStdVector());
+  QVector<float> qRdfData = m_RDFTableModel->getData(SGRDFTableModel::Frequency);
+  std::vector<float> randomFreq = RadialDistributionFunction::GenerateRandomDistribution(minDistLE->text().toFloat(&ok), maxDistLE->text().toFloat(&ok), numBinsLE->text().toInt(&ok), boxDims, boxRes);
+
+  for (size_t i=0; i<qRdfDataFinal.size(); i++)
+  {
+      qRdfDataFinal[i] = qRdfData[i+1]/randomFreq[i+1];
+  }
+
+
+
+  rdf->setFrequencies(qRdfDataFinal.toStdVector());
 
   return rdf;
 }
