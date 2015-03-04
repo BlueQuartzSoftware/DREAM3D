@@ -342,7 +342,10 @@ int PhReader::readHeader()
   fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
 
   // Set the values into the cache, so that they can be used later
-  QVector<int> v = { nx, ny, nz };
+  QVector<int> v;
+  v.push_back(nx);
+  v.push_back(ny);
+  v.push_back(nz);
   setDims(v);
 
   m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
