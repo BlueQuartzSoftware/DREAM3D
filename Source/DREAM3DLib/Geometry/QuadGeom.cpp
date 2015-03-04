@@ -272,14 +272,6 @@ void QuadGeom::deleteElementCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::findDerivatives(FloatArrayType::Pointer field, FloatArrayType::Pointer derivatives, float pCoords[3], int dim)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int QuadGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
 {
   herr_t err = 0;

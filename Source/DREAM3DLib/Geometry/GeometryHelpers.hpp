@@ -1,8 +1,6 @@
 #ifndef _GeometryHelpers_H_
 #define _GeometryHelpers_H_
 
-#include <boost/shared_ptr.hpp>
-
 #include <math.h>
 
 #include "H5Support/QH5Utilities.h"

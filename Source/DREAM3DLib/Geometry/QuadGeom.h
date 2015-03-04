@@ -42,6 +42,10 @@
 #include "DREAM3DLib/Geometry/IGeometry.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 
+// placeholder includes until issues #286/#284 are fixed
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Geometry/DerivativeHelpers.h"
+
 /**
  * @brief The QuadGeom class represents a collection of quadrilaterals
  */
@@ -72,6 +76,90 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @return
      */
     static Pointer CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name);
+
+    // the following functions are placeholders until issues #286/#284 are fixed
+    static void ComputeNormal(float n0[3], float n1[3], float n2[3], float normal[3])
+    {
+      float vert0[3];
+      float vert1[3];
+      float vert2[3];
+      float u[3];
+      float w[3];
+
+      vert0[0] = static_cast<float>(n0[0]);
+      vert0[1] = static_cast<float>(n0[1]);
+      vert0[2] = static_cast<float>(n0[2]);
+
+      vert1[0] = static_cast<float>(n1[0]);
+      vert1[1] = static_cast<float>(n1[1]);
+      vert1[2] = static_cast<float>(n1[2]);
+
+      vert2[0] = static_cast<float>(n2[0]);
+      vert2[1] = static_cast<float>(n2[1]);
+      vert2[2] = static_cast<float>(n2[2]);
+
+      // Compute the normal
+      u[0] = vert1[0] - vert0[0];
+      u[1] = vert1[1] - vert0[1];
+      u[2] = vert1[2] - vert0[2];
+
+      w[0] = vert2[0] - vert0[0];
+      w[1] = vert2[1] - vert0[1];
+      w[2] = vert2[2] - vert0[2];
+
+      MatrixMath::CrossProduct(u, w, normal);
+      MatrixMath::Normalize3x1(normal);
+    }
+
+   static void InterpolationDerivatives(float pCoords[3], float derivs[8])
+   {
+     float rm, sm;
+
+     rm = 1.0f - pCoords[0];
+     sm = 1.0f - pCoords[1];
+
+     derivs[0] = -sm;
+     derivs[1] = sm;
+     derivs[2] = pCoords[1];
+     derivs[3] = -pCoords[1];
+     derivs[4] = -rm;
+     derivs[5] = -pCoords[0];
+     derivs[6] = pCoords[0];
+     derivs[7] = rm;
+   }
+
+   static void GetParametricCenter(float pCoords[3])
+   {
+     pCoords[0] = 0.5f;
+     pCoords[1] = 0.5f;
+     pCoords[2] = 0.0f;
+   }
+
+   void findDerivatives(FloatArrayType::Pointer field, FloatArrayType::Pointer derivatives)
+   {
+     int64_t numQuads = getNumberOfQuads();
+     std::vector<float> values(4);
+     float derivs[3];
+     int cDimsIn = field->getNumberOfComponents();
+     float* fieldPtr = field->getPointer(0);
+     float* derivPtr = derivatives->getPointer(0);
+     int64_t verts[4];
+     for (int64_t i = 0; i < numQuads; i++)
+     {
+       getVertsAtQuad(i, verts);
+       for (int j = 0; j < cDimsIn; j++)
+       {
+         for (int k = 0; k < 4; k++)
+         {
+           values[k] = static_cast<float>(fieldPtr[cDimsIn*verts[k]+j]);
+         }
+         DerivativeHelpers::QuadDeriv()(this, i, &values[0], derivs, 1);
+         derivPtr[i*3*cDimsIn+j*3] = static_cast<float>(derivs[0]);
+         derivPtr[i*3*cDimsIn+j*3+1] = static_cast<float>(derivs[1]);
+         derivPtr[i*3*cDimsIn+j*3+2] = static_cast<float>(derivs[2]);
+       }
+     }
+   }
 
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
@@ -324,15 +412,6 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @brief deleteElementCentroids
      */
     virtual void deleteElementCentroids();
-
-    /**
-     * @brief findDerivatives
-     * @param field
-     * @param derivatives
-     * @param pCoords
-     * @param dim
-     */
-    virtual void findDerivatives(FloatArrayType::Pointer field, FloatArrayType::Pointer derivatives, float pCoords[3], int dim);
 
     /**
      * @brief setName
