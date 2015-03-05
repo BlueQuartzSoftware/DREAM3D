@@ -51,7 +51,7 @@
 
 #include "Plugins/OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
 
-#include "TestFileLocations.h"
+#include "OrientationAnalysisTestFileLocations.h"
 
 const QString File1(UnitTest::CtfCachingTest::TestInputFile1);
 const QString File2(UnitTest::CtfCachingTest::TestInputFile2);

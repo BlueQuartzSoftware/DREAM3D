@@ -51,7 +51,7 @@
 
 #include "Plugins/OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 
-#include "TestFileLocations.h"
+#include "OrientationAnalysisTestFileLocations.h"
 
 const QString File1(UnitTest::AngCachingTest::TestInputFile1);
 const QString File2(UnitTest::AngCachingTest::TestInputFile2);
