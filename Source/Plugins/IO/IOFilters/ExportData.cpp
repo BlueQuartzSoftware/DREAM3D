@@ -41,6 +41,80 @@
 
 #include "IO/IOConstants.h"
 
+template<typename TInputType>
+class ExportDataPrivate
+{
+  public:
+    typedef DataArray<TInputType> DataArrayType;
+
+    ExportDataPrivate() {}
+    virtual ~ExportDataPrivate() {}
+
+    // -----------------------------------------------------------------------------
+    // Determine if this is the proper type of an array to downcast from the IDataArray
+    // -----------------------------------------------------------------------------
+    bool operator()(IDataArray::Pointer p)
+    {
+      return (boost::dynamic_pointer_cast<DataArrayType>(p).get() != NULL);
+    }
+
+    // -----------------------------------------------------------------------------
+    // This is the actual templated algorithm
+    // -----------------------------------------------------------------------------
+    void static Execute(ExportData* filter, IDataArray::Pointer inputData, char delimeter, QString outputFile, int MaxValPerLine)
+    {
+      typename DataArrayType::Pointer inputArray = boost::dynamic_pointer_cast<DataArrayType>(inputData);
+      if(NULL == inputArray.get())
+      {
+        QString ss = QObject::tr("The input array could not be downcast to the proper type for writing.");
+        filter->setErrorCondition(-11007);
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        return;
+      }
+
+      QFile file(outputFile);
+      if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+      {
+        QString ss = QObject::tr("The output file could not be opened for writing.'%1'").arg(outputFile);
+        filter->setErrorCondition(-11008);
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        return;
+      }
+
+      QTextStream out(&file);
+
+      int nComp = inputArray->getNumberOfComponents();
+
+
+      TInputType* inputArrayPtr = inputArray->getPointer(0);
+      size_t nTuples = inputArray->getNumberOfTuples();
+
+      int recCount = 0;
+      for (size_t i = 0; i < nTuples; i++)
+      {
+
+        for(int j = 0; j < nComp; j++) {
+          out << inputArrayPtr[i*nComp + j];
+          if(j<nComp-1) { out << delimeter; }
+        }
+        recCount++;
+
+        if(recCount >= MaxValPerLine)
+        {
+          out << '\n';
+          recCount = 0;
+        }
+        else
+        {
+          out << delimeter;
+        }
+      }
+    }
+
+
+};
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -123,8 +197,8 @@ int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 void ExportData::dataCheck()
 {
-	// Make sure the weak pointer vector is cleared before we begin...
-	m_SelectedWeakPtrVector.clear();
+  // Make sure the weak pointer vector is cleared before we begin...
+  m_SelectedWeakPtrVector.clear();
 
   DataArrayPath tempPath;
   setErrorCondition(0);
@@ -157,17 +231,17 @@ void ExportData::dataCheck()
 
   if (DataArrayPath::validateVector(paths) == false)
   {
-	  setErrorCondition(-11004);
-	  QString ss = QObject::tr("There are data arrays selected that are not contained in the same attribute matrix.  Please select only arrays from the same attribute matrix.");
-	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-	  return;
+    setErrorCondition(-11004);
+    QString ss = QObject::tr("There are data arrays selected that are not contained in the same attribute matrix.  Please select only arrays from the same attribute matrix.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   for (int i = 0; i < paths.count(); i++)
   {
-	  DataArrayPath path = paths.at(i);
-	  IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
-	  m_SelectedWeakPtrVector.push_back(ptr);
+    DataArrayPath path = paths.at(i);
+    IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
+    m_SelectedWeakPtrVector.push_back(ptr);
   }
 }
 
@@ -188,54 +262,6 @@ void ExportData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-int writeDataFile(IDataArray::Pointer inputData, char delimeter, QString outputFile, int MaxValPerLine)
-{
-  typename DataArray<T>::Pointer inputArray = boost::dynamic_pointer_cast< DataArray<T> >(inputData);
-  if(NULL == inputArray.get())
-  {
-    return -11007;
-  }
-
-  QFile file(outputFile);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    return -11008;
-
-  QTextStream out(&file);
-
-  int nComp = inputArray->getNumberOfComponents();
-
-
-  T* inputArrayPtr = inputArray->getPointer(0);
-  size_t nTuples = inputArray->getNumberOfTuples();
-
-  int recCount = 0;
-  for (size_t i = 0; i < nTuples; i++)
-  {
-
-    for(int j = 0; j < nComp; j++) {
-      out << inputArrayPtr[i*nComp + j];
-      if(j<nComp-1) { out << delimeter; }
-    }
-    recCount++;
-
-    if(recCount >= MaxValPerLine)
-    {
-      out << '\n';
-      recCount = 0;
-    }
-    else
-    {
-      out << delimeter;
-    }
-  }
-
-  return 1;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ExportData::execute()
 {
   setErrorCondition(0);
@@ -244,10 +270,10 @@ void ExportData::execute()
 
   if (m_SelectedDataArrayPaths.count() != m_SelectedWeakPtrVector.count())
   {
-	  QString ss = QObject::tr("The number of data array paths does not equal the number of weak pointers.");
-	  setErrorCondition(-11008);
-	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-	  return;
+    QString ss = QObject::tr("The number of data array paths does not equal the number of weak pointers.");
+    setErrorCondition(-11008);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   QString ss;
@@ -267,73 +293,69 @@ void ExportData::execute()
 
   for (int i = 0; i < m_SelectedWeakPtrVector.count(); i++)
   {
-	  IDataArray::WeakPointer selectedArrayPtr = m_SelectedWeakPtrVector.at(i);
+    IDataArray::WeakPointer selectedArrayPtr = m_SelectedWeakPtrVector.at(i);
 
-	  QString exportArrayFile = m_OutputPath + QDir::separator() + selectedArrayPtr.lock()->getName() + m_FileExtension; // the complete output file path, name and extension
+    QString message = QObject::tr(":: Exporting Dataset '%1'").arg(selectedArrayPtr.lock()->getName());
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), message);
 
-	  char delimeter = lookupDelimeter();
 
-	  int err = 0;
-	  QString dType = selectedArrayPtr.lock()->getTypeAsString();
-	  if (dType.compare("int8_t") == 0)
-	  {
-		  err = writeDataFile<int8_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("uint8_t") == 0)
-	  {
-		  err = writeDataFile<uint8_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("int16_t") == 0)
-	  {
-		  err = writeDataFile<int16_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("uint16_t") == 0)
-	  {
-		  err = writeDataFile<uint16_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("int32_t") == 0)
-	  {
-		  err = writeDataFile<int32_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("uint32_t") == 0)
-	  {
-		  err = writeDataFile<uint32_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("int64_t") == 0)
-	  {
-		  err = writeDataFile<int64_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("uint64_t") == 0)
-	  {
-		  err = writeDataFile<uint64_t>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("float") == 0)
-	  {
-		  err = writeDataFile<float>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("double") == 0)
-	  {
-		  err = writeDataFile<double>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else if (dType.compare("bool") == 0)
-	  {
-		  err = writeDataFile<bool>(selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
-	  }
-	  else
-	  {
-		  ss = QObject::tr("Incorrect type for selected array '%1' for the output file ").arg(m_SelectedDataArrayPaths.at(i).getDataArrayName());
-		  setErrorCondition(-11006);
-		  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		  return;
-	  }
+    QString exportArrayFile = m_OutputPath + QDir::separator() + selectedArrayPtr.lock()->getName() + m_FileExtension; // the complete output file path, name and extension
 
-	  if (-11008 == err)
-	  {
-		  ss = QObject::tr("Could not open Output file '%1' for writing.").arg(exportArrayFile);
-		  setErrorCondition(err);
-		  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		  return;
-	  }
+    char delimeter = lookupDelimeter();
+
+    if (ExportDataPrivate<int8_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<int8_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<uint8_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<uint8_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<int16_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<int16_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<uint16_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<uint16_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<int32_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<int32_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<uint32_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<uint32_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<int64_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<int64_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<uint64_t>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<uint64_t>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<float>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<float>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<double>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<double>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else if (ExportDataPrivate<bool>()(selectedArrayPtr.lock()))
+    {
+      ExportDataPrivate<bool>::Execute(this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine);
+    }
+    else
+    {
+      ss = QObject::tr("Incorrect type for selected array '%1' for the output file ").arg(m_SelectedDataArrayPaths.at(i).getDataArrayName());
+      setErrorCondition(-11006);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    if(getErrorCondition() < 0) { break; }
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -347,23 +369,23 @@ char ExportData::lookupDelimeter()
   char del = ' ';
   switch (m_Delimeter)
   {
-  case Comma:
-    del = ',';
-    break;
-  case Semicolon:
-    del = ';';
-    break;
-  case Space:
-    del = ' ';
-    break;
-  case Colon:
-    del = ':';
-    break;
-  case Tab:
-    del = '\t';
-    break;
-  default:
-    del = ' ';
+    case Comma:
+      del = ',';
+      break;
+    case Semicolon:
+      del = ';';
+      break;
+    case Space:
+      del = ' ';
+      break;
+    case Colon:
+      del = ':';
+      break;
+    case Tab:
+      del = '\t';
+      break;
+    default:
+      del = ' ';
   }
   return del;
 }
@@ -406,5 +428,5 @@ const QString ExportData::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getHumanLabel()
-{ return "Export Data"; }
+{ return "Export Data (ASCII Text)"; }
 
