@@ -1,6 +1,7 @@
 #ifndef _@PROJECT_NAME@FileLocation_h_
 #define _@PROJECT_NAME@FileLocation_h_
 
+
 #include <QtCore/QString>
 
 #define REMOVE_TEST_FILES 1
@@ -21,7 +22,11 @@ namespace UnitTest
   const QString TestTempDir("@TEST_TEMP_DIR@");
   const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
-  
+  namespace EMMPMSegmentationTest
+  {
+    const QString TestFile("@TEST_TEMP_DIR@/TestImage.tif");
+  }
+
 }
 
 #endif
