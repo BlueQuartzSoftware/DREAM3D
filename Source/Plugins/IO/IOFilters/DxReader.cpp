@@ -419,6 +419,7 @@ int DxReader::readHeader()
   v.push_back(nx);
   v.push_back(ny);
   v.push_back(nz);
+
   setDims(v);
 
   m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);

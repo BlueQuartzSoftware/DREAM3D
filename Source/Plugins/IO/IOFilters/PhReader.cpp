@@ -44,12 +44,41 @@
 #include <sstream>
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QDateTime>
 
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 #include "IO/IOConstants.h"
 
 #define BUF_SIZE 1024
+
+/* ############## Start Private Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class PhReaderPrivate
+{
+	Q_DISABLE_COPY(PhReaderPrivate)
+		Q_DECLARE_PUBLIC(PhReader)
+		PhReader* const q_ptr;
+	PhReaderPrivate(PhReader* ptr);
+
+	QVector<int> m_Dims;
+	QString m_InputFile_Cache;
+	QDateTime m_LastRead;
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
+q_ptr(ptr),
+m_InputFile_Cache(""),
+m_LastRead(QDateTime()),
+m_Dims(QVector<int>())
+{
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -60,7 +89,9 @@ PhReader::PhReader() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+  m_FileWasRead(false),
+  d_ptr(new PhReaderPrivate(this))
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -83,6 +114,13 @@ PhReader::~PhReader()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QVector<int>, Dims)
+DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QString, InputFile_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QDateTime, LastRead)
 
 // -----------------------------------------------------------------------------
 //
@@ -146,6 +184,20 @@ void PhReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PhReader::flushCache()
+{
+	setInputFile_Cache("");
+	QVector<int> v;
+	v.push_back(0);
+	v.push_back(0);
+	v.push_back(0);
+	setDims(v);
+	setLastRead(QDateTime());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PhReader::dataCheck()
 {
   DataArrayPath tempPath;
@@ -184,23 +236,47 @@ void PhReader::dataCheck()
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
-    // We need to read the header of the input file to get the dimensions
-    m_InStream = fopen(getInputFile().toLatin1().data(), "r");
-    if(m_InStream == NULL)
-    {
-      setErrorCondition(-48802);
-      notifyErrorMessage(getHumanLabel(), "Error opening input file", getErrorCondition());
-      return;
-    }
-    int error = readHeader();
-    fclose(m_InStream);
-    m_InStream = NULL;
-    if (error < 0)
-    {
-      setErrorCondition(error);
-      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
-      notifyErrorMessage(getHumanLabel(), ss, -48010);
-    }
+	  QDateTime lastModified(fi.lastModified());
+
+	  QString lastRead = getLastRead().toString();
+	  bool lastReadValid = getLastRead().isValid();
+	  qint64 secs = lastModified.msecsTo(getLastRead());
+
+	  if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
+	  {
+		  // We are reading from the cache, so set the FileWasRead flag to false
+		  m_FileWasRead = false;
+
+		  QVector<int> v = getDims();
+		  m->getGeometryAs<ImageGeom>()->setDimensions(v[0], v[1], v[2]);
+	  }
+	  else
+	  {
+		  // We are reading from the file, so set the FileWasRead flag to true
+		  m_FileWasRead = true;
+
+		  // We need to read the header of the input file to get the dimensions
+		  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
+		  if (m_InStream == NULL)
+		  {
+			  setErrorCondition(-48802);
+			  notifyErrorMessage(getHumanLabel(), "Error opening input file", getErrorCondition());
+			  return;
+		  }
+		  int error = readHeader();
+		  fclose(m_InStream);
+		  m_InStream = NULL;
+		  if (error < 0)
+		  {
+			  setErrorCondition(error);
+			  QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
+			  notifyErrorMessage(getHumanLabel(), ss, -48010);
+		  }
+
+		  // Set the file path and time stamp into the cache
+		  setLastRead(QDateTime::currentDateTime());
+		  setInputFile_Cache(getInputFile());
+	  }
   }
 }
 
@@ -264,6 +340,14 @@ int PhReader::readHeader()
 
   // Read Line #1 which has the dimensions
   fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
+
+  // Set the values into the cache, so that they can be used later
+  QVector<int> v;
+  v.push_back(nx);
+  v.push_back(ny);
+  v.push_back(nz);
+  setDims(v);
+
   m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
 
   char buf[BUF_SIZE];
