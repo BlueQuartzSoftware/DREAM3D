@@ -950,7 +950,6 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
     dcaProxy.list.push_back(dcProxy);
 
   }
-  dcaProxy.isValid = true;
   return dcaProxy;
 }
 

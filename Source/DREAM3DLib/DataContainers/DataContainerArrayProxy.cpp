@@ -47,27 +47,20 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy::DataContainerArrayProxy() : isValid(false) {}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainerArrayProxy::DataContainerArrayProxy(bool is_valid) : isValid(is_valid) {}
+DataContainerArrayProxy::DataContainerArrayProxy() {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy::DataContainerArrayProxy(const DataContainerArrayProxy& rhs)
 {
-  isValid = rhs.isValid;
   list = rhs.list;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
-  isValid(false)
+DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca)
 {
 
   if(NULL == dca)
@@ -105,7 +98,6 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
     }
     list.push_back(dcProxy);
   }
-  isValid = true;
 }
 
 
@@ -115,7 +107,6 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxy::operator=(const DataContainerArrayProxy& rhs)
 {
-  isValid = rhs.isValid;
   list = rhs.list;
 }
 

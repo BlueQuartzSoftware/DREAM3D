@@ -38,6 +38,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QDateTime>
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QFileDialog>
@@ -377,15 +378,6 @@ void DataContainerReaderWidget::itemActivated(const QModelIndex& index)
   updateProxyFromModel();
   m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);		// Set the new proxy into filter
 
-  if (m_DcaProxy.list.size() > 0)
-  {
-	  m_Filter->setIsProxyValid(true);
-  }
-  else
-  {
-	  m_Filter->setIsProxyValid(false);
-  }
-
   emit parametersChanged();
   m_DidCausePreflight = false;
 }
@@ -596,15 +588,6 @@ void DataContainerReaderWidget::filterNeedsInputParameters(AbstractFilter* filte
   m_Filter->setInputFile(filePath->text());
   updateProxyFromModel(); // Will update m_DcaProxy with the latest selections from the Model
   m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);
-
-  if (m_Filter->getInputFileDataContainerArrayProxy().list.size() > 0)
-  {
-	  m_Filter->setIsProxyValid(true);
-  }
-  else
-  {
-	  m_Filter->setIsProxyValid(false);
-  }
 }
 
 
@@ -641,11 +624,7 @@ bool DataContainerReaderWidget::verifyPathExists(QString filePath, QFSDropLabel*
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 {
-	// If we are switching files, invalidate the proxy
-	if (m_LastFileRead.isEmpty() == false && text != m_LastFileRead)
-	{
-		m_Filter->setIsProxyValid(false);
-	}
+	DataContainerArrayProxy proxy;
 
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
@@ -654,30 +633,28 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
   {
     if(getFilter() != NULL)
     {
-      if(m_LastFileRead.compare(text) != 0)
+      if(m_Filter->getLastFileRead().compare(text) != 0)
       {
         QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcaProxyView->model());
         if(NULL != model)
         {
           model->clear();
         }
-        m_LastFileRead = text; // Update the cached file path
-      }
 
-      if(filePath->text().isEmpty() == false)
-      {
-        DataContainerArrayProxy proxy;
-        if (m_Filter->getInputFileDataContainerArrayProxy().isValid == true)
-        {
-          proxy = m_Filter->getInputFileDataContainerArrayProxy();
-        }
-        else
-        {
-          proxy = m_Filter->readDataContainerArrayStructure(filePath->text());
-        }
+		if (m_Filter->getInputFileDataContainerArrayProxy().list.size() > 0 && (text == m_Filter->getLastFileRead() || m_Filter->getLastFileRead().isEmpty()))
+		{
+			proxy = m_Filter->getInputFileDataContainerArrayProxy();
+		}
+		else
+		{
+			proxy = m_Filter->readDataContainerArrayStructure(text);
+			m_Filter->setLastRead(QDateTime::currentDateTime());
+		}
+
+        m_Filter->setLastFileRead(text); // Update the cached file path in the filter
+      }
 
         updateModelFromProxy(proxy);
-      }
     }
     emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
   }

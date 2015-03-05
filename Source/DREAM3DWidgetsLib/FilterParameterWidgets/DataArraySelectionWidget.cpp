@@ -512,7 +512,7 @@ void DataArraySelectionWidget::afterPreflight()
 DataContainerArrayProxy DataArraySelectionWidget::generateDCAProxy()
 {
   // This will only work for a single selection
-  DataContainerArrayProxy dcaProxy(true);
+  DataContainerArrayProxy dcaProxy;
   QString dcaName = dataContainerList->currentText();
   DataContainerProxy dcProxy(dcaName, true);
 

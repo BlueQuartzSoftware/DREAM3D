@@ -50,10 +50,11 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
-  AbstractFilter(),
-  m_InputFile(""),
-  m_OverwriteExistingDataContainers(false),
-  m_InputFileDataContainerArrayProxy()
+AbstractFilter(),
+m_InputFile(""),
+m_OverwriteExistingDataContainers(false),
+m_InputFileDataContainerArrayProxy(),
+m_LastFileRead("")
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
@@ -205,11 +206,8 @@ void DataContainerReader::preflight()
   // The GUI will pick up the structure
   emit preflightAboutToExecute();
 
-  if (m_InputFileDataContainerArrayProxy.isValid == false)
-  {
-	  // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
-	  emit updateFilterParameters(this);
-  }
+  // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
+  emit updateFilterParameters(this);
 
   // to the read here because this will populate the DataContainerArray with our DataContainer
   dataCheck();
@@ -401,7 +399,6 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure(con
 
   // Read the entire structure of the file into the proxy
   DataContainer::ReadDataContainerStructure(dcArrayGroupId, proxy, h5InternalPath);
-  proxy.isValid = true; // Make the DataContainerArrayProxy valid
 
   return proxy;
 }
@@ -643,20 +640,7 @@ void DataContainerReader::setInputFile(QString filePath)
   m_InputFile = filePath;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool DataContainerReader::getIsProxyValid()
-{
-	return m_InputFileDataContainerArrayProxy.isValid;
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReader::setIsProxyValid(bool valid)
-{
-	m_InputFileDataContainerArrayProxy.isValid = valid;
-}
+
 
 

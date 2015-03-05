@@ -1724,7 +1724,6 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
     }
   }
   m_Prefs->endArray();
-  dcaProxy.isValid = true;
   return dcaProxy;
 }
 

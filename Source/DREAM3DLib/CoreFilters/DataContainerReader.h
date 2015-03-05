@@ -70,13 +70,15 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
     Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers)
 
+	DREAM3D_FILTER_PARAMETER(QString, LastFileRead)
+	Q_PROPERTY(QString LastFileRead READ getLastFileRead WRITE setLastFileRead)
+
+	DREAM3D_FILTER_PARAMETER(QDateTime, LastRead)
+	Q_PROPERTY(QDateTime LastRead READ getLastRead WRITE setLastRead)
+
     DataContainerArrayProxy getInputFileDataContainerArrayProxy();
     void setInputFileDataContainerArrayProxy(DataContainerArrayProxy proxy);
     Q_PROPERTY(DataContainerArrayProxy InputFileDataContainerArrayProxy READ getInputFileDataContainerArrayProxy WRITE setInputFileDataContainerArrayProxy)
-
-	bool getIsProxyValid();
-	void setIsProxyValid(bool valid);
-	Q_PROPERTY(bool IsProxyValid READ getIsProxyValid WRITE setIsProxyValid)
 
 
     virtual const QString getCompiledLibraryName();
