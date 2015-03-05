@@ -372,6 +372,106 @@ QStringList DataContainerArrayProxy::serialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainerArrayProxy DataContainerArrayProxy::mergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy)
+{
+	QList<DataContainerProxy> fDcList = fileProxy.list;
+	QList<DataContainerProxy> cDcList = cacheProxy.list;
+
+	// Add extra items in the file to the cache
+	for (int i = 0; i < fDcList.count(); i++)
+	{
+		DataContainerProxy fileDcProxy = fDcList[i];
+		int cIndex = cDcList.indexOf(fileDcProxy);
+		// If the cache does not have the file dc proxy, add it to the cache
+		if (cIndex < 0)
+		{
+			cDcList.push_back(fileDcProxy);
+			//cacheProxy.list.push_back(fileDcProxy);
+		}
+		cIndex = cDcList.indexOf(fileDcProxy);
+
+		QList<AttributeMatrixProxy> fAmList = fileDcProxy.attributeMatricies.values();
+		QList<AttributeMatrixProxy> cAmList = cDcList[cIndex].attributeMatricies.values();
+		for (int j = 0; j < fAmList.count(); j++)
+		{
+			AttributeMatrixProxy fileAmProxy = fAmList[j];
+			cIndex = cAmList.indexOf(fileAmProxy);
+			// If the cache does not have the file am proxy, add it to the cache
+			if (cIndex < 0)
+			{
+				cAmList.push_back(fileAmProxy);
+				//cDcList[cIndex].attributeMatricies.insert(fileAmProxy.name, fileAmProxy);
+			}
+			cIndex = cAmList.indexOf(fileAmProxy);
+
+			QList<DataArrayProxy> fDaList = fileAmProxy.dataArrays.values();
+			QList<DataArrayProxy> cDaList = cAmList[cIndex].dataArrays.values();
+			for (int k = 0; k < fDaList.count(); k++)
+			{
+				DataArrayProxy fileDaProxy = fDaList[k];
+				cIndex = cDaList.indexOf(fileDaProxy);
+				// If the cache does not have the file da proxy, add it to the cache
+				if (cIndex < 0)
+				{
+					cDaList.push_back(fileDaProxy);
+					//cAmList[cIndex].dataArrays.insert(fileDaProxy.name, fileDaProxy);
+				}
+			}
+		}
+	}
+
+	// Remove items from the cache that are no longer in the file
+	for (int i = 0; i < cDcList.count(); i++)
+	{
+		DataContainerProxy cacheDcProxy = cDcList[i];
+		int fIndex = fDcList.indexOf(cacheDcProxy);
+		// If the file does not have the cached dc proxy, remove it from the cache
+		if (fIndex < 0)
+		{
+			cDcList.removeAt(i);
+		}
+		else
+		{
+			QList<AttributeMatrixProxy> cAmList = cacheDcProxy.attributeMatricies.values();
+			QList<AttributeMatrixProxy> fAmList = fDcList[fIndex].attributeMatricies.values();
+
+			for (int j = 0; j < cAmList.count(); j++)
+			{
+				AttributeMatrixProxy cacheAmProxy = cAmList[j];
+				fIndex = fAmList.indexOf(cacheAmProxy);
+				// If the file does not have the cached am proxy, remove it from the cache
+				if (fIndex < 0)
+				{
+					cAmList.removeAt(j);
+				}
+				else
+				{
+					QList<DataArrayProxy> cDaList = cacheAmProxy.dataArrays.values();
+					QList<DataArrayProxy> fDaList = fAmList[fIndex].dataArrays.values();
+
+					for (int k = 0; k < cDaList.count(); k++)
+					{
+						DataArrayProxy cacheDaProxy = cDaList[k];
+						fIndex = fDaList.indexOf(cacheDaProxy);
+						// If the file does not have the cached da proxy, remove it from the cache
+						if (fIndex < 0)
+						{
+							cDaList.removeAt(k);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	cacheProxy.list = cDcList;
+
+	return cacheProxy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool DataContainerArrayProxy::contains(const QString& name)
 {
   QListIterator<DataContainerProxy> iter(list);

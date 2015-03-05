@@ -97,14 +97,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
 
-  if (m_InputFileDataContainerArrayProxy.list.size() > 0)
-  {
-	  m_InputFileDataContainerArrayProxy.isValid = true;
-  }
-  else
-  {
-	  m_InputFileDataContainerArrayProxy.isValid = false;
-  }
+  syncProxies();	// Sync the file proxy and currently cached proxy together into one proxy
 
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
@@ -134,8 +127,14 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void DataContainerReader::dataCheck()
 {
+	// Sync the file proxy and cached proxy if the time stamps are different
+	QFileInfo fi(getInputFile());
+	if (getInputFile() == getLastFileRead() && getLastRead() < fi.lastModified())
+	{
+		syncProxies();
+	}
+
   QString ss;
-  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
     ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
@@ -545,6 +544,28 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
   H5Gclose(dcbGroupId);
   dcbGroupId = -1;
   return err;
+}
+
+// -----------------------------------------------------------------------------
+// Combines the file and cached proxies if they are out-of-sync
+// -----------------------------------------------------------------------------
+void DataContainerReader::syncProxies()
+{
+	// If there is something in the cached proxy...
+	if (m_InputFileDataContainerArrayProxy.list.size() > 0)
+	{
+		DataContainerArrayProxy fileProxy = readDataContainerArrayStructure(getInputFile());
+		DataContainerArrayProxy cacheProxy = getInputFileDataContainerArrayProxy();
+
+		// Mesh proxies together into one proxy
+		DataContainerArrayProxy mergedProxy = DataContainerArrayProxy::mergeProxies(fileProxy, cacheProxy);
+		setInputFileDataContainerArrayProxy(mergedProxy);
+	}
+	else
+	{
+		DataContainerArrayProxy fileProxy = readDataContainerArrayStructure(getInputFile());
+		setInputFileDataContainerArrayProxy(fileProxy);
+	}
 }
 
 // -----------------------------------------------------------------------------

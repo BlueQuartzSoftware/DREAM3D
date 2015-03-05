@@ -38,6 +38,7 @@
 #define _DataContainerReader_H_
 
 #include <QtCore/QString>
+#include <QtCore/QDateTime>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -137,6 +138,12 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      * @return
      */
     int readDataContainerBundles(hid_t fileId, DataContainerArray::Pointer dca);
+
+	/**
+	* @brief syncProxies Combines the file and cached proxies if they are out-of-sync
+	* @return
+	*/
+	void syncProxies();
 
 
   signals:
