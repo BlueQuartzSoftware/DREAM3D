@@ -121,7 +121,7 @@ namespace GeometryHelpers
           total += dynamicList->getNumberOfElements(v);
         }
 
-        size_t totalBytes = numCells * sizeof(K) + total * sizeof(T);
+        size_t totalBytes = numCells * sizeof(T) + total * sizeof(K);
 
         // Allocate a flat array to copy the data into
         QVector<uint8_t> buffer(totalBytes, 0);
