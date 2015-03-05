@@ -159,7 +159,7 @@ void MultiEmmpmFilter::dataCheck()
 	  return;
   }
 
-  bool vResult = DataArrayPath::validateVector(getInputDataArrayVector());
+  bool vResult = DataArrayPath::ValidateVector(getInputDataArrayVector());
 
   if (vResult == false)
   {
@@ -169,7 +169,7 @@ void MultiEmmpmFilter::dataCheck()
 	  return;
   }
 
-  DataArrayPath inputAMPath = DataArrayPath::getAttributeMatrixPath(getInputDataArrayVector());
+  DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
   // Make sure the Data Container exists
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName());
@@ -196,7 +196,7 @@ void MultiEmmpmFilter::dataCheck()
 
 
   // Get the list of checked array names from the input data arrays list
-  QList<QString> arrayNames = DataArrayPath::getDataArrayNames(getInputDataArrayVector());
+  QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
 
   inputAMPath.setAttributeMatrixName(getOutputAttributeMatrixName());
   for ( int i = 0; i < arrayNames.size(); i++ )
@@ -250,9 +250,9 @@ void MultiEmmpmFilter::execute()
   if (getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
-  DataArrayPath inputAMPath = DataArrayPath::getAttributeMatrixPath(getInputDataArrayVector());
+  DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
-  QList<QString> arrayNames = DataArrayPath::getDataArrayNames(getInputDataArrayVector());
+  QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
   QListIterator<QString> iter(arrayNames);
 
   QString msgPrefix = getMessagePrefix();

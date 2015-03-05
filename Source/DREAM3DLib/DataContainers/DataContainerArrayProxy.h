@@ -118,7 +118,7 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
      */
     bool contains(const QString& name);
 
-	static DataContainerArrayProxy mergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy);
+	static DataContainerArrayProxy MergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy);
 
     /**
      * @brief getDataContainerProxy

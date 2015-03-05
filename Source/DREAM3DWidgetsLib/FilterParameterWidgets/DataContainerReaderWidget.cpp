@@ -596,7 +596,8 @@ void DataContainerReaderWidget::filterNeedsInputParameters(AbstractFilter* filte
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::afterPreflight()
 {
-  // qDebug() << getFilter()->getNameOfClass() << " DataContainerReaderWidget::afterPreflight()";
+	// Make sure the model has the latest data from the proxy
+	updateModelFromProxy(m_Filter->getInputFileDataContainerArrayProxy());
 }
 
 

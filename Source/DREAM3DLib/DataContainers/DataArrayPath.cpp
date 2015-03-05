@@ -193,7 +193,7 @@ QString DataArrayPath::serialize(QString delimiter) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath DataArrayPath::deserialize(QString str, QString delimiter)
+DataArrayPath DataArrayPath::Deserialize(QString str, QString delimiter)
 {
   if (str.isEmpty())
   {
@@ -264,7 +264,7 @@ bool DataArrayPath::isValid() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> DataArrayPath::getDataArrayNames(const QVector<DataArrayPath> &paths)
+QList<QString> DataArrayPath::GetDataArrayNames(const QVector<DataArrayPath> &paths)
 {
   QList<QString> arrayNames;
   for (int i = 0; i < paths.count(); i++)
@@ -278,7 +278,7 @@ QList<QString> DataArrayPath::getDataArrayNames(const QVector<DataArrayPath> &pa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath DataArrayPath::getAttributeMatrixPath(const QVector<DataArrayPath> &paths)
+DataArrayPath DataArrayPath::GetAttributeMatrixPath(const QVector<DataArrayPath> &paths)
 {
   if (paths.isEmpty())
   {
@@ -351,7 +351,7 @@ bool DataArrayPath::sameAttributeMatrixPath(const DataArrayPath& other) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataArrayPath::validateVector(const QVector<DataArrayPath>& other)
+bool DataArrayPath::ValidateVector(const QVector<DataArrayPath>& other)
 {
   QString dcName = "";
   QString amName = "";

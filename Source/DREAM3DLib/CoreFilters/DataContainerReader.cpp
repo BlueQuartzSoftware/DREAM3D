@@ -558,7 +558,7 @@ void DataContainerReader::syncProxies()
 		DataContainerArrayProxy cacheProxy = getInputFileDataContainerArrayProxy();
 
 		// Mesh proxies together into one proxy
-		DataContainerArrayProxy mergedProxy = DataContainerArrayProxy::mergeProxies(fileProxy, cacheProxy);
+		DataContainerArrayProxy mergedProxy = DataContainerArrayProxy::MergeProxies(fileProxy, cacheProxy);
 		setInputFileDataContainerArrayProxy(mergedProxy);
 	}
 	else

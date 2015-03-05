@@ -991,7 +991,7 @@ QVector<DataArrayPath> H5FilterParametersReader::readDataArrayPathVector(const Q
   for (int i = 0; i < tokens.size(); i++)
   {
     QString str = tokens.at(i);
-    DataArrayPath path = DataArrayPath::deserialize(str, "|");
+    DataArrayPath path = DataArrayPath::Deserialize(str, "|");
     defPaths.push_back(path);
   }
 
