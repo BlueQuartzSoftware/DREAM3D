@@ -50,10 +50,11 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
-  AbstractFilter(),
-  m_InputFile(""),
-  m_OverwriteExistingDataContainers(false),
-  m_InputFileDataContainerArrayProxy()
+AbstractFilter(),
+m_InputFile(""),
+m_OverwriteExistingDataContainers(false),
+m_InputFileDataContainerArrayProxy(),
+m_LastFileRead("")
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
@@ -96,14 +97,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
 
-  if (m_InputFileDataContainerArrayProxy.list.size() > 0)
-  {
-	  m_InputFileDataContainerArrayProxy.isValid = true;
-  }
-  else
-  {
-	  m_InputFileDataContainerArrayProxy.isValid = false;
-  }
+  syncProxies();	// Sync the file proxy and currently cached proxy together into one proxy
 
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
@@ -133,8 +127,14 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void DataContainerReader::dataCheck()
 {
+	// Sync the file proxy and cached proxy if the time stamps are different
+	QFileInfo fi(getInputFile());
+	if (getInputFile() == getLastFileRead() && getLastRead() < fi.lastModified())
+	{
+		syncProxies();
+	}
+
   QString ss;
-  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
     ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
@@ -205,11 +205,8 @@ void DataContainerReader::preflight()
   // The GUI will pick up the structure
   emit preflightAboutToExecute();
 
-  if (m_InputFileDataContainerArrayProxy.isValid == false)
-  {
-	  // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
-	  emit updateFilterParameters(this);
-  }
+  // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
+  emit updateFilterParameters(this);
 
   // to the read here because this will populate the DataContainerArray with our DataContainer
   dataCheck();
@@ -401,7 +398,6 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure(con
 
   // Read the entire structure of the file into the proxy
   DataContainer::ReadDataContainerStructure(dcArrayGroupId, proxy, h5InternalPath);
-  proxy.isValid = true; // Make the DataContainerArrayProxy valid
 
   return proxy;
 }
@@ -551,6 +547,28 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
 }
 
 // -----------------------------------------------------------------------------
+// Combines the file and cached proxies if they are out-of-sync
+// -----------------------------------------------------------------------------
+void DataContainerReader::syncProxies()
+{
+	// If there is something in the cached proxy...
+	if (m_InputFileDataContainerArrayProxy.list.size() > 0)
+	{
+		DataContainerArrayProxy fileProxy = readDataContainerArrayStructure(getInputFile());
+		DataContainerArrayProxy cacheProxy = getInputFileDataContainerArrayProxy();
+
+		// Mesh proxies together into one proxy
+		DataContainerArrayProxy mergedProxy = DataContainerArrayProxy::MergeProxies(fileProxy, cacheProxy);
+		setInputFileDataContainerArrayProxy(mergedProxy);
+	}
+	else
+	{
+		DataContainerArrayProxy fileProxy = readDataContainerArrayStructure(getInputFile());
+		setInputFileDataContainerArrayProxy(fileProxy);
+	}
+}
+
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterParameters)
@@ -643,20 +661,7 @@ void DataContainerReader::setInputFile(QString filePath)
   m_InputFile = filePath;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool DataContainerReader::getIsProxyValid()
-{
-	return m_InputFileDataContainerArrayProxy.isValid;
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReader::setIsProxyValid(bool valid)
-{
-	m_InputFileDataContainerArrayProxy.isValid = valid;
-}
+
 
 

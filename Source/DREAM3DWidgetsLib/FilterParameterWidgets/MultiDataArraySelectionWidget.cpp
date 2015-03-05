@@ -193,7 +193,7 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
   QString filtDcName = "";
   QString filtAmName = "";
 
-  if (DataArrayPath::validateVector(selectedPaths) == false)
+  if (DataArrayPath::ValidateVector(selectedPaths) == false)
   {
     // Throw an error?  The Data Containers and Attribute Matrices are not the same
   }
@@ -463,7 +463,7 @@ void MultiDataArraySelectionWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
 {
-  DataContainerArrayProxy dcaProxy(true);
+  DataContainerArrayProxy dcaProxy;
   QString dcaName = dataContainerList->currentText();
   DataContainerProxy dcProxy(dcaName, true);
 

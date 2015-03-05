@@ -69,12 +69,6 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
 
     /**
      * @brief DataContainerArrayProxy
-     * @param is_valid
-     */
-    explicit DataContainerArrayProxy(bool is_valid);
-
-    /**
-     * @brief DataContainerArrayProxy
      * @param rhs
      */
     DataContainerArrayProxy(const DataContainerArrayProxy& rhs);
@@ -124,6 +118,8 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
      */
     bool contains(const QString& name);
 
+	static DataContainerArrayProxy MergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy);
+
     /**
      * @brief getDataContainerProxy
      * @param name
@@ -135,7 +131,6 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
 
     //----- Our variables, publicly available
     QList<DataContainerProxy>  list;
-    bool isValid;
 };
 
 Q_DECLARE_METATYPE(DataContainerArrayProxy)

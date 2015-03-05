@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
   * @param delimiter
   * @return
   */
-  static DataArrayPath deserialize(QString str, QString delimiter = "|");
+  static DataArrayPath Deserialize(QString str, QString delimiter = "|");
 
     /**
      * @brief getAsStringList
@@ -190,20 +190,20 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
   * @brief checks that a vector of paths have the same data container and attribute matrix
   * @return true if the paths in the vector have the same data container and attribute matrix, false otherwise
   */
-  static bool validateVector(const QVector<DataArrayPath>& other);
+  static bool ValidateVector(const QVector<DataArrayPath>& other);
 
   /**
   * @brief Gets the data array names from a QVector of DataArrayPaths.
   * @return Returns the data array names from a QVector of DataArrayPaths, in a QList.
   */
-  static QList<QString> getDataArrayNames(const QVector<DataArrayPath> &paths);
+  static QList<QString> GetDataArrayNames(const QVector<DataArrayPath> &paths);
 
   /**
   * @brief Gets the attribute matrix path from a QVector of DataArrayPaths.
   * @return Returns the attribute matrix path as a DataArrayPath from a QVector
   * of DataArrayPaths.
   */
-  static DataArrayPath getAttributeMatrixPath(const QVector<DataArrayPath> &paths);
+  static DataArrayPath GetAttributeMatrixPath(const QVector<DataArrayPath> &paths);
 
 
   protected:

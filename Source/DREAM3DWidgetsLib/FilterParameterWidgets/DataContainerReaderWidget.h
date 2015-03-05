@@ -132,7 +132,6 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParamete
 
 
   private:
-    QString m_LastFileRead;
     DataContainerReader*   m_Filter;
     DataContainerReaderFilterParameter*  m_FilterParameter;
     DataContainerArrayProxy m_DcaProxy;
