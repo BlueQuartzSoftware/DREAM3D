@@ -39,7 +39,6 @@
 #include <fstream>
 
 #include <QtCore/QFileInfo>
-#include <QtCore/QDateTime>
 
 #include "IO/IOConstants.h"
 

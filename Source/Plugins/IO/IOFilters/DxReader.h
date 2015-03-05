@@ -40,6 +40,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QDateTime>
 #include <vector>
 #include <QtCore/QFile>
 

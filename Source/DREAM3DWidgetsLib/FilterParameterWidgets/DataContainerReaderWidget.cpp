@@ -596,8 +596,9 @@ void DataContainerReaderWidget::filterNeedsInputParameters(AbstractFilter* filte
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::afterPreflight()
 {
-	// Make sure the model has the latest data from the proxy
-	updateModelFromProxy(m_Filter->getInputFileDataContainerArrayProxy());
+  // Make sure the model has the latest data from the proxy
+  DataContainerArrayProxy p = m_Filter->getInputFileDataContainerArrayProxy();
+  updateModelFromProxy(p);
 }
 
 
@@ -625,7 +626,7 @@ bool DataContainerReaderWidget::verifyPathExists(QString filePath, QFSDropLabel*
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 {
-	DataContainerArrayProxy proxy;
+  DataContainerArrayProxy proxy;
 
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
@@ -642,15 +643,15 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
           model->clear();
         }
 
-		if (m_Filter->getInputFileDataContainerArrayProxy().list.size() > 0 && (text == m_Filter->getLastFileRead() || m_Filter->getLastFileRead().isEmpty()))
-		{
-			proxy = m_Filter->getInputFileDataContainerArrayProxy();
-		}
-		else
-		{
-			proxy = m_Filter->readDataContainerArrayStructure(text);
-			m_Filter->setLastRead(QDateTime::currentDateTime());
-		}
+    if (m_Filter->getInputFileDataContainerArrayProxy().list.size() > 0 && (text == m_Filter->getLastFileRead() || m_Filter->getLastFileRead().isEmpty()))
+    {
+      proxy = m_Filter->getInputFileDataContainerArrayProxy();
+    }
+    else
+    {
+      proxy = m_Filter->readDataContainerArrayStructure(text);
+      m_Filter->setLastRead(QDateTime::currentDateTime());
+    }
 
         m_Filter->setLastFileRead(text); // Update the cached file path in the filter
       }

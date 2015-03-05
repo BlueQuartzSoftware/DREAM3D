@@ -10,6 +10,7 @@
 
 project(OrientationAnalysisTest)
 
+
 include(${DREAM3DTest_SOURCE_DIR}/DREAM3DTestFunctions.cmake)
 
 
@@ -24,4 +25,9 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
                ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
+
+set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support DREAM3DLib OrientationLib)
+
+AddDREAM3DUnitTest(TESTNAME AngCachingTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/AngCachingTest.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+AddDREAM3DUnitTest(TESTNAME CtfCachingTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/CtfCachingTest.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 

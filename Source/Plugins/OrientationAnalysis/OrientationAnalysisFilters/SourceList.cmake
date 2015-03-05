@@ -20,7 +20,9 @@ set(_PublicFilters
   GenerateMisorientationColors
   GenerateRodriguesColors
   ReadH5Ebsd
-  ReadOrientationData
+  ReadAngData
+  ReadCtfData
+  ReadMicData
   WritePoleFigure
   WriteIPFStandardTriangle
   WriteStatsGenOdfAngleFile
