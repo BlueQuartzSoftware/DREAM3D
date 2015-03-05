@@ -78,25 +78,25 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
     static Pointer CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name);
 
     // the following functions are placeholders until issues #286/#284 are fixed
-    static void ComputeNormal(float n0[3], float n1[3], float n2[3], float normal[3])
+    static void ComputeNormal(double n0[3], double n1[3], double n2[3], double normal[3])
     {
-      float vert0[3];
-      float vert1[3];
-      float vert2[3];
-      float u[3];
-      float w[3];
+      double vert0[3];
+      double vert1[3];
+      double vert2[3];
+      double u[3];
+      double w[3];
 
-      vert0[0] = static_cast<float>(n0[0]);
-      vert0[1] = static_cast<float>(n0[1]);
-      vert0[2] = static_cast<float>(n0[2]);
+      vert0[0] = static_cast<double>(n0[0]);
+      vert0[1] = static_cast<double>(n0[1]);
+      vert0[2] = static_cast<double>(n0[2]);
 
-      vert1[0] = static_cast<float>(n1[0]);
-      vert1[1] = static_cast<float>(n1[1]);
-      vert1[2] = static_cast<float>(n1[2]);
+      vert1[0] = static_cast<double>(n1[0]);
+      vert1[1] = static_cast<double>(n1[1]);
+      vert1[2] = static_cast<double>(n1[2]);
 
-      vert2[0] = static_cast<float>(n2[0]);
-      vert2[1] = static_cast<float>(n2[1]);
-      vert2[2] = static_cast<float>(n2[2]);
+      vert2[0] = static_cast<double>(n2[0]);
+      vert2[1] = static_cast<double>(n2[1]);
+      vert2[2] = static_cast<double>(n2[2]);
 
       // Compute the normal
       u[0] = vert1[0] - vert0[0];
@@ -111,12 +111,12 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
       MatrixMath::Normalize3x1(normal);
     }
 
-   static void InterpolationDerivatives(float pCoords[3], float derivs[8])
+   static void InterpolationDerivatives(double pCoords[3], double derivs[8])
    {
-     float rm, sm;
+     double rm, sm;
 
-     rm = 1.0f - pCoords[0];
-     sm = 1.0f - pCoords[1];
+     rm = 1.0 - pCoords[0];
+     sm = 1.0 - pCoords[1];
 
      derivs[0] = -sm;
      derivs[1] = sm;
@@ -128,21 +128,21 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      derivs[7] = rm;
    }
 
-   static void GetParametricCenter(float pCoords[3])
+   static void GetParametricCenter(double pCoords[3])
    {
-     pCoords[0] = 0.5f;
-     pCoords[1] = 0.5f;
-     pCoords[2] = 0.0f;
+     pCoords[0] = 0.5;
+     pCoords[1] = 0.5;
+     pCoords[2] = 0.0;
    }
 
-   void findDerivatives(FloatArrayType::Pointer field, FloatArrayType::Pointer derivatives)
+   void findDerivatives(FloatArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
    {
      int64_t numQuads = getNumberOfQuads();
-     std::vector<float> values(4);
-     float derivs[3];
+     std::vector<double> values(4);
+     double derivs[3];
      int cDimsIn = field->getNumberOfComponents();
      float* fieldPtr = field->getPointer(0);
-     float* derivPtr = derivatives->getPointer(0);
+     double* derivPtr = derivatives->getPointer(0);
      int64_t verts[4];
      for (int64_t i = 0; i < numQuads; i++)
      {
@@ -151,12 +151,12 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
        {
          for (int k = 0; k < 4; k++)
          {
-           values[k] = static_cast<float>(fieldPtr[cDimsIn*verts[k]+j]);
+           values[k] = static_cast<double>(fieldPtr[cDimsIn*verts[k]+j]);
          }
          DerivativeHelpers::QuadDeriv()(this, i, &values[0], derivs, 1);
-         derivPtr[i*3*cDimsIn+j*3] = static_cast<float>(derivs[0]);
-         derivPtr[i*3*cDimsIn+j*3+1] = static_cast<float>(derivs[1]);
-         derivPtr[i*3*cDimsIn+j*3+2] = static_cast<float>(derivs[2]);
+         derivPtr[i*3*cDimsIn+j*3] = static_cast<double>(derivs[0]);
+         derivPtr[i*3*cDimsIn+j*3+1] = static_cast<double>(derivs[1]);
+         derivPtr[i*3*cDimsIn+j*3+2] = static_cast<double>(derivs[2]);
        }
      }
    }

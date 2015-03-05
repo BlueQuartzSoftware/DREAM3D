@@ -168,7 +168,7 @@ namespace GeometryHelpers
         size_t numVertsPerCell = cellList->getNumberOfComponents();
 
         // Allocate the basic structures
-        QVector<size_t> linkCount(numCells, 0);
+        QVector<size_t> linkCount(numVerts, 0);
         size_t cellId = 0;
         int64_t* linkLoc;
 
@@ -413,7 +413,8 @@ namespace GeometryHelpers
        */
       template<typename T, typename K>
       static void WeightedAverageVertexArrayValues(typename DataArray<T>::Pointer cellList, DataArray<float>::Pointer vertices,
-                                                   DataArray<float>::Pointer centroids, typename DataArray<K>::Pointer inVertexArray, DataArray<float>::Pointer outCellArray)
+                                                   DataArray<float>::Pointer centroids, typename DataArray<K>::Pointer inVertexArray,
+                                                   DataArray<float>::Pointer outCellArray)
       {
         BOOST_ASSERT(outCellArray->getNumberOfTuples() == cellList->getNumberOfTuples());
         BOOST_ASSERT(outCellArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
@@ -458,6 +459,37 @@ namespace GeometryHelpers
             }
             vertValue /= static_cast<float>(sumDist);
             cellArray[cDims*j+i] = vertValue;
+          }
+        }
+      }
+
+      template<typename T, typename K, typename L>
+      static void AverageCellArrayValues(typename DynamicListArray<L, T>::Pointer cellsContainingVert,
+                                         DataArray<float>::Pointer vertices, typename DataArray<K>::Pointer inCellArray,
+                                         DataArray<float>::Pointer outVertexArray)
+      {
+        BOOST_ASSERT(outVertexArray->getNumberOfTuples() == vertices->getNumberOfTuples());
+        BOOST_ASSERT(outVertexArray->getComponentDimensions() == inCellArray->getComponentDimensions());
+
+        K* cellArray = inCellArray->getPointer(0);
+        float* vertArray = outVertexArray->getPointer(0);
+
+        size_t numVerts = vertices->getNumberOfTuples();
+        size_t cDims = inCellArray->getNumberOfComponents();
+
+        for (size_t i=0;i<cDims;i++)
+        {
+          for (size_t j=0;j<numVerts;j++)
+          {
+            L numCellsPerVert = cellsContainingVert->getNumberOfElements(j);
+            T* cellIdxs = cellsContainingVert->getElementListPointer(j);
+            float vertValue = 0.0;
+            float weight = 1.0f / numCellsPerVert;
+            for (size_t k=0;k<numCellsPerVert;k++)
+            {
+              vertValue += cellArray[cDims*cellIdxs[k]+i] * weight;
+            }
+            vertArray[cDims*j+i] = vertValue;
           }
         }
       }

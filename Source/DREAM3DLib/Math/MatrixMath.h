@@ -234,6 +234,14 @@ class DREAM3DLib_EXPORT MatrixMath
      * @param b 1x3 Vector
      * @return
      */
+    static float DotProduct3x1(double a[3], double b[3]);
+
+    /**
+     * @brief The dot product of 2 vectors a & b. Single Precision Variant
+     * @param a 1x3 Vector
+     * @param b 1x3 Vector
+     * @return
+     */
     static float DotProduct3x1(float a[3], float b[3]);
 
     /**

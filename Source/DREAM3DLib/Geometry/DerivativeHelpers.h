@@ -56,7 +56,7 @@ namespace DerivativeHelpers
   /**
    * @brief QuadJacobian
    */
-  typedef Eigen::Matrix<float,2,2,Eigen::RowMajor> QuadJacobian;
+  typedef Eigen::Matrix<double,2,2,Eigen::RowMajor> QuadJacobian;
 
   /**
    * @brief The QuadDeriv class
@@ -67,12 +67,12 @@ namespace DerivativeHelpers
       QuadDeriv() {}
       virtual ~QuadDeriv() {}
 
-      void operator()(QuadGeom* quads, int64_t quadId, float* values, float* derivs, int dim);
+      void operator()(QuadGeom* quads, int64_t quadId, double* values, double* derivs, int dim);
 
-      int InvertMatrix(float** A, float** AI, int size)
+      int InvertMatrix(double** A, double** AI, int size)
       {
-        int *index, iScratch[10];
-        float *column, dScratch[10];
+        int* index, iScratch[10];
+        double* column, dScratch[10];
 
         // Check on allocation of working vectors
         //
@@ -84,7 +84,7 @@ namespace DerivativeHelpers
         else
           {
           index = new int[size];
-          column = new float[size];
+          column = new double[size];
           }
 
         int retVal = DerivativeHelpers::QuadDeriv::InvertMatrixF(A, AI, size, index, column);
@@ -98,7 +98,7 @@ namespace DerivativeHelpers
         return retVal;
       }
 
-      int InvertMatrixF(float** A, float** AI, int size, int* tmp1Size, float* tmp2Size)
+      int InvertMatrixF(double** A, double** AI, int size, int* tmp1Size, double* tmp2Size)
       {
         int i, j;
 
@@ -131,7 +131,7 @@ namespace DerivativeHelpers
         return 1;
       }
 
-      int LUFactorLinearSystem(float** A, int* index, int size, float* tmpSize)
+      int LUFactorLinearSystem(double** A, int* index, int size, double* tmpSize)
       {
         int i, j, k;
         int maxI = 0;
@@ -226,7 +226,7 @@ namespace DerivativeHelpers
         return 1;
       }
 
-      void LUSolveLinearSystem(float** A, int* index, float* x, int size)
+      void LUSolveLinearSystem(double** A, int* index, double* x, int size)
       {
         int i, j, ii, idx;
         double sum;
