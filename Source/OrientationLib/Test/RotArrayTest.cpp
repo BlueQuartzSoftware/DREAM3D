@@ -3,6 +3,14 @@
 
 #include <vector>
 #include <iomanip>
+#include <string>
+#include <iostream>
+#include <algorithm>
+#include <complex>
+
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Eigen>
 
 #include <QtCore/QVector>
 
@@ -20,6 +28,12 @@ using namespace DREAM3D::Constants;
 
 
 #include "OrientationLib/Test/TestFileLocations.h"
+
+
+  typedef RotArray<float> RotArrayType;
+  typedef std::vector<float> FloatVectorType;
+  typedef QVector<float> FloatQVectorType;
+
 
 void TestRotArray()
 {
@@ -582,21 +596,29 @@ void OM_2_XXX(float* in)
 {
   T om(9);
   for(size_t i = 0; i < 9; i++) { om[i] = in[i]; }
-
   T res(9); // Just size to 9 as we are going to reuse the variable
   RotationTransforms rt;
   // Convert to Euler
   rt.om2eu<T, float>(om, res);
   Print_EU<T>(res);
 
+  // Transpose array to be Column Major Format for the BLAS/LAPACK routine
+  om[1] = in[3];
+  om[3] = in[1];
+  om[2] = in[6];
+  om[6] = in[2];
+  om[7] = in[5];
+  om[5] = in[7];
   //Convert to Axis Angle
   rt.om2ax<T, float>(om, res);
   Print_AX<T>(res);
 
+
+#if 0
   // Convert to Rodriques
   rt.om2ro<T, float>(om, res);
   Print_RO<T>(res);
-#if 0
+
   // Convert to Quaternion
   rt.om2qu<T, float>(om, res);
   Print_QU<T>(res);
@@ -642,39 +664,164 @@ void RO_2_XXX(float* in)
 // -----------------------------------------------------------------------------
 void Test_eu2_XXX()
 {
-  typedef RotArray<float> RotArrayType;
-  typedef std::vector<float> FloatVectorType;
-  typedef QVector<float> FloatQVectorType;
-  std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
+  std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
   float eu[3] = {k_PiOver2, 0.0f, 0.0f};
   Print_EU<float*>(eu);
   EU_2_XXX<RotArrayType>(eu);
-  EU_2_XXX<FloatVectorType>(eu);
-  EU_2_XXX<FloatQVectorType>(eu);
+//  EU_2_XXX<FloatVectorType>(eu);
+//  EU_2_XXX<FloatQVectorType>(eu);
 
-  std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
 
+}
+
+template<typename T>
+T transfer_sign(T a, T b)
+{
+  if( a > 0.0 && b > 0.0) return a;
+  if( a < 0.0 && b > 0.0) return -1*a;
+
+  if( a < 0.0 && b < 0.0) return a;
+
+  return -1*a;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Test_om2_XXX()
+{
+/*
+                                 : /     0.000000     1.000000     0.000000    \
+Orientation Matrix               : |    -1.000000     0.000000     0.000000    |
+                                 : \     0.000000     0.000000     1.000000    /
+*/
+  std::cout << "Test_om2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
   float om[9] = { 0.0000, 1.0000, 0.0000,
                   -1.0000, 0.0000, 0.0000,
                   0.0000, 0.0000, 1.0000};
   Print_OM<float*>(om);
   OM_2_XXX<RotArrayType>(om);
-  OM_2_XXX<FloatVectorType>(om);
-  OM_2_XXX<FloatQVectorType>(om);
-  std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
-  float ro[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-  Print_RO<float*>(ro);
-  RO_2_XXX<RotArrayType>(om);
-  RO_2_XXX<FloatVectorType>(om);
-  RO_2_XXX<FloatQVectorType>(om);
+//  OM_2_XXX<FloatVectorType>(om);
+//  OM_2_XXX<FloatQVectorType>(om);
+
+
+
+//  om[0] = 0.0000; om[1] = 1.0000; om[2] =  0.0000;
+//  om[3] = -1.0000; om[4] = 0.0000; om[5] =  0.0000;
+//  om[6] = 0.0000; om[7] =  0.0000; om[8] =  1.0000;
+
+
+  typedef Eigen::Matrix<float, 3, 3, Eigen::RowMajor> Matrix_t;
+
+  Eigen::Map<Matrix_t> testMat(const_cast<float*>(&(om[0])));
+
+  Eigen::EigenSolver<Matrix_t> solver;
+  solver.compute(testMat);
+  Eigen::EigenSolver<Matrix_t>::EigenvalueType w = solver.eigenvalues();
+  Eigen::EigenSolver<Matrix_t>::EigenvectorsType VR = solver.eigenvectors();
+//  std::cout << "00000000000000000000000000000000000000000000000000000" << std::endl;
+//  for(int c = 0; c < bar2.cols(); c++)
+//  {
+//    for(int r = 0; r < bar2.rows(); r++)
+//    {
+//      std::cout << bar2(r,c)<< "\t";
+//    }
+//    std::cout << std::endl;
+
+//  }
+
+
+  //     std::cout << "The eigenvalues of A are:" << std::endl << solver.eigenvalues() << std::endl;
+  std::cout << "The matrix of eigenvectors, V2, is:" << std::endl << VR << std::endl;
+#if 1
+  float thr = 1.0E-7;
+  float res[3] = { 0.0, 0.0, 0.0};
+  for(int i = 0; i < 3; i++)
+  {
+    std::complex<float> cone(1.0,0.0);
+    std::complex<float> ev = std::complex<float>( w(i).real(), w(i).imag() );
+    if (std::abs(ev-cone) < thr)
+    {
+      res[0] = VR(i, 0).real();
+      res[1] = VR(i, 1).real();
+      res[2] = VR(i, 2).real();
+
+      if ((om[5]-om[7]) != 0.0) { res[0] = transfer_sign(res[0],-RConst::epsijk*(om[7]-om[5])); }
+      if ((om[6]-om[2]) != 0.0) { res[1] = transfer_sign(res[1],-RConst::epsijk*(om[2]-om[6 ])); }
+      if ((om[1]-om[3]) != 0.0) { res[2] = transfer_sign(res[2],-RConst::epsijk*(om[3]-om[1])); }
+
+      return;
+    }
+
+  }
+std::cout << "=========================================================" << std::endl;
+  std::cout << res[0] << "\t" << res[1] << "\t" << res[2] << std::endl;
+#endif
+
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Test_ro2_XXX()
+{
+  std::cout << "Test_ro2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
+  float ro[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+  Print_RO<float*>(ro);
+  RO_2_XXX<RotArrayType>(ro);
+  RO_2_XXX<FloatVectorType>(ro);
+  RO_2_XXX<FloatQVectorType>(ro);
+}
+
+
+void foo()
+{
+#define LDA 5
+#define N 5
+
+      float a[LDA*N] = {
+           -1.01f,  0.86f, -4.60f,  3.31f, -4.81f,
+            3.98f,  0.53f, -7.04f,  5.29f,  3.55f,
+            3.30f,  8.26f, -3.89f,  8.20f, -1.51f,
+            4.43f,  4.96f, -7.66f, -7.33f,  6.18f,
+            7.31f, -6.43f, -6.16f,  2.47f,  5.58f
+        };
+  typedef Eigen::Matrix<float, LDA, N, Eigen::RowMajor> Matrix_t;
+
+  Eigen::Map<Matrix_t> testMat(a);
+
+  Eigen::EigenSolver<Matrix_t> solver;
+  solver.compute(testMat);
+
+  Eigen::EigenSolver<Matrix_t>::EigenvectorsType bar2 = solver.eigenvectors();
+  std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+  for(int c = 0; c < bar2.cols(); c++)
+  {
+    for(int r = 0; r < bar2.rows(); r++)
+    {
+      std::cout << bar2(r,c)<< "\t";
+    }
+    std::cout << std::endl;
+
+  }
+
+  Eigen::EigenSolver<Matrix_t>::EigenvalueType ev = solver.eigenvalues();
+  std::cout << "Eigin Values: " << std::endl << ev << std::endl;
+
+  //     std::cout << "The eigenvalues of A are:" << std::endl << solver.eigenvalues() << std::endl;
+  std::cout << "The matrix of eigenvectors, V2, is:" << std::endl << bar2 << std::endl;
+}
+
 
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  foo();
+
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestRotArray() );
   DREAM3D_REGISTER_TEST( Test_eu_check() );
@@ -684,6 +831,12 @@ int main(int argc, char* argv[])
   DREAM3D_REGISTER_TEST( Test_qu_check() );
   DREAM3D_REGISTER_TEST( Test_ax_check() );
   DREAM3D_REGISTER_TEST( Test_om_check() );
+
+
   DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
+
+
   return err;
 }
