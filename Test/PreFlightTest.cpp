@@ -55,7 +55,7 @@
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "TestFileLocations.h"
+#include "DREAM3DTestFileLocations.h"
 
 #include "PreflightVerify.h"
 

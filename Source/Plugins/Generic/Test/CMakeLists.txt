@@ -8,7 +8,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ImageImportTest)
+project(GenericTest)
 
 include(${DREAM3DTest_SOURCE_DIR}/DREAM3DTestFunctions.cmake)
 

@@ -54,7 +54,7 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "TestFileLocations.h"
+#include "IOTestFileLocations.h"
 
 #include "GenerateFeatureIds.h"
 

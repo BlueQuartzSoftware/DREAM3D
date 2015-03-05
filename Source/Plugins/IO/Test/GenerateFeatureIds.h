@@ -8,7 +8,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "TestFileLocations.h"
+#include "IOTestFileLocations.h"
 
 
 // -----------------------------------------------------------------------------

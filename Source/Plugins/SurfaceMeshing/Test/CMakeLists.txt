@@ -1,6 +1,6 @@
 #--////////////////////////////////////////////////////////////////////////////
 #--
-#--  Copyright (c) 2015, BlueQuartz Software
+#--  Copyright (c) 2015 BlueQuartz Software
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
@@ -8,7 +8,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ImageImportTest)
+project(StatisticsTest)
 
 include(${DREAM3DTest_SOURCE_DIR}/DREAM3DTestFunctions.cmake)
 
@@ -24,4 +24,7 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
                ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
+
+
+
 

@@ -148,3 +148,15 @@ if(BUILD_SHARED_LIBS AND NOT APPLE)
         BUNDLE DESTINATION "."
     )
 endif()
+
+
+
+
+# ------- Enable the CTest testing. Use make test to run all tests ---------------
+if(DREAM3D_BUILD_TESTING)
+    add_subdirectory(${H5Support_SOURCE_DIR}/Test ${H5Support_BINARY_DIR}/Test)
+endif()
+
+
+
+

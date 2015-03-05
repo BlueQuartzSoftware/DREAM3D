@@ -51,7 +51,7 @@
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 #include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 
-#include "TestFileLocations.h"
+#include "IOTestFileLocations.h"
 
 // -----------------------------------------------------------------------------
 //

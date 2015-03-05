@@ -21,7 +21,7 @@
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
-#include "TestFileLocations.h"
+#include "H5SupportTestFileLocations.h"
 
 
 #define DSET0_NAME "2D int32_t array"

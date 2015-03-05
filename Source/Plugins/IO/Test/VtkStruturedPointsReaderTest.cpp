@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
-#include "IO/Test/TestFileLocations.h"
+#include "IOTestFileLocations.h"
 
 #include "GenerateFeatureIds.h"
 

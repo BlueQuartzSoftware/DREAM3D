@@ -49,11 +49,11 @@ standard C++ library."
 
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
+#include "H5SupportTestFileLocations.h"
 
 
+// THIS IS REALLY DANGEROUS AS IT COULD SETUP A CIRCULAR REFERENCE WITH LIBRARY DEPENDECIES.
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "TestFileLocations.h"
-
 
 #define DIM 6
 #define DIM0 4
