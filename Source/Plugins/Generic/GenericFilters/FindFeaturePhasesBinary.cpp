@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindFeatureCentroids.h"
+#include "FindFeaturePhasesBinary.h"
 
 #include <sstream>
 
@@ -43,61 +43,70 @@
 
 #include "Generic/GenericConstants.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureCentroids::FindFeatureCentroids() :
+FindFeaturePhasesBinary::FindFeaturePhasesBinary() :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_FeatureIds(NULL),
-  m_Centroids(NULL)
+  m_GoodVoxels(NULL)
 {
-  featurecenters = NULL;
+
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureCentroids::~FindFeatureCentroids()
+FindFeaturePhasesBinary::~FindFeaturePhasesBinary()
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureCentroids::setupFilterParameters()
+void FindFeaturePhasesBinary::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayName", FilterParameterWidgetType::StringWidget, getCentroidsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellEnsembleAttributeMatrixName(), true, ""));
+
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void FindFeatureCentroids::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindFeaturePhasesBinary::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setCentroidsArrayName(reader->readString("CentroidsArrayName", getCentroidsArrayName() ) );
+  setFeaturePhasesArrayName(reader->readString("FeaturePhasesArrayName", getFeaturePhasesArrayName() ) );
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() ) );
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindFeatureCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindFeaturePhasesBinary::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -105,27 +114,33 @@ int FindFeatureCentroids::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureCentroids::dataCheck()
+void FindFeaturePhasesBinary::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-
-  INIT_DataArray(m_FeatureCenters, float)
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getFeaturePhasesArrayName() );
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  QVector<size_t> tDims(1, 2);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  if(getErrorCondition() < 0) { return; }
 
-  dims[0] = 3;
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getCentroidsArrayName() );
-  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 }
 
 
@@ -133,7 +148,7 @@ void FindFeatureCentroids::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureCentroids::preflight()
+void FindFeaturePhasesBinary::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -146,92 +161,41 @@ void FindFeatureCentroids::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureCentroids::execute()
+void FindFeaturePhasesBinary::execute()
 {
   setErrorCondition(0);
 
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
+  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-
-  QVector<size_t> dims(1, 5);
-  m_FeatureCenters = FloatArrayType::CreateArray(totalFeatures, dims, "centers");
-  featurecenters = m_FeatureCenters->getPointer(0);
-
-  find_centroids();
+  int gnum = 0;
+  for(int64_t i = 0; i < totalPoints; i++)
+  {
+    gnum = m_FeatureIds[i];
+    if(m_GoodVoxels[i] == true)
+    {
+        m_FeaturePhases[gnum] = 1;
+    }
+    else
+    {
+        m_FeaturePhases[gnum] = 0;
+    }
+//    m_FeaturePhases[gnum] = m_CellPhases[i];
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindFeatureCentroids::find_centroids()
-{
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  float x, y, z;
-  size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  if (numfeatures == 0) { return; }
-
-  featurecenters = m_FeatureCenters->getPointer(0);
-
-  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
-  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
-  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
-
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
-
-//  float xSize = float(xPoints)*xRes;
-//  float ySize = float(yPoints)*yRes;
-//  float zSize = float(zPoints)*zRes;
-
-  // Initialize every element to 0.0
-  for (size_t i = 0; i < numfeatures * 5; i++)
-  {
-    featurecenters[i] = 0.0f;
-  }
-  size_t zStride, yStride;
-  for(qint32 i = 0; i < zPoints; i++)
-  {
-    zStride = i * xPoints * yPoints;
-    for (qint32 j = 0; j < yPoints; j++)
-    {
-      yStride = j * xPoints;
-      for(qint32 k = 0; k < xPoints; k++)
-      {
-        int gnum = m_FeatureIds[zStride + yStride + k];
-        featurecenters[gnum * 5 + 0]++;
-        x = float(k) * xRes;
-        y = float(j) * yRes;
-        z = float(i) * zRes;
-        featurecenters[gnum * 5 + 1] = featurecenters[gnum * 5 + 1] + x;
-        featurecenters[gnum * 5 + 2] = featurecenters[gnum * 5 + 2] + y;
-        featurecenters[gnum * 5 + 3] = featurecenters[gnum * 5 + 3] + z;
-      }
-    }
-  }
-  for (size_t i = 1; i < numfeatures; i++)
-  {
-    featurecenters[i * 5 + 1] = featurecenters[i * 5 + 1] / featurecenters[i * 5 + 0];
-    featurecenters[i * 5 + 2] = featurecenters[i * 5 + 2] / featurecenters[i * 5 + 0];
-    featurecenters[i * 5 + 3] = featurecenters[i * 5 + 3] / featurecenters[i * 5 + 0];
-    m_Centroids[3 * i] = featurecenters[i * 5 + 1];
-    m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
-    m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeaturePhasesBinary::newFilterInstance(bool copyFilterParameters)
 {
-  FindFeatureCentroids::Pointer filter = FindFeatureCentroids::New();
+  FindFeaturePhasesBinary::Pointer filter = FindFeaturePhasesBinary::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -242,27 +206,27 @@ AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getCompiledLibraryName()
+const QString FindFeaturePhasesBinary::getCompiledLibraryName()
 { return Generic::GenericBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getGroupName()
+const QString FindFeaturePhasesBinary::getGroupName()
 { return DREAM3D::FilterGroups::GenericFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getSubGroupName()
+const QString FindFeaturePhasesBinary::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MiscFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getHumanLabel()
-{ return "Find Feature Centroids"; }
+const QString FindFeaturePhasesBinary::getHumanLabel()
+{ return "Find Feature Phases Binary"; }
 

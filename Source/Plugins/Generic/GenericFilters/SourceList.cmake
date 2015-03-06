@@ -18,6 +18,7 @@ FindBoundingBoxFeatures
 FindCellQuats
 FindFeatureCentroids
 FindFeaturePhases
+FindFeaturePhasesBinary
 FindSurfaceFeatures
 GenerateVectorColors
 ConvertOrientations
