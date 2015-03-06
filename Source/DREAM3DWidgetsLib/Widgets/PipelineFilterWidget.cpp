@@ -266,7 +266,7 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* op
       Ftype = fsParam->getFileType();
       ext = fsParam->getFileExtension();
     }
-      QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+      QString s = Ftype + QString(" Files (*") + ext + QString(");;All Files (*.*)");
       QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
 
       if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputFileWidget) == 0 )
