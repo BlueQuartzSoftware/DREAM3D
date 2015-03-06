@@ -503,23 +503,19 @@ void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   var.setValue(data);
   ok = false;
 
-  const char* p1 = p->getPhaseTypeDataProperty().toLatin1().constData();
   // Set the value into the Filter
-  ok = filter->setProperty(p1, var);
+  ok = filter->setProperty(p->getPhaseTypeDataProperty().toLatin1().constData(), var);
   if(false == ok)
   {
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
-
-
-  const char* p2 = p->getAttributeMatrixPathProperty().toLatin1().constData();
 
   DataArrayPath path(dataContainerList->currentText(), attributeMatrixList->currentText(), "");
 
   var.setValue(path);
   ok = false;
   // Set the value into the Filter
-  ok = filter->setProperty(p2, var);
+  ok = filter->setProperty(p->getAttributeMatrixPathProperty().toLatin1().constData(), var);
   if(false == ok)
   {
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
