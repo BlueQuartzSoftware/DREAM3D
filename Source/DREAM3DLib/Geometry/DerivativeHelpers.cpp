@@ -84,8 +84,6 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   double v0[2], v1[2], v2[2], v3[2], v10[3], v20[3], lenX, lenTmp;
   double x0[3], x1[3], x2[3], x3[3], n[3], vec20[3], vec30[3], pCoords[3];
   double funcDerivs[8], sum[2], dBydx, dBydy;
-  double* J[2], J0[2], J1[2];
-  double* JI[2], JI0[2], JI1[2];
   int64_t verts[4];
 
   // Project points of quad into 2D system
@@ -103,11 +101,14 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
      x3[i] = static_cast<double>(x3f[i]);
   }
 
-  QuadGeom::ComputeNormal(x0, x1, x2, n);
+  GeometryMath::FindPlaneNormalVector(x0, x1, x2, n);
+  MatrixMath::Normalize3x1(n);
 
+  // If the x0, x1, and x2 are co-linear, use x3 to find the normal
   if (n[0] == 0.0 && n[1] == 0.0 && n[2] == 0.0)
   {
-    QuadGeom::ComputeNormal(x1, x2, x3, n);
+    GeometryMath::FindPlaneNormalVector(x0, x1, x2, n);
+    MatrixMath::Normalize3x1(n);
   }
 
   for (size_t i = 0; i < 3; i++)
@@ -121,9 +122,11 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
 
   lenX = sqrt(v10[0] * v10[0] + v10[1] * v10[1] + v10[2] * v10[2]);
   lenTmp = sqrt(v20[0] * v20[0] + v20[1] * v20[1] + v20[2] * v20[2]);
+  MatrixMath::Normalize3x1(v10);
+  MatrixMath::Normalize3x1(v20);
 
   if ( lenX <= 0.0
-       || lenTmp <= 0.0 ) //degenerate
+       || lenTmp <= 0.0 ) // degenerate
   {
     for (int j=0; j < dim; j++ )
     {
@@ -135,7 +138,7 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
     return;
   }
 
-  v0[0] = v0[1] = 0.0; //convert points to 2D (i.e., local system)
+  v0[0] = v0[1] = 0.0; // convert points to 2D (i.e., local system)
   v1[0] = lenX; v1[1] = 0.0;
   v2[0] = MatrixMath::DotProduct3x1(vec20, v10);
   v2[1] = MatrixMath::DotProduct3x1(vec20, v20);
@@ -145,6 +148,7 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   QuadGeom::GetParametricCenter(pCoords);
   QuadGeom::InterpolationDerivatives(pCoords, funcDerivs);
 
+  // Compute Jacobian and inverse Jacobian using Eigen
   double jPtr[4];
 
   jPtr[0] = v0[0]*funcDerivs[0] + v1[0]*funcDerivs[1] +
@@ -162,32 +166,6 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
 
   jMat.computeInverseWithCheck(jMatI, invertible);
 
-//  // Compute Jacobian and inverse Jacobian
-//  J[0] = J0; J[1] = J1;
-//  JI[0] = JI0; JI[1] = JI1;
-
-//  J[0][0] = v0[0]*funcDerivs[0] + v1[0]*funcDerivs[1] +
-//            v2[0]*funcDerivs[2] + v3[0]*funcDerivs[3];
-//  J[0][1] = v0[1]*funcDerivs[0] + v1[1]*funcDerivs[1] +
-//            v2[1]*funcDerivs[2] + v3[1]*funcDerivs[3];
-//  J[1][0] = v0[0]*funcDerivs[4] + v1[0]*funcDerivs[5] +
-//            v2[0]*funcDerivs[6] + v3[0]*funcDerivs[7];
-//  J[1][1] = v0[1]*funcDerivs[4] + v1[1]*funcDerivs[5] +
-//            v2[1]*funcDerivs[6] + v3[1]*funcDerivs[7];
-
-//  // Compute inverse Jacobian, return if Jacobian is singular
-//  if (!DerivativeHelpers::QuadDeriv::InvertMatrix(J,JI,2))
-//    {
-//    for (size_t j=0; j < dim; j++ )
-//      {
-//      for (size_t i=0; i < 3; i++ )
-//        {
-//        derivs[j*dim + i] = 0.0;
-//        }
-//      }
-//    return;
-//    }
-
   if (!invertible)
   {
     for (int j = 0; j < dim; j++ )
@@ -198,19 +176,6 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
       }
     }
   }
-//    qDebug() << "failed at" << quadId;
-//    qDebug() << "fail values" << values[0] << " " << values[1] << " " << values[2] << " " << values[3];
-//    qDebug() << "fail jacobian" << jPtr[0] << " " << jPtr[1] << " " << jPtr[2] << " " << jPtr[3];
-//    return;
-  //}
-
-  //if (invertible)
-  //{
-//    qDebug() << "success at" << quadId;
-//    qDebug() << "success values" << values[0] << " " << values[1] << " " << values[2] << " " << values[3];
-//    qDebug() << "success jacobian" << jPtr[0] << " " << jPtr[1] << " " << jPtr[2] << " " << jPtr[3];
-//    qDebug() << "success inv_jacobian" << jMatI(0,0) << " " << jMatI(0,1) << " " << jMatI(1,0) << " " << jMatI(1,1);
-  //}
 
   // Loop over "dim" derivative values. For each set of values,
   // compute derivatives
@@ -219,7 +184,7 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   for (int j = 0; j < dim; j++ )
   {
     sum[0] = sum[1] = 0.0;
-    for (size_t i = 0; i < 4; i++) //loop over interp. function derivatives
+    for (size_t i = 0; i < 4; i++) // loop over interp. function derivatives
     {
       sum[0] += funcDerivs[i] * values[dim*i + j];
       sum[1] += funcDerivs[4 + i] * values[dim*i + j];
@@ -227,9 +192,6 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
 
     dBydx = sum[0]*jMatI(0,0) + sum[1]*jMatI(0,1);
     dBydy = sum[0]*jMatI(1,0) + sum[1]*jMatI(1,1);
-
-//    dBydx = sum[0]*JI[0][0] + sum[1]*JI[0][1];
-//    dBydy = sum[0]*JI[1][0] + sum[1]*JI[1][1];
 
     // Transform into global system (dot product with global axes)
     derivs[3*j] = dBydx * v10[0] + dBydy * v20[0];

@@ -41,9 +41,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
-
-// placeholder includes until issues #286/#284 are fixed
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Geometry/DerivativeHelpers.h"
 
 /**
@@ -77,89 +74,55 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      */
     static Pointer CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name);
 
-    // the following functions are placeholders until issues #286/#284 are fixed
-    static void ComputeNormal(double n0[3], double n1[3], double n2[3], double normal[3])
+    static void InterpolationDerivatives(double pCoords[3], double derivs[8])
     {
-      double vert0[3];
-      double vert1[3];
-      double vert2[3];
-      double u[3];
-      double w[3];
+      double rm, sm;
 
-      vert0[0] = static_cast<double>(n0[0]);
-      vert0[1] = static_cast<double>(n0[1]);
-      vert0[2] = static_cast<double>(n0[2]);
+      rm = 1.0 - pCoords[0];
+      sm = 1.0 - pCoords[1];
 
-      vert1[0] = static_cast<double>(n1[0]);
-      vert1[1] = static_cast<double>(n1[1]);
-      vert1[2] = static_cast<double>(n1[2]);
-
-      vert2[0] = static_cast<double>(n2[0]);
-      vert2[1] = static_cast<double>(n2[1]);
-      vert2[2] = static_cast<double>(n2[2]);
-
-      // Compute the normal
-      u[0] = vert1[0] - vert0[0];
-      u[1] = vert1[1] - vert0[1];
-      u[2] = vert1[2] - vert0[2];
-
-      w[0] = vert2[0] - vert0[0];
-      w[1] = vert2[1] - vert0[1];
-      w[2] = vert2[2] - vert0[2];
-
-      MatrixMath::CrossProduct(u, w, normal);
-      MatrixMath::Normalize3x1(normal);
+      derivs[0] = -sm;
+      derivs[1] = sm;
+      derivs[2] = pCoords[1];
+      derivs[3] = -pCoords[1];
+      derivs[4] = -rm;
+      derivs[5] = -pCoords[0];
+      derivs[6] = pCoords[0];
+      derivs[7] = rm;
     }
 
-   static void InterpolationDerivatives(double pCoords[3], double derivs[8])
-   {
-     double rm, sm;
+    static void GetParametricCenter(double pCoords[3])
+    {
+      pCoords[0] = 0.5;
+      pCoords[1] = 0.5;
+      pCoords[2] = 0.0;
+    }
 
-     rm = 1.0 - pCoords[0];
-     sm = 1.0 - pCoords[1];
-
-     derivs[0] = -sm;
-     derivs[1] = sm;
-     derivs[2] = pCoords[1];
-     derivs[3] = -pCoords[1];
-     derivs[4] = -rm;
-     derivs[5] = -pCoords[0];
-     derivs[6] = pCoords[0];
-     derivs[7] = rm;
-   }
-
-   static void GetParametricCenter(double pCoords[3])
-   {
-     pCoords[0] = 0.5;
-     pCoords[1] = 0.5;
-     pCoords[2] = 0.0;
-   }
-
-   void findDerivatives(FloatArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
-   {
-     int64_t numQuads = getNumberOfQuads();
-     std::vector<double> values(4);
-     double derivs[3];
-     int cDimsIn = field->getNumberOfComponents();
-     float* fieldPtr = field->getPointer(0);
-     double* derivPtr = derivatives->getPointer(0);
-     int64_t verts[4];
-     for (int64_t i = 0; i < numQuads; i++)
-     {
-       getVertsAtQuad(i, verts);
-       for (int j = 0; j < cDimsIn; j++)
-       {
-         for (int k = 0; k < 4; k++)
-         {
-           values[k] = static_cast<double>(fieldPtr[cDimsIn*verts[k]+j]);
-         }
-         DerivativeHelpers::QuadDeriv()(this, i, &values[0], derivs, 1);
-         derivPtr[i*3*cDimsIn+j*3] = static_cast<double>(derivs[0]);
-         derivPtr[i*3*cDimsIn+j*3+1] = static_cast<double>(derivs[1]);
-         derivPtr[i*3*cDimsIn+j*3+2] = static_cast<double>(derivs[2]);
-       }
-     }
-   }
+    void findDerivatives(FloatArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+    {
+      int64_t numQuads = getNumberOfQuads();
+      std::vector<double> values(4);
+      double derivs[3];
+      int cDimsIn = field->getNumberOfComponents();
+      float* fieldPtr = field->getPointer(0);
+      double* derivPtr = derivatives->getPointer(0);
+      int64_t verts[4];
+      for (int64_t i = 0; i < numQuads; i++)
+      {
+        getVertsAtQuad(i, verts);
+        for (int j = 0; j < cDimsIn; j++)
+        {
+          for (int k = 0; k < 4; k++)
+          {
+            values[k] = static_cast<double>(fieldPtr[cDimsIn*verts[k]+j]);
+          }
+          DerivativeHelpers::QuadDeriv()(this, i, &values[0], derivs, 1);
+          derivPtr[i*3*cDimsIn+j*3] = static_cast<double>(derivs[0]);
+          derivPtr[i*3*cDimsIn+j*3+1] = static_cast<double>(derivs[1]);
+          derivPtr[i*3*cDimsIn+j*3+2] = static_cast<double>(derivs[2]);
+        }
+      }
+    }
 
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
