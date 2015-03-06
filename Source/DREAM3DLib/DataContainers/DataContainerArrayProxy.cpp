@@ -381,12 +381,13 @@ DataContainerArrayProxy DataContainerArrayProxy::MergeProxies(DataContainerArray
 	for (int i = 0; i < fDcList.count(); i++)
 	{
 		DataContainerProxy fileDcProxy = fDcList[i];
-		int dcIndex = cDcList.indexOf(fileDcProxy);
+		int cIndex = cDcList.indexOf(fileDcProxy);
 		// If the cache does not have the file dc proxy, add it to the cache
-		if (dcIndex < 0)
+		if (cIndex < 0)
 		{
 			cDcList.push_back(fileDcProxy);
 		}
+		int dcIndex = cDcList.indexOf(fileDcProxy);
 
 		QList<AttributeMatrixProxy> fAmList = fileDcProxy.attributeMatricies.values();
 		QMap<QString, AttributeMatrixProxy>& cAmMap = cDcList[dcIndex].attributeMatricies;
