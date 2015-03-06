@@ -44,7 +44,7 @@
 #include "OrientationLib/OrientationOps/CubicOps.h"
 
 
-#include "TestFileLocations.h"
+#include "OrientationLibTestFileLocations.h"
 
 
 

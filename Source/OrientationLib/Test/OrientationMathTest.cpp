@@ -42,7 +42,7 @@
 
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "TestFileLocations.h"
+#include "OrientationLibTestFileLocations.h"
 
 /*
  * IDL> print, eulers[*,0]

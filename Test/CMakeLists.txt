@@ -12,7 +12,7 @@ project(DREAM3DTest)
 
 include_directories(${DREAM3DTest_SOURCE_DIR})
 
-include(${DREAM3DTest_SOURCE_DIR}/DREAM3DTestFunctions.cmake)
+include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
 
 set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)

@@ -10,7 +10,7 @@
 
 project(SamplingTest)
 
-include(${DREAM3DTest_SOURCE_DIR}/DREAM3DTestFunctions.cmake)
+include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
 
 include_directories(${${PROJECT_NAME}_SOURCE_DIR})
