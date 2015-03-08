@@ -97,6 +97,70 @@ namespace TemplateHelpers
 
   };
 
+
+  /**
+   * @brief The CreateNonPrereqArrayFromArrayType class will create a DataArray of the same type as another DataArray and attach it to
+   * a supplied data container.
+   */
+  class CreateNonPrereqArrayFromTypeEnum
+  {
+    public:
+      CreateNonPrereqArrayFromTypeEnum(){}
+      ~CreateNonPrereqArrayFromTypeEnum(){}
+
+      IDataArray::WeakPointer operator()(AbstractFilter* f, DataArrayPath arrayPath, QVector<size_t> compDims, int arrayType, double initValue)
+      {
+        IDataArray::Pointer ptr = IDataArray::NullPointer();
+
+        switch(arrayType)
+        {
+          case DREAM3D::TypeEnums::Int8:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(f, arrayPath, static_cast<int8_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::UInt8:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(f, arrayPath, static_cast<uint8_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::Int16:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int16_t>, AbstractFilter, int16_t>(f, arrayPath, static_cast<int16_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::UInt16:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint16_t>, AbstractFilter, uint16_t>(f, arrayPath, static_cast<uint16_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::Int32:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(f, arrayPath, static_cast<int32_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::UInt32:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(f, arrayPath, static_cast<uint32_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::Int64:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int64_t>, AbstractFilter, int64_t>(f, arrayPath, static_cast<int64_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::UInt64:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint64_t>, AbstractFilter, uint64_t>(f, arrayPath, static_cast<uint64_t>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::Float:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(f, arrayPath, static_cast<float>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::Double:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(f, arrayPath, static_cast<double>(initValue), compDims);
+            break;
+          case DREAM3D::TypeEnums::Bool:
+            ptr = f->getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(f, arrayPath, static_cast<bool>(initValue), compDims);
+            break;
+          default:
+            QString msg = QObject::tr("The created array '%1' is of unsupported type. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(DREAM3D::TypeEnums::SupportedTypeList);
+            f->setErrorCondition(Errors::UnsupportedType);
+            f->notifyErrorMessage(f->getHumanLabel(), msg, f->getErrorCondition());
+          break;
+        }
+        return ptr;
+      }
+
+  };
+
+
+
+
   /**
    * @brief The CreateArrayFromArrayType class will create a DataArray of the same type as another DataArray but not attach
    * it to any data container.
