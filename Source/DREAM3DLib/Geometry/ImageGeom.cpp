@@ -227,7 +227,7 @@ void ImageGeom::getParametricCenter(double pCoords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::getShapeFunctions(double pCoords[3], double shape[8])
+void ImageGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
   return;
 }

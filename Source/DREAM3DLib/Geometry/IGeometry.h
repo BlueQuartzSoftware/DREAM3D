@@ -162,7 +162,7 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      * @param pCoords
      * @param derivs
      */
-    virtual void getShapeFunctions(double pCoords[3], double derivs[8]) = 0;
+    virtual void getShapeFunctions(double pCoords[3], double* shape) = 0;
 
     /**
      * @brief findDerivatives

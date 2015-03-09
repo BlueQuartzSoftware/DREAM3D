@@ -37,7 +37,10 @@
 /* ============================================================================
  * DerivativeHelpers uses code adapated from the following vtk modules:
  *
+ * * vtkTriangle.cxx
+ *   - adapted vtkTriangle::Derivatives to TriangleDeriv::operator()
  * * vtkQuad.cxx
+ *   - adapted vtkQuad::Derivatives to QuadDeriv::operator()
  *
  * The vtk license is reproduced below.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -73,7 +76,103 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DerivativeHelpers.h"
 
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+
+#include "TriangleGeom.h"
 #include "QuadGeom.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DerivativeHelpers::TriangleDeriv::operator()(TriangleGeom* triangles, int64_t triId, double values[3], double derivs[3])
+{
+  float x0f[3], x1f[3], x2f[3], x3f[3];
+  double v0[2], v1[2], v2[2], v[3], v10[3], v20[3], lenX, lenTmp;
+  double x0[3], x1[3], x2[3], n[3], pCoords[3];
+  double funcDerivs[6], sum[2], dBydx, dBydy;
+  int64_t verts[3];
+
+  // Project points of triangle into 2D system
+  triangles->getVertsAtTri(triId, verts);
+  triangles->getCoords(verts[0], x0f);
+  triangles->getCoords(verts[1], x1f);
+  triangles->getCoords(verts[2], x2f);
+
+  for (size_t i = 0; i < 3; i++)
+  {
+     x0[i] = static_cast<double>(x0f[i]);
+     x1[i] = static_cast<double>(x1f[i]);
+     x2[i] = static_cast<double>(x2f[i]);
+  }
+
+  GeometryMath::FindPlaneNormalVector(x0, x1, x2, n);
+  MatrixMath::Normalize3x1(n);
+
+  for (size_t i = 0; i < 3; i++)
+  {
+    v10[i] = x1[i] - x0[i];
+    v[i] = x2[i] - x0[i];
+  }
+
+  MatrixMath::CrossProduct(n, v10, v20);
+
+  lenX = MatrixMath::Magnitude3x1(v10);
+  lenTmp = MatrixMath::Magnitude3x1(v20);
+
+  if ( lenX <= 0.0
+       || lenTmp <= 0.0 ) // degenerate
+  {
+    for (size_t i = 0; i < 3; i++ )
+    {
+      derivs[i] = 0.0;
+    }
+    return;
+  }
+
+  MatrixMath::Normalize3x1(v10);
+  MatrixMath::Normalize3x1(v20);
+
+  v0[0] = v0[1] = 0.0; //convert points to 2D (i.e., local system)
+  v1[0] = lenX; v1[1] = 0.0;
+  v2[0] = MatrixMath::DotProduct3x1(v, v10);
+  v2[1] = MatrixMath::DotProduct3x1(v, v20);
+
+  // Compute interpolation function derivatives
+  triangles->getShapeFunctions(NULL, funcDerivs);
+
+  // Compute Jacobian and inverse Jacobian using Eigen
+  // Jacobian is constant for a triangle
+  double jPtr[4];
+
+  jPtr[0] = v1[0] - v0[0];
+  jPtr[1] = v1[1] - v0[1];
+  jPtr[2] = v2[0] - v0[0];
+  jPtr[3] = v2[1] - v0[1];
+
+  Eigen::Map<TriangleJacobian> jMat(jPtr);
+  TriangleJacobian jMatI;
+
+  jMatI = jMat.inverse();
+
+  // Loop over derivative values. For each set of values, compute
+  // derivatives in local system and then transform into modelling system.
+  // First compute derivatives in local x'-y' coordinate system
+  sum[0] = sum[1] = 0.0;
+  for (size_t i = 0; i < 3; i++) //loop over interp. function derivatives
+  {
+    sum[0] += funcDerivs[i] * values[i];
+    sum[1] += funcDerivs[3 + i] * values[i];
+  }
+
+  dBydx = sum[0]*jMatI(0,0) + sum[1]*jMatI(0,1);
+  dBydy = sum[0]*jMatI(1,0) + sum[1]*jMatI(1,1);
+
+  // Transform into global system (dot product with global axes)
+  derivs[0] = dBydx * v10[0] + dBydy * v20[0];
+  derivs[1] = dBydx * v10[1] + dBydy * v20[1];
+  derivs[2] = dBydx * v10[2] + dBydy * v20[2];
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -120,20 +219,21 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
 
   MatrixMath::CrossProduct(n, v10, v20);
 
-  lenX = sqrt(v10[0] * v10[0] + v10[1] * v10[1] + v10[2] * v10[2]);
-  lenTmp = sqrt(v20[0] * v20[0] + v20[1] * v20[1] + v20[2] * v20[2]);
-  MatrixMath::Normalize3x1(v10);
-  MatrixMath::Normalize3x1(v20);
+  lenX = MatrixMath::Magnitude3x1(v10);
+  lenTmp = MatrixMath::Magnitude3x1(v20);
 
   if ( lenX <= 0.0
        || lenTmp <= 0.0 ) // degenerate
   {
-    for (int i = 0; i < 3; i++ )
+    for (size_t i = 0; i < 3; i++ )
     {
       derivs[i] = 0.0;
     }
     return;
   }
+
+  MatrixMath::Normalize3x1(v10);
+  MatrixMath::Normalize3x1(v20);
 
   v0[0] = v0[1] = 0.0; // convert points to 2D (i.e., local system)
   v1[0] = lenX; v1[1] = 0.0;
@@ -171,7 +271,7 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
     }
   }
 
-  // Loop over "dim" derivative values. For each set of values,
+  // Loop over derivative values. For each set of values,
   // compute derivatives
   // in local system and then transform into modelling system.
   // First compute derivatives in local x'-y' coordinate system

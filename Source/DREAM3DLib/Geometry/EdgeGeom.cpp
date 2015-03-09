@@ -275,7 +275,7 @@ void EdgeGeom::getParametricCenter(double pCoords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeGeom::getShapeFunctions(double pCoords[3], double shape[8])
+void EdgeGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
   return;
 }

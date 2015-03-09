@@ -236,7 +236,7 @@ void VertexGeom::getParametricCenter(double pCoords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::getShapeFunctions(double pCoords[3], double shape[8])
+void VertexGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
   return;
 }

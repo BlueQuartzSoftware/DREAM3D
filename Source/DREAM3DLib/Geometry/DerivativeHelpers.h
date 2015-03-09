@@ -41,12 +41,11 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 
 #include "Eigen/LU"
 #include "Eigen/Eigenvalues"
 
+class TriangleGeom;
 class QuadGeom;
 
 /**
@@ -56,9 +55,23 @@ namespace DerivativeHelpers
 {
 
   /**
+   * @brief TriJacobian
+   */
+  typedef Eigen::Matrix<double,2,2,Eigen::RowMajor> TriangleJacobian;
+
+  /**
    * @brief QuadJacobian
    */
   typedef Eigen::Matrix<double,2,2,Eigen::RowMajor> QuadJacobian;
+
+  class TriangleDeriv
+  {
+    public:
+      TriangleDeriv() {}
+      virtual ~TriangleDeriv() {}
+
+      void operator()(TriangleGeom* triangles, int64_t triId, double values[3], double derivs[3]);
+  };
 
   /**
    * @brief The QuadDeriv class

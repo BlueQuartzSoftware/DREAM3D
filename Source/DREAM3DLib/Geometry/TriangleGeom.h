@@ -41,6 +41,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
+#include "DREAM3DLib/Geometry/DerivativeHelpers.h"
 
 /**
  * @brief The TriangleGeom class represents a collection of triangles
@@ -335,7 +336,7 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
      * @param pCoords
      * @param shape
      */
-    virtual void getShapeFunctions(double pCoords[3], double shape[8]);
+    virtual void getShapeFunctions(double pCoords[3], double* shape);
 
     /**
      * @brief findDerivatives

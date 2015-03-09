@@ -337,7 +337,7 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @param pCoords
      * @param shape
      */
-    virtual void getShapeFunctions(double pCoords[3], double shape[8]);
+    virtual void getShapeFunctions(double pCoords[3], double* shape);
 
     /**
      * @brief findDerivatives
