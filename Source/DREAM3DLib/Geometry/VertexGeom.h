@@ -194,6 +194,26 @@ class DREAM3DLib_EXPORT VertexGeom : public IGeometry
     virtual void deleteElementCentroids();
 
     /**
+     * @brief getParametricCenter
+     * @param pCoords
+     */
+    virtual void getParametricCenter(double pCoords[3]);
+
+    /**
+     * @brief getShapeFunctions
+     * @param pCoords
+     * @param shape
+     */
+    virtual void getShapeFunctions(double pCoords[3], double shape[8]);
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     */
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
+
+    /**
      * @brief setName
      * @param name
      */

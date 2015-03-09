@@ -151,6 +151,26 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
      */
     virtual void deleteElementCentroids() = 0;
 
+    /**
+     * @brief getParametricCenter
+     * @param pCoords
+     */
+    virtual void getParametricCenter(double pCoords[3]) = 0;
+
+    /**
+     * @brief getShapeFunctions
+     * @param pCoords
+     * @param derivs
+     */
+    virtual void getShapeFunctions(double pCoords[3], double derivs[8]) = 0;
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     */
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives) = 0;
+
 // -----------------------------------------------------------------------------
 // Generic
 // -----------------------------------------------------------------------------

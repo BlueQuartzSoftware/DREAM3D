@@ -272,6 +272,65 @@ void QuadGeom::deleteElementCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QuadGeom::getParametricCenter(double pCoords[3])
+{
+  pCoords[0] = 0.5;
+  pCoords[1] = 0.5;
+  pCoords[2] = 0.0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::getShapeFunctions(double pCoords[3], double shape[8])
+{
+  double rm, sm;
+
+  rm = 1.0 - pCoords[0];
+  sm = 1.0 - pCoords[1];
+
+  shape[0] = -sm;
+  shape[1] = sm;
+  shape[2] = pCoords[1];
+  shape[3] = -pCoords[1];
+  shape[4] = -rm;
+  shape[5] = -pCoords[0];
+  shape[6] = pCoords[0];
+  shape[7] = rm;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+{
+  int64_t numQuads = getNumberOfQuads();
+  int cDims = field->getNumberOfComponents();
+  double* fieldPtr = field->getPointer(0);
+  double* derivsPtr = derivatives->getPointer(0);
+  double values[4];
+  double derivs[3];
+  int64_t verts[4];
+  for (int64_t i = 0; i < numQuads; i++)
+  {
+    getVertsAtQuad(i, verts);
+    for (int j = 0; j < cDims; j++)
+    {
+      for (size_t k = 0; k < 4; k++)
+      {
+        values[k] = fieldPtr[cDims*verts[k]+j];
+      }
+      DerivativeHelpers::QuadDeriv()(this, i, values, derivs);
+      derivsPtr[i*3*cDims+j*3] = derivs[0];
+      derivsPtr[i*3*cDims+j*3+1] = derivs[1];
+      derivsPtr[i*3*cDims+j*3+2] = derivs[2];
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int QuadGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
 {
   herr_t err = 0;
@@ -317,7 +376,7 @@ int QuadGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_QuadNeighbors.get() != NULL)
   {
     size_t numQuads = getNumberOfQuads();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadNeighbors, numQuads);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadNeighbors, numQuads, DREAM3D::StringConstants::QuadNeighbors);
     if (err < 0)
     {
       return err;
@@ -328,7 +387,7 @@ int QuadGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_QuadsContainingVert.get() != NULL)
   {
     size_t numVerts = getNumberOfVertices();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadsContainingVert, numVerts);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadsContainingVert, numVerts, DREAM3D::StringConstants::QuadsContainingVert);
     if (err < 0)
     {
       return err;

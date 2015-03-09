@@ -110,7 +110,7 @@ namespace GeometryHelpers
        * @return
        */
       template<typename T, typename K>
-      static int WriteDynamicListToHDF5(hid_t parentId, typename DynamicListArray<T, K>::Pointer dynamicList, size_t numCells)
+      static int WriteDynamicListToHDF5(hid_t parentId, typename DynamicListArray<T, K>::Pointer dynamicList, size_t numCells, QString name)
       {
         herr_t err = 0;
         int32_t rank = 0;
@@ -141,7 +141,7 @@ namespace GeometryHelpers
         rank = 1;
         dims[0] = totalBytes;
 
-        err = QH5Lite::writePointerDataset(parentId, DREAM3D::StringConstants::EdgeNeighbors, rank, dims, bufPtr);
+        err = QH5Lite::writePointerDataset(parentId, name, rank, dims, bufPtr);
         return err;
       }
   };

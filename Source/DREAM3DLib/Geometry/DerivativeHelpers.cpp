@@ -78,7 +78,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, double* values, double* derivs, int dim)
+void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, double values[4], double derivs[3])
 {
   float x0f[3], x1f[3], x2f[3], x3f[3];
   double v0[2], v1[2], v2[2], v3[2], v10[3], v20[3], lenX, lenTmp;
@@ -128,12 +128,9 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   if ( lenX <= 0.0
        || lenTmp <= 0.0 ) // degenerate
   {
-    for (int j=0; j < dim; j++ )
+    for (int i = 0; i < 3; i++ )
     {
-      for (int i=0; i < 3; i++ )
-      {
-        derivs[j*dim + i] = 0.0;
-      }
+      derivs[i] = 0.0;
     }
     return;
   }
@@ -145,8 +142,8 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   v3[0] = MatrixMath::DotProduct3x1(vec30, v10);
   v3[1] = MatrixMath::DotProduct3x1(vec30, v20);
 
-  QuadGeom::GetParametricCenter(pCoords);
-  QuadGeom::InterpolationDerivatives(pCoords, funcDerivs);
+  quads->getParametricCenter(pCoords);
+  quads->getShapeFunctions(pCoords, funcDerivs);
 
   // Compute Jacobian and inverse Jacobian using Eigen
   double jPtr[4];
@@ -168,12 +165,9 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
 
   if (!invertible)
   {
-    for (int j = 0; j < dim; j++ )
+    for (int i = 0; i < 3; i++ )
     {
-      for (int i = 0; i < 3; i++ )
-      {
-        derivs[j*dim+i] = 0.0;
-      }
+      derivs[i] = 0.0;
     }
   }
 
@@ -181,21 +175,18 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   // compute derivatives
   // in local system and then transform into modelling system.
   // First compute derivatives in local x'-y' coordinate system
-  for (int j = 0; j < dim; j++ )
+  sum[0] = sum[1] = 0.0;
+  for (size_t i = 0; i < 4; i++) // loop over interp. function derivatives
   {
-    sum[0] = sum[1] = 0.0;
-    for (size_t i = 0; i < 4; i++) // loop over interp. function derivatives
-    {
-      sum[0] += funcDerivs[i] * values[dim*i + j];
-      sum[1] += funcDerivs[4 + i] * values[dim*i + j];
-    }
-
-    dBydx = sum[0]*jMatI(0,0) + sum[1]*jMatI(0,1);
-    dBydy = sum[0]*jMatI(1,0) + sum[1]*jMatI(1,1);
-
-    // Transform into global system (dot product with global axes)
-    derivs[3*j] = dBydx * v10[0] + dBydy * v20[0];
-    derivs[3*j + 1] = dBydx * v10[1] + dBydy * v20[1];
-    derivs[3*j + 2] = dBydx * v10[2] + dBydy * v20[2];
+    sum[0] += funcDerivs[i] * values[i];
+    sum[1] += funcDerivs[4 + i] * values[i];
   }
+
+  dBydx = sum[0]*jMatI(0,0) + sum[1]*jMatI(0,1);
+  dBydy = sum[0]*jMatI(1,0) + sum[1]*jMatI(1,1);
+
+  // Transform into global system (dot product with global axes)
+  derivs[0] = dBydx * v10[0] + dBydy * v20[0];
+  derivs[1] = dBydx * v10[1] + dBydy * v20[1];
+  derivs[2] = dBydx * v10[2] + dBydy * v20[2];
 }

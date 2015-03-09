@@ -69,7 +69,7 @@ namespace DerivativeHelpers
       QuadDeriv() {}
       virtual ~QuadDeriv() {}
 
-      void operator()(QuadGeom* quads, int64_t quadId, double* values, double* derivs, int dim);
+      void operator()(QuadGeom* quads, int64_t quadId, double values[4], double derivs[3]);
   };
 
 }

@@ -272,6 +272,30 @@ void TriangleGeom::deleteElementCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TriangleGeom::getParametricCenter(double pCoords[3])
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::getShapeFunctions(double pCoords[3], double shape[8])
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
 {
   herr_t err = 0;
@@ -317,7 +341,7 @@ int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_TriangleNeighbors.get() != NULL)
   {
     size_t numTris = getNumberOfTris();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_TriangleNeighbors, numTris);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_TriangleNeighbors, numTris, DREAM3D::StringConstants::TriangleNeighbors);
     if (err < 0)
     {
       return err;
@@ -328,7 +352,7 @@ int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_TrianglesContainingVert.get() != NULL)
   {
     size_t numVerts = getNumberOfVertices();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_TrianglesContainingVert, numVerts);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_TrianglesContainingVert, numVerts, DREAM3D::StringConstants::TrianglesContainingVert);
     if (err < 0)
     {
       return err;

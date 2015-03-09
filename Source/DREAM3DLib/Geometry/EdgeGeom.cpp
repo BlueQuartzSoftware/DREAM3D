@@ -35,7 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "DREAM3DLib/Geometry/EdgeGeom.h"
-#define GEOM_CLASS_NAME EdgeGeom
 
 // -----------------------------------------------------------------------------
 //
@@ -268,6 +267,30 @@ void EdgeGeom::deleteElementCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EdgeGeom::getParametricCenter(double pCoords[3])
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeGeom::getShapeFunctions(double pCoords[3], double shape[8])
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
 {
   herr_t err = 0;
@@ -304,7 +327,7 @@ int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_EdgeNeighbors.get() != NULL)
   {
     size_t numEdges = getNumberOfEdges();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_EdgeNeighbors, numEdges);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_EdgeNeighbors, numEdges, DREAM3D::StringConstants::EdgeNeighbors);
     if (err < 0)
     {
       return err;
@@ -315,7 +338,7 @@ int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_EdgesContainingVert.get() != NULL)
   {
     size_t numVerts = getNumberOfVertices();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_EdgesContainingVert, numVerts);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_EdgesContainingVert, numVerts, DREAM3D::StringConstants::EdgesContainingVert);
     if (err < 0)
     {
       return err;

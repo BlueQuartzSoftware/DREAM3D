@@ -40,7 +40,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
-#include "DREAM3DLib/Geometry/VertexGeom.h"
 
 /**
  * @brief The ImageGeom class represents a structured rectlinear grid
@@ -140,6 +139,26 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
      * @brief deleteElementCentroids
      */
     virtual void deleteElementCentroids();
+
+    /**
+     * @brief getParametricCenter
+     * @param pCoords
+     */
+    virtual void getParametricCenter(double pCoords[3]);
+
+    /**
+     * @brief getShapeFunctions
+     * @param pCoords
+     * @param shape
+     */
+    virtual void getShapeFunctions(double pCoords[3], double shape[8]);
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     */
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
 
     /**
      * @brief setName

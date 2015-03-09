@@ -74,56 +74,6 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      */
     static Pointer CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name);
 
-    static void InterpolationDerivatives(double pCoords[3], double derivs[8])
-    {
-      double rm, sm;
-
-      rm = 1.0 - pCoords[0];
-      sm = 1.0 - pCoords[1];
-
-      derivs[0] = -sm;
-      derivs[1] = sm;
-      derivs[2] = pCoords[1];
-      derivs[3] = -pCoords[1];
-      derivs[4] = -rm;
-      derivs[5] = -pCoords[0];
-      derivs[6] = pCoords[0];
-      derivs[7] = rm;
-    }
-
-    static void GetParametricCenter(double pCoords[3])
-    {
-      pCoords[0] = 0.5;
-      pCoords[1] = 0.5;
-      pCoords[2] = 0.0;
-    }
-
-    void findDerivatives(FloatArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
-    {
-      int64_t numQuads = getNumberOfQuads();
-      std::vector<double> values(4);
-      double derivs[3];
-      int cDimsIn = field->getNumberOfComponents();
-      float* fieldPtr = field->getPointer(0);
-      double* derivPtr = derivatives->getPointer(0);
-      int64_t verts[4];
-      for (int64_t i = 0; i < numQuads; i++)
-      {
-        getVertsAtQuad(i, verts);
-        for (int j = 0; j < cDimsIn; j++)
-        {
-          for (int k = 0; k < 4; k++)
-          {
-            values[k] = static_cast<double>(fieldPtr[cDimsIn*verts[k]+j]);
-          }
-          DerivativeHelpers::QuadDeriv()(this, i, &values[0], derivs, 1);
-          derivPtr[i*3*cDimsIn+j*3] = static_cast<double>(derivs[0]);
-          derivPtr[i*3*cDimsIn+j*3+1] = static_cast<double>(derivs[1]);
-          derivPtr[i*3*cDimsIn+j*3+2] = static_cast<double>(derivs[2]);
-        }
-      }
-    }
-
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
 // -----------------------------------------------------------------------------
@@ -375,6 +325,26 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @brief deleteElementCentroids
      */
     virtual void deleteElementCentroids();
+
+    /**
+     * @brief getParametricCenter
+     * @param pCoords
+     */
+    virtual void getParametricCenter(double pCoords[3]);
+
+    /**
+     * @brief getShapeFunctions
+     * @param pCoords
+     * @param shape
+     */
+    virtual void getShapeFunctions(double pCoords[3], double shape[8]);
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     */
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
 
     /**
      * @brief setName
