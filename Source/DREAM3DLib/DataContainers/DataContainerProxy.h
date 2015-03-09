@@ -95,17 +95,21 @@ class DataContainerProxy
       attributeMatricies = amp.attributeMatricies;
     }
 
-  /**
-  * @brief operator == method
-  */
-  bool operator==(const DataContainerProxy& amp)
-  {
-    if (flag == amp.flag && name == amp.name && dcType == amp.dcType)
-    {
-      return true;
-    }
-    return false;
-  }
+#if 0
+	/**
+* @brief operator == method
+*/
+	// THIS METHOD IS WRONG.  PLEASE FIX BEFORE IMPLEMENTING
+	bool operator==(const DataContainerProxy& amp)
+	{
+		if (flag == amp.flag && name == amp.name && dcType == amp.dcType)
+		{
+			return true;
+		}
+		return false;
+	}
+#endif // 0
+
 
     //----- Our variables, publicly available
     uint8_t flag;
