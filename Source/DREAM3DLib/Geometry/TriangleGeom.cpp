@@ -35,11 +35,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 /* ============================================================================
- * QuadGeom uses code adapated from the following vtk modules:
+ * TriangleGeom uses code adapated from the following vtk modules:
  *
  * * vtkTriangle.cxx
- *   - adapted vtkQuad::GetParametricCenter to TriangleGeom::getParametricCenter
- *   - adapted vtkQuad::InterpolationDerivs to TriangleGeom::getShapeFunctions
+ *   - adapted vtkTriangle::GetParametricCenter to TriangleGeom::getParametricCenter
+ *   - adapted vtkTriangle::InterpolationDerivs to TriangleGeom::getShapeFunctions
  * * vtkGradientFilter.cxx
  *   - adapted vtkGradientFilter template function ComputeCellGradientsUG to
  *     TriangleGeom::findDerivatives
@@ -326,6 +326,8 @@ void TriangleGeom::getParametricCenter(double pCoords[3])
 // -----------------------------------------------------------------------------
 void TriangleGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
+  (void)pCoords;
+
   // r-derivatives
   shape[0] = -1.0;
   shape[1] = 1.0;

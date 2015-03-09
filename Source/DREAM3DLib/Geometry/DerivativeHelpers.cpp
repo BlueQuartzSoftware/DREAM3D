@@ -37,6 +37,8 @@
 /* ============================================================================
  * DerivativeHelpers uses code adapated from the following vtk modules:
  *
+ * * vtkLine.cxx
+ *   - adapted vtkLine::Derivatives to EdgeDeriv::operator()
  * * vtkTriangle.cxx
  *   - adapted vtkTriangle::Derivatives to TriangleDeriv::operator()
  * * vtkQuad.cxx
@@ -79,8 +81,46 @@
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
+#include "EdgeGeom.h"
 #include "TriangleGeom.h"
 #include "QuadGeom.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DerivativeHelpers::EdgeDeriv::operator()(EdgeGeom* edges, int64_t edgeId, double values[2], double derivs[3])
+{
+  float x0f[3], x1f[3];
+  double x0[3], x1[3], deltaX[3];
+  int64_t verts[2];
+
+  edges->getVertsAtEdge(edgeId, verts);
+  edges->getCoords(verts[0], x0f);
+  edges->getCoords(verts[1], x1f);
+
+  for (size_t i = 0; i < 3; i++)
+  {
+     x0[i] = static_cast<double>(x0f[i]);
+     x1[i] = static_cast<double>(x1f[i]);
+  }
+
+  for (size_t i = 0; i < 3; i++)
+  {
+    deltaX[i] = x1[i] - x0[i];
+  }
+
+  for (size_t i = 0; i < 3; i++)
+  {
+    if ( deltaX[i] != 0 )
+    {
+      derivs[i] = (values[1] - values[0]) / deltaX[i];
+    }
+    else
+    {
+      derivs[i] = 0.0;
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------
 //

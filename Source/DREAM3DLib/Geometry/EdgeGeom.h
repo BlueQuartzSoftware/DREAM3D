@@ -41,6 +41,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
+#include "DREAM3DLib/Geometry/DerivativeHelpers.h"
 
 /**
  * @brief The EdgeGeom class represents a collection of line segments

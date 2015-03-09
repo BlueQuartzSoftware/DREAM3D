@@ -45,6 +45,7 @@
 #include "Eigen/LU"
 #include "Eigen/Eigenvalues"
 
+class EdgeGeom;
 class TriangleGeom;
 class QuadGeom;
 
@@ -64,6 +65,18 @@ namespace DerivativeHelpers
    */
   typedef Eigen::Matrix<double,2,2,Eigen::RowMajor> QuadJacobian;
 
+  class EdgeDeriv
+  {
+    public:
+      EdgeDeriv() {}
+      virtual ~EdgeDeriv() {}
+
+      void operator()(EdgeGeom* edges, int64_t edgeId, double values[2], double derivs[3]);
+  };
+
+  /**
+   * @brief The TriangleDeriv class
+   */
   class TriangleDeriv
   {
     public:
