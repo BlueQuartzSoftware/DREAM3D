@@ -155,18 +155,45 @@ void SaveImages::dataCheck()
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if(m_ColorsArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-1004);
-    notifyErrorMessage(getHumanLabel(), "Input Color Array name is empty", getErrorCondition());
-  }
-  else
-  {
-    QVector<size_t> cDims(1, 3);
+	IDataArray::Pointer iDa = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getColorsArrayPath());
+	if (getErrorCondition() < 0)
+	{
+		return;
+	}
+
+	QVector<size_t> cDims = iDa->getComponentDimensions();
+
+	if (cDims[0] == 1)
+	{
 		m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+		if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+		{
+			m_Colors = m_ColorsPtr.lock()->getPointer(0);
+		} /* Now assign the raw pointer to data from the DataArray<T> object */
+	} 
+	else if (cDims[0] == 3)
+	{
+		m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+		if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+		{
+			m_Colors = m_ColorsPtr.lock()->getPointer(0);
+		} /* Now assign the raw pointer to data from the DataArray<T> object */
+	}
+	else if (cDims[0] == 4)
+	{
+		m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+		if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+		{
+			m_Colors = m_ColorsPtr.lock()->getPointer(0);
+		} /* Now assign the raw pointer to data from the DataArray<T> object */
+	}
+	else
+	{
+		setErrorCondition(-1006);
+		notifyErrorMessage(getHumanLabel(), "Number of Components must be 1, 3 or 4 for Gray Scale or RGB or RGBA arrays", getErrorCondition());
+		return;
+	}
+	
   if(getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getColorsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
@@ -206,6 +233,7 @@ void SaveImages::execute()
 		for (size_t z = 0; z < dims[2]; ++z)
 		{
 			err = saveImage(z, dims[0], dims[1], dims);
+			if (-1 == err) { return; }
 		}
 	}
 	else if (1 == m_Plane) // XZ plane
@@ -213,6 +241,7 @@ void SaveImages::execute()
 		for (size_t y = 0; y < dims[1]; ++y)
 		{
 			err = saveImage(y, dims[0], dims[2], dims);
+			if (-1 == err) { return; }
 		}
 	}
 	else if (2 == m_Plane) // YZ plane
@@ -220,6 +249,7 @@ void SaveImages::execute()
 		for (size_t x = 0; x < dims[0]; ++x)
 		{
 			err = saveImage(x, dims[1], dims[2], dims);
+			if (-1 == err) { return; }
 		}
 	}
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -235,6 +265,11 @@ int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 	int nComp = m_ColorsPtr.lock()->getNumberOfComponents();
 
   QString path = (m_OutputPath) + QDir::separator() + (m_ImagePrefix) + QString::number(slice);
+
+	if (!m_FilePrefix)
+	{
+		  path = (m_OutputPath)+QDir::separator() + QString::number(slice);
+	}
   if(m_ImageFormat == TifImageType)
   {
     path.append(".tif");
@@ -282,10 +317,17 @@ int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 #endif
 		}
 	}
-	image.setText("", "DREAM3DLib::Version::PackageComplete()");
+	image.setText("Description", DREAM3DLib::Version::PackageComplete());
 	bool success = image.save(path);
-	if (success) { err = 0; }
-	else { err = -1; }
+	if (success) {
+		err = 0; 
+	}
+	else {
+		err = -1;
+		QString ss = QObject::tr("The image '%1' was not successfully saved").arg(path);
+		setErrorCondition(-1007);
+		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+	}
   return err;
 }
 
