@@ -22,25 +22,25 @@ With other coloring methods such as IPF bad voxels which result from non-indexed
 |------------------------|-------------------------|-------------------| -----------|-----------------------|
 | Triclinic | 1, -1  |  C1, C1 | -1 | Not Implemented|
 | Monoclinic | 2, m, 2/m | C2, Cs, C2h | 2/m | Not Implemented |
-| Orthorhombic | 222,, 2/m 2/m 2/m | D2, D2h | mmm | ![](MisorientationLegendD2_222.png) |
+| Orthorhombic | 222,, 2/m 2/m 2/m | D2, D2h | mmm | ![](images/MisorientationLegendD2_222.png) |
 | Orthorhombic | mm2 | C2v | mmm | Not Implemented |
 | Trigonal (Low)|3, -3 | C3, C3i | -3 | Not Implemented |
 | Trigonal (High)  | 32, 3m, -32/m | D3, C3v, D3d | -3m | Not Implemented |
 | Tetragonal (Low) | 4, -4, 4/m | C4, S4, C4h | 4/m | Not Implemented |
-| Tetragonal (High) | 422,  4/m 2/m 2/m | D4, D4h | 4/mmm |  ![](MisorientationLegendD4_422.png)|
+| Tetragonal (High) | 422,  4/m 2/m 2/m | D4, D4h | 4/mmm |  ![](images/MisorientationLegendD4_422.png)|
 | Tetragonal (High) | 4mmm, -42m | C4v, D2d | 4/mmm | Not Implemented|
 | Hexagonal (Low) | 6, -6, 6/m | C6, C3h, C6h | 6/m | Not Implemented |
-| Hexagonal  (High)| 622, 6/m 2/m 2/m | D6, D6h | 6/mmm | ![](MisorientationLegendD6_622.png) |
+| Hexagonal  (High)| 622, 6/m 2/m 2/m | D6, D6h | 6/mmm | ![](images/MisorientationLegendD6_622.png) |
 | Hexagonal  (High)| 6mm, -62m | C6v, D3h | 6/mmm | Not Implemented |
-| Cubic (Low) | 23, 2/m-3 | T, Th | m-3 | ![](MisorientationLegendT_23.png) |
-| Cubic (High) | 432, 4/m -3 2/m | O, Oh| m-3m | ![](MisorientationLegendO_432.png) |
+| Cubic (Low) | 23, 2/m-3 | T, Th | m-3 | ![](images/MisorientationLegendT_23.png) |
+| Cubic (High) | 432, 4/m -3 2/m | O, Oh| m-3m | ![](images/MisorientationLegendO_432.png) |
 | Cubic (High) | -43m | Td| m-3m | Not Implemented |
 
 ## Example Output Image ##
 
-![Small IN100 courtesy of [2] showing a generally random texture](MisoColor_Small_IN100.png)
+![Small IN100 courtesy of [2] showing a generally random texture](images/Small_IN100_Miso_90.png)
 
-![Interstitial Free (IF) Steel courtesy of [3] showing a strong texture](Miso_fw-ar-IF1-avtr12-corr.png)
+![Interstitial Free (IF) Steel courtesy of [3]](images/Miso_fw-ar-IF1-avtr12-corr.png)
 
 
 ## Input Options ##

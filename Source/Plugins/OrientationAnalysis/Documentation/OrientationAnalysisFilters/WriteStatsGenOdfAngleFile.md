@@ -8,11 +8,11 @@ IOFilters (Output)
 
 ## Description ##
 
-This filter is used in a workflow where the user would like to generate a synthetic microstructure with an ODF that matches (as closely as possible) an existing experimental data set or other data set that is being mimiced. The basic workflow is the following:
+This filter is used in a workflow where the user would like to generate a synthetic microstructure with an ODF that matches (as closely as possible) an existing experimental data set or other data set that is being mimicked. The basic workflow is the following:
 
 0. Import or Read in Euler Angle data
 1. Optionally threshold the data so each cell is marked as allowable or not-allowable.
-2. Insert the "Write StatsGenerator IDF Angle File" filter in the pipeline.
+2. Insert the "Write StatsGenerator ODF Angle File" filter in the pipeline.
 3. Run the pipeline to produce the file.
 4. Launch StatsGenerator
 5. Generate the data
@@ -20,6 +20,9 @@ This filter is used in a workflow where the user would like to generate a synthe
 7. Click on the *Bulk Load* sub tab
 8. Select the file that was just written
 9. Load the data and inspect the ODF that was generated.
+
+
+**StatsGenerator can not load data from standard .ang or .ctf files. So if you want to get the ODF from an existing experimental data set and you have one of those files then you can use that functionality in StatsGenerator**
 
 ## Notes on Implementation ##
 

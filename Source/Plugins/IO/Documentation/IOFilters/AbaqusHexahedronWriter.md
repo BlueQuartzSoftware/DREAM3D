@@ -38,7 +38,7 @@ None
 
 ## Authors ##
 
-**Copyright** BlueQuartz Software, LLC
+**Copyright** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 

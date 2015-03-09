@@ -1,6 +1,7 @@
 Read EDAX/TSL Ebsd Data {#readangdata}
 =====
 
+
 ## Group (Subgroup) ##
 IOFilters (Input)
 
@@ -10,7 +11,7 @@ This filter will read a single .ang file into the VoxelDataContainer allowing th
 
 ### Default TSL Transformations ###
 
-If the data has come from a TSL based acquisition system and the settings of the acquisition software were in the default modes then the following reference frame transformations need to be performed:
+If the data has come from a TSL based acquisition system and the settings of the acquisition software were in the default modes then the following reference frame transformations may need to be performed based on the version of the OIM Analysis software being used to collect the data
 
 + Sample Reference Frame: 180 Degrees about the <010> Axis
 + Crystal Reference Frame: 90 Degrees about the <001> Axis

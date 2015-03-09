@@ -36,6 +36,8 @@ Not Applicable
 | Quaternions                | Quats            |
 | Rodrigues Vectors          | RodriguesVectors |
 | Axis-Angle Pairs           | AxisAngles       |
+
+
 ## Authors ##
 
 **Copyright:** 2014 Will Lenthe (UCSB)

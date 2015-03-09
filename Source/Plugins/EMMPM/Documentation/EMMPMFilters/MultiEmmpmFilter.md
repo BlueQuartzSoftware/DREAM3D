@@ -44,7 +44,7 @@ There is also an option to use the last Mu (mean) and Sigma (variance) values ca
 
 ## Authors ##
 
-**Copyright** 2015 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2015  BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 

@@ -1,18 +1,23 @@
 Find Feature Phases Binary {#findfeaturephasesbinary}
 ==========
+
 ## Group (Subgroup) ##
+
 Generic Filters (Misc)
 
 ## Description ##
+
 This filter assigns a phase number to binary data. The good voxels will be phase 1, and remaining voxels will be phase 0. It is generally for use when the cell phases weren't known ahead of time. For example, if an image is segmented into precipitates and non-precipitates, this filter will assign the precipitates to phase 1, and the non-precipitates to phase 0.
 
 Additionally, this filter creates a Cell Ensemble Attribute Matrix to hold ensemble data. 
 
 ## Parameters ##
+
 None
 
 
 ## Required Geometry ##
+
 Image / Rectilinear Grid
 
 ## Required Arrays ##
@@ -37,7 +42,7 @@ Image / Rectilinear Grid
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 

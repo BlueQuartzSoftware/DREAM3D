@@ -2,20 +2,25 @@ Generate Vector Colors {#generatevectorcolors}
 ========
 
 ## Group (Subgroup) ##
+
 Generic Filters (Misc)
 
 ## Description ##
+
 This filter generates a color for each **Element** based on the vector assigned to that **Element** in the input vector data array.  The color scheme assigns a unique color to all points on the unit hemisphere using a HSV-like scheme. 
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|---------|
 | UseGoodVoxels | Boolean | Whether or not to assign colors to "bad" voxels or leave them black |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Arrays ##
+
 | Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
 | Element | VectorData | Float | (1,3) | Vectors the colors will represent  |
@@ -23,6 +28,7 @@ Not Applicable
 
 
 ## Created Arrays ##
+
 | Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
 | Element | Colors | Unsigned Char | (1,3) | The RGB colors |
@@ -31,7 +37,7 @@ Not Applicable
 ### Authors ###
 
 
-**Copyright:** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 

@@ -60,9 +60,11 @@ _See: www.opendx.org for more information._
 | Origin     | The location in space coordinates of the (0,0,0) voxel |
 
 ## Required DataContainers ##
-Voxel
+
+ImageGeometry is required.
 
 ## Required Arrays ##
+
 None
 
 ## Created Arrays ##
@@ -75,7 +77,7 @@ None
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 
