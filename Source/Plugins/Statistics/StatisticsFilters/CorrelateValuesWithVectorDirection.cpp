@@ -660,3 +660,38 @@ int CorrelateValuesWithVectorDirection::writeCoords(FILE* f, const char* axis, c
   }
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName()
+{
+  return Statistics::StatisticsBaseName;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getGroupName()
+{
+  return DREAM3D::FilterGroups::StatisticsFilters;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getSubGroupName()
+{
+  return DREAM3D::FilterSubGroups::CrystallographicFilters;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getHumanLabel()
+{
+  return "Correlate Values with Vector Direction";
+}
