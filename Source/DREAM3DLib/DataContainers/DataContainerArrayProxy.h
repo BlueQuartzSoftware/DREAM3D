@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
 
 
     //----- Our variables, publicly available
-    QList<DataContainerProxy>  list;
+    QMap<QString, DataContainerProxy>  dataContainers;
 };
 
 Q_DECLARE_METATYPE(DataContainerArrayProxy)

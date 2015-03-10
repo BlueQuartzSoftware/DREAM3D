@@ -1677,7 +1677,7 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
       {
         dcp.flag = Qt::Checked;
       }
-      dcaProxy.list.push_back(dcp);
+      dcaProxy.dataContainers.insert(dcp.name, dcp);
     }
 
     // Now we check for the AttributeMatrix

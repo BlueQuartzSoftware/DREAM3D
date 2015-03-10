@@ -54,7 +54,7 @@ DataContainerArrayProxy::DataContainerArrayProxy() {}
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy::DataContainerArrayProxy(const DataContainerArrayProxy& rhs)
 {
-  list = rhs.list;
+  dataContainers = rhs.dataContainers;
 }
 
 // -----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca)
       }
       dcProxy.attributeMatricies.insert(amName, amProxy); // Add the new AttributeMatrix to the DataContainerProxy
     }
-    list.push_back(dcProxy);
+    dataContainers.insert(dcProxy.name, dcProxy);
   }
 }
 
@@ -107,7 +107,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca)
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxy::operator=(const DataContainerArrayProxy& rhs)
 {
-  list = rhs.list;
+  dataContainers = rhs.dataContainers;
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +116,8 @@ void DataContainerArrayProxy::operator=(const DataContainerArrayProxy& rhs)
 QStringList DataContainerArrayProxy::flattenHeirarchy(Qt::CheckState dcFlag, Qt::CheckState amFlag, Qt::CheckState daFlag)
 {
   QStringList strList;
-  QListIterator<DataContainerProxy> dcIter(list);
+  QList<DataContainerProxy> dcProxies = dataContainers.values();
+  QListIterator<DataContainerProxy> dcIter(dcProxies);
 
   while (dcIter.hasNext()) // DataContainerLevel
   {
@@ -162,7 +163,8 @@ void DataContainerArrayProxy::print(const QString header)
 {
   QString str;
   QTextStream out(&str);
-  QListIterator<DataContainerProxy> dcIter(list);
+  QList<DataContainerProxy> dcProxies = dataContainers.values();
+  QListIterator<DataContainerProxy> dcIter(dcProxies);
 
   while (dcIter.hasNext()) // DataContainerLevel
   {
@@ -197,92 +199,30 @@ void DataContainerArrayProxy::print(const QString header)
   std::cout << str.toStdString() << std::endl;
 }
 
-//// -----------------------------------------------------------------------------
-////
-//// -----------------------------------------------------------------------------
-//void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state)
-//{
-//  // Loop over the data containers until we find the proper data container
-//  QList<DataContainerProxy> containers = list;
-//  QListIterator<DataContainerProxy> containerIter(containers);
-//  QStringList dcList;
-//  while(containerIter.hasNext())
-//  {
-//    DataContainerProxy dcProxy = containerIter.next();
-//    dcList.push_back(dcProxy.name);
-//    DataContainer::Pointer dcItem = dca->getDataContainer(dcProxy.name);
-//    if(dcItem.get() == NULL) { continue; }
-//    // Check to see if the DataContainer is checked, if it is NOT checked then we remove the entire DataContainer from
-//    // the DataContainerArray
-//    if (dcProxy.flag == state)
-//    {
-//        DataContainer::Pointer ptr = dca->removeDataContainer(dcProxy.name); // Remove it out
-//
-//      continue; // Continue to the next DataContainer
-//    }
-//    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
-//    QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-//    while(attrMatsIter.hasNext() )
-//    {
-//      attrMatsIter.next();
-//      QString amName = attrMatsIter.key();
-//      AttributeMatrix::Pointer amItem = dcItem->getAttributeMatrix(amName);
-//      //assert(amItem.get() != NULL);
-//      if(amItem.get() == NULL) { continue; }
-//      AttributeMatrixProxy attrProxy = attrMatsIter.value();
-//      // Check to see if this AttributeMatrix is checked, if not then remove it from the DataContainer and go to the next loop
-//      if(attrProxy.flag == state)
-//      {
-//        dcItem->removeAttributeMatrix(amName);
-//        continue;
-//      }
-//      // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
-//      QMap<QString, DataArrayProxy>& dataArrays = attrProxy.dataArrays;
-//      QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
-//      while(dataArraysIter.hasNext() )
-//      {
-//        dataArraysIter.next();
-//        QString daName = dataArraysIter.key();
-//        IDataArray::Pointer daItem = amItem->getAttributeArray(daName);
-//        if(daItem.get() == NULL) { continue; }
-//        DataArrayProxy daProxy = dataArraysIter.value();
-//        // Check to see if the user selected this item
-//        if(daProxy.flag == state)
-//        {
-//          amItem->removeAttributeArray(daName);
-//          continue;
-//        }
-//      }
-//    }
-//  }
-//}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxy::setAllFlags(Qt::CheckState state)
 {
-  QMutableListIterator<DataContainerProxy> dcIter(list);
+	for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
+	{
+		DataContainerProxy& dcProxy = dcIter.value();
+		dcProxy.flag = state;
 
-  while (dcIter.hasNext()) // DataContainerLevel
-  {
-    DataContainerProxy& dcProxy =  dcIter.next();
-    dcProxy.flag = state;
-    QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
-    while(amIter.hasNext()) // AttributeMatrixLevel
-    {
-      amIter.next();
-      AttributeMatrixProxy& amProxy = amIter.value();
-      amProxy.flag = state;
-      QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
-      while(dIter.hasNext()) // DataArray Level
-      {
-        dIter.next();
-        DataArrayProxy& daProxy = dIter.value();
-        daProxy.flag = state;
-      }
-    }
-  }
+		QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+		for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+		{
+			AttributeMatrixProxy& amProxy = amIter.value();
+			amProxy.flag = state;
+
+			QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+			for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+			{
+				DataArrayProxy& daProxy = daIter.value();
+				daProxy.flag = state;
+			}
+		}
+	}
 }
 
 
@@ -291,11 +231,9 @@ void DataContainerArrayProxy::setAllFlags(Qt::CheckState state)
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxy::reverseFlags()
 {
-  QMutableListIterator<DataContainerProxy> dcIter(list);
-
-  while (dcIter.hasNext()) // DataContainerLevel
-  {
-    DataContainerProxy& dcProxy =  dcIter.next();
+	for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
+	{
+    DataContainerProxy& dcProxy =  dcIter.value();
     if(dcProxy.flag == Qt::Checked)
     {
       dcProxy.flag = Qt::Unchecked;
@@ -305,10 +243,9 @@ void DataContainerArrayProxy::reverseFlags()
       dcProxy.flag = Qt::Checked;
     }
 
-    QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
-    while(amIter.hasNext()) // AttributeMatrixLevel
-    {
-      amIter.next();
+	QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+	for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+	{
       AttributeMatrixProxy& amProxy = amIter.value();
       if(amProxy.flag == Qt::Checked)
       {
@@ -318,11 +255,11 @@ void DataContainerArrayProxy::reverseFlags()
       {
         amProxy.flag = Qt::Checked;
       }
-      QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
-      while(dIter.hasNext()) // DataArray Level
-      {
-        dIter.next();
-        DataArrayProxy& daProxy = dIter.value();
+
+	  QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+	  for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+	  {
+		DataArrayProxy& daProxy = daIter.value();
         if(daProxy.flag == Qt::Checked)
         {
           daProxy.flag = Qt::Unchecked;
@@ -345,21 +282,19 @@ QStringList DataContainerArrayProxy::serialize()
 
   QStringList entries;
 
-  QMutableListIterator<DataContainerProxy> dcIter(list);
-
-  while (dcIter.hasNext()) // DataContainerLevel
+  for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
   {
-    DataContainerProxy& dcProxy =  dcIter.next();
-    QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
-    while(amIter.hasNext()) // AttributeMatrixLevel
-    {
-      amIter.next();
+    DataContainerProxy& dcProxy =  dcIter.value();
+
+	QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+	for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+	{
       AttributeMatrixProxy& amProxy = amIter.value();
-      QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
-      while(dIter.hasNext()) // DataArray Level
-      {
-        dIter.next();
-        DataArrayProxy& daProxy = dIter.value();
+
+	  QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+	  for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+	  {
+        DataArrayProxy& daProxy = daIter.value();
 
         QString str = QString("[PATH=%1|%2|%3][FLAG=%4]").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name).arg(daProxy.flag);
         entries << str;
@@ -374,8 +309,9 @@ QStringList DataContainerArrayProxy::serialize()
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy DataContainerArrayProxy::MergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy)
 {
-	QList<DataContainerProxy> fDcList = fileProxy.list;
-	QList<DataContainerProxy>& cDcList = cacheProxy.list;
+#if 0
+	QMap<QString, DataContainerProxy> fDcList = fileProxy.dataContainers;
+	QMap<QString, DataContainerProxy>& cDcList = cacheProxy.dataContainers;
 
 	// Add extra items in the file to the cache
 	for (int i = 0; i < fDcList.count(); i++)
@@ -470,6 +406,8 @@ DataContainerArrayProxy DataContainerArrayProxy::MergeProxies(DataContainerArray
 			}
 		}
 	}
+#endif // 0
+
 
 	return cacheProxy;
 }
@@ -479,7 +417,8 @@ DataContainerArrayProxy DataContainerArrayProxy::MergeProxies(DataContainerArray
 // -----------------------------------------------------------------------------
 bool DataContainerArrayProxy::contains(const QString& name)
 {
-  QListIterator<DataContainerProxy> iter(list);
+	QList<DataContainerProxy> dcProxies = dataContainers.values();
+	QListIterator<DataContainerProxy> iter(dcProxies);
   while(iter.hasNext())
   {
     const DataContainerProxy dc = iter.next();
@@ -496,16 +435,15 @@ bool DataContainerArrayProxy::contains(const QString& name)
 // -----------------------------------------------------------------------------
 DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString& name)
 {
-  QMutableListIterator<DataContainerProxy> iter(list);
-  while(iter.hasNext())
-  {
-    DataContainerProxy& dc = iter.next();
-    if(dc.name.compare(name) == 0)
-    {
-      return dc;
-    }
-  }
-  DataContainerProxy proxy;
-  list.push_back(proxy);
-  return list.back();
+	for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
+	{
+		DataContainerProxy& dc = dcIter.value();
+		if (dc.name.compare(name) == 0)
+		{
+			return dc;
+		}
+	}
+	DataContainerProxy proxy;
+	dataContainers.insert(proxy.name, proxy);
+	return proxy;
 }

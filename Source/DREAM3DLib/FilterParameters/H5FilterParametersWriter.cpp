@@ -630,7 +630,8 @@ int H5FilterParametersWriter::writeArraySelections(const QString name, QSet<QStr
 int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
 {
   int err = 0;
-  QListIterator<DataContainerProxy> dcIter(v.list);
+  QList<DataContainerProxy> dcProxies = v.dataContainers.values();
+  QListIterator<DataContainerProxy> dcIter(dcProxies);
   hid_t dcaGid = QH5Utilities::createGroup(m_CurrentGroupId, name);
 
   while (dcIter.hasNext()) // DataContainerLevel

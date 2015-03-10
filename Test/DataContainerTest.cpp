@@ -415,11 +415,11 @@ void TestDataContainerReader()
   err = writer->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
-  QList<DataContainerProxy>& dcsToRead = dcaProxy.list;
+  QMap<QString, DataContainerProxy>& dcsToRead = dcaProxy.dataContainers;
   //uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
-  for(int i=(dcsToRead.size()-1); i>=0; i--)
+  for (QMap<QString, DataContainerProxy>::iterator iter = dcsToRead.end(); iter != dcsToRead.begin(); --iter)
   {
-    DataContainerProxy& dcProxy = dcsToRead[i];
+	DataContainerProxy& dcProxy = iter.value();
     if (dcProxy.name.compare(DREAM3D::Defaults::DataContainerName) != 0) { dcProxy.flag = Qt::Unchecked; }
     else
     {
@@ -573,7 +573,7 @@ void TestDataContainerArrayProxy()
 
   DataContainerArrayProxy dcaProxy = reader->getInputFileDataContainerArrayProxy();
 
-  int dcaCount = dcaProxy.list.count();
+  int dcaCount = dcaProxy.dataContainers.count();
   DREAM3D_REQUIRE_EQUAL(dcaCount, 4);
 
   H5Gclose(pipelineGroupId);
