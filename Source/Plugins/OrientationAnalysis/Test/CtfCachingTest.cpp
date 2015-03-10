@@ -37,6 +37,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QThread>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -195,6 +196,9 @@ int TestCtfReader()
 		bool prop = ctfReader->property("FileWasRead").toBool();
 		DREAM3D_REQUIRE_EQUAL(prop, true)
 	}
+    
+    // Force the thread to sleep for 1 second for the next test
+    QThread::sleep(1);
 
 	// Reading the same file, but the contents changed outside the program
 	{
