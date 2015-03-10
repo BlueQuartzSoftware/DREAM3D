@@ -66,6 +66,7 @@ const int numPhases2 = 5;
 // -----------------------------------------------------------------------------
 void CopyTestFiles()
 {
+	// Copy test files to Build directory to manipulate
 	QFile::copy(File1, CopiedFile1);
 	QFile::copy(File2, CopiedFile2);
 }
@@ -297,6 +298,7 @@ int main(int argc, char** argv)
 	DREAM3D_REGISTER_TEST(loadFilterPlugins());
 	DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
+	DREAM3D_REGISTER_TEST(RemoveTestFiles())
 	DREAM3D_REGISTER_TEST(CopyTestFiles())
 
 	DREAM3D_REGISTER_TEST(TestCtfReader())
