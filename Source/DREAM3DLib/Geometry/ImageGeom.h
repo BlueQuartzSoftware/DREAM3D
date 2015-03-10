@@ -74,6 +74,8 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
 
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
+    void getCoords(size_t idx[3], float coords[3]);
+
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry
 // -----------------------------------------------------------------------------

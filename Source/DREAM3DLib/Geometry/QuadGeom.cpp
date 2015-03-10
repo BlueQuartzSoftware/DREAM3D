@@ -197,7 +197,7 @@ size_t QuadGeom::getNumberOfTuples()
 int QuadGeom::findElementsContainingVert()
 {
   m_QuadsContainingVert = ElementDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
+  GeometryHelpers::Connectivity::FindElementsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
   if (m_QuadsContainingVert.get() == NULL)
   {
     return -1;
@@ -240,7 +240,7 @@ int QuadGeom::findElementNeighbors()
     return -1;
   }
   m_QuadNeighbors = ElementDynamicList::New();
-  err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
+  err = GeometryHelpers::Connectivity::FindElementNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
   if (m_QuadNeighbors.get() == NULL)
   {
     return -1;
@@ -279,7 +279,7 @@ int QuadGeom::findElementCentroids()
 {
   QVector<size_t> cDims(1, 3);
   m_QuadCentroids = FloatArrayType::CreateArray(getNumberOfQuads(), cDims, DREAM3D::StringConstants::QuadCentroids);
-  GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_QuadList, m_VertexList, m_QuadCentroids);
+  GeometryHelpers::Topology::FindElementCentroids<int64_t>(m_QuadList, m_VertexList, m_QuadCentroids);
   if (m_QuadCentroids.get() == NULL)
   {
     return -1;

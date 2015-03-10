@@ -197,7 +197,7 @@ size_t TriangleGeom::getNumberOfTuples()
 int TriangleGeom::findElementsContainingVert()
 {
   m_TrianglesContainingVert = ElementDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, getNumberOfVertices());
+  GeometryHelpers::Connectivity::FindElementsContainingVert<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, getNumberOfVertices());
   if (m_TrianglesContainingVert.get() == NULL)
   {
     return -1;
@@ -240,7 +240,7 @@ int TriangleGeom::findElementNeighbors()
     return -1;
   }
   m_TriangleNeighbors = ElementDynamicList::New();
-  err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, m_TriangleNeighbors);
+  err = GeometryHelpers::Connectivity::FindElementNeighbors<uint16_t, int64_t>(m_TriList, m_TrianglesContainingVert, m_TriangleNeighbors);
   if (m_TriangleNeighbors.get() == NULL)
   {
     return -1;
@@ -279,7 +279,7 @@ int TriangleGeom::findElementCentroids()
 {
   QVector<size_t> cDims(1, 3);
   m_TriangleCentroids = FloatArrayType::CreateArray(getNumberOfTris(), cDims, DREAM3D::StringConstants::TriangleCentroids);
-  GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_TriList, m_VertexList, m_TriangleCentroids);
+  GeometryHelpers::Topology::FindElementCentroids<int64_t>(m_TriList, m_VertexList, m_TriangleCentroids);
   if (m_TriangleCentroids.get() == NULL)
   {
     return -1;
@@ -328,12 +328,12 @@ void TriangleGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
   (void)pCoords;
 
-  // r-derivatives
+  // r derivatives
   shape[0] = -1.0;
   shape[1] = 1.0;
   shape[2] = 0.0;
 
-  // s-derivatives
+  // s derivatives
   shape[3] = -1.0;
   shape[4] = 0.0;
   shape[5] = 1.0;

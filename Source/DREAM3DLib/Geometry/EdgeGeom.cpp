@@ -192,7 +192,7 @@ size_t EdgeGeom::getNumberOfTuples()
 int EdgeGeom::findElementsContainingVert()
 {
   m_EdgesContainingVert = ElementDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, getNumberOfVertices());
+  GeometryHelpers::Connectivity::FindElementsContainingVert<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, getNumberOfVertices());
   if (m_EdgesContainingVert.get() == NULL)
   {
     return -1;
@@ -235,7 +235,7 @@ int EdgeGeom::findElementNeighbors()
     return -1;
   }
   m_EdgeNeighbors = ElementDynamicList::New();
-  err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, m_EdgeNeighbors);
+  err = GeometryHelpers::Connectivity::FindElementNeighbors<uint16_t, int64_t>(m_EdgeList, m_EdgesContainingVert, m_EdgeNeighbors);
   if (m_EdgeNeighbors.get() == NULL)
   {
     err = -1;
@@ -274,7 +274,7 @@ int EdgeGeom::findElementCentroids()
 {
   QVector<size_t> cDims(1, 3);
   m_EdgeCentroids = FloatArrayType::CreateArray(getNumberOfEdges(), cDims, DREAM3D::StringConstants::EdgeCentroids);
-  GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_EdgeList, m_VertexList, m_EdgeCentroids);
+  GeometryHelpers::Topology::FindElementCentroids<int64_t>(m_EdgeList, m_VertexList, m_EdgeCentroids);
   if (m_EdgeCentroids.get() == NULL)
   {
     return -1;
