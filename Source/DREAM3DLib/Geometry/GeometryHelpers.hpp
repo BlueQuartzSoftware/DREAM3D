@@ -468,16 +468,16 @@ namespace GeometryHelpers
         }
       }
 
-      template<typename T, typename K, typename L>
+      template<typename T, typename K, typename L, typename M>
       static void AverageCellArrayValues(typename DynamicListArray<L, T>::Pointer elemsContainingVert,
                                          DataArray<float>::Pointer vertices, typename DataArray<K>::Pointer inElemArray,
-                                         DataArray<float>::Pointer outVertexArray)
+                                         typename DataArray<M>::Pointer outVertexArray)
       {
         BOOST_ASSERT(outVertexArray->getNumberOfTuples() == vertices->getNumberOfTuples());
         BOOST_ASSERT(outVertexArray->getComponentDimensions() == inElemArray->getComponentDimensions());
 
         K* elemArray = inElemArray->getPointer(0);
-        float* vertArray = outVertexArray->getPointer(0);
+        M* vertArray = outVertexArray->getPointer(0);
 
         size_t numVerts = vertices->getNumberOfTuples();
         size_t cDims = inElemArray->getNumberOfComponents();
@@ -488,11 +488,11 @@ namespace GeometryHelpers
           {
             L numElemsPerVert = elemsContainingVert->getNumberOfElements(j);
             T* elemIdxs = elemsContainingVert->getElementListPointer(j);
-            float vertValue = 0.0;
-            float weight = 1.0f / numElemsPerVert;
+            M vertValue = 0.0;
+            double weight = 1.0 / numElemsPerVert;
             for (size_t k = 0; k < numElemsPerVert; k++)
             {
-              vertValue += elemArray[cDims*elemIdxs[k]+i] * weight;
+              vertValue += static_cast<M>(elemArray[cDims*elemIdxs[k]+i] * weight);
             }
             vertArray[cDims*j+i] = vertValue;
           }
