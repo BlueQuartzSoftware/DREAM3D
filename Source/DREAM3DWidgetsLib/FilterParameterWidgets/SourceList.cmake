@@ -31,6 +31,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       PreflightUpdatedValueWidget
       DataArrayCreationWidget
       SeparatorWidget
+      DynamicTableWidget
       LinkedBooleanWidget
       PhaseTypeSelectionWidget
       VolumeDataContainerInfoWidget

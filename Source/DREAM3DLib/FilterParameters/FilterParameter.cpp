@@ -897,6 +897,45 @@ MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterPar
 	return ptr;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableFilterParameter::DynamicTableFilterParameter() :
+FilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableFilterParameter::~DynamicTableFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableFilterParameter::Pointer DynamicTableFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+	const QString& widgetType, int defaultRowNum, int defaultColNum,
+	QStringList rHeaders, QStringList cHeaders,
+	std::vector<std::vector<double> > defaultTable, bool areRowsDynamic,
+	bool areColsDynamic, bool advanced, int groupIndex)
+{
+	DynamicTableFilterParameter::Pointer ptr = DynamicTableFilterParameter::New();
+	ptr->setHumanLabel(humanLabel);
+	ptr->setPropertyName(propertyName);
+	ptr->setWidgetType(widgetType);
+	ptr->setDefaultRowCount(defaultRowNum);
+	ptr->setDefaultColCount(defaultColNum);
+	ptr->setRowHeaders(rHeaders);
+	ptr->setColumnHeaders(cHeaders);
+	ptr->setDefaultTable(defaultTable);
+	ptr->setAreRowsDynamic(areRowsDynamic);
+	ptr->setAreColsDynamic(areColsDynamic);
+	ptr->setAdvanced(advanced);
+	ptr->setGroupIndex(groupIndex);
+	ptr->setReadOnly(true);
+	return ptr;
+}
+
 
 
 
