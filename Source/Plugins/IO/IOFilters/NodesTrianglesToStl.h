@@ -135,7 +135,7 @@ class  NodesTrianglesToStl : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight);
+    void dataCheck();
 
 
     int writeBinaryCellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);

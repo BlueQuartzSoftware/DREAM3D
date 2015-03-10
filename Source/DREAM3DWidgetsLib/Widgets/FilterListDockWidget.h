@@ -74,11 +74,10 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     // void updateFilterList(const QStringList& list, bool sortItems);
 
-    /**
-     * @brief searchFieldsChanged
-     */
-    void searchFieldsChanged();
-
+	/**
+	* @brief searchFilters triggered when the user types something in the Search Field
+	*/
+	void searchFilters();
 
     /**
      * @brief updateFilterList This method extracts all the names of the filters that have been
@@ -107,17 +106,6 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     void setupSearchField();
 
-
-    /**
-     * @brief searchFilters triggered when the user types something in the Search Field
-     */
-    void searchFilters();
-
-    /**
-     * @brief updateSearchIcons Updates the icon being shown in the search field.
-     */
-    void updateSearchIcons();
-
     /**
      * @brief addItemToList
      * @param filter
@@ -125,24 +113,6 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     void addItemToList(AbstractFilter::Pointer filter);
 
   private:
-
-    bool m_SearchFilterClassName;
-    bool m_SearchFilterHumanName;
-    bool m_SearchParameterPropertyName;
-    bool m_SearchParameterHumanName;
-    bool m_SearchSearchGroupName;
-    bool m_SearchSubGroupName;
-    bool m_SearchPluginName;
-
-    QAction* m_ActionSearchFilterClassName;
-    QAction* m_ActionSearchFilterHumanName;
-    QAction* m_ActionSearchParameterName;
-    QAction* m_ActionSearchParameterPropertyName;
-    QAction* m_ActionSearchGroupName;
-    QAction* m_ActionSearchSubGroupName;
-    QAction* m_ActionSearchPluginName;
-
-
     FilterManager::Collection  m_LoadedFilters;
 
     FilterListDockWidget(const FilterListDockWidget&); // Copy Constructor Not Implemented

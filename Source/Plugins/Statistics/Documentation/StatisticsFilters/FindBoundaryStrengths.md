@@ -46,7 +46,7 @@ Note: each metric is calculated twice for the two different directions slip coul
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 

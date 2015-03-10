@@ -19,12 +19,12 @@ Given the set of Euler Angles (0.43765, 0.265830, 5.583250) would result in RGB 
 
 ------------------
 
-![Example Data Set using Euler Colors](EulerColor_1.png)
+![Example Data Set using Euler Colors](images/EulerColor_1.png)
 @image latex EulerColor_1.png " " width=6in 
 
 -------------------
 
-![Example Data Set using IPF Colors](IPFColor_1.png)
+![Example Data Set using IPF Colors](images/IPFColor_1.png)
 @image latex IPFColor_1.png " " width=6in 
 
 -------------------
@@ -51,7 +51,7 @@ Voxel DataContainer
 | Cell | EulerColors | | The RGB colors are encoded as an unsigned char triplet  |
 
 ### Authors ##
-**Copyright:** 2013 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 

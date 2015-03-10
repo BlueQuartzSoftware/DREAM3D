@@ -20,6 +20,7 @@ set(_PublicFilters
   FindBoundaryStrengths
   FindCAxisLocations
   FindDirectionalModuli
+  FindEllipsoidError
   FindEuclideanDistMap
   FindFeatureClustering
   FindFeatureHistogram
@@ -41,6 +42,7 @@ set(_PublicFilters
   FindSizes
   FindSaltykovSizes
   FindSlipTransmissionMetrics
+  FindSurfaceAreaToVolume
   #FindBoundaryCellFractions
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors

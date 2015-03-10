@@ -1,7 +1,6 @@
 WritePoleFigure {#writepolefigure}
 =====
 
-
 ## Group (Subgroup) ##
 IOFilters (Output)
 
@@ -10,6 +9,11 @@ IOFilters (Output)
 This filter creates standard pole figure images for the microstructure that is being analyzed. The filter uses Euler Angles which MUST be in radians to work correctly. The filter also requires the Crystal Structures ensemble array and the Cell Phases data array.
 
 If the "Good Voxels" array has been created from another filter this filter will use that information to determine if a voxel's Euler Angle data should be added to the array that will be used for the calculation of the Pole Figure. Allowing the use of non-indexed EBSD data (which shows up as Bad Data) will cause errors or undefined behavior in this filter. The user is strongly cautioned to understand their data and where it comes from before running this filter.
+
+The pole figure algorithm uses a "Modified Lambert Square" to perform the interpolations onto the circle. This is an alternate type of interpolation that the EBSD OEMs do not perform which may make the output from DREAM3D look slightly different than output obtained from the OEM programs.
+
+![Example Pole Figure using the Square Layout option](images/PoleFigure_Example.png)
+
 
 ## Parameters ##
 | Name             | Type |
@@ -37,7 +41,7 @@ None
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 

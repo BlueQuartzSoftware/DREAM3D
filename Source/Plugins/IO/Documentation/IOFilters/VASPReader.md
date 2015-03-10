@@ -30,7 +30,7 @@ This filter reads in files generated using the VASP program. See [the VASP web s
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 

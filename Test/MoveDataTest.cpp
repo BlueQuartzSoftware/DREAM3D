@@ -51,9 +51,10 @@
 #include "DREAM3DLib/CoreFilters/CopyDataContainer.h"
 #include "DREAM3DLib/CoreFilters/CopyAttributeMatrix.h"
 #include "DREAM3DLib/CoreFilters/CopyAttributeArray.h"
-
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "TestFileLocations.h"
+
+#include "DREAM3DTestFileLocations.h"
+
 #include "RemoveArraysObserver.h"
 
 static const int k_MoveAttributeMatrix = 0;

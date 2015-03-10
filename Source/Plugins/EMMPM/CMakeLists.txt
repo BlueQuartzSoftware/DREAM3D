@@ -211,7 +211,7 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 
-## This has a command line program to run EMMPM but it requires libTIFF which
-# is not supported any more.
-# add_subdirectory(${PROJECT_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 
+if(${DREAM3D_BUILD_TESTING})
+  ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+endif()

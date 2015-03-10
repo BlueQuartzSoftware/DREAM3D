@@ -64,8 +64,8 @@ class ExportData : public AbstractFilter
 
     virtual ~ExportData();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+	DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+	Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
@@ -155,7 +155,7 @@ class ExportData : public AbstractFilter
   private:
     char lookupDelimeter();
 
-    IDataArray::WeakPointer m_SelectedArrayPtr;
+    QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 
     ExportData(const ExportData&); // Copy Constructor Not Implemented
     void operator=(const ExportData&); // Operator '=' Not Implemented

@@ -244,6 +244,14 @@ void MatchCrystallography::dataCheck()
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getPhaseTypesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+  // Now create the output CrystalStructures Array
+  tempPath.update(getNumFeaturesArrayPath().getDataContainerName(), getNumFeaturesArrayPath().getAttributeMatrixName(), "CrystalStructures" );
+  m_SyntheticCrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath, true, dims); /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SyntheticCrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SyntheticCrystalStructures = m_SyntheticCrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 }
 
 // -----------------------------------------------------------------------------
@@ -272,6 +280,7 @@ void MatchCrystallography::execute()
 
   int64_t totalEnsembles = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
 
+
   QString ss;
   ss = QObject::tr("Determining Volumes");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -281,6 +290,8 @@ void MatchCrystallography::execute()
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   determine_boundary_areas();
 
+
+  m_SyntheticCrystalStructures[0] = m_CrystalStructures[0];
   for (int64_t i = 1; i < totalEnsembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -301,6 +312,8 @@ void MatchCrystallography::execute()
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       matchCrystallography(i);
     }
+
+    m_SyntheticCrystalStructures[i] = m_CrystalStructures[i]; // Copy over the crystal structures from the statsfile into the synthetic file
   }
 
   // If there is an error set this to something negative and also set a message

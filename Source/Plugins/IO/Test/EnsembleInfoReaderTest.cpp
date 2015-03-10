@@ -34,6 +34,9 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
+#include <stdlib.h>
+ 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -50,10 +53,9 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "TestFileLocations.h"
+#include "IOTestFileLocations.h"
 #include "GenerateFeatureIds.h"
 
-#include <stdlib.h>
 
 // -----------------------------------------------------------------------------
 //

@@ -37,7 +37,7 @@ None
 
 ## Authors ##
 
-**Copyright** 2013 Michael A. Groeber (AFRL), 2013 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 

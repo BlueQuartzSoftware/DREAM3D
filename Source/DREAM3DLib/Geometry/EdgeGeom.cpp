@@ -379,7 +379,7 @@ int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   edges = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedEdgeList>(DREAM3D::Geometry::SharedEdgeList, parentId, preflight);
   QVector<size_t> cDims(1, 0);
   FloatArrayType::Pointer edgeCentroids = FloatArrayType::CreateArray(cDims, cDims, DREAM3D::StringConstants::EdgeCentroids);
-  if (true == preflight)
+  if (preflight == true)
   {
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
     if (err >= 0)

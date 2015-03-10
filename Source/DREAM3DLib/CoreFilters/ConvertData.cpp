@@ -254,7 +254,7 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertData::dataCheck(bool preflight)
+void ConvertData::dataCheck()
 {
   setErrorCondition(0);
 
@@ -279,7 +279,7 @@ DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<Abstr
   }
 
 // int numberOfComponents = 0;
-  if (true == preflight)
+  if (getInPreflight())
   {
 
     AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_SelectedCellArrayPath, -301);
@@ -354,7 +354,7 @@ void ConvertData::preflight()
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
-  dataCheck(true);
+  dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
@@ -367,7 +367,7 @@ void ConvertData::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  dataCheck(false);
+  dataCheck();
   if(getErrorCondition() < 0)
   {
     return;

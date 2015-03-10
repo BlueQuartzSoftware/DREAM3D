@@ -34,14 +34,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-//#include <stdlib.h>
-//#include <iostream>
-//#include <vector>
-//#include <limits>
-
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QDateTime>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -54,10 +50,19 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "TestFileLocations.h"
+#include "IOTestFileLocations.h"
 
 #include "GenerateFeatureIds.h"
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void delay(int secs)
+{
+	QTime dieTime = QTime::currentTime().addSecs(secs);
+	while (QTime::currentTime() < dieTime)
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -65,7 +70,8 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::PhIOTest::TestFile);
+	QFile::remove(UnitTest::PhIOTest::TestFile);
+	QFile::remove(UnitTest::PhIOTest::TestFile2);
 #endif
 }
 
@@ -101,53 +107,111 @@ int TestFilterAvailability()
 // -----------------------------------------------------------------------------
 int TestPhWriter()
 {
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+	// Write first file
+	{
+		FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  int err = 0;
+		int err = 0;
 
-  // Use the helper class CreateDataContainer to generate a valid DataContainer
-  CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
-  createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
-  createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
-  createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
-  pipeline->pushBack(createVolumeDC);
-  // Generate some "Feature Ids" inside that DataContainer
-  GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
-  pipeline->pushBack(generateFeatureIds);
+		// Use the helper class CreateDataContainer to generate a valid DataContainer
+		CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
+		createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
+		createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
+		createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
+		pipeline->pushBack(createVolumeDC);
 
-  // Now instantiate the PhWriter Filter from the FilterManager
-  QString filtName = "PhWriter";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL != filterFactory.get() )
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer phWriter = filterFactory->create();
+		// Generate some "Feature Ids" inside that DataContainer
+		GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
+		pipeline->pushBack(generateFeatureIds);
 
-    DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-                                       DREAM3D::Defaults::CellAttributeMatrixName,
-                                       DREAM3D::CellData::FeatureIds);
-    QVariant var;
-    var.setValue(path);
-    bool propWasSet = phWriter->setProperty("FeatureIdsArrayPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+		// Now instantiate the phWriter Filter from the FilterManager
+		QString filtName = "PhWriter";
+		FilterManager* fm = FilterManager::Instance();
+		IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+		if (NULL != filterFactory.get())
+		{
+			// If we get this far, the Factory is good so creating the filter should not fail unless something has
+			// horribly gone wrong in which case the system is going to come down quickly after this.
+			AbstractFilter::Pointer phWriter = filterFactory->create();
 
-    propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-    pipeline->pushBack(phWriter);
-  }
-  else
-  {
-    QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-    DREAM3D_REQUIRE_EQUAL(0, 1)
-  }
+			DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+				DREAM3D::Defaults::CellAttributeMatrixName,
+				DREAM3D::CellData::FeatureIds);
+			QVariant var;
+			var.setValue(path);
+			bool propWasSet = phWriter->setProperty("FeatureIdsArrayPath", var);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-  err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-  pipeline->execute();
-  err = pipeline->getErrorCondition();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
+				propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+				pipeline->pushBack(phWriter);
+		}
+		else
+		{
+			QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+			DREAM3D_REQUIRE_EQUAL(0, 1)
+		}
+
+		err = pipeline->preflightPipeline();
+		DREAM3D_REQUIRE_EQUAL(err, 0);
+		pipeline->execute();
+		err = pipeline->getErrorCondition();
+		DREAM3D_REQUIRE_EQUAL(err, 0);
+	}
+
+	// Write second file
+	{
+		FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+		int err = 0;
+
+		// Use the helper class CreateDataContainer to generate a valid DataContainer
+		CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
+		createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize2);
+		createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize2);
+		createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize2);
+		pipeline->pushBack(createVolumeDC);
+
+		// Generate some "Feature Ids" inside that DataContainer
+		GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
+		pipeline->pushBack(generateFeatureIds);
+
+		// Now instantiate the phWriter Filter from the FilterManager
+		QString filtName = "PhWriter";
+		FilterManager* fm = FilterManager::Instance();
+		IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+		if (NULL != filterFactory.get())
+		{
+			// If we get this far, the Factory is good so creating the filter should not fail unless something has
+			// horribly gone wrong in which case the system is going to come down quickly after this.
+			AbstractFilter::Pointer phWriter = filterFactory->create();
+
+			DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+				DREAM3D::Defaults::CellAttributeMatrixName,
+				DREAM3D::CellData::FeatureIds);
+			QVariant var;
+			var.setValue(path);
+			bool propWasSet = phWriter->setProperty("FeatureIdsArrayPath", var);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+				propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile2);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+				pipeline->pushBack(phWriter);
+		}
+		else
+		{
+			QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+			DREAM3D_REQUIRE_EQUAL(0, 1)
+		}
+
+		err = pipeline->preflightPipeline();
+		DREAM3D_REQUIRE_EQUAL(err, 0);
+		pipeline->execute();
+		err = pipeline->getErrorCondition();
+		DREAM3D_REQUIRE_EQUAL(err, 0);
+	}
+
+  
   return EXIT_SUCCESS;
 }
 
@@ -232,6 +296,226 @@ void test(T x, T y, T z, const QString& type)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int TestPhReaderCache()
+{
+	AbstractFilter::Pointer phReader = AbstractFilter::NullPointer();
+	QString filtName = "PhReader";
+	FilterManager* fm = FilterManager::Instance();
+	IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+
+	// Reading first file
+	{
+		DataContainerArray::Pointer dca = DataContainerArray::New();
+
+		if (NULL != filterFactory.get())
+		{
+			// If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
+			phReader = filterFactory->create();		// Create the reader for the first time
+			bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+				phReader->setDataContainerArray(dca);
+			phReader->preflight();
+			int err = phReader->getErrorCondition();
+			DREAM3D_REQUIRE_EQUAL(err, 0);
+		}
+		else
+		{
+			QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+			qDebug() << ss;
+			DREAM3D_REQUIRE_EQUAL(0, 1)
+		}
+
+		size_t nx = 0;
+		size_t ny = 0;
+		size_t nz = 0;
+
+
+		DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
+		DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+
+			m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+		DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
+		DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
+		DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
+
+		// Check that the filter read the file
+		bool prop = phReader->property("FileWasRead").toBool();
+		DREAM3D_REQUIRE_EQUAL(prop, true)
+	}
+
+	// Reading the file again
+	{
+		DataContainerArray::Pointer dca = DataContainerArray::New();
+
+		if (NULL != filterFactory.get())
+		{
+			bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+				phReader->setDataContainerArray(dca);
+			phReader->preflight();
+			int err = phReader->getErrorCondition();
+			DREAM3D_REQUIRE_EQUAL(err, 0);
+		}
+		else
+		{
+			QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+			qDebug() << ss;
+			DREAM3D_REQUIRE_EQUAL(0, 1)
+		}
+
+		size_t nx = 0;
+		size_t ny = 0;
+		size_t nz = 0;
+
+
+		DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
+		DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+
+			m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+		DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
+		DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
+		DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
+
+		// Check that the filter read from the cache this time, since we're reading from the same file
+		bool prop = phReader->property("FileWasRead").toBool();
+		DREAM3D_REQUIRE_EQUAL(prop, false)
+	}
+
+	// Reading a different file
+	{
+		DataContainerArray::Pointer dca = DataContainerArray::New();
+
+		if (NULL != filterFactory.get())
+		{
+			bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+				phReader->setDataContainerArray(dca);
+			phReader->preflight();
+			int err = phReader->getErrorCondition();
+			DREAM3D_REQUIRE_EQUAL(err, 0);
+		}
+		else
+		{
+			QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+			qDebug() << ss;
+			DREAM3D_REQUIRE_EQUAL(0, 1)
+		}
+
+		size_t nx = 0;
+		size_t ny = 0;
+		size_t nz = 0;
+
+
+		DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
+		DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+
+			m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+		DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize2);
+		DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize2);
+		DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize2);
+
+		// Check that the filter read from the file again, since we changed file names
+		bool prop = phReader->property("FileWasRead").toBool();
+		DREAM3D_REQUIRE_EQUAL(prop, true)
+	}
+
+	// Reading the same file, but the contents changed outside the program
+	{
+		delay(1);	// This delay needs to be here to make the lastModified and lastRead logic in the reader to work for all OSes
+		// Change the contents of the file to be read
+		{
+			QFile file(UnitTest::PhIOTest::TestFile2);
+			if (!file.open(QFile::ReadWrite | QFile::Append))
+				DREAM3D_REQUIRE_EQUAL(0, 1)
+				QTextStream out(&file);
+			out << "This test string should force the filter to read from the file instead of the cache.";
+			file.close();
+		}
+
+		DataContainerArray::Pointer dca = DataContainerArray::New();
+
+		if (NULL != filterFactory.get())
+		{
+			bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
+			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+				phReader->setDataContainerArray(dca);
+			phReader->preflight();
+			int err = phReader->getErrorCondition();
+			DREAM3D_REQUIRE_EQUAL(err, 0);
+		}
+		else
+		{
+			QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+			qDebug() << ss;
+			DREAM3D_REQUIRE_EQUAL(0, 1)
+		}
+
+		size_t nx = 0;
+		size_t ny = 0;
+		size_t nz = 0;
+
+
+		DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
+		DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+
+			m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+		DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize2);
+		DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize2);
+		DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize2);
+
+		// Check that the filter read from the file again, since we changed the contents of the file outside the program
+		bool prop = phReader->property("FileWasRead").toBool();
+		DREAM3D_REQUIRE_EQUAL(prop, true)
+	}
+
+	// Reading the same file, but we are testing the cache flush function
+	{
+		DataContainerArray::Pointer dca = DataContainerArray::New();
+
+		// Flush the cache by invoking the flushCache method dynamically, using Qt's meta system
+		if (QMetaObject::invokeMethod(phReader.get(), "flushCache", Qt::DirectConnection) == false)
+			DREAM3D_REQUIRE_EQUAL(0, 1)
+
+			if (NULL != filterFactory.get())
+			{
+				bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
+				DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+					phReader->setDataContainerArray(dca);
+				phReader->preflight();
+				int err = phReader->getErrorCondition();
+				DREAM3D_REQUIRE_EQUAL(err, 0);
+			}
+			else
+			{
+				QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+				qDebug() << ss;
+				DREAM3D_REQUIRE_EQUAL(0, 1)
+			}
+
+		size_t nx = 0;
+		size_t ny = 0;
+		size_t nz = 0;
+
+
+		DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
+		DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+
+			m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+		DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize2);
+		DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize2);
+		DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize2);
+
+		// Check that the filter read from the file again, since we flushed the cache
+		bool prop = phReader->property("FileWasRead").toBool();
+		DREAM3D_REQUIRE_EQUAL(prop, true)
+	}
+
+	return EXIT_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void loadFilterPlugins()
 {
   // Register all the filters including trying to load those from Plugins
@@ -260,6 +544,7 @@ int main(int argc, char** argv)
 
   DREAM3D_REGISTER_TEST( TestPhWriter() )
   DREAM3D_REGISTER_TEST( TestPhReader() )
+  DREAM3D_REGISTER_TEST(TestPhReaderCache())
 
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();

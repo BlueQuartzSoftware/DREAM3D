@@ -288,9 +288,7 @@ void GenerateIPFColors::execute()
 
   // Make sure we are dealing with a unit 1 vector.
   FloatVec3_t normRefDir = m_ReferenceDir; // Make a copy of the reference Direction
-
   MatrixMath::Normalize3x1(normRefDir.x, normRefDir.y, normRefDir.z);
-  // Create 1 of every type of Ops class. This condenses the code below
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -302,7 +300,6 @@ void GenerateIPFColors::execute()
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                       GenerateIPFColorsImpl(normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_GoodVoxels, m_CellIPFColors), tbb::auto_partitioner());
-
   }
   else
 #endif

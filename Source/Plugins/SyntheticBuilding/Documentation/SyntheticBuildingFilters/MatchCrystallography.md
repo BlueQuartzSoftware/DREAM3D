@@ -35,10 +35,11 @@ Voxel
 | Feature | AvgQuats |  |
 | Feature | FeatureEulerAngles |  |
 | Feature | Volumes |  |
+| Ensemble | CrystalStructures | This filter copies over the crystal structures from the Stats file into a new crystal structures array in the ensemble attribute matrix for the synthetic structure. The user currently has no choice in the name of this array|
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 

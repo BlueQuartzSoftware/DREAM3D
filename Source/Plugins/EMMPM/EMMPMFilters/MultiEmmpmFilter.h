@@ -34,8 +34,6 @@ public:
 	/* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
 	* or other instance variables
 	*/
-	DREAM3D_FILTER_PARAMETER(DataArrayPath, InputAttributeMatrixPath)
-	Q_PROPERTY(DataArrayPath InputAttributeMatrixPath READ getInputAttributeMatrixPath WRITE setInputAttributeMatrixPath)
 
 	DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
 	Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)

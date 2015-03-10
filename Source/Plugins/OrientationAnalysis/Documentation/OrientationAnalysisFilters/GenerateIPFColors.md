@@ -16,10 +16,10 @@ This filter will generate Inverse Pole Figure colors for Cubic, Hexagonal or Tri
     - If the data originates from an HKL (or Bruker) system (.ctf file) then bad voxels can typically be found by setting "Error" > 0
     - This means that when the user runs some sort of threshold filter the _GoodVoxels_ will be those voxels that have an Error = 0
 
-![IPF Color Triangle](IPFFilterLegend.png)
+![IPF Color Triangle](images/IPFFilterLegend.png)
 @image latex IPFFilterLegend.png " " width=2.5in
 
-![Example Data Set](IPFColor_1.png)
+![Example Data Set](images/IPFColor_1.png)
 @image latex IPFColor_1.png " " width=5in
 
 
@@ -55,7 +55,7 @@ Voxel DataContainer
 ### Authors ###
 
 
-**Copyright:** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
 

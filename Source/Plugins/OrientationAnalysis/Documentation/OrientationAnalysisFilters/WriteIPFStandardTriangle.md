@@ -16,7 +16,7 @@ Currently the only supported triangles are for Cubic (High) crystal symmetry.
 | Name             | Type |
 |------------------|------|
 | Image Size | Pixels (This will be both the height and width of the image) |  
-|  Image Type | Tiff, PNG and BMP can be selected |  
+| Image Type | Tiff, PNG and BMP can be selected |  
 | Output File Name |  The path to the output file |
 
 

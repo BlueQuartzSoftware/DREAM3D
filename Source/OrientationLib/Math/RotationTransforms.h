@@ -13,6 +13,11 @@
 #endif
 
 
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Eigen>
+
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 // The C++ Math include MUST be after the above "DREAM3DMath.h" include.
@@ -22,7 +27,7 @@
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Math/RotArray.hpp"
 
-#include "SGEEV.h"
+//#include "SGEEV.h"
 
 /* This comment block is commented as Markdown. if you paste this into a text
  * editor then render it with a Markdown aware system a nice table should show
@@ -978,12 +983,32 @@ class OrientationLib_EXPORT RotationTransforms
     T transfer_sign(T a, T b)
     {
       if( a > 0.0 && b > 0.0) return a;
-      if( a < 0.0 && b > 0.0) return -a;
+      if( a < 0.0 && b > 0.0) return -1*a;
 
       if( a < 0.0 && b < 0.0) return a;
 
-      return -a;
+      return -1*a;
 
+    }
+
+    /* Auxiliary routine: printing eigenvectors */
+    void print_eigenvectors( char* desc, int n, float* wi, float* v, int ldv ) {
+      int i, j;
+      printf( "\n %s\n", desc );
+      for( i = 0; i < n; i++ ) {
+        j = 0;
+        while( j < n ) {
+          if( wi[j] == (float)0.0 ) {
+            printf( " %6.2f", v[i+j*ldv] );
+            j++;
+          } else {
+            printf( " (%6.2f,%6.2f)", v[i+j*ldv], v[i+(j+1)*ldv] );
+            printf( " (%6.2f,%6.2f)", v[i+j*ldv], -v[i+(j+1)*ldv] );
+            j += 2;
+          }
+        }
+        printf( "\n" );
+      }
     }
 
     /**: om2ax
@@ -1009,40 +1034,12 @@ class OrientationLib_EXPORT RotationTransforms
       res[2] = std::numeric_limits<float>::signaling_NaN();
       res[3] = std::numeric_limits<float>::signaling_NaN();
 #else
-      //*** use local
-      //*** use constants
-      //*** use error
-      //*** use io
-      //real(kind=sgl), INTENT(IN)              :: om(3,3)
-
-
       K t;
       K omega;
       K qq[4];
 
-
-      // Apparently no way to wrap existing arrays with Eigen (stupid) so we have to
-      // make a copy
-#if 1
-      // K* o; //[9];
-
-#else
-      typedef Eigen::Matrix<K, 3, 3, Eigen::RowMajor> Matrix3x3f;
-      Matrix3x3f o;
-      for(int i = 0; i < 9; i++)
-      {
-        o(i) = om[i];
-      }
-      std::cout << "om: " << ref << std::endl;
-#endif
-
-      std::complex<K> ev;
-      std::complex<K> cone(1.0,0.0);
-
       K thr = 1.0E-7;
 
-
-      //o = &(om[0]);
       t = 0.50*(om[0]+om[4]+om[8] - 1.0);
       if (t > 1.0) { t = 1.0; }
       if (t < -1.0) {t = -1.0; }
@@ -1054,7 +1051,7 @@ class OrientationLib_EXPORT RotationTransforms
         res[2] = 1.0;
         return;
       } else {
-        K o[9];
+        //K o[9];
         K VL[9];
         K VR[9];
         K Wr[3];
@@ -1071,32 +1068,10 @@ class OrientationLib_EXPORT RotationTransforms
         JOBVR = 'V';   //do compute the right eigenvectors
         int LWORK = 20;
 
-        ::memcpy(o, &(om[0]), sizeof(K)*9);
+        sgeev_(&JOBVL, &JOBVR, &nn, &(om[0]), &LDA, Wr, Wi, VL, &LDVL, VR, &LDVR, WORK, &LWORK, &INFO);
 
-        sgeev_(&JOBVL, &JOBVR, &nn, o, &LDA, Wr, Wi, VL, &LDVL, VR, &LDVR, WORK, &LWORK, &INFO);
-        std::cout << VR[0] << " " << VR[1] << " " << VR[2] << std::endl;
-        std::cout << VR[3] << " " << VR[4] << " " << VR[5] << std::endl;
-        std::cout << VR[6] << " " << VR[7] << " " << VR[8] << std::endl;
-        std::cout << "" << std::endl;
-
-        std::cout << VL[0] << " " << VL[1] << " " << VL[2] << std::endl;
-        std::cout << VL[3] << " " << VL[4] << " " << VL[5] << std::endl;
-        std::cout << VL[6] << " " << VL[7] << " " << VL[8] << std::endl;
-        std::cout << "" << std::endl;
-
-        std::cout << Wr[0] << " " << Wr[1] << " " << Wr[2] << std::endl;
-        std::cout << Wi[0] << " " << Wi[1] << " " << Wi[2] << std::endl;
-
-
-        K V[9];
-        K d[9];
-        eigen_decomposition<K>(&(om[0]), V, d);
-        std::cout << V[0] << " " << V[1] << " " << V[2] << std::endl;
-        std::cout << V[3] << " " << V[4] << " " << V[5] << std::endl;
-        std::cout << V[6] << " " << V[7] << " " << V[8] << std::endl;
-        std::cout << "" << std::endl;
-        std::cout << d[0] << " " << d[1] << " " << d[2] << std::endl;
-
+        /* Print right eigenvectors */
+        print_eigenvectors( "Right eigenvectors", nn, Wi, VR, LDVR );
 
         if (INFO != 0) {
           res[0] = std::numeric_limits<float>::signaling_NaN();
@@ -1106,20 +1081,21 @@ class OrientationLib_EXPORT RotationTransforms
           //FatalError('Error in om2ax/dgeev : ','DGEEV return not zero');
           exit(0);
         }
+
         for(int i = 0; i < 3; i++)
         {
-          ev = std::complex<K>( Wr[i], Wi[i] );
+          std::complex<K> cone(1.0,0.0);
+          std::complex<K> ev = std::complex<K>( Wr[i], Wi[i] );
           if (std::abs(ev-cone) < thr)
           {
-            //            res(1:3) = VR(1:3,i);
-
             res[0] = VR[3*i+0];
             res[1] = VR[3*i+1];
             res[2] = VR[3*i+2];
 
-            if ((om[5]-om[7]) != 0.0) { res[0] = transfer_sign(res[0],-RConst::epsijk*(om[5]-om[7])); }
-            if ((om[6]-om[2]) != 0.0) { res[1] = transfer_sign(res[1],-RConst::epsijk*(om[6]-om[2])); }
-            if ((om[1]-om[3]) != 0.0) { res[2] = transfer_sign(res[2],-RConst::epsijk*(om[1]-om[3])); }
+            if ((om[5]-om[7]) != 0.0) { res[0] = transfer_sign(res[0],-RConst::epsijk*(om[7]-om[5])); }
+            if ((om[6]-om[2]) != 0.0) { res[1] = transfer_sign(res[1],-RConst::epsijk*(om[2]-om[6 ])); }
+            if ((om[1]-om[3]) != 0.0) { res[2] = transfer_sign(res[2],-RConst::epsijk*(om[3]-om[1])); }
+
             return;
           }
 
@@ -1127,6 +1103,7 @@ class OrientationLib_EXPORT RotationTransforms
 #endif
       }
     }
+
 
     /**: ro2ax
     *

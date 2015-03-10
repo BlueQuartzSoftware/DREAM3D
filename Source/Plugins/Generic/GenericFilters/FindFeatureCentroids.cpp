@@ -153,7 +153,8 @@ void FindFeatureCentroids::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  size_t totalFeatures = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
+
 
   QVector<size_t> dims(1, 5);
   m_FeatureCenters = FloatArrayType::CreateArray(totalFeatures, dims, "centers");

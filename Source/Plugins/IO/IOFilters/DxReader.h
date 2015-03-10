@@ -40,6 +40,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QDateTime>
 #include <vector>
 #include <QtCore/QFile>
 
@@ -110,9 +111,7 @@ class  DxReader : public FileReader
     virtual void preflight();
     virtual void execute();
 
-	DREAM3D_PIMPL_PROPERTY_DECL(size_t, XDim_Cache)
-	DREAM3D_PIMPL_PROPERTY_DECL(size_t, YDim_Cache)
-	DREAM3D_PIMPL_PROPERTY_DECL(size_t, ZDim_Cache)
+	DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
 	DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
 	DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 

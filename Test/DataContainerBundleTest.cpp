@@ -44,7 +44,7 @@
 
 
 
-#include "Test/TestFileLocations.h"
+#include "Test/DREAM3DTestFileLocations.h"
 
 // -----------------------------------------------------------------------------
 //

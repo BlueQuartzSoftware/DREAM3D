@@ -39,7 +39,6 @@
 #include <fstream>
 
 #include <QtCore/QFileInfo>
-#include <QtCore/QDateTime>
 
 #include "IO/IOConstants.h"
 
@@ -55,9 +54,7 @@ class DxReaderPrivate
 	DxReader* const q_ptr;
 	DxReaderPrivate(DxReader* ptr);
 
-	size_t m_XDim_Cache;
-	size_t m_YDim_Cache;
-	size_t m_ZDim_Cache;
+	QVector<int> m_Dims;
 	QString m_InputFile_Cache;
 	QDateTime m_LastRead;
 };
@@ -69,9 +66,7 @@ DxReaderPrivate::DxReaderPrivate(DxReader* ptr) :
 q_ptr(ptr),
 m_InputFile_Cache(""),
 m_LastRead(QDateTime()),
-m_XDim_Cache(0),
-m_YDim_Cache(0),
-m_ZDim_Cache(0)
+m_Dims(QVector<int>())
 {
 
 }
@@ -114,9 +109,7 @@ DxReader::~DxReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, XDim_Cache)
-DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, YDim_Cache)
-DREAM3D_PIMPL_PROPERTY_DEF(DxReader, size_t, ZDim_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QVector<int>, Dims)
 DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QString, InputFile_Cache)
 DREAM3D_PIMPL_PROPERTY_DEF(DxReader, QDateTime, LastRead)
 
@@ -183,9 +176,11 @@ void DxReader::updateCellInstancePointers()
 void DxReader::flushCache()
 {
 	setInputFile_Cache("");
-	setXDim_Cache(0);
-	setYDim_Cache(0);
-	setZDim_Cache(0);
+	QVector<int> v;
+	v.push_back(0);
+	v.push_back(0);
+	v.push_back(0);
+	setDims(v);
 	setLastRead(QDateTime());
 }
 
@@ -247,7 +242,8 @@ void DxReader::dataCheck()
 		  // We are reading from the cache, so set the FileWasRead flag to false
 		  m_FileWasRead = false;
 
-		  m->getGeometryAs<ImageGeom>()->setDimensions(getXDim_Cache(), getYDim_Cache(), getZDim_Cache());
+		  QVector<int> v = getDims();
+		  m->getGeometryAs<ImageGeom>()->setDimensions(v[0], v[1], v[2]);
 	  }
 	  else
 	  {
@@ -419,9 +415,12 @@ int DxReader::readHeader()
   }
 
   // Set the values into the cache, so that they can be used later
-  setXDim_Cache(nx);
-  setYDim_Cache(ny);
-  setZDim_Cache(nz);
+  QVector<int> v;
+  v.push_back(nx);
+  v.push_back(ny);
+  v.push_back(nz);
+
+  setDims(v);
 
   m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
   //  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz ;

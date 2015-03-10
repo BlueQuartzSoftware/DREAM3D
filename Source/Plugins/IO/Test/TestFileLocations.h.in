@@ -25,6 +25,7 @@ namespace UnitTest
   namespace PhIOTest
   {
     const QString TestFile("@TEST_TEMP_DIR@/PhIOTest.ph");
+    const QString TestFile2("@TEST_TEMP_DIR@/PhIOTest2.ph");
   }
 
   namespace DxIOTest

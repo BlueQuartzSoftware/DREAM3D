@@ -85,7 +85,7 @@ int EmptyFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EmptyFilter::dataCheck(bool preflight)
+void EmptyFilter::dataCheck()
 {
 
   QString ss = QObject::tr("This filter does nothing and was was inserted as a place holder for filter '%1' that does not exist anymore.").arg(getOriginalFilterName());
@@ -101,7 +101,7 @@ void EmptyFilter::dataCheck(bool preflight)
 void EmptyFilter::preflight()
 {
   setInPreflight(true);
-  dataCheck(true);
+  dataCheck();
 }
 
 
@@ -110,7 +110,7 @@ void EmptyFilter::preflight()
 // -----------------------------------------------------------------------------
 void EmptyFilter::execute()
 {
-  dataCheck(false);
+  dataCheck();
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

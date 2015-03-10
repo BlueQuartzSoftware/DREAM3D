@@ -308,7 +308,7 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RawBinaryReader::dataCheck(bool preflight)
+void RawBinaryReader::dataCheck()
 {
   setErrorCondition(0);
 
@@ -390,7 +390,7 @@ void RawBinaryReader::dataCheck(bool preflight)
     }
   }
 
-  if (true == preflight)
+  if (getInPreflight())
   {
     size_t allocatedBytes = 0;
     IDataArray::Pointer p = IDataArray::NullPointer();
@@ -482,7 +482,7 @@ void RawBinaryReader::preflight()
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
-  dataCheck(true);
+  dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
@@ -496,7 +496,7 @@ void RawBinaryReader::execute()
   QString ss;
   setErrorCondition(err);
 
-  dataCheck(false);
+  dataCheck();
   if(getErrorCondition() < 0)
   {
     return;

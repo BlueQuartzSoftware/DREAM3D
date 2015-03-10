@@ -57,7 +57,8 @@ class DataContainerProxy
      */
     DataContainerProxy() :
       flag(Qt::Unchecked),
-      name("")
+      name(""),
+      dcType(0)
     {}
 
     /**
@@ -68,7 +69,8 @@ class DataContainerProxy
      */
     DataContainerProxy(QString dc_name, uint8_t read_dc = Qt::Checked) :
       flag(read_dc),
-      name(dc_name)
+      name(dc_name),
+      dcType(0)
       {}
 
     /**
@@ -92,6 +94,18 @@ class DataContainerProxy
       dcType = amp.dcType;
       attributeMatricies = amp.attributeMatricies;
     }
+
+  /**
+  * @brief operator == method
+  */
+  bool operator==(const DataContainerProxy& amp)
+  {
+    if (flag == amp.flag && name == amp.name && dcType == amp.dcType)
+    {
+      return true;
+    }
+    return false;
+  }
 
     //----- Our variables, publicly available
     uint8_t flag;

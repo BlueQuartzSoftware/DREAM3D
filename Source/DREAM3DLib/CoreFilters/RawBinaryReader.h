@@ -172,7 +172,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     * @param features The number of features
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight);
+    void dataCheck();
 
   private:
     IDataArray::Pointer         array;

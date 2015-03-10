@@ -35,7 +35,7 @@ Voxel
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software), 2014 William C. Lenthe (UCSB)
+**Copyright:** 2015 BlueQuartz Software, LLC, 2014 William C. Lenthe (UCSB)
 
 **Contact Info:** dream3d@bluequartz.net
 

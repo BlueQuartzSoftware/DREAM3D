@@ -66,7 +66,7 @@
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
-#include "TestFileLocations.h"
+#include "DREAM3DTestFileLocations.h"
 
 #define helper(a, b)\
   a##b

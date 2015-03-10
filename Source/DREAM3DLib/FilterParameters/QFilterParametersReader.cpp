@@ -1724,7 +1724,6 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
     }
   }
   m_Prefs->endArray();
-  dcaProxy.isValid = true;
   return dcaProxy;
 }
 
@@ -1762,7 +1761,7 @@ QVector<DataArrayPath> QFilterParametersReader::readDataArrayPathVector(const QS
 	for (int i = 0; i < size; ++i) {
 		m_Prefs->setArrayIndex(i);
 		QString pathStr = m_Prefs->value(DREAM3D::IO::DAPSettingsHeader).toString();
-		DataArrayPath path = DataArrayPath::deserialize(pathStr, "|");
+		DataArrayPath path = DataArrayPath::Deserialize(pathStr, "|");
 		vector.append(path);
 	}
 	m_Prefs->endArray();

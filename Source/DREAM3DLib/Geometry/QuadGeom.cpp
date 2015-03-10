@@ -394,7 +394,7 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   quads = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedQuadList>(DREAM3D::Geometry::SharedQuadList, parentId, preflight);
   QVector<size_t> cDims(1, 0);
   FloatArrayType::Pointer quadCentroids = FloatArrayType::CreateArray(cDims, cDims, DREAM3D::StringConstants::QuadCentroids);
-  if (true == preflight)
+  if (preflight == true)
   {
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadNeighbors, dims, type_class, type_size);
     if (err >= 0)

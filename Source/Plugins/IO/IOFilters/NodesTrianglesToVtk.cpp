@@ -115,7 +115,7 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::dataCheck(bool preflight)
+void NodesTrianglesToVtk::dataCheck()
 {
   setErrorCondition(0);
 
@@ -128,7 +128,7 @@ void NodesTrianglesToVtk::dataCheck(bool preflight)
   else if (fi.exists() == false)
   {
 
-    if (preflight == true)
+    if (getInPreflight())
     { notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
     else
     {
@@ -146,7 +146,7 @@ void NodesTrianglesToVtk::dataCheck(bool preflight)
   else if (fii.exists() == false)
   {
 
-    if (preflight == true)
+    if (getInPreflight())
     { notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
     else
     {
@@ -170,7 +170,7 @@ void NodesTrianglesToVtk::preflight()
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
-  dataCheck(true);
+  dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
@@ -182,7 +182,7 @@ void NodesTrianglesToVtk::execute()
 {
   //int err = 0;
 
-  dataCheck(false);
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");

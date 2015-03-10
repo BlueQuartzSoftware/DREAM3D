@@ -21,26 +21,6 @@ namespace UnitTest
   const QString TestTempDir("@TEST_TEMP_DIR@");
   const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
-  // -----------------------------------------------------------------------------
-  //  Define where to put our temporary files for the H5Utilities Test
-  // -----------------------------------------------------------------------------
-  namespace H5UtilTest
-  {
-    const QString TestDir("H5UtilTest");
-    const QString FileName("@TEST_TEMP_DIR@/H5Utilities_Test.h5");
-    const QString GroupTest("@TEST_TEMP_DIR@/H5Utilities_GroupTest.h5");
-  }
-
-  // -----------------------------------------------------------------------------
-  //  Define where to put our temporary files for the H5Lite Test
-  // -----------------------------------------------------------------------------
-  namespace H5LiteTest
-  {
-    const QString TestDir("@TEST_TEMP_DIR@/H5LiteTest");
-    const QString FileName("@TEST_TEMP_DIR@/H5Lite_Test.h5");
-    const QString LargeFile("@TEST_TEMP_DIR@/H5Lite_LargeFile_Test.h5");
-  }
-
   namespace DataArrayTest
   {
     const QString TestDir("@TEST_TEMP_DIR@/DataArrayTest");

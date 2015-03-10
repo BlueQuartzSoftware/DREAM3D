@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "TestFileLocations.h"
+#include "SamplingTestFileLocations.h"
 
 static const QString k_DataArrayName("Data");
 static const QString k_4CompDataArrayName("Data 4 Comp");

@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
-#include "TestFileLocations.h"
+#include "DREAM3DTestFileLocations.h"
 
 #define ARRAY_SIZE 10
 #define RESIZE_SMALLER 5

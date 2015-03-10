@@ -88,6 +88,24 @@ namespace DREAM3D
     const QString SupportedTypeList(TypeNames::Int8 + ", " + TypeNames::UInt8 + ", " + TypeNames::Int16 + ", " + TypeNames::UInt16 + ", " + TypeNames::Int32 + ", " + TypeNames::UInt32 + ", " + TypeNames::Int64 + ", " + TypeNames::UInt64 + ", " + TypeNames::Float + ", " + TypeNames::Double);
   }
 
+  namespace TypeEnums
+  {
+    static const int Int8 = 0;
+    static const int UInt8 = 1;
+    static const int Int16 = 2;
+    static const int UInt16 = 3;
+    static const int Int32 = 4;
+    static const int UInt32 = 5;
+    static const int Int64 = 6;
+    static const int UInt64 = 7;
+    static const int Float = 8;
+    static const int Double = 9;
+    static const int Bool = 10;
+
+    static const int UnknownType = 11;
+    const QString SupportedTypeList(TypeNames::Int8 + ", " + TypeNames::UInt8 + ", " + TypeNames::Int16 + ", " + TypeNames::UInt16 + ", " + TypeNames::Int32 + ", " + TypeNames::UInt32 + ", " + TypeNames::Int64 + ", " + TypeNames::UInt64 + ", " + TypeNames::Float + ", " + TypeNames::Double);
+  }
+
   namespace IO
   {
     const QString DAPSettingsHeader("Path");
@@ -299,6 +317,7 @@ namespace DREAM3D
     const DREAM3D_STRING Schmids("Schmids");
     const DREAM3D_STRING SharedSurfaceAreaList("SharedSurfaceAreaList");
     const DREAM3D_STRING SlipSystems("SlipSystems");
+    const DREAM3D_STRING SurfaceAreaVol("SurfaceAreaVolumeRatio");
     const DREAM3D_STRING SurfaceFeatures("SurfaceFeatures");
     const DREAM3D_STRING SurfaceCellFractions("SurfaceCellFractions");
     const DREAM3D_STRING Volumes("Volumes");

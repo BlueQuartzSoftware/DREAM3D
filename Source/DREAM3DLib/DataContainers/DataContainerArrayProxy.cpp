@@ -47,27 +47,20 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy::DataContainerArrayProxy() : isValid(false) {}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainerArrayProxy::DataContainerArrayProxy(bool is_valid) : isValid(is_valid) {}
+DataContainerArrayProxy::DataContainerArrayProxy() {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy::DataContainerArrayProxy(const DataContainerArrayProxy& rhs)
 {
-  isValid = rhs.isValid;
   list = rhs.list;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
-  isValid(false)
+DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca)
 {
 
   if(NULL == dca)
@@ -105,7 +98,6 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
     }
     list.push_back(dcProxy);
   }
-  isValid = true;
 }
 
 
@@ -115,7 +107,6 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxy::operator=(const DataContainerArrayProxy& rhs)
 {
-  isValid = rhs.isValid;
   list = rhs.list;
 }
 
@@ -376,6 +367,111 @@ QStringList DataContainerArrayProxy::serialize()
     }
   }
   return entries;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerArrayProxy DataContainerArrayProxy::MergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy)
+{
+	QList<DataContainerProxy> fDcList = fileProxy.list;
+	QList<DataContainerProxy>& cDcList = cacheProxy.list;
+
+	// Add extra items in the file to the cache
+	for (int i = 0; i < fDcList.count(); i++)
+	{
+		DataContainerProxy fileDcProxy = fDcList[i];
+		int cIndex = cDcList.indexOf(fileDcProxy);
+		// If the cache does not have the file dc proxy, add it to the cache
+		if (cIndex < 0)
+		{
+			cDcList.push_back(fileDcProxy);
+		}
+		int dcIndex = cDcList.indexOf(fileDcProxy);
+
+		QList<AttributeMatrixProxy> fAmList = fileDcProxy.attributeMatricies.values();
+		QMap<QString, AttributeMatrixProxy>& cAmMap = cDcList[dcIndex].attributeMatricies;
+		for (int j = 0; j < fAmList.count(); j++)
+		{
+			AttributeMatrixProxy fileAmProxy = fAmList[j];
+			// If the cache does not have the file am proxy, add it to the cache
+			if (cAmMap.contains(fileAmProxy.name) == false)
+			{
+				cAmMap.insert(fileAmProxy.name, fileAmProxy);
+			}
+
+			QMap<QString, AttributeMatrixProxy>::iterator iter = cAmMap.find(fileAmProxy.name);
+
+			QList<DataArrayProxy> fDaList = fileAmProxy.dataArrays.values();
+			QMap<QString, DataArrayProxy>& cDaMap = iter.value().dataArrays;
+			for (int k = 0; k < fDaList.count(); k++)
+			{
+				DataArrayProxy fileDaProxy = fDaList[k];
+				// If the cache does not have the file da proxy, add it to the cache
+				if (cDaMap.contains(fileDaProxy.name) == false)
+				{
+					cDaMap.insert(fileDaProxy.name, fileDaProxy);
+				}
+			}
+		}
+	}
+
+	// Remove items from the cache that are no longer in the file
+	for (int i = 0; i < cDcList.count(); i++)
+	{
+		DataContainerProxy& cacheDcProxy = cDcList[i];
+		int fIndex = fDcList.indexOf(cacheDcProxy);
+		// If the file does not have the cached dc proxy, remove it from the cache
+		if (fIndex < 0)
+		{
+			cDcList.removeAt(i);
+		}
+		else
+		{
+			QMap<QString, AttributeMatrixProxy>& cAmMap = cacheDcProxy.attributeMatricies;
+			QMap<QString, AttributeMatrixProxy> fAmMap = fDcList[fIndex].attributeMatricies;
+
+			QList<QString> amItemsToDelete;
+			for (QMap<QString, AttributeMatrixProxy>::iterator amIter = cAmMap.begin(); amIter != cAmMap.end(); ++amIter)
+			{
+				AttributeMatrixProxy& cacheAmProxy = amIter.value();
+				// If the file does not have the cached am proxy, remove it from the cache
+				if (fAmMap.contains(cacheAmProxy.name) == false)
+				{
+					amItemsToDelete.push_back(cacheAmProxy.name);
+				}
+				else
+				{
+					QMap<QString, AttributeMatrixProxy>::iterator iter = fAmMap.find(cacheAmProxy.name);
+					QMap<QString, DataArrayProxy>& cDaMap = cacheAmProxy.dataArrays;
+					QMap<QString, DataArrayProxy> fDaMap = iter.value().dataArrays;
+
+					QList<QString> daItemsToDelete;
+					for (QMap<QString, DataArrayProxy>::iterator daIter = cDaMap.begin(); daIter != cDaMap.end(); ++daIter)
+					{
+						DataArrayProxy cacheDaProxy = daIter.value();
+						// If the file does not have the cached da proxy, remove it from the cache
+						if (fDaMap.contains(cacheDaProxy.name) == false)
+						{
+							daItemsToDelete.push_back(cacheDaProxy.name);
+						}
+					}
+					// Remove extra da entries from cache
+					for (QList<QString>::iterator iter = daItemsToDelete.begin(); iter != daItemsToDelete.end(); ++iter)
+					{
+						cDaMap.remove(*iter);
+					}
+				}
+			}
+			// Remove extra am entries from cache
+			for (QList<QString>::iterator iter = amItemsToDelete.begin(); iter != amItemsToDelete.end(); ++iter)
+			{
+				cAmMap.remove(*iter);
+			}
+		}
+	}
+
+	return cacheProxy;
 }
 
 // -----------------------------------------------------------------------------

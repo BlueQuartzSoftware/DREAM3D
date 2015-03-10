@@ -50,7 +50,7 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "TestFileLocations.h"
+#include "IOTestFileLocations.h"
 
 #include "GenerateFeatureIds.h"
 
@@ -311,7 +311,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -349,7 +349,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -387,7 +387,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -422,7 +422,7 @@ int TestDxReaderCache()
 		// Change the contents of the file to be read
 		{
 			QFile file(UnitTest::DxIOTest::TestFile2);
-			if (!file.open(QFile::ReadWrite | QFile::Text))
+			if (!file.open(QFile::ReadWrite | QFile::Append))
 				DREAM3D_REQUIRE_EQUAL(0, 1)
 			QTextStream out(&file);
 			out << "This test string should force the filter to read from the file instead of the cache.";
@@ -436,7 +436,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}
@@ -478,7 +478,7 @@ int TestDxReaderCache()
 			bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
 			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 				dxReader->setDataContainerArray(dca);
-			dxReader->execute();
+			dxReader->preflight();
 			int err = dxReader->getErrorCondition();
 			DREAM3D_REQUIRE_EQUAL(err, 0);
 		}

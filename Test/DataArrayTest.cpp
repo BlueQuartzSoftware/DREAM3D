@@ -49,7 +49,7 @@
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
-#include "Test/TestFileLocations.h"
+#include "Test/DREAM3DTestFileLocations.h"
 
 #define NUM_ELEMENTS  10
 #define NUM_COMPONENTS 2
