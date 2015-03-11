@@ -343,7 +343,7 @@ void EdgeGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::
     getVertsAtEdge(i, verts);
     for (int j = 0; j < cDims; j++)
     {
-      for (size_t k = 0; k < 4; k++)
+      for (size_t k = 0; k < 2; k++)
       {
         values[k] = fieldPtr[cDims*verts[k]+j];
       }
