@@ -211,7 +211,7 @@ class DREAM3DLib_EXPORT MatrixMath
     static void Sort3x1Ascending(float g[3]);
 
     /**
-     * @brief returns index of maximum value. Single Precision Variant
+     * @brief Returns index of maximum value. Single Precision Variant
      * @param g
      */
     static int FindIndexOfMaxVal3x1(float g[3]);
@@ -222,14 +222,44 @@ class DREAM3DLib_EXPORT MatrixMath
     */
     static void Normalize3x1(double g[3]);
 
-
-//    static void NormalizeVector(double g[3]);
+    /**
+     * @brief Performs an "in place" normalization of the 3x1 vector. Double Precision Variant
+     * @param i
+     * @param j
+     * @param k
+     */
     static void Normalize3x1(double& i, double& j, double& k);
-//    static void NormalizeVector(float a[3]);
+
+    /**
+     * @brief Performs an "in place" normalization of the 3x1 vector. Single Precision Variant
+     * @param i
+     * @param j
+     * @param k
+     */
     static void Normalize3x1(float& i, float& j, float& k);
 
     /**
-     * @brief The dot product of 2 vectors a & b
+     * @brief Returns the magnitude of the 3x1 vector. Double Precision Variant
+     * @param a
+     */
+    static double Magnitude3x1(double a[3]);
+
+    /**
+     * @brief Returns the magnitude of the 3x1 vector. Single Precision Variant
+     * @param a
+     */
+    static float Magnitude3x1(float a[3]);
+
+    /**
+     * @brief The dot product of 2 vectors a & b. Double Precision Variant
+     * @param a 1x3 Vector
+     * @param b 1x3 Vector
+     * @return
+     */
+    static float DotProduct3x1(double a[3], double b[3]);
+
+    /**
+     * @brief The dot product of 2 vectors a & b. Single Precision Variant
      * @param a 1x3 Vector
      * @param b 1x3 Vector
      * @return
@@ -237,7 +267,7 @@ class DREAM3DLib_EXPORT MatrixMath
     static float DotProduct3x1(float a[3], float b[3]);
 
     /**
-     * @brief Performs a Cross Product of "a into b" and places the result into c.
+     * @brief Performs a Cross Product of "a into b" and places the result into c. Double Precision Variant
      * A X B = C
      * @param a
      * @param b
@@ -245,6 +275,13 @@ class DREAM3DLib_EXPORT MatrixMath
      */
     static void CrossProduct(double a[3], double b[3], double c[3]);
 
+    /**
+     * @brief Performs a Cross Product of "a into b" and places the result into c. Single Precision Variant
+     * A X B = C
+     * @param a
+     * @param b
+     * @param c
+     */
     static void CrossProduct(float a[3], float b[3], float c[3]);
 
 

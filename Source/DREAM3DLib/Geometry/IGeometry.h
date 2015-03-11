@@ -67,7 +67,7 @@ typedef FloatArrayType SharedVertexList;
 typedef Int64ArrayType SharedEdgeList;
 typedef Int64ArrayType SharedTriList;
 typedef Int64ArrayType SharedQuadList;
-typedef UInt16Int64DynamicListArray CellDynamicList;
+typedef UInt16Int64DynamicListArray ElementDynamicList;
 
 /**
  * @brief The IGeometry class
@@ -91,38 +91,38 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
 // -----------------------------------------------------------------------------
 
     /**
-     * @brief findCellsContainingVert
+     * @brief findElementsContainingVert
      * @return
      */
-    virtual int findCellsContainingVert() = 0;
+    virtual int findElementsContainingVert() = 0;
 
     /**
-     * @brief getCellsContainingVert
+     * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getCellsContainingVert() = 0;
+    virtual ElementDynamicList::Pointer getElementsContainingVert() = 0;
 
     /**
-     * @brief deleteCellsContainingVert
+     * @brief deleteElementsContainingVert
      */
-    virtual void deleteCellsContainingVert() = 0;
+    virtual void deleteElementsContainingVert() = 0;
 
     /**
-     * @brief findCellNeighbors
+     * @brief findElementNeighbors
      * @return
      */
-    virtual int findCellNeighbors() = 0;
+    virtual int findElementNeighbors() = 0;
 
     /**
-     * @brief getCellNeighbors
+     * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getCellNeighbors() = 0;
+    virtual ElementDynamicList::Pointer getElementNeighbors() = 0;
 
     /**
-     * @brief deleteCellNeighbors
+     * @brief deleteElementNeighbors
      */
-    virtual void deleteCellNeighbors() = 0;
+    virtual void deleteElementNeighbors() = 0;
 
 // -----------------------------------------------------------------------------
 // Topology
@@ -135,21 +135,41 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
     virtual size_t getNumberOfTuples() = 0;
 
     /**
-     * @brief findCellCentroids
+     * @brief findElementCentroids
      * @return
      */
-    virtual int findCellCentroids() = 0;
+    virtual int findElementCentroids() = 0;
 
     /**
-     * @brief getCellCentroids
+     * @brief getElementCentroids
      * @return
      */
-    virtual FloatArrayType::Pointer getCellCentroids() = 0;
+    virtual FloatArrayType::Pointer getElementCentroids() = 0;
 
     /**
-     * @brief deleteCellCentroids
+     * @brief deleteElementCentroids
      */
-    virtual void deleteCellCentroids() = 0;
+    virtual void deleteElementCentroids() = 0;
+
+    /**
+     * @brief getParametricCenter
+     * @param pCoords
+     */
+    virtual void getParametricCenter(double pCoords[3]) = 0;
+
+    /**
+     * @brief getShapeFunctions
+     * @param pCoords
+     * @param derivs
+     */
+    virtual void getShapeFunctions(double pCoords[3], double* shape) = 0;
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     */
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives) = 0;
 
 // -----------------------------------------------------------------------------
 // Generic
@@ -261,22 +281,22 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
   protected:
 
     /**
-     * @brief setCellsContaingVert
-     * @param cellsContaingVert
+     * @brief setElementsContaingVert
+     * @param elementsContaingVert
      */
-    virtual void setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert) = 0;
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert) = 0;
 
     /**
-     * @brief setCellNeighbors
-     * @param cellNeighbors
+     * @brief setElementNeighbors
+     * @param elementNeighbors
      */
-    virtual void setCellNeighbors(CellDynamicList::Pointer cellNeighbors) = 0;
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementsNeighbors) = 0;
 
     /**
-     * @brief setCellCentroids
-     * @param cellCentroids
+     * @brief setElementCentroids
+     * @param elementCentroids
      */
-    virtual void setCellCentroids(FloatArrayType::Pointer cellCentroids) = 0;
+    virtual void setElementCentroids(FloatArrayType::Pointer elementCentroids) = 0;
 
   private:
 

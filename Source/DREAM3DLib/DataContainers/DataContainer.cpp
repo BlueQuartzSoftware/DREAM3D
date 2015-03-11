@@ -488,86 +488,86 @@ int DataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
     uint32_t amType = attrMat->getType();
     switch(geomType)
     {
-    case DREAM3D::GeometryType::VertexGeometry:
-      switch(amType)
-      {
-      //FIXME: There are more AttributeMatrix Types that should be implemented
-      case DREAM3D::AttributeMatrixType::Vertex:
-        xdmfCenter = DREAM3D::XdmfCenterType::Node;
-        break;
-      default:
-        break;
-      }
-    case DREAM3D::GeometryType::EdgeGeometry:
-      switch(amType)
-      {
-      //FIXME: There are more AttributeMatrix Types that should be implemented
-      case DREAM3D::AttributeMatrixType::Vertex:
-        xdmfCenter = DREAM3D::XdmfCenterType::Node;
-        break;
-      case DREAM3D::AttributeMatrixType::Edge:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      default:
-        break;
-      }
-    case DREAM3D::GeometryType::TriangleGeometry:
-      switch(amType)
-      {
-      //FIXME: There are more AttributeMatrix Types that should be implemented
-      case DREAM3D::AttributeMatrixType::Vertex:
-        xdmfCenter = DREAM3D::XdmfCenterType::Node;
-        break;
-      case DREAM3D::AttributeMatrixType::Edge:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      case DREAM3D::AttributeMatrixType::Face:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      case DREAM3D::AttributeMatrixType::Cell:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      default:
-        break;
-      }
-    case DREAM3D::GeometryType::QuadGeometry:
-      switch(amType)
-      {
-      //FIXME: There are more AttributeMatrix Types that should be implemented
-      case DREAM3D::AttributeMatrixType::Vertex:
-        xdmfCenter = DREAM3D::XdmfCenterType::Node;
-        break;
-      case DREAM3D::AttributeMatrixType::Edge:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      case DREAM3D::AttributeMatrixType::Face:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      case DREAM3D::AttributeMatrixType::Cell:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      default:
-        break;
-      }
-    case DREAM3D::GeometryType::ImageGeometry:
-      switch(amType)
-      {
-      //FIXME: There are more AttributeMatrix Types that should be implemented
-      case DREAM3D::AttributeMatrixType::Vertex:
-        xdmfCenter = DREAM3D::XdmfCenterType::Node;
-        break;
-      case DREAM3D::AttributeMatrixType::Edge:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      case DREAM3D::AttributeMatrixType::Face:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      case DREAM3D::AttributeMatrixType::Cell:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
-        break;
-      default:
-        break;
-      }
+      case DREAM3D::GeometryType::VertexGeometry:
+        switch(amType)
+        {
+          //FIXME: There are more AttributeMatrix Types that should be implemented
+          case DREAM3D::AttributeMatrixType::Vertex:
+            xdmfCenter = DREAM3D::XdmfCenterType::Node;
+            break;
+          default:
+            break;
+        }
+      case DREAM3D::GeometryType::EdgeGeometry:
+        switch(amType)
+        {
+          //FIXME: There are more AttributeMatrix Types that should be implemented
+          case DREAM3D::AttributeMatrixType::Vertex:
+            xdmfCenter = DREAM3D::XdmfCenterType::Node;
+            break;
+          case DREAM3D::AttributeMatrixType::Edge:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          default:
+            break;
+        }
+      case DREAM3D::GeometryType::TriangleGeometry:
+        switch(amType)
+        {
+          //FIXME: There are more AttributeMatrix Types that should be implemented
+          case DREAM3D::AttributeMatrixType::Vertex:
+            xdmfCenter = DREAM3D::XdmfCenterType::Node;
+            break;
+          case DREAM3D::AttributeMatrixType::Edge:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          case DREAM3D::AttributeMatrixType::Face:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          case DREAM3D::AttributeMatrixType::Cell:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          default:
+            break;
+        }
+      case DREAM3D::GeometryType::QuadGeometry:
+        switch(amType)
+        {
+          //FIXME: There are more AttributeMatrix Types that should be implemented
+          case DREAM3D::AttributeMatrixType::Vertex:
+            xdmfCenter = DREAM3D::XdmfCenterType::Node;
+            break;
+          case DREAM3D::AttributeMatrixType::Edge:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          case DREAM3D::AttributeMatrixType::Face:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          case DREAM3D::AttributeMatrixType::Cell:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          default:
+            break;
+        }
+      case DREAM3D::GeometryType::ImageGeometry:
+        switch(amType)
+        {
+          //FIXME: There are more AttributeMatrix Types that should be implemented
+          case DREAM3D::AttributeMatrixType::Vertex:
+            xdmfCenter = DREAM3D::XdmfCenterType::Node;
+            break;
+          case DREAM3D::AttributeMatrixType::Edge:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          case DREAM3D::AttributeMatrixType::Face:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          case DREAM3D::AttributeMatrixType::Cell:
+            xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+            break;
+          default:
+            break;
+        }
     }
 
     if(xdmfCenter.isEmpty() == false)
@@ -618,52 +618,52 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
   {
     switch(geometryType)
     {
-    case DREAM3D::GeometryType::ImageGeometry:
-    {
-      ImageGeom::Pointer image = ImageGeom::New();
-      err = image->readGeometryFromHDF5(geometryId, preflight);
-      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, image);
-      setGeometry(image);
-      break;
-    }
-    case DREAM3D::GeometryType::VertexGeometry:
-    {
-      VertexGeom::Pointer vertices = VertexGeom::New();
-      err = vertices->readGeometryFromHDF5(geometryId, preflight);
-      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, vertices);
-      setGeometry(vertices);
-      break;
-    }
-    case DREAM3D::GeometryType::EdgeGeometry:
-    {
-      EdgeGeom::Pointer edges = EdgeGeom::New();
-      err = edges->readGeometryFromHDF5(geometryId, preflight);
-      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, edges);
-      setGeometry(edges);
-      break;
-    }
-    case DREAM3D::GeometryType::TriangleGeometry:
-    {
-      TriangleGeom::Pointer triangles = TriangleGeom::New();
-      err = triangles->readGeometryFromHDF5(geometryId, preflight);
-      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, triangles);
-      setGeometry(triangles);
-      break;
-    }
-    case DREAM3D::GeometryType::QuadGeometry:
-    {
-      QuadGeom::Pointer quads = QuadGeom::New();
-      err = quads->readGeometryFromHDF5(geometryId, preflight);
-      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, quads);
-      setGeometry(quads);
-      break;
-    }
-    case DREAM3D::GeometryType::UnknownGeometry:
-      setGeometry(geomPtr);
-      break;
-    default:
-      setGeometry(geomPtr);
-      break;
+      case DREAM3D::GeometryType::ImageGeometry:
+      {
+        ImageGeom::Pointer image = ImageGeom::New();
+        err = image->readGeometryFromHDF5(geometryId, preflight);
+        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, image);
+        setGeometry(image);
+        break;
+      }
+      case DREAM3D::GeometryType::VertexGeometry:
+      {
+        VertexGeom::Pointer vertices = VertexGeom::New();
+        err = vertices->readGeometryFromHDF5(geometryId, preflight);
+        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, vertices);
+        setGeometry(vertices);
+        break;
+      }
+      case DREAM3D::GeometryType::EdgeGeometry:
+      {
+        EdgeGeom::Pointer edges = EdgeGeom::New();
+        err = edges->readGeometryFromHDF5(geometryId, preflight);
+        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, edges);
+        setGeometry(edges);
+        break;
+      }
+      case DREAM3D::GeometryType::TriangleGeometry:
+      {
+        TriangleGeom::Pointer triangles = TriangleGeom::New();
+        err = triangles->readGeometryFromHDF5(geometryId, preflight);
+        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, triangles);
+        setGeometry(triangles);
+        break;
+      }
+      case DREAM3D::GeometryType::QuadGeometry:
+      {
+        QuadGeom::Pointer quads = QuadGeom::New();
+        err = quads->readGeometryFromHDF5(geometryId, preflight);
+        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, quads);
+        setGeometry(quads);
+        break;
+      }
+      case DREAM3D::GeometryType::UnknownGeometry:
+        setGeometry(geomPtr);
+        break;
+      default:
+        setGeometry(geomPtr);
+        break;
     }
   }
 

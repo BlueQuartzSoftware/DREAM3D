@@ -34,6 +34,48 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+/* ============================================================================
+ * QuadGeom uses code adapated from the following vtk modules:
+ *
+ * * vtkQuad.cxx
+ *   - adapted vtkQuad::GetParametricCenter to QuadGeom::getParametricCenter
+ *   - adapted vtkQuad::InterpolationDerivs to QuadGeom::getShapeFunctions
+ * * vtkGradientFilter.cxx
+ *   - adapted vtkGradientFilter template function ComputeCellGradientsUG to
+ *     QuadGeom::findDerivatives
+ *
+ * The vtk license is reproduced below.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+/* ============================================================================
+ * Copyright (c) 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen
+ * All rights reserved.
+
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * * Neither name of Ken Martin, Will Schroeder, or Bill Lorensen nor the names of
+ * any contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DREAM3DLib/Geometry/QuadGeom.h"
 
 // -----------------------------------------------------------------------------
@@ -49,8 +91,8 @@ QuadGeom::QuadGeom()
   m_VertexList = QuadGeom::CreateSharedVertexList(0);
   m_QuadList = QuadGeom::CreateSharedQuadList(0);
   m_EdgeList = SharedEdgeList::NullPointer();
-  m_QuadsContainingVert = CellDynamicList::NullPointer();
-  m_QuadNeighbors = CellDynamicList::NullPointer();
+  m_QuadsContainingVert = ElementDynamicList::NullPointer();
+  m_QuadNeighbors = ElementDynamicList::NullPointer();
   m_QuadCentroids = FloatArrayType::NullPointer();
 }
 
@@ -152,10 +194,10 @@ size_t QuadGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuadGeom::findCellsContainingVert()
+int QuadGeom::findElementsContainingVert()
 {
-  m_QuadsContainingVert = CellDynamicList::New();
-  GeometryHelpers::Connectivity::FindCellsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
+  m_QuadsContainingVert = ElementDynamicList::New();
+  GeometryHelpers::Connectivity::FindElementsContainingVert<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, getNumberOfVertices());
   if (m_QuadsContainingVert.get() == NULL)
   {
     return -1;
@@ -166,7 +208,7 @@ int QuadGeom::findCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer QuadGeom::getCellsContainingVert()
+ElementDynamicList::Pointer QuadGeom::getElementsContainingVert()
 {
   return m_QuadsContainingVert;
 }
@@ -174,31 +216,31 @@ CellDynamicList::Pointer QuadGeom::getCellsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert)
+void QuadGeom::setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert)
 {
-  m_QuadsContainingVert = cellsContaingVert;
+  m_QuadsContainingVert = elementsContainingVert;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteCellsContainingVert()
+void QuadGeom::deleteElementsContainingVert()
 {
-  m_QuadsContainingVert = CellDynamicList::NullPointer();
+  m_QuadsContainingVert = ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuadGeom::findCellNeighbors()
+int QuadGeom::findElementNeighbors()
 {
   int err = 0;
   if (m_QuadsContainingVert.get() == NULL)
   {
     return -1;
   }
-  m_QuadNeighbors = CellDynamicList::New();
-  err = GeometryHelpers::Connectivity::FindCellNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
+  m_QuadNeighbors = ElementDynamicList::New();
+  err = GeometryHelpers::Connectivity::FindElementNeighbors<uint16_t, int64_t>(m_QuadList, m_QuadsContainingVert, m_QuadNeighbors);
   if (m_QuadNeighbors.get() == NULL)
   {
     return -1;
@@ -209,7 +251,7 @@ int QuadGeom::findCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CellDynamicList::Pointer QuadGeom::getCellNeighbors()
+ElementDynamicList::Pointer QuadGeom::getElementNeighbors()
 {
   return m_QuadNeighbors;
 }
@@ -217,27 +259,27 @@ CellDynamicList::Pointer QuadGeom::getCellNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setCellNeighbors(CellDynamicList::Pointer cellNeighbors)
+void QuadGeom::setElementNeighbors(ElementDynamicList::Pointer elementNeighbors)
 {
-  m_QuadNeighbors = cellNeighbors;
+  m_QuadNeighbors = elementNeighbors;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteCellNeighbors()
+void QuadGeom::deleteElementNeighbors()
 {
-  m_QuadNeighbors = CellDynamicList::NullPointer();
+  m_QuadNeighbors = ElementDynamicList::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuadGeom::findCellCentroids()
+int QuadGeom::findElementCentroids()
 {
   QVector<size_t> cDims(1, 3);
   m_QuadCentroids = FloatArrayType::CreateArray(getNumberOfQuads(), cDims, DREAM3D::StringConstants::QuadCentroids);
-  GeometryHelpers::Topology::FindCellCentroids<int64_t>(m_QuadList, m_VertexList, m_QuadCentroids);
+  GeometryHelpers::Topology::FindElementCentroids<int64_t>(m_QuadList, m_VertexList, m_QuadCentroids);
   if (m_QuadCentroids.get() == NULL)
   {
     return -1;
@@ -248,7 +290,7 @@ int QuadGeom::findCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatArrayType::Pointer QuadGeom::getCellCentroids()
+FloatArrayType::Pointer QuadGeom::getElementCentroids()
 {
   return m_QuadCentroids;
 }
@@ -256,17 +298,76 @@ FloatArrayType::Pointer QuadGeom::getCellCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::setCellCentroids(FloatArrayType::Pointer cellCentroids)
+void QuadGeom::setElementCentroids(FloatArrayType::Pointer elementCentroids)
 {
-  m_QuadCentroids = cellCentroids;
+  m_QuadCentroids = elementCentroids;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuadGeom::deleteCellCentroids()
+void QuadGeom::deleteElementCentroids()
 {
   m_QuadCentroids = FloatArrayType::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::getParametricCenter(double pCoords[3])
+{
+  pCoords[0] = 0.5;
+  pCoords[1] = 0.5;
+  pCoords[2] = 0.0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::getShapeFunctions(double pCoords[3], double* shape)
+{
+  double rm, sm;
+
+  rm = 1.0 - pCoords[0];
+  sm = 1.0 - pCoords[1];
+
+  shape[0] = -sm;
+  shape[1] = sm;
+  shape[2] = pCoords[1];
+  shape[3] = -pCoords[1];
+  shape[4] = -rm;
+  shape[5] = -pCoords[0];
+  shape[6] = pCoords[0];
+  shape[7] = rm;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuadGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+{
+  int64_t numQuads = getNumberOfQuads();
+  int cDims = field->getNumberOfComponents();
+  double* fieldPtr = field->getPointer(0);
+  double* derivsPtr = derivatives->getPointer(0);
+  double values[4];
+  double derivs[3];
+  int64_t verts[4];
+  for (int64_t i = 0; i < numQuads; i++)
+  {
+    getVertsAtQuad(i, verts);
+    for (int j = 0; j < cDims; j++)
+    {
+      for (size_t k = 0; k < 4; k++)
+      {
+        values[k] = fieldPtr[cDims*verts[k]+j];
+      }
+      DerivativeHelpers::QuadDeriv()(this, i, values, derivs);
+      derivsPtr[i*3*cDims+j*3] = derivs[0];
+      derivsPtr[i*3*cDims+j*3+1] = derivs[1];
+      derivsPtr[i*3*cDims+j*3+2] = derivs[2];
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -317,7 +418,7 @@ int QuadGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_QuadNeighbors.get() != NULL)
   {
     size_t numQuads = getNumberOfQuads();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadNeighbors, numQuads);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadNeighbors, numQuads, DREAM3D::StringConstants::QuadNeighbors);
     if (err < 0)
     {
       return err;
@@ -328,7 +429,7 @@ int QuadGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
   if (m_QuadsContainingVert.get() != NULL)
   {
     size_t numVerts = getNumberOfVertices();
-    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadsContainingVert, numVerts);
+    err = GeometryHelpers::GeomIO::WriteDynamicListToHDF5<uint16_t, int64_t>(parentId, m_QuadsContainingVert, numVerts, DREAM3D::StringConstants::QuadsContainingVert);
     if (err < 0)
     {
       return err;
@@ -399,13 +500,13 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadNeighbors, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
+      ElementDynamicList::Pointer quadNeighbors = ElementDynamicList::New();
       m_QuadNeighbors = quadNeighbors;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadsContainingVert, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
+      ElementDynamicList::Pointer quadsContainingVert = ElementDynamicList::New();
       m_QuadsContainingVert = quadsContainingVert;
     }
     err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::QuadCentroids, dims, type_class, type_size);
@@ -434,7 +535,7 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       {
         return err;
       }
-      CellDynamicList::Pointer quadNeighbors = CellDynamicList::New();
+      ElementDynamicList::Pointer quadNeighbors = ElementDynamicList::New();
       quadNeighbors->deserializeLinks(buffer, numQuads);
       m_QuadNeighbors = quadNeighbors;
     }
@@ -448,7 +549,7 @@ int QuadGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
       {
         return err;
       }
-      CellDynamicList::Pointer quadsContainingVert = CellDynamicList::New();
+      ElementDynamicList::Pointer quadsContainingVert = ElementDynamicList::New();
       quadsContainingVert->deserializeLinks(buffer, numQuads);
       m_QuadsContainingVert = quadsContainingVert;
     }
@@ -472,9 +573,9 @@ IGeometry::Pointer QuadGeom::deepCopy()
 {
   QuadGeom::Pointer quadCopy = QuadGeom::CreateGeometry(getQuads(), getVertices(), getName());
 
-  quadCopy->setCellsContaingVert(getCellsContainingVert());
-  quadCopy->setCellNeighbors(getCellNeighbors());
-  quadCopy->setCellCentroids(getCellCentroids());
+  quadCopy->setElementsContainingVert(getElementsContainingVert());
+  quadCopy->setElementNeighbors(getElementNeighbors());
+  quadCopy->setElementCentroids(getElementCentroids());
   quadCopy->setSpatialDimensionality(getSpatialDimensionality());
 
   return quadCopy;
