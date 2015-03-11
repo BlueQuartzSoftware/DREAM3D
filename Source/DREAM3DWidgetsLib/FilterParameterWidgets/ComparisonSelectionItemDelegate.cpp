@@ -115,7 +115,6 @@ QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* parent, const QS
       operatorCombo->addItems(m_FeatureList);
       operatorCombo->setAutoFillBackground(true);
       return operatorCombo;
-      break;
     case ComparisonSelectionTableModel::FeatureValue:
       featureValue = new QLineEdit(parent);
       featureValue->setFrame(false);

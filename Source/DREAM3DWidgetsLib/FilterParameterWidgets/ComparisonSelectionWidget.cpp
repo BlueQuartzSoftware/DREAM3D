@@ -110,6 +110,7 @@ void ComparisonSelectionWidget::setupGui()
   }
   m_ComparisonSelectionTableView->setModel(m_ComparisonSelectionTableModel);
   m_ComparisonSelectionTableModel->setNumberOfPhases(1);
+  m_ComparisonSelectionTableView->resizeColumnsToContents();
 
   // Set the ItemDelegate for the table.
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
@@ -134,6 +135,7 @@ void ComparisonSelectionWidget::setupGui()
   // Set the data into the TableModel
   ComparisonInputs comps = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
   m_ComparisonSelectionTableModel->setTableData(comps);
+
 
 
 #if 0
