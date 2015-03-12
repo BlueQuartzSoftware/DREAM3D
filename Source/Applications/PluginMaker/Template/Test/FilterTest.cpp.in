@@ -1,0 +1,103 @@
+/* ============================================================================
+ * ADD LICENSE HERE
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+#include <QtCore/QCoreApplication>
+#include <QtCore/QFile>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+
+#include "@PluginName@TestFileLocations.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
+#if REMOVE_TEST_FILES
+  QFile::remove(UnitTest::@ClassName@Test::TestFile1);
+  QFile::remove(UnitTest::@ClassName@Test::TestFile2);
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TestFilterAvailability()
+{
+  // Now instantiate the @PluginName@ Filter from the FilterManager
+  QString filtName = "@ClassName@";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get() )
+  {
+    std::stringstream ss;
+    ss << "The @ClassName@Test Requires the use of the " << filtName.toStdString() << " filter which is found in the @PluginName@ Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+
+  return EXIT_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int @ClassName@Test()
+{
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ /* Please write @ClassName@ test code here.
+  *
+  * Your IO test files are:
+  * UnitTest::@ClassName@Test::TestFile1
+  * UnitTest::@ClassName@Test::TestFile2
+  */
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  return EXIT_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void loadFilterPlugins()
+{
+  // Register all the filters including trying to load those from Plugins
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
+
+  // Send progress messages from PipelineBuilder to this object for display
+  QMetaObjectUtilities::RegisterMetaTypes();
+}
+
+
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
+int main(int argc, char** argv)
+{
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setApplicationName("@ClassName@Test");
+
+  int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
+  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+
+  DREAM3D_REGISTER_TEST( @ClassName@Test() )
+
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  PRINT_TEST_SUMMARY();
+  return err;
+}
+

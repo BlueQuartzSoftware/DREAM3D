@@ -45,6 +45,7 @@
 #include <QtWidgets/QTreeWidgetItem>
 #include <QtGui/QCloseEvent>
 #include <QtCore/QSettings>
+#include <QtCore/QSignalMapper>
 
 #include "ui_PluginMaker.h"
 #include "FilterBundler.h"
@@ -77,6 +78,11 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
     void on_addFilterBtn_clicked();
     void on_removeFilterBtn_clicked();
 
+	void testFileLocationsHandler();
+
+  signals:
+	void clicked(QSet<QString> names);
+
   private:
     QString m_OpenDialogLastDirectory;
     QString cleanName(QString name);
@@ -91,12 +97,13 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
 // QString generateQrcContents();
 
     QVector<FilterBundler> m_FilterBundles;
+	QSet<QString> m_TestFileLocationNames;
     QTreeWidgetItem* F_name;
     QTreeWidgetItem* F_doc;
     QTreeWidgetItem* F_res;
     QTreeWidgetItem* F_res_sub;
+	QTreeWidgetItem* F_test;
     QTreeWidgetItem* F_namefilters;
-
 };
 
 #endif
