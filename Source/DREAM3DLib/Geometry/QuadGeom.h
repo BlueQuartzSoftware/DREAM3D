@@ -74,6 +74,8 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      */
     static Pointer CreateGeometry(SharedQuadList::Pointer quads, SharedVertexList::Pointer vertices, const QString& name);
 
+    SharedEdgeList::Pointer findUniqueEdges();
+
 // -----------------------------------------------------------------------------
 // Inherited from SharedVertexOps
 // -----------------------------------------------------------------------------
