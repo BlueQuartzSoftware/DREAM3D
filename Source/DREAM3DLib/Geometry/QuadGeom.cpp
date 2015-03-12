@@ -155,40 +155,44 @@ SharedEdgeList::Pointer QuadGeom::findUniqueEdges()
   int64_t v0 = 0;
   int64_t v1 = 0;
 
-  QMap<int64_t, int64_t> edgeMap;
-  QMap<int64_t, int64_t>::Iterator it;
+  QMultiMap<int64_t, QSet<int64_t> > edgeMap;
+  QMultiMap<int64_t, QSet<int64_t> >::Iterator it;
 
-  for (size_t t = 0; t < numQuads; t++)
+  for (size_t i = 0; i < numQuads; i++)
   {
-    getVertsAtQuad(t, verts);
+    getVertsAtQuad(i, verts);
 
     // edge 0
-    int i = 0;
-    if (verts[i] > verts[i+1]) { v0 = verts[i+1]; v1 = verts[i]; }
-    else { v0 = verts[i]; v1 = verts[i+1]; }
+    int e = 0;
+		if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
+    else { v0 = verts[e]; v1 = verts[e+1]; }
     it = edgeMap.find(v0);
-    if (it == edgeMap.end() || it.value() != v1) { edgeMap.insert(v0,v1); }
+		if (it == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
+		else  { it.value().insert(v1); }
 
     // edge 1
-    i = 1;
-    if (verts[i] > verts[i+1]) { v0 = verts[i+1]; v1 = verts[i]; }
-    else { v0 = verts[i]; v1 = verts[i+1]; }
+    e = 1;
+    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
+    else { v0 = verts[e]; v1 = verts[e+1]; }
     it = edgeMap.find(v0);
-    if (it == edgeMap.end() || it.value() != v1) { edgeMap.insert(v0,v1); }
+		if(it == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
+		else  { it.value().insert(v1); }
 
     // edge 2
-    i = 2;
-    if (verts[i] > verts[i+1]) { v0 = verts[i+1]; v1 = verts[i]; }
-    else { v0 = verts[i]; v1 = verts[i+1]; }
+    e = 2;
+    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
+    else { v0 = verts[e]; v1 = verts[e+1]; }
     it = edgeMap.find(v0);
-    if (it == edgeMap.end() || it.value() != v1) { edgeMap.insert(v0,v1); }
+		if(it == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
+		else  { it.value().insert(v1); }
 
     // edge 3
-    i = 3;
-    if (verts[i] > verts[0]) { v0 = verts[0]; v1 = verts[i]; }
-    else { v0 = verts[i]; v1 = verts[0]; }
+		e = 3;
+    if (verts[e] > verts[0]) { v0 = verts[0]; v1 = verts[e]; }
+    else { v0 = verts[e]; v1 = verts[0]; }
     it = edgeMap.find(v0);
-    if (it == edgeMap.end() || it.value() != v1) { edgeMap.insert(v0,v1); }
+		if(it == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
+		else  { it.value().insert(v1); }
   }
 
   SharedEdgeList::Pointer uniqueEdges = CreateSharedEdgeList(edgeMap.size());
@@ -198,7 +202,7 @@ SharedEdgeList::Pointer QuadGeom::findUniqueEdges()
 
   qDebug() << edgeMap.size();
 
-  for (it = edgeMap.begin(); it != edgeMap.end(); it++)
+  for (it = edgeMap.begin(); it != edgeMap.end(); ++it)
   {
     qDebug() << index << " " << it.key() << " " << it.value();
     ++index;
