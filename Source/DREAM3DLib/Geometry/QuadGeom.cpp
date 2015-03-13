@@ -155,64 +155,53 @@ SharedEdgeList::Pointer QuadGeom::findElementEdges()
   int64_t v0 = 0;
   int64_t v1 = 0;
 
-  QMultiMap<int64_t, QSet<int64_t> > edgeMap;
-  QMultiMap<int64_t, QSet<int64_t> >::Iterator mapIter;
+	std::pair<int64_t, int64_t> edge;
+	std::set<std::pair<int64_t, int64_t> > edgeSet;
 
-  for (size_t i = 0; i < numQuads; i++)
-  {
-    getVertsAtQuad(i, verts);
+	for (size_t i = 0; i < numQuads; i++)
+	{
+		getVertsAtQuad(i, verts);
 
-    // edge 0
-    int e = 0;
-    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[e+1]; }
-    mapIter = edgeMap.find(v0);
-    if (mapIter == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
-    else  { mapIter.value().insert(v1); }
+		// edge 0
+		int e = 0;
+		if (verts[e] > verts[e + 1]) { v0 = verts[e + 1]; v1 = verts[e]; }
+		else { v0 = verts[e]; v1 = verts[e + 1]; }
+		edge = std::make_pair(v0, v1);
+		edgeSet.insert(edge);
 
-    // edge 1
-    e = 1;
-    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[e+1]; }
-    mapIter = edgeMap.find(v0);
-    if(mapIter == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
-    else  { mapIter.value().insert(v1); }
+		// edge 1
+		e = 1;
+		if (verts[e] > verts[e + 1]) { v0 = verts[e + 1]; v1 = verts[e]; }
+		else { v0 = verts[e]; v1 = verts[e + 1]; }
+		edge = std::make_pair(v0, v1);
+		edgeSet.insert(edge);
 
-    // edge 2
-    e = 2;
-    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[e+1]; }
-    mapIter = edgeMap.find(v0);
-    if(mapIter == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
-    else  { mapIter.value().insert(v1); }
+		// edge 2
+		e = 2;
+		if (verts[e] > verts[e + 1]) { v0 = verts[e + 1]; v1 = verts[e]; }
+		else { v0 = verts[e]; v1 = verts[e + 1]; }
+		edge = std::make_pair(v0, v1);
+		edgeSet.insert(edge);
 
-    // edge 3
-    e = 3;
-    if (verts[e] > verts[0]) { v0 = verts[0]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[0]; }
-    mapIter = edgeMap.find(v0);
-    if(mapIter == edgeMap.end()) { QSet<int64_t> e0; e0.insert(v1); edgeMap.insert(v0, e0); }
-    else  { mapIter.value().insert(v1); }
-  }
+		// edge 3
+		e = 3;
+		if (verts[e] > verts[0]) { v0 = verts[0]; v1 = verts[e]; }
+		else { v0 = verts[e]; v1 = verts[0]; }
+		edge = std::make_pair(v0, v1);
+		edgeSet.insert(edge);
+	}
 
-  QSet<int64_t>::Iterator setIter;
-  int64_t index = 0;
-  std::vector<int64_t> uniqueEdges;
+	std::set<std::pair<int64_t, int64_t> >::iterator setIter;
+	SharedEdgeList::Pointer uniqueEdgesList = CreateSharedEdgeList(edgeSet.size());
+	int64_t* uEdges = uniqueEdgesList->getPointer(0);
+	int64_t index = 0;
 
-  for (mapIter = edgeMap.begin(); mapIter != edgeMap.end(); ++mapIter)
-  {
-    for (setIter = mapIter.value().begin(); setIter != mapIter.value().end(); ++setIter)
-    {
-      uniqueEdges.push_back(mapIter.key());
-      uniqueEdges.push_back((*setIter));
-      ++index;
-    }
-  }
-
-  SharedEdgeList::Pointer uniqueEdgesList = CreateSharedEdgeList(index);
-  int64_t* uEdges = uniqueEdgesList->getPointer(0);
-
-  ::memcpy(uEdges, &uniqueEdges[0], index*2*sizeof(int64_t));
+	for (setIter = edgeSet.begin(); setIter != edgeSet.end(); ++setIter)
+	{
+		uEdges[2 * index] = (*setIter).first;
+		uEdges[2 * index + 1] = (*setIter).second;
+		++index;
+	}
 
   return uniqueEdgesList;
 }
@@ -221,91 +210,77 @@ SharedEdgeList::Pointer QuadGeom::findElementEdges()
 //
 // -----------------------------------------------------------------------------
 SharedEdgeList::Pointer QuadGeom::findBoundaryEdges()
-{
-  int64_t numQuads = getNumberOfQuads();
-  int64_t verts[4];
-  int64_t v0 = 0;
-  int64_t v1 = 0;
+{ 
+	if (getSpatialDimensionality() > 2)
+	{
+		return SharedEdgeList::NullPointer();
+	}
+	else
+	{
+		int64_t numQuads = getNumberOfQuads();
+		int64_t verts[4];
+		int64_t v0 = 0;
+		int64_t v1 = 0;
 
-  QMultiMap<int64_t, int64_t> edgeMap;
-  QMultiMap<int64_t, int64_t>::Iterator mapIter;
+		std::pair<int64_t, int64_t> edge;
+		std::pair<std::pair<int64_t, int64_t>, int64_t> edgePair;
+		std::map<std::pair<int64_t, int64_t>, int64_t> edgeMap;
+		std::map<std::pair<int64_t, int64_t>, int64_t>::iterator mapIter;
 
-  for (size_t i = 0; i < numQuads; i++)
-  {
-    getVertsAtQuad(i, verts);
+		for (size_t i = 0; i < numQuads; i++)
+		{
+			getVertsAtQuad(i, verts);
 
-    // edge 0
-    int e = 0;
-    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[e+1]; }
-    edgeMap.insert(v0, v1);
+			// edge 0
+			int e = 0;
+			if (verts[e] > verts[e + 1]) { v0 = verts[e + 1]; v1 = verts[e]; }
+			else { v0 = verts[e]; v1 = verts[e + 1]; }
+			edge = std::make_pair(v0, v1);
+			edgeMap[edge]++;
 
-    // edge 1
-    e = 1;
-    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[e+1]; }
-    edgeMap.insert(v0, v1);
+			// edge 1
+			e = 1;
+			if (verts[e] > verts[e + 1]) { v0 = verts[e + 1]; v1 = verts[e]; }
+			else { v0 = verts[e]; v1 = verts[e + 1]; }
+			edge = std::make_pair(v0, v1);
+			edgeMap[edge]++;
 
-    // edge 2
-    e = 2;
-    if (verts[e] > verts[e+1]) { v0 = verts[e+1]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[e+1]; }
-    edgeMap.insert(v0, v1);
+			// edge 2
+			e = 2;
+			if (verts[e] > verts[e + 1]) { v0 = verts[e + 1]; v1 = verts[e]; }
+			else { v0 = verts[e]; v1 = verts[e + 1]; }
+			edge = std::make_pair(v0, v1);
+			edgeMap[edge]++;
 
-    // edge 3
-    e = 3;
-    if (verts[e] > verts[0]) { v0 = verts[0]; v1 = verts[e]; }
-    else { v0 = verts[e]; v1 = verts[0]; }
-    edgeMap.insert(v0, v1);
-  }
+			// edge 3
+			e = 3;
+			if (verts[e] > verts[0]) { v0 = verts[0]; v1 = verts[e]; }
+			else { v0 = verts[e]; v1 = verts[0]; }
+			edge = std::make_pair(v0, v1);
+			edgeMap[edge]++;
+		}
 
-  mapIter = edgeMap.begin();
-  int64_t val = mapIter.value();
+		mapIter = edgeMap.begin();
 
-  while (mapIter != edgeMap.end())
-  {
-    if (edgeMap.count(mapIter.key(), mapIter.value()) > 1)
-    {
-      edgeMap.remove(mapIter.key(), mapIter.value());
-    }
-    ++mapIter;
-  }
+		while (mapIter != edgeMap.end())
+		{
+			if ((*mapIter).second > 1) { edgeMap.erase(mapIter++); }
+			else { ++mapIter; }
+		}
 
-  qDebug() << edgeMap.size();
+		SharedEdgeList::Pointer boundaryEdgesList = CreateSharedEdgeList(edgeMap.size());
+		int64_t* bEdges = boundaryEdgesList->getPointer(0);
+		int64_t index = 0;
 
-  for (mapIter = edgeMap.begin(); mapIter != edgeMap.end(); ++mapIter)
-  {
-    qDebug() << mapIter.key() << " " << mapIter.value();
-  }
+		for (mapIter = edgeMap.begin(); mapIter != edgeMap.end(); ++mapIter)
+		{
+			bEdges[2 * index] = (*mapIter).first.first;
+			bEdges[2 * index + 1] = (*mapIter).first.second;
+			++index;
+		}
 
-//  for (mapIter = edgeMap.begin(); mapIter != edgeMap.end(); ++mapIter)
-//  {
-//    qDebug() << edgeMap.count(mapIter.key(), mapIter.value());
-//    if (edgeMap.count(mapIter.key(), mapIter.value()) > 1)
-//    {
-//      edgeMap.remove(mapIter.key(), mapIter.value());
-//    }
-//  }
-
-
-
-  SharedEdgeList::Pointer boundaryEdgesList = CreateSharedEdgeList(edgeMap.size());
-  int64_t* bEdges = boundaryEdgesList->getPointer(0);
-  int64_t index = 0;
-
-//  for (mapIter = edgeMap.begin(); mapIter != edgeMap.end(); ++mapIter)
-//  {
-//    bEdges[2*index] = mapIter.key();
-//    bEdges[2*index+1] = mapIter.value();
-//    ++index;
-//  }
-
-//  for (size_t i = 0; i < boundaryEdgesList->getNumberOfTuples(); i++)
-//  {
-//    qDebug() << i << " " << bEdges[2*i] << " " << bEdges[2*i+1];
-//  }
-
-  return boundaryEdgesList;
+		return boundaryEdgesList;
+	}
 }
 
 // -----------------------------------------------------------------------------
