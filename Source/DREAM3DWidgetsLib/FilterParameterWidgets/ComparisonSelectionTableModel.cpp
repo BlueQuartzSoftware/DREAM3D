@@ -434,7 +434,7 @@ void ComparisonSelectionTableModel::setNumberOfPhases(int n)
 // -----------------------------------------------------------------------------
 QAbstractItemDelegate* ComparisonSelectionTableModel::getItemDelegate()
 {
-  return new ComparisonSelectionItemDelegate(m_PossibleFeatures, m_NumberOfPhases);
+  return new ComparisonSelectionItemDelegate(m_PossibleFeatures, m_NumberOfPhases, this);
 }
 
 // -----------------------------------------------------------------------------
