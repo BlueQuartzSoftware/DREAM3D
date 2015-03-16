@@ -18,16 +18,16 @@ This filter determines the _Output Orientation Representation_ for each **Elemen
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element     | Varies            | Float | (1,3) or (1,4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
-| Element     | CellPhases            | Int | (1,1) | Specifies the **Ensemble** of the **Cell** |
-| Ensemble | CrystalStructures | Int | (1,1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
+| Element     | Varies            | Float | (3) or (4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
+| Element     | CellPhases            | Int | (1) | Specifies the **Ensemble** of the **Cell** |
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element     | Varies            | Float | (1,3) or (1,4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
+| Element     | Varies            | Float | (3) or (4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
 
 ## Default Array Names ##
 | Orientation Representation | Default Name     |

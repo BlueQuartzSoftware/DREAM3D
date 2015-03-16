@@ -25,9 +25,9 @@ None
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | CrystalCompliances | Float | (2,6) | 6x6 matrix that specify compliance of the crystal (in the crystal reference frame) |
+| Ensemble | CrystalCompliances | Float | (6,6) | 6x6 matrix that specify compliance of the crystal (in the crystal reference frame) |
 
 ## Authors ##
 

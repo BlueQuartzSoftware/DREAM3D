@@ -21,17 +21,17 @@ Not Applicable
 
 ## Required Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | VectorData | Float | (1,3) | Vectors the colors will represent  |
-| Element | GoodVoxels | Boolean | (1,1) | States if the **Element** is a 'good' **Element**  |
+| Element | VectorData | Float | (3) | Vectors the colors will represent  |
+| Element | GoodVoxels | Boolean | (1) | States if the **Element** is a 'good' **Element**  |
 
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | Colors | Unsigned Char | (1,3) | The RGB colors |
+| Element | Colors | Unsigned Char | (3) | The RGB colors |
 
 
 ### Authors ###
