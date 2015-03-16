@@ -67,7 +67,7 @@ typedef struct
   char s2;
 } HKLFamily_t;
 
-#pragma(pop)
+#pragma pack(pop)
 
 /**
  * @class HKLFamily HKLFamily.h EbsdLib/TSL/HKLFamily.h
