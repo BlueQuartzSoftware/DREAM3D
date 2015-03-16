@@ -18,9 +18,9 @@ If the wrong conversion is selected (i.e. the user chooses *degrees to radians*,
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | CellEulerAngles | Float | (1,3) | Euler angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| Element | CellEulerAngles | Float | (3) | Euler angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
 
 ## Created Arrays ##
 None

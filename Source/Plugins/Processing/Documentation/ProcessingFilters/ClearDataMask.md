@@ -14,9 +14,9 @@ None
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensionss | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GoodVoxels | Boolean | (1,1) | Used to define whether the **Cells** are part of the mask  |
+| Cell | GoodVoxels | Boolean | (1) | Used to define whether the **Cells** are part of the mask  |
 
 ## Created Arrays ##
 None

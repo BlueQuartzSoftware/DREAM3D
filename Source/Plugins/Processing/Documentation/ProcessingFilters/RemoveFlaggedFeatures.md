@@ -14,10 +14,10 @@ None
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1,1) | Specifies which **Feature** each **Cell** belongs to |
-| Feature | None | Boolean | (1,1) | Specifies whether the **Feature** will remain in the structure or not (ie "true" = remain and "false" = remove) |
+| Cell | FeatureIds | Int | (1) | Specifies which **Feature** each **Cell** belongs to |
+| Feature | None | Boolean | (1) | Specifies whether the **Feature** will remain in the structure or not (ie "true" = remain and "false" = remove) |
 
 
 ## Created Arrays ##

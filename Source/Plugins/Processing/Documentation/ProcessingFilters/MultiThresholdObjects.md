@@ -18,14 +18,14 @@ All arrays **must** come from the same **AttributeMatrix** in order for the filt
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | *User Chosen* | *User Chosen* | Variable | Variable | Array(s) selected in criteria set |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| *User Chosen* | User Defined | Boolean | (1,1) | Specifies whether the **Object** passed the set of criteria applied during thresholding |
+| *User Chosen* | User Defined | Boolean | (1) | Specifies whether the **Object** passed the set of criteria applied during thresholding |
 
 ## Authors ##
 

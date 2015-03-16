@@ -22,9 +22,9 @@ The filter also offers the option(s) to turn on/off the erosion or dilation in s
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GoodVoxels | Boolean | (1,1) | Used to define **Cells** as "good" or "bad"  |
+| Cell | GoodVoxels | Boolean | (1) | Used to define **Cells** as "good" or "bad"  |
 
 ## Created Arrays ##
 None
