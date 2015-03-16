@@ -273,6 +273,24 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 
 
     /**
+     * @brief getPrereqGeometryFromDataContainer Returns an IGeometry object of the templated type
+     * if it is available for the given DataContainer
+     * @param filter
+     * @param dcName
+     * @return
+     */
+    template<typename GeometryType, typename Filter>
+    typename GeometryType::Pointer getPrereqGeometryFromDataContainer(Filter* filter, const QString& dcName)
+    {
+      typename GeometryType::Pointer geom = GeometryType::NullPointer();
+      DataContainer::Pointer dc = getPrereqDataContainer<Filter>(filter, dcName, false);
+      if(NULL == dc) { return geom; }
+
+      return dc->getPrereqGeometry<GeometryType>(filter);
+    }
+
+
+    /**
      * @brief getPrereqAttributeMatrixFromPath This function will return an AttributeMatrix if it is availabe
      * at the path
      * @param filter An AbstractFilter or subclass where error messages and error codes can be sent
