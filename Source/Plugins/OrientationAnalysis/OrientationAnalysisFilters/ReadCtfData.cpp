@@ -62,8 +62,8 @@
 class ReadCtfDataPrivate
 {
   Q_DISABLE_COPY(ReadCtfDataPrivate)
-    Q_DECLARE_PUBLIC(ReadCtfData)
-    ReadCtfData* const q_ptr;
+  Q_DECLARE_PUBLIC(ReadCtfData)
+  ReadCtfData* const q_ptr;
   ReadCtfDataPrivate(ReadCtfData* ptr);
 
   Ctf_Private_Data m_Data;
@@ -131,7 +131,7 @@ DREAM3D_PIMPL_PROPERTY_DEF(ReadCtfData, QDateTime, TimeStamp_Cache)
 void ReadCtfData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.ang *.ctf"));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.ctf"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));

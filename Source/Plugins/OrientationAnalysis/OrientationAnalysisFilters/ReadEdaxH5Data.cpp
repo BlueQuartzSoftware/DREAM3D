@@ -33,23 +33,18 @@
 *                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "ReadAngData.h"
+#include "ReadEdaxH5Data.h"
 
 
 #include <limits>
 #include <vector>
 #include <sstream>
 
+#include <QtCore/QtGlobal>
 #include <QtCore/QFileInfo>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
-
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
-
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -60,12 +55,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class ReadAngDataPrivate
+class ReadEdaxH5DataPrivate
 {
-    Q_DISABLE_COPY(ReadAngDataPrivate)
-    Q_DECLARE_PUBLIC(ReadAngData)
-    ReadAngData* const q_ptr;
-    ReadAngDataPrivate(ReadAngData* ptr);
+    Q_DISABLE_COPY(ReadEdaxH5DataPrivate)
+    Q_DECLARE_PUBLIC(ReadEdaxH5Data)
+    ReadEdaxH5Data* const q_ptr;
+    ReadEdaxH5DataPrivate(ReadEdaxH5Data* ptr);
 
     Ang_Private_Data m_Data;
 
@@ -76,7 +71,7 @@ class ReadAngDataPrivate
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadAngDataPrivate::ReadAngDataPrivate(ReadAngData* ptr) :
+ReadEdaxH5DataPrivate::ReadEdaxH5DataPrivate(ReadEdaxH5Data* ptr) :
   q_ptr(ptr),
   m_InputFile_Cache(""),
   m_TimeStamp_Cache(QDateTime())
@@ -87,15 +82,15 @@ ReadAngDataPrivate::ReadAngDataPrivate(ReadAngData* ptr) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadAngData::ReadAngData() :
+ReadEdaxH5Data::ReadEdaxH5Data() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_PhaseNameArrayName(""),
+  m_PhaseNameArrayName(DREAM3D::CellData::Phases),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
-  d_ptr(new ReadAngDataPrivate(this)),
+  d_ptr(new ReadEdaxH5DataPrivate(this)),
   m_FileWasRead(false),
   m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
@@ -114,25 +109,26 @@ ReadAngData::ReadAngData() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadAngData::~ReadAngData()
+ReadEdaxH5Data::~ReadEdaxH5Data()
 {
-
+qDebug() << "ReadEdaxH5Data::~ReadEdaxH5Data()";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D_PIMPL_PROPERTY_DEF(ReadAngData, Ang_Private_Data, Data)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadAngData, QString, InputFile_Cache)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadAngData, QDateTime, TimeStamp_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, Ang_Private_Data, Data)
+DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QString, InputFile_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QDateTime, TimeStamp_Cache)
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::setupFilterParameters()
+void ReadEdaxH5Data::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.ang"));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.h5 *.hdf5"));
+  parameters.push_back(FilterParameter::New("Scan Name", "ScanName", FilterParameterWidgetType::StringWidget, getScanName(), false, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
@@ -143,34 +139,36 @@ void ReadAngData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ReadEdaxH5Data::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
+  setScanName(reader->readString("ScanName", getScanName()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadAngData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ReadEdaxH5Data::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(ScanName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::flushCache()
+void ReadEdaxH5Data::flushCache()
 {
   setInputFile_Cache("");
   setTimeStamp_Cache(QDateTime());
@@ -180,8 +178,9 @@ void ReadAngData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::populateAngData(AngReader* reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG flag)
+void ReadEdaxH5Data::populateAngData(H5OIMReader::Pointer reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG flag)
 {
+  //Q_ASSERT_X(false, "NOT IMPLEMENTED", "ReadEdaxH5Data::populateAngData");
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
 
@@ -191,7 +190,8 @@ void ReadAngData::populateAngData(AngReader* reader, DataContainer::Pointer m, Q
     float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
     int zDim = 1;
 
-    reader->setFileName(m_InputFile);
+    reader->setFileName(getInputFile());
+    reader->setHDF5Path(getScanName());
 
     if (flag == ANG_HEADER_ONLY)
     {
@@ -200,7 +200,7 @@ void ReadAngData::populateAngData(AngReader* reader, DataContainer::Pointer m, Q
       {
         setErrorCondition(err);
         notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file header.", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file header.", getErrorCondition());
         m_FileWasRead = false;
         return;
       }
@@ -216,7 +216,7 @@ void ReadAngData::populateAngData(AngReader* reader, DataContainer::Pointer m, Q
       {
         setErrorCondition(err);
         notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file.", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
         return;
       }
     }
@@ -268,7 +268,7 @@ void ReadAngData::populateAngData(AngReader* reader, DataContainer::Pointer m, Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::dataCheck()
+void ReadEdaxH5Data::dataCheck()
 {
   // Reset FileWasRead flag
   m_FileWasRead = false;
@@ -312,9 +312,10 @@ void ReadAngData::dataCheck()
 
     QString ext = fi.suffix();
     QVector<QString> names;
-    if (ext.compare(Ebsd::Ang::FileExt) == 0)
+    int comp = ext.compare(Ebsd::Ang::H5FileExt);
+    if (comp == 0)
     {
-      AngReader* reader = new AngReader();
+      H5OIMReader::Pointer reader = H5OIMReader::New();
 
       populateAngData(reader, m, dims, ANG_HEADER_ONLY);
 
@@ -336,12 +337,11 @@ void ReadAngData::dataCheck()
         }
       }
 
-      delete reader;
     }
     else
     {
       setErrorCondition(-997);
-      QString ss = QObject::tr("The File extension '%1' was not recognized. The reader only recognizes the .ang file extension").arg(ext);
+      QString ss = QObject::tr("The File extension '%1' was not recognized. The reader only recognizes the .h5 file extension").arg(ext);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
@@ -384,7 +384,7 @@ void ReadAngData::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::preflight()
+void ReadEdaxH5Data::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -397,7 +397,7 @@ void ReadAngData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::execute()
+void ReadEdaxH5Data::execute()
 {
   int err = 0;
   QString ss;
@@ -405,7 +405,8 @@ void ReadAngData::execute()
 
   dataCheck();
   if (getErrorCondition() < 0) { return; }
-
+  // Invalidate the cache
+  setInputFile_Cache(QString(""));
   readAngFile();
 
   // Set the file name and time stamp into the cache, if we are reading from the file and after all the reading has been done
@@ -427,19 +428,22 @@ void ReadAngData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::readAngFile()
+void ReadEdaxH5Data::readAngFile()
 {
   int err = 0;
-  AngReader* reader = new AngReader();
+  H5OIMReader::Pointer reader = H5OIMReader::New();
   QVector<size_t> tDims(3, 0);
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
+  populateAngData(reader, m, tDims, ANG_FULL_FILE);
+
+  tDims[0] = getData().dims[0];
+  tDims[1] = getData().dims[1];
+  tDims[2] = getData().dims[2];
   ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
   ebsdAttrMat->setTupleDimensions(tDims);
-
-  populateAngData(reader, m, tDims, ANG_FULL_FILE);
 
   float* f1 = NULL;
   float* f2 = NULL;
@@ -449,7 +453,7 @@ void ReadAngData::readAngFile()
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
 
   //// Adjust the values of the 'phase' data to correct for invalid values
   {
@@ -518,7 +522,56 @@ void ReadAngData::readAngFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadAngData::loadInfo(AngReader* reader)
+AbstractFilter::Pointer ReadEdaxH5Data::newFilterInstance(bool copyFilterParameters)
+{
+  ReadEdaxH5Data::Pointer filter = ReadEdaxH5Data::New();
+  if (true == copyFilterParameters)
+  {
+    filter->setFilterParameters(getFilterParameters());
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadEdaxH5Data::getCompiledLibraryName()
+{
+  return OrientationAnalysis::OrientationAnalysisBaseName;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadEdaxH5Data::getGroupName()
+{
+  return DREAM3D::FilterGroups::IOFilters;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadEdaxH5Data::getSubGroupName()
+{
+  return DREAM3D::FilterSubGroups::InputFilters;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadEdaxH5Data::getHumanLabel()
+{
+  return "Read EDAX EBSD Data (.h5)";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReadEdaxH5Data::loadInfo(H5OIMReader::Pointer reader)
 {
   QVector<AngPhase::Pointer> phases = getData().phases;
   if (phases.size() == 0)
@@ -586,53 +639,3 @@ int ReadAngData::loadInfo(AngReader* reader)
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   return 0;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReadAngData::newFilterInstance(bool copyFilterParameters)
-{
-  ReadAngData::Pointer filter = ReadAngData::New();
-  if (true == copyFilterParameters)
-  {
-    filter->setFilterParameters(getFilterParameters());
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ReadAngData::getCompiledLibraryName()
-{
-  return OrientationAnalysis::OrientationAnalysisBaseName;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ReadAngData::getGroupName()
-{
-  return DREAM3D::FilterGroups::IOFilters;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ReadAngData::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::InputFilters;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ReadAngData::getHumanLabel()
-{
-  return "Read EDAX EBSD Data (.ang)";
-}
-

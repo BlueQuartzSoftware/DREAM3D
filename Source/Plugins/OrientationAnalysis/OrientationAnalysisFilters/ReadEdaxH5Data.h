@@ -33,8 +33,8 @@
 *                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ReadAngData_H_
-#define _ReadAngData_H_
+#ifndef _ReadEdaxH5Data_H_
+#define _ReadEdaxH5Data_H_
 
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
@@ -47,13 +47,13 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/TSL/H5OIMReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 
 // our PIMPL private class
-class ReadAngDataPrivate;
+class ReadEdaxH5DataPrivate;
 
 /**
 * @class ReadOrientationData ReadOrientationData.h /FilterCategoryFilters/ReadOrientationData.h
@@ -62,17 +62,23 @@ class ReadAngDataPrivate;
 * @date
 * @version 1.0
 */
-class ReadAngData : public AbstractFilter
+class ReadEdaxH5Data : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-    Q_DECLARE_PRIVATE(ReadAngData)
+    Q_DECLARE_PRIVATE(ReadEdaxH5Data)
 
   public:
-    DREAM3D_SHARED_POINTERS(ReadAngData)
-    DREAM3D_STATIC_NEW_MACRO(ReadAngData)
-    DREAM3D_TYPE_MACRO_SUPER(ReadAngData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ReadEdaxH5Data)
+    DREAM3D_STATIC_NEW_MACRO(ReadEdaxH5Data)
+    DREAM3D_TYPE_MACRO_SUPER(ReadEdaxH5Data, AbstractFilter)
 
-    virtual ~ReadAngData();
+    virtual ~ReadEdaxH5Data();
+
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+    DREAM3D_FILTER_PARAMETER(QString, ScanName)
+    Q_PROPERTY(QString ScanName READ getScanName WRITE setScanName)
 
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
@@ -89,10 +95,7 @@ class ReadAngData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-
-    void populateAngData(AngReader* reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG = ANG_FULL_FILE);
+    void populateAngData(H5OIMReader::Pointer reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG = ANG_FULL_FILE);
 
 
     /**
@@ -166,48 +169,48 @@ class ReadAngData : public AbstractFilter
     void flushCache();
 
   protected:
-    ReadAngData();
+    ReadEdaxH5Data();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+  * @brief Checks for the appropriate parameter values and availability of
+  * arrays in the data container
+  * @param preflight
+  * @param voxels The number of voxels
+  * @param features The number of features
+  * @param ensembles The number of ensembles
+  */
     void dataCheck();
 
     /**
-    * @brief readAngFile This reads the Ang file and puts the data into the Voxel Data container
-    */
+  * @brief readAngFile This reads the Ang file and puts the data into the Voxel Data container
+  */
     void readAngFile();
 
     /**
-    * @brief This method reads the values for the phase type, crystal structure
-    * and precipitate fractions from the EBSD file.
-    * @param reader The EbsdReader instance
-    * @param precipFractions Container to hold the precipitate fractions (out)
-    * @param crystalStructures Container to hold the crystal structures (out)
-    * @return Zero/Positive on Success - Negative on error.
-    */
-    int loadInfo(AngReader* reader);
-
+  * @brief This method reads the values for the phase type, crystal structure
+  * and precipitate fractions from the EBSD file.
+  * @param reader The EbsdReader instance
+  * @param precipFractions Container to hold the precipitate fractions (out)
+  * @param crystalStructures Container to hold the crystal structures (out)
+  * @return Zero/Positive on Success - Negative on error.
+  */
+    int loadInfo(H5OIMReader::Pointer reader);
 
   private:
-    QScopedPointer<ReadAngDataPrivate> const d_ptr;
+    QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-    ReadAngData(const ReadAngData&); // Copy Constructor Not Implemented
-    void operator=(const ReadAngData&); // Operator '=' Not Implemented
+    ReadEdaxH5Data(const ReadEdaxH5Data&); // Copy Constructor Not Implemented
+    void operator=(const ReadEdaxH5Data&); // Operator '=' Not Implemented
 };
 
 
-#endif /* _ReadAngData_H_ */
+
+#endif /* _ReadEdaxH5Data_H_ */
 
 
 

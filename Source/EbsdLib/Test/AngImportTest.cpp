@@ -1,8 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2013, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2013, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
+ * Copyright (c) 2015 BlueQuartz Software
+ * *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
@@ -13,8 +11,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * Neither the name of Michael A. Jackson, BlueQuartz Software nor the names of
+ * its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -34,6 +32,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include <string.h>
 
 #include <QtCore/QDir>
@@ -52,8 +51,7 @@
 #include "EbsdLib/TSL/H5AngImporter.h"
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "EbsdTestFileLocation.h"
-
+#include "EbsdLib/Test/EbsdLibTestFileLocation.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -61,7 +59,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::EbsdImportTest::H5EbsdOutputFile);
+  QFile::remove(UnitTest::AngImportTest::H5EbsdOutputFile);
 #endif
 }
 
@@ -72,7 +70,7 @@ void TestMissingHeaders()
 {
 
   AngReader reader;
-  reader.setFileName(UnitTest::EbsdImportTest::MissingHeader1);
+  reader.setFileName(UnitTest::AngImportTest::MissingHeader1);
   int err = reader.readHeaderOnly();
   // It should read through this header just fine
   DREAM3D_REQUIRE(err > 0)
@@ -105,7 +103,7 @@ void TestMissingGrid()
 {
 
   AngReader reader;
-  reader.setFileName(UnitTest::EbsdImportTest::GridMissing);
+  reader.setFileName(UnitTest::AngImportTest::GridMissing);
   int err = reader.readHeaderOnly();
   // It should read through this header just fine
   DREAM3D_REQUIRE(err > 0)
@@ -124,7 +122,7 @@ void TestHexGrid()
 {
 
   AngReader reader;
-  reader.setFileName(UnitTest::EbsdImportTest::HexHeader);
+  reader.setFileName(UnitTest::AngImportTest::HexHeader);
   int err = reader.readHeaderOnly();
   // It should read through this header just fine
   DREAM3D_REQUIRE(err > 0)
@@ -142,7 +140,7 @@ void TestHexGrid()
 void TestShortFile()
 {
   AngReader reader;
-  reader.setFileName(UnitTest::EbsdImportTest::ShortFile);
+  reader.setFileName(UnitTest::AngImportTest::ShortFile);
   int err = reader.readFile();
   // It should read through this header just fine but die when reading the file because there is not enough data being read
   qDebug() << reader.getErrorMessage();
@@ -156,7 +154,7 @@ void TestNormalFile()
 {
   // This is just a normal Ang file, well formed and should read without error
   AngReader reader;
-  reader.setFileName(UnitTest::EbsdImportTest::TestFile1);
+  reader.setFileName(UnitTest::AngImportTest::TestFile1);
   int err = reader.readFile();
   qDebug() << reader.getErrorMessage();
   DREAM3D_REQUIRED(err, == , 0)

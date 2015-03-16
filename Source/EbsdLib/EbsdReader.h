@@ -201,6 +201,8 @@ class EbsdLib_EXPORT EbsdReader
       }
     }
 
+    QMap<QString, EbsdHeaderEntry::Pointer>& getHeaderMap() { return m_HeaderMap; }
+
   protected:
     QMap<QString, EbsdHeaderEntry::Pointer> m_HeaderMap;
 

@@ -32,11 +32,13 @@ if(EbsdLib_ENABLE_HDF5)
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngImporter.cpp
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngReader.cpp
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngVolumeReader.cpp
+        ${EbsdLib_SOURCE_DIR}/TSL/H5OIMReader.cpp
     )
     set(TSL_HDRS ${TSL_HDRS}
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngImporter.h
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngReader.h
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngVolumeReader.h
+        ${EbsdLib_SOURCE_DIR}/TSL/H5OIMReader.h
     )
     set(EbsdLib_HDF5_SUPPORT 1)
 endif()

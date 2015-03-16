@@ -169,10 +169,10 @@ int H5MicReader::readHeader(hid_t parId)
   }
 
 
-  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<float>, float, XRes, Ebsd::Mic::XRes)
-  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<float>, float, YRes, Ebsd::Mic::YRes)
-  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<int>, int, XDim, Ebsd::Mic::XDim)
-  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<int>, int, YDim, Ebsd::Mic::YDim)
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<float>, float, XRes, Ebsd::Mic::XRes, gid)
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<float>, float, YRes, Ebsd::Mic::YRes, gid)
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<int>, int, XDim, Ebsd::Mic::XDim, gid)
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<int>, int, YDim, Ebsd::Mic::YDim, gid)
 
 
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toLatin1().data(), H5P_DEFAULT);

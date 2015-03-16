@@ -17,9 +17,12 @@ include_directories(${${PROJECT_NAME}_BINARY_DIR})
 include_directories(${EbsdLibTest_BINARY_DIR})
 include_directories(${DREAM3DProj_SOURCE_DIR}/Test)
 
-configure_file(${EbsdLibTest_SOURCE_DIR}/EbsdTestFileLocation.h.in
-               ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
+set(TEST_TEMP_DIR ${${PROJECT_NAME}_BINARY_DIR}/Temp)
+# Make sure the directory is created during CMake time
+file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
+configure_file(${EbsdLibTest_SOURCE_DIR}/EbsdTestFileLocation.h.in
+               ${EbsdLibTest_BINARY_DIR}/EbsdLibTestFileLocation.h @ONLY IMMEDIATE)
 
 
 set(TEST_TEMP_DIR ${${PROJECT_NAME}_BINARY_DIR}/Temp)

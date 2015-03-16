@@ -50,7 +50,7 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "Plugins/OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
 
 #include "OrientationAnalysisTestFileLocations.h"
 
@@ -67,9 +67,9 @@ const int numPhases2 = 5;
 // -----------------------------------------------------------------------------
 void CopyTestFiles()
 {
-	// Copy test files to Build directory to manipulate
-	QFile::copy(File1, CopiedFile1);
-	QFile::copy(File2, CopiedFile2);
+  // Copy test files to Build directory to manipulate
+  QFile::copy(File1, CopiedFile1);
+  QFile::copy(File2, CopiedFile2);
 }
 
 // -----------------------------------------------------------------------------
@@ -78,8 +78,8 @@ void CopyTestFiles()
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-	QFile::remove(CopiedFile1);
-	QFile::remove(CopiedFile2);
+  QFile::remove(CopiedFile1);
+  QFile::remove(CopiedFile2);
 #endif
 }
 
@@ -88,17 +88,17 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestFilterAvailability()
 {
-	// Now instantiate the ReadCtfData Filter from the FilterManager
-	QString filtName = "ReadCtfData";
-	FilterManager* fm = FilterManager::Instance();
-	IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-	if (NULL == filterFactory.get())
-	{
-		std::stringstream ss;
-		ss << "The CtfCachingTest requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
-		DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-	}
-	return 0;
+  // Now instantiate the ReadCtfData Filter from the FilterManager
+  QString filtName = "ReadCtfData";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get())
+  {
+    std::stringstream ss;
+    ss << "The CtfCachingTest requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -106,171 +106,171 @@ int TestFilterAvailability()
 // -----------------------------------------------------------------------------
 int TestCtfReader()
 {
-	AbstractFilter::Pointer ctfReader = AbstractFilter::NullPointer();
-	QString filtName = "ReadCtfData";
-	FilterManager* fm = FilterManager::Instance();
-	IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  AbstractFilter::Pointer ctfReader = AbstractFilter::NullPointer();
+  QString filtName = "ReadCtfData";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-	// Reading first file
-	{
-		DataContainerArray::Pointer dca = DataContainerArray::New();
+  // Reading first file
+  {
+    DataContainerArray::Pointer dca = DataContainerArray::New();
 
-		if (NULL != filterFactory.get())
-		{
-			// If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
-			ctfReader = filterFactory->create();		// Create the reader for the first time
-			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
-			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-				ctfReader->setDataContainerArray(dca);
-			ctfReader->preflight();
-			int err = ctfReader->getErrorCondition();
-			DREAM3D_REQUIRE_EQUAL(err, 0);
-		}
-		else
-		{
-			QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-			qDebug() << ss;
-			DREAM3D_REQUIRE_EQUAL(0, 1)
-		}
+    if (NULL != filterFactory.get())
+    {
+      // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
+      ctfReader = filterFactory->create();		// Create the reader for the first time
+      bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        ctfReader->setDataContainerArray(dca);
+      ctfReader->preflight();
+      int err = ctfReader->getErrorCondition();
+      DREAM3D_REQUIRE_EQUAL(err, 0);
+    }
+    else
+    {
+      QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+      qDebug() << ss;
+      DREAM3D_REQUIRE_EQUAL(0, 1)
+    }
 
-		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
-		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases1)
+    Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+    DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases1)
 
-		// Check that the filter read the file
-		bool prop = ctfReader->property("FileWasRead").toBool();
-		DREAM3D_REQUIRE_EQUAL(prop, true)
-	}
+    // Check that the filter read the file
+    bool prop = ctfReader->property("FileWasRead").toBool();
+    DREAM3D_REQUIRE_EQUAL(prop, true)
+  }
 
-	// Reading the file again
-	{
-		DataContainerArray::Pointer dca = DataContainerArray::New();
+  // Reading the file again
+  {
+    DataContainerArray::Pointer dca = DataContainerArray::New();
 
-		if (NULL != filterFactory.get())
-		{
-			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
-			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-				ctfReader->setDataContainerArray(dca);
-			ctfReader->preflight();
-			int err = ctfReader->getErrorCondition();
-			DREAM3D_REQUIRE_EQUAL(err, 0);
-		}
-		else
-		{
-			QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-			qDebug() << ss;
-			DREAM3D_REQUIRE_EQUAL(0, 1)
-		}
+    if (NULL != filterFactory.get())
+    {
+      bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        ctfReader->setDataContainerArray(dca);
+      ctfReader->preflight();
+      int err = ctfReader->getErrorCondition();
+      DREAM3D_REQUIRE_EQUAL(err, 0);
+    }
+    else
+    {
+      QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+      qDebug() << ss;
+      DREAM3D_REQUIRE_EQUAL(0, 1)
+    }
 
-		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
-		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases1)
+    Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+    DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases1)
 
-		// Check that the filter read from the cache this time, since we're reading from the same file
-		bool prop = ctfReader->property("FileWasRead").toBool();
-		DREAM3D_REQUIRE_EQUAL(prop, false)
-	}
+    // Check that the filter read from the cache this time, since we're reading from the same file
+    bool prop = ctfReader->property("FileWasRead").toBool();
+    DREAM3D_REQUIRE_EQUAL(prop, false)
+  }
 
-	// Reading a different file
-	{
-		DataContainerArray::Pointer dca = DataContainerArray::New();
+  // Reading a different file
+  {
+    DataContainerArray::Pointer dca = DataContainerArray::New();
 
-		if (NULL != filterFactory.get())
-		{
-			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
-			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-				ctfReader->setDataContainerArray(dca);
-			ctfReader->preflight();
-			int err = ctfReader->getErrorCondition();
-			DREAM3D_REQUIRE_EQUAL(err, 0);
-		}
-		else
-		{
-			QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-			qDebug() << ss;
-			DREAM3D_REQUIRE_EQUAL(0, 1)
-		}
+    if (NULL != filterFactory.get())
+    {
+      bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        ctfReader->setDataContainerArray(dca);
+      ctfReader->preflight();
+      int err = ctfReader->getErrorCondition();
+      DREAM3D_REQUIRE_EQUAL(err, 0);
+    }
+    else
+    {
+      QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+      qDebug() << ss;
+      DREAM3D_REQUIRE_EQUAL(0, 1)
+    }
 
-		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
-		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
+    Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+    DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
 
-		// Check that the filter read from the file again, since we changed file names
-		bool prop = ctfReader->property("FileWasRead").toBool();
-		DREAM3D_REQUIRE_EQUAL(prop, true)
-	}
-    
+    // Check that the filter read from the file again, since we changed file names
+    bool prop = ctfReader->property("FileWasRead").toBool();
+    DREAM3D_REQUIRE_EQUAL(prop, true)
+  }
+
     // Force the thread to sleep for 1 second for the next test
     QThread::sleep(1);
 
-	// Reading the same file, but the contents changed outside the program
-	{
-		// Change the contents of the file to be read
-		{
-			QFile file(CopiedFile2);
-			if (!file.open(QFile::ReadWrite | QFile::Text))
-				DREAM3D_REQUIRE_EQUAL(0, 1)
-				QTextStream out(&file);
-			out << "This test string should force the filter to read from the file instead of the cache.";
-			file.close();
-		}
+  // Reading the same file, but the contents changed outside the program
+  {
+    // Change the contents of the file to be read
+    {
+      QFile file(CopiedFile2);
+      if (!file.open(QFile::ReadWrite | QFile::Text))
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+        QTextStream out(&file);
+      out << "This test string should force the filter to read from the file instead of the cache.";
+      file.close();
+    }
 
-		DataContainerArray::Pointer dca = DataContainerArray::New();
+    DataContainerArray::Pointer dca = DataContainerArray::New();
 
-		if (NULL != filterFactory.get())
-		{
-			bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
-			DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-				ctfReader->setDataContainerArray(dca);
-			ctfReader->preflight();
-			int err = ctfReader->getErrorCondition();
-			DREAM3D_REQUIRE_EQUAL(err, 0);
-		}
-		else
-		{
-			QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-			qDebug() << ss;
-			DREAM3D_REQUIRE_EQUAL(0, 1)
-		}
+    if (NULL != filterFactory.get())
+    {
+      bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        ctfReader->setDataContainerArray(dca);
+      ctfReader->preflight();
+      int err = ctfReader->getErrorCondition();
+      DREAM3D_REQUIRE_EQUAL(err, 0);
+    }
+    else
+    {
+      QString ss = QObject::tr("CtfCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+      qDebug() << ss;
+      DREAM3D_REQUIRE_EQUAL(0, 1)
+    }
 
-		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
-		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
+    Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+    DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
 
-		// Check that the filter read from the file again, since we changed the contents of the file outside the program
-		bool prop = ctfReader->property("FileWasRead").toBool();
-		DREAM3D_REQUIRE_EQUAL(prop, true)
-	}
+    // Check that the filter read from the file again, since we changed the contents of the file outside the program
+    bool prop = ctfReader->property("FileWasRead").toBool();
+    DREAM3D_REQUIRE_EQUAL(prop, true)
+  }
 
-	// Reading the same file, but we are testing the cache flush function
-	{
-		DataContainerArray::Pointer dca = DataContainerArray::New();
+  // Reading the same file, but we are testing the cache flush function
+  {
+    DataContainerArray::Pointer dca = DataContainerArray::New();
 
-		// Flush the cache by invoking the flushCache method dynamically, using Qt's meta system
-		if (QMetaObject::invokeMethod(ctfReader.get(), "flushCache", Qt::DirectConnection) == false)
-			DREAM3D_REQUIRE_EQUAL(0, 1)
+    // Flush the cache by invoking the flushCache method dynamically, using Qt's meta system
+    if (QMetaObject::invokeMethod(ctfReader.get(), "flushCache", Qt::DirectConnection) == false)
+      DREAM3D_REQUIRE_EQUAL(0, 1)
 
-			if (NULL != filterFactory.get())
-			{
-				bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
-				DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-					ctfReader->setDataContainerArray(dca);
-				ctfReader->preflight();
-				int err = ctfReader->getErrorCondition();
-				DREAM3D_REQUIRE_EQUAL(err, 0);
-			}
-			else
-			{
-				QString ss = QObject::tr("CtfCacheTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-				qDebug() << ss;
-				DREAM3D_REQUIRE_EQUAL(0, 1)
-			}
+      if (NULL != filterFactory.get())
+      {
+        bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+          ctfReader->setDataContainerArray(dca);
+        ctfReader->preflight();
+        int err = ctfReader->getErrorCondition();
+        DREAM3D_REQUIRE_EQUAL(err, 0);
+      }
+      else
+      {
+        QString ss = QObject::tr("CtfCacheTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        qDebug() << ss;
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
 
-		Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
-		DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
+    Ctf_Private_Data data = ctfReader->property("Data").value<Ctf_Private_Data>();
+    DREAM3D_REQUIRE_EQUAL(data.phases.size(), numPhases2)
 
-		// Check that the filter read from the file again, since we flushed the cache
-		bool prop = ctfReader->property("FileWasRead").toBool();
-		DREAM3D_REQUIRE_EQUAL(prop, true)
-	}
+    // Check that the filter read from the file again, since we flushed the cache
+    bool prop = ctfReader->property("FileWasRead").toBool();
+    DREAM3D_REQUIRE_EQUAL(prop, true)
+  }
 
-	return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
 
 // -----------------------------------------------------------------------------
@@ -278,12 +278,12 @@ int TestCtfReader()
 // -----------------------------------------------------------------------------
 void loadFilterPlugins()
 {
-	// Register all the filters including trying to load those from Plugins
-	FilterManager* fm = FilterManager::Instance();
-	DREAM3DPluginLoader::LoadPluginFilters(fm);
+  // Register all the filters including trying to load those from Plugins
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
 
-	// Send progress messages from PipelineBuilder to this object for display
-	QMetaObjectUtilities::RegisterMetaTypes();
+  // Send progress messages from PipelineBuilder to this object for display
+  QMetaObjectUtilities::RegisterMetaTypes();
 }
 
 
@@ -292,23 +292,23 @@ void loadFilterPlugins()
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
-	// Instantiate the QCoreApplication that we need to get the current path and load plugins.
-	QCoreApplication app(argc, argv);
-	QCoreApplication::setOrganizationName("BlueQuartz Software");
-	QCoreApplication::setOrganizationDomain("bluequartz.net");
-	QCoreApplication::setApplicationName("CtfCachingTest");
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setApplicationName("CtfCachingTest");
 
-	int err = EXIT_SUCCESS;
-	DREAM3D_REGISTER_TEST(loadFilterPlugins());
-	DREAM3D_REGISTER_TEST(TestFilterAvailability());
+  int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST(loadFilterPlugins());
+DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-	DREAM3D_REGISTER_TEST(RemoveTestFiles())
-	DREAM3D_REGISTER_TEST(CopyTestFiles())
+DREAM3D_REGISTER_TEST(RemoveTestFiles())
+DREAM3D_REGISTER_TEST(CopyTestFiles())
 
-	DREAM3D_REGISTER_TEST(TestCtfReader())
+DREAM3D_REGISTER_TEST(TestCtfReader())
 
-	DREAM3D_REGISTER_TEST(RemoveTestFiles())
-	PRINT_TEST_SUMMARY();
-	return err;
+  DREAM3D_REGISTER_TEST(RemoveTestFiles())
+  PRINT_TEST_SUMMARY();
+  return err;
 }
 
