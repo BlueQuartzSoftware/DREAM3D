@@ -145,7 +145,7 @@ void GenerateGeometryConnectivity::execute()
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage(getHumanLabel(), "Generating Vertex Cell List");
-    err = geom->findCellsContainingVert();
+    err = geom->findElementsContainingVert();
     if (err < 0)
     {
       setErrorCondition(-400);
@@ -156,7 +156,7 @@ void GenerateGeometryConnectivity::execute()
   if (m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage(getHumanLabel(), "Generating Cell Neighbors List");
-    err = geom->findCellNeighbors();
+    err = geom->findElementNeighbors();
     if (err < 0)
     {
       setErrorCondition(-401);

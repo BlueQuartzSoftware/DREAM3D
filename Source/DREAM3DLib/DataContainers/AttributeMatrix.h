@@ -326,7 +326,16 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       else
       {
         IDataArray::Pointer ptr = getAttributeArray(attributeArrayName);
-        return boost::dynamic_pointer_cast<ArrayType>(ptr);
+        if (boost::dynamic_pointer_cast<ArrayType>(ptr) != NULL)
+        {
+          return boost::dynamic_pointer_cast<ArrayType>(ptr);
+        }
+        else
+        {
+          filter->setErrorCondition(err);
+          ss = QObject::tr("Unable to cast input array %1 to the necessary type.").arg(attributeArrayName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
       }
       return attributeArray;
     }

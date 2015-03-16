@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param b 1x3 Vector
      * @return
      */
-    static float CosThetaBetweenVectors(float a[3], float b[3]);
+    static float CosThetaBetweenVectors(const float a[3], const float b[3]);
 
     /**
      * @brief Computes the angle in RADIANS between 2 vectors.
@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param b
      * @return
      */
-    static float AngleBetweenVectors(float a[3], float b[3]);
+    static float AngleBetweenVectors(const float a[3], const float b[3]);
 
     /**
      * @brief Computes the area of a triangle defined by 3 points.
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param distance
      * @return
      */
-    static void FindDistanceBetweenPoints(const float* a, const float* b, float& distance);
+    static void FindDistanceBetweenPoints(const float a[3], const float b[3], float& distance);
 
     /**
      * @brief Computes the area of a triangle defined by 3 points.
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param area
      * @return
      */
-    static void FindTriangleArea(const float* a, const float* b, const float* c, float& area);
+    static void FindTriangleArea(const float a[3], const float b[3], const float c[3], float& area);
 
     /**
      * @brief Computes the volume of a tetrahedron defined by 4 points.
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param volume
      * @return
      */
-    static void FindTetrahedronVolume(const float* a, const float* b, const float* c, const float* d, float& volume);
+    static void FindTetrahedronVolume(const float a[3], const float b[3], const float c[3], const float d[3], float& volume);
 
     /**
      * @brief Computes the normal vector to a plane containing 3 points (AB X AC).
@@ -112,7 +112,17 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param n
      * @return
      */
-    static void FindPlaneNormalVector(const float* a, const float* b, const float* c, float n[3]);
+    static void FindPlaneNormalVector(const float a[3], const float b[3], const float c[3], float n[3]);
+
+    /**
+     * @brief Computes the normal vector to a plane containing 3 points (AB X AC).
+     * @param a
+     * @param b
+     * @param c
+     * @param n
+     * @return
+     */
+    static void FindPlaneNormalVector(const double a[3], const double b[3], const double c[3], double n[3]);
 
     /**
      * @brief Computes the coefficients of a plane containing 3 points (AB X AC).
@@ -123,16 +133,16 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param d float
      * @return
      */
-    static void FindPlaneCoefficients(const float* a, const float* b, const float* c, float n[3], float& d);
+    static void FindPlaneCoefficients(const float a[3], const float b[3], const float c[3], float n[3], float& d);
 
     /**
      * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
      * @param p
-     * @param lowerLeft
-     * @param upperRight
+     * @param ll
+     * @param ur
      * @return
      */
-    static bool PointInBox(const float* p, const float* lowerLeft, const float* upperRight);
+    static bool PointInBox(const float p[3], const float ll[3], const float ur[3]);
 
     /**
      * @brief Determines if a point is inside of a polyhedron defined by a set of faces
@@ -148,6 +158,7 @@ class DREAM3DLib_EXPORT GeometryMath
                                   const float* ll,
                                   const float* ur,
                                   float radius);
+
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
      * @param a

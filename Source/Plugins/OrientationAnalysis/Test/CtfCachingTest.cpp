@@ -37,6 +37,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QThread>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -66,6 +67,7 @@ const int numPhases2 = 5;
 // -----------------------------------------------------------------------------
 void CopyTestFiles()
 {
+	// Copy test files to Build directory to manipulate
 	QFile::copy(File1, CopiedFile1);
 	QFile::copy(File2, CopiedFile2);
 }
@@ -194,6 +196,9 @@ int TestCtfReader()
 		bool prop = ctfReader->property("FileWasRead").toBool();
 		DREAM3D_REQUIRE_EQUAL(prop, true)
 	}
+    
+    // Force the thread to sleep for 1 second for the next test
+    QThread::sleep(1);
 
 	// Reading the same file, but the contents changed outside the program
 	{
@@ -297,6 +302,7 @@ int main(int argc, char** argv)
 	DREAM3D_REGISTER_TEST(loadFilterPlugins());
 	DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
+	DREAM3D_REGISTER_TEST(RemoveTestFiles())
 	DREAM3D_REGISTER_TEST(CopyTestFiles())
 
 	DREAM3D_REGISTER_TEST(TestCtfReader())

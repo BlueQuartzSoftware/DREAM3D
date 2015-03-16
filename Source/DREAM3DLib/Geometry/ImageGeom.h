@@ -40,7 +40,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
-#include "DREAM3DLib/Geometry/VertexGeom.h"
 
 /**
  * @brief The ImageGeom class represents a structured rectlinear grid
@@ -75,6 +74,14 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
 
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
+    void getCoords(size_t idx[3], float coords[3]);
+
+    void getCoords(size_t& x, size_t& y, size_t& z, float coords[3]);
+
+    void getCoords(size_t idx[3], double coords[3]);
+
+    void getCoords(size_t& x, size_t& y, size_t& z, double coords[3]);
+
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry
 // -----------------------------------------------------------------------------
@@ -91,55 +98,75 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
     virtual size_t getNumberOfTuples();
 
     /**
-     * @brief findCellsContainingVert
+     * @brief findElementsContainingVert
      * @return
      */
-    virtual int findCellsContainingVert();
+    virtual int findElementsContainingVert();
 
     /**
-     * @brief getCellsContainingVert
+     * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getCellsContainingVert();
+    virtual ElementDynamicList::Pointer getElementsContainingVert();
 
     /**
-     * @brief deleteCellsContainingVert
+     * @brief deleteElementsContainingVert
      */
-    virtual void deleteCellsContainingVert();
+    virtual void deleteElementsContainingVert();
 
     /**
-     * @brief findCellNeighbors
+     * @brief findElementNeighbors
      * @return
      */
-    virtual int findCellNeighbors();
+    virtual int findElementNeighbors();
 
     /**
-     * @brief getCellNeighbors
+     * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getCellNeighbors();
+    virtual ElementDynamicList::Pointer getElementNeighbors();
 
     /**
-     * @brief deleteCellNeighbors
+     * @brief deleteElementNeighbors
      */
-    virtual void deleteCellNeighbors();
+    virtual void deleteElementNeighbors();
 
     /**
-     * @brief findCellCentroids
+     * @brief findElementCentroids
      * @return
      */
-    virtual int findCellCentroids();
+    virtual int findElementCentroids();
 
     /**
-     * @brief getCellCentroids
+     * @brief getElementCentroids
      * @return
      */
-    virtual FloatArrayType::Pointer getCellCentroids();
+    virtual FloatArrayType::Pointer getElementCentroids();
 
     /**
-     * @brief deleteCellCentroids
+     * @brief deleteElementCentroids
      */
-    virtual void deleteCellCentroids();
+    virtual void deleteElementCentroids();
+
+    /**
+     * @brief getParametricCenter
+     * @param pCoords
+     */
+    virtual void getParametricCenter(double pCoords[3]);
+
+    /**
+     * @brief getShapeFunctions
+     * @param pCoords
+     * @param shape
+     */
+    virtual void getShapeFunctions(double pCoords[3], double* shape);
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     */
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
 
     /**
      * @brief setName
@@ -254,22 +281,22 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
     virtual int gatherMetaData(hid_t parentid, size_t volDims[3], float spacing[3], float origin[3], unsigned int spatialDims, QString geomName);
 
     /**
-     * @brief setCellsContaingVert
-     * @param cellsContaingVert
+     * @brief setElementsContaingVert
+     * @param elementsContaingVert
      */
-    virtual void setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert);
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert);
 
     /**
-     * @brief setCellNeighbors
-     * @param cellNeighbors
+     * @brief setElementNeighbors
+     * @param elementNeighbors
      */
-    virtual void setCellNeighbors(CellDynamicList::Pointer cellNeighbors);
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementsNeighbors);
 
     /**
-     * @brief setCellCentroids
-     * @param cellCentroids
+     * @brief setElementCentroids
+     * @param elementCentroids
      */
-    virtual void setCellCentroids(FloatArrayType::Pointer cellCentroids);
+    virtual void setElementCentroids(FloatArrayType::Pointer elementCentroids);
 
   private:
 

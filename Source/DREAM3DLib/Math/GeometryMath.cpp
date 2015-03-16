@@ -52,7 +52,7 @@ GeometryMath::~GeometryMath()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float GeometryMath::CosThetaBetweenVectors(float a[3], float b[3])
+float GeometryMath::CosThetaBetweenVectors(const float a[3], const float b[3])
 {
   float norm1 = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
   float norm2 = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
@@ -66,7 +66,7 @@ float GeometryMath::CosThetaBetweenVectors(float a[3], float b[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float GeometryMath::AngleBetweenVectors(float a[3], float b[3])
+float GeometryMath::AngleBetweenVectors(const float a[3], const float b[3])
 {
   float norm1 = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
   float norm2 = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
@@ -78,7 +78,7 @@ float GeometryMath::AngleBetweenVectors(float a[3], float b[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GeometryMath::PointInBox(const float* p, const float* ll, const float* ur)
+bool GeometryMath::PointInBox(const float p[3], const float ll[3], const float ur[3])
 {
   if((ll[0] <= p[0]) && (p[0] <= ur[0]) && (ll[1] <= p[1]) && (p[1] <= ur[1]) && (ll[2] <= p[2]) && (p[2] <= ur[2]))
   {
@@ -597,7 +597,7 @@ void GeometryMath::FindBoundingBoxOfRotatedFace(TriangleGeom::Pointer faces, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindPlaneNormalVector(const float* a, const float* b, const float* c, float n[3])
+void GeometryMath::FindPlaneNormalVector(const float a[3], const float b[3], const float c[3], float n[3])
 {
   float ab[3], ac[3];
 
@@ -615,7 +615,25 @@ void GeometryMath::FindPlaneNormalVector(const float* a, const float* b, const f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindPlaneCoefficients(const float* a, const float* b, const float* c, float n[3], float& d)
+void GeometryMath::FindPlaneNormalVector(const double a[3], const double b[3], const double c[3], double n[3])
+{
+  double ab[3], ac[3];
+
+  ab[0] = b[0] - a[0];
+  ab[1] = b[1] - a[1];
+  ab[2] = b[2] - a[2];
+
+  ac[0] = c[0] - a[0];
+  ac[1] = c[1] - a[1];
+  ac[2] = c[2] - a[2];
+
+  MatrixMath::CrossProduct(ab, ac, n);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeometryMath::FindPlaneCoefficients(const float a[3], const float b[3], const float c[3], float n[3], float& d)
 {
   FindPlaneNormalVector(a, b, c, n);
 
@@ -625,7 +643,7 @@ void GeometryMath::FindPlaneCoefficients(const float* a, const float* b, const f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindDistanceBetweenPoints(const float* a, const float* b, float& distance)
+void GeometryMath::FindDistanceBetweenPoints(const float a[3], const float b[3], float& distance)
 {
   float dx = b[0] - a[0];
   float dy = b[1] - a[1];
@@ -636,7 +654,7 @@ void GeometryMath::FindDistanceBetweenPoints(const float* a, const float* b, flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindTriangleArea(const float* a, const float* b, const float* c, float& area)
+void GeometryMath::FindTriangleArea(const float a[3], const float b[3], const float c[3], float& area)
 {
   area = ((b[0] - a[0]) * (c[1] - a[1])) - ((c[0] - a[0]) * (b[1] - a[1]));
 }
@@ -644,7 +662,7 @@ void GeometryMath::FindTriangleArea(const float* a, const float* b, const float*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeometryMath::FindTetrahedronVolume(const float* a, const float* b, const float* c, const float* d, float& volume)
+void GeometryMath::FindTetrahedronVolume(const float a[3], const float b[3], const float c[3], const float d[3], float& volume)
 {
   float axdx, aydy, azdz, bxdx, bydy, bzdz, cxdx, cydy, czdz;
 

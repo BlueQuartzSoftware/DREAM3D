@@ -41,6 +41,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
+#include "DREAM3DLib/Geometry/DerivativeHelpers.h"
 
 /**
  * @brief The EdgeGeom class represents a collection of line segments
@@ -209,55 +210,75 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
     virtual size_t getNumberOfTuples();
 
     /**
-     * @brief findCellsContainingVert
+     * @brief findElementsContainingVert
      * @return
      */
-    virtual int findCellsContainingVert();
+    virtual int findElementsContainingVert();
 
     /**
-     * @brief getCellsContainingVert
+     * @brief getElementsContainingVert
      * @return
      */
-    virtual CellDynamicList::Pointer getCellsContainingVert();
+    virtual ElementDynamicList::Pointer getElementsContainingVert();
 
     /**
-     * @brief deleteCellsContainingVert
+     * @brief deleteElementsContainingVert
      */
-    virtual void deleteCellsContainingVert();
+    virtual void deleteElementsContainingVert();
 
     /**
-     * @brief findCellNeighbors
+     * @brief findElementNeighbors
      * @return
      */
-    virtual int findCellNeighbors();
+    virtual int findElementNeighbors();
 
     /**
-     * @brief getCellNeighbors
+     * @brief getElementNeighbors
      * @return
      */
-    virtual CellDynamicList::Pointer getCellNeighbors();
+    virtual ElementDynamicList::Pointer getElementNeighbors();
 
     /**
-     * @brief deleteCellNeighbors
+     * @brief deleteElementNeighbors
      */
-    virtual void deleteCellNeighbors();
+    virtual void deleteElementNeighbors();
 
     /**
-     * @brief findCellCentroids
+     * @brief findElementCentroids
      * @return
      */
-    virtual int findCellCentroids();
+    virtual int findElementCentroids();
 
     /**
-     * @brief getCellCentroids
+     * @brief getElementCentroids
      * @return
      */
-    virtual FloatArrayType::Pointer getCellCentroids();
+    virtual FloatArrayType::Pointer getElementCentroids();
 
     /**
-     * @brief deleteCellCentroids
+     * @brief deleteElementCentroids
      */
-    virtual void deleteCellCentroids();
+    virtual void deleteElementCentroids();
+
+    /**
+     * @brief getParametricCenter
+     * @param pCoords
+     */
+    virtual void getParametricCenter(double pCoords[3]);
+
+    /**
+     * @brief getShapeFunctions
+     * @param pCoords
+     * @param shape
+     */
+    virtual void getShapeFunctions(double pCoords[3], double* shape);
+
+    /**
+     * @brief findDerivatives
+     * @param field
+     * @param derivatives
+     */
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
 
     /**
      * @brief setName
@@ -362,22 +383,22 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
     EdgeGeom();
 
     /**
-     * @brief setCellsContaingVert
-     * @param cellsContaingVert
+     * @brief setElementsContainingVert
+     * @param elementsContainingVert
      */
-    virtual void setCellsContaingVert(CellDynamicList::Pointer cellsContaingVert);
+    virtual void setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert);
 
     /**
-     * @brief setCellNeighbors
-     * @param cellNeighbors
+     * @brief setElementNeighbors
+     * @param elementNeighbors
      */
-    virtual void setCellNeighbors(CellDynamicList::Pointer cellNeighbors);
+    virtual void setElementNeighbors(ElementDynamicList::Pointer elementNeighbors);
 
     /**
-     * @brief setCellCentroids
-     * @param cellCentroids
+     * @brief setElementCentroids
+     * @param elementCentroids
      */
-    virtual void setCellCentroids(FloatArrayType::Pointer cellCentroids);
+    virtual void setElementCentroids(FloatArrayType::Pointer elementCentroids);
 
   private:
 
@@ -390,8 +411,8 @@ class DREAM3DLib_EXPORT EdgeGeom : public IGeometry
     AttributeMatrixMap_t m_AttributeMatrices;
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
-    CellDynamicList::Pointer m_EdgesContainingVert;
-    CellDynamicList::Pointer m_EdgeNeighbors;
+    ElementDynamicList::Pointer m_EdgesContainingVert;
+    ElementDynamicList::Pointer m_EdgeNeighbors;
     FloatArrayType::Pointer m_EdgeCentroids;
 
     EdgeGeom(const EdgeGeom&); // Copy Constructor Not Implemented
