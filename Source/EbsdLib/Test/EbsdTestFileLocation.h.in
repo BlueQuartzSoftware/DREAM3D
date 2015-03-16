@@ -50,8 +50,11 @@
 namespace UnitTest
 {
 
+  const QString DataDir("@DREAM3D_DATA_DIR@");
+  const QString TestTempDir("@TEST_TEMP_DIR@");
+  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
-  namespace EbsdImportTest {
+  namespace AngImportTest {
     const QString FileDir("@DREAM3D_DATA_DIR@/EbsdTestFiles/");
     const QString TestFile1("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_1.ang");
     const QString TestFile2("@DREAM3D_DATA_DIR@/EbsdTestFiles/Test_2.ang");
@@ -62,6 +65,7 @@ namespace UnitTest
     const QString MissingHeader3("@DREAM3D_DATA_DIR@/EbsdTestFiles/MissingHeader_3.ang");
     const QString HexHeader("@DREAM3D_DATA_DIR@/EbsdTestFiles/HexHeader.ang");
     const QString ShortFile("@DREAM3D_DATA_DIR@/EbsdTestFiles/ShortFile.ang");
+    const QString EdaxOIMH5File("@DREAM3D_DATA_DIR@/EbsdTestFiles/EdaxOIMData.h5");
   }
 
   namespace CtfReaderTest
@@ -77,11 +81,6 @@ namespace UnitTest
 
     const QString H5EbsdOutputFile("@EbsdLibTest_BINARY_DIR@/FromCtf.h5ebsd");
   }
-
-}
-
-namespace UnitTest
-{
 
   namespace HedmReaderTest
   {

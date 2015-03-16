@@ -44,7 +44,7 @@
  * @brief These macros are used to read header values from an HDF5 file, NOT From a .ang or .ctf file
  */
 
-#define READ_EBSD_HEADER_DATA(cname, class, m_msgType, getName, key)\
+#define READ_EBSD_HEADER_DATA(cname, class, m_msgType, getName, key, gid)\
   {\
     m_msgType t;\
     err = QH5Lite::readScalarDataset(gid, key, t);\
@@ -62,7 +62,7 @@
     }\
   }
 
-#define READ_EBSD_HEADER_STRING_DATA(cname, class, m_msgType, getName, key)\
+#define READ_EBSD_HEADER_STRING_DATA(cname, class, m_msgType, getName, key, gid)\
   {\
     QString t;\
     err = QH5Lite::readStringDataset(gid, key, t);\
@@ -136,7 +136,7 @@
     if (err < 0) {\
       QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
                    .arg(cname).arg(fqKey);\
-      setErrorCode(-90005);\
+      setErrorCode(-90006);\
       setErrorMessage(ss);\
       err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
       return -1; }\

@@ -275,9 +275,9 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
   xDim = reader.getNumEvenCols();
   WRITE_ANG_HEADER_DATA(reader, int, NumRows, Ebsd::Ang::NRows)
   yDim = reader.getNumRows();
-  WRITE_ANG_HEADER_STRING_DATA(reader, QString, OIMOperator, Ebsd::Ang::Operator)
-  WRITE_ANG_HEADER_STRING_DATA(reader, QString, SampleID, Ebsd::Ang::SampleId)
-  WRITE_ANG_HEADER_STRING_DATA(reader, QString, ScanID, Ebsd::Ang::ScanId)
+  WRITE_ANG_HEADER_STRING_DATA(reader, QString, OIMOperator, Ebsd::Ang::OPERATOR)
+  WRITE_ANG_HEADER_STRING_DATA(reader, QString, SampleID, Ebsd::Ang::SAMPLEID)
+  WRITE_ANG_HEADER_STRING_DATA(reader, QString, ScanID, Ebsd::Ang::ScanID)
 
   QString angCompleteHeader = reader.getOriginalHeader();
   err = QH5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, angCompleteHeader);
