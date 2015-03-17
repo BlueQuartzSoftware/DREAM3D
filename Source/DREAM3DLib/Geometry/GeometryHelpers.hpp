@@ -41,7 +41,7 @@ namespace GeometryHelpers
         H5T_class_t type_class;
         size_t type_size;
         typename ListType::Pointer mesh = ListType::CreateArray(0, listName);
-		if (preflight == true)
+    if (preflight == true)
         {
           err = QH5Lite::getDatasetInfo(parentId, listName, dims, type_class, type_size);
           if (err < 0)
@@ -320,6 +320,51 @@ namespace GeometryHelpers
         }
 
         return err;
+      }
+
+      template<typename T>
+      static void Find2DElementEdges(typename DataArray<T>::Pointer elemList, typename DataArray<T>::Pointer edgeList)
+      {
+        size_t numElems = elemList->getNumberOfTuples();
+        size_t numVertsPerElem = elemList->getNumberOfComponents();
+        T v0 = 0;
+        T v1 = 0;
+
+        std::pair<T, T> edge;
+        std::set<std::pair<T, T> > edgeSet;
+
+        for (size_t i = 0; i < numElems; i++)
+        {
+          T* verts = elemList->getTuplePointer(i);
+
+          for (size_t j = 0; j < numVertsPerElem; j++)
+          {
+            if (j == (numVertsPerElem - 1))
+            {
+              if (verts[j] > verts[0]) { v0 = verts[0]; v1 = verts[j]; }
+              else { v0 = verts[j]; v1 = verts[0]; }
+            }
+            else
+            {
+              if (verts[j] > verts[j + 1]) { v0 = verts[j + 1]; v1 = verts[j]; }
+              else { v0 = verts[j]; v1 = verts[j + 1]; }
+            }
+            edge = std::make_pair(v0, v1);
+            edgeSet.insert(edge);
+          }
+        }
+
+        typename std::set<std::pair<T, T> >::iterator setIter;
+        edgeList->resize(edgeSet.size());
+        T* uEdges = edgeList->getPointer(0);
+        T index = 0;
+
+        for (setIter = edgeSet.begin(); setIter != edgeSet.end(); ++setIter)
+        {
+          uEdges[2 * index] = (*setIter).first;
+          uEdges[2 * index + 1] = (*setIter).second;
+          ++index;
+        }
       }
   };
 
