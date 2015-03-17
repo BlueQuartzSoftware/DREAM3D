@@ -17,15 +17,14 @@ This filter will bin a specified scalar **Array**.  The user will select the num
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| various  | Array        | The array |
-
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+| various | None | Must be a scalar array | None |
 
 ## Created Arrays ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Ensemble | Statistics |  |  |
+| Double | User chosen | Frequencies sorted into bin | None |
 
 ## Authors ##
 
