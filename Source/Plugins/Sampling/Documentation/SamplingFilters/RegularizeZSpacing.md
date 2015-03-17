@@ -5,8 +5,7 @@ Regularize Z Spacing {#regularizezspacing}
 Sampling Filters (Resolution)
 
 ## Description ##
-This filter "resamples" the 3D array in the *Z*-direction (which is generally taken as the setioning direction).  The *Voxel* data container assumes all **Cells** are of the same size.  If the *Z* locations (i.e. slice positions) are not uniform, then the user can enter a list of the actual *Z* locations and a desired uniform "resolution".  The filter will then create a new volume with uniform *Z* locations and determine which of the old "slices" should be copied to the new "slices". Below is an example:
-
+This filter "resamples" the 3D array in the *Z*-direction (which is generally taken as the sectioning direction).  The *Image/Rectilinear Grid* geometry assumes all **Cells** are of the same size(dX x dY x dZ).  If the *Z* locations (i.e. slice positions) are not uniform, then the user can enter a list of the actual *Z* locations and a desired uniform "resolution".  The filter will then create a new volume with uniform *Z* locations and determine which of the old "slices" should be copied to the new "slices". Below is an example:
 
 If a dataset had 10 sections with the following locations:
 
@@ -23,7 +22,7 @@ If a dataset had 10 sections with the following locations:
 |8|30|
 |9|34|
 
-and the user wanted a uniform resolution of *3*, then the following mapping woud occur 
+and the user wanted a uniform resolution of *3*, then the following mapping would occur 
 
 |New Slice # | New Slice Location |Old Slice # Used|
 |---------|---------|---------|
@@ -43,14 +42,13 @@ and the user wanted a uniform resolution of *3*, then the following mapping woud
 Note: there is no interpolation of the data and the nearest "old slice" is copied to a given "new slice".
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| Current Z Positions File | File Path | Location of the Z positions file |
+| Z Res | Double | Uniform resolution desired in the Z direction of the new grid |
 
-| Name | Type |
-|------|------|
-| Current Z Positions File | Input File |
-| Z Res | Double |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
 None

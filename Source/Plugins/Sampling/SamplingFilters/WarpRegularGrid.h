@@ -89,7 +89,7 @@ class WarpRegularGrid : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::WarpingFilters; }
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();

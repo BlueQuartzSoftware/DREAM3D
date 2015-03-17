@@ -265,5 +265,5 @@ const QString ExtractFlaggedFeatures::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getHumanLabel()
-{ return "Extract Flagged Features"; }
+{ return "Extract Flagged Features (Rogues Gallery)"; }
 
