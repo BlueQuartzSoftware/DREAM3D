@@ -33,83 +33,64 @@
 *                           FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DynamicTableWidget_H_
-#define _DynamicTableWidget_H_
+#ifndef _DynamicTableData_H_
+#define _DynamicTableData_H_
 
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtWidgets/QWidget>
+#include <QtCore/QAbstractTableModel>
 
-#include "QtSupport/FaderWidget.h"
+#include <QtWidgets/QWidget>
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-
-#include "DREAM3DWidgetsLib/ui_DynamicTableWidget.h"
-
-class DynamicTableFilterParameter;
 
 /**
 * @brief
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DynamicTableWidget : public FilterParameterWidget, private Ui::DynamicTableWidget
+class DREAM3DLib_EXPORT DynamicTableData : public QObject
 {
 	Q_OBJECT
 
 public:
-	/**
-	* @brief Constructor
-	* @param parameter The FilterParameter object that this widget represents
-	* @param filter The instance of the filter that this parameter is a part of
-	* @param parent The parent QWidget for this Widget
-	*/
-	DynamicTableWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+	DynamicTableData();
+	DynamicTableData(std::vector<std::vector<double> > data, int nRows, int nCols, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
+	DynamicTableData(QAbstractItemModel* model);
 
-	virtual ~DynamicTableWidget();
+	virtual ~DynamicTableData();
 
-	/**
-	* @brief This method does additional GUI widget connections
-	*/
-	void setupGui();
+	std::vector<std::vector<double> > getTableData();
+	void setTableData(std::vector<std::vector<double> > data);
 
-	/**
-	* @brief initializeWidget
-	* @param parameter
-	* @param filter
-	*/
-	void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
+	QStringList getRowHeaders();
+	void setRowHeaders(QStringList rHeaders);
 
+	QStringList getColHeaders();
+	void setColHeaders(QStringList cHeaders);
 
-	void setFilterParameter(FilterParameter* value);
-	FilterParameter* getFilterParameter() const;
+	int getNumRows();
+	void setNumRows(int nRows);
 
-	std::vector<std::vector<double> > getData();
+	int getNumCols();
+	void setNumCols(int nCols);
 
+	static QAbstractItemModel* convertToModel(DynamicTableData data);
 
-
-	public slots:
-	void widgetChanged(QTableWidgetItem* item);
-	void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
-	void beforePreflight(); // Called just before the "dataCheck()" is called
-	void afterPreflight(); // Called just after the dataCheck() is called.
-
-signals:
-	void parametersChanged();
+	DynamicTableData(const DynamicTableData& rhs);
+	void operator=(const DynamicTableData& rhs);
 
 private:
-
-	DynamicTableFilterParameter*  m_FilterParameter;
-	bool m_DidCausePreflight;
-
-
-	DynamicTableWidget(const DynamicTableWidget&); // Copy Constructor Not Implemented
-	void operator=(const DynamicTableWidget&); // Operator '=' Not Implemented
-
+	std::vector<std::vector<double> > tableData;
+	QStringList rowHeaders;
+	QStringList colHeaders;
+	int numRows;
+	int numCols;
 };
+
+Q_DECLARE_METATYPE(DynamicTableData)
 
 #endif /* _DynamicTableWidget_H_ */

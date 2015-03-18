@@ -38,6 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DynamicTableData.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -67,6 +68,16 @@ DynamicTableWidget::~DynamicTableWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DynamicTableWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
+{
+	setFilter(filter);
+	setFilterParameter(parameter);
+	setupGui();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DynamicTableWidget::setFilterParameter(FilterParameter* value)
 {
 	m_FilterParameter = dynamic_cast<DynamicTableFilterParameter*>(value);
@@ -85,7 +96,6 @@ FilterParameter* DynamicTableWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 void DynamicTableWidget::setupGui()
 {
-
 	// Catch when the filter is about to execute the preflight
 	connect(getFilter(), SIGNAL(preflightAboutToExecute()),
 		this, SLOT(beforePreflight()));
@@ -100,7 +110,7 @@ void DynamicTableWidget::setupGui()
 
 	// Catch when a value in the table changes
 	connect(dynamicTable, SIGNAL(itemChanged(QTableWidgetItem*)),
-		this, SLOT(widgetChanged(QTableWidgetItem*)));
+		this, SLOT(widgetChanged(QTableWidgetItem*))); 
 
 	if (m_FilterParameter != NULL)
 	{
@@ -144,6 +154,8 @@ void DynamicTableWidget::setupGui()
 			deleteColBtn->setHidden(true);
 		}
 	}
+
+	filterNeedsInputParameters(getFilter());
 }
 
 // -----------------------------------------------------------------------------
@@ -161,14 +173,58 @@ void DynamicTableWidget::widgetChanged(QTableWidgetItem* item)
 // -----------------------------------------------------------------------------
 void DynamicTableWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-	/*QString index = value->currentText();
-	QVariant v(index);
+	QStringList rHeaders, cHeaders;
+	for (int i = 0; i < dynamicTable->rowCount(); i++)
+	{
+		rHeaders << dynamicTable->verticalHeaderItem(i)->data(Qt::DisplayRole).toString();
+	}
+	for (int i = 0; i < dynamicTable->columnCount(); i++)
+	{
+		cHeaders << dynamicTable->horizontalHeaderItem(i)->data(Qt::DisplayRole).toString();
+	}
+
+	DynamicTableData data(getData(), dynamicTable->rowCount(), dynamicTable->columnCount(), rHeaders, cHeaders);
+
+	QVariant v;
+	v.setValue(data);
 	bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
 
 	if (false == ok)
 	{
 		FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), m_FilterParameter);
-	}*/
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::vector<double> > DynamicTableWidget::getData()
+{
+	std::vector<std::vector<double> > data;
+	data.resize(dynamicTable->rowCount());
+
+	for (int i = 0; i < dynamicTable->rowCount(); i++)
+	{
+		data[i].resize(dynamicTable->columnCount());
+	}
+
+	for (int row = 0; row < dynamicTable->rowCount(); row++)
+	{
+		for (int col = 0; col < dynamicTable->columnCount(); col++)
+		{
+			bool ok = false;
+			data[row][col] = dynamicTable->item(row, col)->data(Qt::DisplayRole).toDouble(&ok);
+
+			if (ok == false)
+			{
+				qDebug() << "Could not set the model data into the DynamicTableData object.";
+				data.clear();
+				return data;
+			}
+		}
+	}
+
+	return data;
 }
 
 // -----------------------------------------------------------------------------

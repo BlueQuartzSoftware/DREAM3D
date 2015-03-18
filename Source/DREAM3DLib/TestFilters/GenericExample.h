@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/DynamicTableData.h"
 
 
 /**
@@ -130,6 +131,8 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, DistanceMetric)
     Q_PROPERTY(int DistanceMetric READ getDistanceMetric WRITE setDistanceMetric)
 
+	DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData)
+	Q_PROPERTY(DynamicTableData DynamicData READ getDynamicData WRITE setDynamicData)
 
 
     virtual const QString getCompiledLibraryName();

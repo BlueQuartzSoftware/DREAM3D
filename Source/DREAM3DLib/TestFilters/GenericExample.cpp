@@ -203,6 +203,15 @@ void GenericExample::setupFilterParameters()
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
   parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", FilterParameterWidgetType::MultiDataArraySelectionWidget, paths, false, 0));
 
+  QStringList rHeaders, cHeaders;
+  rHeaders << "Row 1" << "Row 2";
+  cHeaders << "Col 1" << "Col 2";
+  std::vector<std::vector<double> > defaultTable;
+  defaultTable.resize(2);
+  defaultTable[0].resize(2);
+  defaultTable[1].resize(2);
+  parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table", "DynamicData", FilterParameterWidgetType::DynamicTableWidget, 2, 2, rHeaders, cHeaders, defaultTable, true, false, false, 0));
+
 
   setFilterParameters(parameters);
 }
