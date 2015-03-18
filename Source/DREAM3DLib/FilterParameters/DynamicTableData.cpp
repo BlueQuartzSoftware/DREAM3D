@@ -49,96 +49,14 @@ DynamicTableData::DynamicTableData()
 // -----------------------------------------------------------------------------
 DynamicTableData::DynamicTableData(std::vector<std::vector<double> > data, int nRows, int nCols, QStringList rHeaders, QStringList cHeaders)
 {
-	if (nRows != data.size())
-	{
-		qDebug() << "The default row count does not equal the row dimension of the default data.  The default row count will be used and will overwrite the default data dimension.  This may result in data loss.";
-	}
+	// Adjust dimensions if they are not all the same
+	checkAndAdjustDimensions(data, nRows, nCols, rHeaders, cHeaders);
 
-	if (rHeaders.size() != data.size())
-	{
-		qDebug() << "The number of default row headers does not equal the row dimension of the default data.  The default row count will be used and will overwrite the default data dimension.  This may result in data loss.";
-	}
-
-	if (data.size() > 0)
-	{
-		if (nCols != data[0].size())
-		{
-			qDebug() << "The default column count does not equal the column dimension of the default data.  The default column count will be used and will overwrite the default data dimension.  This may result in data loss.";
-		}
-
-		if (cHeaders.size() != data[0].size())
-		{
-			qDebug() << "The number of default column headers does not equal the column dimension of the default data.  The default column count will be used and will overwrite the default data dimension.  This may result in data loss.";
-		}
-	}
-
-	// Resize the data with the correct dimensions
-	tableData.resize(nRows);
 	numRows = nRows;
-
-	for (int i = 0; i < tableData.size(); i++)
-	{
-		tableData[i].resize(nCols);
-	}
 	numCols = nCols;
-
-	// Store data in the object
-	for (int row = 0; row < nRows; row++)
-	{
-		for (int col = 0; col < nCols; col++)
-		{
-			tableData[row][col] = data[row][col];
-		}
-	}
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DynamicTableData::DynamicTableData(QAbstractItemModel* model)
-{
-	QAbstractTableModel* tableModel = qobject_cast<QAbstractTableModel*>(model);
-
-	if (NULL == tableModel)
-	{
-		qDebug() << "Could not convert QAbstractItemModel* to QAbstractTableModel*.";
-		return;
-	}
-
-	// Resize the data with the correct dimensions
-	tableData.resize(tableModel->rowCount());
-	numRows = tableModel->rowCount();
-
-	for (int i = 0; i < tableData.size(); i++)
-	{
-		tableData[i].resize(tableModel->columnCount());
-	}
-	numCols = tableModel->columnCount();
-
-	// Store data from the model in the object
-	for (int row = 0; row < tableModel->rowCount(); row++)
-	{
-		// Store row header
-		rowHeaders.push_back(tableModel->headerData(row, Qt::Vertical, Qt::DisplayRole).toString());
-
-		for (int col = 0; col < tableModel->columnCount(); col++)
-		{
-			bool ok = false;
-			tableData[row][col] = tableModel->index(row, col).data(Qt::DisplayRole).toDouble(&ok);
-
-			if (ok == false)
-			{
-				qDebug() << "Could not set the model data into the DynamicTableData object.";
-				return;
-			}
-		}
-	}
-
-	// Store column headers
-	for (int col = 0; col < tableModel->columnCount(); col++)
-	{
-		colHeaders.push_back(tableModel->headerData(col, Qt::Horizontal, Qt::DisplayRole).toString());
-	}
+	tableData = data;
+	rowHeaders = rHeaders;
+	colHeaders = cHeaders;
 }
 
 // -----------------------------------------------------------------------------
@@ -147,6 +65,72 @@ DynamicTableData::DynamicTableData(QAbstractItemModel* model)
 DynamicTableData::~DynamicTableData()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableData::checkAndAdjustDimensions(std::vector<std::vector<double> > &data, int nRows, int nCols, QStringList &rHeaders, QStringList &cHeaders)
+{
+	QSize dataSize(data.size(), 0);
+	QSize defaultSize(nRows, nCols);
+	QSize headerSize(rHeaders.size(), cHeaders.size());
+	
+	if (data.size() > 0)
+	{
+		dataSize.setHeight(data[0].size());
+	}
+
+	if (dataSize == defaultSize && defaultSize == headerSize)
+	{
+		return;
+	}
+	if (dataSize != defaultSize)
+	{
+		qDebug() << "The data dimensions do not equal the default dimensions.  The default dimensions will be used and will overwrite the current data dimensions.  This may result in data loss or garbage values.";
+		data.resize(nRows);		// Resize rows
+		for (int i = 0; i < nRows; i++)
+		{
+			data[i].resize(nCols);		// Resize columns
+		}
+	}
+	if (headerSize != defaultSize)
+	{
+		qDebug() << "The header dimensions do not equal the default dimensions.  The default dimensions will be used and will overwrite the current header dimensions.  This may result in data loss.";
+
+		// If row header dimension is greater than default row dimension, remove the extra headers
+		if (rHeaders.size() > nRows)
+		{
+			while (rHeaders.size() > nRows)
+			{
+				rHeaders.pop_back();
+			}
+		}
+		// If row header dimension is less than default row dimension, add blank headers
+		else
+		{
+			while (rHeaders.size() < nRows)
+			{
+				rHeaders.push_back("");
+			}
+		}
+		// If column header dimension is greater than default column dimension, remove the extra headers
+		if (cHeaders.size() > nCols)
+		{
+			while (cHeaders.size() > nCols)
+			{
+				cHeaders.pop_back();
+			}
+		}
+		// If column header dimension is less than default column dimension, add blank headers
+		else
+		{
+			while (cHeaders.size() < nCols)
+			{
+				cHeaders.push_back("");
+			}
+		}
+	}
 }
 
 // -----------------------------------------------------------------------------

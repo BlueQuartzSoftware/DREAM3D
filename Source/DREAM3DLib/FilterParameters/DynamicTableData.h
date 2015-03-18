@@ -59,7 +59,6 @@ class DREAM3DLib_EXPORT DynamicTableData : public QObject
 public:
 	DynamicTableData();
 	DynamicTableData(std::vector<std::vector<double> > data, int nRows, int nCols, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
-	DynamicTableData(QAbstractItemModel* model);
 
 	virtual ~DynamicTableData();
 
@@ -89,6 +88,8 @@ private:
 	QStringList colHeaders;
 	int numRows;
 	int numCols;
+
+	void checkAndAdjustDimensions(std::vector<std::vector<double> > &data, int nRows, int nCols, QStringList &rHeaders, QStringList &cHeaders);
 };
 
 Q_DECLARE_METATYPE(DynamicTableData)

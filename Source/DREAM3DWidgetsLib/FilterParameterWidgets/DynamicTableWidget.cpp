@@ -112,32 +112,34 @@ void DynamicTableWidget::setupGui()
 	connect(dynamicTable, SIGNAL(itemChanged(QTableWidgetItem*)),
 		this, SLOT(widgetChanged(QTableWidgetItem*))); 
 
+	DynamicTableData data(m_FilterParameter->getDefaultTable(), m_FilterParameter->getDefaultRowCount(), m_FilterParameter->getDefaultColCount(), m_FilterParameter->getRowHeaders(), m_FilterParameter->getColumnHeaders());
+
 	if (m_FilterParameter != NULL)
 	{
-		QStringList rHeaders = m_FilterParameter->getRowHeaders();
-		QStringList cHeaders = m_FilterParameter->getColumnHeaders();
-
-		// Default row and column numbers???  How do we reconcile this with the data already coming in???
-
-		for (int rHeader = 0; rHeader < rHeaders.size(); rHeader++)
-		{
-			// Populate row headers
-		}
-
-		for (int cHeader = 0; cHeader < cHeaders.size(); cHeader++)
-		{
-			// Populate column headers
-		}
-
 		// Populate the table with the default values
-		std::vector<std::vector<double> > table = m_FilterParameter->getDefaultTable();
-		for (int row = 0; row < table.size(); row++)
+		std::vector<std::vector<double> > tableData = data.getTableData();
+		for (int row = 0; row < tableData.size(); row++)
 		{
-			for (int col = 0; col < table[row].size(); col++)
+			dynamicTable->insertRow(row);
+			QTableWidgetItem* item = new QTableWidgetItem(data.getRowHeaders().at(row));
+			dynamicTable->setVerticalHeaderItem(row, item);
+			for (int col = 0; col < tableData[row].size(); col++)
 			{
-				QTableWidgetItem* item = new QTableWidgetItem(QString::number(table[row][col]));
+				if (dynamicTable->columnCount() == col)
+				{
+					dynamicTable->insertColumn(col);
+				}
+
+				QTableWidgetItem* item = new QTableWidgetItem(QString::number(tableData[row][col]));
 				dynamicTable->setItem(row, col, item);
 			}
+		}
+
+		// Populate column headers
+		for (int cHeader = 0; cHeader < data.getColHeaders().size(); cHeader++)
+		{
+			QTableWidgetItem* item = new QTableWidgetItem(data.getColHeaders().at(cHeader));
+			dynamicTable->setHorizontalHeaderItem(cHeader, item);
 		}
 
 		// Hide add/remove row buttons if row count is not dynamic
@@ -154,8 +156,6 @@ void DynamicTableWidget::setupGui()
 			deleteColBtn->setHidden(true);
 		}
 	}
-
-	filterNeedsInputParameters(getFilter());
 }
 
 // -----------------------------------------------------------------------------
@@ -176,11 +176,21 @@ void DynamicTableWidget::filterNeedsInputParameters(AbstractFilter* filter)
 	QStringList rHeaders, cHeaders;
 	for (int i = 0; i < dynamicTable->rowCount(); i++)
 	{
-		rHeaders << dynamicTable->verticalHeaderItem(i)->data(Qt::DisplayRole).toString();
+		QTableWidgetItem* vItem = dynamicTable->verticalHeaderItem(i);
+		if (NULL != vItem)
+		{
+			QString vName = vItem->data(Qt::DisplayRole).toString();
+			rHeaders << vName;
+		}
 	}
 	for (int i = 0; i < dynamicTable->columnCount(); i++)
 	{
-		cHeaders << dynamicTable->horizontalHeaderItem(i)->data(Qt::DisplayRole).toString();
+		QTableWidgetItem* cItem = dynamicTable->horizontalHeaderItem(i);
+		if (NULL != cItem)
+		{
+			QString cName = cItem->data(Qt::DisplayRole).toString();
+			cHeaders << cName;
+		}
 	}
 
 	DynamicTableData data(getData(), dynamicTable->rowCount(), dynamicTable->columnCount(), rHeaders, cHeaders);
@@ -200,17 +210,12 @@ void DynamicTableWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 std::vector<std::vector<double> > DynamicTableWidget::getData()
 {
-	std::vector<std::vector<double> > data;
-	data.resize(dynamicTable->rowCount());
+	int rCount = dynamicTable->rowCount(), cCount = dynamicTable->columnCount();
+	std::vector<std::vector<double> > data(rCount, std::vector<double>(cCount));
 
-	for (int i = 0; i < dynamicTable->rowCount(); i++)
+	for (int row = 0; row < rCount; row++)
 	{
-		data[i].resize(dynamicTable->columnCount());
-	}
-
-	for (int row = 0; row < dynamicTable->rowCount(); row++)
-	{
-		for (int col = 0; col < dynamicTable->columnCount(); col++)
+		for (int col = 0; col < cCount; col++)
 		{
 			bool ok = false;
 			data[row][col] = dynamicTable->item(row, col)->data(Qt::DisplayRole).toDouble(&ok);
