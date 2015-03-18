@@ -549,6 +549,9 @@ void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
 
 	attributeArraysWidget->blockSignals(false);
 
+	// This is needed to enable/disable the Data Container and Attribute Matrix combo boxes
+	updateSelectAllCheckbox();
+
 	m_DidCausePreflight = true;
 	emit parametersChanged();
 	m_DidCausePreflight = false;
@@ -581,18 +584,24 @@ void MultiDataArraySelectionWidget::updateSelectAllCheckbox()
 	{
 		selectCheckBox->blockSignals(true);
 		selectCheckBox->setCheckState(Qt::PartiallyChecked);
+		dataContainerList->setDisabled(true);
+		attributeMatrixList->setDisabled(true);
 		selectCheckBox->blockSignals(false);
 	}
 	else if (checkedStateCount == attributeArraysWidget->count())
 	{
 		selectCheckBox->blockSignals(true);
 		selectCheckBox->setCheckState(Qt::Checked);
+		dataContainerList->setDisabled(true);
+		attributeMatrixList->setDisabled(true);
 		selectCheckBox->blockSignals(false);
 	}
 	else
 	{
 		selectCheckBox->blockSignals(true);
 		selectCheckBox->setCheckState(Qt::Unchecked);
+		dataContainerList->setEnabled(true);
+		attributeMatrixList->setEnabled(true);
 		selectCheckBox->blockSignals(false);
 	}
 }
