@@ -87,121 +87,121 @@ GenericExample::~GenericExample()
 void GenericExample::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
-  ///* Place all your option initialization code here */
-  ///* For String input use this code */
-  //parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget, getStlFilePrefix(), false));
+  /* Place all your option initialization code here */
+  /* For String input use this code */
+  parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget, getStlFilePrefix(), false));
 
-  ///*   For an output file use this code*/
-  ////parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
-  ///*   For an output path use this code*/
-  ////parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
-  ///*   For a simple true/false boolean use this code*/
-  //parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget, getWriteAlignmentShifts(), false));
+  /*   For an output file use this code*/
+  //parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
+  /*   For an output path use this code*/
+  //parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
+  /*   For a simple true/false boolean use this code*/
+  parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget, getWriteAlignmentShifts(), false));
 
-  //parameters.push_back(FilterParameter::New("Choice Example", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-
-
-  ///*   For presenting a set of choices to the user use this code*/
-  //{
-  //  ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-  //  parameter->setHumanLabel("Conversion Type");
-  //  parameter->setPropertyName("ConversionType");
-  //  parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-  //  ////parameter->setValueType("unsigned int");
-  //  QVector<QString> choices;
-  //  choices.push_back("Degrees To Radians");
-  //  choices.push_back("Radians To Degrees");
-  //  parameter->setChoices(choices);
-  //  parameters.push_back(parameter);
-  //}
+  parameters.push_back(FilterParameter::New("Choice Example", "", FilterParameterWidgetType::SeparatorWidget, "", false));
 
 
-  ///* Display a group of 3 text boxes to collect 3 integer values */
-  //parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "XYZ"));
-
-  //parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
-
-
-  //{
-  //  QStringList linkedProps;
-  //  linkedProps << "Bool2";
-  //  parameters.push_back(LinkedBooleanFilterParameter::New("Bool1", "Bool1", getBool1(), linkedProps, false));
-  //}
-
-  //{
-  //  QStringList linkedProps;
-  //  linkedProps << "AttributeMatrixPath";
-  //  parameters.push_back(LinkedBooleanFilterParameter::New("Bool2", "Bool2", getBool2(), linkedProps, false));
-  //}
-  //parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), false, ""));
+  /*   For presenting a set of choices to the user use this code*/
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Conversion Type");
+    parameter->setPropertyName("ConversionType");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    ////parameter->setValueType("unsigned int");
+    QVector<QString> choices;
+    choices.push_back("Degrees To Radians");
+    choices.push_back("Radians To Degrees");
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
+  }
 
 
-  //parameters.push_back(FilterParameter::New("Linked Combo Box Example (1)", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  //{
-  //  LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-  //  parameter->setHumanLabel("Select Distance Metric");
-  //  parameter->setPropertyName("DistanceMetric");
-  //  parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-  //  parameter->setDefaultValue(getDistanceMetric()); // Just set the first index
+  /* Display a group of 3 text boxes to collect 3 integer values */
+  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "XYZ"));
 
-  //  QVector<QString> choices;
-  //  choices.push_back("Alt Choice 0");
-  //  choices.push_back("Alt Choice 1");
-  //  choices.push_back("Alt Choice 2");
-  //  parameter->setChoices(choices);
-  //  QStringList linkedProps;
-  //  linkedProps << "MaxIterations" << "MisorientationTolerance" << "InputFile" << "InputPath";
-  //  parameter->setLinkedProperties(linkedProps);
-  //  parameter->setEditable(false);
-  //  parameters.push_back(parameter);
-
-  //  /*  For an Integer use this code*/
-  //  parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget, getMaxIterations(), false, "", 0));
-  //  /*  For a Floating point value use this code*/
-  //  parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, getMisorientationTolerance(), false, "", 1));
-  //  /*   For an input file use this code*/
-  //  //parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "", "", 1));
-  //  /*   For an input path use this code*/
-  //  //parameters.push_back(FileSystemFilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, getInputPath(), false, "", "", "", 2));
-  //}
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
 
 
+  {
+    QStringList linkedProps;
+    linkedProps << "Bool2";
+    parameters.push_back(LinkedBooleanFilterParameter::New("Bool1", "Bool1", getBool1(), linkedProps, false));
+  }
 
-  //parameters.push_back(FilterParameter::New("Linked Combo Box Example (2)", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-
-  ///*   For presenting a set of choices to the user use this code*/
-  //{
-  //  LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-  //  parameter->setHumanLabel("Select Algorithm");
-  //  parameter->setPropertyName("AlgorithmSelection");
-  //  parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-  //  parameter->setDefaultValue(getAlgorithmSelection()); // Just set the first index
-
-  //  QVector<QString> choices;
-  //  choices.push_back("Choice 0");
-  //  choices.push_back("Choice 1");
-  //  choices.push_back("Choice 2");
-  //  parameter->setChoices(choices);
-  //  QStringList linkedProps;
-  //  linkedProps << "CreatedDataArray" << "Origin" << "CrystalSymmetryRotations" << "DataContainerName";
-  //  parameter->setLinkedProperties(linkedProps);
-  //  parameter->setEditable(false);
-  //  parameters.push_back(parameter);
+  {
+    QStringList linkedProps;
+    linkedProps << "AttributeMatrixPath";
+    parameters.push_back(LinkedBooleanFilterParameter::New("Bool2", "Bool2", getBool2(), linkedProps, false));
+  }
+  parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), false, ""));
 
 
-  //  parameters.push_back(FilterParameter::New("Created Data Array", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, "", 0));
-  //  /* Display a group of 3 text boxes to collect 3 float values */
-  //  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "", 1));
+  parameters.push_back(FilterParameter::New("Linked Combo Box Example (1)", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Select Distance Metric");
+    parameter->setPropertyName("DistanceMetric");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setDefaultValue(getDistanceMetric()); // Just set the first index
 
-  //  /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
-  //  parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget, getCrystalSymmetryRotations(), false, "", 2));
+    QVector<QString> choices;
+    choices.push_back("Alt Choice 0");
+    choices.push_back("Alt Choice 1");
+    choices.push_back("Alt Choice 2");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "MaxIterations" << "MisorientationTolerance" << "InputFile" << "InputPath";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameters.push_back(parameter);
 
-  //  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, "", 2));
-  //}
-  //QVector<DataArrayPath> paths;
-  //paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "CrystalStructures"));
-  //paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
-  //parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", FilterParameterWidgetType::MultiDataArraySelectionWidget, paths, false, 0));
+    /*  For an Integer use this code*/
+    parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget, getMaxIterations(), false, "", 0));
+    /*  For a Floating point value use this code*/
+    parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, getMisorientationTolerance(), false, "", 1));
+    /*   For an input file use this code*/
+    //parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "", "", 1));
+    /*   For an input path use this code*/
+    //parameters.push_back(FileSystemFilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, getInputPath(), false, "", "", "", 2));
+  }
+
+
+
+  parameters.push_back(FilterParameter::New("Linked Combo Box Example (2)", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+
+  /*   For presenting a set of choices to the user use this code*/
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Select Algorithm");
+    parameter->setPropertyName("AlgorithmSelection");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setDefaultValue(getAlgorithmSelection()); // Just set the first index
+
+    QVector<QString> choices;
+    choices.push_back("Choice 0");
+    choices.push_back("Choice 1");
+    choices.push_back("Choice 2");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "CreatedDataArray" << "Origin" << "CrystalSymmetryRotations" << "DataContainerName";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameters.push_back(parameter);
+
+
+    parameters.push_back(FilterParameter::New("Created Data Array", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, "", 0));
+    /* Display a group of 3 text boxes to collect 3 float values */
+    parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "", 1));
+
+    /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
+    parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget, getCrystalSymmetryRotations(), false, "", 2));
+
+    parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, "", 2));
+  }
+  QVector<DataArrayPath> paths;
+  paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "CrystalStructures"));
+  paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
+  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", FilterParameterWidgetType::MultiDataArraySelectionWidget, paths, false, 0));
 
   QStringList rHeaders, cHeaders;
   rHeaders << "Row 1" << "Row 2";
