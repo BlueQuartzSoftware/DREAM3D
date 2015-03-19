@@ -27,7 +27,7 @@
     <number>5</number>
    </property>
    <item row="3" column="1">
-    <widget class="QTableView" name="m_ComparisonSelectionTableView">
+    <widget class="QTableView" name="comparisonSelectionTableView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
@@ -113,13 +113,13 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Add Quality Filter</string>
+        <string>Add Threshold Criteria</string>
        </property>
        <property name="statusTip">
         <string/>
        </property>
        <property name="whatsThis">
-        <string>Add Quality Filter</string>
+        <string/>
        </property>
        <property name="text">
         <string/>
@@ -160,7 +160,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Delete Quality Filter</string>
+        <string>Delete Threshold Criteria</string>
        </property>
        <property name="statusTip">
         <string/>

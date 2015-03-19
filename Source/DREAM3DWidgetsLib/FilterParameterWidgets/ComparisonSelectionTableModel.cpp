@@ -203,13 +203,13 @@ QVariant ComparisonSelectionTableModel::headerData(int section, Qt::Orientation 
     switch(section)
     {
       case FeatureName:
-        return QVariant(QString("Feature"));
+        return QVariant(QString("Array"));
         break;
       case FeatureValue:
-        return QVariant(QString("Value"));
+        return QVariant(QString("Threshold Value"));
         break;
       case FeatureOperator:
-        return QVariant(QString("Filter"));
+        return QVariant(QString("Operator"));
         break;
 //      case FeaturePhaseValue:
 //        return QVariant(QString("Phase"));
@@ -280,8 +280,7 @@ bool ComparisonSelectionTableModel::setData(const QModelIndex& index, const QVar
 
   }
 
-  emit
-  dataChanged(index, index);
+  emit dataChanged(index, index);
   return true;
 }
 
@@ -435,7 +434,7 @@ void ComparisonSelectionTableModel::setNumberOfPhases(int n)
 // -----------------------------------------------------------------------------
 QAbstractItemDelegate* ComparisonSelectionTableModel::getItemDelegate()
 {
-  return new ComparisonSelectionItemDelegate(m_PossibleFeatures, m_NumberOfPhases);
+  return new ComparisonSelectionItemDelegate(m_PossibleFeatures, m_NumberOfPhases, this);
 }
 
 // -----------------------------------------------------------------------------
