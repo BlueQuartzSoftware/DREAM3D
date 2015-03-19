@@ -42,6 +42,7 @@
 
 #include "FilterParameterWidgetsDialogs.h"
 
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/DynamicTableItemDelegate.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 
@@ -111,6 +112,12 @@ void DynamicTableWidget::setupGui()
 	// Catch when a value in the table changes
 	connect(dynamicTable, SIGNAL(itemChanged(QTableWidgetItem*)),
 		this, SLOT(widgetChanged(QTableWidgetItem*))); 
+
+	tableLabel->setText(m_FilterParameter->getHumanLabel());
+
+	// Set the item delegate so that we can only enter 'double' values into the table
+	DynamicTableItemDelegate* dlg = new DynamicTableItemDelegate;
+	dynamicTable->setItemDelegate(dlg);
 
 	DynamicTableData data(m_FilterParameter->getDefaultTable(), m_FilterParameter->getDefaultRowCount(), m_FilterParameter->getDefaultColCount(), m_FilterParameter->getRowHeaders(), m_FilterParameter->getColumnHeaders());
 
