@@ -417,7 +417,7 @@ void TestDataContainerReader()
 
   QMap<QString, DataContainerProxy>& dcsToRead = dcaProxy.dataContainers;
   //uint32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
-  for (QMap<QString, DataContainerProxy>::iterator iter = dcsToRead.end(); iter != dcsToRead.begin(); --iter)
+  for (QMap<QString, DataContainerProxy>::iterator iter = dcsToRead.begin(); iter != dcsToRead.end();++iter)
   {
 	DataContainerProxy& dcProxy = iter.value();
     if (dcProxy.name.compare(DREAM3D::Defaults::DataContainerName) != 0) { dcProxy.flag = Qt::Unchecked; }
