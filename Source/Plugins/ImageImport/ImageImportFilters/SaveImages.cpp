@@ -35,7 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SaveImages.h"
 
-
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
@@ -50,7 +49,10 @@ SaveImages::SaveImages() :
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
-  m_ColorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor)
+	m_Plane(0),
+	m_FilePrefix(false),
+  m_ColorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor),
+	m_Colors(NULL)
 {
   setupFilterParameters();
 }
@@ -69,9 +71,7 @@ void SaveImages::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("Select RGB Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getColorsArrayPath(), false, ""));
-
-  /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
+  parameters.push_back(FilterParameter::New("Select Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getColorsArrayPath(), false, ""));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -84,9 +84,24 @@ void SaveImages::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  /* For String input use this code */
+	{
+		ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+		parameter->setHumanLabel("Plane");
+		parameter->setPropertyName("Plane");
+		parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+		QVector<QString> choices;
+		choices.push_back("XY");
+		choices.push_back("XZ");
+		choices.push_back("YZ");
+		parameter->setChoices(choices);
+		parameters.push_back(parameter);
+	}
+	{
+		QStringList linkedProps;
+		linkedProps << "ImagePrefix";
+		parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, false));
+	}
   parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), false));
-  /*   For an output path use this code*/
   parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
   setFilterParameters(parameters);
 }
@@ -96,12 +111,13 @@ void SaveImages::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  reader->openFilterGroup(this, index);
+	reader->openFilterGroup(this, index);	
   setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()) );
   setOutputPath( reader->readString("OutputPath", getOutputPath()) );
   setColorsArrayPath( reader->readDataArrayPath("ColorsArrayPath", getColorsArrayPath()) );
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()) );
-  reader->closeFilterGroup();
+	setPlane(reader->readValue("Plane", getPlane()));
+	reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +131,8 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ColorsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
-  writer->closeFilterGroup();
+	DREAM3D_FILTER_WRITE_PARAMETER(Plane)
+	writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -139,18 +156,45 @@ void SaveImages::dataCheck()
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if(m_ColorsArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-1004);
-    notifyErrorMessage(getHumanLabel(), "Input  Color Array name is empty", getErrorCondition());
-  }
-  else
-  {
-    QVector<size_t> dims(1, 3);
-    m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+	IDataArray::Pointer iDa = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getColorsArrayPath());
+	if (getErrorCondition() < 0)
+	{
+		return;
+	}
+
+	QVector<size_t> cDims = iDa->getComponentDimensions();
+
+	if (cDims[0] == 1)
+	{
+		m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+		if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+		{
+			m_Colors = m_ColorsPtr.lock()->getPointer(0);
+		} /* Now assign the raw pointer to data from the DataArray<T> object */
+	} 
+	else if (cDims[0] == 3)
+	{
+		m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+		if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+		{
+			m_Colors = m_ColorsPtr.lock()->getPointer(0);
+		} /* Now assign the raw pointer to data from the DataArray<T> object */
+	}
+	else if (cDims[0] == 4)
+	{
+		m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+		if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+		{
+			m_Colors = m_ColorsPtr.lock()->getPointer(0);
+		} /* Now assign the raw pointer to data from the DataArray<T> object */
+	}
+	else
+	{
+		setErrorCondition(-1006);
+		notifyErrorMessage(getHumanLabel(), "Number of Components must be 1, 3 or 4 for Gray Scale or RGB or RGBA arrays", getErrorCondition());
+		return;
+	}
+	
   if(getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getColorsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
@@ -164,8 +208,6 @@ void SaveImages::dataCheck()
 void SaveImages::preflight()
 {
   setInPreflight(true);
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
@@ -184,34 +226,51 @@ void SaveImages::execute()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ColorsArrayPath.getDataContainerName());
-
-  /* Place all your code to execute your filter here. */
   size_t dims[3];
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  size_t index = 0;
-  uint8_t* slice = NULL;
-  for(size_t z = 0; z < dims[2]; ++z)
-  {
-    index = z * (dims[0] * dims[1]) * 3;
-    // Get the pointer to the data.
-    slice = m_Colors + index;
-
-    err = saveImage(slice, z, dims);
-  }
-
-  /* Let the GUI know we are done with this filter */
+	if (0 == m_Plane) // XY plane
+	{
+		for (size_t z = 0; z < dims[2]; ++z)
+		{
+			err = saveImage(z, dims[0], dims[1], dims);
+			if (-1 == err) { return; }
+		}
+	}
+	else if (1 == m_Plane) // XZ plane
+	{
+		for (size_t y = 0; y < dims[1]; ++y)
+		{
+			err = saveImage(y, dims[0], dims[2], dims);
+			if (-1 == err) { return; }
+		}
+	}
+	else if (2 == m_Plane) // YZ plane
+	{
+		for (size_t x = 0; x < dims[0]; ++x)
+		{
+			err = saveImage(x, dims[1], dims[2], dims);
+			if (-1 == err) { return; }
+		}
+	}
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
+int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 {
   int err = 0;
+	// Sets up for Gray Scale or RGB or RGBA arrays
+	int nComp = m_ColorsPtr.lock()->getNumberOfComponents();
 
   QString path = (m_OutputPath) + QDir::separator() + (m_ImagePrefix) + QString::number(slice);
+
+	if (!m_FilePrefix)
+	{
+		  path = (m_OutputPath)+QDir::separator() + QString::number(slice);
+	}
   if(m_ImageFormat == TifImageType)
   {
     path.append(".tif");
@@ -224,10 +283,6 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
   {
     path.append(".png");
   }
-  else if (m_ImageFormat == JpgImageType)
-  {
-    path.append(".jpg");
-  }
 
   path = QDir::toNativeSeparators(path);
   QFileInfo fi(path);
@@ -238,30 +293,42 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
   }
 
   int index = 0;
-  QImage image(dims[0], dims[1], QImage::Format_RGB32);
-  for(size_t y = 0; y < dims[1]; ++y)
-  {
-    uint8_t* scanLine = image.scanLine(y);
-    for(size_t x = 0; x < dims[0]; ++x)
-    {
+	QImage image(dB, dA, QImage::Format_RGB32);
+	for (size_t axisA = 0; axisA < dA; ++axisA)
+	{
+		uint8_t* scanLine = image.scanLine(axisA);
+		for (size_t axisB = 0; axisB < dB; ++axisB)
+		{
 #if defined (CMP_WORDS_BIGENDIAN)
 #error
 #else
-
-      scanLine[x * 4 + 3] = 0xFF;
-      index = y * dims[0] * 3 + x * 3;
-      scanLine[x * 4 + 2] = ipfColors[index + 0];
-      scanLine[x * 4 + 1] = ipfColors[index + 1];
-      scanLine[x * 4 + 0] = ipfColors[index + 2];
-
+			scanLine[axisB * 4 + 3] = 0xFF;
+			if (0 == m_Plane){ // XY plane
+				index = (nComp * dims[0] * dims[1] * slice) + (nComp * dims[0] * axisA) + (nComp * axisB);
+			}
+			if (1 == m_Plane){ // XZ plane
+				index = (nComp * dims[0] * dims[1] * axisA) + (nComp * dims[0] * slice) + (nComp * axisB);
+			}
+			if (2 == m_Plane){ // YZ plane
+				index = (nComp * dims[0] * dims[1] * axisA) + (nComp * dims[0] * axisB) + (nComp * slice);
+			}
+			scanLine[axisB * 4 + 2] = m_Colors[index + 0];
+			scanLine[axisB * 4 + 1] = m_Colors[index + 1];
+			scanLine[axisB * 4 + 0] = m_Colors[index + 2];
 #endif
-    }
-
-  }
-  image.setText("", "DREAM3D generated Image");
-  bool success = image.save(path);
-  if (success) { err = 0;}
-  else { err = -1;}
+		}
+	}
+	image.setText("Description", DREAM3DLib::Version::PackageComplete());
+	bool success = image.save(path);
+	if (success) {
+		err = 0; 
+	}
+	else {
+		err = -1;
+		QString ss = QObject::tr("The image '%1' was not successfully saved").arg(path);
+		setErrorCondition(-1007);
+		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+	}
   return err;
 }
 
@@ -303,5 +370,5 @@ const QString SaveImages::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString SaveImages::getHumanLabel()
-{ return "Write XY Slice Images"; }
+{ return "Export Slice Images"; }
 
