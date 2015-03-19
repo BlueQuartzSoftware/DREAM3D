@@ -136,23 +136,6 @@ void DynamicTableData::checkAndAdjustDimensions(std::vector<std::vector<double> 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QAbstractItemModel* DynamicTableData::convertToModel(DynamicTableData data)
-{
-	/*QAbstractTableModel* tableModel = new QAbstractTableModel();
-	for (int row = 0; row < data.numRows; row++)
-	{
-		for (int col = 0; col < data.numCols; col++)
-		{
-
-		}
-	}*/
-	QAbstractItemModel* model;
-	return model;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 std::vector<std::vector<double> > DynamicTableData::getTableData()
 {
 	return tableData;

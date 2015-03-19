@@ -77,8 +77,6 @@ public:
 	int getNumCols();
 	void setNumCols(int nCols);
 
-	static QAbstractItemModel* convertToModel(DynamicTableData data);
-
 	DynamicTableData(const DynamicTableData& rhs);
 	void operator=(const DynamicTableData& rhs);
 
