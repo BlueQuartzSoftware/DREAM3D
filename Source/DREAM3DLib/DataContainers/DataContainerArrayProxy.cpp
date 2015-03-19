@@ -100,7 +100,13 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerArrayProxy::~DataContainerArrayProxy()
+{
 
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -204,25 +210,25 @@ void DataContainerArrayProxy::print(const QString header)
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxy::setAllFlags(Qt::CheckState state)
 {
-	for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
-	{
-		DataContainerProxy& dcProxy = dcIter.value();
-		dcProxy.flag = state;
+  for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
+  {
+    DataContainerProxy& dcProxy = dcIter.value();
+    dcProxy.flag = state;
 
-		QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
-		for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
-		{
-			AttributeMatrixProxy& amProxy = amIter.value();
-			amProxy.flag = state;
+    QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+    for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+    {
+      AttributeMatrixProxy& amProxy = amIter.value();
+      amProxy.flag = state;
 
-			QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
-			for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
-			{
-				DataArrayProxy& daProxy = daIter.value();
-				daProxy.flag = state;
-			}
-		}
-	}
+      QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+      for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+      {
+        DataArrayProxy& daProxy = daIter.value();
+        daProxy.flag = state;
+      }
+    }
+  }
 }
 
 
@@ -231,8 +237,8 @@ void DataContainerArrayProxy::setAllFlags(Qt::CheckState state)
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxy::reverseFlags()
 {
-	for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
-	{
+  for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
+  {
     DataContainerProxy& dcProxy =  dcIter.value();
     if(dcProxy.flag == Qt::Checked)
     {
@@ -243,9 +249,9 @@ void DataContainerArrayProxy::reverseFlags()
       dcProxy.flag = Qt::Checked;
     }
 
-	QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
-	for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
-	{
+  QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+  for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+  {
       AttributeMatrixProxy& amProxy = amIter.value();
       if(amProxy.flag == Qt::Checked)
       {
@@ -256,10 +262,10 @@ void DataContainerArrayProxy::reverseFlags()
         amProxy.flag = Qt::Checked;
       }
 
-	  QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
-	  for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
-	  {
-		DataArrayProxy& daProxy = daIter.value();
+    QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+    for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+    {
+    DataArrayProxy& daProxy = daIter.value();
         if(daProxy.flag == Qt::Checked)
         {
           daProxy.flag = Qt::Unchecked;
@@ -286,14 +292,14 @@ QStringList DataContainerArrayProxy::serialize()
   {
     DataContainerProxy& dcProxy =  dcIter.value();
 
-	QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
-	for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
-	{
+  QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+  for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+  {
       AttributeMatrixProxy& amProxy = amIter.value();
 
-	  QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
-	  for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
-	  {
+    QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+    for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+    {
         DataArrayProxy& daProxy = daIter.value();
 
         QString str = QString("[PATH=%1|%2|%3][FLAG=%4]").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name).arg(daProxy.flag);
@@ -309,112 +315,112 @@ QStringList DataContainerArrayProxy::serialize()
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy DataContainerArrayProxy::MergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy)
 {
-	QMap<QString, DataContainerProxy> fDcMap = fileProxy.dataContainers;
-	QMap<QString, DataContainerProxy>& cDcMap = cacheProxy.dataContainers;
+  QMap<QString, DataContainerProxy> fDcMap = fileProxy.dataContainers;
+  QMap<QString, DataContainerProxy>& cDcMap = cacheProxy.dataContainers;
 
-	// Add extra items in the file to the cache
-	for (QMap<QString, DataContainerProxy>::iterator fDcIter = fDcMap.begin(); fDcIter != fDcMap.end(); ++fDcIter)
-	{
-		QString fileDcName = fDcIter.key();
-		DataContainerProxy fileDcProxy = fDcIter.value();
+  // Add extra items in the file to the cache
+  for (QMap<QString, DataContainerProxy>::iterator fDcIter = fDcMap.begin(); fDcIter != fDcMap.end(); ++fDcIter)
+  {
+    QString fileDcName = fDcIter.key();
+    DataContainerProxy fileDcProxy = fDcIter.value();
 
-		// If the cache does not have the file dc proxy, add it to the cache
-		if (cDcMap.contains(fileDcName) == false)
-		{
-			cDcMap.insert(fileDcName, fileDcProxy);
-		}
+    // If the cache does not have the file dc proxy, add it to the cache
+    if (cDcMap.contains(fileDcName) == false)
+    {
+      cDcMap.insert(fileDcName, fileDcProxy);
+    }
 
-		QMap<QString, AttributeMatrixProxy> fAmMap = fileDcProxy.attributeMatricies;
-		QMap<QString, AttributeMatrixProxy>& cAmMap = cDcMap.find(fileDcName).value().attributeMatricies;
-		for (QMap<QString, AttributeMatrixProxy>::iterator fAmIter = fAmMap.begin(); fAmIter != fAmMap.end(); ++fAmIter)
-		{
-			QString fileAmName = fAmIter.key();
-			AttributeMatrixProxy fileAmProxy = fAmIter.value();
-			// If the cache does not have the file am proxy, add it to the cache
-			if (cAmMap.contains(fileAmName) == false)
-			{
-				cAmMap.insert(fileAmName, fileAmProxy);
-			}
+    QMap<QString, AttributeMatrixProxy> fAmMap = fileDcProxy.attributeMatricies;
+    QMap<QString, AttributeMatrixProxy>& cAmMap = cDcMap.find(fileDcName).value().attributeMatricies;
+    for (QMap<QString, AttributeMatrixProxy>::iterator fAmIter = fAmMap.begin(); fAmIter != fAmMap.end(); ++fAmIter)
+    {
+      QString fileAmName = fAmIter.key();
+      AttributeMatrixProxy fileAmProxy = fAmIter.value();
+      // If the cache does not have the file am proxy, add it to the cache
+      if (cAmMap.contains(fileAmName) == false)
+      {
+        cAmMap.insert(fileAmName, fileAmProxy);
+      }
 
-			QMap<QString, DataArrayProxy> fDaMap = fileAmProxy.dataArrays;
-			QMap<QString, DataArrayProxy>& cDaMap = cAmMap.find(fileAmName).value().dataArrays;
-			for (QMap<QString, DataArrayProxy>::iterator fDaIter = fDaMap.begin(); fDaIter != fDaMap.end(); ++fDaIter)
-			{
-				QString fileDaName = fDaIter.key();
-				DataArrayProxy fileDaProxy = fDaIter.value();
-				// If the cache does not have the file da proxy, add it to the cache
-				if (cDaMap.contains(fileDaName) == false)
-				{
-					cDaMap.insert(fileDaName, fileDaProxy);
-				}
-			}
-		}
-	}
+      QMap<QString, DataArrayProxy> fDaMap = fileAmProxy.dataArrays;
+      QMap<QString, DataArrayProxy>& cDaMap = cAmMap.find(fileAmName).value().dataArrays;
+      for (QMap<QString, DataArrayProxy>::iterator fDaIter = fDaMap.begin(); fDaIter != fDaMap.end(); ++fDaIter)
+      {
+        QString fileDaName = fDaIter.key();
+        DataArrayProxy fileDaProxy = fDaIter.value();
+        // If the cache does not have the file da proxy, add it to the cache
+        if (cDaMap.contains(fileDaName) == false)
+        {
+          cDaMap.insert(fileDaName, fileDaProxy);
+        }
+      }
+    }
+  }
 
-	// Remove items from the cache that are no longer in the file
-	QList<QString> dcItemsToDelete;
-	for (QMap<QString, DataContainerProxy>::iterator cDcIter = cDcMap.begin(); cDcIter != cDcMap.end(); ++cDcIter)
-	{
-		QString cacheDcName = cDcIter.key();
-		DataContainerProxy& cacheDcProxy = cDcIter.value();
+  // Remove items from the cache that are no longer in the file
+  QList<QString> dcItemsToDelete;
+  for (QMap<QString, DataContainerProxy>::iterator cDcIter = cDcMap.begin(); cDcIter != cDcMap.end(); ++cDcIter)
+  {
+    QString cacheDcName = cDcIter.key();
+    DataContainerProxy& cacheDcProxy = cDcIter.value();
 
-		// If the file does not have the cached dc proxy, remove it from the cache
-		if (fDcMap.contains(cacheDcName) == false)
-		{
-			dcItemsToDelete.push_back(cacheDcName);
-		}
-		else
-		{
-			QMap<QString, AttributeMatrixProxy>& cAmMap = cacheDcProxy.attributeMatricies;
-			QMap<QString, AttributeMatrixProxy> fAmMap = fDcMap.find(cacheDcName).value().attributeMatricies;
+    // If the file does not have the cached dc proxy, remove it from the cache
+    if (fDcMap.contains(cacheDcName) == false)
+    {
+      dcItemsToDelete.push_back(cacheDcName);
+    }
+    else
+    {
+      QMap<QString, AttributeMatrixProxy>& cAmMap = cacheDcProxy.attributeMatricies;
+      QMap<QString, AttributeMatrixProxy> fAmMap = fDcMap.find(cacheDcName).value().attributeMatricies;
 
-			QList<QString> amItemsToDelete;
-			for (QMap<QString, AttributeMatrixProxy>::iterator amIter = cAmMap.begin(); amIter != cAmMap.end(); ++amIter)
-			{
-				QString cacheAmName = amIter.key();
-				AttributeMatrixProxy& cacheAmProxy = amIter.value();
-				// If the file does not have the cached am proxy, remove it from the cache
-				if (fAmMap.contains(cacheAmName) == false)
-				{
-					amItemsToDelete.push_back(cacheAmName);
-				}
-				else
-				{
-					QMap<QString, DataArrayProxy>& cDaMap = cacheAmProxy.dataArrays;
-					QMap<QString, DataArrayProxy> fDaMap = fAmMap.find(cacheAmName).value().dataArrays;
+      QList<QString> amItemsToDelete;
+      for (QMap<QString, AttributeMatrixProxy>::iterator amIter = cAmMap.begin(); amIter != cAmMap.end(); ++amIter)
+      {
+        QString cacheAmName = amIter.key();
+        AttributeMatrixProxy& cacheAmProxy = amIter.value();
+        // If the file does not have the cached am proxy, remove it from the cache
+        if (fAmMap.contains(cacheAmName) == false)
+        {
+          amItemsToDelete.push_back(cacheAmName);
+        }
+        else
+        {
+          QMap<QString, DataArrayProxy>& cDaMap = cacheAmProxy.dataArrays;
+          QMap<QString, DataArrayProxy> fDaMap = fAmMap.find(cacheAmName).value().dataArrays;
 
-					QList<QString> daItemsToDelete;
-					for (QMap<QString, DataArrayProxy>::iterator daIter = cDaMap.begin(); daIter != cDaMap.end(); ++daIter)
-					{
-						QString cacheDaName = daIter.key();
-						DataArrayProxy cacheDaProxy = daIter.value();
-						// If the file does not have the cached da proxy, remove it from the cache
-						if (fDaMap.contains(cacheDaName) == false)
-						{
-							daItemsToDelete.push_back(cacheDaName);
-						}
-					}
-					// Remove extra da entries from cache
-					for (QList<QString>::iterator iter = daItemsToDelete.begin(); iter != daItemsToDelete.end(); ++iter)
-					{
-						cDaMap.remove(*iter);
-					}
-				}
-			}
-			// Remove extra am entries from cache
-			for (QList<QString>::iterator iter = amItemsToDelete.begin(); iter != amItemsToDelete.end(); ++iter)
-			{
-				cAmMap.remove(*iter);
-			}
-		}
-	}
-	// Remove extra dc entries from cache
-	for (QList<QString>::iterator iter = dcItemsToDelete.begin(); iter != dcItemsToDelete.end(); ++iter)
-	{
-		cDcMap.remove(*iter);
-	}
+          QList<QString> daItemsToDelete;
+          for (QMap<QString, DataArrayProxy>::iterator daIter = cDaMap.begin(); daIter != cDaMap.end(); ++daIter)
+          {
+            QString cacheDaName = daIter.key();
+            DataArrayProxy cacheDaProxy = daIter.value();
+            // If the file does not have the cached da proxy, remove it from the cache
+            if (fDaMap.contains(cacheDaName) == false)
+            {
+              daItemsToDelete.push_back(cacheDaName);
+            }
+          }
+          // Remove extra da entries from cache
+          for (QList<QString>::iterator iter = daItemsToDelete.begin(); iter != daItemsToDelete.end(); ++iter)
+          {
+            cDaMap.remove(*iter);
+          }
+        }
+      }
+      // Remove extra am entries from cache
+      for (QList<QString>::iterator iter = amItemsToDelete.begin(); iter != amItemsToDelete.end(); ++iter)
+      {
+        cAmMap.remove(*iter);
+      }
+    }
+  }
+  // Remove extra dc entries from cache
+  for (QList<QString>::iterator iter = dcItemsToDelete.begin(); iter != dcItemsToDelete.end(); ++iter)
+  {
+    cDcMap.remove(*iter);
+  }
 
-	return cacheProxy;
+  return cacheProxy;
 }
 
 // -----------------------------------------------------------------------------
@@ -422,8 +428,8 @@ DataContainerArrayProxy DataContainerArrayProxy::MergeProxies(DataContainerArray
 // -----------------------------------------------------------------------------
 bool DataContainerArrayProxy::contains(const QString& name)
 {
-	QList<DataContainerProxy> dcProxies = dataContainers.values();
-	QListIterator<DataContainerProxy> iter(dcProxies);
+  QList<DataContainerProxy> dcProxies = dataContainers.values();
+  QListIterator<DataContainerProxy> iter(dcProxies);
   while(iter.hasNext())
   {
     const DataContainerProxy dc = iter.next();
@@ -440,15 +446,16 @@ bool DataContainerArrayProxy::contains(const QString& name)
 // -----------------------------------------------------------------------------
 DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString& name)
 {
-	for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
-	{
-		DataContainerProxy& dc = dcIter.value();
-		if (dc.name.compare(name) == 0)
-		{
-			return dc;
-		}
-	}
-	DataContainerProxy proxy;
-	dataContainers.insert(proxy.name, proxy);
-	return proxy;
+  for (QMap<QString, DataContainerProxy>::iterator dcIter = dataContainers.begin(); dcIter != dataContainers.end(); ++dcIter) // DataContainer Level
+  {
+    DataContainerProxy& dc = dcIter.value();
+    if (dc.name.compare(name) == 0)
+    {
+      return dc;
+    }
+  }
+
+  DataContainerProxy proxy(name);
+  dataContainers.insert(proxy.name, proxy);
+  return dataContainers[name];
 }

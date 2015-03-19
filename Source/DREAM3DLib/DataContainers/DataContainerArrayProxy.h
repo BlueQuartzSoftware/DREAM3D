@@ -74,6 +74,19 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
     DataContainerArrayProxy(const DataContainerArrayProxy& rhs);
 
     /**
+     * @brief ~DataContainerArrayProxy
+     */
+    virtual ~DataContainerArrayProxy();
+
+    /**
+     * @brief MergeProxies
+     * @param fileProxy
+     * @param cacheProxy
+     * @return
+     */
+    static DataContainerArrayProxy MergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy);
+
+    /**
      * @brief operator =
      * @param rhs
      */
@@ -118,16 +131,17 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
      */
     bool contains(const QString& name);
 
-	static DataContainerArrayProxy MergeProxies(DataContainerArrayProxy fileProxy, DataContainerArrayProxy cacheProxy);
-
     /**
-     * @brief getDataContainerProxy
-     * @param name
+     * @brief getDataContainerProxy This will return the DataContainerProxy associated
+     * with the name given. If a DataContainerProxy with the given name does NOT
+     * exist in the DataContainerArrayProxy then a new one will be inserted. If this
+     * is NOT what you want, then use the @see contains(QString) function first
+     * to make sure the DataContainerArray has the DataContainer that you are
+     * looking for.
+     * @param name The name of the DataContainer.
      * @return
      */
     DataContainerProxy& getDataContainerProxy(const QString& name);
-
-
 
     //----- Our variables, publicly available
     QMap<QString, DataContainerProxy>  dataContainers;

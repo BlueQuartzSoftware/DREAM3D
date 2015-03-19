@@ -91,22 +91,6 @@ class AttributeMatrixProxy
       dataArrays = amp.dataArrays;
     }
 
-#if 0
-	/**
-* @brief operator == method
-*/
-	// THIS METHOD IS WRONG.  PLEASE FIX BEFORE IMPLEMENTING
-	bool operator==(const AttributeMatrixProxy& amp)
-	{
-		if (flag == amp.flag && name == amp.name && amType == amp.amType)
-		{
-			return true;
-		}
-		return false;
-	}
-#endif // 0
-
-
     //----- Our variables, publicly available
     uint8_t flag;
     QString name;
