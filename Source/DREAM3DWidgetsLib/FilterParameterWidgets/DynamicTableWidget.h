@@ -93,7 +93,12 @@ public:
 
 
 	public slots:
+	void on_dynamicTable_cellChanged(int row, int col);
 	void widgetChanged(QTableWidgetItem* item);
+	void on_addRowBtn_pressed();
+	void on_deleteRowBtn_pressed();
+	void on_addColBtn_pressed();
+	void on_deleteColBtn_pressed();
 	void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
 	void beforePreflight(); // Called just before the "dataCheck()" is called
 	void afterPreflight(); // Called just after the dataCheck() is called.

@@ -171,6 +171,16 @@ void DynamicTableWidget::widgetChanged(QTableWidgetItem* item)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DynamicTableWidget::on_dynamicTable_cellChanged(int row, int col)
+{
+	m_DidCausePreflight = true;
+	emit parametersChanged();
+	m_DidCausePreflight = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DynamicTableWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
 	QStringList rHeaders, cHeaders;
@@ -247,3 +257,39 @@ void DynamicTableWidget::afterPreflight()
 {
 	
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::on_addRowBtn_pressed()
+{
+	dynamicTable->insertRow(dynamicTable->rowCount());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::on_deleteRowBtn_pressed()
+{
+	dynamicTable->removeRow(dynamicTable->currentRow());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::on_addColBtn_pressed()
+{
+	dynamicTable->insertColumn(dynamicTable->columnCount());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::on_deleteColBtn_pressed()
+{
+	dynamicTable->removeColumn(dynamicTable->currentColumn());
+}
+
+
+
+
