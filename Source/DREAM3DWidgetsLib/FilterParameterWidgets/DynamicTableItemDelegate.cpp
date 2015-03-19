@@ -61,7 +61,10 @@ DynamicTableItemDelegate::~DynamicTableItemDelegate()
 QWidget* DynamicTableItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	QLineEdit* editor = new QLineEdit(parent);
-	editor->setValidator(new QDoubleValidator);
+	QDoubleValidator* validator = new QDoubleValidator();
+	validator->setDecimals(5);
+	validator->setNotation(QDoubleValidator::StandardNotation);
+	editor->setValidator(validator);
 	return editor;
 }
 
