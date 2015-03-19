@@ -65,9 +65,11 @@ enum ErrorCodes
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-//  QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportArray.txt");
-//  QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportTest.dream3d");
-//  QFile::remove(UnitTest::ExportDataTest::TestFile + QDir::separator() + "ExportTest.xdmf");
+  QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.dream3d");
+  QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.xdmf");
+  QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ConfidenceIndex.txt");
+  QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "Phases.txt");
+  QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ThresholdArray.txt");
 #endif
 }
 
@@ -86,7 +88,6 @@ int TestFilterAvailability()
     ss << "The ExportDataTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
     DREAM3D_TEST_THROW_EXCEPTION(ss.str())
   }
-
   return EXIT_SUCCESS;
 }
 
@@ -95,7 +96,6 @@ int TestFilterAvailability()
 // -----------------------------------------------------------------------------
 int TestExportDataWriter()
 {
-
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
   // A DataContainer that mimics some real data
@@ -118,25 +118,35 @@ int TestExportDataWriter()
 	  attrMatrix->addAttributeArray(DREAM3D::CellData::CellPhases, intArray);
   }
   {
-	  Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndex);
+    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndexNoSpace);
 	  for (int i = 0; i < size; ++i) // create an array with values 20 to 39
 	  {
 		  intArray->setValue(i, i + 20);
 	  }
-	  attrMatrix->addAttributeArray(DREAM3D::CellData::ConfidenceIndex, intArray);
+    attrMatrix->addAttributeArray(DREAM3D::CellData::ConfidenceIndexNoSpace, intArray);
   }
   {
-	  Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndex);
+    BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::GeneralData::ThresholdArray);
+    for (int i = 0; i < size; ++i) // create an bool array with true and false values
+    {
+      if (i % 2 == 0)
+        boolArray->setValue(i, 0);
+      else
+        boolArray->setValue(i, 1);
+    }
+    attrMatrix->addAttributeArray(DREAM3D::GeneralData::ThresholdArray, boolArray);
+  }
+  {
+    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndexNoSpace);
 	  for (int i = 0; i < size; ++i) // create an array with values 20 to 39
 	  {
 		  intArray->setValue(i, i + 20);
 	  }
-	  attrMatrix2->addAttributeArray(DREAM3D::CellData::ConfidenceIndex, intArray);
+    attrMatrix2->addAttributeArray(DREAM3D::CellData::ConfidenceIndexNoSpace, intArray);
   }
 
   Observer obs;
   // Send progress messages from PipelineBuilder to this object for display
-
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setDataContainerArray(dca);
   QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.dream3d" ;
@@ -152,7 +162,6 @@ int TestExportDataWriter()
 
   writer->execute();
   int err = writer->getErrorCondition();
-
   DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
   // Now instantiate the EnsembleInfoReader Filter from the FilterManager
@@ -186,13 +195,18 @@ int TestExportDataWriter()
     DREAM3D::Defaults::AttributeMatrixName,
     DREAM3D::CellData::CellPhases);
 
-	DataArrayPath path2 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+	  DataArrayPath path2 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
 		DREAM3D::Defaults::AttributeMatrixName,
-		DREAM3D::CellData::ConfidenceIndex);
+    DREAM3D::CellData::ConfidenceIndexNoSpace);
 
-	QVector<DataArrayPath> vector;
-	vector.push_back(path1);
-	vector.push_back(path2);
+    DataArrayPath path4 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+    DREAM3D::Defaults::AttributeMatrixName,
+    DREAM3D::GeneralData::ThresholdArray);
+
+	  QVector<DataArrayPath> vector;
+	  vector.push_back(path1);
+    vector.push_back(path2);
+    vector.push_back(path4);
 
     var.setValue(vector);
     propWasSet = filter->setProperty("SelectedDataArrayPaths", var); //arrays just created above
@@ -202,26 +216,25 @@ int TestExportDataWriter()
     err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
-	DataArrayPath path3 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+	  DataArrayPath path3 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
 		DREAM3D::Defaults::CellAttributeMatrixName,
-		DREAM3D::CellData::ConfidenceIndex);
+    DREAM3D::CellData::ConfidenceIndexNoSpace);
 
-	vector.push_back(path3);
+	  vector.push_back(path3);
 
-	var.setValue(vector);
-	propWasSet = filter->setProperty("SelectedDataArrayPaths", var); //arrays just created above
-	DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+	  var.setValue(vector);
+	  propWasSet = filter->setProperty("SelectedDataArrayPaths", var); //arrays just created above
+	  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
 		filter->execute();
-	err = filter->getErrorCondition();
-	DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
+	  err = filter->getErrorCondition();
+	  DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
   }
   else
   {
     QString ss = QObject::tr("ExportDataTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
     DREAM3D_REQUIRE_EQUAL(0, 1)
   }
-
   return EXIT_SUCCESS;
 }
 
@@ -237,38 +250,49 @@ int TestExportDataReader()
 		f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
 		DREAM3D_REQUIRE_VALID_POINTER(f)
 
-
-			for (int i = 0; i < 20; i++) // compare file to what was written in array
-			{
-				fscanf(f, "%d,", &num);
-				if (i + 20 != num)
-				{
-					DREAM3D_REQUIRE_EQUAL(0, -3)
-				}
-			}
-
+		for (int i = 0; i < 20; i++) // compare file to what was written in array
+		{
+			fscanf(f, "%d,", &num);
+      if (i + 20 != num)
+      {
+        DREAM3D_REQUIRE_EQUAL(0, -3)
+      }
+		}
 		fclose(f);
 	}
 	{
 		int num = 0;
 		FILE *f;
-		QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::ConfidenceIndex + ".txt";
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::ConfidenceIndexNoSpace + ".txt";
 		f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
 		DREAM3D_REQUIRE_VALID_POINTER(f)
 
-
-			for (int i = 0; i < 20; i++) // compare file to what was written in array
+		for (int i = 0; i < 20; i++) // compare file to what was written in array
+		{
+			fscanf(f, "%d,", &num);
+			if (i + 20 != num)
 			{
-				fscanf(f, "%d,", &num);
-				if (i + 20 != num)
-				{
-					DREAM3D_REQUIRE_EQUAL(0, -3)
-				}
+				DREAM3D_REQUIRE_EQUAL(0, -3)
 			}
-
+		}
 		fclose(f);
 	}
-
+  {
+    int num = 0;
+    FILE *f;
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::GeneralData::ThresholdArray + ".txt";
+    f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+    DREAM3D_REQUIRE_VALID_POINTER(f)
+    for (int i = 0; i < 20; i++) // compare file to what was written in bool array
+    {
+      fscanf(f, "%d,", &num);
+      if ((i % 2 == 0 && num == 1) || (i % 2 != 0 && num == 0))
+      {
+        DREAM3D_REQUIRE_EQUAL(0, -3)
+      }
+    }
+    fclose(f);
+  }
   return EXIT_SUCCESS;
 }
 
