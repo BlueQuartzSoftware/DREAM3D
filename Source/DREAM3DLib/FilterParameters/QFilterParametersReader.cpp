@@ -1677,50 +1677,54 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
       {
         dcp.flag = Qt::Checked;
       }
-      dcaProxy.list.push_back(dcp);
+      dcaProxy.dataContainers.insert(dcp.name, dcp);
     }
 
     // Now we check for the AttributeMatrix
-    DataContainerProxy& dcProxy = dcaProxy.getDataContainerProxy(dap.getDataContainerName());
-    if(dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) == dcProxy.attributeMatricies.end() && dap.getAttributeMatrixName().isEmpty() == false)
+    if(dcaProxy.contains(dap.getDataContainerName()) )
     {
-      AttributeMatrixProxy attrProxy(dap.getAttributeMatrixName());
-      if (attrFlag.compare("0") == 0)
+      DataContainerProxy& dcProxy = dcaProxy.getDataContainerProxy(dap.getDataContainerName());
+      if(dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) == dcProxy.attributeMatricies.end() && dap.getAttributeMatrixName().isEmpty() == false)
       {
-        attrProxy.flag = Qt::Unchecked;
+        AttributeMatrixProxy attrProxy(dap.getAttributeMatrixName());
+        if (attrFlag.compare("0") == 0)
+        {
+          attrProxy.flag = Qt::Unchecked;
+        }
+        else if (attrFlag.compare("1") == 0)
+        {
+          attrProxy.flag = Qt::PartiallyChecked;
+        }
+        else
+        {
+          attrProxy.flag = Qt::Checked;
+        }
+        dcProxy.attributeMatricies.insert(dap.getAttributeMatrixName(), attrProxy);
       }
-      else if (attrFlag.compare("1") == 0)
-      {
-        attrProxy.flag = Qt::PartiallyChecked;
-      }
-      else
-      {
-        attrProxy.flag = Qt::Checked;
-      }
-      dcProxy.attributeMatricies.insert(dap.getAttributeMatrixName(), attrProxy);
-    }
 
-    // Now we have the attribute matrix
-    AttributeMatrixProxy& attrProxy = dcProxy.attributeMatricies[dap.getAttributeMatrixName()];
-
-
-    // Now check for the data array
-	if (attrProxy.dataArrays.find(dap.getDataArrayName()) == attrProxy.dataArrays.end() && dap.getDataArrayName().isEmpty() == false)
-    {
-      DataArrayProxy proxy(QString("%1|%2").arg(dap.getDataContainerName()).arg(dap.getAttributeMatrixName()), dap.getDataArrayName());
-      if (daFlag.compare("0") == 0)
+      // Now we have the attribute matrix
+      if(dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) != dcProxy.attributeMatricies.end() )
       {
-        proxy.flag = Qt::Unchecked;
+        AttributeMatrixProxy& attrProxy = dcProxy.attributeMatricies[dap.getAttributeMatrixName()];
+        // Now check for the data array
+        if (attrProxy.dataArrays.find(dap.getDataArrayName()) == attrProxy.dataArrays.end() && dap.getDataArrayName().isEmpty() == false)
+        {
+          DataArrayProxy proxy(QString("%1|%2").arg(dap.getDataContainerName()).arg(dap.getAttributeMatrixName()), dap.getDataArrayName());
+          if (daFlag.compare("0") == 0)
+          {
+            proxy.flag = Qt::Unchecked;
+          }
+          else if (daFlag.compare("1") == 0)
+          {
+            proxy.flag = Qt::PartiallyChecked;
+          }
+          else
+          {
+            proxy.flag = Qt::Checked;
+          }
+          attrProxy.dataArrays.insert(dap.getDataArrayName(), proxy);
+        }
       }
-      else if (daFlag.compare("1") == 0)
-      {
-        proxy.flag = Qt::PartiallyChecked;
-      }
-      else
-      {
-        proxy.flag = Qt::Checked;
-      }
-      attrProxy.dataArrays.insert(dap.getDataArrayName(), proxy);
     }
   }
   m_Prefs->endArray();
@@ -1748,23 +1752,23 @@ DataArrayPath QFilterParametersReader::readDataArrayPath(const QString& name, Da
 // -----------------------------------------------------------------------------
 QVector<DataArrayPath> QFilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
 {
-	BOOST_ASSERT(m_Prefs != NULL);
+  BOOST_ASSERT(m_Prefs != NULL);
 
-	QVector<DataArrayPath> vector;
+  QVector<DataArrayPath> vector;
 
-	int size = m_Prefs->beginReadArray(name);
-	if (size <= 0)
-	{
-		return def;
-	}
+  int size = m_Prefs->beginReadArray(name);
+  if (size <= 0)
+  {
+    return def;
+  }
 
-	for (int i = 0; i < size; ++i) {
-		m_Prefs->setArrayIndex(i);
-		QString pathStr = m_Prefs->value(DREAM3D::IO::DAPSettingsHeader).toString();
-		DataArrayPath path = DataArrayPath::Deserialize(pathStr, "|");
-		vector.append(path);
-	}
-	m_Prefs->endArray();
+  for (int i = 0; i < size; ++i) {
+    m_Prefs->setArrayIndex(i);
+    QString pathStr = m_Prefs->value(DREAM3D::IO::DAPSettingsHeader).toString();
+    DataArrayPath path = DataArrayPath::Deserialize(pathStr, "|");
+    vector.append(path);
+  }
+  m_Prefs->endArray();
 
-	return vector;
+  return vector;
 }

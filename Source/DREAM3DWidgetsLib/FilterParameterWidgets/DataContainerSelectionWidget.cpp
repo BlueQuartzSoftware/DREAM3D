@@ -155,7 +155,7 @@ void DataContainerSelectionWidget::populateComboBoxes()
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
   // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.list;
+  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
 
   while(iter.hasNext() )

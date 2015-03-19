@@ -552,7 +552,7 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
 void DataContainerReader::syncProxies()
 {
   // If there is something in the cached proxy...
-  if (m_InputFileDataContainerArrayProxy.list.size() > 0)
+  if (m_InputFileDataContainerArrayProxy.dataContainers.size() > 0)
   {
     DataContainerArrayProxy fileProxy = readDataContainerArrayStructure(getInputFile());
     DataContainerArrayProxy cacheProxy = getInputFileDataContainerArrayProxy();

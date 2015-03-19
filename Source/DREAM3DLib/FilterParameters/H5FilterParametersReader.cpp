@@ -947,7 +947,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
       dcProxy.attributeMatricies.insert(amName, amProxy);
     }
     // Add this DataContainerProxy to the DataContainerArrayProxy
-    dcaProxy.list.push_back(dcProxy);
+    dcaProxy.dataContainers.insert(dcProxy.name, dcProxy);
 
   }
   return dcaProxy;
