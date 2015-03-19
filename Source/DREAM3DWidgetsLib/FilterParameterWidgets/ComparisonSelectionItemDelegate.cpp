@@ -36,7 +36,6 @@
 
 #include "ComparisonSelectionItemDelegate.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QAbstractItemModel>
 #include <QtWidgets/QStyleOptionViewItemV4>
 #include <QtWidgets/QLineEdit>
@@ -90,7 +89,6 @@ void ComparisonSelectionItemDelegate::setFeatureList(QStringList features)
 // -----------------------------------------------------------------------------
 QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* widgetParent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-  qDebug() << "ComparisonSelectionItemDelegate::createEditor" << "\n";
   QLineEdit* featureValue = NULL;
   QDoubleValidator* featureValueValidator = NULL;
   QComboBox* operatorCombo = NULL;
@@ -162,8 +160,6 @@ QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* widgetParent, co
 // -----------------------------------------------------------------------------
 void ComparisonSelectionItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-  qDebug() << "ComparisonSelectionItemDelegate::setEditorData" << "\n";
-
   qint32 col = index.column();
   // bool ok = false;
   if (col == ComparisonSelectionTableModel::FeatureName)
@@ -208,7 +204,6 @@ void ComparisonSelectionItemDelegate::setEditorData(QWidget* editor, const QMode
 // -----------------------------------------------------------------------------
 void ComparisonSelectionItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-  qDebug() << "ComparisonSelectionItemDelegate::setModelData" << "\n";
   qint32 col = index.column();
   //  bool ok = false;
   if (col == ComparisonSelectionTableModel::FeatureName)
