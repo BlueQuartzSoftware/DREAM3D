@@ -89,6 +89,27 @@ void PMFilterGenerator::outputDirChanged(const QString& outputDir)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString PMFilterGenerator::generateFileContents()
+{
+	QString pluginName = getPluginName();
+	QString text = "";
+
+	//Open file
+	QFile rfile(getCodeTemplateResourcePath());
+	if (rfile.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream in(&rfile);
+		text = in.readAll();
+		text.replace("@PluginName@", pluginName);
+		text.replace("@ClassName@", m_ClassName.replace("@PluginName@", getPluginName()));
+		text.replace("@ClassNameLowerCase@", m_ClassName.toLower());
+	}
+	return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PMFilterGenerator::generateOutput()
 {
 // qDebug() << "PMFilterGenerator::generateOutput" << "\n";
@@ -114,7 +135,7 @@ void PMFilterGenerator::generateOutput()
     QTextStream in(&rfile);
     QString text = in.readAll();
     text.replace("@PluginName@", pluginName);
-    text.replace("@ClassName@", m_ClassName);
+	text.replace("@ClassName@", m_ClassName.replace("@PluginName@", getPluginName()));
     text.replace("@MD_FILE_NAME@", m_ClassName + ".md");
     text.replace("@ClassNameLowerCase@", classNameLowerCase);
     text.replace("@FilterGroup@", pluginName);
@@ -137,7 +158,67 @@ void PMFilterGenerator::generateOutput()
     }
 
   }
-
-
-
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFilterGenerator::generateTestFileLocationsOutput(QSet<QString> names)
+{
+	QString pluginName = getPluginName();
+	QString text = "";
+
+	// Build up the huge string full of namespaces using names
+	QString nameSpaces = "";
+	QSet<QString>::iterator iter = names.begin();
+	while (iter != names.end())
+	{
+		QString name = *iter;
+
+		if (name == "@PluginName@Filter")
+		{
+			name.replace("@PluginName@", pluginName);
+		}
+
+		nameSpaces.append("  namespace " + name + "Test\n");
+		nameSpaces.append("  {\n");
+		nameSpaces.append("    const QString TestFile1(\"@TEST_TEMP_DIR@/TestFile1.txt\");\n");
+		nameSpaces.append("    const QString TestFile2(\"@TEST_TEMP_DIR@/TestFile2.txt\");\n");
+		nameSpaces.append("  }");
+
+		if (++iter != names.end())
+		{
+			nameSpaces.append("\n\n");
+		}
+	}
+
+	//Open file
+	QFile rfile(getCodeTemplateResourcePath());
+	if (rfile.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream in(&rfile);
+		text = in.readAll();
+		text.replace("@Namespaces@", nameSpaces);
+	}
+	
+	QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
+	parentPath = QDir::toNativeSeparators(parentPath);
+
+	QDir dir(parentPath);
+	dir.mkpath(parentPath);
+
+	parentPath = parentPath + QDir::separator() + getFileName();
+	//Write to file
+	QFile f(parentPath);
+	if (f.open(QIODevice::WriteOnly | QIODevice::Text))
+	{
+		QTextStream out(&f);
+		out << text;
+	}
+}
+
+
+
+
+
+

@@ -43,12 +43,14 @@ FilterBundler::FilterBundler()
 }
 
 FilterBundler::FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile,
-                             PMFileGenerator* htmlfile, bool pub_filter)
+							PMFileGenerator* htmlfile, PMFileGenerator* testfile, 
+							bool pub_filter)
 {
   this->cppfile = cppfile;
   this->hfile = hfile;
   this->htmlfile = htmlfile;
   this->publicFilter = pub_filter;
+  this->testfile = testfile;
 }
 
 PMFileGenerator* FilterBundler::getCPPGenerator()
@@ -66,6 +68,11 @@ PMFileGenerator* FilterBundler::getHTMLGenerator()
   return htmlfile;
 }
 
+PMFileGenerator* FilterBundler::getTestGenerator()
+{
+	return testfile;
+}
+
 bool FilterBundler::isPublic()
 {
   return this->publicFilter;
@@ -75,7 +82,8 @@ bool FilterBundler::containsTreeWidgetItem(QTreeWidgetItem* item)
 {
   if ( item == cppfile->getTreeWidgetItem() ||
        item == hfile->getTreeWidgetItem() ||
-       item == htmlfile->getTreeWidgetItem() )
+       item == htmlfile->getTreeWidgetItem() ||
+	   item == testfile->getTreeWidgetItem() )
   { return true; }
   else
   { return false; }
