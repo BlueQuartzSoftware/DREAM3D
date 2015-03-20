@@ -926,3 +926,36 @@ int QFilterParametersWriter::writeValue(const QString name, const QVector<DataAr
 
 	return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, const DynamicTableData v)
+{
+	int err = 0;
+
+	QString value = v.serializeData(',');
+	int numRows = v.getNumRows();
+	int numCols = v.getNumCols();
+	QStringList rHeaders = v.getRowHeaders();
+	QStringList cHeaders = v.getColHeaders();
+
+	m_Prefs->beginWriteArray(name);
+
+	m_Prefs->setArrayIndex(0);
+	m_Prefs->setValue(name, value);
+	m_Prefs->setArrayIndex(1);
+	m_Prefs->setValue(name, numRows);
+	m_Prefs->setArrayIndex(2);
+	m_Prefs->setValue(name, numCols);
+	m_Prefs->setArrayIndex(3);
+	m_Prefs->setValue(name, rHeaders);
+	m_Prefs->setArrayIndex(4);
+	m_Prefs->setValue(name, cHeaders);
+
+	m_Prefs->endArray();
+
+	return err;
+}
+
+

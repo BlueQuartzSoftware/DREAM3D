@@ -45,8 +45,6 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
 /**
 * @brief
 * @author
@@ -62,19 +60,74 @@ public:
 
 	virtual ~DynamicTableData();
 
-	std::vector<std::vector<double> > getTableData();
+	/**
+	* @brief This deserializes a string of data and returns the original 2D array.
+	*/
+	static std::vector<std::vector<double> > DeserializeData(QString dataStr, int nRows, int nCols, char delimiter);
+
+	/**
+	* @brief This does the reverse of the flattenData function.  It expands the data back into a 2D array.
+	*/
+	static std::vector<std::vector<double> > ExpandData(std::vector<double> orig, int nRows, int nCols);
+
+	/**
+	* @brief This deserializes a string of row headers and returns the original QStringList.
+	*/
+	static QStringList DeserializeRowHeaders(QString headersStr, char delimiter);
+
+	/**
+	* @brief This deserializes a string of column headers and returns the original QStringList.
+	*/
+	static QStringList DeserializeColumnHeaders(QString headersStr, char delimiter);
+
+	/**
+	* @brief This returns a serialized string of the data, iterating through columns first.
+	*/
+	QString serializeData(char delimiter) const;
+
+	/**
+	* @brief This returns a serialized string of the row headers list.
+	*/
+	QString serializeRowHeaders(char delimiter) const;
+
+	/**
+	* @brief This returns a serialized string of the column headers list.
+	*/
+	QString serializeColumnHeaders(char delimiter) const;
+
+	/**
+	* @brief This returns a flattened vector of the data.
+	*/
+	QVector<double> flattenData() const;
+
+	/**
+	* @brief Table data getter and setter
+	*/
+	std::vector<std::vector<double> > getTableData() const;
 	void setTableData(std::vector<std::vector<double> > data);
 
-	QStringList getRowHeaders();
+	/**
+	* @brief Row headers getter and setter
+	*/
+	QStringList getRowHeaders() const;
 	void setRowHeaders(QStringList rHeaders);
 
-	QStringList getColHeaders();
+	/**
+	* @brief Column headers getter and setter
+	*/
+	QStringList getColHeaders() const;
 	void setColHeaders(QStringList cHeaders);
 
-	int getNumRows();
+	/**
+	* @brief numRows getter and setter
+	*/
+	int getNumRows() const;
 	void setNumRows(int nRows);
 
-	int getNumCols();
+	/**
+	* @brief numCols getter and setter
+	*/
+	int getNumCols() const;
 	void setNumCols(int nCols);
 
 	DynamicTableData(const DynamicTableData& rhs);
@@ -87,6 +140,10 @@ private:
 	int numRows;
 	int numCols;
 
+	/**
+	* @brief Checks that the dimensions between all variables are the same.  If not, adjusts dimensions
+	* to match numRows and numCols.
+	*/
 	void checkAndAdjustDimensions(std::vector<std::vector<double> > &data, int nRows, int nCols, QStringList &rHeaders, QStringList &cHeaders);
 };
 

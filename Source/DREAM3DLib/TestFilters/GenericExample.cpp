@@ -222,6 +222,7 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSelectedMultiArrayPaths(reader->readDataArrayPathVector("SelectedMultiArrayPaths", getSelectedMultiArrayPaths()));
+  //setDynamicData(reader->readValue("DynamicData", getDynamicData()));
   setStlFilePrefix( reader->readString("StlFilePrefix", getStlFilePrefix()) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
@@ -244,8 +245,7 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-
-
+  DREAM3D_FILTER_WRITE_PARAMETER(DynamicData)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedMultiArrayPaths)
   /* Place code that will write the inputs values into a file. reference the

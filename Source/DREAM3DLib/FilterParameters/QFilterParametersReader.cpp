@@ -1505,13 +1505,11 @@ ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString nam
   if(!ok)
   {
     m_Prefs->endArray();
-    m_Prefs->endArray();
     return defaultValue;
   }
   v.compValue = m_Prefs->value("CompValue").toDouble(&ok);
   if(!ok)
   {
-    m_Prefs->endArray();
     m_Prefs->endArray();
     return defaultValue;
   }
@@ -1768,3 +1766,44 @@ QVector<DataArrayPath> QFilterParametersReader::readDataArrayPathVector(const QS
 
 	return vector;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableData QFilterParametersReader::readDynamicTableData(const QString& name, DynamicTableData def)
+{
+	BOOST_ASSERT(m_Prefs != NULL);
+
+	QString dataStr;
+	int numRows;
+	int numCols;
+	QStringList rHeaders;
+	QStringList cHeaders;
+
+	int size = m_Prefs->beginReadArray(name);
+	if (size <= 0)
+	{
+		return def;
+	}
+
+	m_Prefs->setArrayIndex(0);
+	dataStr = m_Prefs->value(name, "").toString();
+	m_Prefs->setArrayIndex(1);
+	numRows = m_Prefs->value(name, 0).toInt();
+	m_Prefs->setArrayIndex(2);
+	numCols = m_Prefs->value(name, 0).toInt();
+	m_Prefs->setArrayIndex(3);
+	rHeaders = m_Prefs->value(name, "").toStringList();
+	m_Prefs->setArrayIndex(4);
+	cHeaders = m_Prefs->value(name, "").toStringList();
+
+	m_Prefs->endArray();
+
+	std::vector<std::vector<double> > data = DynamicTableData::DeserializeData(dataStr, numRows, numCols, ',');
+
+	DynamicTableData tableData(data, numRows, numCols, rHeaders, cHeaders);
+
+	return tableData;
+}
+
+

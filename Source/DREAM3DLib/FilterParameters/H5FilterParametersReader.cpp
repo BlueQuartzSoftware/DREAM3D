@@ -887,7 +887,6 @@ QSet<QString> H5FilterParametersReader::readArraySelections(const QString name, 
   return v;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -953,8 +952,6 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
   return dcaProxy;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1001,4 +998,35 @@ QVector<DataArrayPath> H5FilterParametersReader::readDataArrayPathVector(const Q
   }
 
   return defPaths;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableData H5FilterParametersReader::readDynamicTableData(const QString& name, DynamicTableData def)
+{
+	int numRows, numCols;
+	std::vector<double> dataVec;
+	QString rHeadersStr, cHeadersStr;
+	int err = 0;
+
+	err = QH5Lite::readVectorDataset(m_CurrentGroupId, name, dataVec);
+	err = QH5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumRows", numRows);
+	err = QH5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumCols", numCols);
+	err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, "RowHeaders", rHeadersStr);
+	err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, "ColHeaders", cHeadersStr);
+
+	if (err == 0)
+	{
+		QStringList rHeaders = DynamicTableData::DeserializeRowHeaders(rHeadersStr, '|');
+		QStringList cHeaders = DynamicTableData::DeserializeColumnHeaders(cHeadersStr, '|');
+		std::vector<std::vector<double> > data = DynamicTableData::ExpandData(dataVec, numRows, numCols);
+
+		DynamicTableData tableData(data, numRows, numCols, rHeaders, cHeaders);
+		return tableData;
+	}
+	else
+	{
+		return def;
+	}
 }

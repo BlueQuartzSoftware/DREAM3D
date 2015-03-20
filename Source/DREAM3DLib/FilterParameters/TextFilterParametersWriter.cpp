@@ -421,4 +421,14 @@ int TextFilterParametersWriter::writeValue(const QString name, const QVector<Dat
 	return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, const DynamicTableData v)
+{
+	int err = -1;
+
+	return err;
+}
+
 
