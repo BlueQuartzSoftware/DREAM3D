@@ -170,7 +170,9 @@ void MultiThresholdObjects::dataCheck()
 
     }
     ComparisonInput_t comp = m_SelectedThresholds[0];
-    DataContainer::Pointer m = dca->getDataContainer(comp.dataContainerName);
+    DataContainer::Pointer m = dca->getPrereqDataContainer<AbstractFilter>(this, comp.dataContainerName, false);
+    if(getErrorCondition() < 0) { return; }
+
 
     // Do not allow non-scalar arrays
     for (size_t i = 0; i < m_SelectedThresholds.size(); ++i)
