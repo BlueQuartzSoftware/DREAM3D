@@ -84,6 +84,26 @@ void TestH5OIMReader()
   int y = reader->getYDimension();
   DREAM3D_REQUIRED(y, ==, 151)
 
+
+  err = reader->readFile();
+      float* f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi1));
+  DREAM3D_REQUIRE_VALID_POINTER(f1)
+      f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
+  DREAM3D_REQUIRE_VALID_POINTER(f1)
+      f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
+  DREAM3D_REQUIRE_VALID_POINTER(f1)
+      f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
+  DREAM3D_REQUIRE_VALID_POINTER(f1)
+      f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
+  DREAM3D_REQUIRE_VALID_POINTER(f1)
+      f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
+  DREAM3D_REQUIRE_VALID_POINTER(f1)
+      f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
+
+  int* phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Ebsd::Ang::PhaseData));
+  DREAM3D_REQUIRE_VALID_POINTER(phasePtr)
+
+
 }
 
 

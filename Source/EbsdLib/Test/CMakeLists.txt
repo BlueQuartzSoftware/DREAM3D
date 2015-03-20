@@ -49,8 +49,8 @@ AddDREAM3DUnitTest(TESTNAME CtfReaderTest
 # --------------------------------------------------------------------------
 # HEDM Tests
 # --------------------------------------------------------------------------
-AddDREAM3DUnitTest(TESTNAME HedmReaderTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/HedmReaderTest.cpp
-                    LINK_LIBRARIES Qt5::Core H5Support EbsdLib)
+#AddDREAM3DUnitTest(TESTNAME HedmReaderTest
+#                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/HedmReaderTest.cpp
+#                    LINK_LIBRARIES Qt5::Core H5Support EbsdLib)
 
 

@@ -167,6 +167,7 @@ void TestCellCountToLarge()
   CtfReader reader;
   reader.setFileName(UnitTest::CtfReaderTest::Corrupted_XCells);
   int err =  reader.readFile();
+  qDebug() << reader.getErrorMessage();
   DREAM3D_REQUIRE(err == -106);
 }
 

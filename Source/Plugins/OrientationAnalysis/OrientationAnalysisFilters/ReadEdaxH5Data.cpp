@@ -45,6 +45,7 @@
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/TSL/H5OIMReader.h"
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -111,7 +112,6 @@ ReadEdaxH5Data::ReadEdaxH5Data() :
 // -----------------------------------------------------------------------------
 ReadEdaxH5Data::~ReadEdaxH5Data()
 {
-qDebug() << "ReadEdaxH5Data::~ReadEdaxH5Data()";
 }
 
 // -----------------------------------------------------------------------------
@@ -168,106 +168,6 @@ int ReadEdaxH5Data::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5Data::flushCache()
-{
-  setInputFile_Cache("");
-  setTimeStamp_Cache(QDateTime());
-  setData(Ang_Private_Data());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadEdaxH5Data::populateAngData(H5OIMReader::Pointer reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG flag)
-{
-  //Q_ASSERT_X(false, "NOT IMPLEMENTED", "ReadEdaxH5Data::populateAngData");
-  QFileInfo fi(m_InputFile);
-  QDateTime timeStamp(fi.lastModified());
-
-  // Drop into this if statement if we need to read from a file
-  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
-  {
-    float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
-    int zDim = 1;
-
-    reader->setFileName(getInputFile());
-    reader->setHDF5Path(getScanName());
-
-    if (flag == ANG_HEADER_ONLY)
-    {
-      int err = reader->readHeaderOnly();
-      if (err < 0)
-      {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file header.", getErrorCondition());
-        m_FileWasRead = false;
-        return;
-      }
-      else
-      {
-        m_FileWasRead = true;
-      }
-    }
-    else
-    {
-      int err = reader->readFile();
-      if (err < 0)
-      {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
-        return;
-      }
-    }
-    dims[0] = reader->getXDimension();
-    dims[1] = reader->getYDimension();
-    dims[2] = zDim; // We are reading a single slice
-
-    // Set Cache with values from the file
-    {
-      Ang_Private_Data data;
-      data.dims = dims;
-      data.resolution.push_back(reader->getXStep());
-      data.resolution.push_back(reader->getYStep());
-      data.resolution.push_back(zStep);
-      data.origin.push_back(xOrigin);
-      data.origin.push_back(yOrigin);
-      data.origin.push_back(zOrigin);
-      data.phases = reader->getPhaseVector();
-      setData(data);
-
-      setInputFile_Cache(m_InputFile);
-
-      QFileInfo newFi(m_InputFile);
-      QDateTime timeStamp(newFi.lastModified());
-      setTimeStamp_Cache(timeStamp);
-    }
-  }
-  else
-  {
-    m_FileWasRead = false;
-  }
-
-  // Read from cache
-  {
-    dims[0] = getData().dims[0];
-    dims[1] = getData().dims[1];
-    dims[2] = getData().dims[2];
-    m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-    m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
-    m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
-  }
-
-  if (flag == ANG_FULL_FILE)
-  {
-    loadInfo(reader);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReadEdaxH5Data::dataCheck()
 {
   // Reset FileWasRead flag
@@ -316,8 +216,7 @@ void ReadEdaxH5Data::dataCheck()
     if (comp == 0)
     {
       H5OIMReader::Pointer reader = H5OIMReader::New();
-
-      populateAngData(reader, m, dims, ANG_HEADER_ONLY);
+      readDataFile(reader.get(), m, dims, ANG_HEADER_ONLY);
 
       //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(dims);
@@ -336,7 +235,6 @@ void ReadEdaxH5Data::dataCheck()
           cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, dims);
         }
       }
-
     }
     else
     {
@@ -405,9 +303,17 @@ void ReadEdaxH5Data::execute()
 
   dataCheck();
   if (getErrorCondition() < 0) { return; }
-  // Invalidate the cache
-  setInputFile_Cache(QString(""));
-  readAngFile();
+
+  H5OIMReader::Pointer reader = H5OIMReader::New();
+  QVector<size_t> tDims(3, 0);
+  QVector<size_t> cDims(1, 1);
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+  AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
+
+  readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
+
+  copyRawEbsdData(reader.get(), tDims, cDims);
 
   // Set the file name and time stamp into the cache, if we are reading from the file and after all the reading has been done
   {
@@ -423,114 +329,6 @@ void ReadEdaxH5Data::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadEdaxH5Data::readAngFile()
-{
-  int err = 0;
-  H5OIMReader::Pointer reader = H5OIMReader::New();
-  QVector<size_t> tDims(3, 0);
-  QVector<size_t> cDims(1, 1);
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-  AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-
-  populateAngData(reader, m, tDims, ANG_FULL_FILE);
-
-  tDims[0] = getData().dims[0];
-  tDims[1] = getData().dims[1];
-  tDims[2] = getData().dims[2];
-  ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
-  ebsdAttrMat->setTupleDimensions(tDims);
-
-  float* f1 = NULL;
-  float* f2 = NULL;
-  float* f3 = NULL;
-  int* phasePtr = NULL;
-
-  FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
-  Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
-
-  //// Adjust the values of the 'phase' data to correct for invalid values
-  {
-    phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Ebsd::Ang::PhaseData));
-    for (size_t i = 0; i < totalPoints; i++)
-    {
-      if (phasePtr[i] < 1)
-      {
-        phasePtr[i] = 1;
-      }
-    }
-    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
-    ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
-  }
-
-  //// Condense the Euler Angles from 3 separate arrays into a single 1x3 array
-  {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi1));
-    f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
-    f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
-    cDims[0] = 3;
-    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
-    float* cellEulerAngles = fArray->getPointer(0);
-
-    for (size_t i = 0; i < totalPoints; i++)
-    {
-      cellEulerAngles[3 * i] = f1[i];
-      cellEulerAngles[3 * i + 1] = f2[i];
-      cellEulerAngles[3 * i + 2] = f3[i];
-    }
-    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
-  }
-
-  cDims[0] = 1;
-  {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
-  }
-
-  {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
-  }
-
-  {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
-  }
-
-  {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReadEdaxH5Data::newFilterInstance(bool copyFilterParameters)
-{
-  ReadEdaxH5Data::Pointer filter = ReadEdaxH5Data::New();
-  if (true == copyFilterParameters)
-  {
-    filter->setFilterParameters(getFilterParameters());
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -568,10 +366,128 @@ const QString ReadEdaxH5Data::getHumanLabel()
   return "Read EDAX EBSD Data (.h5)";
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadEdaxH5Data::loadInfo(H5OIMReader::Pointer reader)
+AbstractFilter::Pointer ReadEdaxH5Data::newFilterInstance(bool copyFilterParameters)
+{
+  ReadEdaxH5Data::Pointer filter = ReadEdaxH5Data::New();
+  if (true == copyFilterParameters)
+  {
+    filter->setFilterParameters(getFilterParameters());
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadEdaxH5Data::flushCache()
+{
+  setInputFile_Cache("");
+  setTimeStamp_Cache(QDateTime());
+  setData(Ang_Private_Data());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, ANG_READ_FLAG flag)
+{
+  QFileInfo fi(m_InputFile);
+  QDateTime timeStamp(fi.lastModified());
+  if (flag == ANG_FULL_FILE)
+  {
+    setInputFile_Cache(""); // We need something to trigger the file read below
+  }
+  // Drop into this if statement if we need to read from a file
+  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+  {
+    float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
+    int zDim = 1;
+
+    reader->setFileName(getInputFile());
+    reader->setHDF5Path(getScanName());
+
+    if (flag == ANG_HEADER_ONLY)
+    {
+      int err = reader->readHeaderOnly();
+      if (err < 0)
+      {
+        setErrorCondition(err);
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file header.", getErrorCondition());
+        m_FileWasRead = false;
+        return;
+      }
+      else
+      {
+        m_FileWasRead = true;
+      }
+    }
+    else
+    {
+      int err = reader->readFile();
+      if (err < 0)
+      {
+        setErrorCondition(err);
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
+        return;
+      }
+    }
+    tDims[0] = reader->getXDimension();
+    tDims[1] = reader->getYDimension();
+    tDims[2] = zDim; // We are reading a single slice
+
+    // Set Cache with values from the file
+    {
+      Ang_Private_Data data;
+      data.dims = tDims;
+      data.resolution.push_back(reader->getXStep());
+      data.resolution.push_back(reader->getYStep());
+      data.resolution.push_back(zStep);
+      data.origin.push_back(xOrigin);
+      data.origin.push_back(yOrigin);
+      data.origin.push_back(zOrigin);
+      data.phases = reader->getPhaseVector();
+      setData(data);
+
+      setInputFile_Cache(m_InputFile);
+
+      QFileInfo newFi(m_InputFile);
+      QDateTime timeStamp(newFi.lastModified());
+      setTimeStamp_Cache(timeStamp);
+    }
+  }
+  else
+  {
+    m_FileWasRead = false;
+  }
+
+  // Read from cache
+  {
+    tDims[0] = getData().dims[0];
+    tDims[1] = getData().dims[1];
+    tDims[2] = getData().dims[2];
+    m->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
+    m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+    m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+  }
+
+  if (flag == ANG_FULL_FILE)
+  {
+    loadMaterialInfo(reader);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
 {
   QVector<AngPhase::Pointer> phases = getData().phases;
   if (phases.size() == 0)
@@ -638,4 +554,95 @@ int ReadEdaxH5Data::loadInfo(H5OIMReader::Pointer reader)
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   return 0;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims)
+{
+
+  float* f1 = NULL;
+  float* f2 = NULL;
+  float* f3 = NULL;
+  int* phasePtr = NULL;
+
+  FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
+  Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
+
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+  AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+
+  // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
+  tDims.resize(3);
+  tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
+  tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+  tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
+  ebsdAttrMat->resizeAttributeArrays(tDims);
+
+  //// Adjust the values of the 'phase' data to correct for invalid values
+  {
+    phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Ebsd::Ang::PhaseData));
+    for (size_t i = 0; i < totalPoints; i++)
+    {
+      if (phasePtr[i] < 1)
+      {
+        phasePtr[i] = 1;
+      }
+    }
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
+    ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+  }
+
+  //// Condense the Euler Angles from 3 separate arrays into a single 1x3 array
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi1));
+    f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
+    f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
+    cDims[0] = 3;
+    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
+    float* cellEulerAngles = fArray->getPointer(0);
+
+    for (size_t i = 0; i < totalPoints; i++)
+    {
+      cellEulerAngles[3 * i] = f1[i];
+      cellEulerAngles[3 * i + 1] = f2[i];
+      cellEulerAngles[3 * i + 2] = f3[i];
+    }
+    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+  }
+
+  cDims[0] = 1;
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+  }
+
 }
