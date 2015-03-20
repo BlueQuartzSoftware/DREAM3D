@@ -47,10 +47,12 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/TSL/AngPhase.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+
+class AngReader;
 
 // our PIMPL private class
 class ReadAngDataPrivate;
@@ -92,58 +94,67 @@ class ReadAngData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    void populateAngData(AngReader* reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG = ANG_FULL_FILE);
-
 
     /**
-  * @brief This returns the group that the filter belonds to. You can select
-  * a different group if you want. The string returned here will be displayed
-  * in the GUI for the filter
-  */
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance
+     * @param copyFilterParameters
+     * @return
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName
+     * @return
+     */
     virtual const QString getGroupName();
 
     /**
-  * @brief This returns the group that the filter belonds to. You can select
-  * a different group if you want. The string returned here will be displayed
-  * in the GUI for the filter
-  */
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
     virtual const QString getSubGroupName();
 
     /**
-  * @brief This returns a string that is displayed in the GUI. It should be readable
-  * and understandable by humans.
-  */
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
     virtual const QString getHumanLabel();
 
     /**
-  * @brief This method will instantiate all the end user settable options/parameters
-  * for this filter
-  */
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
 
     /**
-  * @brief This method will write the options to a file
-  * @param writer The writer that is used to write the options to a file
-  */
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-  * @brief This method will read the options from a file
-  * @param reader The reader that is used to read the options from a file
-  */
+    * @brief This method will read the options from a file
+    * @param reader The reader that is used to read the options from a file
+    */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-  * @brief Reimplemented from @see AbstractFilter class
-  */
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
 
     /**
-  * @brief This function runs some sanity checks on the DataContainer and inputs
-  * in an attempt to ensure the filter can process the inputs.
-  */
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
     virtual void preflight();
 
     /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
@@ -156,8 +167,8 @@ class ReadAngData : public AbstractFilter
     Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
 
-    signals:
-      void updateFilterParameters(AbstractFilter* filter);
+  signals:
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
@@ -179,20 +190,28 @@ class ReadAngData : public AbstractFilter
     void dataCheck();
 
     /**
-    * @brief readAngFile This reads the Ang file and puts the data into the Voxel Data container
-    */
-    void readAngFile();
+    * @brief copyRawEbsdData This reads the Ang file and puts the data into the Voxel Data container
+     * @param reader
+     * @param tDims
+     * @param cDims
+     */
+    void copyRawEbsdData(AngReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
 
     /**
     * @brief This method reads the values for the phase type, crystal structure
     * and precipitate fractions from the EBSD file.
     * @param reader The EbsdReader instance
-    * @param precipFractions Container to hold the precipitate fractions (out)
-    * @param crystalStructures Container to hold the crystal structures (out)
     * @return Zero/Positive on Success - Negative on error.
     */
-    int loadInfo(AngReader* reader);
+    int loadMaterialInfo(AngReader* reader);
 
+    /**
+     * @brief readDataFile
+     * @param reader
+     * @param m
+     * @param dims
+     */
+    void readDataFile(AngReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG = ANG_FULL_FILE);
 
   private:
     QScopedPointer<ReadAngDataPrivate> const d_ptr;

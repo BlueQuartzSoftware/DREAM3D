@@ -47,6 +47,11 @@ void TestHedmReader()
   MicReader reader;
   reader.setFileName(UnitTest::HedmReaderTest::MicFile);
   int err =  reader.readFile();
+  if(err < 0)
+  {
+    qDebug() << reader.getErrorMessage();
+  }
+  std::cout << "err: " << err << std::endl;
   DREAM3D_REQUIRE(err >= 0);
 
 }

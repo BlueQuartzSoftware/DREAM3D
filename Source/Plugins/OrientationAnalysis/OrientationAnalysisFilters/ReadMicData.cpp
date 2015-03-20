@@ -44,6 +44,8 @@
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/HEDM/MicFields.h"
+#include "EbsdLib/HEDM/MicReader.h"
+
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -62,24 +64,24 @@
 // -----------------------------------------------------------------------------
 class ReadMicDataPrivate
 {
-  Q_DISABLE_COPY(ReadMicDataPrivate)
+    Q_DISABLE_COPY(ReadMicDataPrivate)
     Q_DECLARE_PUBLIC(ReadMicData)
     ReadMicData* const q_ptr;
-  ReadMicDataPrivate(ReadMicData* ptr);
+    ReadMicDataPrivate(ReadMicData* ptr);
 
-  Mic_Private_Data m_Data;
+    Mic_Private_Data m_Data;
 
-  QString m_InputFile_Cache;
-  QDateTime m_TimeStamp_Cache;
+    QString m_InputFile_Cache;
+    QDateTime m_TimeStamp_Cache;
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ReadMicDataPrivate::ReadMicDataPrivate(ReadMicData* ptr) :
-q_ptr(ptr),
-m_InputFile_Cache(""),
-m_TimeStamp_Cache(QDateTime())
+  q_ptr(ptr),
+  m_InputFile_Cache(""),
+  m_TimeStamp_Cache(QDateTime())
 {
 
 }
@@ -88,25 +90,25 @@ m_TimeStamp_Cache(QDateTime())
 //
 // -----------------------------------------------------------------------------
 ReadMicData::ReadMicData() :
-AbstractFilter(),
-m_DataContainerName(DREAM3D::Defaults::DataContainerName),
-m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-m_PhaseNameArrayName(""),
-m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
-m_InputFile(""),
-d_ptr(new ReadMicDataPrivate(this)),
-m_FileWasRead(false),
-m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
-m_Manufacturer(Ebsd::UnknownManufacturer),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_CellPhases(NULL),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CellEulerAngles(NULL),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_CrystalStructures(NULL),
-m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
-m_LatticeConstants(NULL)
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_PhaseNameArrayName(""),
+  m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_InputFile(""),
+  d_ptr(new ReadMicDataPrivate(this)),
+  m_FileWasRead(false),
+  m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
+  m_Manufacturer(Ebsd::UnknownManufacturer),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_CellPhases(NULL),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellEulerAngles(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL),
+  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
+  m_LatticeConstants(NULL)
 {
   setupFilterParameters();
 }
@@ -160,10 +162,10 @@ int ReadMicData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-    DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-    writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -184,7 +186,10 @@ void ReadMicData::populateMicData(MicReader* reader, DataContainer::Pointer m, Q
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
-
+  if (flag == MIC_FULL_FILE)
+  {
+    setInputFile_Cache(""); // We need something to trigger the file read below
+  }
   // Drop into this if statement if we need to read from a file
   if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
   {
@@ -251,19 +256,19 @@ void ReadMicData::populateMicData(MicReader* reader, DataContainer::Pointer m, Q
   }
 
   // Read from cache
-      {
-        dims[0] = getData().dims[0];
-        dims[1] = getData().dims[1];
-        dims[2] = getData().dims[2];
-        m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
-        m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
-        m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
-      }
+  {
+    dims[0] = getData().dims[0];
+    dims[1] = getData().dims[1];
+    dims[2] = getData().dims[2];
+    m->getGeometryAs<ImageGeom>()->setDimensions(dims[0], dims[1], dims[2]);
+    m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
+    m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+  }
 
-      if (flag == MIC_FULL_FILE)
-      {
-        loadInfo(reader);
-      }
+  if (flag == MIC_FULL_FILE)
+  {
+    loadMaterialInfo(reader);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -433,7 +438,7 @@ void ReadMicData::execute()
 void ReadMicData::readMicFile()
 {
   int err = 0;
-  MicReader* reader = new MicReader();
+  boost::shared_ptr<MicReader> reader(new MicReader());
   reader->setFileName(m_InputFile);
   err = reader->readFile();
   if (err < 0)
@@ -453,7 +458,7 @@ void ReadMicData::readMicFile()
   m->getGeometryAs<ImageGeom>()->setResolution(reader->getXStep(), reader->getYStep(), 1.0);
   m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
-  err = loadInfo(reader);
+  err = loadMaterialInfo(reader.get());
 
   float* f1 = NULL;
   float* f2 = NULL;
@@ -529,8 +534,6 @@ void ReadMicData::readMicFile()
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     cellAttrMat->addAttributeArray(Ebsd::Mic::Confidence, fArray);
   }
-
-  delete reader;
 }
 
 // -----------------------------------------------------------------------------
@@ -582,3 +585,74 @@ const QString ReadMicData::getHumanLabel()
   return "Read HEDM Data (.mic)";
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ReadMicData::loadMaterialInfo(MicReader* reader)
+{
+  QVector<MicPhase::Pointer> phases = getData().phases;
+  if (phases.size() == 0)
+  {
+    setErrorCondition(reader->getErrorCode());
+    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
+    return getErrorCondition();
+  }
+
+  DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
+  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
+  QVector<size_t> dims(1, 6);
+  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, getLatticeConstantsArrayName());
+
+  // Initialize the zero'th element to unknowns. The other elements will
+  // be filled in based on values from the data file
+  crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  materialNames->setValue(0, "Invalid Phase");
+  latticeConstants->setComponent(0, 0, 0.0f);
+  latticeConstants->setComponent(0, 1, 0.0f);
+  latticeConstants->setComponent(0, 2, 0.0f);
+  latticeConstants->setComponent(0, 3, 0.0f);
+  latticeConstants->setComponent(0, 4, 0.0f);
+  latticeConstants->setComponent(0, 5, 0.0f);
+
+  for (size_t i = 0; i < phases.size(); i++)
+  {
+    int phaseID = phases[i]->getPhaseIndex();
+    crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
+    materialNames->setValue(phaseID, phases[i]->getMaterialName());
+    QVector<float> lc = phases[i]->getLatticeConstants();
+
+    latticeConstants->setComponent(phaseID, 0, lc[0]);
+    latticeConstants->setComponent(phaseID, 1, lc[1]);
+    latticeConstants->setComponent(phaseID, 2, lc[2]);
+    latticeConstants->setComponent(phaseID, 3, lc[3]);
+    latticeConstants->setComponent(phaseID, 4, lc[4]);
+    latticeConstants->setComponent(phaseID, 5, lc[5]);
+
+  }
+  DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
+  if (NULL == vdc) { return -1; }
+  AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
+  if (NULL == attrMatrix.get()) { return -2; }
+
+  // Resize the AttributeMatrix based on the size of the crystal structures array
+  QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
+  attrMatrix->resizeAttributeArrays(tDims);
+  // Now add the attributeArray to the AttributeMatrix
+  attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+  attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+  attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+
+  // Now reset the internal ensemble array references to these new arrays
+  m_CrystalStructuresPtr = crystalStructures;
+  if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  m_LatticeConstantsPtr = latticeConstants;
+  if (NULL != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+    m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  return 0;
+}

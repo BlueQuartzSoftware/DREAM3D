@@ -142,7 +142,7 @@ int H5OIMReader::readFile()
     return getErrorCode();
   }
 
-  // Read and transform data
+  // Read data
   err = readData(ebsdGid);
   if(err < 0)
   {
@@ -229,7 +229,9 @@ int H5OIMReader::readHeaderOnly()
   }
   sentinel.addGroupId(&ebsdGid);
 
- err = H5Gclose(ebsdGid);
+  err = readHeader(ebsdGid);
+
+  err = H5Gclose(ebsdGid);
   ebsdGid = -1;
   if(err < 0)
   {
