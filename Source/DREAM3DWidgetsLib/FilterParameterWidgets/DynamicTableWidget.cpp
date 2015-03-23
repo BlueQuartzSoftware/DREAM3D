@@ -169,6 +169,14 @@ void DynamicTableWidget::setupGui()
 			deleteColBtn->setHidden(true);
 		}
 	}
+
+	// Set Icons
+	QIcon addIcon = QIcon(QString(":/add2.png"));
+	QIcon deleteIcon = QIcon(QString(":/delete2.png"));
+	addRowBtn->setIcon(addIcon);
+	addColBtn->setIcon(addIcon);
+	deleteRowBtn->setIcon(deleteIcon);
+	deleteColBtn->setIcon(deleteIcon);
 }
 
 // -----------------------------------------------------------------------------

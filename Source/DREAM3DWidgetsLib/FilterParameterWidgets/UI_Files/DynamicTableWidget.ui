@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>762</width>
-    <height>553</height>
+    <width>1304</width>
+    <height>1035</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>200</height>
+       <height>400</height>
       </size>
      </property>
      <property name="toolTip">
@@ -54,7 +54,7 @@
       <string>Adds a row to the table.</string>
      </property>
      <property name="text">
-      <string>Add Row</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -96,7 +96,7 @@
       <string>Adds a column to the table.</string>
      </property>
      <property name="text">
-      <string>Add Column</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -112,7 +112,7 @@
       <string>Removes the currently selected column from the table.</string>
      </property>
      <property name="text">
-      <string>Remove Column</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -134,7 +134,7 @@
       <string>Removes the currently selected row from the table.</string>
      </property>
      <property name="text">
-      <string>Remove Row</string>
+      <string/>
      </property>
     </widget>
    </item>
