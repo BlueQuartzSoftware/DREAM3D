@@ -1753,6 +1753,7 @@ QVector<DataArrayPath> QFilterParametersReader::readDataArrayPathVector(const QS
 	int size = m_Prefs->beginReadArray(name);
 	if (size <= 0)
 	{
+		m_Prefs->endArray();
 		return def;
 	}
 
@@ -1783,6 +1784,7 @@ DynamicTableData QFilterParametersReader::readDynamicTableData(const QString& na
 	int size = m_Prefs->beginReadArray(name);
 	if (size <= 0)
 	{
+		m_Prefs->endArray();
 		return def;
 	}
 

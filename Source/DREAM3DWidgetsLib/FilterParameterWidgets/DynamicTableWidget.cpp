@@ -109,27 +109,32 @@ void DynamicTableWidget::setupGui()
 	connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
 		this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-	// Catch when a value in the table changes
-	connect(dynamicTable, SIGNAL(itemChanged(QTableWidgetItem*)),
-		this, SLOT(widgetChanged(QTableWidgetItem*))); 
-
 	tableLabel->setText(m_FilterParameter->getHumanLabel());
 
 	// Set the item delegate so that we can only enter 'double' values into the table
 	DynamicTableItemDelegate* dlg = new DynamicTableItemDelegate;
 	dynamicTable->setItemDelegate(dlg);
 
-	DynamicTableData data(m_FilterParameter->getDefaultTable(), m_FilterParameter->getDefaultRowCount(), m_FilterParameter->getDefaultColCount(), m_FilterParameter->getRowHeaders(), m_FilterParameter->getColumnHeaders());
+	// Get what is in the filter
+	DynamicTableData data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DynamicTableData>();
 
+	// If there was nothing in the filter, use the defaults
 	if (m_FilterParameter != NULL)
 	{
+		if (data.getTableData().size() == 0)
+		{
+			data.setTableData(m_FilterParameter->getDefaultTable());
+			data.setNumRows(m_FilterParameter->getDefaultRowCount());
+			data.setNumCols(m_FilterParameter->getDefaultColCount());
+			data.setRowHeaders(m_FilterParameter->getRowHeaders());
+			data.setColHeaders(m_FilterParameter->getColumnHeaders());
+		}
+
 		// Populate the table with the default values
 		std::vector<std::vector<double> > tableData = data.getTableData();
 		for (int row = 0; row < tableData.size(); row++)
 		{
 			dynamicTable->insertRow(row);
-			QTableWidgetItem* item = new QTableWidgetItem(data.getRowHeaders().at(row));
-			dynamicTable->setVerticalHeaderItem(row, item);
 			for (int col = 0; col < tableData[row].size(); col++)
 			{
 				if (dynamicTable->columnCount() == col)
@@ -142,12 +147,13 @@ void DynamicTableWidget::setupGui()
 			}
 		}
 
-		// Populate column headers
-		for (int cHeader = 0; cHeader < data.getColHeaders().size(); cHeader++)
-		{
-			QTableWidgetItem* item = new QTableWidgetItem(data.getColHeaders().at(cHeader));
-			dynamicTable->setHorizontalHeaderItem(cHeader, item);
-		}
+		// Populate row and column headers
+		dynamicTable->setVerticalHeaderLabels(data.getRowHeaders());
+		dynamicTable->setHorizontalHeaderLabels(data.getColHeaders());
+
+		// Resize rows and columns to contents
+		dynamicTable->resizeColumnsToContents();
+		dynamicTable->resizeRowsToContents();
 
 		// Hide add/remove row buttons if row count is not dynamic
 		if (m_FilterParameter->getAreRowsDynamic() == false)
@@ -163,16 +169,6 @@ void DynamicTableWidget::setupGui()
 			deleteColBtn->setHidden(true);
 		}
 	}
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DynamicTableWidget::widgetChanged(QTableWidgetItem* item)
-{
-	m_DidCausePreflight = true;
-	emit parametersChanged();
-	m_DidCausePreflight = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -270,7 +266,34 @@ void DynamicTableWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void DynamicTableWidget::on_addRowBtn_pressed()
 {
-	dynamicTable->insertRow(dynamicTable->rowCount());
+	int row = dynamicTable->rowCount();
+
+	// If we are adding the first row, add the first column too.
+	if (row <= 0)
+	{
+		dynamicTable->insertColumn(0);
+		dynamicTable->setHorizontalHeaderItem(0, new QTableWidgetItem("Column 1"));
+	}
+
+	dynamicTable->insertRow(row);
+	dynamicTable->setVerticalHeaderItem(row, new QTableWidgetItem("Row " + QString::number(dynamicTable->rowCount())));
+
+	dynamicTable->blockSignals(true);
+	for (int col = 0; col < dynamicTable->columnCount(); col++)
+	{
+		if (col + 1 == dynamicTable->columnCount())
+		{
+			// Only fire the signal after the last new item has been created
+			dynamicTable->blockSignals(false);
+		}
+
+		QTableWidgetItem* item = new QTableWidgetItem("0");
+		dynamicTable->setItem(row, col, item);
+	}
+
+	// Resize entire table to contents
+	dynamicTable->resizeRowsToContents();
+	dynamicTable->resizeColumnsToContents();
 }
 
 // -----------------------------------------------------------------------------
@@ -279,6 +302,19 @@ void DynamicTableWidget::on_addRowBtn_pressed()
 void DynamicTableWidget::on_deleteRowBtn_pressed()
 {
 	dynamicTable->removeRow(dynamicTable->currentRow());
+
+	if (dynamicTable->rowCount() <= 0)
+	{
+		while (dynamicTable->columnCount() > 0)
+		{
+			dynamicTable->removeColumn(0);
+		}
+	}
+
+	// Cause a preflight
+	m_DidCausePreflight = true;
+	emit parametersChanged();
+	m_DidCausePreflight = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -286,7 +322,34 @@ void DynamicTableWidget::on_deleteRowBtn_pressed()
 // -----------------------------------------------------------------------------
 void DynamicTableWidget::on_addColBtn_pressed()
 {
-	dynamicTable->insertColumn(dynamicTable->columnCount());
+	int col = dynamicTable->columnCount();
+
+	// If we are adding the first column, add the first row too.
+	if (col <= 0)
+	{
+		dynamicTable->insertRow(0);
+		dynamicTable->setVerticalHeaderItem(0, new QTableWidgetItem("Row 1"));
+	}
+
+	dynamicTable->insertColumn(col);
+	dynamicTable->setHorizontalHeaderItem(col, new QTableWidgetItem("Column " + QString::number(dynamicTable->columnCount())));
+
+	dynamicTable->blockSignals(true);
+	for (int row = 0; row < dynamicTable->rowCount(); row++)
+	{
+		if (row + 1 == dynamicTable->rowCount())
+		{
+			// Only fire the signal after the last new item has been created
+			dynamicTable->blockSignals(false);
+		}
+
+		QTableWidgetItem* item = new QTableWidgetItem("0");
+		dynamicTable->setItem(row, col, item);
+	}
+
+	// Resize entire table to contents
+	dynamicTable->resizeRowsToContents();
+	dynamicTable->resizeColumnsToContents();
 }
 
 // -----------------------------------------------------------------------------
@@ -295,6 +358,19 @@ void DynamicTableWidget::on_addColBtn_pressed()
 void DynamicTableWidget::on_deleteColBtn_pressed()
 {
 	dynamicTable->removeColumn(dynamicTable->currentColumn());
+
+	if (dynamicTable->columnCount() <= 0)
+	{
+		while (dynamicTable->rowCount() > 0)
+		{
+			dynamicTable->removeRow(0);
+		}
+	}
+
+	// Cause a preflight
+	m_DidCausePreflight = true;
+	emit parametersChanged();
+	m_DidCausePreflight = false;
 }
 
 

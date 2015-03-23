@@ -167,20 +167,18 @@ std::vector<std::vector<double> > DynamicTableData::DeserializeData(QString data
 	}
 
 	int start = 0;
+	int tokenIndex = 0;
 
-	while (start >= 0)
+	while (tokenIndex >= 0)
 	{
-		int tokenIndex = dataStr.indexOf(delimiter, start);
-		QString valueStr = dataStr.mid(start, tokenIndex);
+		tokenIndex = dataStr.indexOf(delimiter, start);
+		QString valueStr = dataStr.mid(start, tokenIndex-start);
 		double value = valueStr.toDouble();
 		data[row][col] = value;
 		start = tokenIndex + 1;
 
-		if (col < 3)
-		{
-			col++;
-		}
-		else
+		col++;
+		if (col == nCols)
 		{
 			row++;
 			col = 0;
@@ -195,7 +193,17 @@ std::vector<std::vector<double> > DynamicTableData::DeserializeData(QString data
 // -----------------------------------------------------------------------------
 QString DynamicTableData::serializeRowHeaders(char delimiter) const
 {
-	return "";
+	QString str = "";
+	QTextStream ss(&str);
+
+	for (int i = 0; i < rowHeaders.size(); i++)
+	{
+		ss << rowHeaders[i];
+		ss << delimiter;
+	}
+	str.chop(1);	// Get rid of the last, unnecessary delimiter
+
+	return str;
 }
 
 // -----------------------------------------------------------------------------
@@ -203,23 +211,43 @@ QString DynamicTableData::serializeRowHeaders(char delimiter) const
 // -----------------------------------------------------------------------------
 QString DynamicTableData::serializeColumnHeaders(char delimiter) const
 {
-	return "";
+	QString str = "";
+	QTextStream ss(&str);
+
+	for (int i = 0; i < colHeaders.size(); i++)
+	{
+		ss << colHeaders[i];
+		ss << delimiter;
+	}
+	str.chop(1);	// Get rid of the last, unnecessary delimiter
+
+	return str;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList DynamicTableData::DeserializeRowHeaders(QString headersStr, char delimiter)
+QStringList DynamicTableData::DeserializeHeaders(QString headersStr, char delimiter)
 {
-	return QStringList();
-}
+	QStringList headers;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QStringList DynamicTableData::DeserializeColumnHeaders(QString headersStr, char delimiter)
-{
-	return QStringList();
+	if (headersStr.isEmpty())
+	{
+		return headers;
+	}
+
+	int start = 0;
+	int tokenIndex = 0;
+
+	while (tokenIndex >= 0)
+	{
+		tokenIndex = headersStr.indexOf(delimiter, start);
+		QString header = headersStr.mid(start, tokenIndex);
+		headers.push_back(header);
+		start = tokenIndex + 1;
+	}
+
+	return headers;
 }
 
 // -----------------------------------------------------------------------------

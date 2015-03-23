@@ -94,7 +94,6 @@ public:
 
 	public slots:
 	void on_dynamicTable_cellChanged(int row, int col);
-	void widgetChanged(QTableWidgetItem* item);
 	void on_addRowBtn_pressed();
 	void on_deleteRowBtn_pressed();
 	void on_addColBtn_pressed();

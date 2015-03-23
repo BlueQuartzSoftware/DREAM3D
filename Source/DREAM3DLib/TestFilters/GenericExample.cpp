@@ -206,9 +206,9 @@ void GenericExample::setupFilterParameters()
 
   QStringList rHeaders, cHeaders;
   rHeaders << "Row 1" << "Row 2";
-  cHeaders << "Col 1" << "Col 2";
+  cHeaders << "Column 1" << "Column 2";
   std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
-  parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table", "DynamicData", FilterParameterWidgetType::DynamicTableWidget, 2, 2, rHeaders, cHeaders, defaultTable, true, false, false, 0));
+  parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table", "DynamicData", FilterParameterWidgetType::DynamicTableWidget, 2, 2, rHeaders, cHeaders, defaultTable, true, true, false, 0));
 
 
   setFilterParameters(parameters);
@@ -223,7 +223,7 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSelectedMultiArrayPaths(reader->readDataArrayPathVector("SelectedMultiArrayPaths", getSelectedMultiArrayPaths()));
-  //setDynamicData(reader->readValue("DynamicData", getDynamicData()));
+  setDynamicData(reader->readDynamicTableData("DynamicData", getDynamicData()));
   setStlFilePrefix( reader->readString("StlFilePrefix", getStlFilePrefix()) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );

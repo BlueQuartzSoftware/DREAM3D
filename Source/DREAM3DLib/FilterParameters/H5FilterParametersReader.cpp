@@ -1018,8 +1018,8 @@ DynamicTableData H5FilterParametersReader::readDynamicTableData(const QString& n
 
 	if (err == 0)
 	{
-		QStringList rHeaders = DynamicTableData::DeserializeRowHeaders(rHeadersStr, '|');
-		QStringList cHeaders = DynamicTableData::DeserializeColumnHeaders(cHeadersStr, '|');
+		QStringList rHeaders = DynamicTableData::DeserializeHeaders(rHeadersStr, '|');
+		QStringList cHeaders = DynamicTableData::DeserializeHeaders(cHeadersStr, '|');
 		std::vector<std::vector<double> > data = DynamicTableData::ExpandData(dataVec, numRows, numCols);
 
 		DynamicTableData tableData(data, numRows, numCols, rHeaders, cHeaders);

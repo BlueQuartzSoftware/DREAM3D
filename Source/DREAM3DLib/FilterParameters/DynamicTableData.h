@@ -71,14 +71,9 @@ public:
 	static std::vector<std::vector<double> > ExpandData(std::vector<double> orig, int nRows, int nCols);
 
 	/**
-	* @brief This deserializes a string of row headers and returns the original QStringList.
+	* @brief This deserializes a string of headers and returns the original QStringList.
 	*/
-	static QStringList DeserializeRowHeaders(QString headersStr, char delimiter);
-
-	/**
-	* @brief This deserializes a string of column headers and returns the original QStringList.
-	*/
-	static QStringList DeserializeColumnHeaders(QString headersStr, char delimiter);
+	static QStringList DeserializeHeaders(QString headersStr, char delimiter);
 
 	/**
 	* @brief This returns a serialized string of the data, iterating through columns first.
