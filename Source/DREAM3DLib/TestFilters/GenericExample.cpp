@@ -204,12 +204,6 @@ void GenericExample::setupFilterParameters()
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
   parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", FilterParameterWidgetType::MultiDataArraySelectionWidget, paths, false, 0));
 
-  QStringList rHeaders, cHeaders;
-  rHeaders << "Row 1" << "Row 2";
-  cHeaders << "Column 1" << "Column 2";
-  std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
-  parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table", "DynamicData", FilterParameterWidgetType::DynamicTableWidget, 2, 2, rHeaders, cHeaders, defaultTable, true, true, false, 0));
-
 
   setFilterParameters(parameters);
 }
@@ -223,7 +217,6 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSelectedMultiArrayPaths(reader->readDataArrayPathVector("SelectedMultiArrayPaths", getSelectedMultiArrayPaths()));
-  setDynamicData(reader->readDynamicTableData("DynamicData", getDynamicData()));
   setStlFilePrefix( reader->readString("StlFilePrefix", getStlFilePrefix()) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
@@ -246,7 +239,6 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DynamicData)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedMultiArrayPaths)
   /* Place code that will write the inputs values into a file. reference the
