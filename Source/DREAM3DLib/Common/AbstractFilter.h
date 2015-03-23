@@ -47,10 +47,11 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
+
+class AbstractFilterParametersReader;
+class AbstractFilterParametersWriter;
 
 
 /**

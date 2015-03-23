@@ -43,6 +43,8 @@
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "OrientationLib/Math/OrientationMath.h"
 
 // -----------------------------------------------------------------------------

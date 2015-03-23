@@ -149,9 +149,9 @@ void AbstractFilter::addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::P
 // -----------------------------------------------------------------------------
 void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  reader->openFilterGroup(this, index);
-
-  reader->closeFilterGroup();
+	BOOST_ASSERT(reader != NULL);
+	qDebug() << "AbstractFilter::readFilterParameters() -> Writing Filter Options" << "\n";
+	return;
 }
 
 // -----------------------------------------------------------------------------

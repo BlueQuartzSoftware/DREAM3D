@@ -45,6 +45,8 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 
 #define ERROR_TXT_OUT 1

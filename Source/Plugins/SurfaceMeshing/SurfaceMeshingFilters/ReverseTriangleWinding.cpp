@@ -34,6 +34,9 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
 #include "ReverseTriangleWinding.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

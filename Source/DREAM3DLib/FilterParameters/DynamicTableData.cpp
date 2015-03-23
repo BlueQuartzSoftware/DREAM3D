@@ -195,7 +195,7 @@ std::vector<std::vector<double> > DynamicTableData::DeserializeData(QString data
 // -----------------------------------------------------------------------------
 QString DynamicTableData::serializeRowHeaders(char delimiter) const
 {
-	
+	return "";
 }
 
 // -----------------------------------------------------------------------------
@@ -203,7 +203,7 @@ QString DynamicTableData::serializeRowHeaders(char delimiter) const
 // -----------------------------------------------------------------------------
 QString DynamicTableData::serializeColumnHeaders(char delimiter) const
 {
-
+	return "";
 }
 
 // -----------------------------------------------------------------------------
@@ -211,7 +211,7 @@ QString DynamicTableData::serializeColumnHeaders(char delimiter) const
 // -----------------------------------------------------------------------------
 QStringList DynamicTableData::DeserializeRowHeaders(QString headersStr, char delimiter)
 {
-
+	return QStringList();
 }
 
 // -----------------------------------------------------------------------------
@@ -219,7 +219,7 @@ QStringList DynamicTableData::DeserializeRowHeaders(QString headersStr, char del
 // -----------------------------------------------------------------------------
 QStringList DynamicTableData::DeserializeColumnHeaders(QString headersStr, char delimiter)
 {
-
+	return QStringList();
 }
 
 // -----------------------------------------------------------------------------

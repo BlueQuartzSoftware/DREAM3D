@@ -42,6 +42,8 @@
 #include <tbb/task.h>
 #endif
 
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
 

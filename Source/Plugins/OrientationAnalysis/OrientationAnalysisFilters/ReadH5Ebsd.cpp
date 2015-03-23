@@ -55,6 +55,8 @@
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

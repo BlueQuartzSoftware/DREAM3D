@@ -18,6 +18,9 @@
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
 
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
