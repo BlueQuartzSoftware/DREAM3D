@@ -1353,17 +1353,18 @@ class DataArray : public IDataArray
       m_Size = newSize;
       m_Array = newArray;
 
+      // This object has now allocated its memory and owns it.
+      m_OwnsData = true;
+
+      m_MaxId = newSize - 1;
+      m_IsAllocated = true;
+
       // Initialize the new tuples if newSize is larger than old size
       if(newSize > oldSize)
       {
         initializeWithValue(m_InitValue, oldSize);
       }
 
-      // This object has now allocated its memory and owns it.
-      m_OwnsData = true;
-
-      m_MaxId = newSize - 1;
-      m_IsAllocated = true;
       return m_Array;
     }
 
