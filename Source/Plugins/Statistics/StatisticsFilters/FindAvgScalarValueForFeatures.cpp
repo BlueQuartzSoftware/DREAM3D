@@ -314,7 +314,7 @@ const QString FindAvgScalarValueForFeatures::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgScalarValueForFeatures::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
 
 
 // -----------------------------------------------------------------------------

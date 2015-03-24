@@ -1,39 +1,29 @@
-Find Feature Average C-Axes {#findcaxislocations}
+Find C-Axis Locations {#findcaxislocations}
 ======
 
 ## Group (Subgroup) ##
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter determines the average c-axis location of each **Feature** by the following algorithm:
+This Filter determines the direction <u,v,w> of the c-axis for each **Element** by applying the quaternion of the **Element** to the <001> direction, which is the c-axis for *Hexagonal* materials.  This will tell where the c-axis of the **Element** sits in the *sample reference frame*.
 
-1. Gather all **Cells** that belong to the **Feature**
-2. Determine the location of the c-axis in the sample *reference frame* for the rotated quaternions for all **Cells**.
-
-3.  average the locations and store as the average for the **Feature**.
-
-Note: This filter will only work properly for *Hexagonal* materials.  The filter does not apply any symmetry operators because there is only one c-axis (<001>) in *Hexagonal* materials and thus all symmetry operators will leave the c-axis in the same position in the sample *reference frame*.  However, in *Cubic* materials, for example, the {100} family of directions are all equivalent and the <001> direction will change location in the sample *reference frame* when symmetry operators are applied. 
-
- 
+Note: This filter will only work properly for *Hexagonal* materials.  The filter does not apply any symmetry operators because there is only one c-axis (<001>) in *Hexagonal* materials and thus all symmetry operators will leave the c-axis in the same position in the sample *reference frame*.  However, in *Cubic* materials, for example, the {100} family of directions are all equivalent and the <001> direction will change location in the *sample reference frame* when symmetry operators are applied. 
 
 ## Parameters ##
 None
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
+| Element | Quats | Float | (4) | Specifies the orientation of the **Element** in quaternion representation |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|---------|--------|
-| Feature | AvgCAxes | This array is the direction <u,v,w> of the c-axis in the sample reference frame |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Element | CAxisLocation | Float | (3) | Direction <u,v,w> of the c-axis for each **Element** in the sample reference frame |
 
 ## Authors ##
 
