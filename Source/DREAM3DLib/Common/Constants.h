@@ -157,7 +157,6 @@ namespace DREAM3D
 
   namespace FilterGroups
   {
-    const DREAM3D_STRING DDDAnalysisFilters("DDDAnalysis");
     const DREAM3D_STRING GenericFilters("Generic");
     const DREAM3D_STRING IOFilters("IO");
     const DREAM3D_STRING ProcessingFilters("Processing");

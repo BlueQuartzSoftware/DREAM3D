@@ -39,6 +39,13 @@
 
 #include "PMDirGenerator.h"
 
+enum FileType
+{
+	CMAKELISTS,
+	TESTFILELOCATIONS,
+	DEFAULT
+};
+
 /*
  *
  */
@@ -57,13 +64,15 @@ class PMFileGenerator : public PMDirGenerator
 
     QString getFileName();
 
-    virtual QString generateFileContents();
+    virtual QString generateFileContents(QString replaceStr = "");
+
+	QString createReplacementString(FileType type, QSet<QString> names);
 
   protected slots:
     virtual void pluginNameChanged (const QString& plugname);
     virtual void outputDirChanged (const QString& outputDir);
     virtual void generateOutput();
-
+	virtual void generateOutputWithFilterNames(QSet<QString> names);
 
   private:
     QString m_FileName;

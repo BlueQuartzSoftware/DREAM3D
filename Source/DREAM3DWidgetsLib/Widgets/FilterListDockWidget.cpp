@@ -261,6 +261,8 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
 // -----------------------------------------------------------------------------
 void FilterListDockWidget::searchFilters()
 {
+	// Set scroll bar back to the top
+	filterList->scrollToTop();
 
   // Get the text from the search box
   QString text = filterSearch->text();
@@ -269,6 +271,7 @@ void FilterListDockWidget::searchFilters()
   {
     // Put back the entire list of Filters
     updateFilterList(true);
+
     // Set the text for the total number of filters
     QString countText = QObject::tr("Filter Count: %1").arg(m_LoadedFilters.size());
     filterCountLabel->setText(countText);

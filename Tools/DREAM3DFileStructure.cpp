@@ -56,7 +56,8 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
 {
   DataContainerArray::Pointer dcArray = DataContainerArray::New();
 
-  QListIterator<DataContainerProxy> dcIter(dcaProxy.list);
+  QList<DataContainerProxy> dcProxies = dcaProxy.dataContainers.values();
+  QListIterator<DataContainerProxy> dcIter(dcProxies);
   while (dcIter.hasNext()) // DataContainerLevel
   {
 

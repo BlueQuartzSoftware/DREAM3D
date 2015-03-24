@@ -72,12 +72,21 @@ class CorrelateValuesWithVectorDirection : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
     Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    /**
+    * @brief This returns the group that the filter belongs to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Correlate Values with Vector Direction"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
 
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
 

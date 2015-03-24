@@ -292,7 +292,7 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
                                                    Observable* obs)
 {
   int err = 0;
-  QList<DataContainerProxy> dcsToRead = dcaProxy.list;
+  QList<DataContainerProxy> dcsToRead = dcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> dcIter(dcsToRead);
   while (dcIter.hasNext()) // DataContainerLevel
   {

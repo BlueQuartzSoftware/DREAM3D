@@ -819,7 +819,8 @@ int QFilterParametersWriter::writeArraySelections(const QString name, QSet<QStri
 int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
 {
   int err = 0;
-  QListIterator<DataContainerProxy> dcIter(v.list);
+  QList<DataContainerProxy> dcProxies = v.dataContainers.values();
+  QListIterator<DataContainerProxy> dcIter(dcProxies);
   // Reset the iterator to the start of the QList
   dcIter.toFront();
   QStringList flat;
