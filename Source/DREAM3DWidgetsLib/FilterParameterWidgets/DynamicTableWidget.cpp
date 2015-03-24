@@ -280,11 +280,11 @@ void DynamicTableWidget::on_addRowBtn_pressed()
 	if (row <= 0)
 	{
 		dynamicTable->insertColumn(0);
-		dynamicTable->setHorizontalHeaderItem(0, new QTableWidgetItem("Column 1"));
+		dynamicTable->setHorizontalHeaderItem(0, new QTableWidgetItem("1"));
 	}
 
 	dynamicTable->insertRow(row);
-	dynamicTable->setVerticalHeaderItem(row, new QTableWidgetItem("Row " + QString::number(dynamicTable->rowCount())));
+	dynamicTable->setVerticalHeaderItem(row, new QTableWidgetItem(QString::number(dynamicTable->rowCount())));
 
 	dynamicTable->blockSignals(true);
 	for (int col = 0; col < dynamicTable->columnCount(); col++)
@@ -336,11 +336,11 @@ void DynamicTableWidget::on_addColBtn_pressed()
 	if (col <= 0)
 	{
 		dynamicTable->insertRow(0);
-		dynamicTable->setVerticalHeaderItem(0, new QTableWidgetItem("Row 1"));
+		dynamicTable->setVerticalHeaderItem(0, new QTableWidgetItem("1"));
 	}
 
 	dynamicTable->insertColumn(col);
-	dynamicTable->setHorizontalHeaderItem(col, new QTableWidgetItem("Column " + QString::number(dynamicTable->columnCount())));
+	dynamicTable->setHorizontalHeaderItem(col, new QTableWidgetItem(QString::number(dynamicTable->columnCount())));
 
 	dynamicTable->blockSignals(true);
 	for (int row = 0; row < dynamicTable->rowCount(); row++)
