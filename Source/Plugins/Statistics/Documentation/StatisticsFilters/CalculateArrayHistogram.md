@@ -7,7 +7,7 @@ Statistics Filters
 ## Description ##
 This filter will create a "Frequency Distribution" histogram of a specified scalar **Array**. The user will select the number of bins (a value greater than zero). The user will enter a new attribute matrix name and a new histogram array name. If the user clicks the new Data Container check box, a new data container name must be entered. Otherwise the current data container will be used.
 
-The histogram is a "Left-Open and Right-Closed" histogram, meaning the intervals are denoted as [a, b). The value returned in component "0" of the output array is _b_ from the above interval while component "1" is the frequency for that bin. The output output array can be most easily be thought of as a 2 column x "num bins" row output.
+The histogram is a "Left Closed, Right Open" histogram, meaning the bin intervals are denoted as [a, b). The value returned in component "0" of the output array is _b_ from the above interval while component "1" is the frequency for that bin. The output output array can be most easily be thought of as a 2 column x "num bins" row output.
 
 ## Example Data ##
 
