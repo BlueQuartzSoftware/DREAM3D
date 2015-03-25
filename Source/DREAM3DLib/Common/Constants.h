@@ -699,6 +699,7 @@ namespace DREAM3D
     const DREAM3D_STRING SharedEdgeList("SharedEdgeList");
     const DREAM3D_STRING SharedTriList("SharedTriList");
     const DREAM3D_STRING SharedQuadList("SharedQuadList");
+    const DREAM3D_STRING UnsharedEdgeList("UnsharedEdgeList");
   }
 
   namespace GeometryType

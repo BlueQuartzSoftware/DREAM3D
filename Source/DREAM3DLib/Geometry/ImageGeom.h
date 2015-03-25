@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/Geometry/IGeometry3D.h"
 
 /**
  * @brief The ImageGeom class represents a structured rectlinear grid

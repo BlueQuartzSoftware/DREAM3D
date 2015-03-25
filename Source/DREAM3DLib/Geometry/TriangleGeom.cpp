@@ -91,6 +91,7 @@ TriangleGeom::TriangleGeom()
   m_VertexList = TriangleGeom::CreateSharedVertexList(0);
   m_TriList = TriangleGeom::CreateSharedTriList(0);
   m_EdgeList = SharedEdgeList::NullPointer();
+  m_UnsharedEdgeList = SharedEdgeList::NullPointer();
   m_TrianglesContainingVert = ElementDynamicList::NullPointer();
   m_TriangleNeighbors = ElementDynamicList::NullPointer();
   m_TriangleCentroids = FloatArrayType::NullPointer();
@@ -190,6 +191,37 @@ size_t TriangleGeom::getNumberOfTuples()
 {
   return m_TriList->getNumberOfTuples();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TriangleGeom::findElementEdges()
+{
+  m_EdgeList = CreateSharedEdgeList(0);
+  GeometryHelpers::Connectivity::Find2DElementEdges<int64_t>(m_TriList, m_EdgeList);
+  if (m_EdgeList.get() == NULL)
+  {
+    return -1;
+  }
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SharedEdgeList::Pointer TriangleGeom::getElementEdges()
+{
+  return m_EdgeList;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::deleteElementEdges()
+{
+  m_EdgeList = SharedEdgeList::NullPointer();
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -314,6 +346,45 @@ void TriangleGeom::deleteElementCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int TriangleGeom::findUnsharedEdges()
+{
+  QVector<size_t> cDims(1, 2);
+  m_UnsharedEdgeList = SharedEdgeList::CreateArray(0, cDims, DREAM3D::Geometry::UnsharedEdgeList);
+  GeometryHelpers::Connectivity::Find2DUnsharedEdges<int64_t>(m_TriList, m_UnsharedEdgeList);
+  if (m_UnsharedEdgeList.get() == NULL)
+  {
+    return -1;
+  }
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SharedEdgeList::Pointer TriangleGeom::getUnsharedEdges()
+{
+  return m_UnsharedEdgeList;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::setUnsharedEdges(SharedEdgeList::Pointer bEdgeList)
+{
+  m_UnsharedEdgeList = bEdgeList;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleGeom::deleteUnsharedEdges()
+{
+  m_UnsharedEdgeList = SharedEdgeList::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriangleGeom::getParametricCenter(double pCoords[3])
 {
   pCoords[0] = 1./3;
@@ -371,7 +442,7 @@ void TriangleGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayTy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
+int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool DREAM3D_NOT_USED(writeXdmf))
 {
   herr_t err = 0;
 
@@ -402,7 +473,15 @@ int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
     }
   }
 
-  // Next write the triangle centroids if the exist
+  if (m_UnsharedEdgeList.get() != NULL)
+  {
+    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_UnsharedEdgeList);
+    if (err < 0)
+    {
+      return err;
+    }
+  }
+
   if (m_TriangleCentroids.get() != NULL)
   {
     err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_TriangleCentroids);
@@ -412,7 +491,6 @@ int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
     }
   }
 
-  // Next write triangle neighbors if they exist
   if (m_TriangleNeighbors.get() != NULL)
   {
     size_t numTris = getNumberOfTris();
@@ -423,7 +501,6 @@ int TriangleGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
     }
   }
 
-  // Last write triangles containing verts if they exist
   if (m_TrianglesContainingVert.get() != NULL)
   {
     size_t numVerts = getNumberOfVertices();
@@ -482,84 +559,47 @@ int TriangleGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileNam
 int TriangleGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
   herr_t err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-  SharedVertexList::Pointer vertices = SharedVertexList::NullPointer();
-  SharedEdgeList::Pointer edges = SharedEdgeList::NullPointer();
-  SharedTriList::Pointer triangles = SharedTriList::NullPointer();
-  vertices = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight);
-  edges = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedEdgeList>(DREAM3D::Geometry::SharedEdgeList, parentId, preflight);
-  triangles = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedTriList>(DREAM3D::Geometry::SharedTriList, parentId, preflight);
-  QVector<size_t> cDims(1, 0);
-  FloatArrayType::Pointer triCentroids = FloatArrayType::CreateArray(cDims, cDims, DREAM3D::StringConstants::TriangleCentroids);
-  if (preflight == true)
+  SharedVertexList::Pointer vertices = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight, err);
+  SharedQuadList::Pointer tris = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedQuadList>(DREAM3D::Geometry::SharedTriList, parentId, preflight, err);
+  if (tris.get() == NULL || vertices.get() == NULL)
   {
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TriangleNeighbors, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      ElementDynamicList::Pointer triNeighbors = ElementDynamicList::New();
-      m_TriangleNeighbors = triNeighbors;
-    }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TrianglesContainingVert, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      ElementDynamicList::Pointer trisContainingVert = ElementDynamicList::New();
-      m_TrianglesContainingVert = trisContainingVert;
-    }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TriangleCentroids, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      m_TriangleCentroids = triCentroids;
-    }
-    setVertices(vertices);
-    setEdges(edges);
-    setTriangles(triangles);
+    return -1;
   }
-  else
+  size_t numTris = tris->getNumberOfTuples();
+  size_t numVerts = vertices->getNumberOfTuples();
+  SharedEdgeList::Pointer edges = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedEdgeList>(DREAM3D::Geometry::SharedEdgeList, parentId, preflight, err);
+  if (err < 0 && err != -2)
   {
-    if (triangles.get() == NULL)
-    {
-      return -1;
-    }
-    size_t numTris = triangles->getNumberOfTuples();
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TriangleNeighbors, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      // Read the triNeighbors array into the buffer
-      std::vector<uint8_t> buffer;
-      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::TriangleNeighbors, buffer);
-      if (err < 0)
-      {
-        return err;
-      }
-      ElementDynamicList::Pointer triNeighbors = ElementDynamicList::New();
-      triNeighbors->deserializeLinks(buffer, numTris);
-      m_TriangleNeighbors = triNeighbors;
-    }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::TrianglesContainingVert, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      // Read the trisContainingVert array into the buffer
-      std::vector<uint8_t> buffer;
-      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::TrianglesContainingVert, buffer);
-      if (err < 0)
-      {
-        return err;
-      }
-      ElementDynamicList::Pointer trisContainingVert = ElementDynamicList::New();
-      trisContainingVert->deserializeLinks(buffer, numTris);
-      m_TrianglesContainingVert = trisContainingVert;
-    }
-    err = triCentroids->readH5Data(parentId);
-    if (err >= 0)
-    {
-      m_TriangleCentroids = triCentroids;
-    }
-    setVertices(vertices);
-    setEdges(edges);
-    setTriangles(triangles);
+    return -1;
   }
+  SharedEdgeList::Pointer bEdges = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedEdgeList>(DREAM3D::Geometry::UnsharedEdgeList, parentId, preflight, err);
+  if (err < 0 && err != -2)
+  {
+    return -1;
+  }
+  FloatArrayType::Pointer triCentroids = GeometryHelpers::GeomIO::ReadListFromHDF5<FloatArrayType>(DREAM3D::StringConstants::TriangleCentroids, parentId, preflight, err);
+  if (err < 0 && err != -2)
+  {
+    return -1;
+  }
+  ElementDynamicList::Pointer triNeighbors = GeometryHelpers::GeomIO::ReadDynamicListFromHDF5<uint16_t, int64_t>(DREAM3D::StringConstants::TriangleNeighbors, parentId, numTris, preflight, err);
+  if (err < 0 && err != -2)
+  {
+    return -1;
+  }
+  ElementDynamicList::Pointer trisContainingVert = GeometryHelpers::GeomIO::ReadDynamicListFromHDF5<uint16_t, int64_t>(DREAM3D::StringConstants::TrianglesContainingVert, parentId, numVerts, preflight, err);
+  if (err < 0 && err != -2)
+  {
+    return -1;
+  }
+
+  setVertices(vertices);
+  setEdges(edges);
+  setUnsharedEdges(bEdges);
+  setTriangles(tris);
+  setElementCentroids(triCentroids);
+  setElementNeighbors(triNeighbors);
+  setElementsContainingVert(trisContainingVert);
 
   return 1;
 }

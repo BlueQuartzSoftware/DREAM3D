@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Geometry/IGeometry.h"
 
 /**
- * @brief The IGeometry3D class
+ * @brief The IGeometry3D class extends IGeoemtry for elements with a topology of 3D
  */
 class DREAM3DLib_EXPORT IGeometry3D : public IGeometry
 {

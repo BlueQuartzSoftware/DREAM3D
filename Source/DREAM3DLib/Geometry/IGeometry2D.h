@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Geometry/IGeometry.h"
 
 /**
- * @brief The IGeometry2D class
+ * @brief The IGeometry2D class extends IGeometry for elements with a topology of 2D
  */
 class DREAM3DLib_EXPORT IGeometry2D : public IGeometry
 {
@@ -52,6 +52,56 @@ class DREAM3DLib_EXPORT IGeometry2D : public IGeometry
 
     IGeometry2D();
     virtual ~IGeometry2D();
+
+// -----------------------------------------------------------------------------
+// Connectivity
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief findElementEdges
+     * @return
+     */
+    virtual int findElementEdges() = 0;
+
+    /**
+     * @brief getElementEdges
+     * @return
+     */
+    virtual SharedEdgeList::Pointer getElementEdges() = 0;
+
+    /**
+     * @brief deleteElementEdges
+     */
+    virtual void deleteElementEdges() = 0;
+
+// -----------------------------------------------------------------------------
+// Topology
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief findUnsharedEdges
+     */
+    virtual int findUnsharedEdges() = 0;
+
+    /**
+     * @brief getUnsharedEdges
+     * @return
+     */
+    virtual SharedEdgeList::Pointer getUnsharedEdges() = 0;
+
+    /**
+     * @brief deleteUnsharedEdges
+     */
+    virtual void deleteUnsharedEdges() = 0;
+
+  protected:
+
+    /**
+     * @brief setUnsharedEdges
+     * @param bEdgeList
+     */
+    virtual void setUnsharedEdges(SharedEdgeList::Pointer bEdgeList) = 0;
+
 
   private:
 
