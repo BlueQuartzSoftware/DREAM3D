@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/ComparisonInputs.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DynamicTableData.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
@@ -121,7 +122,10 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const QString name, AxisAngleInput_t v) = 0;
 
     virtual int writeValue(const QString name, const DataArrayPath& path) = 0;
-	virtual int writeValue(const QString name, const QVector<DataArrayPath>& path) = 0;
+
+    virtual int writeValue(const QString name, const QVector<DataArrayPath>& path) = 0;
+
+    virtual int writeValue(const QString name, const DynamicTableData& v) = 0;
 
   protected:
     AbstractFilterParametersWriter();

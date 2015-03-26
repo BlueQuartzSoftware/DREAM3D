@@ -41,7 +41,8 @@
 #include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"

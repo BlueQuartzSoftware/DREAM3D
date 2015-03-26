@@ -31,6 +31,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       PreflightUpdatedValueWidget
       DataArrayCreationWidget
       SeparatorWidget
+      DynamicTableWidget
       LinkedBooleanWidget
       PhaseTypeSelectionWidget
       VolumeDataContainerInfoWidget
@@ -85,6 +86,7 @@ set(DREAM3DWidgetsLib_ParameterWidgets_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionTableModel.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/DynamicTableItemDelegate.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetsDialogs.h
 )
 set(DREAM3DWidgetsLib_ParameterWidgets_SRCS
@@ -92,6 +94,7 @@ set(DREAM3DWidgetsLib_ParameterWidgets_SRCS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionTableModel.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/DynamicTableItemDelegate.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetsDialogs.cpp
 )
 set(DREAM3DWidgetsLib_ParameterWidgets_UIS

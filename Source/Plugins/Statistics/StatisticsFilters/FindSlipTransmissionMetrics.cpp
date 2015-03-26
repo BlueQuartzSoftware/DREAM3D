@@ -37,7 +37,8 @@
 
 #include "FindSlipTransmissionMetrics.h"
 
-
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------

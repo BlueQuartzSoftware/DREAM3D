@@ -42,6 +42,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"

@@ -61,6 +61,8 @@
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"

@@ -43,7 +43,6 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
 /**
  * @class GenericExample GenericExample.h ExamplePlugin/Code/ExamplePluginFilters/GenericExample.h
  * @brief
@@ -129,7 +128,6 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, DistanceMetric)
     Q_PROPERTY(int DistanceMetric READ getDistanceMetric WRITE setDistanceMetric)
-
 
 
     virtual const QString getCompiledLibraryName();

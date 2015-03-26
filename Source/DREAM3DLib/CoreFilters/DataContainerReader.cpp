@@ -44,6 +44,8 @@
 
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 
 // -----------------------------------------------------------------------------

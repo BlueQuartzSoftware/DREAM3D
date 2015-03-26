@@ -43,6 +43,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1

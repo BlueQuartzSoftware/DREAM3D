@@ -36,6 +36,8 @@
 #include <QtCore/QDateTime>
 
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "IO/IOConstants.h"
 

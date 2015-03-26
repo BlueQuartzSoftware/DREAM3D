@@ -80,6 +80,12 @@ class DREAM3DLib_EXPORT PluginManager
      */
     QList<QString> getPluginNames();
 
+	/**
+	* @brief getPluginName Returns the plugin name for the given filter name
+	* @return
+	*/
+	QString getPluginName(QString filtName);
+
     /**
      * @brief getPluginList Returns the plugins list
      * @return

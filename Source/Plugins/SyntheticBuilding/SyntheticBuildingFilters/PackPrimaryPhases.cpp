@@ -56,6 +56,8 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SyntheticBuilding/ShapeOps/CubeOctohedronOps.h"
 #include "SyntheticBuilding/ShapeOps/CylinderOps.h"
 #include "SyntheticBuilding/ShapeOps/EllipsoidOps.h"

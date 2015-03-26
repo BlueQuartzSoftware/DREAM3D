@@ -109,6 +109,8 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeValue(const QString name, const DataArrayPath& v);
 	virtual int writeValue(const QString name, const QVector<DataArrayPath>& v);
 
+	virtual int writeValue(const QString name, const DynamicTableData& v);
+
   protected:
     H5FilterParametersWriter();
 
