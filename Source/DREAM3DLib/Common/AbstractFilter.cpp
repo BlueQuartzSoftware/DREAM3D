@@ -175,6 +175,17 @@ bool AbstractFilter::getCancel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+IDREAM3DPlugin* AbstractFilter::getPluginInstance()
+{
+	PluginManager* manager = PluginManager::Instance();
+	QString pluginName = manager->getPluginName(getNameOfClass());
+	IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);
+	return plugin;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AbstractFilter::Pointer AbstractFilter::newFilterInstance(bool copyFilterParameters)
 {
   return NullPointer();

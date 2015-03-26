@@ -47,16 +47,53 @@ DynamicTableData::DynamicTableData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DynamicTableData::DynamicTableData(std::vector<std::vector<double> > data, int nRows, int nCols, QStringList rHeaders, QStringList cHeaders)
+DynamicTableData::DynamicTableData(int nRows, int nCols)
 {
-	// Adjust dimensions if they are not all the same
-	checkAndAdjustDimensions(data, nRows, nCols, rHeaders, cHeaders);
+	std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols, 0));
+	tableData = data;
 
-	numRows = nRows;
-	numCols = nCols;
+	QStringList rHeaders, cHeaders;
+
+	for (int i = 0; i < nRows; i++)
+	{
+		rHeaders << QString::number(i);
+	}
+
+	for (int i = 0; i < nCols; i++)
+	{
+		cHeaders << QString::number(i);
+	}
+
+	rowHeaders = rHeaders;
+	colHeaders = cHeaders;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableData::DynamicTableData(int nRows, int nCols, QStringList rHeaders, QStringList cHeaders)
+{
+	std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols, 0));
+	tableData = data;
+
+	rowHeaders = rHeaders;
+	colHeaders = cHeaders;
+
+	// Adjust dimensions if they are not all the same
+	checkAndAdjustDimensions();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableData::DynamicTableData(std::vector<std::vector<double> > data, QStringList rHeaders, QStringList cHeaders)
+{
 	tableData = data;
 	rowHeaders = rHeaders;
 	colHeaders = cHeaders;
+
+	// Adjust dimensions if they are not all the same
+	checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
@@ -70,64 +107,78 @@ DynamicTableData::~DynamicTableData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableData::checkAndAdjustDimensions(std::vector<std::vector<double> > &data, int nRows, int nCols, QStringList &rHeaders, QStringList &cHeaders)
+bool DynamicTableData::isEmpty()
 {
-	QSize dataSize(data.size(), 0);
-	QSize defaultSize(nRows, nCols);
-	QSize headerSize(rHeaders.size(), cHeaders.size());
-	
-	if (data.size() > 0)
+	if (tableData.size() > 0 || rowHeaders.size() > 0 || colHeaders.size() > 0)
 	{
-		dataSize.setHeight(data[0].size());
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableData::checkAndAdjustDimensions()
+{
+	QSize dataSize(tableData.size(), 0);
+	QSize headerSize(rowHeaders.size(), colHeaders.size());
+	
+	if (tableData.size() > 0)
+	{
+		dataSize.setHeight(tableData[0].size());
 	}
 
-	if (dataSize == defaultSize && defaultSize == headerSize)
+	if (dataSize == headerSize)
 	{
 		return;
 	}
-	if (dataSize != defaultSize)
+	else
 	{
-		qDebug() << "The data dimensions do not equal the default dimensions.  The default dimensions will be used and will overwrite the current data dimensions.  This may result in data loss or garbage values.";
-		data.resize(nRows);		// Resize rows
-		for (int i = 0; i < nRows; i++)
-		{
-			data[i].resize(nCols);		// Resize columns
-		}
-	}
-	if (headerSize != defaultSize)
-	{
-		qDebug() << "The header dimensions do not equal the default dimensions.  The default dimensions will be used and will overwrite the current header dimensions.  This may result in data loss.";
+		/* The header dimensions do not equal the data dimensions.
+		   The data dimensions will be used and will overwrite the current header dimensions.
+		   This may result in data loss.
+		*/
+		int nRows = dataSize.width();
+		int nCols = dataSize.height();
 
 		// If row header dimension is greater than default row dimension, remove the extra headers
-		if (rHeaders.size() > nRows)
+		if (rowHeaders.size() > nRows)
 		{
-			while (rHeaders.size() > nRows)
+			while (rowHeaders.size() > nRows)
 			{
-				rHeaders.pop_back();
+				rowHeaders.pop_back();
 			}
 		}
 		// If row header dimension is less than default row dimension, add blank headers
 		else
 		{
-			while (rHeaders.size() < nRows)
+			int count = rowHeaders.size();
+			while (rowHeaders.size() < nRows)
 			{
-				rHeaders.push_back("");
+				rowHeaders.push_back(QString::number(count));
+				count++;
 			}
 		}
 		// If column header dimension is greater than default column dimension, remove the extra headers
-		if (cHeaders.size() > nCols)
+		if (colHeaders.size() > nCols)
 		{
-			while (cHeaders.size() > nCols)
+			while (colHeaders.size() > nCols)
 			{
-				cHeaders.pop_back();
+				colHeaders.pop_back();
 			}
 		}
 		// If column header dimension is less than default column dimension, add blank headers
 		else
 		{
-			while (cHeaders.size() < nCols)
+			int count = colHeaders.size();
+			while (colHeaders.size() < nCols)
 			{
-				cHeaders.push_back("");
+				colHeaders.push_back(QString::number(count));
+				count++;
 			}
 		}
 	}
@@ -255,6 +306,9 @@ QStringList DynamicTableData::DeserializeHeaders(QString headersStr, char delimi
 // -----------------------------------------------------------------------------
 QVector<double> DynamicTableData::flattenData() const
 {
+	int numRows = getNumRows();
+	int numCols = getNumCols();
+
 	QVector<double> flat(numRows*numCols);
 	for (int row = 0; row < numRows; row++)
 	{
@@ -305,6 +359,9 @@ std::vector<std::vector<double> > DynamicTableData::getTableData() const
 void DynamicTableData::setTableData(std::vector<std::vector<double> > data)
 {
 	tableData = data;
+
+	// Adjust dimensions
+	checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
@@ -321,6 +378,9 @@ QStringList DynamicTableData::getRowHeaders() const
 void DynamicTableData::setRowHeaders(QStringList rHeaders)
 {
 	rowHeaders = rHeaders;
+
+	// Adjust dimensions
+	checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
@@ -337,6 +397,9 @@ QStringList DynamicTableData::getColHeaders() const
 void DynamicTableData::setColHeaders(QStringList cHeaders)
 {
 	colHeaders = cHeaders;
+
+	// Adjust dimensions
+	checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
@@ -344,15 +407,7 @@ void DynamicTableData::setColHeaders(QStringList cHeaders)
 // -----------------------------------------------------------------------------
 int DynamicTableData::getNumRows() const
 {
-	return numRows;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DynamicTableData::setNumRows(int nRows)
-{
-	numRows = nRows;
+	return tableData.size();
 }
 
 // -----------------------------------------------------------------------------
@@ -360,15 +415,14 @@ void DynamicTableData::setNumRows(int nRows)
 // -----------------------------------------------------------------------------
 int DynamicTableData::getNumCols() const
 {
-	return numCols;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DynamicTableData::setNumCols(int nCols)
-{
-	numCols = nCols;
+	if (tableData.size() > 0)
+	{
+		return tableData[0].size();
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -379,8 +433,6 @@ DynamicTableData::DynamicTableData(const DynamicTableData& rhs)
 	tableData = rhs.tableData;
 	rowHeaders = rhs.rowHeaders;
 	colHeaders = rhs.colHeaders;
-	numRows = rhs.numRows;
-	numCols = rhs.numCols;
 }
 
 // -----------------------------------------------------------------------------
@@ -391,8 +443,6 @@ void DynamicTableData::operator=(const DynamicTableData& rhs)
 	tableData = rhs.tableData;
 	rowHeaders = rhs.rowHeaders;
 	colHeaders = rhs.colHeaders;
-	numRows = rhs.numRows;
-	numCols = rhs.numCols;
 }
 
 

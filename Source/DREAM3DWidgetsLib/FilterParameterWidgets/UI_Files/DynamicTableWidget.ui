@@ -19,7 +19,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>200</height>
+       <height>0</height>
       </size>
      </property>
      <property name="toolTip">
@@ -33,6 +33,31 @@
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectItems</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QPushButton" name="deleteColBtn">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
@@ -51,7 +76,52 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Adds a row to the table.</string>
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QPushButton" name="addColBtn">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="tableLabel">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="deleteRowBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
      </property>
      <property name="text">
       <string/>
@@ -84,66 +154,18 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="5">
-    <widget class="QPushButton" name="addColBtn">
-     <property name="maximumSize">
+   <item row="2" column="6">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
       <size>
-       <width>16777215</width>
-       <height>16777215</height>
+       <width>40</width>
+       <height>20</height>
       </size>
      </property>
-     <property name="toolTip">
-      <string>Adds a column to the table.</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="5">
-    <widget class="QPushButton" name="deleteColBtn">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Removes the currently selected column from the table.</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
-    <widget class="QPushButton" name="deleteRowBtn">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Removes the currently selected row from the table.</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="tableLabel">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
+    </spacer>
    </item>
   </layout>
  </widget>

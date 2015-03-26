@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include <QMessageBox>
+
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DynamicTableData.h"
 
@@ -45,6 +47,10 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/DynamicTableItemDelegate.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
+const QString addRowTT = "Adds a row to the table.";
+const QString addColTT = "Adds a column to the table.";
+const QString deleteRowTT = "Removes the currently selected row from the table.";
+const QString deleteColTT = "Removes the currently selected column from the table.";
 
 // -----------------------------------------------------------------------------
 //
@@ -115,60 +121,14 @@ void DynamicTableWidget::setupGui()
 	DynamicTableItemDelegate* dlg = new DynamicTableItemDelegate;
 	dynamicTable->setItemDelegate(dlg);
 
-	// Get what is in the filter
-	DynamicTableData data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DynamicTableData>();
+	// Set button tooltips
+	addRowBtn->setToolTip(addRowTT);
+	addColBtn->setToolTip(addColTT);
+	deleteRowBtn->setToolTip(deleteRowTT);
+	deleteColBtn->setToolTip(deleteColTT);
 
-	// If there was nothing in the filter, use the defaults
-	if (m_FilterParameter != NULL)
-	{
-		if (data.getTableData().size() == 0)
-		{
-			data.setTableData(m_FilterParameter->getDefaultTable());
-			data.setNumRows(m_FilterParameter->getDefaultRowCount());
-			data.setNumCols(m_FilterParameter->getDefaultColCount());
-			data.setRowHeaders(m_FilterParameter->getRowHeaders());
-			data.setColHeaders(m_FilterParameter->getColumnHeaders());
-		}
-
-		// Populate the table with the default values
-		std::vector<std::vector<double> > tableData = data.getTableData();
-		for (int row = 0; row < tableData.size(); row++)
-		{
-			dynamicTable->insertRow(row);
-			for (int col = 0; col < tableData[row].size(); col++)
-			{
-				if (dynamicTable->columnCount() == col)
-				{
-					dynamicTable->insertColumn(col);
-				}
-
-				QTableWidgetItem* item = new QTableWidgetItem(QString::number(tableData[row][col]));
-				dynamicTable->setItem(row, col, item);
-			}
-		}
-
-		// Populate row and column headers
-		dynamicTable->setVerticalHeaderLabels(data.getRowHeaders());
-		dynamicTable->setHorizontalHeaderLabels(data.getColHeaders());
-
-		// Resize rows and columns to contents
-		dynamicTable->resizeColumnsToContents();
-		dynamicTable->resizeRowsToContents();
-
-		// Hide add/remove row buttons if row count is not dynamic
-		if (m_FilterParameter->getAreRowsDynamic() == false)
-		{
-			addRowBtn->setHidden(true);
-			deleteRowBtn->setHidden(true);
-		}
-
-		// Hide add/remove column buttons if column count is not dynamic
-		if (m_FilterParameter->getAreColsDynamic() == false)
-		{
-			addColBtn->setHidden(true);
-			deleteColBtn->setHidden(true);
-		}
-	}
+	// Populate the table
+	populateTable();
 
 	// Set Icons
 	QIcon addIcon = QIcon(QString(":/add2.png"));
@@ -214,7 +174,7 @@ void DynamicTableWidget::filterNeedsInputParameters(AbstractFilter* filter)
 		}
 	}
 
-	DynamicTableData data(getData(), dynamicTable->rowCount(), dynamicTable->columnCount(), rHeaders, cHeaders);
+	DynamicTableData data(getData(), rHeaders, cHeaders);
 
 	QVariant v;
 	v.setValue(data);
@@ -239,7 +199,12 @@ std::vector<std::vector<double> > DynamicTableWidget::getData()
 		for (int col = 0; col < cCount; col++)
 		{
 			bool ok = false;
-			data[row][col] = dynamicTable->item(row, col)->data(Qt::DisplayRole).toDouble(&ok);
+			QTableWidgetItem* item = dynamicTable->item(row, col);
+			if (NULL == item)
+			{
+				return std::vector < std::vector<double> >();
+			}
+			data[row][col] = item->data(Qt::DisplayRole).toDouble(&ok);
 
 			if (ok == false)
 			{
@@ -280,11 +245,11 @@ void DynamicTableWidget::on_addRowBtn_pressed()
 	if (row <= 0)
 	{
 		dynamicTable->insertColumn(0);
-		dynamicTable->setHorizontalHeaderItem(0, new QTableWidgetItem("1"));
+		dynamicTable->setHorizontalHeaderItem(0, new QTableWidgetItem("0"));
 	}
 
 	dynamicTable->insertRow(row);
-	dynamicTable->setVerticalHeaderItem(row, new QTableWidgetItem(QString::number(dynamicTable->rowCount())));
+	dynamicTable->setVerticalHeaderItem(row, new QTableWidgetItem(QString::number(dynamicTable->rowCount() - 1)));
 
 	dynamicTable->blockSignals(true);
 	for (int col = 0; col < dynamicTable->columnCount(); col++)
@@ -302,27 +267,12 @@ void DynamicTableWidget::on_addRowBtn_pressed()
 	// Resize entire table to contents
 	dynamicTable->resizeRowsToContents();
 	dynamicTable->resizeColumnsToContents();
-}
+	
+	// Update buttons
+	updateDynamicButtons();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DynamicTableWidget::on_deleteRowBtn_pressed()
-{
-	dynamicTable->removeRow(dynamicTable->currentRow());
-
-	if (dynamicTable->rowCount() <= 0)
-	{
-		while (dynamicTable->columnCount() > 0)
-		{
-			dynamicTable->removeColumn(0);
-		}
-	}
-
-	// Cause a preflight
-	m_DidCausePreflight = true;
-	emit parametersChanged();
-	m_DidCausePreflight = false;
+	// Renumber dynamic headers
+	renumberDynamicHeaders();
 }
 
 // -----------------------------------------------------------------------------
@@ -336,11 +286,11 @@ void DynamicTableWidget::on_addColBtn_pressed()
 	if (col <= 0)
 	{
 		dynamicTable->insertRow(0);
-		dynamicTable->setVerticalHeaderItem(0, new QTableWidgetItem("1"));
+		dynamicTable->setVerticalHeaderItem(0, new QTableWidgetItem("0"));
 	}
 
 	dynamicTable->insertColumn(col);
-	dynamicTable->setHorizontalHeaderItem(col, new QTableWidgetItem(QString::number(dynamicTable->columnCount())));
+	dynamicTable->setHorizontalHeaderItem(col, new QTableWidgetItem(QString::number(dynamicTable->columnCount() - 1)));
 
 	dynamicTable->blockSignals(true);
 	for (int row = 0; row < dynamicTable->rowCount(); row++)
@@ -358,6 +308,39 @@ void DynamicTableWidget::on_addColBtn_pressed()
 	// Resize entire table to contents
 	dynamicTable->resizeRowsToContents();
 	dynamicTable->resizeColumnsToContents();
+
+	// Update buttons
+	updateDynamicButtons();
+
+	// Renumber dynamic headers
+	renumberDynamicHeaders();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::on_deleteRowBtn_pressed()
+{
+	dynamicTable->removeRow(dynamicTable->currentRow());
+
+	if (dynamicTable->rowCount() <= 0)
+	{
+		while (dynamicTable->columnCount() > 0)
+		{
+			dynamicTable->removeColumn(0);
+		}
+	}
+
+	// Update buttons
+	updateDynamicButtons();
+
+	// Renumber dynamic headers
+	renumberDynamicHeaders();
+
+	// Cause a preflight
+	m_DidCausePreflight = true;
+	emit parametersChanged();
+	m_DidCausePreflight = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -375,12 +358,205 @@ void DynamicTableWidget::on_deleteColBtn_pressed()
 		}
 	}
 
+	// Update buttons
+	updateDynamicButtons();
+
+	// Renumber dynamic headers
+	renumberDynamicHeaders();
+
 	// Cause a preflight
 	m_DidCausePreflight = true;
 	emit parametersChanged();
 	m_DidCausePreflight = false;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::populateTable()
+{
+	// Get what is in the filter
+	DynamicTableData data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DynamicTableData>();
+
+	if (m_FilterParameter != NULL)
+	{
+		// If the filter parameter generated an error, empty the data object and display the error.
+		if (m_FilterParameter->getErrorCondition() < 0)
+		{
+			QString errorMessage = m_FilterParameter->getErrorMessage();
+			QString pluginName = getFilter()->getPluginInstance()->getPluginName();
+			QString filterName = getFilter()->getHumanLabel();
+			QString filterParameterName = m_FilterParameter->getPropertyName();
+			QString vendorName = getFilter()->getPluginInstance()->getVendor();
+
+			// Use HTML code in the error message, because this will be displayed in RichText format.
+			errorMessage.prepend("The filter parameter '" + filterParameterName + "' in filter '" + filterName + "' has an error:<blockquote><b>");
+			errorMessage.append("</b></blockquote>'" + filterName + "' is a part of the " + pluginName + " plugin.  ");
+			errorMessage.append("Please contact " + vendorName + ", the developer of the " + pluginName + " plugin.");
+			
+			QMessageBox errorBox;
+			errorBox.setIcon(QMessageBox::Critical);
+			errorBox.setWindowTitle("'" + filterName + "' Error");
+			errorBox.setText(errorMessage);
+			errorBox.setStandardButtons(QMessageBox::Ok);
+			errorBox.setDefaultButton(QMessageBox::Ok);
+			errorBox.setTextFormat(Qt::RichText);
+			errorBox.exec();
+		}
+		else if (data.isEmpty())	// If there was nothing in the filter, use the defaults
+		{
+			data.setTableData(m_FilterParameter->getDefaultTable());
+			data.setRowHeaders(m_FilterParameter->getRowHeaders());
+			data.setColHeaders(m_FilterParameter->getColumnHeaders());
+
+			// Populate table with default values
+			for (int row = 0; row < data.getNumRows(); row++)
+			{
+				dynamicTable->insertRow(row);
+				for (int col = 0; col < data.getNumCols(); col++)
+				{
+					if (dynamicTable->columnCount() == col)
+					{
+						dynamicTable->insertColumn(col);
+					}
+					QTableWidgetItem* item = new QTableWidgetItem(QString::number(data.getTableData()[row][col]));
+					dynamicTable->setItem(row, col, item);
+				}
+			}
+		}
+		else
+		{
+			std::vector<std::vector<double> > tableData = data.getTableData();
+
+			// Populate table with filter values
+			for (int row = 0; row < tableData.size(); row++)
+			{
+				dynamicTable->insertRow(row);
+				for (int col = 0; col < tableData[row].size(); col++)
+				{
+					if (dynamicTable->columnCount() == col)
+					{
+						dynamicTable->insertColumn(col);
+					}
+
+					QTableWidgetItem* item = new QTableWidgetItem(QString::number(tableData[row][col]));
+					dynamicTable->setItem(row, col, item);
+				}
+			}
+		}
+
+		// Populate row and column headers
+		populateHeaders(data.getRowHeaders(), data.getColHeaders());
+
+		// Resize rows and columns to contents
+		dynamicTable->resizeColumnsToContents();
+		dynamicTable->resizeRowsToContents();
+
+		// Update the state of the Add/Remove buttons
+		updateDynamicButtons();
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::populateHeaders(QStringList rHeaders, QStringList cHeaders)
+{
+	if (m_FilterParameter->getAreRowsDynamic() == false)
+	{
+		dynamicTable->setVerticalHeaderLabels(rHeaders);
+	}
+	if (m_FilterParameter->getAreColsDynamic() == false)
+	{
+		dynamicTable->setHorizontalHeaderLabels(cHeaders);
+	}
+
+	renumberDynamicHeaders();	// Use this function to populate the dynamic headers for the first time
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::renumberDynamicHeaders()
+{
+	if (m_FilterParameter->getAreRowsDynamic() == true)
+	{
+		QStringList rHeaders;
+		for (int i = 0; i < dynamicTable->rowCount(); i++)
+		{
+			rHeaders << QString::number(i);
+		}
+		dynamicTable->setVerticalHeaderLabels(rHeaders);
+	}
+
+	if (m_FilterParameter->getAreColsDynamic() == true)
+	{
+		QStringList cHeaders;
+		for (int i = 0; i < dynamicTable->columnCount(); i++)
+		{
+			cHeaders << QString::number(i);
+		}
+		dynamicTable->setHorizontalHeaderLabels(cHeaders);
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DynamicTableWidget::updateDynamicButtons()
+{
+	// Hide add/remove row buttons if row count is not dynamic
+	if (m_FilterParameter->getAreRowsDynamic() == false)
+	{
+		addRowBtn->setHidden(true);
+		deleteRowBtn->setHidden(true);
+	}
+
+	// Hide add/remove column buttons if column count is not dynamic
+	if (m_FilterParameter->getAreColsDynamic() == false)
+	{
+		addColBtn->setHidden(true);
+		deleteColBtn->setHidden(true);
+	}
+	
+	// Enable/Disable delete row button
+	if (dynamicTable->rowCount() <= m_FilterParameter->getMinRowCount())
+	{
+		deleteRowBtn->setDisabled(true);
+		QString toolTip = "'" + m_FilterParameter->getHumanLabel() + "' must have at least " + QString::number(m_FilterParameter->getMinRowCount()) + " rows.";
+		if (m_FilterParameter->getMinRowCount() == 1)
+		{
+			// Fix the grammar in the tooltip when there's only 1 row.
+			toolTip.chop(2);
+			toolTip.append('.');
+		}
+		deleteRowBtn->setToolTip(toolTip);
+	}
+	else
+	{
+		deleteRowBtn->setEnabled(true);
+		deleteRowBtn->setToolTip(deleteRowTT);
+	}
+
+	// Enable/Disable delete column button
+	if (dynamicTable->columnCount() <= m_FilterParameter->getMinColCount())
+	{
+		deleteColBtn->setDisabled(true);
+		QString toolTip = "'" + m_FilterParameter->getHumanLabel() + "' must have at least " + QString::number(m_FilterParameter->getMinColCount()) + " columns.";
+		if (m_FilterParameter->getMinColCount() == 1)
+		{
+			// Fix the grammar in the tooltip when there's only 1 column.
+			toolTip.chop(2);
+			toolTip.append('.');
+		}
+		deleteColBtn->setToolTip(toolTip);
+	}
+	else
+	{
+		deleteColBtn->setEnabled(true);
+		deleteColBtn->setToolTip(deleteColTT);
+	}
+}
 
 
 

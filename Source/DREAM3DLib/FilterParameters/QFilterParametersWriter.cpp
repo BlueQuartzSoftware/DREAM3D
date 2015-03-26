@@ -945,11 +945,11 @@ int QFilterParametersWriter::writeValue(const QString name, const DynamicTableDa
 	m_Prefs->setArrayIndex(0);
 	m_Prefs->setValue(name, value);
 	m_Prefs->setArrayIndex(1);
-	m_Prefs->setValue(name, numRows);
-	m_Prefs->setArrayIndex(2);
-	m_Prefs->setValue(name, numCols);
-	m_Prefs->setArrayIndex(3);
 	m_Prefs->setValue(name, rHeaders);
+	m_Prefs->setArrayIndex(2);
+	m_Prefs->setValue(name, numRows);
+	m_Prefs->setArrayIndex(3);
+	m_Prefs->setValue(name, numCols);
 	m_Prefs->setArrayIndex(4);
 	m_Prefs->setValue(name, cHeaders);
 

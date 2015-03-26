@@ -727,8 +727,6 @@ int H5FilterParametersWriter::writeValue(const QString name, const DynamicTableD
 	dims[0] = v.getNumRows();
 	dims[1] = v.getNumCols();
 
-	err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, "NumRows", dims[0]);
-	err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, "NumCols", dims[1]);
 	err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, "RowHeaders", rHeaders);
 	err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, "ColHeaders", cHeaders);
 	err = QH5Lite::writeVectorDataset(m_CurrentGroupId, name, dims, flat);

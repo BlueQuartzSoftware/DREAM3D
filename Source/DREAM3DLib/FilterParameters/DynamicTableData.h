@@ -56,7 +56,9 @@ class DREAM3DLib_EXPORT DynamicTableData : public QObject
 
 public:
 	DynamicTableData();
-	DynamicTableData(std::vector<std::vector<double> > data, int nRows, int nCols, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
+	DynamicTableData(int nRows, int nCols);
+	DynamicTableData(int nRows, int nCols, QStringList rHeaders, QStringList cHeaders);
+	DynamicTableData(std::vector<std::vector<double> > data, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
 
 	virtual ~DynamicTableData();
 
@@ -114,16 +116,19 @@ public:
 	void setColHeaders(QStringList cHeaders);
 
 	/**
-	* @brief numRows getter and setter
+	* @brief Calculates and returns the number of rows
 	*/
 	int getNumRows() const;
-	void setNumRows(int nRows);
 
 	/**
-	* @brief numCols getter and setter
+	* @brief Calculates and returns the number of columns
 	*/
 	int getNumCols() const;
-	void setNumCols(int nCols);
+
+	/**
+	* @brief Checks if the DynamicTableData object is empty.
+	*/
+	bool isEmpty();
 
 	DynamicTableData(const DynamicTableData& rhs);
 	void operator=(const DynamicTableData& rhs);
@@ -132,14 +137,12 @@ private:
 	std::vector<std::vector<double> > tableData;
 	QStringList rowHeaders;
 	QStringList colHeaders;
-	int numRows;
-	int numCols;
 
 	/**
 	* @brief Checks that the dimensions between all variables are the same.  If not, adjusts dimensions
 	* to match numRows and numCols.
 	*/
-	void checkAndAdjustDimensions(std::vector<std::vector<double> > &data, int nRows, int nCols, QStringList &rHeaders, QStringList &cHeaders);
+	void checkAndAdjustDimensions();
 };
 
 Q_DECLARE_METATYPE(DynamicTableData)

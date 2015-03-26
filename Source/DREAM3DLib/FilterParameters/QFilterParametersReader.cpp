@@ -1776,8 +1776,7 @@ DynamicTableData QFilterParametersReader::readDynamicTableData(const QString& na
 	BOOST_ASSERT(m_Prefs != NULL);
 
 	QString dataStr;
-	int numRows;
-	int numCols;
+	int numRows, numCols;
 	QStringList rHeaders;
 	QStringList cHeaders;
 
@@ -1791,11 +1790,11 @@ DynamicTableData QFilterParametersReader::readDynamicTableData(const QString& na
 	m_Prefs->setArrayIndex(0);
 	dataStr = m_Prefs->value(name, "").toString();
 	m_Prefs->setArrayIndex(1);
-	numRows = m_Prefs->value(name, 0).toInt();
-	m_Prefs->setArrayIndex(2);
-	numCols = m_Prefs->value(name, 0).toInt();
-	m_Prefs->setArrayIndex(3);
 	rHeaders = m_Prefs->value(name, "").toStringList();
+	m_Prefs->setArrayIndex(2);
+	numRows = m_Prefs->value(name, 0).toInt();
+	m_Prefs->setArrayIndex(3);
+	numCols = m_Prefs->value(name, 0).toInt();
 	m_Prefs->setArrayIndex(4);
 	cHeaders = m_Prefs->value(name, "").toStringList();
 
@@ -1803,7 +1802,7 @@ DynamicTableData QFilterParametersReader::readDynamicTableData(const QString& na
 
 	std::vector<std::vector<double> > data = DynamicTableData::DeserializeData(dataStr, numRows, numCols, ',');
 
-	DynamicTableData tableData(data, numRows, numCols, rHeaders, cHeaders);
+	DynamicTableData tableData(data, rHeaders, cHeaders);
 
 	return tableData;
 }

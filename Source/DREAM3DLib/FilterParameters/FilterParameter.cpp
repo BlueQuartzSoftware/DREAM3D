@@ -914,25 +914,43 @@ DynamicTableFilterParameter::~DynamicTableFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DynamicTableFilterParameter::Pointer DynamicTableFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-	const QString& widgetType, int defaultRowNum, int defaultColNum,
-	QStringList rHeaders, QStringList cHeaders,
+	const QString& widgetType, QStringList rHeaders, QStringList cHeaders,
 	std::vector<std::vector<double> > defaultTable, bool areRowsDynamic,
-	bool areColsDynamic, bool advanced, int groupIndex)
+	bool areColsDynamic, int minRowCount, int minColCount)
 {
 	DynamicTableFilterParameter::Pointer ptr = DynamicTableFilterParameter::New();
 	ptr->setHumanLabel(humanLabel);
 	ptr->setPropertyName(propertyName);
 	ptr->setWidgetType(widgetType);
-	ptr->setDefaultRowCount(defaultRowNum);
-	ptr->setDefaultColCount(defaultColNum);
 	ptr->setRowHeaders(rHeaders);
 	ptr->setColumnHeaders(cHeaders);
 	ptr->setDefaultTable(defaultTable);
 	ptr->setAreRowsDynamic(areRowsDynamic);
 	ptr->setAreColsDynamic(areColsDynamic);
-	ptr->setAdvanced(advanced);
-	ptr->setGroupIndex(groupIndex);
+	ptr->setMinRowCount(minRowCount);
+	ptr->setMinColCount(minColCount);
 	ptr->setReadOnly(true);
+
+	// Check that all columns are initialized to the same size
+	if (defaultTable.size() > 0)
+	{
+		QSet<int> colSizes;
+		colSizes.insert(defaultTable[0].size());
+		for (int i = 1; i < defaultTable.size(); i++)
+		{
+			colSizes.insert(defaultTable[i].size());
+			if (colSizes.size() > 1)
+			{
+				ptr->setErrorCondition(-100);
+				// Use HTML code in the error message, because this will be displayed in RichText format.
+				ptr->setErrorMessage("Column " + QString::number(i) + " has a different size than the other columns.<br>Please make all columns the same size.");
+				return ptr;
+			}
+		}
+	}
+
+	ptr->setErrorCondition(0);
+	ptr->setErrorMessage("There is no error.");
 	return ptr;
 }
 

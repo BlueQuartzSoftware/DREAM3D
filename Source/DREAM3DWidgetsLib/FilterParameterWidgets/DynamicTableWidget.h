@@ -110,6 +110,10 @@ private:
 	DynamicTableFilterParameter*  m_FilterParameter;
 	bool m_DidCausePreflight;
 
+	void populateTable();
+	void populateHeaders(QStringList rHeaders, QStringList cHeaders);
+	void renumberDynamicHeaders();
+	void updateDynamicButtons();
 
 	DynamicTableWidget(const DynamicTableWidget&); // Copy Constructor Not Implemented
 	void operator=(const DynamicTableWidget&); // Operator '=' Not Implemented
