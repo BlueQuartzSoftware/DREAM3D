@@ -48,6 +48,9 @@ CalculateArrayHistogram::CalculateArrayHistogram() :
   AbstractFilter(),
   m_SelectedArrayPath("", "", ""),
   m_NumberOfBins(-1),
+  m_MinRange(0.0f),
+  m_MaxRange(1.0f),
+  m_UserDefinedRange(false),
   m_Normalize(false),
   m_NewDataArrayName(""),
   m_NewAttributeMatrixName(""),
@@ -71,15 +74,25 @@ CalculateArrayHistogram::~CalculateArrayHistogram()
 void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Histogram", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Selected Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
   parameters.push_back(FilterParameter::New("Number of Bins", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), false));
-  parameters.push_back(FilterParameter::New("Normalize", "Normalize", FilterParameterWidgetType::BooleanWidget, getNormalize(), false));
-  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), false, ""));
-  parameters.push_back(FilterParameter::New("New Histogram Array Name", "NewDataArrayName", FilterParameterWidgetType::StringWidget, getNewDataArrayName(), false, ""));
+  //  parameters.push_back(FilterParameter::New("Normalize", "Normalize", FilterParameterWidgetType::BooleanWidget, getNormalize(), false));
   QStringList linkedProps;
+  linkedProps << "MinRange" << "MaxRange";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, false));
+
+  parameters.push_back(FilterParameter::New("Min Value", "MinRange", FilterParameterWidgetType::DoubleWidget, getMinRange(), false));
+  parameters.push_back(FilterParameter::New("Max Value", "MaxRange", FilterParameterWidgetType::DoubleWidget, getMaxRange(), false));
+
+
+  linkedProps.clear();
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, false));
   parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false, ""));
+
+  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), false, ""));
+  parameters.push_back(FilterParameter::New("New Histogram Array Name", "NewDataArrayName", FilterParameterWidgetType::StringWidget, getNewDataArrayName(), false, ""));
+
   setFilterParameters(parameters);
 }
 
@@ -106,14 +119,14 @@ int CalculateArrayHistogram::writeFilterParameters(AbstractFilterParametersWrite
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
-  DREAM3D_FILTER_WRITE_PARAMETER(Normalize)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainer)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
+      DREAM3D_FILTER_WRITE_PARAMETER(Normalize)
+      DREAM3D_FILTER_WRITE_PARAMETER(NewDataArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(NewAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainer)
+      DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -166,7 +179,7 @@ void CalculateArrayHistogram::dataCheck()
   }
 
   QVector<size_t> tDims(1, m_NumberOfBins);
-  QVector<size_t> cDims(1, 1);
+  QVector<size_t> cDims(1, 2);
 
   QString newArrayName;
   if (m_Normalize == true)
@@ -220,7 +233,7 @@ void CalculateArrayHistogram::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void findHistogram(IDataArray::Pointer inputData, int numberOfBins, bool normalize, DataArray<double>::Pointer newDataArray)
+void findHistogram(IDataArray::Pointer inputData, int numberOfBins, bool userRange, double minRange, double maxRange, DataArray<double>::Pointer newDataArray)
 {
   DataArray<T>* inputArray = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == inputArray)
@@ -233,40 +246,54 @@ void findHistogram(IDataArray::Pointer inputData, int numberOfBins, bool normali
 
   T* inputArrayPtr = inputArray->getPointer(0);
   size_t numPoints = inputArray->getNumberOfTuples();
-  int bin;
-  float min = 1000000.0f;
-  float max = 0.0f;
-  float value;
-  for (size_t i = 0; i < numPoints; i++) // min and max in the input array
+  int bin = 0;
+  float min = std::numeric_limits<float>::max();
+  float max = -1.0 * std::numeric_limits<float>::max();
+  if(userRange)
   {
-    value = inputArrayPtr[i]; // use float for our comparison
-    if(value > max) { max = value; }
-    if(value < min) { min = value; }
+    min = minRange;
+    max = maxRange;
+  }
+  else
+  {
+    for (size_t i = 0; i < numPoints; i++) // min and max in the input array
+    {
+      if(static_cast<float>(inputArrayPtr[i]) > max) { max = static_cast<float>(inputArrayPtr[i]); }
+      if(static_cast<float>(inputArrayPtr[i]) < min) { min = static_cast<float>(inputArrayPtr[i]); }
+    }
   }
 
+  float increment = (max - min) / (numberOfBins);
   if (numberOfBins == 1) // if one bin, just set the first element to total number of points
   {
-    newDataArrayPtr[0] = numPoints;
+    newDataArrayPtr[0] = max;
+    newDataArrayPtr[1] = numPoints;
   }
   else
   {
     for (size_t i = 0; i < numPoints; i++) // sort into bins to create the histogram
     {
-      bin = size_t((inputArrayPtr[i] - min) / ((max - min) / (numberOfBins - 1))); // find bin for this input array value
-      if ((bin >= 0) && (bin < numPoints)) // make certain bin is in range
+      bin = size_t((inputArrayPtr[i] - min) / increment); // find bin for this input array value
+      if ((bin >= 0) && (bin < numberOfBins)) // make certain bin is in range
       {
-        newDataArrayPtr[bin]++; // increment histogram element corresponding to this input array value
+        newDataArrayPtr[bin*2+1]++; // increment histogram element corresponding to this input array value
       }
     }
   }
 
-  if (normalize) // if normalize is checked, divide each element in the histogram by total number of points
+
+  for(int i = 0; i < numberOfBins; i++)
   {
-    for (size_t i = 0; i < numberOfBins; i++)
-    {
-      newDataArrayPtr[i] /= numPoints;
-    }
+    newDataArrayPtr[i*2] = min + increment *(i+1);
   }
+
+  //  if (normalize) // if normalize is checked, divide each element in the histogram by total number of points
+  //  {
+  //    for (size_t i = 0; i < numberOfBins; i++)
+  //    {
+  //      newDataArrayPtr[i] /= numPoints;
+  //    }
+  //  }
 }
 
 // -----------------------------------------------------------------------------
@@ -307,47 +334,47 @@ void CalculateArrayHistogram::execute()
   QString dType = inputData->getTypeAsString();
   if (dType.compare("int8_t") == 0)
   {
-    findHistogram<int8_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<int8_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    findHistogram<uint8_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<uint8_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("int16_t") == 0)
   {
-    findHistogram<int16_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<int16_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    findHistogram<uint16_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<uint16_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("int32_t") == 0)
   {
-    findHistogram<int32_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<int32_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    findHistogram<uint32_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<uint32_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("int64_t") == 0)
   {
-    findHistogram<int64_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<int64_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    findHistogram<uint64_t>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<uint64_t>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("float") == 0)
   {
-    findHistogram<float>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<float>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("double") == 0)
   {
-    findHistogram<double>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<double>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else if (dType.compare("bool") == 0)
   {
-    findHistogram<bool>(inputData, m_NumberOfBins, m_Normalize, m_NewDataArrayPtr.lock());
+    findHistogram<bool>(inputData, m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock());
   }
   else
   {
@@ -397,5 +424,5 @@ const QString CalculateArrayHistogram::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getHumanLabel()
-{ return "Calculate Array Histogram"; }
+{ return "Calculate Frequency Histogram"; }
 
