@@ -146,17 +146,18 @@ class DREAM3DLib_EXPORT QFilterParametersWriter : public AbstractFilterParameter
     virtual int writeValue(const QString name, DataContainerArrayProxy& v);
 
     virtual int writeValue(const QString name, AxisAngleInput_t v);
-    virtual int writeValue(const QString name, const DataArrayPath& v);
-	virtual int writeValue(const QString name, const QVector<DataArrayPath>& v);
 
-	virtual int writeValue(const QString name, const DynamicTableData v);
+    virtual int writeValue(const QString name, const DataArrayPath& v);
+
+    virtual int writeValue(const QString name, const QVector<DataArrayPath>& v);
+
+    virtual int writeValue(const QString name, const DynamicTableData& v);
 
 
   protected:
     QFilterParametersWriter();
+
     virtual int writeValue(const QString name, AxisAngleInput_t v, int notUsed);
-
-
 
   private:
     QSettings* m_Prefs;

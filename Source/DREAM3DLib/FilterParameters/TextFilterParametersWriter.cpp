@@ -416,19 +416,19 @@ int TextFilterParametersWriter::writeValue(const QString name, const DataArrayPa
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
-	int err = -1;
+  int err = -1;
 
-	return err;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const DynamicTableData v)
+int TextFilterParametersWriter::writeValue(const QString name, const DynamicTableData& v)
 {
-	int err = -1;
+  int err = -1;
 
-	return err;
+  return err;
 }
 
 
