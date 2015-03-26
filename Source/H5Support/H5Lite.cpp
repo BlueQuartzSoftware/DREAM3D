@@ -295,8 +295,16 @@ herr_t H5Lite::writeStringDataset (hid_t loc_id, const std::string& dsetName, co
         /* Create the data space for the dataset. */
         if ( (sid = H5Screate( H5S_SCALAR )) >= 0 )
         {
-          /* Create the dataset. */
-          if ( (did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0 )
+          /* Create or open the dataset. */
+          HDF_ERROR_HANDLER_OFF
+          did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
+          HDF_ERROR_HANDLER_ON
+          if ( did < 0 ) // dataset does not exist so create it
+          {
+            did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+          }
+
+          if ( did >= 0 )
           {
             if ( !data.empty() )
             {
