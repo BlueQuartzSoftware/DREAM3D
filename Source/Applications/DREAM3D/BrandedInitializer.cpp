@@ -152,7 +152,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   this->MainWindow->show();
   if (show_splash)
   {
-    delay(1);
+ //   delay(1);
     this->Splash->finish(this->MainWindow);
   }
   QApplication::instance()->processEvents();
