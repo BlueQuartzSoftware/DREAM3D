@@ -40,13 +40,14 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/Geometry/IGeometry2D.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 #include "DREAM3DLib/Geometry/DerivativeHelpers.h"
 
 /**
  * @brief The TriangleGeom class represents a collection of triangles
  */
-class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
+class DREAM3DLib_EXPORT TriangleGeom : public IGeometry2D
 {
   public:
 
@@ -443,6 +444,43 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
      */
     virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name);
 
+// -----------------------------------------------------------------------------
+// Inherited from IGeometry2D
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief findElementEdges
+     * @return
+     */
+    virtual int findElementEdges();
+
+    /**
+     * @brief getElementEdges
+     * @return
+     */
+    virtual SharedEdgeList::Pointer getElementEdges();
+
+    /**
+     * @brief deleteElementEdges
+     */
+    virtual void deleteElementEdges();
+
+    /**
+     * @brief findUnsharedEdges
+     */
+    virtual int findUnsharedEdges();
+
+    /**
+     * @brief getUnsharedEdges
+     * @return
+     */
+    virtual SharedEdgeList::Pointer getUnsharedEdges();
+
+    /**
+     * @brief deleteUnsharedEdges
+     */
+    virtual void deleteUnsharedEdges();
+
   protected:
 
     TriangleGeom();
@@ -465,6 +503,13 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
      */
     virtual void setElementCentroids(FloatArrayType::Pointer elementCentroids);
 
+    /**
+     * @brief setUnsharedEdges
+     * @param bEdgeList
+     */
+    virtual void setUnsharedEdges(SharedEdgeList::Pointer bEdgeList);
+
+
   private:
 
     QString m_Name;
@@ -476,6 +521,7 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry
     AttributeMatrixMap_t m_AttributeMatrices;
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
+    SharedEdgeList::Pointer m_UnsharedEdgeList;
     SharedTriList::Pointer m_TriList;
     ElementDynamicList::Pointer m_TrianglesContainingVert;
     ElementDynamicList::Pointer m_TriangleNeighbors;

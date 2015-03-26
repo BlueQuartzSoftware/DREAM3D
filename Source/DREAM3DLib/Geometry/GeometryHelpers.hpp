@@ -34,19 +34,23 @@ namespace GeometryHelpers
        * @return
        */
       template<typename ListType>
-      static typename ListType::Pointer ReadMeshFromHDF5(const QString& listName, hid_t parentId, bool preflight)
+      static typename ListType::Pointer ReadListFromHDF5(const QString& listName, hid_t parentId, bool preflight, herr_t& err)
       {
-        herr_t err = 0;
         QVector<hsize_t> dims;
         H5T_class_t type_class;
         size_t type_size;
         typename ListType::Pointer mesh = ListType::CreateArray(0, listName);
-		if (preflight == true)
+        err = QH5Lite::getDatasetInfo(parentId, listName, dims, type_class, type_size);
+        if (err < 0)
         {
-          err = QH5Lite::getDatasetInfo(parentId, listName, dims, type_class, type_size);
+          err = -2;
+          return mesh = ListType::NullPointer();
+        }
+        if (preflight == true)
+        {
           if (err < 0)
           {
-            mesh = ListType::NullPointer();
+            return mesh = ListType::NullPointer();
           }
         }
         else
@@ -54,7 +58,7 @@ namespace GeometryHelpers
           err = mesh->readH5Data(parentId);
           if (err < 0)
           {
-            mesh = ListType::NullPointer();
+            return mesh = ListType::NullPointer();
           }
         }
 
@@ -73,12 +77,12 @@ namespace GeometryHelpers
         unsigned int spatialDims = 0;
         QString geomName = "";
         err = QH5Lite::readScalarAttribute(parentId, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::SpatialDimensionality, spatialDims);
-        if(err < 0)
+        if (err < 0)
         {
           return err;
         }
         err = QH5Lite::readStringAttribute(parentId, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryName, geomName);
-        if(err < 0)
+        if (err < 0)
         {
           return err;
         }
@@ -102,6 +106,47 @@ namespace GeometryHelpers
         return err;
       }
 
+      /**
+       * @brief ReadDynamicListFromHDF5
+       * @param dynamicListName
+       * @param parentId
+       * @param numElems
+       * @param preflight
+       * @return
+       */
+      template<typename T, typename K>
+      static typename DynamicListArray<T, K>::Pointer ReadDynamicListFromHDF5(const QString& dynamicListName, hid_t parentId, size_t numElems, bool preflight, herr_t& err)
+      {
+        QVector<hsize_t> dims;
+        H5T_class_t type_class;
+        size_t type_size;
+        typename DynamicListArray<T, K>::Pointer dynamicList = DynamicListArray<T, K>::New();
+        err = QH5Lite::getDatasetInfo(parentId, dynamicListName, dims, type_class, type_size);
+        if (err < 0)
+        {
+          err = -2;
+          return dynamicList = DynamicListArray<T, K>::NullPointer();
+        }
+        if (preflight == true)
+        {
+          if ( err < 0)
+          {
+            return dynamicList = DynamicListArray<T, K>::NullPointer();
+          }
+        }
+        else
+        {
+          std::vector<uint8_t> buffer;
+          err = QH5Lite::readVectorDataset(parentId, dynamicListName, buffer);
+          if (err < 0)
+          {
+            return dynamicList = DynamicListArray<T, K>::NullPointer();
+          }
+          dynamicList->deserializeLinks(buffer, numElems);
+        }
+
+        return dynamicList;
+      }
 
       /**
        * @brief WriteDynamicListToHDF5
@@ -112,7 +157,7 @@ namespace GeometryHelpers
        * @return
        */
       template<typename T, typename K>
-      static int WriteDynamicListToHDF5(hid_t parentId, typename DynamicListArray<T, K>::Pointer dynamicList, size_t numElems, QString name)
+      static int WriteDynamicListToHDF5(hid_t parentId, typename DynamicListArray<T, K>::Pointer dynamicList, size_t numElems, const QString& name)
       {
         herr_t err = 0;
         int32_t rank = 0;
@@ -207,7 +252,6 @@ namespace GeometryHelpers
           }
         }
       }
-
 
       /**
        * @brief FindElementNeighbors
@@ -320,6 +364,113 @@ namespace GeometryHelpers
         }
 
         return err;
+      }
+
+      /**
+       * @brief Find2DElementEdges
+       * @param elemList
+       * @param edgeList
+       */
+      template<typename T>
+      static void Find2DElementEdges(typename DataArray<T>::Pointer elemList, typename DataArray<T>::Pointer edgeList)
+      {
+        size_t numElems = elemList->getNumberOfTuples();
+        size_t numVertsPerElem = elemList->getNumberOfComponents();
+        T v0 = 0;
+        T v1 = 0;
+
+        std::pair<T, T> edge;
+        std::set<std::pair<T, T> > edgeSet;
+
+        for (size_t i = 0; i < numElems; i++)
+        {
+          T* verts = elemList->getTuplePointer(i);
+
+          for (size_t j = 0; j < numVertsPerElem; j++)
+          {
+            if (j == (numVertsPerElem - 1))
+            {
+              if (verts[j] > verts[0]) { v0 = verts[0]; v1 = verts[j]; }
+              else { v0 = verts[j]; v1 = verts[0]; }
+            }
+            else
+            {
+              if (verts[j] > verts[j + 1]) { v0 = verts[j + 1]; v1 = verts[j]; }
+              else { v0 = verts[j]; v1 = verts[j + 1]; }
+            }
+            edge = std::make_pair(v0, v1);
+            edgeSet.insert(edge);
+          }
+        }
+
+        typename std::set<std::pair<T, T> >::iterator setIter;
+        edgeList->resize(edgeSet.size());
+        T* uEdges = edgeList->getPointer(0);
+        T index = 0;
+
+        for (setIter = edgeSet.begin(); setIter != edgeSet.end(); ++setIter)
+        {
+          uEdges[2 * index] = (*setIter).first;
+          uEdges[2 * index + 1] = (*setIter).second;
+          ++index;
+        }
+      }
+
+      /**
+       * @brief Find2DUnsharedEdges
+       * @param elemList
+       * @param edgeList
+       */
+      template<typename T>
+      static void Find2DUnsharedEdges(typename DataArray<T>::Pointer elemList, typename DataArray<T>::Pointer edgeList)
+      {
+        size_t numElems = elemList->getNumberOfTuples();
+        size_t numVertsPerElem = elemList->getNumberOfComponents();
+        T v0 = 0;
+        T v1 = 0;
+
+        std::pair<T, T> edge;
+        std::map<std::pair<T, T>, T> edgeMap;
+
+        for (size_t i = 0; i < numElems; i++)
+        {
+          T* verts = elemList->getTuplePointer(i);
+
+          for (size_t j = 0; j < numVertsPerElem; j++)
+          {
+            if (j == (numVertsPerElem - 1))
+            {
+              if (verts[j] > verts[0]) { v0 = verts[0]; v1 = verts[j]; }
+              else { v0 = verts[j]; v1 = verts[0]; }
+            }
+            else
+            {
+              if (verts[j] > verts[j + 1]) { v0 = verts[j + 1]; v1 = verts[j]; }
+              else { v0 = verts[j]; v1 = verts[j + 1]; }
+            }
+            edge = std::make_pair(v0, v1);
+            edgeMap[edge]++;
+          }
+        }
+
+        typename std::map<std::pair<T, T>, T>::iterator mapIter = edgeMap.begin();
+
+        while (mapIter != edgeMap.end())
+        {
+          if ((*mapIter).second > 1) { edgeMap.erase(mapIter++); }
+          else { ++mapIter; }
+        }
+
+        edgeList->resize(edgeMap.size());
+        T* bEdges = edgeList->getPointer(0);
+        T index = 0;
+
+        for (mapIter = edgeMap.begin(); mapIter != edgeMap.end(); ++mapIter)
+        {
+          bEdges[2 * index] = (*mapIter).first.first;
+          bEdges[2 * index + 1] = (*mapIter).first.second;
+          ++index;
+        }
       }
   };
 

@@ -579,6 +579,13 @@
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
   QString outpath = m_OutputDirectory + "/" + m_OutputFilePrefix + filename;
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+/**
+  * @brief Macro to silence compiler warnings for unused parameters in methods.
+  */
+#define DREAM3D_NOT_USED(x)
 
 // -----------------------------------------------------------------------------
 //
