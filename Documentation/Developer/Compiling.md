@@ -71,12 +71,13 @@ With this environment setup proceed to download and install Git, CMake and Doxyg
 
 In order to build boost 1.57.0 one needs to use the "b2" command.
 
-+ Download the boost-1.57.0.zip file for windows.
-+ Decompress and open up a Visual Studio x64 command prompt.
-+ CD into the boost-1.57.0 directory.
-+ ./bootstrap
-+ C:\Users\mjackson\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 variant=debug,release link=static threading=multi address-model=64 install
-+ That should build and install the complete boost library set with Debug and Release libraries with static linking.
+	Download the boost-1.57.0.zip file for windows.
+	Decompress and open up a Visual Studio x64 command prompt.
+	CD into the boost-1.57.0 directory.
+	./bootstrap
+	C:\Users\mjackson\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 variant=debug,release link=static threading=multi address-model=64 install
+	
+That should build and install the complete boost library set with Debug and Release libraries with static linking.
 
 
 
