@@ -78,6 +78,8 @@ class DREAM3DWidgetsLib_EXPORT DoubleWidget : public FilterParameterWidget, priv
     */
     void setupGui();
 
+    void setInputStyle(QLineEdit* lineEdit);
+
   public slots:
     void widgetChanged(const QString& msg);// when something in the widget changes
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
