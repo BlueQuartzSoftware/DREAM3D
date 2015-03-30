@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1212</width>
-    <height>768</height>
+    <width>1233</width>
+    <height>860</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,7 +58,7 @@ font-weight: bold;s
       <property name="bottomMargin">
        <number>2</number>
       </property>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -70,7 +70,7 @@ font-weight: bold;s
          <enum>QTabWidget::South</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="basicTab">
          <attribute name="title">
@@ -99,8 +99,8 @@ font-weight: bold;s
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1198</width>
-               <height>627</height>
+               <width>1219</width>
+               <height>776</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -120,43 +120,7 @@ font-weight: bold;s
                 </property>
                </spacer>
               </item>
-              <item>
-               <widget class="QFrame" name="basicInputsFrame">
-                <property name="styleSheet">
-                 <string notr="true">QFrame#basicInputsFrame
-{
-/*	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255)); */
-  background-color: rgb(215, 215, 215);
-  border: 1px solid #000000;
-  border-radius: 10px;
-  padding: 5 5 5 5px;
-}</string>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout" stretch="">
-                 <property name="leftMargin">
-                  <number>4</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>4</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>4</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>4</number>
-                 </property>
-                </layout>
-               </widget>
-              </item>
              </layout>
-             <zorder>basicInputsLabel</zorder>
-             <zorder>basicInputsFrame</zorder>
              <zorder></zorder>
              <zorder>verticalSpacer</zorder>
             </widget>
@@ -191,60 +155,26 @@ font-weight: bold;s
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1198</width>
-               <height>627</height>
+               <width>1219</width>
+               <height>776</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
-               <widget class="QFrame" name="advInputsFrame">
-                <property name="styleSheet">
-                 <string notr="true">QFrame#advInputsFrame
-{
-/*	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255)); */
-  background-color: rgb(200, 200, 212);
-  border: 1px solid #000000;
-  border-radius: 10px;
-  padding: 5 5 5 5px;
-}</string>
+               <layout class="QGridLayout" name="advInputsGrid"/>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
                 </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
                 </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <property name="leftMargin">
-                  <number>4</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>4</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>4</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>4</number>
-                 </property>
-                 <item>
-                  <layout class="QGridLayout" name="advInputsGrid"/>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer_2">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
-               </widget>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -270,53 +200,49 @@ font-weight: bold;s
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="currentStructureFrame">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
+           <layout class="QGridLayout" name="currentStructureGrid"/>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="helpTab">
+         <attribute name="title">
+          <string>Help</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QWebView" name="helpWebView">
+            <property name="url">
+             <url>
+              <string>about:blank</string>
+             </url>
             </property>
-            <property name="styleSheet">
-             <string notr="true">QFrame#currentStructureFrame
-{
-/*	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255)); */
-  background-color: rgb(200, 200, 212);
-  border: 1px solid #000000;
-  border-radius: 10px;
-  padding: 5 5 5 5px;
-}</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Plain</enum>
-            </property>
-            <property name="lineWidth">
-             <number>1</number>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0">
-             <property name="leftMargin">
-              <number>4</number>
-             </property>
-             <property name="topMargin">
-              <number>4</number>
-             </property>
-             <property name="rightMargin">
-              <number>4</number>
-             </property>
-             <property name="bottomMargin">
-              <number>4</number>
-             </property>
-             <item>
-              <layout class="QGridLayout" name="currentStructureGrid"/>
-             </item>
-            </layout>
            </widget>
           </item>
          </layout>
         </widget>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="Line" name="line">
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>2</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="brandingLabel">
+        <property name="text">
+         <string>Branding Information</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="0" column="0">
@@ -345,55 +271,18 @@ font-weight: bold;s
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
-       <widget class="Line" name="line">
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="lineWidth">
-         <number>2</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="brandingLabel">
-        <property name="text">
-         <string>Branding Information</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="basicInputsLabel">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="advInputsLabel">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="currentStructureLabel">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKitWidgets/QWebView</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>

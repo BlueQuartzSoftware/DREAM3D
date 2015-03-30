@@ -45,18 +45,29 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLineEdit>
 
+#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
+enum TabIndices
+{
+	BASIC_TAB,
+	ADVANCED_TAB,
+	CURRENT_STRUCTURE_TAB,
+	HELP_TAB
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FilterInputWidget::FilterInputWidget(QWidget* parent) :
   QWidget(parent),
-  m_AdvFadedOut(false)
+  m_AdvFadedOut(false),
+  advancedTab(NULL)
 {
   setupUi(this);
   setupGui();
@@ -143,9 +154,6 @@ void FilterInputWidget::setupGui()
 
   filterHumanLabel->setFont(humanLabelFont);
   brandingLabel->setFont(brandingFont);
-  basicInputsLabel->setFont(categoryFont);
-  advInputsLabel->setFont(categoryFont);
-  currentStructureLabel->setFont(categoryFont);
   brandingLabel->installEventFilter(this);
 }
 
@@ -214,23 +222,29 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   advInputsGrid->addWidget(w->getAdvancedInputsWidget());
   currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
-  basicInputsFrame->setVisible((bool)(w->getBasicParameterCount()));
+  // Generate web page in the help web view
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(w->getFilter()->getNameOfClass().toLower());
+  helpWebView->load(helpURL);
 
   bool showAdv = false;
   // Cases
 
   // First check to see if we even have advanced parameters and show/hide the buttons accordingly
   showAdv = static_cast<bool>(w->getAdvParameterCount());
-  advInputsBtn->setVisible(showAdv);
-  advInputsLabel->setVisible(showAdv);
-  // If we do NOT have any advanced Parameters then hide the AdvFrame
+  // If we do NOT have any advanced Parameters then hide the Advanced tab
   if(showAdv == false)
   {
-    advInputsFrame->setVisible(showAdv);
+	  advancedTab = tabWidget->widget(ADVANCED_TAB);
+	  tabWidget->removeTab(ADVANCED_TAB);
   }
-  else // Show or Hide the AdvFrame based on the last interaction the user did
+  else
   {
-    advInputsFrame->setVisible(!m_AdvFadedOut);
+	  // If the advanced tab has been removed before on the last interaction...
+	  if (NULL != advancedTab)
+	  {
+		  tabWidget->insertTab(ADVANCED_TAB, advancedTab, "Advanced");
+		  advancedTab = NULL;
+	  }
   }
 
   w->getBasicInputsWidget()->setVisible(true);
@@ -244,6 +258,9 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   m_BrandingLabel = filter->getBrandingString()  + "  [" + w->getCompiledLibraryName() + "/" + w->getFilterGroup() + "/" + w->getFilterClassName() + "]";
 
   brandingLabel->setText(m_BrandingLabel);
+
+  // Set the current index to the basic tab by default
+  tabWidget->setCurrentIndex(BASIC_TAB);
 
 }
 
@@ -282,44 +299,5 @@ void FilterInputWidget::fadeOutWidget(QWidget* widget)
   m_AdvFadedOut = true;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterInputWidget::hideButton()
-{
-  advInputsFrame->setVisible(false);
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterInputWidget::on_advInputsBtn_clicked()
-{
-  if(advInputsFrame->isVisible() == false)
-  {
-    advInputsFrame->setVisible(true);
-    fadeInWidget(advInputsFrame);
-  }
-  else
-  {
-    fadeOutWidget(advInputsFrame);
-  }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterInputWidget::on_currentStructureBtn_clicked()
-{
-  if(currentStructureFrame->isVisible() == false)
-  {
-    currentStructureFrame->setVisible(true);
-    fadeInWidget(currentStructureFrame);
-  }
-  else
-  {
-    fadeOutWidget(currentStructureFrame);
-  }
-
-}

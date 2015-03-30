@@ -73,10 +73,6 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     void displayFilterParameters(PipelineFilterWidget* w);
     void removeWidgetInputs(PipelineFilterWidget* w);
 
-    void on_advInputsBtn_clicked();
-    void on_currentStructureBtn_clicked();
-    void hideButton();
-
   private slots:
     void fadeInWidget(QWidget* widget);
     void fadeOutWidget(QWidget* widget);
@@ -85,6 +81,7 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     QPointer<FaderWidget> faderWidget;
     bool m_AdvFadedOut;
     QString m_BrandingLabel;
+	QWidget* advancedTab;
 
     FilterInputWidget(const FilterInputWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterInputWidget&); // Operator '=' Not Implemented

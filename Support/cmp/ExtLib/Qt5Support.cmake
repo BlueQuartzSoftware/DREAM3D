@@ -277,7 +277,7 @@ endfunction()
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Find the QtWidgets library
-set(Qt5_COMPONENTS Core Widgets Network Gui Concurrent Script Svg Xml OpenGL PrintSupport)
+set(Qt5_COMPONENTS Core Widgets Network Gui Concurrent Script Svg Xml OpenGL PrintSupport WebKit WebKitWidgets)
 find_package(Qt5 COMPONENTS ${Qt5_COMPONENTS})
 if(NOT Qt5_FOUND)
   message(FATAL_ERROR "Qt5 is Required for DREAM3D to build. Please install it.")
@@ -335,6 +335,9 @@ if(0)
               LIBRARY_SEARCH_FILE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
               PLUGIN_TYPE accessible)
 endif()
+
+CopyQt5RunTimeLibraries(LIBRARIES Multimedia MultimediaWidgets Qml Quick Positioning Sensors Sql WebChannel
+                        PREFIX Qt5)
 
 
 # Append the locations of the Qt libraries to our Library Search Paths
