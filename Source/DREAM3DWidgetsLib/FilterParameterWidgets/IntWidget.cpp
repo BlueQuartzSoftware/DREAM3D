@@ -118,27 +118,27 @@ void IntWidget::widgetChanged(const QString& text)
 void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = true;
-	int i = getFilterParameter()->getDefaultValue().toInt();
-	if (!value->text().isEmpty())
-	{
-		i = value->text().toInt(&ok);
-	}
+  int i = getFilterParameter()->getDefaultValue().toInt();
+  if (!value->text().isEmpty())
+  {
+    i = value->text().toInt(&ok);
+  }
 
-	setInputStyle(value);
+  setInputStyle(value);
 
-	if (ok)
-	{
-		QVariant v(i);
-		ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-		if (false == ok)
-		{
-			FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
-		}
-	}
-	else 	// Check for Empty String. If empty, show error dialog
-	{
-		// Some error message "Could not convert string to an integer"
-	}
+  if (ok)
+  {
+    QVariant v(i);
+    ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+    if (false == ok)
+    {
+      FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    }
+  }
+  else 	// Check for Empty String. If empty, show error dialog
+  {
+    // Some error message "Could not convert string to an integer"
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -146,15 +146,19 @@ void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 void IntWidget::setInputStyle(QLineEdit* lineEdit)
 {
-	
-	if (lineEdit->text().isEmpty())
-	{
-		lineEdit->setStyleSheet("border: 1px solid red;");
-	}
-	else
-	{
-		lineEdit->setStyleSheet("");
-	}
+
+  if (lineEdit->text().isEmpty())
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
+  }
+  else
+  {
+    lineEdit->setStyleSheet("");
+    errorLabel->hide();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -178,38 +182,38 @@ void IntWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 QString IntWidget::generateStyleSheet(int style)
 {
-	QString styleSheet;
-	QTextStream ss(&styleSheet);
+  QString styleSheet;
+  QTextStream ss(&styleSheet);
 
-	ss << "QLineEdit {";
+  ss << "QLineEdit {";
 #if defined(Q_OS_WIN)
-	ss << "font: italic 9 pt \"Arial\";";
+  ss << "font: italic 9 pt \"Arial\";";
 #elif defined(Q_OS_MAC)
-	ss << "font: italic 12 pt \"Arial\";";
+  ss << "font: italic 12 pt \"Arial\";";
 #else
-	ss << "font: italic 10 pt \"Arial\";";
+  ss << "font: italic 10 pt \"Arial\";";
 #endif
 
-	if (style == FS_STANDARD_STYLE)
-	{
+  if (style == FS_STANDARD_STYLE)
+  {
 
-	}
-	else if (style == FS_DRAGGING_STYLE)
-	{
-		ss << "border: 2px solid rgb(34, 170, 46);";
-		ss << "border-radius: 5px;";
-	}
-	else if (style == FS_DOESNOTEXIST_STYLE)
-	{
-		ss << "color: rgb(200, 50, 50); font: bold;";
-	}
-	else if (style == FS_WARNING_STYLE)
-	{
-		ss << "color: rgb(255, 140, 0); font: bold;";
-	}
+  }
+  else if (style == FS_DRAGGING_STYLE)
+  {
+    ss << "border: 2px solid rgb(34, 170, 46);";
+    ss << "border-radius: 5px;";
+  }
+  else if (style == FS_DOESNOTEXIST_STYLE)
+  {
+    ss << "color: rgb(200, 50, 50); font: bold;";
+  }
+  else if (style == FS_WARNING_STYLE)
+  {
+    ss << "color: rgb(255, 140, 0); font: bold;";
+  }
 
 
-	ss << "}";
+  ss << "}";
 
-	return styleSheet;
+  return styleSheet;
 }
