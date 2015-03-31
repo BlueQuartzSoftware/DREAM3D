@@ -209,12 +209,27 @@ font-weight: bold;s
           <string>Help</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QWebView" name="helpWebView">
             <property name="url">
              <url>
               <string>about:blank</string>
              </url>
+            </property>
+            <property name="renderHints">
+             <set>QPainter::Antialiasing|QPainter::HighQualityAntialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
             </property>
            </widget>
           </item>
