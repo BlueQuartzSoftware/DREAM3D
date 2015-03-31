@@ -62,8 +62,8 @@ class SaveImages : public AbstractFilter
 
     virtual ~SaveImages();
 
-		DREAM3D_FILTER_PARAMETER(bool, FilePrefix)
-			Q_PROPERTY(bool FilePrefix READ getFilePrefix WRITE setFilePrefix)
+    DREAM3D_FILTER_PARAMETER(bool, FilePrefix)
+    Q_PROPERTY(bool FilePrefix READ getFilePrefix WRITE setFilePrefix)
 
     DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
@@ -74,8 +74,8 @@ class SaveImages : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
-		DREAM3D_FILTER_PARAMETER(int, Plane)
-		Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
+    DREAM3D_FILTER_PARAMETER(int, Plane)
+    Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ColorsArrayPath)
     Q_PROPERTY(DataArrayPath ColorsArrayPath READ getColorsArrayPath WRITE setColorsArrayPath)
@@ -141,12 +141,12 @@ class SaveImages : public AbstractFilter
     /**
      * @brief saveImage This will do the actual saving of the data to an Image on the disk
      * @param slice The axis on which the slicing occurs
-		 * @param dA Dimensions of one axis of the plane
-		 * @param dB Dimensions of the second axis of the plane
-		 * @param dims Array of the 3 dimensions
-		 * @return
+     * @param dA Dimensions of one axis of the plane
+     * @param dB Dimensions of the second axis of the plane
+     * @param dims Array of the 3 dimensions
+     * @return
      */
-		int saveImage(size_t slice, size_t dB, size_t dA, size_t* dims);
+    int saveImage(size_t slice, size_t dB, size_t dA, size_t* dims);
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
