@@ -509,6 +509,34 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     }
 
 
+    /**
+     * @brief validateNumberOfTuples This will validate that all of the DataArray
+     * paths that are listed have the same number of tuples.
+     * @param filter The filter calling the validation
+     * @param paths The paths that should be checked.
+     * @return
+     */
+    template<typename Filter>
+    bool validateNumberOfTuples(Filter* filter, QVector<DataArrayPath> paths)
+    {
+      if(paths.size() < 1) { return false; }
+      bool valid = true;
+      IDataArray::Pointer array0 = getPrereqIDataArrayFromPath<IDataArray, Filter>(filter, paths.at(0));
+      size_t numTuples = array0->getNumberOfTuples();
+      for(qint32 i = 1; i < paths.size(); i++)
+      {
+        IDataArray::Pointer nextArray = getPrereqIDataArrayFromPath<IDataArray, Filter>(filter, paths.at(i));
+        if(numTuples != nextArray->getNumberOfTuples() && NULL != filter)
+        {
+          filter->setErrorCondition(-10200);
+          QString ss = QObject::tr("The number of Tuples for the DataArray '%1' is '%2' and for DataArray '%3' is '%4'. The number of tuples must match.")
+              .arg(paths.at(0).serialize("/")).arg(array0->getNumberOfTuples()).arg(paths.at(i).serialize("/")).arg(nextArray->getNumberOfTuples());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          valid = false;
+        }
+      }
+      return valid;
+    }
 
   protected:
     DataContainerArray();
