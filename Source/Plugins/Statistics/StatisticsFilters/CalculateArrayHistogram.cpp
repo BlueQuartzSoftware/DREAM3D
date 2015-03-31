@@ -138,10 +138,10 @@ void CalculateArrayHistogram::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  if (m_SelectedArrayPath.isEmpty() == true)
+  if (m_SelectedArrayPath.isValid() == false)
   {
     setErrorCondition(-11010);
-    QString ss = QObject::tr("The complete path to the Data Array can not be empty. Please set an appropriate path.");
+    QString ss = QObject::tr("The DataArray path for variable '%1' is not valid. There may be missing parts in the path. Please set a valid path that has a DataContainer, AttributeMatrix and DataArray name.").arg("Selected Array");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
