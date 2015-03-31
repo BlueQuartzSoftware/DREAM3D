@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "QtSupport/DREAM3DStyles.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -118,9 +120,16 @@ void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
   if (!value->text().isEmpty())
   {
     i = value->text().toDouble(&ok);
+    errorLabel->hide();
+  }
+  else
+  {
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
   }
 
-  setInputStyle(value);
+  DREAM3DStyles::LineEditErrorStyle(value);
 
   if (ok)
   {
@@ -136,26 +145,6 @@ void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
     // Some error message "Could not convert string to a double"
   }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DoubleWidget::setInputStyle(QLineEdit* lineEdit)
-{
-
-  if (lineEdit->text().isEmpty())
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
-    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
-    errorLabel->show();
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-    errorLabel->hide();
-  }
 }
 
 // -----------------------------------------------------------------------------

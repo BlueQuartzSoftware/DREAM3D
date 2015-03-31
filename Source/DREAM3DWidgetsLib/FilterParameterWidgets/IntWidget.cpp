@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "QtSupport/DREAM3DStyles.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -122,9 +124,16 @@ void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
   if (!value->text().isEmpty())
   {
     i = value->text().toInt(&ok);
+    errorLabel->hide();
+  }
+  else
+  {
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
   }
 
-  setInputStyle(value);
+  DREAM3DStyles::LineEditErrorStyle(value);
 
   if (ok)
   {
@@ -138,26 +147,6 @@ void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
   else 	// Check for Empty String. If empty, show error dialog
   {
     // Some error message "Could not convert string to an integer"
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void IntWidget::setInputStyle(QLineEdit* lineEdit)
-{
-
-  if (lineEdit->text().isEmpty())
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
-    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
-    errorLabel->show();
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-    errorLabel->hide();
   }
 }
 
