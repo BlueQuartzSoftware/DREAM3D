@@ -49,11 +49,11 @@
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "TestFileLocations.h"
+#include "DREAM3DTestFileLocations.h"
 
 enum ErrorCodes
 {
-	NO_ERROR = 0,
+  NO_ERROR = 0,
   INT8_ERROR = -4050
 };
 
@@ -136,7 +136,7 @@ int TestCreateDataArray()
       DREAM3D_REQUIRE_EQUAL(0, 1)
     }
 
-    // Test 2 set a bool array with a non-zero value and compare to 1 
+    // Test 2 set a bool array with a non-zero value and compare to 1
     filter->setDataContainerArray(dca);
     var.setValue(10);
     propWasSet = filter->setProperty("ScalarType", var); // bool

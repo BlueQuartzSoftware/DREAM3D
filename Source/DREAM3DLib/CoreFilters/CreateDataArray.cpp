@@ -136,7 +136,7 @@ void checkInitializationInt(AbstractFilter* filter, double initValue, int err)
 {
   filter->setErrorCondition(0);
   QString ss;
-  DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
   QString strType = var->getTypeAsString();
   strType.remove("_t");
 
@@ -159,7 +159,7 @@ void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, in
 {
   filter->setErrorCondition(0);
   QString ss;
-  DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
   QString strType = var->getTypeAsString();
 
   if (!(((initValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (initValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
@@ -183,10 +183,10 @@ void CreateDataArray::checkInitialization()
 
   switch (m_ScalarType) // check user input value to data type
   {
-    case DREAM3D::TypeEnums::Int8: 
+    case DREAM3D::TypeEnums::Int8:
       checkInitializationInt<int8_t>(this, m_InitializationValue, -4050);
       break;
-    case DREAM3D::TypeEnums::UInt8:   
+    case DREAM3D::TypeEnums::UInt8:
       checkInitializationInt<uint8_t>(this, m_InitializationValue, -4051);
       break;
     case DREAM3D::TypeEnums::Int16:
@@ -195,10 +195,10 @@ void CreateDataArray::checkInitialization()
     case DREAM3D::TypeEnums::UInt16:
       checkInitializationInt<uint16_t>(this, m_InitializationValue, -4053);
       break;
-    case DREAM3D::TypeEnums::Int32:   
+    case DREAM3D::TypeEnums::Int32:
       checkInitializationInt<int32_t>(this, m_InitializationValue, -4054);
       break;
-    case DREAM3D::TypeEnums::UInt32:    
+    case DREAM3D::TypeEnums::UInt32:
       checkInitializationInt<uint32_t>(this, m_InitializationValue, -4055);
       break;
     case DREAM3D::TypeEnums::Int64:
@@ -207,7 +207,7 @@ void CreateDataArray::checkInitialization()
     case DREAM3D::TypeEnums::UInt64:
       checkInitializationInt<uint64_t>(this, m_InitializationValue, -4057);
       break;
-    case DREAM3D::TypeEnums::Float:    
+    case DREAM3D::TypeEnums::Float:
       checkInitializationFloatDouble<float>(this, m_InitializationValue, -4058);
       break;
     case DREAM3D::TypeEnums::Double:

@@ -148,7 +148,7 @@ void DoubleWidget::setInputStyle(QLineEdit* lineEdit)
   {
     lineEdit->setStyleSheet("border: 1px solid red;");
     label_2->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
-    label_2->setText("Filter will use default value");
+    label_2->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
     label_2->show();
   }
   else
