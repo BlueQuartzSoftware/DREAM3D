@@ -38,6 +38,7 @@ AddDREAM3DUnitTest(TESTNAME ErrorMessageTest SOURCES ${DREAM3DTest_SOURCE_DIR}/E
 
 AddDREAM3DUnitTest(TESTNAME DataContainerBundleTest SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerBundleTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
+AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
 
 

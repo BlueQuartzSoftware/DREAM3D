@@ -56,7 +56,8 @@
 class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-  public:
+  public: 
+
     DREAM3D_SHARED_POINTERS(CreateDataArray)
     DREAM3D_STATIC_NEW_MACRO(CreateDataArray)
     DREAM3D_TYPE_MACRO_SUPER(CreateDataArray, AbstractFilter)
@@ -144,6 +145,8 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
 
   private:
     DEFINE_CREATED_IDATAARRAY_VARIABLE(OutputArray)
+
+    void checkInitialization();
 
     CreateDataArray(const CreateDataArray&); // Copy Constructor Not Implemented
     void operator=(const CreateDataArray&); // Operator '=' Not Implemented

@@ -35,7 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CreateDataArray.h"
 
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -49,7 +48,7 @@ CreateDataArray::CreateDataArray() :
   AbstractFilter(),
   m_AttributeMatrixPath(),
   m_ScalarType(0),
-  m_NumberOfComponents(0),
+  m_NumberOfComponents(-1),
   m_OutputArrayName(""),
   m_InitializationValue(0.0)
 {
@@ -134,37 +133,144 @@ int CreateDataArray::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CreateDataArray::dataCheck()
+template<typename T>
+void checkInitializationInt(AbstractFilter* filter, double initValue, int err)
+{
+  filter->setErrorCondition(0);
+  QString ss;
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
+  QString strType = var->getTypeAsString();
+  strType.remove("_t");
+
+  if (!((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max()))){
+    filter->setErrorCondition(err);
+    ss = QObject::tr("The %1 initialization value was invalid. The valid range is %2 to %3.").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
+  }
+
+  if (filter->getErrorCondition() < 0)
+  {
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, int err)
+{
+  filter->setErrorCondition(0);
+  QString ss;
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
+  QString strType = var->getTypeAsString();
+
+  if (!(((initValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (initValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
+    (initValue == 0) || ((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max())))){
+    filter->setErrorCondition(err);
+    ss = QObject::tr("The %1 initialization value was invalid. The valid ranges are -%3 to -%2, 0, %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
+  }
+
+  if (filter->getErrorCondition() < 0)
+  {
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CreateDataArray::checkInitialization()
 {
   setErrorCondition(0);
 
+  switch (m_ScalarType) // check user input value to data type
+  {
+    case DREAM3D::TypeEnums::Int8:
+      checkInitializationInt<int8_t>(this, m_InitializationValue, -4050);
+      break;
+    case DREAM3D::TypeEnums::UInt8:
+      checkInitializationInt<uint8_t>(this, m_InitializationValue, -4051);
+      break;
+    case DREAM3D::TypeEnums::Int16:
+      checkInitializationInt<int16_t>(this, m_InitializationValue, -4052);
+      break;
+    case DREAM3D::TypeEnums::UInt16:
+      checkInitializationInt<uint16_t>(this, m_InitializationValue, -4053);
+      break;
+    case DREAM3D::TypeEnums::Int32:
+      checkInitializationInt<int32_t>(this, m_InitializationValue, -4054);
+      break;
+    case DREAM3D::TypeEnums::UInt32:
+      checkInitializationInt<uint32_t>(this, m_InitializationValue, -4055);
+      break;
+    case DREAM3D::TypeEnums::Int64:
+      checkInitializationInt<int64_t>(this, m_InitializationValue, -4056);
+      break;
+    case DREAM3D::TypeEnums::UInt64:
+      checkInitializationInt<uint64_t>(this, m_InitializationValue, -4057);
+      break;
+    case DREAM3D::TypeEnums::Float:
+      checkInitializationFloatDouble<float>(this, m_InitializationValue, -4058);
+      break;
+    case DREAM3D::TypeEnums::Double:
+      checkInitializationFloatDouble<double>(this, m_InitializationValue, -4059);
+      break;
+    case DREAM3D::TypeEnums::Bool:
+    {
+      if (m_InitializationValue != 0.0)
+      {
+        m_InitializationValue = 1.0; // anything that is not a zero is a one
+      }
+      break;
+    }
+    default:
+    {
+      setErrorCondition(-4060);
+      QString ss = QObject::tr("Incorrect data scalar type.");
+      break;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CreateDataArray::dataCheck()
+{
+  setErrorCondition(0);
+  QString ss;
   if(getAttributeMatrixPath().getDataContainerName().isEmpty() == true || getAttributeMatrixPath().getAttributeMatrixName().isEmpty() == true)
   {
-    QString ss = QObject::tr("The AttributeMatrix Path has empty elements: DataContainer->'%1'  AttributeMatrix->'%2'").arg(getAttributeMatrixPath().getDataContainerName()).arg(getAttributeMatrixPath().getAttributeMatrixName());
+    ss = QObject::tr("The AttributeMatrix Path has empty elements: DataContainer->'%1'  AttributeMatrix->'%2'").arg(getAttributeMatrixPath().getDataContainerName()).arg(getAttributeMatrixPath().getAttributeMatrixName());
     setErrorCondition(-4000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(getScalarType() < 0 || getScalarType() > 9)
+  if(getScalarType() < 0 || getScalarType() > 10)
   {
-    QString ss = QObject::tr("The scalar type was invalid. Valid values range from 0 to 9.");
+    ss = QObject::tr("The scalar type was invalid. Valid values range from 0 to 10.");
     setErrorCondition(-4002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(getNumberOfComponents() < 1)
+  if (getNumberOfComponents() <= 0)
   {
-    QString ss = QObject::tr("The number of components must be 1 or greater.");
     setErrorCondition(-4003);
+    QString ss = QObject::tr("The Number of Components can not be zero or less. The current value is '%1'. Please set a value greater than zero.").arg(m_NumberOfComponents);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   if(getOutputArrayName().isEmpty() == true)
   {
-    QString ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-4001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+  if (getErrorCondition() < 0) { return; }
+
+  checkInitialization(); // check the initialization value range for that data type
+  if (getErrorCondition() < 0) { return; }
 
   DataArrayPath tempPath = getAttributeMatrixPath();
   QVector<size_t> cDims(1, getNumberOfComponents());
@@ -201,7 +307,6 @@ void CreateDataArray::execute()
   {
     return;
   }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

@@ -112,15 +112,50 @@ void DoubleWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  bool ok = false;
-  double i = value->text().toDouble(&ok);
-  QVariant v(i);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(false == ok)
+
+  bool ok = true;
+  double i = getFilterParameter()->getDefaultValue().toDouble();
+  if (!value->text().isEmpty())
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    i = value->text().toDouble(&ok);
   }
 
+  setInputStyle(value);
+
+  if (ok)
+  {
+    QVariant v(i);
+    ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+    if (false == ok)
+    {
+      FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    }
+  }
+  else 	// Check for Empty String. If empty, show error dialog
+  {
+    // Some error message "Could not convert string to a double"
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DoubleWidget::setInputStyle(QLineEdit* lineEdit)
+{
+
+  if (lineEdit->text().isEmpty())
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+    label_2->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    label_2->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    label_2->show();
+  }
+  else
+  {
+    lineEdit->setStyleSheet("");
+    label_2->hide();
+  }
 }
 
 // -----------------------------------------------------------------------------
