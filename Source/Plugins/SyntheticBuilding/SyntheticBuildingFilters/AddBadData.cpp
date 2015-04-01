@@ -177,7 +177,7 @@ void  AddBadData::add_noise()
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attMatName)->getAttributeArrayNames();
 
   float random = 0.0;
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
     if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)

@@ -586,7 +586,7 @@ void IdentifyMicroTextureRegions::execute()
   // By default we randomize grains
   if (true == getRandomizeMTRIds() && getCancel() == false)
   {
-    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
+    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
 

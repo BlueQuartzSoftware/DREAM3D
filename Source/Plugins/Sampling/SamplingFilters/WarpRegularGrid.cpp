@@ -217,7 +217,7 @@ void WarpRegularGrid::execute()
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
   float res[3];
   m->getGeometryAs<ImageGeom>()->getResolution(res);
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   float x, y, z;
   float newX, newY;

@@ -86,7 +86,7 @@ class FindEuclideanMap
     void operator()() const
     {
       // qDebug() << "  FindEuclideanMap: Loop = " << loop << "\n";
-      int64_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+      int64_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
       int euclideanDistance = 0;
       size_t count = 1;

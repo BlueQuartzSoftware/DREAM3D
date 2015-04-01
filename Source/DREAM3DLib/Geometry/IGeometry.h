@@ -130,10 +130,10 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
 // -----------------------------------------------------------------------------
 
     /**
-     * @brief getNumberOfTuples
+     * @brief getNumberOfElements
      * @return
      */
-    virtual size_t getNumberOfTuples() = 0;
+    virtual size_t getNumberOfElements() = 0;
 
     /**
      * @brief findElementCentroids

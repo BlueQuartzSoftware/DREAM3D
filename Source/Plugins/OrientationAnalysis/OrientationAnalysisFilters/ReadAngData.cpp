@@ -445,7 +445,7 @@ void ReadAngData::readAngFile()
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   //// Adjust the values of the 'phase' data to correct for invalid values
   {

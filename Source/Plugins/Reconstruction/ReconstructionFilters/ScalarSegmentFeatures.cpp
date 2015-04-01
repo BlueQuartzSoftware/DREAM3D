@@ -411,7 +411,7 @@ void ScalarSegmentFeatures::execute()
   // By default we randomize grains
   if (true == m_RandomizeFeatureIds)
   {
-    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
+    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
 

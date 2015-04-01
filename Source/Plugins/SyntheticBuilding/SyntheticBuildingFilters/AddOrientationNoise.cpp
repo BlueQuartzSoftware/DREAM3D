@@ -170,7 +170,7 @@ void  AddOrientationNoise::add_orientation_noise()
   float newg[3][3];
   float rot[3][3];
   float w, n1, n2, n3;
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
     float ea1 = m_CellEulerAngles[3 * i + 0];

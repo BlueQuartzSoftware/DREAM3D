@@ -167,7 +167,7 @@ void EdgeGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer 
   {
     return;
   }
-  if (data->getType() == 1 && data->getNumTuples() != getNumberOfTuples())
+  if (data->getType() == 1 && data->getNumTuples() != getNumberOfElements())
   {
     return;
   }
@@ -181,7 +181,7 @@ void EdgeGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t EdgeGeom::getNumberOfTuples()
+size_t EdgeGeom::getNumberOfElements()
 {
   return m_EdgeList->getNumberOfTuples();
 }
