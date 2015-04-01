@@ -46,7 +46,6 @@
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/CtfFields.h"
 #include "EbsdLib/HEDM/MicFields.h"
-
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 #include "EbsdLib/HEDM/H5MicVolumeReader.h"

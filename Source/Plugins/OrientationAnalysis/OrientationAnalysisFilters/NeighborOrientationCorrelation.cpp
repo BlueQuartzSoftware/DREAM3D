@@ -45,6 +45,8 @@
 
 #include "OrientationLib/Math/OrientationMath.h"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -380,7 +382,7 @@ AbstractFilter::Pointer NeighborOrientationCorrelation::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString NeighborOrientationCorrelation::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

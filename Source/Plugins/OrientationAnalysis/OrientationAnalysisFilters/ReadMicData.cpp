@@ -42,11 +42,14 @@
 
 #include <QtCore/QFileInfo>
 
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/HEDM/MicFields.h"
+
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/HEDM/MicFields.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\

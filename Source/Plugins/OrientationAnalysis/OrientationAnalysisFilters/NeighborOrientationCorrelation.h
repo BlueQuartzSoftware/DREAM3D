@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _NeighborCICorrelation_H_
-#define _NeighborCICorrelation_H_
+#ifndef _NeighborOrientationCorrelation_H_
+#define _NeighborOrientationCorrelation_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -44,37 +44,48 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "Processing/ProcessingConstants.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
+
+
 
 /**
- * @class NeighborCICorrelation NeighborCICorrelation.h DREAM3DLib/ReconstructionFilters/NeighborCICorrelation.h
+ * @class NeighborOrientationCorrelation NeighborOrientationCorrelation.h DREAM3DLib/ReconstructionFilters/NeighborOrientationCorrelation.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class NeighborCICorrelation : public AbstractFilter
+class NeighborOrientationCorrelation : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(NeighborCICorrelation)
-    DREAM3D_STATIC_NEW_MACRO(NeighborCICorrelation)
-    DREAM3D_TYPE_MACRO_SUPER(NeighborCICorrelation, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(NeighborOrientationCorrelation)
+    DREAM3D_STATIC_NEW_MACRO(NeighborOrientationCorrelation)
+    DREAM3D_TYPE_MACRO_SUPER(NeighborOrientationCorrelation, AbstractFilter)
 
-    virtual ~NeighborCICorrelation();
+    virtual ~NeighborOrientationCorrelation();
 
+    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
+    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
     DREAM3D_FILTER_PARAMETER(float, MinConfidence)
     Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
-
-    DREAM3D_FILTER_PARAMETER(bool, Loop)
-    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
+    DREAM3D_FILTER_PARAMETER(int, Level)
+    Q_PROPERTY(int Level READ getLevel WRITE setLevel)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
     Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -91,7 +102,6 @@ class NeighborCICorrelation : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     virtual void execute();
     virtual void preflight();
 
@@ -102,19 +112,23 @@ class NeighborCICorrelation : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    NeighborCICorrelation();
-
+    NeighborOrientationCorrelation();
 
   private:
+    QVector<OrientationOps::Pointer> m_OrientationOps;
+
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     void dataCheck();
 
-
-    NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented
-    void operator=(const NeighborCICorrelation&); // Operator '=' Not Implemented
+    NeighborOrientationCorrelation(const NeighborOrientationCorrelation&); // Copy Constructor Not Implemented
+    void operator=(const NeighborOrientationCorrelation&); // Operator '=' Not Implemented
 };
 
-#endif /* NeighborCICorrelation_H_ */
+#endif /* NeighborOrientationCorrelation_H_ */
+
 
 

@@ -50,22 +50,20 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-
-#include "QtSupport/PoleFigureImageUtilities.h"
-
-
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
 
-
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+#include "QtSupport/PoleFigureImageUtilities.h"
 
 
 

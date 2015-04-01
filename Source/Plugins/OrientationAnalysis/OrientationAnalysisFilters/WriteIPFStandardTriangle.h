@@ -45,7 +45,6 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 /**
  * @class WriteIPFStandardTriangle WriteIPFStandardTriangle.h /IOFilters/WriteIPFStandardTriangle.h

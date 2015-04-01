@@ -55,8 +55,6 @@
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
 
-
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
@@ -76,8 +74,12 @@
 #include "OrientationLib/OrientationOps/TriclinicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 #include "QtSupport/PoleFigureImageUtilities.h"
+
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
 
 #define SET_DIRECTION(i, j, k)\
   direction[0] = i; direction[1] = j; direction[2] = k;

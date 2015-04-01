@@ -22,8 +22,6 @@ set(_PublicFilters
   FillBadData
   FindProjectedImageStatistics
   FindRelativeMotionBetweenSlices
-  NeighborCICorrelation
-  NeighborOrientationCorrelation
   BadDataNeighborOrientationCheck
   ConvertEulerAngles
   RotateEulerRefFrame
