@@ -325,7 +325,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
         dlta = delta[in0] / ncon[i];
 
         ll = lambda[i];
-        verts[3 * i + j] += 11 * dlta;
+        verts[3 * i + j] += ll * dlta;
         delta[in0] = 0.0; // reset for next iteration
       }
       ncon[i] = 0; // reset for next iteration
