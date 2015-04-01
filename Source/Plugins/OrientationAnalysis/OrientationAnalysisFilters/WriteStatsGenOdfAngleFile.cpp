@@ -56,7 +56,7 @@
 #include "EbsdLib/HKL/CtfReader.h"
 
 
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "OrientationLib/Math/OrientationMath.h"

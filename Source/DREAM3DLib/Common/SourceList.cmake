@@ -36,8 +36,6 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/IFilterFactory.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IObserver.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjection.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjectionArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
@@ -56,8 +54,6 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IObserver.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjection.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/ModifiedLambertProjectionArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp

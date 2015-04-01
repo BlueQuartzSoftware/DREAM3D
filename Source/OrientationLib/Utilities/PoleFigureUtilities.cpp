@@ -39,7 +39,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QTextStream>
 
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"

@@ -49,7 +49,7 @@
 // to expose some of the constants needed below
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
