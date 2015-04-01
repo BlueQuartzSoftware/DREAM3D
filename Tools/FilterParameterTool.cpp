@@ -696,6 +696,25 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFiltersWithMultipleDataArrayPaths(AbstractFilter::Pointer filter)
+{
+  //std::cout << "Filter: " << filter->getNameOfClass().toStdString() << std::endl;
+  QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
+  int count = 0;
+  foreach(FilterParameter::Pointer param, parameters)
+  {
+    if(param->getWidgetType() == FilterParameterWidgetType::DataArraySelectionWidget) { count++; }
+  }
+  if(count > 1) {
+    std::cout << "| " << filter->getCompiledLibraryName().toStdString() << " | " << filter->getNameOfClass().toStdString() << " | " << count  << " | " << std::endl;
+  }
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateFilterParametersCode()
 {
 
@@ -703,6 +722,8 @@ void GenerateFilterParametersCode()
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
   // Loop on each filter
+  std::cout << "| Plugin | Filter | Count |" << std::endl;
+  std::cout << "|--------|--------|-------|" << std::endl;
   while(iter.hasNext())
   {
     iter.next();
@@ -713,10 +734,11 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    CorrectInitializerList(filter, h, cpp);
+    //CorrectInitializerList(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
+    FindFiltersWithMultipleDataArrayPaths(filter);
   }
 
 }
@@ -727,7 +749,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
