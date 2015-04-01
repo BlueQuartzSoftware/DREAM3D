@@ -50,13 +50,13 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
+#include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/TrigonalOps.h"
-#include "OrientationLib/OrientationOps/TetragonalOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
+#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/OrientationOps/TetragonalOps.h"
+#include "OrientationLib/OrientationOps/TrigonalOps.h"
 
 #include "IO/IOConstants.h"
 

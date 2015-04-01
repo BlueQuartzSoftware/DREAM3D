@@ -45,13 +45,13 @@
 #endif
 
 
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/Math/OrientationMath.h"
+
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

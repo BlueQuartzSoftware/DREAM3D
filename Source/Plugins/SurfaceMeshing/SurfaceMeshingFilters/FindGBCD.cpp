@@ -47,8 +47,8 @@
 #include <QtCore/QDateTime>
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 

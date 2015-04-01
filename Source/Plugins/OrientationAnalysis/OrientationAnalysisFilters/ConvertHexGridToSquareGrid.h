@@ -50,9 +50,9 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 /**

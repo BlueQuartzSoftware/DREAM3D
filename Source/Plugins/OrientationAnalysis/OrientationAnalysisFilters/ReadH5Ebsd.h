@@ -42,16 +42,16 @@
 #include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/TSL/AngConstants.h"
-#include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/HEDM/MicConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
+#include "EbsdLib/HEDM/MicConstants.h"
+#include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 
 class H5EbsdVolumeReader;

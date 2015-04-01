@@ -37,10 +37,10 @@
 #include "MakeDataContainer.h"
 
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
-#include "DREAM3DLib/Geometry/ImageGeom.h"
-#include "DREAM3DLib/Geometry/VertexGeom.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Geometry/ImageGeom.h"
+#include "DREAM3DLib/Geometry/VertexGeom.h"
 
 // -----------------------------------------------------------------------------
 //

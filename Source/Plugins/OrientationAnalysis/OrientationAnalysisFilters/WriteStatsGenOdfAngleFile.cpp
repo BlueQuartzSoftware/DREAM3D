@@ -52,30 +52,30 @@
 #include <QtGui/QColor>
 
 #include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/TSL/AngReader.h"
 
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 #include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
+#include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalLowOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "OrientationLib/OrientationOps/TrigonalOps.h"
-#include "OrientationLib/OrientationOps/TetragonalOps.h"
-#include "OrientationLib/OrientationOps/TrigonalLowOps.h"
-#include "OrientationLib/OrientationOps/TetragonalLowOps.h"
-#include "OrientationLib/OrientationOps/TriclinicOps.h"
+#include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/MonoclinicOps.h"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/OrientationOps/TetragonalLowOps.h"
+#include "OrientationLib/OrientationOps/TetragonalOps.h"
+#include "OrientationLib/OrientationOps/TriclinicOps.h"
+#include "OrientationLib/OrientationOps/TrigonalLowOps.h"
+#include "OrientationLib/OrientationOps/TrigonalOps.h"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "QtSupport/PoleFigureImageUtilities.h"
 

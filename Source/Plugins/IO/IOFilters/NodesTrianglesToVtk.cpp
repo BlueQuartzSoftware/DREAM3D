@@ -41,9 +41,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QtEndian>
 
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 #include "IO/IOConstants.h"
 

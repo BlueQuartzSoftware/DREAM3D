@@ -51,15 +51,15 @@
 #include <QtGui/QColor>
 
 #include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/TSL/AngReader.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 

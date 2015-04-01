@@ -86,6 +86,31 @@ void writeOutput(bool didReplace, QStringList &outLines, QString filename)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeOutput(bool didReplace, QVector<QString> &outLines, QString filename)
+{
+  if(didReplace == true)
+  {
+    QFileInfo fi2(filename);
+#if 1
+    QFile hOut(filename);
+#else
+    QString tmpPath = "/tmp/" + fi2.fileName();
+    QFile hOut(tmpPath);
+#endif
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream( &hOut );
+    for(qint32 i = 0; i < outLines.size() - 1; i++)
+    {
+      stream << outLines[i] << "\n";
+    }
+    hOut.close();
+
+    qDebug() << "Saved File " << fi2.absoluteFilePath();
+  }
+}
 
 
 // -----------------------------------------------------------------------------
@@ -662,7 +687,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
           "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
           "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
-          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic";
+          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -677,7 +702,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   }
 
 
-  prefix = D3DTools::GetDREAM3DProjParentDir();
+  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins2";
   for (int i = 0; i < libs.size(); ++i)
   {
     QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
@@ -710,7 +735,84 @@ void FindFiltersWithMultipleDataArrayPaths(AbstractFilter::Pointer filter)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
+{
+  QString contents;
+  {
+    // Read the Source File
+//    QFileInfo fi(cppFile);
+//    if (fi.baseName().compare("AddOrientationNoise") != 0)
+//    {
+//      return false;
+//    }
 
+    QFile source(file);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  qDebug() << file;
+
+  QStringList names;
+  bool didReplace = false;
+
+  QVector<int> lines(0);
+
+
+  QString searchString = "#include";
+  QVector<QString> outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString body;
+  QMap<QString, int> lineToInclude;
+  int index = 0;
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    outLines.push_back(line);
+    if(line.contains(searchString) )
+    {
+      if(line.contains("H5Support/H5Support.h")) { didReplace = true; lineToInclude["[0]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("H5Support")) { didReplace = true; lineToInclude["[1]\t" + line] = index; lines.push_back(index); }
+
+      else if(line.contains("EbsdLib/EbsdLib.h")) { didReplace = true; lineToInclude["[2]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("EbsdLib")) { didReplace = true; lineToInclude["[3]\t" + line] = index; lines.push_back(index); }
+
+      else if(line.contains("DREAM3DLib/DREAM3DLib.h")) { didReplace = true; lineToInclude["[4]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("DREAM3DLib")) { didReplace = true; lineToInclude["[5]\t" + line] = index; lines.push_back(index); }
+
+      else if(line.contains("OrientationLib/OrientationLib.h")) { didReplace = true; lineToInclude["[6]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("OrientationLib")) { didReplace = true; lineToInclude["[7]\t" + line] = index; lines.push_back(index); }
+    }
+    index++;
+  }
+
+ // qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
+
+  int lineIndex = 0;
+  QMapIterator<QString, int> iter(lineToInclude);
+  while (iter.hasNext())
+  {
+    iter.next();
+    QString str = iter.key();
+    int l = iter.value();
+    str = str.split('\t').at(1);
+
+  //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
+
+    outLines[lines[lineIndex]] = str;
+
+    lineIndex++;
+  }
+
+  writeOutput(didReplace, outLines, file);
+
+  return didReplace;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -738,7 +840,10 @@ void GenerateFilterParametersCode()
     //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
-    FindFiltersWithMultipleDataArrayPaths(filter);
+    //FindFiltersWithMultipleDataArrayPaths(filter);
+    GroupIncludes(filter, cpp);
+    GroupIncludes(filter, h);
+
   }
 
 }

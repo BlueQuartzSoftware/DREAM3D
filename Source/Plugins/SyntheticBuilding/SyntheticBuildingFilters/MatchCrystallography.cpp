@@ -37,17 +37,17 @@
 #include "MatchCrystallography.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "OrientationLib/Texture/Texture.hpp"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/Texture/Texture.hpp"
 
 using namespace DREAM3D;
 

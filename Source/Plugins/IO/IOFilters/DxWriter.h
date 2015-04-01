@@ -40,10 +40,10 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/CoreFilters/FileWriter.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/CoreFilters/FileWriter.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
  * @class DxWriter DxWriter.h DREAM3DLib/IOFilters/DxWriter.h

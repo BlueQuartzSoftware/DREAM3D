@@ -40,13 +40,13 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 
 
 

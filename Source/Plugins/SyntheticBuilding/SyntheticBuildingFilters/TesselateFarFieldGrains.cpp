@@ -51,18 +51,18 @@
 #include <QtCore/QDir>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "SyntheticBuilding/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "OrientationLib/Math/OrientationMath.h"
 
 //// Macro to determine if we are going to show the Debugging Output files
 #define PPP_SHOW_DEBUG_OUTPUTS 0
