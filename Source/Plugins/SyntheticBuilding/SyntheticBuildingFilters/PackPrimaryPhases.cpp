@@ -2328,7 +2328,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "Neighbors");
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 

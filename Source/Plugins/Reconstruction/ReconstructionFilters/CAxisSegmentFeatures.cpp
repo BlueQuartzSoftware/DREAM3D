@@ -279,7 +279,7 @@ void CAxisSegmentFeatures::execute()
   // By default we randomize grains
   if (true == m_RandomizeFeatureIds)
   {
-    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
   // If there is an error set this to something negative and also set a message

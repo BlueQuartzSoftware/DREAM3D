@@ -24,12 +24,10 @@ set(_PublicFilters
   TriangleCentroidFilter
   TriangleDihedralAngleFilter
   TriangleNormalFilter
+  LaplacianSmoothing
 # These filters require extensive updates to comply with the IGeometry design
 #  M3CSliceBySlice
 #  MovingFiniteElementSmoothing
-
-# These filters rely on Unique Edges which does not work in current IGeometry design
-#  LaplacianSmoothing
 #  VerifyTriangleWinding
 )
 

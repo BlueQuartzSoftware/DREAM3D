@@ -330,7 +330,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 
   bool good = false;
 
-  size_t totalPoints = static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
+  size_t totalPoints = static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
   size_t totalFeatures = static_cast<size_t>(m_NumNeighborsPtr.lock()->getNumberOfTuples());
 
   QVector<bool> activeObjects(totalFeatures, true);

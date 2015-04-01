@@ -459,7 +459,7 @@ void ReadMicData::readMicFile()
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
   QVector<size_t> tDims(3, 0);
   tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();

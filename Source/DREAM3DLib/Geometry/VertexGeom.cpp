@@ -150,7 +150,7 @@ void VertexGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointe
     // VertexGeom can only accept vertex Attribute Matrices
     return;
   }
-  if (data->getNumTuples() != getNumberOfTuples())
+  if (data->getNumTuples() != getNumberOfElements())
   {
     return;
   }
@@ -164,7 +164,7 @@ void VertexGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t VertexGeom::getNumberOfTuples()
+size_t VertexGeom::getNumberOfElements()
 {
   return m_VertexList->getNumberOfTuples();
 }

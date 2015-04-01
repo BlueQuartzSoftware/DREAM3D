@@ -340,7 +340,7 @@ void WritePoleFigure::execute()
     missingGoodVoxels = false;
   }
   // Find how many phases we have by getting the number of Crystal Structures
-  size_t numPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t numPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   int numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t count = 0;
   // Loop over all the voxels gathering the Eulers for a specific phase into an array

@@ -173,7 +173,7 @@ void TriangleGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Poin
   {
     return;
   }
-  if (data->getType() == 2 && data->getNumTuples() != getNumberOfTuples())
+  if (data->getType() == 2 && data->getNumTuples() != getNumberOfElements())
   {
     return;
   }
@@ -187,7 +187,7 @@ void TriangleGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t TriangleGeom::getNumberOfTuples()
+size_t TriangleGeom::getNumberOfElements()
 {
   return m_TriList->getNumberOfTuples();
 }
@@ -195,7 +195,7 @@ size_t TriangleGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleGeom::findElementEdges()
+int TriangleGeom::findEdges()
 {
   m_EdgeList = CreateSharedEdgeList(0);
   GeometryHelpers::Connectivity::Find2DElementEdges<int64_t>(m_TriList, m_EdgeList);
@@ -209,15 +209,7 @@ int TriangleGeom::findElementEdges()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SharedEdgeList::Pointer TriangleGeom::getElementEdges()
-{
-  return m_EdgeList;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TriangleGeom::deleteElementEdges()
+void TriangleGeom::deleteEdges()
 {
   m_EdgeList = SharedEdgeList::NullPointer();
 }
@@ -611,6 +603,8 @@ IGeometry::Pointer TriangleGeom::deepCopy()
 {
   TriangleGeom::Pointer triCopy = TriangleGeom::CreateGeometry(getTriangles(), getVertices(), getName());
 
+  triCopy->setEdges(getEdges());
+  triCopy->setUnsharedEdges(getUnsharedEdges());
   triCopy->setElementsContainingVert(getElementsContainingVert());
   triCopy->setElementNeighbors(getElementNeighbors());
   triCopy->setElementCentroids(getElementCentroids());

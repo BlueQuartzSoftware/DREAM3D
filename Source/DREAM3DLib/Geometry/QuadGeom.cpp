@@ -173,7 +173,7 @@ void QuadGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer 
   {
     return;
   }
-  if (data->getType() == 2 && data->getNumTuples() != getNumberOfTuples())
+  if (data->getType() == 2 && data->getNumTuples() != getNumberOfElements())
   {
     return;
   }
@@ -187,7 +187,7 @@ void QuadGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t QuadGeom::getNumberOfTuples()
+size_t QuadGeom::getNumberOfElements()
 {
   return m_QuadList->getNumberOfTuples();
 }
@@ -195,7 +195,7 @@ size_t QuadGeom::getNumberOfTuples()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuadGeom::findElementEdges()
+int QuadGeom::findEdges()
 {
   m_EdgeList = CreateSharedEdgeList(0);
   GeometryHelpers::Connectivity::Find2DElementEdges<int64_t>(m_QuadList, m_EdgeList);
@@ -209,15 +209,7 @@ int QuadGeom::findElementEdges()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SharedEdgeList::Pointer QuadGeom::getElementEdges()
-{
-  return m_EdgeList;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QuadGeom::deleteElementEdges()
+void QuadGeom::deleteEdges()
 {
   m_EdgeList = SharedEdgeList::NullPointer();
 }
@@ -611,6 +603,8 @@ IGeometry::Pointer QuadGeom::deepCopy()
 {
   QuadGeom::Pointer quadCopy = QuadGeom::CreateGeometry(getQuads(), getVertices(), getName());
 
+  quadCopy->setEdges(getEdges());
+  quadCopy->setUnsharedEdges(getUnsharedEdges());
   quadCopy->setElementsContainingVert(getElementsContainingVert());
   quadCopy->setElementNeighbors(getElementNeighbors());
   quadCopy->setElementCentroids(getElementCentroids());
