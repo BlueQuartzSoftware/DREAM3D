@@ -38,6 +38,8 @@
 
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
@@ -91,6 +93,47 @@ class DataArrayProxy
       objectType = rhs.objectType;
       tupleDims = rhs.tupleDims;
       compDims = rhs.compDims;
+    }
+
+    /**
+    * @brief Writes the contents of the proxy to the json object 'json'
+    * @param json
+    * @return
+    */
+    void writeJson(QJsonObject &json)
+    {
+      json["Flag"] = static_cast<double>(flag);
+      json["Version"] = static_cast<double>(version);
+      json["Path"] = path;
+      json["Name"] = name;
+      json["Object Type"] = objectType;
+      json["Tuple Dimensions"] = writeVector(tupleDims);
+      json["Component Dimensions"] = writeVector(compDims);
+    }
+
+    /**
+    * @brief Reads the contents of the the json object 'json' into the proxy
+    * @param json
+    * @return
+    */
+    bool readJson(QJsonObject &json)
+    {
+      if (json["Flag"].isDouble() && json["Version"].isDouble() && json["Path"].isString() && json["Name"].isString()
+        && json["Object Type"].isString() && json["Tuple Dimensions"].isArray() && json["Component Dimensions"].isArray())
+      {
+        if (json["Flag"].toDouble() >= std::numeric_limits<uint8_t>().min() && json["Flag"].toDouble() <= std::numeric_limits<uint8_t>().max())
+        {
+          flag = static_cast<uint8_t>(json["Flag"].toDouble());
+        }
+        version = json["Version"].toInt();
+        path = json["Path"].toString();
+        name = json["Name"].toString();
+        objectType = json["Object Type"].toString();
+        tupleDims = readVector(json["Tuple Dimensions"].toArray());
+        compDims = readVector(json["Component Dimensions"].toArray());
+        return true;
+      }
+      return false;
     }
 
     /**
@@ -152,6 +195,36 @@ class DataArrayProxy
     QString objectType;
     QVector<size_t> tupleDims;
     QVector<size_t> compDims;
+
+    private:
+
+
+      QJsonArray writeVector(QVector<size_t> vector)
+      {
+        QJsonArray jsonArray;
+        foreach(size_t num, compDims)
+        {
+          jsonArray.push_back(static_cast<double>(num));
+        }
+
+        return jsonArray;
+      }
+
+      QVector<size_t> readVector(QJsonArray jsonArray)
+      {
+        QVector<size_t> vector;
+        foreach(QJsonValue val, jsonArray)
+        {
+          if (val.isDouble())
+          {
+            if (val.toDouble() >= std::numeric_limits<size_t>().min() && val.toDouble() <= std::numeric_limits<size_t>().max())
+            {
+              vector.push_back(static_cast<size_t>(val.toDouble()));
+            }
+          }
+        }
+        return vector;
+      }
 
 };
 

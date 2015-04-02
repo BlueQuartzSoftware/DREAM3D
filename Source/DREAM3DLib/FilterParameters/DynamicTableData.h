@@ -80,50 +80,64 @@ public:
 	/**
 	* @brief This returns a serialized string of the data, iterating through columns first.
 	*/
-	QString serializeData(char delimiter) const;
+	QString serializeData(char delimiter);
 
 	/**
 	* @brief This returns a serialized string of the row headers list.
 	*/
-	QString serializeRowHeaders(char delimiter) const;
+	QString serializeRowHeaders(char delimiter);
 
 	/**
 	* @brief This returns a serialized string of the column headers list.
 	*/
-	QString serializeColumnHeaders(char delimiter) const;
+	QString serializeColumnHeaders(char delimiter);
 
 	/**
 	* @brief This returns a flattened vector of the data.
 	*/
-	QVector<double> flattenData() const;
+	QVector<double> flattenData();
+
+  /**
+  * @brief Writes the contents of the proxy to the json object 'json'
+  * @param json
+  * @return
+  */
+  void writeJson(QJsonObject &json);
+
+  /**
+  * @brief Reads the contents of the json object 'json' into the proxy
+  * @param json
+  * @return
+  */
+  bool readJson(QJsonObject &json);
 
 	/**
 	* @brief Table data getter and setter
 	*/
-	std::vector<std::vector<double> > getTableData() const;
-	void setTableData(std::vector<std::vector<double> > data);
+	std::vector<std::vector<double> > getTableData();
+	void setTableData(const std::vector<std::vector<double> > data);
 
 	/**
 	* @brief Row headers getter and setter
 	*/
-	QStringList getRowHeaders() const;
+	QStringList getRowHeaders();
 	void setRowHeaders(QStringList rHeaders);
 
 	/**
 	* @brief Column headers getter and setter
 	*/
-	QStringList getColHeaders() const;
+	QStringList getColHeaders();
 	void setColHeaders(QStringList cHeaders);
 
 	/**
 	* @brief Calculates and returns the number of rows
 	*/
-	int getNumRows() const;
+	int getNumRows();
 
 	/**
 	* @brief Calculates and returns the number of columns
 	*/
-	int getNumCols() const;
+	int getNumCols();
 
 	/**
 	* @brief Checks if the DynamicTableData object is empty.
@@ -137,6 +151,20 @@ private:
 	std::vector<std::vector<double> > tableData;
 	QStringList rowHeaders;
 	QStringList colHeaders;
+
+  /**
+  * @brief Writes the contents of the data to a QJsonObject
+  * @param data
+  * @return QJsonArray
+  */
+  QJsonObject writeData(std::vector<std::vector<double> > data);
+
+  /**
+  * @brief Reads the contents of the QJsonObject into a 2D array
+  * @param object
+  * @return 2D array
+  */
+  std::vector<std::vector<double> > readData(QJsonObject object);
 
 	/**
 	* @brief Checks that the dimensions between all variables are the same.  If not, adjusts dimensions

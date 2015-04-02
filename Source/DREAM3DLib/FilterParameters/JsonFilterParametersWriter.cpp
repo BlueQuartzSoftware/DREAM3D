@@ -33,36 +33,94 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "TextFilterParametersWriter.h"
+
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonDocument>
+
+#include "JsonFilterParametersWriter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextFilterParametersWriter::TextFilterParametersWriter()
+JsonFilterParametersWriter::JsonFilterParametersWriter() :
+currentIndex(0)
 {
-
+  
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextFilterParametersWriter::~TextFilterParametersWriter()
+JsonFilterParametersWriter::JsonFilterParametersWriter(QString &fileName, QString &pipelineName, int &numFilters) :
+currentIndex(0)
 {
+  m_FileName = fileName;
+  m_PipelineName = pipelineName;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
+JsonFilterParametersWriter::~JsonFilterParametersWriter()
 {
+  QFile outputFile(getFileName());
+  QFileInfo info(outputFile);
+  QString parentPath = info.absolutePath();
+  QDir parentDir(parentPath);
+  
+  if (parentDir.exists() == false)
+  {
+    parentDir.mkpath(parentPath);
+  }
+
+  QJsonObject meta;
+  meta["Name"] = m_PipelineName;
+  meta["Version"] = DREAM3DLib::Version::Complete();
+  meta[DREAM3D::Settings::NumFilters] = currentIndex + 1;
+
+  m_Root[DREAM3D::Settings::PipelineBuilderGroup] = meta;
+  QJsonDocument doc(m_Root);
+
+  if (outputFile.open(QIODevice::WriteOnly))
+  {
+    QByteArray byteArray = doc.toJson();
+    int err = outputFile.write(doc.toJson());
+    outputFile.close();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
+{
+  m_CurrentFilterIndex = QJsonObject();
+  currentIndex = index;
+
   return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::closeFilterGroup()
+int JsonFilterParametersWriter::closeFilterGroup()
 {
+  {
+    QJsonDocument doc(m_CurrentFilterIndex);
+    QByteArray bytes = doc.toJson();
+  }
+
+  {
+    QString numStr = QString::number(currentIndex);
+    m_Root[numStr] = m_CurrentFilterIndex;
+
+    QJsonDocument doc(m_Root[numStr].toObject());
+    QByteArray bytes = doc.toJson();
+  }
+
   return 0;
 }
 
@@ -70,333 +128,11 @@ int TextFilterParametersWriter::closeFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const QString value)
+int JsonFilterParametersWriter::writeValue(const QString name, const QString value)
 {
-  int err = -1;
-  return err;
-}
+  int err = 0;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const QVector<QString> value)
-{
-  int err = -1;
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, int8_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, int16_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, int32_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, int64_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, uint8_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, uint16_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, uint32_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, uint64_t value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, float value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, double value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<int8_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<int16_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<int32_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<int64_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<uint8_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<uint16_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<uint32_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<uint64_t> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<float> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<double> value)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, IntVec3_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, FloatVec4_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, FloatVec21_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t v)
-{
-  int err = -1;
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, Float3rdOrderPoly_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, Float4thOrderPoly_t v)
-{
-  int err = -1;
-  return err;
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, ComparisonInput_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, ComparisonInputs v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<AxisAngleInput_t> v)
-{
-  int err = -1;
-  return err;
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v, int vectorPos)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeArraySelections(const QString name, QSet<QString> v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
-{
-  int err = -1;
+  m_CurrentFilterIndex[name] = value;
 
   return err;
 }
@@ -404,9 +140,31 @@ int TextFilterParametersWriter::writeValue(const QString name, DataContainerArra
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const DataArrayPath& v)
+int JsonFilterParametersWriter::writeValue(const QString name, const QVector<QString> value)
 {
-  int err = -1;
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(QString str, value)
+  {
+    jsonArray << QJsonValue(str);
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, int8_t value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
 
   return err;
 }
@@ -414,9 +172,11 @@ int TextFilterParametersWriter::writeValue(const QString name, const DataArrayPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
+int JsonFilterParametersWriter::writeValue(const QString name, int16_t value)
 {
-  int err = -1;
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
 
   return err;
 }
@@ -424,9 +184,559 @@ int TextFilterParametersWriter::writeValue(const QString name, const QVector<Dat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const DynamicTableData& v)
+int JsonFilterParametersWriter::writeValue(const QString name, int32_t value)
 {
-  int err = -1;
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, int64_t value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, uint8_t value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, uint16_t value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, uint32_t value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, uint64_t value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, float value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = static_cast<double>(value);
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, double value)
+{
+  int err = 0;
+
+  m_CurrentFilterIndex[name] = value;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<int8_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<int16_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<int32_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<int64_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint8_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint16_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint32_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint64_t> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<float> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(static_cast<double>(val));
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray; 
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<double> value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(int8_t val, value)
+  {
+    jsonArray << QJsonValue(val);
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, IntVec3_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, FloatVec4_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, FloatVec21_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, Float3rdOrderPoly_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, Float4thOrderPoly_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, ComparisonInput_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, ComparisonInputs v)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+  for (int i = 0; i < v.size(); i++)
+  {
+    QJsonObject obj;
+    v[i].writeJson(obj);
+    jsonArray.push_back(obj);
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<AxisAngleInput_t> v)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+  for (int i = 0; i < v.size(); i++)
+  {
+    QJsonObject obj;
+    v[i].writeJson(obj);
+    jsonArray.push_back(obj);
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v, int vectorPos)
+{
+  int err = 0;
+
+  QJsonObject obj;
+  v.writeJson(obj);
+  m_CurrentFilterIndex[name] = obj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeArraySelections(const QString name, QSet<QString> v)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(QString str, v)
+  {
+    jsonArray.push_back(str);
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
+{
+  int err = 0;
+
+  QJsonObject proxyObj;
+  v.writeJson(proxyObj);
+  m_CurrentFilterIndex[name] = proxyObj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, DataArrayPath& v)
+{
+  int err = 0;
+
+  QJsonObject pathObj;
+  v.writeJson(pathObj);
+  m_CurrentFilterIndex[name] = pathObj;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, QVector<DataArrayPath>& v)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+  foreach(DataArrayPath path, v)
+  {
+    QJsonObject pathObj;
+    path.writeJson(pathObj);
+    jsonArray.push_back(pathObj);
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, DynamicTableData& v)
+{
+  int err = 0;
+
+  QJsonObject dataObj;
+  v.writeJson(dataObj);
+  m_CurrentFilterIndex[name] = dataObj;
 
   return err;
 }

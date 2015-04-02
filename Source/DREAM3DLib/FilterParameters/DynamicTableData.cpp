@@ -187,7 +187,7 @@ void DynamicTableData::checkAndAdjustDimensions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicTableData::serializeData(char delimiter) const
+QString DynamicTableData::serializeData(char delimiter)
 {
 	QString str;
 	QTextStream ss(&str);
@@ -242,7 +242,7 @@ std::vector<std::vector<double> > DynamicTableData::DeserializeData(QString data
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicTableData::serializeRowHeaders(char delimiter) const
+QString DynamicTableData::serializeRowHeaders(char delimiter)
 {
 	QString str = "";
 	QTextStream ss(&str);
@@ -260,7 +260,7 @@ QString DynamicTableData::serializeRowHeaders(char delimiter) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicTableData::serializeColumnHeaders(char delimiter) const
+QString DynamicTableData::serializeColumnHeaders(char delimiter)
 {
 	QString str = "";
 	QTextStream ss(&str);
@@ -304,7 +304,7 @@ QStringList DynamicTableData::DeserializeHeaders(QString headersStr, char delimi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> DynamicTableData::flattenData() const
+QVector<double> DynamicTableData::flattenData()
 {
 	int numRows = getNumRows();
 	int numCols = getNumCols();
@@ -348,7 +348,85 @@ std::vector<std::vector<double> > DynamicTableData::ExpandData(std::vector<doubl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::vector<double> > DynamicTableData::getTableData() const
+void DynamicTableData::writeJson(QJsonObject &json)
+{
+  json["Dynamic Table Data"] = writeData(tableData);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DynamicTableData::readJson(QJsonObject &json)
+{
+  if (json["Dynamic Table Data"].isObject())
+  {
+    tableData = readData(json["Dynamic Table Data"].toObject());
+    return true;
+  }
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonObject DynamicTableData::writeData(std::vector<std::vector<double> > data)
+{
+  QJsonObject obj;
+
+  QJsonArray rows;
+  foreach(std::vector<double> vector, data)
+  {
+    QJsonArray cols;
+    foreach(double val, vector)
+    {
+      cols.push_back(val);
+    }
+    rows.push_back(cols);
+  }
+
+  obj["Table Data"] = rows;
+
+  return obj;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::vector<double> > DynamicTableData::readData(QJsonObject object)
+{
+  std::vector<std::vector<double> > data;
+  if (object["Table Data"].isArray())
+  {
+    QJsonArray rowArray = object["Table Data"].toArray();
+    data.resize(rowArray.size());
+
+    for (int row = 0; row < rowArray.size(); row++)
+    {
+      QJsonValue rowObj = rowArray.at(row);
+      if (rowObj.isArray())
+      {
+        QJsonArray colArray = rowObj.toArray();
+        data[row].resize(colArray.size());
+
+        for (int col = 0; col < colArray.size(); col++)
+        {
+          QJsonValue colObj = colArray.at(col);
+
+          if (colObj.isDouble())
+          {
+            data[row][col] = colObj.toDouble();
+          }
+        }
+      }
+    }
+  }
+  return std::vector<std::vector<double> >();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::vector<double> > DynamicTableData::getTableData()
 {
 	return tableData;
 }
@@ -367,7 +445,7 @@ void DynamicTableData::setTableData(std::vector<std::vector<double> > data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList DynamicTableData::getRowHeaders() const
+QStringList DynamicTableData::getRowHeaders()
 {
 	return rowHeaders;
 }
@@ -386,7 +464,7 @@ void DynamicTableData::setRowHeaders(QStringList rHeaders)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList DynamicTableData::getColHeaders() const
+QStringList DynamicTableData::getColHeaders()
 {
 	return colHeaders;
 }
@@ -405,7 +483,7 @@ void DynamicTableData::setColHeaders(QStringList cHeaders)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DynamicTableData::getNumRows() const
+int DynamicTableData::getNumRows()
 {
 	return tableData.size();
 }
@@ -413,7 +491,7 @@ int DynamicTableData::getNumRows() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DynamicTableData::getNumCols() const
+int DynamicTableData::getNumCols()
 {
 	if (tableData.size() > 0)
 	{

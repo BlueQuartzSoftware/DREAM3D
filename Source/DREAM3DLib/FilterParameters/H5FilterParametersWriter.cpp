@@ -687,7 +687,7 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath& v)
+int H5FilterParametersWriter::writeValue(const QString name, DataArrayPath& v)
 {
   int err = 0;
   QString value = v.serialize();
@@ -698,7 +698,7 @@ int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<DataArrayPath>& v)
 {
   int err = 0;
   QString pathStr;
@@ -716,7 +716,7 @@ int H5FilterParametersWriter::writeValue(const QString name, const QVector<DataA
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, const DynamicTableData& v)
+int H5FilterParametersWriter::writeValue(const QString name, DynamicTableData& v)
 {
   int err = 0;
 
