@@ -26,5 +26,7 @@ configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
                ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
 
 
-AddDREAM3DUnitTest(TESTNAME SaveImagesTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SaveImagesTest.cpp LINK_LIBRARIES Qt5::Core Qt5::Gui H5Support DREAM3DLib)
+AddDREAM3DUnitTest(TESTNAME SaveImagesTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SaveImagesTest.cpp 
+					FOLDER "${PLUGIN_NAME}Plugin/Test"
+					LINK_LIBRARIES Qt5::Core Qt5::Gui H5Support DREAM3DLib)
 
