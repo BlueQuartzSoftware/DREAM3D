@@ -617,7 +617,7 @@ void PipelineFilterWidget::updateWidgetStyle()
   ss << "QLabel\n {\n";
 
 #if defined(Q_OS_WIN)
-  ss << "font: 9pt \"" << DREAM3DStyle::GetUIFont() << "\";";
+  ss << "font: 9pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #elif defined(Q_OS_MAC)
   ss << "font: 100 italic 12pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #else

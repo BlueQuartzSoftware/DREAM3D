@@ -217,7 +217,6 @@ void MultiThresholdObjects::preflight()
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::execute()
 {
-  int numComp;
   QVector<size_t> dims;
   QString ss;
   int err = 0;

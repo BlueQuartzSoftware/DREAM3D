@@ -223,21 +223,23 @@ void GenerateIPFColors::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+  // Make sure the number of tuples of the input arrays match
+  QVector<DataArrayPath> paths;
+
 
   QVector<size_t> compDims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), compDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); 
+    paths.push_back(getCellPhasesArrayPath());
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   compDims[0] = 3;
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), compDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  // Make sure the number of tuples of the input arrays match
-  QVector<DataArrayPath> paths;
-  paths.push_back(getCellPhasesArrayPath());
+  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); 
   paths.push_back(getCellEulerAnglesArrayPath());
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   //typedef DataArray<unsigned int> XTalStructArrayType;
   compDims[0] = 1;

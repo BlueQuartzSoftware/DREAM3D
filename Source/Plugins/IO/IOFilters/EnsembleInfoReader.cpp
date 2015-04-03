@@ -237,7 +237,7 @@ int EnsembleInfoReader::readFile()
   }
 
   // Figure out if we are reading contiguous groups
-  std::vector<bool> visited(numphases, false);
+  std::vector<bool> visited(numphases + 1, false);
   visited[0] = true; //this is DREAM3D's internal, which is always visited.
 
 
