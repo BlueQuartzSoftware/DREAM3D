@@ -21,11 +21,11 @@ The filter can be run in a mode where the minimum number of neighbors is applied
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
-| Feature | NumNeighbors | Int | (1,1) | Array holding number of contiguous neighboring **Features** for each **Feature** |
-| Feature | FeaturePhases | Int | (1,1) | Specifies the **Ensemble** of the **Feature** - only required if Apply to Single Phase is true  |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Feature | NumNeighbors | Int | (1) | Array holding number of contiguous neighboring **Features** for each **Feature** |
+| Feature | FeaturePhases | Int | (1) | Specifies the **Ensemble** of the **Feature** - only required if Apply to Single Phase is true  |
 
 ## Created Arrays ##
 None

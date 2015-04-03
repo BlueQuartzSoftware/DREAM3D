@@ -687,7 +687,6 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
   {
     attrType = "Tensor";
   }
-
   QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName, gridType);
 
   out << block;

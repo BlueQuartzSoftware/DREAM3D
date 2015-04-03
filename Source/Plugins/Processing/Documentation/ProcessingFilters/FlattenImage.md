@@ -16,14 +16,14 @@ This filter allows the user to selected a "flattening" method for turning an arr
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | ImageData | Float | (1,3) or (1,4) | RGB or RGBa values |
+| Element | ImageData | Float | (3) or (4) | RGB or RGBa values |
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Element | FlatImageData | Float | (1,1) | Grayscale values |
+| Element | FlatImageData | Float | (1) | Grayscale values |
 
 
 ## Authors ##

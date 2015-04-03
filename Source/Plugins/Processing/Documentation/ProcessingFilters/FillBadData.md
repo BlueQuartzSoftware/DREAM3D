@@ -20,10 +20,10 @@ This Filter collects the *bad* **Cells** (*FeatureId = 0*) and _erodes_ them unt
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
-| Cell | CellPhases | Int | (1,1) | Specifies the phase each **Cell** - is only required if "Store Defects As New Phase" parameter is true |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Cell | CellPhases | Int | (1) | Specifies the phase each **Cell** - is only required if "Store Defects As New Phase" parameter is true |
 
 ## Created Arrays ##
 None

@@ -17,18 +17,18 @@ For example, if there was a 100x200x300 **Cell** volume and the plane of interes
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | None | Any, except Boolean | (1,1) | Any scalar array the user would like to calculate the projected statistics of |
+| Cell | None | Any, except Boolean | (1) | Any scalar array the user would like to calculate the projected statistics of |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | ProjectedImageMin | Float | (1,1) | The minimum value of the scalar array along the stack of voxels perpendicular to the plane of interest |
-| Cell | ProjectedImageMax | Float | (1,1) | The maximum value of the scalar array along the stack of voxels perpendicular to the plane of interest |
-| Cell | ProjectedImageAvg | Float | (1,1) | The average value of the scalar array along the stack of voxels perpendicular to the plane of interest |
-| Cell | ProjectedImageStd | Float | (1,1) | The standard deviation of the scalar array along the stack of voxels perpendicular to the plane of interest |
-| Cell | ProjectedImageVar | Float | (1,1) | The variance of the scalar array along the stack of voxels perpendicular to the plane of interest |
+| Cell | ProjectedImageMin | Float | (1) | The minimum value of the scalar array along the stack of voxels perpendicular to the plane of interest |
+| Cell | ProjectedImageMax | Float | (1) | The maximum value of the scalar array along the stack of voxels perpendicular to the plane of interest |
+| Cell | ProjectedImageAvg | Float | (1) | The average value of the scalar array along the stack of voxels perpendicular to the plane of interest |
+| Cell | ProjectedImageStd | Float | (1) | The standard deviation of the scalar array along the stack of voxels perpendicular to the plane of interest |
+| Cell | ProjectedImageVar | Float | (1) | The variance of the scalar array along the stack of voxels perpendicular to the plane of interest |
 
 ## Authors ##
 

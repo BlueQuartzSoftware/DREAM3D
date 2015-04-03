@@ -5,25 +5,18 @@ Clear Data (Mask) {#cleardatamask}
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter allows the user to define a subvolume of the dataset in which the filter will erase any "true's" in the "mask" array and replace them with "false's".
+This filter clears all attribute arrays for each **Element** that have a value of "false" in the "mask" array.  All **Elements** that have the value of "true" in the "mask" array will retain all their attributes.
 
 ## Parameters ##
-| Name | Type | Description |
-|------|------|------|
-| X Min | Integer | Minimum X bound in voxels |
-| Y Min | Integer | Minimum Y bound in voxels |
-| Z Min | Integer | Minimum Z bound in voxels |
-| X Max | Integer | Maximum X bound in voxels |
-| Y Max | Integer | Maximum Y bound in voxels |
-| Z Max | Integer | Maximum Z bound in voxels |
+None
 
 ## Required Geometry ##
-Image/Rectilinear Grid
+Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensionss | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GoodVoxels | Boolean | (1,1) | Used to define whether the **Cells** are part of the mask  |
+| Cell | GoodVoxels | Boolean | (1) | Used to define whether the **Cells** are part of the mask  |
 
 ## Created Arrays ##
 None

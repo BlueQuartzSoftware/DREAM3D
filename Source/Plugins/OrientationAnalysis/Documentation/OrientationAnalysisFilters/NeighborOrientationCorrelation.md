@@ -22,12 +22,12 @@ If a **Cell** meets the replacement criteria, then all of its attributes are rep
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | Quats | Float | (1,4) | Specifies the orientation of the **Cell** in quaternion representation |
-| Cell | Confidence Index | Float | (1,1) | Specifies the confidence in the orientation of the **Cell** (TSL data) |
-| Cell | CellPhases | Int | (1,1) | Specifies the **Ensemble** of the **Cell** |
-| Ensemble | CrystalStructures | Int | (1,1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
+| Cell | Quats | Float | (4) | Specifies the orientation of the **Cell** in quaternion representation |
+| Cell | Confidence Index | Float | (1) | Specifies the confidence in the orientation of the **Cell** (TSL data) |
+| Cell | CellPhases | Int | (1) | Specifies the **Ensemble** of the **Cell** |
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
 None

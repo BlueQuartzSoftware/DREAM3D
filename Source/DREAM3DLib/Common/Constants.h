@@ -185,6 +185,8 @@ namespace DREAM3D
     const DREAM3D_STRING ThresholdFilters("Threshold");
     const DREAM3D_STRING RegularizationFilters("Regularization");
     const DREAM3D_STRING ConversionFilters("Conversion");
+    const DREAM3D_STRING FusionFilters("Fusion");
+    const DREAM3D_STRING WarpingFilters("Warping");
     const DREAM3D_STRING AlignmentFilters("Alignment");
     const DREAM3D_STRING SegmentationFilters("Segmentation");
     const DREAM3D_STRING GroupingFilters("Grouping");

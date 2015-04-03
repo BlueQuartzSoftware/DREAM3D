@@ -19,17 +19,17 @@ Not Applicable
 
 ## Required Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | CellEulerAngles | Float | (1,3) | Euler angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
-| Element | CellPhases | Int | (1,1) | Id specifying the **Ensemble** of the **Element** |
-| Ensemble | CrystalStructures | Int | (1,1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
+| Element | CellEulerAngles | Float | (3) | Euler angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| Element | CellPhases | Int | (1) | Id specifying the **Ensemble** of the **Element** |
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | Quats | Float | (1,4) | Specifies the orientation of the **Element** in quaternion representation |
+| Element | Quats | Float | (4) | Specifies the orientation of the **Element** in quaternion representation |
 
 ## Authors ##
 

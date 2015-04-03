@@ -262,10 +262,15 @@ const QString ExtractFlaggedFeatures::getCompiledLibraryName()
 const QString ExtractFlaggedFeatures::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CropCutFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getHumanLabel()
-{ return "Extract Flagged Features"; }
+{ return "Extract Flagged Features (Rogues Gallery)"; }
 
