@@ -40,7 +40,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 
@@ -216,7 +217,7 @@ void WarpRegularGrid::execute()
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
   float res[3];
   m->getGeometryAs<ImageGeom>()->getResolution(res);
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   float x, y, z;
   float newX, newY;

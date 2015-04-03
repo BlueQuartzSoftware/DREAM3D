@@ -40,13 +40,14 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/Geometry/IGeometry2D.h"
 #include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 #include "DREAM3DLib/Geometry/DerivativeHelpers.h"
 
 /**
  * @brief The QuadGeom class represents a collection of quadrilaterals
  */
-class DREAM3DLib_EXPORT QuadGeom : public IGeometry
+class DREAM3DLib_EXPORT QuadGeom : public IGeometry2D
 {
   public:
 
@@ -85,51 +86,6 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      */
     static SharedVertexList::Pointer CreateSharedVertexList(int64_t numVertices);
 
-    /**
-     * @brief resizeVertexList
-     * @param newNumVertices
-     */
-    void resizeVertexList(int64_t newNumVertices);
-
-    /**
-     * @brief setVertices
-     * @param vertices
-     */
-    void setVertices(SharedVertexList::Pointer vertices);
-
-    /**
-     * @brief getVertices
-     * @return
-     */
-    SharedVertexList::Pointer getVertices();
-
-    /**
-     * @brief setCoords
-     * @param vertId
-     * @param coords
-     */
-    void setCoords(int64_t vertId, float coords[3]);
-
-    /**
-     * @brief getCoords
-     * @param vertId
-     * @param coords
-     */
-    void getCoords(int64_t vertId, float coords[3]);
-
-    /**
-     * @brief getVertexPointer
-     * @param i
-     * @return
-     */
-    float* getVertexPointer(int64_t i);
-
-    /**
-     * @brief getNumberOfVertices
-     * @return
-     */
-    int64_t getNumberOfVertices();
-
 // -----------------------------------------------------------------------------
 // Inherited from SharedEdgeOps
 // -----------------------------------------------------------------------------
@@ -140,59 +96,6 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      * @return
      */
     static SharedEdgeList::Pointer CreateSharedEdgeList(int64_t numEdges);
-
-    /**
-     * @brief resizeEdgeList
-     * @param newNumEdges
-     */
-    void resizeEdgeList(int64_t newNumEdges);
-
-    /**
-     * @brief setEdges
-     * @param edges
-     */
-    void setEdges(SharedEdgeList::Pointer edges);
-
-    /**
-     * @brief getEdges
-     * @return
-     */
-    SharedEdgeList::Pointer getEdges();
-
-    /**
-     * @brief setVerts
-     * @param edgeId
-     * @param verts
-     */
-    void setVertsAtEdge(int64_t edgeId, int64_t verts[2]);
-
-    /**
-     * @brief getVerts
-     * @param edgeId
-     * @param verts
-     */
-    void getVertsAtEdge(int64_t edgeId, int64_t verts[2]);
-
-    /**
-     * @brief getVertCoordsAtEdge
-     * @param edgeId
-     * @param vert1
-     * @param vert2
-     */
-    void getVertCoordsAtEdge(int64_t edgeId, float vert1[3], float vert2[3]);
-
-    /**
-     * @brief getEdgePointer
-     * @param i
-     * @return
-     */
-    int64_t* getEdgePointer(int64_t i);
-
-    /**
-     * @brief getNumberOfEdges
-     * @return
-     */
-    int64_t getNumberOfEdges();
 
 // -----------------------------------------------------------------------------
 // Inherited from SharedQuadOps
@@ -270,10 +173,10 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
     virtual void initializeWithZeros();
 
     /**
-     * @brief getNumberOfTuples
+     * @brief getNumberOfElements
      * @return
      */
-    virtual size_t getNumberOfTuples();
+    virtual size_t getNumberOfElements();
 
     /**
      * @brief findElementsContainingVert
@@ -444,6 +347,129 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      */
     virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name);
 
+// -----------------------------------------------------------------------------
+// Inherited from IGeometry2D
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief resizeVertexList
+     * @param newNumVertices
+     */
+    virtual void resizeVertexList(int64_t newNumVertices);
+
+    /**
+     * @brief setVertices
+     * @param vertices
+     */
+    virtual void setVertices(SharedVertexList::Pointer vertices);
+
+    /**
+     * @brief getVertices
+     * @return
+     */
+    virtual SharedVertexList::Pointer getVertices();
+
+    /**
+     * @brief setCoords
+     * @param vertId
+     * @param coords
+     */
+    virtual void setCoords(int64_t vertId, float coords[3]);
+
+    /**
+     * @brief getCoords
+     * @param vertId
+     * @param coords
+     */
+    virtual void getCoords(int64_t vertId, float coords[3]);
+
+    /**
+     * @brief getVertexPointer
+     * @param i
+     * @return
+     */
+    virtual float* getVertexPointer(int64_t i);
+
+    /**
+     * @brief getNumberOfVertices
+     * @return
+     */
+    virtual int64_t getNumberOfVertices();
+
+    /**
+     * @brief resizeEdgeList
+     * @param newNumEdges
+     */
+    virtual void resizeEdgeList(int64_t newNumEdges);
+
+    /**
+     * @brief getEdges
+     * @return
+     */
+    virtual SharedEdgeList::Pointer getEdges();
+
+    /**
+     * @brief setVerts
+     * @param edgeId
+     * @param verts
+     */
+    virtual void setVertsAtEdge(int64_t edgeId, int64_t verts[2]);
+
+    /**
+     * @brief getVerts
+     * @param edgeId
+     * @param verts
+     */
+    virtual void getVertsAtEdge(int64_t edgeId, int64_t verts[2]);
+
+    /**
+     * @brief getVertCoordsAtEdge
+     * @param edgeId
+     * @param vert1
+     * @param vert2
+     */
+    virtual void getVertCoordsAtEdge(int64_t edgeId, float vert1[3], float vert2[3]);
+
+    /**
+     * @brief getEdgePointer
+     * @param i
+     * @return
+     */
+    virtual int64_t* getEdgePointer(int64_t i);
+
+    /**
+     * @brief getNumberOfEdges
+     * @return
+     */
+    virtual int64_t getNumberOfEdges();
+
+    /**
+     * @brief findElementEdges
+     * @return
+     */
+    virtual int findEdges();
+
+    /**
+     * @brief deleteElementEdges
+     */
+    virtual void deleteEdges();
+
+    /**
+     * @brief findUnsharedEdges
+     */
+    virtual int findUnsharedEdges();
+
+    /**
+     * @brief getUnsharedEdges
+     * @return
+     */
+    virtual SharedEdgeList::Pointer getUnsharedEdges();
+
+    /**
+     * @brief deleteUnsharedEdges
+     */
+    virtual void deleteUnsharedEdges();
+
   protected:
 
     QuadGeom();
@@ -466,6 +492,18 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
      */
     virtual void setElementCentroids(FloatArrayType::Pointer elementCentroids);
 
+    /**
+     * @brief setEdges
+     * @param edges
+     */
+    virtual void setEdges(SharedEdgeList::Pointer edges);
+
+    /**
+     * @brief setUnsharedEdges
+     * @param bEdgeList
+     */
+    virtual void setUnsharedEdges(SharedEdgeList::Pointer bEdgeList);
+
   private:
 
     QString m_Name;
@@ -477,6 +515,7 @@ class DREAM3DLib_EXPORT QuadGeom : public IGeometry
     AttributeMatrixMap_t m_AttributeMatrices;
     SharedVertexList::Pointer m_VertexList;
     SharedEdgeList::Pointer m_EdgeList;
+    SharedEdgeList::Pointer m_UnsharedEdgeList;
     SharedQuadList::Pointer m_QuadList;
     ElementDynamicList::Pointer m_QuadsContainingVert;
     ElementDynamicList::Pointer m_QuadNeighbors;

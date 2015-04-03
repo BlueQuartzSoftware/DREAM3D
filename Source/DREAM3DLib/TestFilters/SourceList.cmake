@@ -23,6 +23,7 @@ set(_PublicFilters
   ThresholdExample
   ArraySelectionExample
   GenericExample
+  DynamicTableExample
   MakeDataContainer
 )
 

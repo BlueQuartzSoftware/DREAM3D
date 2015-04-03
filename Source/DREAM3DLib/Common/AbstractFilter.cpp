@@ -149,9 +149,9 @@ void AbstractFilter::addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::P
 // -----------------------------------------------------------------------------
 void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  reader->openFilterGroup(this, index);
-
-  reader->closeFilterGroup();
+	BOOST_ASSERT(reader != NULL);
+	qDebug() << "AbstractFilter::readFilterParameters() -> Writing Filter Options" << "\n";
+	return;
 }
 
 // -----------------------------------------------------------------------------
@@ -170,6 +170,17 @@ int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
 bool AbstractFilter::getCancel()
 {
   return m_Cancel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDREAM3DPlugin* AbstractFilter::getPluginInstance()
+{
+	PluginManager* manager = PluginManager::Instance();
+	QString pluginName = manager->getPluginName(getNameOfClass());
+	IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);
+	return plugin;
 }
 
 // -----------------------------------------------------------------------------

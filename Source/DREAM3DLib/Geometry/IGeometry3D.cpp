@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,66 +33,18 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _CRYSTALSTRUCTURE_H_
-#define _CRYSTALSTRUCTURE_H_
+
+#include "DREAM3DLib/Geometry/IGeometry3D.h"
 
 
-#error
-#include "EbsdLib/EbsdConstants.h"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry3D::IGeometry3D()
+{}
 
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-
-
-/**
- * @class CrystalStructure CrystalStructure.h DREAM3DLib/Common/CrystalStructure.h
- * @brief  This class has some utility methods relating to CrystalStructure and
- * how they are used in the DREAM3D package.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 21, 2011
- * @version 1.0
- */
-class  CrystalStructure
-{
-  public:
-    virtual ~CrystalStructure()
-    {
-    }
-
-    /**
-     * @brief Converts an enumeration value for CrystalStructure into a String
-     * @param xtal
-     * @return
-     */
-    static QString getCrystalStructureString(unsigned int xtal)
-    {
-      switch(xtal)
-      {
-        case Ebsd::CrystalStructure::Hexagonal:
-          return QString("Hexagonal");
-        case Ebsd::CrystalStructure::Cubic:
-          return QString("Cubic");
-        case Ebsd::CrystalStructure::AxisOrthoRhombic:
-          return QString("OrthoRhombic");
-        default:
-          break;
-      }
-      return QString("Unknown");
-    }
-
-
-
-  protected:
-    CrystalStructure()
-    {
-    }
-
-  private:
-    CrystalStructure(const CrystalStructure&); // Copy Constructor Not Implemented
-    void operator=(const CrystalStructure&); // Operator '=' Not Implemented
-
-};
-
-#endif /* CRYSTALSTRUCTURE_H_ */
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry3D::~IGeometry3D()
+{}

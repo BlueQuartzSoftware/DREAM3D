@@ -26,5 +26,6 @@ configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
                ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
 
 AddDREAM3DUnitTest(TESTNAME EMMPMSegmentationTest 
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/EMMPMSegmentationTest.cpp 
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/EMMPMSegmentationTest.cpp
+                    FOLDER "${PLUGIN_NAME}Plugin/Test" 
                     LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib Qt5::Widgets)

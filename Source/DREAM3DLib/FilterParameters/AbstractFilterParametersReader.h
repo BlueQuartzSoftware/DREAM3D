@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/ComparisonInputs.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DynamicTableData.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
@@ -118,6 +119,8 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
 
     virtual DataArrayPath readDataArrayPath(const QString& name, DataArrayPath v) = 0;
 	virtual QVector<DataArrayPath> readDataArrayPathVector(const QString& name, QVector<DataArrayPath> v) = 0;
+
+	virtual DynamicTableData readDynamicTableData(const QString& name, DynamicTableData v) = 0;
 
   protected:
     AbstractFilterParametersReader();

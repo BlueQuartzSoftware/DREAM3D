@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/Geometry/IGeometry3D.h"
 
 /**
  * @brief The ImageGeom class represents a structured rectlinear grid
@@ -92,10 +93,10 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
     virtual void initializeWithZeros();
 
     /**
-     * @brief getNumberOfTuples
+     * @brief getNumberOfElements
      * @return
      */
-    virtual size_t getNumberOfTuples();
+    virtual size_t getNumberOfElements();
 
     /**
      * @brief findElementsContainingVert

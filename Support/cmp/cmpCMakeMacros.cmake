@@ -19,7 +19,7 @@ macro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
   #             PROPERTY MACOSX_PACKAGE_LOCATION Headers/${NAME}
   #)
 
-ENDmacro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
+endmacro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
 
 #-------------------------------------------------------------------------------
 
@@ -39,12 +39,12 @@ macro (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
   #             PROPERTY MACOSX_PACKAGE_LOCATION Headers/${NAME}
   #)
 
-ENDmacro (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
+endmacro (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 
 #-------------------------------------------------------------------------------
 # This macro will set all the variables necessary to have a "good" OS X Application
 # bundle. The variables are as follows:
-#  PROJECT_NAME - which can be taken from the ${PROJECT_NAME} variable is needed
+#  TARGET_NAME - which can be taken from the ${TARGET_NAME} variable is needed
 #  DEBUG_EXTENSION - The extension used to denote a debug built Application. Typically
 #   this is '_debug'
 #  ICON_FILE_PATH - The complete path to the bundle icon file
@@ -60,20 +60,21 @@ macro(ConfigureMacOSXBundlePlist TARGET_NAME DEBUG_EXTENSION ICON_FILE_PATH VERS
   endif()
   get_filename_component(ICON_FILE_NAME "${ICON_FILE_PATH}" NAME)
 
- set_target_properties(${TARGET_NAME} PROPERTIES
-     MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}, Copyright 2009 BlueQuartz Software."
-     MACOSX_BUNDLE_ICON_FILE ${ICON_FILE_NAME}
-     MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}${DBG_EXTENSION}"
-     MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}"
-     MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}${DBG_EXTENSION}
-     MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION_STRING}
-     MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION_STRING}
-     MACOSX_BUNDLE_COPYRIGHT "Copyright 2011, BlueQuartz Software. All Rights Reserved."
- )
+  set_target_properties(${TARGET_NAME} PROPERTIES
+    MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}, Copyright 2015 BlueQuartz Software."
+    MACOSX_BUNDLE_ICON_FILE ${ICON_FILE_NAME}
+    MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}${DBG_EXTENSION}"
+    MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}"
+    MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}${DBG_EXTENSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION_STRING}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION_STRING}
+    MACOSX_BUNDLE_COPYRIGHT "Copyright 2015, BlueQuartz Software, LLC All Rights Reserved."
+    MACOSX_BUNDLE_INFO_PLIST ${CMP_OSX_TOOLS_SOURCE_DIR}/MacOSXBundleInfo.plist.in
+  )
 
- SET(${PROJECT_NAME}_PROJECT_SRCS ${${PROJECT_NAME}_PROJECT_SRCS} ${ICON_FILE_PATH})
- SET_SOURCE_FILES_PROPERTIES(${ICON_FILE_PATH} PROPERTIES
-                             MACOSX_PACKAGE_LOCATION Resources)
+  SET(${PROJECT_NAME}_PROJECT_SRCS ${${PROJECT_NAME}_PROJECT_SRCS} ${ICON_FILE_PATH})
+  SET_SOURCE_FILES_PROPERTIES(${ICON_FILE_PATH} PROPERTIES
+                              MACOSX_PACKAGE_LOCATION Resources)
 endmacro()
 
 # --------------------------------------------------------------------
@@ -166,8 +167,9 @@ function(BuildQtAppBundle)
 
 #-- Make sure we have a proper bundle icon. This must occur AFTER the add_executable command
     if(APPLE)
+        message(STATUS "QAB_ICON_FILE: ${QAB_ICON_FILE}")
         ConfigureMacOSXBundlePlist( ${QAB_TARGET} ${QAB_DEBUG_EXTENSION} ${QAB_ICON_FILE}
-                                "${QAB_VERSION_MAJOR}.${QAB_VERSION_MINOR}.${QAB_VERSION_PATCH}" )
+                                     "${QAB_VERSION_MAJOR}.${QAB_VERSION_MINOR}.${QAB_VERSION_PATCH}" )
     endif(APPLE)
 
 #-- Set the Debug Suffix for the application

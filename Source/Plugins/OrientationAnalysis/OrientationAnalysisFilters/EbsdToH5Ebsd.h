@@ -42,7 +42,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 class AbstractFilterParametersWriter;
 

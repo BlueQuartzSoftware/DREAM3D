@@ -146,6 +146,7 @@ namespace FilterParameterWidgetType
   const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
   const QString DataArrayCreationWidget("DataArrayCreationWidget");
   const QString SeparatorWidget("SeparatorWidget");
+  const QString DynamicTableWidget("DynamicTableWidget");
   const QString LinkedBooleanWidget("LinkedBooleanWidget");
   const QString PhaseTypeSelectionWidget("PhaseTypeSelectionWidget");
 
@@ -719,6 +720,44 @@ protected:
 private:
 	MultiDataArraySelectionFilterParameter(const MultiDataArraySelectionFilterParameter&); // Copy Constructor Not Implemented
 	void operator=(const MultiDataArraySelectionFilterParameter&); // Operator '=' Not Implemented
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT DynamicTableFilterParameter : public FilterParameter
+{
+public:
+	DREAM3D_SHARED_POINTERS(DynamicTableFilterParameter)
+		DREAM3D_STATIC_NEW_MACRO(DynamicTableFilterParameter)
+		DREAM3D_TYPE_MACRO_SUPER(DynamicTableFilterParameter, FilterParameter)
+
+		static Pointer New(const QString& humanLabel, const QString& propertyName,
+		const QString& widgetType, QStringList rHeaders, 
+		QStringList cHeaders, std::vector<std::vector<double> > defaultTable,
+		bool isRowsDynamic = true, bool isColsDynamic = true,
+		int minRowCount = 0, int minColCount = 0 );
+
+	virtual ~DynamicTableFilterParameter();
+
+	DREAM3D_INSTANCE_PROPERTY(int, DefaultRowCount)
+		DREAM3D_INSTANCE_PROPERTY(int, DefaultColCount)
+		DREAM3D_INSTANCE_PROPERTY(QStringList, ColumnHeaders)
+		DREAM3D_INSTANCE_PROPERTY(QStringList, RowHeaders)
+		DREAM3D_INSTANCE_PROPERTY(std::vector<std::vector<double> >, DefaultTable)
+		DREAM3D_INSTANCE_PROPERTY(bool, AreRowsDynamic)
+		DREAM3D_INSTANCE_PROPERTY(bool, AreColsDynamic)
+		DREAM3D_INSTANCE_PROPERTY(int, MinRowCount)
+		DREAM3D_INSTANCE_PROPERTY(int, MinColCount)
+		DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+		DREAM3D_INSTANCE_PROPERTY(QString, ErrorMessage)
+
+protected:
+	DynamicTableFilterParameter();
+
+private:
+	DynamicTableFilterParameter(const DynamicTableFilterParameter&); // Copy Constructor Not Implemented
+	void operator=(const DynamicTableFilterParameter&); // Operator '=' Not Implemented
 };
 
 

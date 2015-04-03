@@ -833,39 +833,39 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
     const DataContainerProxy& dcProxy =  dcIter.next();
     // if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
 
-	if (dcProxy.attributeMatricies.size() > 0)
-	{
-		QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
-		while (amIter.hasNext()) // AttributeMatrixLevel
-		{
-			amIter.next();
+  if (dcProxy.attributeMatricies.size() > 0)
+  {
+    QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+    while (amIter.hasNext()) // AttributeMatrixLevel
+    {
+      amIter.next();
 
-			const AttributeMatrixProxy& amProxy = amIter.value();
-			// if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      const AttributeMatrixProxy& amProxy = amIter.value();
+      // if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
 
-			QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
-			while (dIter.hasNext()) // DataArray Level
-			{
-				dIter.next();
+      QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+      while (dIter.hasNext()) // DataArray Level
+      {
+        dIter.next();
 
-				const DataArrayProxy& daProxy = dIter.value();
-				//if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
+        const DataArrayProxy& daProxy = dIter.value();
+        //if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
 
-				QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
-				flat << path;
-				dcFlags << QString("%1").arg(dcProxy.flag);
-				attrFlags << QString("%1").arg(amProxy.flag);
-				daFlags << QString("%1").arg(daProxy.flag);
+        QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
+        flat << path;
+        dcFlags << QString("%1").arg(dcProxy.flag);
+        attrFlags << QString("%1").arg(amProxy.flag);
+        daFlags << QString("%1").arg(daProxy.flag);
 
-			}
-		}
-	}
-	else
-	{
-		QString path = QString("%1").arg(dcProxy.name);
-		flat << path;
-		dcFlags << QString("%1").arg(dcProxy.flag);
-	}
+      }
+    }
+  }
+  else
+  {
+    QString path = QString("%1").arg(dcProxy.name);
+    flat << path;
+    dcFlags << QString("%1").arg(dcProxy.flag);
+  }
   }
 
   qint32 count = flat.size();
@@ -877,23 +877,23 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
     m_Prefs->setArrayIndex(i);
     m_Prefs->setValue("Path", data);
 
-	if (dcFlags.size() > i)
-	{
-		data = dcFlags.at(i);
-		m_Prefs->setValue("DCFlag", data);
-	}
+  if (dcFlags.size() > i)
+  {
+    data = dcFlags.at(i);
+    m_Prefs->setValue("DCFlag", data);
+  }
 
-	if (attrFlags.size() > i)
-	{
-		data = attrFlags.at(i);
-		m_Prefs->setValue("ATTRFlag", data);
-	}
+  if (attrFlags.size() > i)
+  {
+    data = attrFlags.at(i);
+    m_Prefs->setValue("ATTRFlag", data);
+  }
 
-	if (daFlags.size() > i)
-	{
-		data = daFlags.at(i);
-		m_Prefs->setValue("DAFlag", data);
-	}
+  if (daFlags.size() > i)
+  {
+    data = daFlags.at(i);
+    m_Prefs->setValue("DAFlag", data);
+  }
   }
   m_Prefs->endArray();
   return err;
@@ -916,14 +916,47 @@ int QFilterParametersWriter::writeValue(const QString name, const DataArrayPath&
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
-	int err = 0;
+  int err = 0;
 
-	m_Prefs->beginWriteArray(name);
-	for (int i = 0; i < v.size(); ++i) {
-		m_Prefs->setArrayIndex(i);
-		m_Prefs->setValue(DREAM3D::IO::DAPSettingsHeader, v.at(i).serialize("|"));
-	}
-	m_Prefs->endArray();
+  m_Prefs->beginWriteArray(name);
+  for (int i = 0; i < v.size(); ++i) {
+    m_Prefs->setArrayIndex(i);
+    m_Prefs->setValue(DREAM3D::IO::DAPSettingsHeader, v.at(i).serialize("|"));
+  }
+  m_Prefs->endArray();
 
-	return err;
+  return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, const DynamicTableData& v)
+{
+  int err = 0;
+
+  QString value = v.serializeData(',');
+  int numRows = v.getNumRows();
+  int numCols = v.getNumCols();
+  QStringList rHeaders = v.getRowHeaders();
+  QStringList cHeaders = v.getColHeaders();
+
+  m_Prefs->beginWriteArray(name);
+
+  m_Prefs->setArrayIndex(0);
+  m_Prefs->setValue(name, value);
+  m_Prefs->setArrayIndex(1);
+  m_Prefs->setValue(name, rHeaders);
+  m_Prefs->setArrayIndex(2);
+  m_Prefs->setValue(name, numRows);
+  m_Prefs->setArrayIndex(3);
+  m_Prefs->setValue(name, numCols);
+  m_Prefs->setArrayIndex(4);
+  m_Prefs->setValue(name, cHeaders);
+
+  m_Prefs->endArray();
+
+  return err;
+}
+
+

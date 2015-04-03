@@ -41,11 +41,13 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -277,7 +279,7 @@ void CAxisSegmentFeatures::execute()
   // By default we randomize grains
   if (true == m_RandomizeFeatureIds)
   {
-    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
   // If there is an error set this to something negative and also set a message

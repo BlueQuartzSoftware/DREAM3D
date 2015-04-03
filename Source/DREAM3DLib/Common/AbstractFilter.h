@@ -47,10 +47,12 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include <DREAM3DLib/Plugin/PluginManager.h>
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
+
+class AbstractFilterParametersReader;
+class AbstractFilterParametersWriter;
 
 
 /**
@@ -121,6 +123,11 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      * @brief preflight
      */
     virtual void preflight();
+
+	/**
+	* @brief This method returns an instance of the filter's plugin
+	*/
+	IDREAM3DPlugin* getPluginInstance();
 
     /**
      * @brief newFilterInstance

@@ -46,10 +46,13 @@
 #include <QtWidgets/QLineEdit>
 
 
+#include "QtSupport/DREAM3DStyles.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -112,34 +115,10 @@ bool FilterInputWidget::eventFilter(QObject* o, QEvent* e)
 // -----------------------------------------------------------------------------
 void FilterInputWidget::setupGui()
 {
-  QFont humanLabelFont;
-  humanLabelFont.setBold(true);
-  humanLabelFont.setItalic(false);
-  humanLabelFont.setWeight(75);
-  humanLabelFont.setStyleStrategy(QFont::PreferAntialias);
 
-  QFont brandingFont;
-  brandingFont.setBold(true);
-  brandingFont.setItalic(true);
-  brandingFont.setWeight(75);
-  brandingFont.setStyleStrategy(QFont::PreferAntialias);
-  brandingFont.setFamily(QString::fromUtf8("Arial"));
-
-  QFont categoryFont;
-  categoryFont.setBold(true);
-  categoryFont.setWeight(75);
-  categoryFont.setStyleStrategy(QFont::PreferAntialias);
-
-#if defined (Q_OS_MAC)
-  humanLabelFont.setPointSize(16);
-  brandingFont.setPointSize(11);
-  categoryFont.setPointSize(14);
-#elif defined (Q_OS_WIN)
-  humanLabelFont.setPointSize(12);
-  brandingFont.setPointSize(8);
-  categoryFont.setPointSize(10);
-#endif
-
+  QFont humanLabelFont = DREAM3DStyles::GetHumanLabelFont();
+  QFont brandingFont =DREAM3DStyles::GetBrandingLabelFont();
+  QFont categoryFont = DREAM3DStyles::GetCategoryFont();
 
   filterHumanLabel->setFont(humanLabelFont);
   brandingLabel->setFont(brandingFont);

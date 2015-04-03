@@ -37,18 +37,21 @@
 #ifndef _ModifiedLambertProjectionArray_H_
 #define _ModifiedLambertProjectionArray_H_
 
-#include <QtCore/QString>
 #include <vector>
+
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+
+#include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 
 /*
  *
  */
-class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
+class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 {
   public:
     DREAM3D_SHARED_POINTERS(ModifiedLambertProjectionArray)

@@ -11,52 +11,34 @@
 
 project(EbsdLibTest)
 
-# --------------------------------------------------------------------------
-macro(ConvertPathToHeaderCompatible INPUT)
-  #message(STATUS "INPUT: ${INPUT}  ${${INPUT}}")
-    if(WIN32)
-      STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
-      STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
-    endif()
-endmacro()
-
+include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
+include_directories(${${PROJECT_NAME}_SOURCE_DIR})
+include_directories(${${PROJECT_NAME}_BINARY_DIR})
 include_directories(${EbsdLibTest_BINARY_DIR})
-set(TEST_TEMP_DIR ${EbsdLibTest_BINARY_DIR}/Temp)
-file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
-
-
+include_directories(${DREAM3DProj_SOURCE_DIR}/Test)
 
 configure_file(${EbsdLibTest_SOURCE_DIR}/EbsdTestFileLocation.h.in
                ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
 
 
-include_directories(${EbsdLibTest_BINARY_DIR})
-include_directories(${DREAM3DProj_SOURCE_DIR}/Test)
 
-# --------------------------------------------------------------------------
-# ANG Data File Testing
-# --------------------------------------------------------------------------
-add_executable(AngImportTest ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
-target_link_libraries(AngImportTest Qt5::Core EbsdLib)
-set_target_properties(AngImportTest PROPERTIES FOLDER Test)
-add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
-
-# --------------------------------------------------------------------------
-# CTF Data File Testing
-# --------------------------------------------------------------------------
-add_executable(CtfReaderTest ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
-target_link_libraries(CtfReaderTest EbsdLib)
-set_target_properties(CtfReaderTest PROPERTIES FOLDER Test)
-add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
+set(TEST_TEMP_DIR ${${PROJECT_NAME}_BINARY_DIR}/Temp)
+# Make sure the directory is created during CMake time
+file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 
-# --------------------------------------------------------------------------
-# HEDM Tests
-# --------------------------------------------------------------------------
-add_executable(HedmReaderTest HedmReaderTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
-target_link_libraries(HedmReaderTest EbsdLib)
-set_target_properties(HedmReaderTest PROPERTIES FOLDER Test)
-#add_test(HedmReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/HedmReaderTest)
+AddDREAM3DUnitTest(TESTNAME AngImportTest 
+                    SOURCES ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp
+                    FOLDER "Test/EbsdLib" 
+                    LINK_LIBRARIES Qt5::Core EbsdLib)
 
+AddDREAM3DUnitTest(TESTNAME CtfReaderTest 
+                    SOURCES ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp
+                    FOLDER "Test/EbsdLib" 
+                    LINK_LIBRARIES Qt5::Core EbsdLib)
 
+AddDREAM3DUnitTest(TESTNAME HedmReaderTest 
+                    SOURCES ${EbsdLibTest_SOURCE_DIR}/HedmReaderTest.cpp
+                    FOLDER "Test/EbsdLib" 
+                    LINK_LIBRARIES Qt5::Core EbsdLib)
 

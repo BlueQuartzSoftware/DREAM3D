@@ -321,18 +321,22 @@ void DREAM3D_UI::readVersionSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readLastPipeline()
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QString filePath;
+  QString prefFile;
   {
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName() + "_LastPipeline");
-
-    filePath = prefs.fileName();
+#if defined (Q_OS_MAC)
+    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+    prefFile = prefs.fileName();
   }
-  pipelineViewWidget->loadPipelineFile(filePath, format);
+
+  QFileInfo prefFileInfo = QFileInfo(prefFile);
+  QString parentPath = prefFileInfo.path();
+  QString baseName = prefFileInfo.completeBaseName();
+  QString filePath = parentPath + QDir::separator() + baseName + "_LastPipeline.ini";
+
+  pipelineViewWidget->loadPipelineFile(filePath, QSettings::IniFormat);
 }
 
 
@@ -348,7 +352,6 @@ void DREAM3D_UI::writeSettings()
 #endif
   QString filePath;
   {
-
     QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 
     filePath = prefs.fileName();
@@ -358,20 +361,22 @@ void DREAM3D_UI::writeSettings()
     writeVersionCheckSettings(prefs);
   }
 
+  // We scope these sections so that the QSettings object goes out of scope each
+  // time and is destructed
   {
+  #if defined (Q_OS_MAC)
+      QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  #else
+      QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  #endif
+    QString prefFile = prefs.fileName();
 
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName() + "_LastPipeline");
-    filePath = prefs.fileName();
-    QFileInfo fi(filePath);
+    QFileInfo prefFileInfo = QFileInfo(prefFile);
+    QString parentPath = prefFileInfo.path();
+    QString baseName = prefFileInfo.completeBaseName();
+    QString filePath = parentPath + QDir::separator() + baseName + "_LastPipeline.ini";
 
-    pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
-    // Create a Pipeline Object and fill it with the filters from this View
-    //    FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
-    //    int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
-    //    if (err < 0)
-    //    {
-
-    //    }
+    pipelineViewWidget->savePipeline(filePath, prefFileInfo.completeBaseName() + "_LastPipeline", QSettings::IniFormat);
   }
 }
 

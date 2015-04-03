@@ -28,6 +28,10 @@ configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
 
 set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support DREAM3DLib OrientationLib)
 
-AddDREAM3DUnitTest(TESTNAME AngCachingTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/AngCachingTest.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
-AddDREAM3DUnitTest(TESTNAME CtfCachingTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/CtfCachingTest.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+AddDREAM3DUnitTest(TESTNAME AngCachingTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/AngCachingTest.cpp 
+					FOLDER "${PLUGIN_NAME}Plugin/Test"
+					LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+AddDREAM3DUnitTest(TESTNAME CtfCachingTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/CtfCachingTest.cpp 
+					FOLDER "${PLUGIN_NAME}Plugin/Test"
+					LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 

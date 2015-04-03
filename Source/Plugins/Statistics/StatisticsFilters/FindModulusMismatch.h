@@ -9,15 +9,15 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 
 #include "Statistics/StatisticsConstants.h"
