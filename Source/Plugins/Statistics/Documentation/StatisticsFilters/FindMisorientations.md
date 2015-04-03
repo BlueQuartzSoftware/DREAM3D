@@ -5,28 +5,29 @@ Find Feature Neighbor Misorientations {#findmisorientations}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter determines, for each **Feature**, the misorientations with the **Features** that are in contact with it.  The misorientations are stored as a list (for each **Feature**) of angles.  The axis of the misorientation is not stored by this filter.
+This filter determines, for each **Feature**, the misorientations with each of the **Features** that are in contact with it.  The misorientations are stored as a list (for each **Feature**) of angles (in degrees).  The axis of the misorientation is not stored by this filter.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| Find Average Misorientation Per Feature | Boolean | Specifies if the *average* of  the misorienations with the neighboring **Features** should be stored for each **Feature**. |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | NeighborLists | List of the contiguous neighboring **Features** for a given **Feature** |  | Find Feature Neighbors (Statistics) |
-| Feature | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Feature | NeighborLists | List of Ints | (1) | List of the contiguous neighboring **Features** for a given **Feature** |
+| Feature | AvgQuats | Float | (4) | Defines the average orientation of the **Feature** in quaternion representation  (<x,y,z>, w) |
+| Feature | FeaturePhases | Int | (1) | Specifies the phase of the **Feature** - Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | MisorientationLists | List of the misorientation angles with the contiguous neighboring **Features** for a given **Feature** |  |  
-| Feature | avgMisorientation | Number weighted average of neighbor misorientations.
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Feature | MisorientationLists | List of Floats | (1) | List of the misorientation angles with the contiguous neighboring **Features** for a given **Feature** |
+| Feature | AvgMisorientation | Float | (1) | Number weighted average of neighbor misorientations. |
 
 ## Authors ##
 

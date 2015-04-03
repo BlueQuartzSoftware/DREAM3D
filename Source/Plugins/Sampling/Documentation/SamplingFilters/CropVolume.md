@@ -43,7 +43,7 @@ Image/Rectilinear Grid
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. (Only required if Renumber Features is *true* |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. (Only required if Renumber Features is *true*) |
 
 ## Created Arrays ##
 None

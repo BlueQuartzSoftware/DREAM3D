@@ -1,34 +1,27 @@
 Find Number of Features {#findnumfeatures}
 ======
 
-
 ## Group (Subgroup) ##
-
 Statistics Filters (Morphological)
-
-
 
 ## Description ##
 This filter determines the number of **Features** in each **Ensemble**.
 
-
 ## Parameters ##
 None 
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | FeaturePhases | Int | (1) | Specifies the **Ensemble** of the **Feature** - Values will begin at 1 as there is no **Ensemble** 0, which is used temporarily in some filters for bad data|
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Ensemble | NumFeatures | Number (int) of **Features** that belong the ensemble. |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Ensemble | NumFeatures | Int | (1) | Number of **Features** that belong each **Ensemble**. |
 
 ## Authors ##
 

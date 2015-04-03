@@ -17,7 +17,6 @@ Schmid Factor from all of the slip systems is stored for the **Feature**.
 
 
 ## Parameters ##
-
 | Name | Type | Description |
 |------|------| ----------- |
 | Loading X: | Double | X component of the loading axis in the sample reference frame |
@@ -28,7 +27,6 @@ Schmid Factor from all of the slip systems is stored for the **Feature**.
 Voxel
 
 ## Required Arrays ##
-
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
