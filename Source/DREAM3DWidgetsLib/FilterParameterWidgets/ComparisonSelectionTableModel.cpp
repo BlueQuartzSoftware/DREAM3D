@@ -252,7 +252,6 @@ bool ComparisonSelectionTableModel::setHeaderData(int col, Qt::Orientation o, co
 // -----------------------------------------------------------------------------
 bool ComparisonSelectionTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  // qDebug() << "ComparisonSelectionTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FeatureNames.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
@@ -272,12 +271,8 @@ bool ComparisonSelectionTableModel::setData(const QModelIndex& index, const QVar
     case FeatureOperator:
       m_FeatureOperators[row] =  value.toString();
       break;
-//    case FeaturePhaseValue:
-//      m_FeaturePhaseValues[row] =  value.toInt(&ok);
-//      break;
     default:
       Q_ASSERT(false);
-
   }
 
   emit dataChanged(index, index);
