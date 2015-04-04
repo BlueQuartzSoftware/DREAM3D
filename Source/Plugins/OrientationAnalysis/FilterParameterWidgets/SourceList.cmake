@@ -30,16 +30,16 @@ file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "\nvoid ${PLUGIN_NAME}Plu
 # --------------------------------------------------------------------
 # Loop through all the FilterParameterWidgets that this plugin is going to compile and make available.
 foreach(FPW ${${PLUGIN_NAME}_PARAMETER_WIDGETS})
-  set(${PLUGIN_NAME}_ParameterWidgets_HDRS 
-  	${${PLUGIN_NAME}_ParameterWidgets_HDRS}
+  set(${PLUGIN_NAME}_ParameterWidgets_HDRS
+    ${${PLUGIN_NAME}_ParameterWidgets_HDRS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/${FPW}.h
     )
-  set(${PLUGIN_NAME}_ParameterWidgets_SRCS 
-  	${${PLUGIN_NAME}_ParameterWidgets_SRCS}
+  set(${PLUGIN_NAME}_ParameterWidgets_SRCS
+    ${${PLUGIN_NAME}_ParameterWidgets_SRCS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/${FPW}.cpp
     )
-  set(${PLUGIN_NAME}_ParameterWidgets_UIS 
-  	${${PLUGIN_NAME}_ParameterWidgets_UIS}
+  set(${PLUGIN_NAME}_ParameterWidgets_UIS
+    ${${PLUGIN_NAME}_ParameterWidgets_UIS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/UI_Files/${FPW}.ui
     )
 

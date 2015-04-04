@@ -33,27 +33,29 @@
 *                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ReadAngData_H_
-#define _ReadAngData_H_
+#ifndef _ReadEdaxH5Data_H_
+#define _ReadEdaxH5Data_H_
 
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QDateTime>
 
-#include "EbsdLib/TSL/AngReader.h"
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
-
 
 #include "EbsdLib/TSL/AngPhase.h"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+
+class H5OIMReader;
 
 // our PIMPL private class
-class ReadAngDataPrivate;
+class ReadEdaxH5DataPrivate;
 
 /**
 * @class ReadOrientationData ReadOrientationData.h /FilterCategoryFilters/ReadOrientationData.h
@@ -62,22 +64,25 @@ class ReadAngDataPrivate;
 * @date
 * @version 1.0
 */
-class ReadAngData : public AbstractFilter
+class ReadEdaxH5Data : public AbstractFilter
 {
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_DECLARE_PRIVATE(ReadEdaxH5Data)
 
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-    Q_DECLARE_PRIVATE(ReadAngData)
+  public:
+    DREAM3D_SHARED_POINTERS(ReadEdaxH5Data)
+    DREAM3D_STATIC_NEW_MACRO(ReadEdaxH5Data)
+    DREAM3D_TYPE_MACRO_SUPER(ReadEdaxH5Data, AbstractFilter)
 
-public:
-  DREAM3D_SHARED_POINTERS(ReadAngData)
-    DREAM3D_STATIC_NEW_MACRO(ReadAngData)
-    DREAM3D_TYPE_MACRO_SUPER(ReadAngData, AbstractFilter)
+    virtual ~ReadEdaxH5Data();
 
-    virtual ~ReadAngData();
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+    DREAM3D_FILTER_PARAMETER(QString, ScanName)
+    Q_PROPERTY(QString ScanName READ getScanName WRITE setScanName)
 
-  DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
-
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
@@ -91,9 +96,6 @@ public:
 
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -159,9 +161,6 @@ public:
 
     /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
-
-    void populateAngData(AngReader* reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG = ANG_FULL_FILE);
-
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
@@ -171,7 +170,6 @@ public:
 
 
   signals:
-
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
@@ -181,7 +179,7 @@ public:
     void flushCache();
 
   protected:
-    ReadAngData();
+    ReadEdaxH5Data();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -199,7 +197,7 @@ public:
      * @param tDims
      * @param cDims
      */
-    void copyRawEbsdData(AngReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
+    void copyRawEbsdData(H5OIMReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
 
     /**
     * @brief This method reads the values for the phase type, crystal structure
@@ -207,7 +205,7 @@ public:
     * @param reader The EbsdReader instance
     * @return Zero/Positive on Success - Negative on error.
     */
-    int loadMaterialInfo(AngReader* reader);
+    int loadMaterialInfo(H5OIMReader* reader);
 
     /**
      * @brief readDataFile
@@ -215,25 +213,24 @@ public:
      * @param m
      * @param dims
      */
-    void readDataFile(AngReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG = ANG_FULL_FILE);
+    void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, ANG_READ_FLAG flag);
+
 
   private:
-    QScopedPointer<ReadAngDataPrivate> const d_ptr;
+    QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-    ReadAngData(const ReadAngData&); // Copy Constructor Not Implemented
-
-    void operator=(const ReadAngData&); // Operator '=' Not Implemented
-
+    ReadEdaxH5Data(const ReadEdaxH5Data&); // Copy Constructor Not Implemented
+    void operator=(const ReadEdaxH5Data&); // Operator '=' Not Implemented
 };
 
 
-#endif /* _ReadAngData_H_ */
+
+#endif /* _ReadEdaxH5Data_H_ */
 
 
 

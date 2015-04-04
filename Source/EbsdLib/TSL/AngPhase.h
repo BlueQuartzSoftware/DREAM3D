@@ -51,6 +51,8 @@
 
 #include "AngConstants.h"
 
+#pragma pack(push)  /* push current alignment to stack */
+#pragma pack(1)     /* set alignment to 1 byte boundary */
 /*!
  * @struct HKLFamily_t is used to write the HKL Family to an HDF5 file using a
  * compound data type.
@@ -60,11 +62,12 @@ typedef struct
   int h;
   int k;
   int l;
-  int s1;
   float diffractionIntensity;
-  int s2;
+  char s1;
+  char s2;
 } HKLFamily_t;
 
+#pragma pack(pop)
 
 /**
  * @class HKLFamily HKLFamily.h EbsdLib/TSL/HKLFamily.h
@@ -85,9 +88,9 @@ class EbsdLib_EXPORT HKLFamily
     int h;
     int k;
     int l;
-    int s1;
     float diffractionIntensity;
-    int s2;
+    char s1;
+    char s2;
 
     /**
      * @brief Prints this class to the output stream. Useful for debuggin
@@ -96,7 +99,7 @@ class EbsdLib_EXPORT HKLFamily
     void printSelf(QTextStream& stream)
     {
       stream << Ebsd::Ang::HKLFamilies;
-      stream << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << "\n";
+      stream << " " << h << " " << k << " " << l << " " << diffractionIntensity << " " << (int)(s1) << " " << (int)(s2) << "\n";
     }
 
     /**
@@ -166,6 +169,12 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_PROPERTY(QVector<HKLFamily::Pointer>, HKLFamilies)
     EBSD_INSTANCE_PROPERTY(QVector<int>, Categories)
 
+    void setLatticeConstantA(float a);
+    void setLatticeConstantB(float a);
+    void setLatticeConstantC(float a);
+    void setLatticeConstantAlpha(float a);
+    void setLatticeConstantBeta(float a);
+    void setLatticeConstantGamma(float a);
 
     //  void parsePhase(char* value, size_t start, size_t length);
     void parseMaterialName(QList<QByteArray> tokens);
@@ -193,6 +202,23 @@ class EbsdLib_EXPORT AngPhase
     AngPhase(const AngPhase&); // Copy Constructor Not Implemented
     void operator=(const AngPhase&); // Operator '=' Not Implemented
 };
+
+
+struct Ang_Private_Data
+{
+    QVector<size_t> dims;
+    QVector<float> resolution;
+    QVector<float> origin;
+    QVector<AngPhase::Pointer> phases;
+};
+
+enum ANG_READ_FLAG
+{
+  ANG_FULL_FILE,
+  ANG_HEADER_ONLY
+};
+
+Q_DECLARE_METATYPE(Ang_Private_Data)
 
 #endif /* ANGPHASE_H_ */
 

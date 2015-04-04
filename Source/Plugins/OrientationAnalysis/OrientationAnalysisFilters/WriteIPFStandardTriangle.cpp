@@ -385,5 +385,5 @@ const QString WriteIPFStandardTriangle::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getHumanLabel()
-{ return "Write IPF Triangle Legend"; }
+{ return "Write IPF Triangle Legend (Cubic m-3m)"; }
 

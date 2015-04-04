@@ -83,5 +83,7 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
     void operator=(const AngFields&); // Operator '=' Not Implemented
 };
 
+
+
 #endif /* ANGFIELDS_H_ */
 

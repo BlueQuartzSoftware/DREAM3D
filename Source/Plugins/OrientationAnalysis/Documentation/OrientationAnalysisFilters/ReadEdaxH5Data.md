@@ -1,4 +1,4 @@
-Read EDAX/TSL Ebsd Data {#readangdata}
+Read EDAX/TSL Ebsd Data (HDF5 Format) {#readedaxh5data}
 =====
 
 
@@ -7,7 +7,7 @@ IOFilters (Input)
 
 
 ## Description ##
-This filter will read a single .ang file into the VoxelDataContainer allowing the immediate use of filters on the data instead of having to generate the intermediate .h5ebsd file. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be undefined or simply **wrong**. In order to bring the crystal reference frame and sample reference frame into coincidence the proper filters need to be run. The user should read the documentation for the [Rotate Sample Reference Frame](rotatesamplerefframe.html) and [Rotate Euler Reference Frame](rotateeulerrefframe.html).
+This filter will read a single .h5 file into a DataContainer backed by an ImageGeometry allowing the immediate use of filters on the data instead of having to generate the intermediate .h5ebsd file. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be undefined or simply **wrong**. In order to bring the crystal reference frame and sample reference frame into coincidence the proper filters need to be run. The user should read the documentation for the "[Rotate Sample Reference Frame](rotatesamplerefframe.html)" and "[Rotate Euler Reference Frame](rotateeulerrefframe.html)".
 
 ### Default TSL Transformations ###
 
@@ -22,7 +22,8 @@ The user also may want to assign unindexed pixels to be ignored and be assigned 
 
 | Name             | Type |
 |------------------|------|
-| Input File | The Path to the .ang file |
+| Input File | The Path to the .h5 file |
+| Scan Name | The name of the scan in the hdf5 file. EDAX can store multiple scans in a single file |
 
 ## Required Arrays ##
 
@@ -52,7 +53,7 @@ Arrays are created based on the data read from the EBSD file. The following tabl
 
 ## Authors ##
 
-**Copyright** 2015 BlueQuartz Software, LLC
+**Copyright** 2015 BlueQuartz Software
 
 **Contact Info** dream3d@bluequartz.net
 

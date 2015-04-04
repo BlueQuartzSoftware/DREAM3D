@@ -40,17 +40,16 @@
 #include <QtCore/QScopedPointer>
 #include <QtCore/QDateTime>
 
-#include "EbsdLib/HKL/CtfReader.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
+#include "EbsdLib/HKL/CtfReader.h"
 
-
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 struct Ctf_Private_Data
 {
@@ -105,8 +104,6 @@ public:
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-
-  void populateCtfData(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> dims, CTF_READ_FLAG = CTF_FULL_FILE);
 
 
   /**
@@ -193,86 +190,28 @@ protected:
   void dataCheck();
 
   /**
-  * @brief readCtfFile This reads the Ctf file and puts the data into the Voxel Data container
-  */
-  void readCtfFile();
+  * @brief copyRawEbsdData This reads the Ang file and puts the data into the Voxel Data container
+   * @param reader
+   * @param tDims
+   * @param cDims
+   */
+  void copyRawEbsdData(CtfReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
 
   /**
   * @brief This method reads the values for the phase type, crystal structure
   * and precipitate fractions from the EBSD file.
   * @param reader The EbsdReader instance
-  * @param precipFractions Container to hold the precipitate fractions (out)
-  * @param crystalStructures Container to hold the crystal structures (out)
   * @return Zero/Positive on Success - Negative on error.
   */
-  int loadInfo(CtfReader* reader)
-  {
-    QVector<CtfPhase::Pointer> phases = getData().phases;
-    if (phases.size() == 0)
-    {
-      setErrorCondition(reader->getErrorCode());
-      notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
-      return getErrorCondition();
-    }
+  int loadMaterialInfo(CtfReader* reader);
 
-    DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
-    QVector<size_t> dims(1, 6);
-    FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, getLatticeConstantsArrayName());
-
-    // Initialize the zero'th element to unknowns. The other elements will
-    // be filled in based on values from the data file
-    crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-    materialNames->setValue(0, "Invalid Phase");
-    latticeConstants->setComponent(0, 0, 0.0f);
-    latticeConstants->setComponent(0, 1, 0.0f);
-    latticeConstants->setComponent(0, 2, 0.0f);
-    latticeConstants->setComponent(0, 3, 0.0f);
-    latticeConstants->setComponent(0, 4, 0.0f);
-    latticeConstants->setComponent(0, 5, 0.0f);
-
-    for (size_t i = 0; i < phases.size(); i++)
-    {
-      int phaseID = phases[i]->getPhaseIndex();
-      crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
-      materialNames->setValue(phaseID, phases[i]->getMaterialName());
-      QVector<float> lc = phases[i]->getLatticeConstants();
-
-      latticeConstants->setComponent(phaseID, 0, lc[0]);
-      latticeConstants->setComponent(phaseID, 1, lc[1]);
-      latticeConstants->setComponent(phaseID, 2, lc[2]);
-      latticeConstants->setComponent(phaseID, 3, lc[3]);
-      latticeConstants->setComponent(phaseID, 4, lc[4]);
-      latticeConstants->setComponent(phaseID, 5, lc[5]);
-
-    }
-    DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
-    if (NULL == vdc) { return -1; }
-    AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
-    if (NULL == attrMatrix.get()) { return -2; }
-
-    // Resize the AttributeMatrix based on the size of the crystal structures array
-    QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
-    attrMatrix->resizeAttributeArrays(tDims);
-    // Now add the attributeArray to the AttributeMatrix
-    attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-    attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
-    attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-
-    // Now reset the internal ensemble array references to these new arrays
-    m_CrystalStructuresPtr = crystalStructures;
-    if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    {
-      m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-    m_LatticeConstantsPtr = latticeConstants;
-    if (NULL != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    {
-      m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
-    return 0;
-  }
+  /**
+   * @brief readDataFile
+   * @param reader
+   * @param m
+   * @param dims
+   */
+  void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, CTF_READ_FLAG flag);
 
 private:
   QScopedPointer<ReadCtfDataPrivate> const d_ptr;
