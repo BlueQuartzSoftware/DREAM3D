@@ -150,7 +150,7 @@ void VertexGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointe
     // VertexGeom can only accept vertex Attribute Matrices
     return;
   }
-  if (data->getNumTuples() != getNumberOfTuples())
+  if (data->getNumTuples() != getNumberOfElements())
   {
     return;
   }
@@ -164,7 +164,7 @@ void VertexGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t VertexGeom::getNumberOfTuples()
+size_t VertexGeom::getNumberOfElements()
 {
   return m_VertexList->getNumberOfTuples();
 }
@@ -188,7 +188,7 @@ ElementDynamicList::Pointer VertexGeom::getElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert)
+void VertexGeom::setElementsContainingVert(ElementDynamicList::Pointer DREAM3D_NOT_USED(elementsContainingVert))
 {
   return;
 }
@@ -220,7 +220,7 @@ ElementDynamicList::Pointer VertexGeom::getElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setElementNeighbors(ElementDynamicList::Pointer elementNeighbors)
+void VertexGeom::setElementNeighbors(ElementDynamicList::Pointer DREAM3D_NOT_USED(elementNeighbors))
 {
   return;
 }
@@ -252,7 +252,7 @@ FloatArrayType::Pointer VertexGeom::getElementCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexGeom::setElementCentroids(FloatArrayType::Pointer elementCentroids)
+void VertexGeom::setElementCentroids(FloatArrayType::Pointer DREAM3D_NOT_USED(elementCentroids))
 {
   return;
 }
@@ -379,12 +379,14 @@ int VertexGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 // -----------------------------------------------------------------------------
 int VertexGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
+  herr_t err = 0;
   SharedVertexList::Pointer vertices = SharedVertexList::NullPointer();
-  vertices = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight);
+  vertices = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight, err);
   if (vertices.get() == NULL)
   {
     return -1;
   }
+
   setVertices(vertices);
 
   return 1;

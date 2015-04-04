@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "QtSupport/DREAM3DStyles.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -112,13 +114,35 @@ void DoubleWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  bool ok = false;
-  double i = value->text().toDouble(&ok);
-  QVariant v(i);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(false == ok)
+
+  bool ok = true;
+  double i = getFilterParameter()->getDefaultValue().toDouble();
+  if (!value->text().isEmpty())
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    i = value->text().toDouble(&ok);
+    errorLabel->hide();
+  }
+  else
+  {
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
+  }
+
+  DREAM3DStyles::LineEditErrorStyle(value);
+
+  if (ok)
+  {
+    QVariant v(i);
+    ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+    if (false == ok)
+    {
+      FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    }
+  }
+  else 	// Check for Empty String. If empty, show error dialog
+  {
+    // Some error message "Could not convert string to a double"
   }
 
 }

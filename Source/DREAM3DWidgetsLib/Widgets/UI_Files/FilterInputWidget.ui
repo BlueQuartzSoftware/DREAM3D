@@ -49,6 +49,9 @@ font-weight: bold;s
       <property name="bottomMargin">
        <number>2</number>
       </property>
+      <property name="verticalSpacing">
+       <number>4</number>
+      </property>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="topMargin">
@@ -85,6 +88,7 @@ font-weight: bold;s
         </property>
        </widget>
       </item>
+
       <item row="2" column="0">
        <widget class="QScrollArea" name="scrollArea">
         <property name="frameShape">
@@ -98,8 +102,10 @@ font-weight: bold;s
           <rect>
            <x>0</x>
            <y>0</y>
+
            <width>581</width>
            <height>307</height>
+
           </rect>
          </property>
          <layout class="QVBoxLayout" name="scrollAreaVLayout">

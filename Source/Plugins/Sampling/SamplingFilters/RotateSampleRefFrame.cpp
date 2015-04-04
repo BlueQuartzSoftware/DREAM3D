@@ -42,10 +42,12 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "OrientationLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 
 
 typedef struct

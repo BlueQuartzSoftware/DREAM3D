@@ -66,32 +66,39 @@ class CalculateArrayHistogram : public AbstractFilter
 
     virtual ~CalculateArrayHistogram();
 
-		DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-		Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-		DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
-		Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
+    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-		DREAM3D_FILTER_PARAMETER(bool, Normalize)
-		Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
+    DREAM3D_FILTER_PARAMETER(double, MinRange)
+    Q_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
+    DREAM3D_FILTER_PARAMETER(double, MaxRange)
+    Q_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
+    DREAM3D_FILTER_PARAMETER(bool, UserDefinedRange)
+    Q_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
 
-		DREAM3D_FILTER_PARAMETER(QString, NewAttributeMatrixName)
-		Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(bool, Normalize)
+    Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
 
-		DREAM3D_FILTER_PARAMETER(QString, NewDataArrayName)
-		Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, NewAttributeMatrixName)
+    Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
 
-		DREAM3D_FILTER_PARAMETER(bool, NewDataContainer)
-		Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
+    DREAM3D_FILTER_PARAMETER(QString, NewDataArrayName)
+    Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
 
-		DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
-		Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    DREAM3D_FILTER_PARAMETER(bool, NewDataContainer)
+    Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
 
-		/**
-		* @brief This returns the group that the filter belongs to. You can select
-		* a different group if you want. The string returned here will be displayed
-		* in the GUI for the filter
-		*/
+    DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
+    Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+
+    /**
+    * @brief This returns the group that the filter belongs to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -152,7 +159,7 @@ class CalculateArrayHistogram : public AbstractFilter
     void dataCheck();
 
   private:
-		DEFINE_CREATED_DATAARRAY_VARIABLE(double, NewDataArray)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, NewDataArray)
 
     CalculateArrayHistogram(const CalculateArrayHistogram&); // Copy Constructor Not Implemented
     void operator=(const CalculateArrayHistogram&); // Operator '=' Not Implemented

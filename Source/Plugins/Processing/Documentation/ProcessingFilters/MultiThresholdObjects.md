@@ -6,8 +6,7 @@ Processing Filters (Threshold)
 
 ## Description ##
 This filter allows the user to input single or multiple criteria for thresholding **Objects** in an **Attribute Matrix**. Internally the algorithm creates the output boolean arrays for each comparison that the user creates. Then all the output arrays are compared and if __any__ of the values for a specific **Object** is __false__ then the corresponding **Object** in the final output array is marked as false. This is considered a logical 'or' operation.
-An example of this filter's use would be after EBSD data is read into DREAM3D and the user wants to have DREAM3D consider **Cells** that the user considers 'good'. The user would insert this filter and select the criteria that makes a **Cell** 'good'. For the _Small IN100_ example data set the typical values are a _Confidence Index_ > 0.1 and an _Image Quality_ > 120.
-All arrays **must** come from the same **AttributeMatrix** in order for the filter to execute.
+An example of this filter's use would be after EBSD data is read into DREAM3D and the user wants to have DREAM3D consider **Cells** that the user considers 'good'. The user would insert this filter and select the criteria that makes a **Cell** 'good'. All arrays **must** come from the same **AttributeMatrix** in order for the filter to execute. For example, an integer array contains the values 1,2,3,4,5. For a comparison value of 3 and the comparison operator greater than, the boolean threshold array produced will contain false, false, false, true, true.
 
 ## Parameters ##
 | Name | Type | Description |
@@ -18,14 +17,14 @@ All arrays **must** come from the same **AttributeMatrix** in order for the filt
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | *User Chosen* | *User Chosen* | Variable | Variable | Array(s) selected in criteria set |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| *User Chosen* | User Defined | Boolean | (1,1) | Specifies whether the **Object** passed the set of criteria applied during thresholding |
+| *User Chosen* | User Defined | Boolean | (1) | Specifies whether the **Object** passed the set of criteria applied during thresholding |
 
 ## Authors ##
 

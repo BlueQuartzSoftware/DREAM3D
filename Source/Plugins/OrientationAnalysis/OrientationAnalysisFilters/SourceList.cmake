@@ -23,6 +23,8 @@ set(_PublicFilters
   GenerateIPFColors
   GenerateMisorientationColors
   GenerateRodriguesColors
+  NeighborCICorrelation
+  NeighborOrientationCorrelation
   ReadH5Ebsd
   ReadAngData
   ReadMicData

@@ -38,6 +38,7 @@
 
 #include <vector>
 #include <map>
+#include <set>
 #include <sstream>
 #include <list>
 
@@ -129,10 +130,10 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
 // -----------------------------------------------------------------------------
 
     /**
-     * @brief getNumberOfTuples
+     * @brief getNumberOfElements
      * @return
      */
-    virtual size_t getNumberOfTuples() = 0;
+    virtual size_t getNumberOfElements() = 0;
 
     /**
      * @brief findElementCentroids
@@ -299,14 +300,6 @@ class DREAM3DLib_EXPORT IGeometry : public Observable
     virtual void setElementCentroids(FloatArrayType::Pointer elementCentroids) = 0;
 
   private:
-
-    QString m_Name;
-    QString m_GeometryTypeName;
-    unsigned int m_GeometryType;
-    unsigned int m_XdmfGridType;
-    unsigned int m_UnitDimensionality;
-    unsigned int m_SpatialDimensionality;
-    AttributeMatrixMap_t m_AttributeMatrices;
 
     IGeometry(const IGeometry&); // Copy Constructor Not Implemented
     void operator=(const IGeometry&); // Operator '=' Not Implemented

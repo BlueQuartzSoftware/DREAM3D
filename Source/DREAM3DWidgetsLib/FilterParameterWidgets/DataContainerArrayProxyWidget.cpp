@@ -286,7 +286,7 @@ void DataContainerArrayProxyWidget::updateModelFromProxy(DataContainerArrayProxy
   QStandardItem* rootItem = model->invisibleRootItem();
 
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = proxy.list;
+  QList<DataContainerProxy> containers = proxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   QStringList dcList;
   while(containerIter.hasNext())
@@ -352,41 +352,37 @@ void DataContainerArrayProxyWidget::updateProxyFromModel()
   //
   QStandardItem* rootItem = model->invisibleRootItem();
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy>& containers = proxy.list;
-  QMutableListIterator<DataContainerProxy> containerIter(containers);
+  QMap<QString, DataContainerProxy>& containers = proxy.dataContainers;
+  //QMutableListIterator<DataContainerProxy> containerIter(containers);
   //  QStringList dcList;
-  while(containerIter.hasNext())
+  for (QMap<QString, DataContainerProxy>::iterator containerIter = containers.begin(); containerIter != containers.end(); ++containerIter)
   {
-    DataContainerProxy& dcProxy = containerIter.next();
-    //  dcList.push_back(dcProxy.name);
-    QStandardItem* dcItem = updateProxyItem<DataContainerProxy>(rootItem, dcProxy.name, dcProxy);
+	  DataContainerProxy& dcProxy = containerIter.value();
+	  //  dcList.push_back(dcProxy.name);
+	  QStandardItem* dcItem = updateProxyItem<DataContainerProxy>(rootItem, dcProxy.name, dcProxy);
 
-    //    qDebug() << "**  " << dcProxy.name;
-    // We found the proper Data Container, now populate the AttributeMatrix List
-    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
-    QMutableMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-    while(attrMatsIter.hasNext() )
-    {
-      attrMatsIter.next();
-      QString amName = attrMatsIter.key();
-      AttributeMatrixProxy& attrProxy = attrMatsIter.value();
-      QStandardItem* amItem = updateProxyItem<AttributeMatrixProxy>(dcItem, amName, attrProxy);
+	  //    qDebug() << "**  " << dcProxy.name;
+	  // We found the proper Data Container, now populate the AttributeMatrix List
+	  QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
+	  for (QMap<QString, AttributeMatrixProxy>::iterator attrMatsIter = attrMats.begin(); attrMatsIter != attrMats.end(); ++attrMatsIter)
+	  {
+		  QString amName = attrMatsIter.key();
+		  AttributeMatrixProxy& attrProxy = attrMatsIter.value();
+		  QStandardItem* amItem = updateProxyItem<AttributeMatrixProxy>(dcItem, amName, attrProxy);
 
-      //   qDebug() << "@@@ " << amName;
-      // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
-      AttributeMatrixProxy& amProxy = attrMatsIter.value();
-      QMap<QString, DataArrayProxy>& dataArrays = amProxy.dataArrays;
-      QMutableMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
-      while(dataArraysIter.hasNext() )
-      {
-        dataArraysIter.next();
-        DataArrayProxy& daProxy = dataArraysIter.value();
-        QString daName = dataArraysIter.key();
-        //    qDebug() << "#### " << daName;
-        QStandardItem* daItem = updateProxyItem<DataArrayProxy>(amItem, daName, daProxy);
-        Q_UNUSED(daItem)
-      }
-    }
+		  //   qDebug() << "@@@ " << amName;
+		  // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
+		  AttributeMatrixProxy& amProxy = attrMatsIter.value();
+		  QMap<QString, DataArrayProxy>& dataArrays = amProxy.dataArrays;
+		  for (QMap<QString, DataArrayProxy>::iterator dataArraysIter = dataArrays.begin(); dataArraysIter != dataArrays.end(); ++dataArraysIter)
+		  {
+			  DataArrayProxy& daProxy = dataArraysIter.value();
+			  QString daName = dataArraysIter.key();
+			  //    qDebug() << "#### " << daName;
+			  QStandardItem* daItem = updateProxyItem<DataArrayProxy>(amItem, daName, daProxy);
+			  Q_UNUSED(daItem)
+		  }
+	  }
   }
 
   //  m_DcaProxy.print("updateProxy AFTER Updating");
@@ -397,17 +393,16 @@ void DataContainerArrayProxyWidget::updateProxyFromModel()
 // -----------------------------------------------------------------------------
 void transferDataContainFlags(const DataContainerProxy& source, DataContainerArrayProxy& dest)
 {
-
-  QMutableListIterator<DataContainerProxy> dcaIter(dest.list);
-  while(dcaIter.hasNext() )
-  {
-    DataContainerProxy& dcProxy = dcaIter.next();
-    if(dcProxy.name.compare(source.name) == 0)
-    {
-      // we have the correct DataContainer, so transfer the flags
-      dcProxy.flag = source.flag;
-    }
-  }
+	QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
+	for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
+	{
+		DataContainerProxy& dcProxy = dcIter.value();
+		if (dcProxy.name.compare(source.name) == 0)
+		{
+			// we have the correct DataContainer, so transfer the flags
+			dcProxy.flag = source.flag;
+		}
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -415,28 +410,26 @@ void transferDataContainFlags(const DataContainerProxy& source, DataContainerArr
 // -----------------------------------------------------------------------------
 void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixProxy& source, DataContainerArrayProxy& dest)
 {
-
-  QMutableListIterator<DataContainerProxy> dcaIter(dest.list);
-  while(dcaIter.hasNext() )
-  {
-    DataContainerProxy& dcProxy = dcaIter.next();
-    if(dcProxy.name.compare(dcName) == 0)
-    {
-      // we have the correct DataContainer, so transfer the flags
-      //      dcProxy.flag = source.flag;
-      QMutableMapIterator<QString, AttributeMatrixProxy> attrMatsIter(dcProxy.attributeMatricies);
-      while(attrMatsIter.hasNext())
-      {
-        attrMatsIter.next();
-        QString amName = attrMatsIter.key();
-        if(amName.compare(source.name) == 0)
-        {
-          AttributeMatrixProxy& attrProxy = attrMatsIter.value();
-          attrProxy.flag = source.flag;
-        }
-      }
-    }
-  }
+	QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
+	for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
+	{
+		DataContainerProxy& dcProxy = dcIter.value();
+		if (dcProxy.name.compare(dcName) == 0)
+		{
+			// we have the correct DataContainer, so transfer the flags
+			//      dcProxy.flag = source.flag;
+			QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+			for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter)
+			{
+				QString amName = amIter.key();
+				if (amName.compare(source.name) == 0)
+				{
+					AttributeMatrixProxy& attrProxy = amIter.value();
+					attrProxy.flag = source.flag;
+				}
+			}
+		}
+	}
 }
 
 
@@ -445,40 +438,37 @@ void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixPro
 // -----------------------------------------------------------------------------
 void transferDataArrayFlags(const QString dc_name, const QString am_name, const DataArrayProxy& source, DataContainerArrayProxy& dest)
 {
+	QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
+	for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
+	{
+		DataContainerProxy& dcProxy = dcIter.value();
+		if (dcProxy.name.compare(dc_name) == 0)
+		{
+			// we have the correct DataContainer, so transfer the flags
+			//dcProxy.flag = source.flag;
+			QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+			for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter)
+			{
+				QString amName = amIter.key();
+				if (amName.compare(am_name) == 0)
+				{
+					AttributeMatrixProxy& attrProxy = amIter.value();
+					//attrProxy.flag = source.flag;
 
-  QMutableListIterator<DataContainerProxy> dcaIter(dest.list);
-  while(dcaIter.hasNext() )
-  {
-    DataContainerProxy& dcProxy = dcaIter.next();
-    if(dcProxy.name.compare(dc_name) == 0)
-    {
-      // we have the correct DataContainer, so transfer the flags
-      //dcProxy.flag = source.flag;
-      QMutableMapIterator<QString, AttributeMatrixProxy> attrMatsIter(dcProxy.attributeMatricies);
-      while(attrMatsIter.hasNext())
-      {
-        attrMatsIter.next();
-        QString amName = attrMatsIter.key();
-        if(amName.compare(am_name) == 0)
-        {
-          AttributeMatrixProxy& attrProxy = attrMatsIter.value();
-          //attrProxy.flag = source.flag;
-
-          QMutableMapIterator<QString, DataArrayProxy> dataArraysIter(attrProxy.dataArrays);
-          while(dataArraysIter.hasNext() )
-          {
-            dataArraysIter.next();
-            QString daName = dataArraysIter.key();
-            if(daName.compare(source.name) == 0)
-            {
-              DataArrayProxy& daProxy = dataArraysIter.value();
-              daProxy = source;
-            }
-          }
-        }
-      }
-    }
-  }
+					QMap<QString, DataArrayProxy>& daProxies = attrProxy.dataArrays;
+					for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter)
+					{
+						QString daName = daIter.key();
+						if (daName.compare(source.name) == 0)
+						{
+							DataArrayProxy& daProxy = daIter.value();
+							daProxy = source;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 
@@ -493,7 +483,7 @@ void DataContainerArrayProxyWidget::updateProxyFromProxy(DataContainerArrayProxy
   // that flag to the incoming. This allows us to save the selections but also update the model later on with this new
   // proxy which will have selection flags set appropriately.
 
-  QList<DataContainerProxy> containers = current.list;
+  QList<DataContainerProxy> containers = current.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   //  QStringList dcList;
   while(containerIter.hasNext())

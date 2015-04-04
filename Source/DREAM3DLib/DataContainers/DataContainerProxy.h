@@ -95,18 +95,6 @@ class DataContainerProxy
       attributeMatricies = amp.attributeMatricies;
     }
 
-  /**
-  * @brief operator == method
-  */
-  bool operator==(const DataContainerProxy& amp)
-  {
-    if (flag == amp.flag && name == amp.name && dcType == amp.dcType)
-    {
-      return true;
-    }
-    return false;
-  }
-
     //----- Our variables, publicly available
     uint8_t flag;
     QString name;

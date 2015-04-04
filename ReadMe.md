@@ -26,15 +26,16 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 ### Air Force Research Laboratory (AFRL) ###
 + Dr. Michael A. Groeber (VC, CC)
 + Dr. Adam Pilchak (VC, CC)
-+ Dr. Megna Shah (VC, CC)
 + Dr. Michael Uchic (VC)
 + Dr. Chris Woodward (VC)
 + Dr. Dennis Dimiduk (VC)
 
 ### BlueQuartz Software ###
 + Mr. Michael A. Jackson (VC, CC)
++ Dr. Sean P. Donegan (VC, CC)
 + Mr. Joseph B. Kleingers (CC)
 + Ms. Sally Connell (CC)
++ Dr. Megna Shah (VC, CC)
 
 ### Ohio State University/Johns Hopkins University ###
 + Dr. Somnath Ghosh (VC)
@@ -59,4 +60,4 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 ### Other Institutions ###
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
 + Mr. Matthew Priddy (CC) Georgia Tech University
-+ 
+

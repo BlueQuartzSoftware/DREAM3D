@@ -1,13 +1,20 @@
 # Building Qt5 on Windows #
 
+# Important Notes Before Going Forward #
+
+Building Qt5 is NON Trivial and requires intimate knowledge of several build systems and languages. The DREAM3D Developers **strongly** urge you to simply download the latest prebuilt binary of Qt from [Qt.io](http://www.qt.io). The ONLY reason to compile your own version of Qt5 is if you can not use Visual Studio 2013 on Windows (assuming you are developing on Windows.). The complication of building Qt5 is the QtWebKit which depends on the ICU libraries which are currently extremely difficult to build your self (Requires MinGW/Cygwin/MSys). DREAM3D may eventually depend on QtWebKit to render HTML documentation pages instead of using the web browser on the users system. If you, as the developer, chose to NOT compile QtWebKit, you may lose the ability to compile DREAM3D itself at some later date. You have been warned. 
+
+# Moving On… #
 These instructions are for building Qt 5 on windows for the DREAM3D SDK deployment. We are going to use Visual Studio (VS) versions:
-+ 2010 x64 toolset (SP1Rel)
+
 + 2012 x64 toolset (xxx)
 + 2013 x64 toolset (12.0.30723.00 Update 3)
 
+**These instructions are NOT guaranteed to even work.**
+
 ## Downloading Source Codes ##
 
-Get the source code from the Qt website [http://download.qt-project.org/official_releases/qt/5.3/5.3.1/single/qt-everywhere-opensource-src-5.3.1.zip](http://download.qt-project.org/official_releases/qt/5.3/5.3.1/single/qt-everywhere-opensource-src-5.3.1.zip)
+Get the source code from the Qt website [http://download.qt-project.org/official_releases/qt/5.3/5.4.1/single/qt-everywhere-opensource-src-5.4.1.zip](http://download.qt-project.org/official_releases/qt/5.3/5.4.1/single/qt-everywhere-opensource-src-5.4.1.zip)
 
 ## Prepping for the Build ##
 
@@ -30,14 +37,14 @@ We want the build to go into a completely separate build directory so we can get
 We are going to use C:\Developer\x64\ as our main working directory. Open a Visual Studio 20XX x64 command prompt so that Perl, Python and Ruby are all on the path and available. I will assume you have already downloaded the Qt5 sources as a big zip file and have already
 
     cd C:\Developer\x64
-    mkdir Qt-5.3.1
-    mkdir Qt-5.3.1-Build
-    set QT_INSTALL_PREFIX=C:\Developer\x64\Qt-5.3.1
-    set PATH=%PATH%;C:\Developer\x64\Qt-5.3.1-Build\qtbase\bin
-    cd Qt-5.3.1-Build
+    mkdir Qt-5.4.1
+    mkdir Qt-5.4.1-Build
+    set QT_INSTALL_PREFIX=C:\Developer\x64\Qt-5.4.1
+    set PATH=%PATH%;C:\Developer\x64\Qt-5.4.1-Build\qtbase\bin
+    cd Qt-5.4.1-Build
     
     
-    ..\qt-everywhere-opensource-src-5.3.1\configure -confirm-license -opensource -debug-and-release -shared -platform win32-msvc20XX -no-c++11 -opengl desktop -largefile -mp -no-strip -prefix %QT_INSTALL_PREFIX%
+    ..\qt-everywhere-opensource-src-5.4.1\configure -confirm-license -opensource -debug-and-release -shared -platform win32-msvc20XX -no-c++11 -opengl desktop -largefile -mp -no-strip -prefix %QT_INSTALL_PREFIX%
 
 **make sure to set the -platform to the proper value on that command**
 

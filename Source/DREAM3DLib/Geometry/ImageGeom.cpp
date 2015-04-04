@@ -182,7 +182,7 @@ void ImageGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer
     // ImageGeom can only accept cell Attribute Matrices
     return;
   }
-  if (data->getNumTuples() != getNumberOfTuples())
+  if (data->getNumTuples() != getNumberOfElements())
   {
     return;
   }
@@ -196,7 +196,7 @@ void ImageGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t ImageGeom::getNumberOfTuples()
+size_t ImageGeom::getNumberOfElements()
 {
   return (m_Dimensions[0] * m_Dimensions[1] * m_Dimensions[2]);
 }
@@ -220,7 +220,7 @@ ElementDynamicList::Pointer ImageGeom::getElementsContainingVert()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setElementsContainingVert(ElementDynamicList::Pointer elementsContainingVert)
+void ImageGeom::setElementsContainingVert(ElementDynamicList::Pointer DREAM3D_NOT_USED(elementsContainingVert))
 {
   return;
 }
@@ -252,7 +252,7 @@ ElementDynamicList::Pointer ImageGeom::getElementNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setElementNeighbors(ElementDynamicList::Pointer elementNeighbors)
+void ImageGeom::setElementNeighbors(ElementDynamicList::Pointer DREAM3D_NOT_USED(elementNeighbors))
 {
   return;
 }
@@ -284,7 +284,7 @@ FloatArrayType::Pointer ImageGeom::getElementCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::setElementCentroids(FloatArrayType::Pointer elementsCentroids)
+void ImageGeom::setElementCentroids(FloatArrayType::Pointer DREAM3D_NOT_USED(elementsCentroids))
 {
   return;
 }
@@ -649,7 +649,7 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImageGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
+int ImageGeom::writeGeometryToHDF5(hid_t parentId, bool DREAM3D_NOT_USED(writeXdmf))
 {
   herr_t err = 0;
   int64_t volDims[3] =

@@ -40,19 +40,17 @@
 #include <QtCore/QScopedPointer>
 #include <QtCore/QDateTime>
 
+#include "EbsdLib/TSL/AngReader.h"
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
-#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
+
 
 #include "EbsdLib/TSL/AngPhase.h"
 
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
-
-
-class AngReader;
 
 // our PIMPL private class
 class ReadAngDataPrivate;
@@ -66,17 +64,20 @@ class ReadAngDataPrivate;
 */
 class ReadAngData : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
     Q_DECLARE_PRIVATE(ReadAngData)
 
-  public:
-    DREAM3D_SHARED_POINTERS(ReadAngData)
+public:
+  DREAM3D_SHARED_POINTERS(ReadAngData)
     DREAM3D_STATIC_NEW_MACRO(ReadAngData)
     DREAM3D_TYPE_MACRO_SUPER(ReadAngData, AbstractFilter)
 
     virtual ~ReadAngData();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+
+  DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
@@ -93,7 +94,6 @@ class ReadAngData : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -159,6 +159,9 @@ class ReadAngData : public AbstractFilter
 
     /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+
+    void populateAngData(AngReader* reader, DataContainer::Pointer m, QVector<size_t> dims, ANG_READ_FLAG = ANG_FULL_FILE);
+
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
@@ -168,6 +171,7 @@ class ReadAngData : public AbstractFilter
 
 
   signals:
+
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
@@ -217,12 +221,15 @@ class ReadAngData : public AbstractFilter
     QScopedPointer<ReadAngDataPrivate> const d_ptr;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     ReadAngData(const ReadAngData&); // Copy Constructor Not Implemented
+
     void operator=(const ReadAngData&); // Operator '=' Not Implemented
+
 };
 
 

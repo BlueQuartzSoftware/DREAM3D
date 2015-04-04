@@ -729,6 +729,31 @@ herr_t testWriteStringDatasetAndAttributes(hid_t file_id)
   err = QH5Lite::writeStringDataset(file_id, dsetName, strData);
   DREAM3D_REQUIRE(err >= 0);
 
+  // Over Write the data from Above but with different values
+  strData = "THIS IS XXX DATA";
+  err = QH5Lite::writeStringDataset(file_id, dsetName, strData);
+  DREAM3D_REQUIRE(err >= 0);
+
+  // Over Write the data from Above but with longer string
+  strData = "THIS IS LONGER DATA";
+  err = QH5Lite::writeStringDataset(file_id, dsetName, strData);
+  DREAM3D_REQUIRE(err >= 0);
+
+  // Over Write the data from Above but with shorter string
+  strData = "THIS IS LESS DATA";
+  err = QH5Lite::writeStringDataset(file_id, dsetName, strData);
+  DREAM3D_REQUIRE(err >= 0);
+
+  // Over Write the data from Above but with even shorter string
+  strData = "Even LESS DATA";
+  err = QH5Lite::writeStringDataset(file_id, dsetName, strData);
+  DREAM3D_REQUIRE(err >= 0);
+
+  // Over Write the data from Above but with even shorter string
+  strData = "THIS IS THE DATA";
+  err = QH5Lite::writeStringDataset(file_id, dsetName, strData);
+  DREAM3D_REQUIRE(err >= 0);
+
   // Write a String attribute using a QString as the data source
   err = QH5Lite::writeStringAttribute(file_id, dsetName, attributeKey, attrData);
   DREAM3D_REQUIRE(err >= 0);

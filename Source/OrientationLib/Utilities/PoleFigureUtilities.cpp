@@ -39,8 +39,10 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QTextStream>
 
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Utilities/ColorUtilities.h"
 
+
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
@@ -91,6 +93,86 @@ int writeVtkFile(FloatArrayType* xyz, const QString& filename)
     ss << xyz->getComponent(i, 0) << " " << xyz->getComponent(i, 1) << " " << xyz->getComponent(i, 2) << "\n";
   }
   return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const QString& name, double min, double max)
+{
+  QVector<size_t> dims(1, 4);
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(width * height, dims, name);
+  PoleFigureConfiguration_t config;
+  config.imageDim = width;
+  config.numColors = nColors;
+  config.eulers = NULL;
+  config.minScale = min;
+  config.maxScale = max;
+  config.sphereRadius = 1.0;
+  PoleFigureUtilities::CreateColorImage(data, config, image.get());
+  return image;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConfiguration_t& config, UInt8ArrayType* image)
+{
+  int width = config.imageDim ;
+  int height = config.imageDim ;
+
+  int halfWidth = width / 2;
+  int halfHeight = height / 2;
+
+  float xres = 2.0 / (float)(width);
+  float yres = 2.0 / (float)(height);
+  float xtmp, ytmp;
+
+  float max = static_cast<float>(config.maxScale);
+  float min = static_cast<float>(config.minScale);
+
+  // Initialize the image with all zeros
+  image->initializeWithZeros();
+  uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
+
+  int numColors = config.numColors;
+  QVector<float> colors(numColors * 3, 0.0);
+  ColorTable::GetColorTable(config.numColors, colors);
+
+  float r = 0.0, g = 0.0, b = 0.0;
+
+  double* dataPtr = data->getPointer(0);
+  size_t idx = 0;
+  double value;
+  int bin;
+  for (int64_t y = 0; y < height; y++)
+  {
+    for (int64_t x = 0; x < width; x++)
+    {
+      xtmp = float(x - halfWidth) * xres + (xres * 0.5);
+      ytmp = float(y - halfHeight) * yres + (yres * 0.5);
+      idx = (width * y) + x;
+      if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
+      {
+        value = dataPtr[y * width + x];
+        value = (value - min) / (max - min);
+        bin = int(value * numColors);
+        if(bin > numColors - 1)
+        {
+          bin = numColors - 1;
+        }
+        r = colors[3 * bin];
+        g = colors[3 * bin + 1];
+        b = colors[3 * bin + 2];
+        rgbaPtr[idx] = RgbColor::dRgb(r * 255, g * 255, b * 255, 255);
+      }
+      else // Outside the Circle - Set pixel to White
+      {
+        rgbaPtr[idx] = 0xFFFFFFFF; // White
+      }
+    }
+  }
+
 }
 
 // -----------------------------------------------------------------------------

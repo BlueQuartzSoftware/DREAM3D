@@ -40,6 +40,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+
+#include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 /**
@@ -50,7 +52,7 @@
  * @date July 30, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ModifiedLambertProjection
+class OrientationLib_EXPORT ModifiedLambertProjection
 {
   public:
     DREAM3D_SHARED_POINTERS(ModifiedLambertProjection)

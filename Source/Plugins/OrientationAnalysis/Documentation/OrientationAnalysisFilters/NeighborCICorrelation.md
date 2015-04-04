@@ -18,9 +18,9 @@ This Filter first identifies all **Cells** that have a *confidence index* below 
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | Confidence Index | Float | (1,1) | Specifies the confidence in the orientation of the **Cell** (TSL data) |
+| Cell | Confidence Index | Float | (1) | Specifies the confidence in the orientation of the **Cell** (TSL data) |
 
 ## Created Arrays ##
 None

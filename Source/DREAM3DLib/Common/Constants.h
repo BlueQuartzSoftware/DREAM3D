@@ -157,7 +157,6 @@ namespace DREAM3D
 
   namespace FilterGroups
   {
-    const DREAM3D_STRING DDDAnalysisFilters("DDDAnalysis");
     const DREAM3D_STRING GenericFilters("Generic");
     const DREAM3D_STRING IOFilters("IO");
     const DREAM3D_STRING ProcessingFilters("Processing");
@@ -186,6 +185,8 @@ namespace DREAM3D
     const DREAM3D_STRING ThresholdFilters("Threshold");
     const DREAM3D_STRING RegularizationFilters("Regularization");
     const DREAM3D_STRING ConversionFilters("Conversion");
+    const DREAM3D_STRING FusionFilters("Fusion");
+    const DREAM3D_STRING WarpingFilters("Warping");
     const DREAM3D_STRING AlignmentFilters("Alignment");
     const DREAM3D_STRING SegmentationFilters("Segmentation");
     const DREAM3D_STRING GroupingFilters("Grouping");
@@ -699,6 +700,7 @@ namespace DREAM3D
     const DREAM3D_STRING SharedEdgeList("SharedEdgeList");
     const DREAM3D_STRING SharedTriList("SharedTriList");
     const DREAM3D_STRING SharedQuadList("SharedQuadList");
+    const DREAM3D_STRING UnsharedEdgeList("UnsharedEdgeList");
   }
 
   namespace GeometryType

@@ -30,68 +30,21 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-10-D-5210
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ImageUtilites_H_
-#define _ImageUtilites_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
-
-/**
- * @class ImageUtilities ImageUtilities.h /Utilities/ImageUtilities.h
- * @brief This class has functions that help create and manipulate images.
- * @author Mike Jackson for BlueQuartz Software
- * @date Aug 13 2013
- * @version 1.0
- */
-class DREAM3DLib_EXPORT ImageUtilities
-{
-  public:
-    ImageUtilities();
-    virtual ~ImageUtilities();
-
-    static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const QString& name, double min, double max);
-
-    static void CreateColorImage(DoubleArrayType* data, PoleFigureConfiguration_t& config, UInt8ArrayType* image);
-
-  private:
-    ImageUtilities(const ImageUtilities&); // Copy Constructor Not Implemented
-    void operator=(const ImageUtilities&); // Operator '=' Not Implemented
-
-};
+#include "DREAM3DLib/Geometry/IGeometry2D.h"
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry2D::IGeometry2D()
+{}
 
-/**
- * @brief The GenerateRgbaImageImpl class is a wrapper around generating the RGBA image (2D UChar Array with 4 Components) from the
- * intensity image. This should be called from a TBB Task
- */
-class GenerateRgbaImageImpl
-{
-  public:
-    GenerateRgbaImageImpl(DoubleArrayType* intensity, PoleFigureConfiguration_t* config, UInt8ArrayType* rgba) :
-      m_Intensity(intensity),
-      m_Config(config),
-      m_Rgba(rgba)
-    {}
-    virtual ~GenerateRgbaImageImpl() {}
-
-    void operator()() const
-    {
-      ImageUtilities::CreateColorImage(m_Intensity, *m_Config, m_Rgba);
-    }
-  protected:
-    GenerateRgbaImageImpl() {}
-
-  private:
-    DoubleArrayType*    m_Intensity;
-    PoleFigureConfiguration_t* m_Config;
-    UInt8ArrayType* m_Rgba;
-};
-
-
-#endif /* _ImageUtilites_H_ */
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometry2D::~IGeometry2D()
+{}

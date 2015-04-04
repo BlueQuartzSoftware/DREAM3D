@@ -36,7 +36,8 @@
 
 #include "RemoveArrays.h"
 
-
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -191,7 +192,7 @@ const QString RemoveArrays::getHumanLabel()
 void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state)
 {
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DataArraysToRemove.list;
+  QList<DataContainerProxy> containers = m_DataArraysToRemove.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   QStringList dcList;
   while(containerIter.hasNext())

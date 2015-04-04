@@ -74,58 +74,31 @@ endif(BUILD_SHARED_LIBS)
 # Look for our Prerequisite Libraries
 if(NOT DEFINED DREAM3DProj_BINARY_DIR)
 	
-	# ------------------------------------------------------------------------------
-	#  Qt 4 Section
-	# ------------------------------------------------------------------------------
-	# by default only QtCore and QtGui modules are enabled
-	# other modules must be enabled like this:
-	if(WIN32)
-	   set(QT_USE_QTMAIN TRUE)
-	ENDif(WIN32)
+	
+	# ---------- Find and Use the Qt5 Libraries -----------------------
+	include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
 
-	# this command finds Qt4 libraries and sets all required variables
-	# note that it's Qt4, not QT4 or qt4
-	FIND_PACKAGE( Qt4 REQUIRED )
-	if(QT4_FOUND)
-	   CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore")
-	   CMP_QT_LIBRARIES_INSTALL_RULES("QtCore" ".")
-	else()
-	  message(FATAL_ERROR "Qt version 4.8 Core Library is REQUIRED to build EBSDLib")
-	endif()
-
-	set(QT_USE_QTCORE "TRUE")
+	# Extra Variables that need to be set before all the configured files are generated.
+	option(EbsdLib_ENABLE_HDF5 "Enable HDF5 Support in the EbsdLib" OFF)
+	set(EbsdLib_HDF5_SUPPORT "0")
+	# ---------- Find HDF5 Headers/Libraries -----------------------
+	# HDF5 now comes with everything that is needed for CMake to load
+	# up the targets (Exported) that it needs. We just need to find where
+	# HDF5 is installed.
+	include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
 
 	# ---------- Find Boost Headers/Libraries -----------------------
 	#set(Boost_FIND_REQUIRED FALSE)
 	set(Boost_DEBUG FALSE)
 	set(Boost_USE_MULTITHREADED TRUE)
 	set(Boost_USE_STATIC_LIBS TRUE)
-	set(Boost_ADDITIONAL_VERSIONS 1.55.0)
+	set(Boost_ADDITIONAL_VERSIONS 1.57)
 	set(Boost_FIND_COMPONENTS "")
 	set(Boost_NO_BOOST_CMAKE 1)
 	FIND_PACKAGE(Boost)
 	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 	
-	
-	# Extra Variables that need to be set before all the configured files are generated.
-	option(EbsdLib_ENABLE_HDF5 "Enable HDF5 Support in the EbsdLib" OFF)
-	set(EbsdLib_HDF5_SUPPORT "0")
-
-	# ---------- Find HDF5 Headers/Libraries -----------------------
-	find_package(HDF5)
-	if(HDF5_FOUND)
-		file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
-		include_directories(${HDF5_INCLUDE_DIRS} )
-		# This copies the DLL (if needed) into the various build directories on MSVC systems
-		CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
-		# Append the locations of the HDF5 libraries to our Library Search Paths
-		list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
-		# Create an install rule to copy the dependent shared library over to the installed location
-		CMP_LIBRARIES_INSTALL_RULES("hdf5" ".")
-	ELSE(HDF5_FOUND)
-		MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
-	ENDif(HDF5_FOUND)
 
 else()
 	set(EbsdLib_HDF5_SUPPORT "1")

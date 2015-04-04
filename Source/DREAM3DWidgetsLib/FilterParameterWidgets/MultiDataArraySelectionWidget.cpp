@@ -176,7 +176,7 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
   // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.list;
+  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
 
   while (iter.hasNext())
@@ -300,7 +300,7 @@ void MultiDataArraySelectionWidget::populateAttributeMatrixList()
   attributeMatrixList->clear();
 
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   while (containerIter.hasNext())
   {
@@ -368,7 +368,7 @@ void MultiDataArraySelectionWidget::populateAttributeArrayList(QVector<DataArray
   QString currentAttrMatName = attributeMatrixList->currentText();
 
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   while (containerIter.hasNext())
   {
@@ -487,7 +487,7 @@ DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
     DataArrayProxy daProxy(dcaName + "|" + amName, daName, checkState);
     amProxy.dataArrays.insert(daName, daProxy);
     dcProxy.attributeMatricies.insert(amName, amProxy);
-    dcaProxy.list.push_back(dcProxy);
+	dcaProxy.dataContainers.insert(dcProxy.name, dcProxy);
   }
 
   return dcaProxy;
@@ -549,6 +549,9 @@ void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
 
 	attributeArraysWidget->blockSignals(false);
 
+	// This is needed to enable/disable the Data Container and Attribute Matrix combo boxes
+	updateSelectAllCheckbox();
+
 	m_DidCausePreflight = true;
 	emit parametersChanged();
 	m_DidCausePreflight = false;
@@ -581,18 +584,24 @@ void MultiDataArraySelectionWidget::updateSelectAllCheckbox()
 	{
 		selectCheckBox->blockSignals(true);
 		selectCheckBox->setCheckState(Qt::PartiallyChecked);
+		dataContainerList->setDisabled(true);
+		attributeMatrixList->setDisabled(true);
 		selectCheckBox->blockSignals(false);
 	}
 	else if (checkedStateCount == attributeArraysWidget->count())
 	{
 		selectCheckBox->blockSignals(true);
 		selectCheckBox->setCheckState(Qt::Checked);
+		dataContainerList->setDisabled(true);
+		attributeMatrixList->setDisabled(true);
 		selectCheckBox->blockSignals(false);
 	}
 	else
 	{
 		selectCheckBox->blockSignals(true);
 		selectCheckBox->setCheckState(Qt::Unchecked);
+		dataContainerList->setEnabled(true);
+		attributeMatrixList->setEnabled(true);
 		selectCheckBox->blockSignals(false);
 	}
 }

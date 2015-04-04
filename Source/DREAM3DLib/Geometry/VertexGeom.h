@@ -137,10 +137,10 @@ class DREAM3DLib_EXPORT VertexGeom : public IGeometry
     virtual void initializeWithZeros();
 
     /**
-     * @brief getNumberOfTuples
+     * @brief getNumberOfElements
      * @return
      */
-    virtual size_t getNumberOfTuples();
+    virtual size_t getNumberOfElements();
 
     /**
      * @brief findElementsContainingVert

@@ -22,14 +22,14 @@ The filter allows the user to chose which plane the patches are extracted from a
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | None | Any, except Boolean | (1,1) | Any scalar array the user would like to use to track *motion* of **Features** through slices |
+| Cell | None | Any, except Boolean | (1) | Any scalar array the user would like to use to track *motion* of **Features** through slices |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | MotionDirection | Float | (1,3) | Specifies the direction, as a unit vector, that the extracted patch *moved* |
+| Cell | MotionDirection | Float | (3) | Specifies the direction, as a unit vector, that the extracted patch *moved* |
 
 ## Authors ##
 

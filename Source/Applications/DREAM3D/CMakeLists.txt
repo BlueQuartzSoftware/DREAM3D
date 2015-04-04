@@ -10,8 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( DREAM3D )
-cmake_minimum_required(VERSION 2.8.10)
-
+cmake_minimum_required(VERSION 3.1.0)
 
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -52,6 +51,19 @@ include_directories(${HDF5_INCLUDE_DIR}
 # --------------------------------------------------------------------
 # Generate the License File Headers
 set(PROJECT_PREFIX "DREAM3D")
+set(CMP_HEADER_DIR ${DREAM3D_BINARY_DIR})
+set(CMP_CONFIGURATION_FILE_NAME "DREAM3DConfiguration.h")
+set(CMP_TYPES_FILE_NAME "DREAM3DTypes.h")
+set(CMP_VERSION_HEADER_FILE_NAME "DREAM3DVersion.h")
+set(CMP_VERSION_SOURCE_FILE_NAME "DREAM3DVersion.cpp")
+set(CMP_TOP_HEADER_FILE "DREAM3D.h")
+set(CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
+set(CMP_PROJECT_NAME "${PROJECT_NAME}")
+set(CMP_ENABLE_PLUGINS "0")
+set(CMP_LIB_SEARCH_DIRS "")
+set(CMP_GENERATE_VERSION_STRING 1)
+include(${CMP_SOURCE_DIR}/cmpProject.cmake)
+
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
 # List the source files here

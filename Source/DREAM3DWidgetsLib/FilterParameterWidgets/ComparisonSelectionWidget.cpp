@@ -103,17 +103,18 @@ void ComparisonSelectionWidget::setupGui()
   }
 
   m_ComparisonSelectionTableModel = new ComparisonSelectionTableModel(m_ShowOperators);
-  QAbstractItemModel* model = m_ComparisonSelectionTableView->model();
+  QAbstractItemModel* model = comparisonSelectionTableView->model();
   if(NULL != model)
   {
     delete model;
   }
-  m_ComparisonSelectionTableView->setModel(m_ComparisonSelectionTableModel);
+  comparisonSelectionTableView->setModel(m_ComparisonSelectionTableModel);
   m_ComparisonSelectionTableModel->setNumberOfPhases(1);
+  comparisonSelectionTableView->resizeColumnsToContents();
 
   // Set the ItemDelegate for the table.
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
-  m_ComparisonSelectionTableView->setItemDelegate(aid);
+  comparisonSelectionTableView->setItemDelegate(aid);
 
   // Now connect all the signals and slots
   connect(m_ComparisonSelectionTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex)),
@@ -134,6 +135,7 @@ void ComparisonSelectionWidget::setupGui()
   // Set the data into the TableModel
   ComparisonInputs comps = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
   m_ComparisonSelectionTableModel->setTableData(comps);
+
 
 
 #if 0
@@ -206,7 +208,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
   // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.list;
+  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
 
   while(iter.hasNext() )
@@ -284,7 +286,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
     m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
     // Now that we have an updated list of names we need to Set the ItemDelegate for the table.
     QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
-    m_ComparisonSelectionTableView->setItemDelegate(aid);
+    comparisonSelectionTableView->setItemDelegate(aid);
 
 
     // Now set the table data directly.
@@ -309,7 +311,7 @@ void ComparisonSelectionWidget::populateAttributeMatrixList()
   attributeMatrixList->clear();
 
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   while(containerIter.hasNext())
   {
@@ -345,7 +347,7 @@ QStringList ComparisonSelectionWidget::generateAttributeArrayList()
   QString currentAttrMatName = attributeMatrixList->currentText();
 
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   while(containerIter.hasNext())
   {
@@ -416,10 +418,10 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
   if (!m_ComparisonSelectionTableModel->insertRow(m_ComparisonSelectionTableModel->rowCount())) { return; }
 
   QModelIndex index = m_ComparisonSelectionTableModel->index(m_ComparisonSelectionTableModel->rowCount() - 1, 0);
-  m_ComparisonSelectionTableView->setCurrentIndex(index);
-  m_ComparisonSelectionTableView->resizeColumnsToContents();
-  m_ComparisonSelectionTableView->scrollToBottom();
-  m_ComparisonSelectionTableView->setFocus();
+  comparisonSelectionTableView->setCurrentIndex(index);
+  comparisonSelectionTableView->resizeColumnsToContents();
+  comparisonSelectionTableView->scrollToBottom();
+  comparisonSelectionTableView->setFocus();
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
@@ -432,7 +434,7 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
 void ComparisonSelectionWidget::on_removeComparison_clicked()
 {
 //  std::cout << "ComparisonSelectionWidget::on_removeComparison_clicked()" << std::endl;
-  QItemSelectionModel* selectionModel = m_ComparisonSelectionTableView->selectionModel();
+  QItemSelectionModel* selectionModel = comparisonSelectionTableView->selectionModel();
 
   if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
@@ -440,7 +442,7 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
   m_ComparisonSelectionTableModel->removeRow(index.row(), index.parent());
   if (m_ComparisonSelectionTableModel->rowCount() > 0)
   {
-    m_ComparisonSelectionTableView->resizeColumnsToContents();
+    comparisonSelectionTableView->resizeColumnsToContents();
   }
   m_DidCausePreflight = true;
   emit parametersChanged();
@@ -475,7 +477,7 @@ void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int i
   m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
   // Set the ItemDelegate for the table.
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
-  m_ComparisonSelectionTableView->setItemDelegate(aid);
+  comparisonSelectionTableView->setItemDelegate(aid);
 }
 
 // -----------------------------------------------------------------------------

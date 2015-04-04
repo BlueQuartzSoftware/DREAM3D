@@ -18,17 +18,16 @@ None
 Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | CellPhases | Int | (1,1) | Specifies the phase of the **Element** |
-| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
+| Element | CellPhases | Int | (1) | Specifies the phase of the **Element** |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | FeaturePhases | Int | (1,1) | Specifies the phase of the **Feature** - Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
+| Feature | FeaturePhases | Int | (1) | Specifies the phase of the **Feature** - Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
 
 
 ## Authors ##

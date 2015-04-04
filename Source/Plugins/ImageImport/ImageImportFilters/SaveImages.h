@@ -39,9 +39,9 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "ImageImport/ImageImportConstants.h"
 
@@ -62,13 +62,20 @@ class SaveImages : public AbstractFilter
 
     virtual ~SaveImages();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_FILTER_PARAMETER(bool, FilePrefix)
+    Q_PROPERTY(bool FilePrefix READ getFilePrefix WRITE setFilePrefix)
+
     DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+
+    DREAM3D_FILTER_PARAMETER(int, Plane)
+    Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ColorsArrayPath)
     Q_PROPERTY(DataArrayPath ColorsArrayPath READ getColorsArrayPath WRITE setColorsArrayPath)
@@ -133,11 +140,13 @@ class SaveImages : public AbstractFilter
 
     /**
      * @brief saveImage This will do the actual saving of the data to an Image on the disk
-     * @param ipfColors
-     * @param slice
+     * @param slice The axis on which the slicing occurs
+     * @param dA Dimensions of one axis of the plane
+     * @param dB Dimensions of the second axis of the plane
+     * @param dims Array of the 3 dimensions
      * @return
      */
-    int saveImage(uint8_t* ipfColors, size_t slice, size_t* dims);
+    int saveImage(size_t slice, size_t dB, size_t dA, size_t* dims);
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -152,9 +161,6 @@ class SaveImages : public AbstractFilter
     * @brief Checks for the appropriate parameter values and availability of
     * arrays in the data container
     * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
     */
     void dataCheck();
 

@@ -26,8 +26,12 @@ configure_file(${H5SupportTest_SOURCE_DIR}/TestFileLocations.h.in
 include_directories(${H5SupportTest_BINARY_DIR})
 
 
-AddDREAM3DUnitTest(TESTNAME H5LiteTest SOURCES ${H5SupportTest_SOURCE_DIR}/H5LiteTest.cpp LINK_LIBRARIES Qt5::Core H5Support )
-AddDREAM3DUnitTest(TESTNAME H5UtilitiesTest SOURCES ${H5SupportTest_SOURCE_DIR}/H5UtilitiesTest.cpp LINK_LIBRARIES Qt5::Core H5Support )
+AddDREAM3DUnitTest(TESTNAME H5LiteTest SOURCES ${H5SupportTest_SOURCE_DIR}/H5LiteTest.cpp
+                    FOLDER "Test/H5Support" 
+                     LINK_LIBRARIES Qt5::Core H5Support )
+AddDREAM3DUnitTest(TESTNAME H5UtilitiesTest SOURCES ${H5SupportTest_SOURCE_DIR}/H5UtilitiesTest.cpp 
+                      FOLDER "Test/H5Support" 
+                      LINK_LIBRARIES Qt5::Core H5Support )
 
 
 if(0)

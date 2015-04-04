@@ -167,7 +167,7 @@ void EdgeGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer 
   {
     return;
   }
-  if (data->getType() == 1 && data->getNumTuples() != getNumberOfTuples())
+  if (data->getType() == 1 && data->getNumTuples() != getNumberOfElements())
   {
     return;
   }
@@ -181,7 +181,7 @@ void EdgeGeom::addAttributeMatrix(const QString& name, AttributeMatrix::Pointer 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t EdgeGeom::getNumberOfTuples()
+size_t EdgeGeom::getNumberOfElements()
 {
   return m_EdgeList->getNumberOfTuples();
 }
@@ -358,7 +358,7 @@ void EdgeGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
+int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool DREAM3D_NOT_USED(writeXdmf))
 {
   herr_t err = 0;
 
@@ -380,7 +380,6 @@ int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
     }
   }
 
-  // Next write the edge centroids if the exist
   if (m_EdgeCentroids.get() != NULL)
   {
     err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_EdgeCentroids);
@@ -390,7 +389,6 @@ int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
     }
   }
 
-  // Next write edge neighbors if they exist
   if (m_EdgeNeighbors.get() != NULL)
   {
     size_t numEdges = getNumberOfEdges();
@@ -401,7 +399,6 @@ int EdgeGeom::writeGeometryToHDF5(hid_t parentId, bool writeXdmf)
     }
   }
 
-  // last write edges containing verts if they exist
   if (m_EdgesContainingVert.get() != NULL)
   {
     size_t numVerts = getNumberOfVertices();
@@ -460,80 +457,35 @@ int EdgeGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 int EdgeGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
   herr_t err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-  SharedVertexList::Pointer vertices = SharedVertexList::NullPointer();
-  SharedEdgeList::Pointer edges = SharedEdgeList::NullPointer();
-  vertices = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight);
-  edges = GeometryHelpers::GeomIO::ReadMeshFromHDF5<SharedEdgeList>(DREAM3D::Geometry::SharedEdgeList, parentId, preflight);
-  QVector<size_t> cDims(1, 0);
-  FloatArrayType::Pointer edgeCentroids = FloatArrayType::CreateArray(cDims, cDims, DREAM3D::StringConstants::EdgeCentroids);
-  if (preflight == true)
+  SharedVertexList::Pointer vertices = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight, err);
+  SharedEdgeList::Pointer edges = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedEdgeList>(DREAM3D::Geometry::SharedEdgeList, parentId, preflight, err);
+  if (edges.get() == NULL || vertices.get() == NULL)
   {
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      ElementDynamicList::Pointer edgeNeighbors = ElementDynamicList::New();
-      m_EdgeNeighbors = edgeNeighbors;
-    }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgesContainingVert, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      ElementDynamicList::Pointer edgesContainingVert = ElementDynamicList::New();
-      m_EdgesContainingVert = edgesContainingVert;
-    }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeCentroids, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      m_EdgeCentroids = edgeCentroids;
-    }
-    setVertices(vertices);
-    setEdges(edges);
+    return -1;
   }
-  else
+  size_t numEdges = edges->getNumberOfTuples();
+  size_t numVerts = vertices->getNumberOfTuples();
+  FloatArrayType::Pointer edgeCentroids = GeometryHelpers::GeomIO::ReadListFromHDF5<FloatArrayType>(DREAM3D::StringConstants::EdgeCentroids, parentId, preflight, err);
+  if (err < 0 && err != -2)
   {
-    if (edges.get() == NULL)
-    {
-      return -1;
-    }
-    int64_t numEdges = edges->getNumberOfTuples();
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgeNeighbors, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      // Read the edgeNeighbors array into the buffer
-      std::vector<uint8_t> buffer;
-      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::EdgeNeighbors, buffer);
-      if (err < 0)
-      {
-        return err;
-      }
-      ElementDynamicList::Pointer edgeNeighbors = ElementDynamicList::New();
-      edgeNeighbors->deserializeLinks(buffer, numEdges);
-      m_EdgeNeighbors = edgeNeighbors;
-    }
-    err = QH5Lite::getDatasetInfo(parentId, DREAM3D::StringConstants::EdgesContainingVert, dims, type_class, type_size);
-    if (err >= 0)
-    {
-      // Read the edgesContainingVert array into the buffer
-      std::vector<uint8_t> buffer;
-      err = QH5Lite::readVectorDataset(parentId, DREAM3D::StringConstants::EdgesContainingVert, buffer);
-      if (err < 0)
-      {
-        return err;
-      }
-      ElementDynamicList::Pointer edgesContainingVert = ElementDynamicList::New();
-      edgesContainingVert->deserializeLinks(buffer, numEdges);
-      m_EdgesContainingVert = edgesContainingVert;
-    }
-    err = edgeCentroids->readH5Data(parentId);
-    if (err >= 0)
-    {
-      m_EdgeCentroids = edgeCentroids;
-    }
-    setVertices(vertices);
-    setEdges(edges);
+    return -1;
   }
+  ElementDynamicList::Pointer edgeNeighbors = GeometryHelpers::GeomIO::ReadDynamicListFromHDF5<uint16_t, int64_t>(DREAM3D::StringConstants::EdgeNeighbors, parentId, numEdges, preflight, err);
+  if (err < 0 && err != -2)
+  {
+    return -1;
+  }
+  ElementDynamicList::Pointer edgesContainingVert = GeometryHelpers::GeomIO::ReadDynamicListFromHDF5<uint16_t, int64_t>(DREAM3D::StringConstants::EdgesContainingVert, parentId, numVerts, preflight, err);
+  if (err < 0 && err != -2)
+  {
+    return -1;
+  }
+
+  setVertices(vertices);
+  setEdges(edges);
+  setElementCentroids(edgeCentroids);
+  setElementNeighbors(edgeNeighbors);
+  setElementsContainingVert(edgesContainingVert);
 
   return 1;
 }

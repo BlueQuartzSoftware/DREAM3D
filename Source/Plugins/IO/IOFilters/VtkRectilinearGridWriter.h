@@ -40,16 +40,16 @@
 #include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
 /**
  * @class VTKRectilinearGridFileWriter VTKRectilinearGridFileWriter.h DREAM3D/Common/VTKUtils/VTKRectilinearGridFileWriter.h

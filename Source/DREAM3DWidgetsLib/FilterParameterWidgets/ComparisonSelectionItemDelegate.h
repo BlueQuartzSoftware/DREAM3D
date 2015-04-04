@@ -74,8 +74,12 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
 
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
 
+  public slots:
+    void arrayNameChangedData(int i);
+	void operatorChangedData(int i);
+	void valueChangedData(const QString& text);
+
   private:
-    QModelIndex m_Index;
     QStringList m_FeatureList;
     int m_NumberOfPhases;
 

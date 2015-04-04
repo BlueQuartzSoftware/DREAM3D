@@ -37,7 +37,7 @@
 
 #include <iostream>
 
-
+#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
@@ -177,23 +177,161 @@ void PMFileGenerator::generateOutput()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PMFileGenerator::generateFileContents()
+void PMFileGenerator::generateOutputWithFilterNames(QSet<QString> names)
 {
-  QString pluginName = getPluginName();
-  QString text = "";
+	//  qDebug() << "PMFileGenerator::generateOutput" << "\n";
+	if (doesGenerateOutput() == false)
+	{
+		return;
+	}
 
-  //Open file
-  QFile rfile( getCodeTemplateResourcePath() );
-  if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) )
-  {
-    QTextStream in(&rfile);
-    text = in.readAll();
-    text.replace("@PluginName@", pluginName);
-    QFileInfo fi( getFileName() );
-    QString className = fi.baseName();
-    text.replace("@ClassName@", className);
-    text.replace("@ClassNameLowerCase@", className.toLower());
-  }
-  return text;
+	//Get text feature values from widget
+	QString pluginName = getPluginName();
+	QString pluginDir = getOutputDir();
+
+	if (pluginName.isEmpty() == true || pluginDir.isEmpty() == true)
+	{
+		return;
+	}
+
+	//  QString classNameLowerCase = m_ClassName.toLower();
+
+	//Open file
+	QFile rfile(getCodeTemplateResourcePath());
+	if (rfile.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream in(&rfile);
+		QString text = in.readAll();
+
+		text.replace("@PluginName@", pluginName);
+		QFileInfo fi(m_FileName);
+		QString className = fi.baseName();
+		text.replace("@ClassName@", className);
+		text.replace("@MD_FILE_NAME@", m_FileName);
+		text.replace("@ClassNameLowerCase@", className.toLower());
+		text.replace("@FilterGroup@", pluginName);
+		text.replace("@FilterSubgroup@", pluginName);
+
+		if (names.isEmpty() == false)
+		{
+			if (getFileName() == "TestFileLocations.h.in")
+			{
+				QString replaceStr = createReplacementString(TESTFILELOCATIONS, names);
+				text.replace("@Namespaces@", replaceStr);		// Replace token for Test/TestFileLocations.h.in file
+				qDebug() << text;
+			}
+			else if (getFileName() == "CMakeLists.txt")
+			{
+				QString replaceStr = createReplacementString(CMAKELISTS, names);
+				text.replace("@AddTestText@", replaceStr);		// Replace token for Test/CMakeLists.txt file
+				std::cout << text.toStdString();
+				qDebug() << text;
+			}
+		}
+
+		QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
+		parentPath = QDir::toNativeSeparators(parentPath);
+
+		QDir dir(parentPath);
+		dir.mkpath(parentPath);
+
+		parentPath = parentPath + QDir::separator() + m_FileName;
+		//Write to file
+		QFile f(parentPath);
+		if (f.open(QIODevice::WriteOnly | QIODevice::Text))
+		{
+			QTextStream out(&f);
+			out << text;
+		}
+	}
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::generateFileContents(QString replaceStr)
+{
+	QString pluginName = getPluginName();
+	QString text = "";
+
+	//Open file
+	QFile rfile(getCodeTemplateResourcePath());
+	if (rfile.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream in(&rfile);
+		text = in.readAll();
+		text.replace("@PluginName@", pluginName);
+		QFileInfo fi(getFileName());
+		QString className = fi.baseName();
+		text.replace("@ClassName@", className);
+		text.replace("@ClassNameLowerCase@", className.toLower());
+
+		if (replaceStr.isEmpty() == false)
+		{
+			text.replace("@AddTestText@", replaceStr);		// Replace token for Test/CMakeLists.txt file
+			text.replace("@Namespaces@", replaceStr);		// Replace token for Test/TestFileLocations.h.in file
+		}
+	}
+
+	return text;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> names)
+{
+	QString pluginName = getPluginName();
+	QString replaceStr = "";
+	if (type == CMAKELISTS)
+	{
+		// Build up the huge string full of namespaces using names
+		QSet<QString>::iterator iter = names.begin();
+		while (iter != names.end())
+		{
+			QString name = *iter;
+
+			if (name == "@PluginName@Filter")
+			{
+				name.replace("@PluginName@", pluginName);
+			}
+
+			replaceStr.append("AddDREAM3DUnitTest(TESTNAME " + name + "Test SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/" + name + "Test.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})");
+
+			if (++iter != names.end())
+			{
+				replaceStr.append("\n");
+			}
+		}
+	}
+	else if (type == TESTFILELOCATIONS)
+	{
+		// Build up the huge string full of namespaces using names
+		QSet<QString>::iterator iter = names.begin();
+		while (iter != names.end())
+		{
+			QString name = *iter;
+
+			if (name == "@PluginName@Filter")
+			{
+				name.replace("@PluginName@", pluginName);
+			}
+
+			replaceStr.append("  namespace " + name + "Test\n");
+			replaceStr.append("  {\n");
+			replaceStr.append("    const QString TestFile1(\"@TEST_TEMP_DIR@/TestFile1.txt\");\n");
+			replaceStr.append("    const QString TestFile2(\"@TEST_TEMP_DIR@/TestFile2.txt\");\n");
+			replaceStr.append("  }");
+
+			if (++iter != names.end())
+			{
+				replaceStr.append("\n\n");
+			}
+		}
+	}
+
+	return replaceStr;
+}
+
+
 

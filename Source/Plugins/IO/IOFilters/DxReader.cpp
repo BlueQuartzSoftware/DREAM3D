@@ -42,6 +42,9 @@
 
 #include "IO/IOConstants.h"
 
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
@@ -49,14 +52,14 @@
 // -----------------------------------------------------------------------------
 class DxReaderPrivate
 {
-	Q_DISABLE_COPY(DxReaderPrivate)
-	Q_DECLARE_PUBLIC(DxReader)
-	DxReader* const q_ptr;
-	DxReaderPrivate(DxReader* ptr);
+  Q_DISABLE_COPY(DxReaderPrivate)
+  Q_DECLARE_PUBLIC(DxReader)
+  DxReader* const q_ptr;
+  DxReaderPrivate(DxReader* ptr);
 
-	QVector<int> m_Dims;
-	QString m_InputFile_Cache;
-	QDateTime m_LastRead;
+  QVector<int> m_Dims;
+  QString m_InputFile_Cache;
+  QDateTime m_LastRead;
 };
 
 // -----------------------------------------------------------------------------
@@ -175,13 +178,13 @@ void DxReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void DxReader::flushCache()
 {
-	setInputFile_Cache("");
-	QVector<int> v;
-	v.push_back(0);
-	v.push_back(0);
-	v.push_back(0);
-	setDims(v);
-	setLastRead(QDateTime());
+  setInputFile_Cache("");
+  QVector<int> v;
+  v.push_back(0);
+  v.push_back(0);
+  v.push_back(0);
+  setDims(v);
+  setLastRead(QDateTime());
 }
 
 // -----------------------------------------------------------------------------
@@ -231,48 +234,48 @@ void DxReader::dataCheck()
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
-	  QDateTime lastModified(fi.lastModified());
+    QDateTime lastModified(fi.lastModified());
 
-	  QString lastRead = getLastRead().toString();
-	  bool lastReadValid = getLastRead().isValid();
-	  qint64 secs = lastModified.msecsTo(getLastRead());
+    QString lastRead = getLastRead().toString();
+    bool lastReadValid = getLastRead().isValid();
+    qint64 secs = lastModified.msecsTo(getLastRead());
 
-	  if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
-	  {
-		  // We are reading from the cache, so set the FileWasRead flag to false
-		  m_FileWasRead = false;
+    if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
+    {
+      // We are reading from the cache, so set the FileWasRead flag to false
+      m_FileWasRead = false;
 
-		  QVector<int> v = getDims();
-		  m->getGeometryAs<ImageGeom>()->setDimensions(v[0], v[1], v[2]);
-	  }
-	  else
-	  {
-		  // We are reading from the file, so set the FileWasRead flag to true
-		  m_FileWasRead = true;
+      QVector<int> v = getDims();
+      m->getGeometryAs<ImageGeom>()->setDimensions(v[0], v[1], v[2]);
+    }
+    else
+    {
+      // We are reading from the file, so set the FileWasRead flag to true
+      m_FileWasRead = true;
 
-		  // We need to read the header of the input file to get the dimensions
-		  m_InStream.setFileName(getInputFile());
-		  if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
-		  {
-			  QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
-			  setErrorCondition(-100);
-			  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-			  return;
-		  }
+      // We need to read the header of the input file to get the dimensions
+      m_InStream.setFileName(getInputFile());
+      if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+      {
+        QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
 
-		  int error = readHeader();
-		  m_InStream.close();
-		  if (error < 0)
-		  {
-			  setErrorCondition(error);
-			  QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
-			  notifyErrorMessage(getHumanLabel(), ss, -11000);
-		  }
+      int error = readHeader();
+      m_InStream.close();
+      if (error < 0)
+      {
+        setErrorCondition(error);
+        QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+        notifyErrorMessage(getHumanLabel(), ss, -11000);
+      }
 
-		  // Set the file path and time stamp into the cache
-		  setLastRead(QDateTime::currentDateTime());
-		  setInputFile_Cache(getInputFile()); 
-	  }
+      // Set the file path and time stamp into the cache
+      setLastRead(QDateTime::currentDateTime());
+      setInputFile_Cache(getInputFile());
+    }
   }
 }
 
@@ -397,7 +400,7 @@ int DxReader::readHeader()
     // in the line
     if(pos1 == 0)
     {
-      if(tokens.size() == 20) 
+      if(tokens.size() == 20)
       {
         ss = QObject::tr("ERROR: Unable to locate the last header line");
         notifyErrorMessage(getHumanLabel(), ss, -8);
@@ -466,7 +469,7 @@ int DxReader::readFile()
     buf = buf.simplified();
     QList<QByteArray> tokens = buf.split(' ');
 
-    int64_t total = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    int64_t total = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
     if( index == total || ( finished_header && tokens.size() != 0 && tokens[0] == "attribute") )
     {
       finished_data = true;
@@ -487,9 +490,9 @@ int DxReader::readFile()
     buf = m_InStream.readLine();
   }
 
-  if(index != static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfTuples()))
+  if(index != static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements()))
   {
-    QString ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getGeometryAs<ImageGeom>()->getNumberOfTuples());
+    QString ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
     setErrorCondition(-495);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     m_InStream.close();

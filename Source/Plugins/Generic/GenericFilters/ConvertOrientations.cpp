@@ -47,6 +47,8 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "OrientationLib/Math/OrientationMath.h"
 
 #include "Generic/GenericConstants.h"

@@ -48,11 +48,10 @@
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/Utilities/ImageUtilities.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 namespace Detail
 {
@@ -791,9 +790,9 @@ QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigure
 
   if(doParallel == true)
   {
-    g->run(GenerateRgbaImageImpl(intensity001.get(), &config, image001.get()));
-    g->run(GenerateRgbaImageImpl(intensity011.get(), &config, image011.get()));
-    g->run(GenerateRgbaImageImpl(intensity111.get(), &config, image111.get()));
+    g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
+    g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
+    g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
     g = NULL;
@@ -801,11 +800,11 @@ QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigure
   else
 #endif
   {
-    GenerateRgbaImageImpl m001(intensity001.get(), &config, image001.get());
+    GeneratePoleFigureRgbaImageImpl m001(intensity001.get(), &config, image001.get());
     m001();
-    GenerateRgbaImageImpl m011(intensity011.get(), &config, image011.get());
+    GeneratePoleFigureRgbaImageImpl m011(intensity011.get(), &config, image011.get());
     m011();
-    GenerateRgbaImageImpl m111(intensity111.get(), &config, image111.get());
+    GeneratePoleFigureRgbaImageImpl m111(intensity111.get(), &config, image111.get());
     m111();
   }
 

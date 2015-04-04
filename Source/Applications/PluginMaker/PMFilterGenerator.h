@@ -27,13 +27,15 @@ class PMFilterGenerator : public PMFileGenerator
                       QObject* parent = 0);
     virtual ~PMFilterGenerator();
 
+	virtual QString generateFileContents();
+
   protected slots:
     virtual void pluginNameChanged (const QString& plugname);
     virtual void outputDirChanged (const QString& outputDir);
-    virtual void generateOutput();
+	virtual void generateOutput();
+	virtual void generateTestFileLocationsOutput(QSet<QString> names);
 
   signals:
-    void outputError(const QString& message);
     void filterSourceError(const QString& message);
 
 

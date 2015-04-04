@@ -43,18 +43,19 @@
 #include <QtCore/QFileInfo>
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
-#include "EbsdLib/TSL/AngFields.h"
-#include "EbsdLib/HKL/CtfFields.h"
-#include "EbsdLib/HEDM/MicFields.h"
-
-#include "EbsdLib/TSL/H5AngVolumeReader.h"
-#include "EbsdLib/HKL/H5CtfVolumeReader.h"
 #include "EbsdLib/HEDM/H5MicVolumeReader.h"
+#include "EbsdLib/HEDM/MicFields.h"
+#include "EbsdLib/HKL/CtfFields.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
+#include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -551,7 +552,7 @@ void ReadH5Ebsd::execute()
 
   // Initialize all the arrays with some default values
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   {
     QString ss = QObject::tr("Initializing %1 voxels").arg(totalPoints);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -855,7 +856,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   QVector<size_t> cDims(1, 1);
   if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end() )
   {
@@ -956,7 +957,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   QVector<size_t> cDims(1, 1);
   phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
   iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
@@ -1061,7 +1062,7 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   float x, y;
   float xMin = 10000000;

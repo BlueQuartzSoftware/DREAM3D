@@ -36,11 +36,13 @@
 
 #include "CorrelateValuesWithVectorDirection.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "OrientationLib/Math/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -659,4 +661,39 @@ int CorrelateValuesWithVectorDirection::writeCoords(FILE* f, const char* axis, c
     return -1;
   }
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName()
+{
+  return Statistics::StatisticsBaseName;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getGroupName()
+{
+  return DREAM3D::FilterGroups::StatisticsFilters;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getSubGroupName()
+{
+  return DREAM3D::FilterSubGroups::CrystallographicFilters;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getHumanLabel()
+{
+  return "Correlate Values with Vector Direction";
 }

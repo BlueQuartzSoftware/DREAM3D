@@ -44,6 +44,8 @@
 
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -552,7 +554,7 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
 void DataContainerReader::syncProxies()
 {
   // If there is something in the cached proxy...
-  if (m_InputFileDataContainerArrayProxy.list.size() > 0)
+  if (m_InputFileDataContainerArrayProxy.dataContainers.size() > 0)
   {
     DataContainerArrayProxy fileProxy = readDataContainerArrayStructure(getInputFile());
     DataContainerArrayProxy cacheProxy = getInputFileDataContainerArrayProxy();

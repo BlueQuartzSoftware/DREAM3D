@@ -130,29 +130,29 @@ void setDeleteSelections(DataContainerArrayProxy &proxy)
 {
     proxy.setAllFlags(Qt::Unchecked);
 
-    QMutableListIterator<DataContainerProxy> dcIter(proxy.list);
+	QMap<QString, DataContainerProxy>& dcProxies = proxy.dataContainers;
 
-    while (dcIter.hasNext()) // DataContainerLevel
+	for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
     {
-        DataContainerProxy& dcProxy =  dcIter.next();
+        DataContainerProxy& dcProxy =  dcIter.value();
         if (dcProxy.name == "DataContainer1")
         {
             dcProxy.flag = Qt::Checked;
         }
-        QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
-        while(amIter.hasNext()) // AttributeMatrixLevel
-        {
-            amIter.next();
-            AttributeMatrixProxy& amProxy = amIter.value();
+
+		QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+		for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter)
+		{
+			AttributeMatrixProxy& amProxy = amIter.value();
             if (amProxy.name == "AttributeMatrix5")
             {
                 amProxy.flag = Qt::Checked;
             }
-            QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
-            while(dIter.hasNext()) // DataArray Level
-            {
-                dIter.next();
-                DataArrayProxy& daProxy = dIter.value();
+
+			QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+			for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter)
+			{
+				DataArrayProxy& daProxy = daIter.value();
                 if (daProxy.name == "DataArray4")
                 {
                     daProxy.flag = Qt::Checked;

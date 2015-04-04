@@ -167,7 +167,7 @@ void DataArrayCreationWidget::populateComboBoxes()
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
   // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.list;
+  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
 
   while(iter.hasNext() )
@@ -351,7 +351,7 @@ void DataArrayCreationWidget::populateAttributeMatrixList()
   attributeMatrixList->clear();
 
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   while(containerIter.hasNext())
   {

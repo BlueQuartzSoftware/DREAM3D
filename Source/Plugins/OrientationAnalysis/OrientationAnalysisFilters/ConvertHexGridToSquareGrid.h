@@ -50,12 +50,11 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "Sampling/SamplingConstants.h"
 /**
  * @class ConvertHexGridToSquareGrid ConvertHexGridToSquareGrid.h ConvertHexGridToSquareGrid/ConvertHexGridToSquareGrid.h
  * @brief This class is used to convert Hex grid TSL .ang files into Square grid

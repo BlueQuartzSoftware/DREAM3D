@@ -46,7 +46,11 @@
 #include <Eigen/Dense>
 
 #include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
 

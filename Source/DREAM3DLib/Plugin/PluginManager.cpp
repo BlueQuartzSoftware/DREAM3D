@@ -108,6 +108,25 @@ QList<QString> PluginManager::getPluginNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString PluginManager::getPluginName(QString filtName)
+{
+	QVector<IDREAM3DPlugin*> plugins = getPluginsVector();
+	for (int i = 0; i < plugins.size(); i++)
+	{
+		IDREAM3DPlugin* plugin = plugins[i];
+
+		if (plugin->getFilters().contains(filtName))
+		{
+			return plugin->getPluginName();
+		}
+	}
+
+	return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVector<IDREAM3DPlugin*> PluginManager::getPluginsVector()
 {
   return plugins;

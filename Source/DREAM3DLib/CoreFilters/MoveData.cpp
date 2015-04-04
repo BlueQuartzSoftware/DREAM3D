@@ -36,6 +36,9 @@
 
 #include "MoveData.h"
 
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
 
 static const int k_MoveAttributeMatrix = 0;
 static const int k_MoveDataArray = 1;

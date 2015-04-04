@@ -34,80 +34,52 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CropSurfaceMesh_H_
-#define _CropSurfaceMesh_H_
+#ifndef _NeighborCICorrelation_H_
+#define _NeighborCICorrelation_H_
 
+#include <vector>
 #include <QtCore/QString>
 
+
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "Sampling/SamplingConstants.h"
 /**
- * @class CropSurfaceMesh CropSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/CropSurfaceMesh.h
+ * @class NeighborCICorrelation NeighborCICorrelation.h DREAM3DLib/ReconstructionFilters/NeighborCICorrelation.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class CropSurfaceMesh : public AbstractFilter
+class NeighborCICorrelation : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CropSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(CropSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(CropSurfaceMesh, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(NeighborCICorrelation)
+    DREAM3D_STATIC_NEW_MACRO(NeighborCICorrelation)
+    DREAM3D_TYPE_MACRO_SUPER(NeighborCICorrelation, AbstractFilter)
 
-    virtual ~CropSurfaceMesh();
-    DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
-    Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
-    DREAM3D_FILTER_PARAMETER(bool, HasNodeData)
-    Q_PROPERTY(bool HasNodeData READ getHasNodeData WRITE setHasNodeData)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, VertexAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath VertexAttributeMatrixPath READ getVertexAttributeMatrixPath WRITE setVertexAttributeMatrixPath)
-    DREAM3D_FILTER_PARAMETER(bool, HasFaceData)
-    Q_PROPERTY(bool HasFaceData READ getHasFaceData WRITE setHasFaceData)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceFeatureAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath FaceFeatureAttributeMatrixPath READ getFaceFeatureAttributeMatrixPath WRITE setFaceFeatureAttributeMatrixPath)
+    virtual ~NeighborCICorrelation();
 
-    DREAM3D_FILTER_PARAMETER(float, XMin)
-    Q_PROPERTY(float XMin READ getXMin WRITE setXMin)
-    DREAM3D_FILTER_PARAMETER(float, YMin)
-    Q_PROPERTY(float YMin READ getYMin WRITE setYMin)
-    DREAM3D_FILTER_PARAMETER(float, ZMin)
-    Q_PROPERTY(float ZMin READ getZMin WRITE setZMin)
+    DREAM3D_FILTER_PARAMETER(float, MinConfidence)
+    Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
 
-    DREAM3D_FILTER_PARAMETER(float, XMax)
-    Q_PROPERTY(float XMax READ getXMax WRITE setXMax)
-    DREAM3D_FILTER_PARAMETER(float, YMax)
-    Q_PROPERTY(float YMax READ getYMax WRITE setYMax)
-    DREAM3D_FILTER_PARAMETER(float, ZMax)
-    Q_PROPERTY(float ZMax READ getZMax WRITE setZMax)
-    DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
-    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
-    DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
-    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
+    DREAM3D_FILTER_PARAMETER(bool, Loop)
+    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
+    Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -116,9 +88,7 @@ class CropSurfaceMesh : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-       * @brief Reimplemented from @see AbstractFilter class
-       */
+
     virtual void execute();
     virtual void preflight();
 
@@ -129,24 +99,19 @@ class CropSurfaceMesh : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CropSurfaceMesh();
+    NeighborCICorrelation();
 
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
 
     void dataCheck();
 
-    CropSurfaceMesh(const CropSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const CropSurfaceMesh&); // Operator '=' Not Implemented
+
+    NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented
+    void operator=(const NeighborCICorrelation&); // Operator '=' Not Implemented
 };
 
-#endif /* CropSurfaceMesh_H_ */
-
-
-
-
-
-
+#endif /* NeighborCICorrelation_H_ */
 
 

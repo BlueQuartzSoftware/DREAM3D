@@ -630,7 +630,8 @@ int H5FilterParametersWriter::writeArraySelections(const QString name, QSet<QStr
 int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
 {
   int err = 0;
-  QListIterator<DataContainerProxy> dcIter(v.list);
+  QList<DataContainerProxy> dcProxies = v.dataContainers.values();
+  QListIterator<DataContainerProxy> dcIter(dcProxies);
   hid_t dcaGid = QH5Utilities::createGroup(m_CurrentGroupId, name);
 
   while (dcIter.hasNext()) // DataContainerLevel
@@ -709,6 +710,30 @@ int H5FilterParametersWriter::writeValue(const QString name, const QVector<DataA
     ss << path.serialize("|") << sep;
   }
   err = QH5Lite::writeStringDataset(m_CurrentGroupId, name, pathStr);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, const DynamicTableData& v)
+{
+  int err = 0;
+
+  QVector<double> flat = v.flattenData();
+  QString rHeaders = v.serializeRowHeaders('|');
+  QString cHeaders = v.serializeColumnHeaders('|');
+
+  QVector<hsize_t> dims(2);
+  dims[0] = v.getNumRows();
+  dims[1] = v.getNumCols();
+
+  err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, "RowHeaders", rHeaders);
+  if (err < 0) { return err; }
+  err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, "ColHeaders", cHeaders);
+  if (err < 0) { return err; }
+  err = QH5Lite::writeVectorDataset(m_CurrentGroupId, name, dims, flat);
+
   return err;
 }
 

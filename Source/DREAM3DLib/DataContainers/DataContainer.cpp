@@ -96,7 +96,7 @@ void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContain
     AttributeMatrix::ReadAttributeMatrixStructure(containerGid, dcProxy, h5Path);
 
     // Insert the DataContainerProxy proxy into the DataContainerArrayProxy
-    proxy.list.push_back(dcProxy);
+    proxy.dataContainers.insert(dcProxy.name, dcProxy);
   }
 }
 

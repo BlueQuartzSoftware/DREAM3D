@@ -73,7 +73,6 @@ AboutPlugins::AboutPlugins(QWidget* parent) :
 
   // Hide the add and remove plugin buttons until we are ready to use them
   addPluginBtn->setVisible(false);
-  removePluginBtn->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -103,6 +102,16 @@ void AboutPlugins::setupGui()
 
   // Set default cell to the first item in the list
   pluginsTable->setCurrentCell(0, 0);
+  QTableWidgetItem* statusItem = pluginsTable->item(pluginsTable->currentRow(), STATUS_INDEX);
+
+  if (statusItem->text() == NOT_FOUND_STRING)
+  {
+	  removePluginBtn->setVisible(true);
+  }
+  else
+  {
+	  removePluginBtn->setVisible(false);
+  }
 
   connect(pluginsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(displayDetailsWindow(QTableWidgetItem*)));
 }
@@ -263,10 +272,12 @@ void AboutPlugins::on_pluginsTable_cellClicked(int row, int column)
   if (pluginsTable->item(row, STATUS_INDEX)->text() == NOT_FOUND_STRING)
   {
     detailsBtn->setDisabled(true);
+	removePluginBtn->setVisible(true);
   }
   else
   {
     detailsBtn->setEnabled(true);
+	removePluginBtn->setVisible(false);
   }
 }
 

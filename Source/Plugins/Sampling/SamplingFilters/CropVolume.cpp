@@ -40,7 +40,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 // -----------------------------------------------------------------------------
@@ -458,7 +459,7 @@ void CropVolume::execute()
     }
   }
   destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(XP), static_cast<size_t>(YP), static_cast<size_t>(ZP));
-  totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
   QVector<size_t> tDims(3, 0);
   tDims[0] = XP;
   tDims[1] = YP;
@@ -468,7 +469,7 @@ void CropVolume::execute()
 
   if (m_RenumberFeatures == true)
   {
-    totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
     // This just sanity checks to make sure there were existing features before the cropping
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());

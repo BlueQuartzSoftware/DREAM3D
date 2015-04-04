@@ -11,7 +11,6 @@
 
 set(DREAM3DLib_Utilities_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorTable.h
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/ImageUtilities.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorUtilities.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/TimeUtilities.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DEndian.h
@@ -22,7 +21,6 @@ set(DREAM3DLib_Utilities_HDRS
 
 set(DREAM3DLib_Utilities_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorTable.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Utilities/ImageUtilities.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorUtilities.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/FilePathGenerator.cpp
