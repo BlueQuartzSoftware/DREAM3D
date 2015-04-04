@@ -265,7 +265,7 @@ const QString ExtractFlaggedFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString getSubGroupName()
+const QString ExtractFlaggedFeatures::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CropCutFilters; }
 
 // -----------------------------------------------------------------------------
