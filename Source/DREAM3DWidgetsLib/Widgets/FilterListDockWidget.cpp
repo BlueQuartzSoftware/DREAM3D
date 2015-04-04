@@ -144,7 +144,7 @@ void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
 {
 
   QString humanName = filter->getHumanLabel();
-  QString iconName(":/");
+  QString iconName(":/Groups/");
   iconName.append( filter->getGroupName() );
   iconName.append("_Icon.png");
 
@@ -152,7 +152,7 @@ void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
   QFileInfo iconInfo(iconName);
   if (iconInfo.exists() == false)
   {
-    iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+    iconName = ":/Groups/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
   }
 
   QIcon icon(iconName);
@@ -211,49 +211,49 @@ QList<QString> FilterListDockWidget::serializeString(QString string, char token)
 // -----------------------------------------------------------------------------
 void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int &filterCount)
 {
-	QList<QString> wordList = serializeString(fullWord, ' ');
-	QList<AbstractFilter::Pointer> filterCache;
+  QList<QString> wordList = serializeString(fullWord, ' ');
+  QList<AbstractFilter::Pointer> filterCache;
 
-	while (iter.hasNext())
-	{
-		iter.next();
-		IFilterFactory::Pointer factory = iter.value();
-		if (NULL == factory.get())
-		{
-			continue;
-		}
+  while (iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    if (NULL == factory.get())
+    {
+      continue;
+    }
 
-		AbstractFilter::Pointer filter = factory->create();
-		if (NULL == filter.get())
-		{
-			continue;
-		}
+    AbstractFilter::Pointer filter = factory->create();
+    if (NULL == filter.get())
+    {
+      continue;
+    }
 
-		bool match = false;
-		QString filterHumanLabel = filter->getHumanLabel();
+    bool match = false;
+    QString filterHumanLabel = filter->getHumanLabel();
 
-		for (QList<QString>::iterator wordIter = wordList.begin(); wordIter != wordList.end(); wordIter++)
-		{
-			QString keyword = *wordIter;
+    for (QList<QString>::iterator wordIter = wordList.begin(); wordIter != wordList.end(); wordIter++)
+    {
+      QString keyword = *wordIter;
 
-			if (filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0 && filterHumanLabel.startsWith(fullWord, Qt::CaseInsensitive))
-			{
-				filterCount++;
-				addItemToList(filter);
-			}
-			else if (filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0 && filterCache.contains(filter) == false)
-			{
-				filterCount++;
-				filterCache.push_back(filter);
-			}
-		}
-	}
+      if (filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0 && filterHumanLabel.startsWith(fullWord, Qt::CaseInsensitive))
+      {
+        filterCount++;
+        addItemToList(filter);
+      }
+      else if (filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0 && filterCache.contains(filter) == false)
+      {
+        filterCount++;
+        filterCache.push_back(filter);
+      }
+    }
+  }
 
-	// Add the remaining items to the list that do not match the full text, but match one or more words
-	for (QList<AbstractFilter::Pointer>::iterator iter = filterCache.begin(); iter != filterCache.end(); iter++)
-	{
-		addItemToList(*iter);
-	}
+  // Add the remaining items to the list that do not match the full text, but match one or more words
+  for (QList<AbstractFilter::Pointer>::iterator iter = filterCache.begin(); iter != filterCache.end(); iter++)
+  {
+    addItemToList(*iter);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -261,8 +261,8 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
 // -----------------------------------------------------------------------------
 void FilterListDockWidget::searchFilters()
 {
-	// Set scroll bar back to the top
-	filterList->scrollToTop();
+  // Set scroll bar back to the top
+  filterList->scrollToTop();
 
   // Get the text from the search box
   QString text = filterSearch->text();

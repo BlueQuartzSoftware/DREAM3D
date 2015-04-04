@@ -353,7 +353,7 @@ FilterPipeline::Pointer PipelineViewWidget::getCopyOfFilterPipeline()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::savePipeline(const QString& filePath, const QString& name, QSettings::Format format)
 {
-
+  qDebug() << "Saving Pipeline to file: " << filePath;
   //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
   if (fi.exists() == true)
@@ -385,6 +385,8 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString& na
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Format format, bool append)
 {
+  qDebug() << "Loading Pipeline from file: " << filePath;
+
   // Clear the pipeline Issues table first so we can collect all the error messages
   emit pipelineIssuesCleared();
   // Load the pipeline from the file resulting in a FilterPipeline Object
