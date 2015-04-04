@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>481</width>
+    <width>485</width>
     <height>453</height>
    </rect>
   </property>
@@ -14,11 +14,17 @@
    <string>Advanced Reference Frame Options</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
     <number>4</number>
    </property>
-   <property name="spacing">
-    <number>6</number>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
    </property>
    <item row="6" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -396,7 +402,7 @@ font-size: 10px;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
          <normaloff>:/help2.png</normaloff>:/help2.png</iconset>
        </property>
        <property name="iconSize">
@@ -481,8 +487,8 @@ font-size: 10px;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/zoomIn.png</normaloff>:/zoomIn.png</iconset>
+        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+         <normaloff>:/zoom_in.png</normaloff>:/zoom_in.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -522,8 +528,8 @@ font-size: 10px;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/zoomOut.png</normaloff>:/zoomOut.png</iconset>
+        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+         <normaloff>:/zoom_out.png</normaloff>:/zoom_out.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -563,7 +569,7 @@ font-size: 10px;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
          <normaloff>:/fitToWindow.png</normaloff>:/fitToWindow.png</iconset>
        </property>
        <property name="iconSize">
@@ -655,8 +661,7 @@ font-size: 10px;
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../../EMMPMGui/Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
  <connections>
   <connection>
