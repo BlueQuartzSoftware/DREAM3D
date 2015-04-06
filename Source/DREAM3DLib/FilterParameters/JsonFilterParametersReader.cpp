@@ -1169,22 +1169,30 @@ QVector<AxisAngleInput_t> JsonFilterParametersReader::readAxisAngles(const QStri
 // -----------------------------------------------------------------------------
 QSet<QString> JsonFilterParametersReader::readArraySelections(const QString name, QSet<QString> v)
 {
-  //BOOST_ASSERT(m_Prefs != NULL);
-  //// if(m_Prefs->contains(name) == false){ return v; }
-  //QString defValue;
-  //int count = m_Prefs->beginReadArray("ArraySelections_" + name);
-  //QSet<QString> values;
-  //for (int i = 0; i < count; i++)
-  //{
-  //  m_Prefs->setArrayIndex(i);
-  //  QString data = m_Prefs->value(name, defValue).toString();
-  //  values.insert(data);
-  //}
-  //m_Prefs->endArray();
+  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  if (m_CurrentFilterIndex.contains(name) == false)
+  {
+    return v;
+  }
 
-  //return values;
+  QSet<QString> set;
+  
+  if (m_CurrentFilterIndex[name].isArray())
+  {
+    QJsonArray jsonArray = m_CurrentFilterIndex[name].toArray();
 
-  return QSet<QString>();
+    foreach(QJsonValue val, jsonArray)
+    {
+      if (val.isString())
+      {
+        set.insert(val.toString());
+      }
+    }
+
+    return set;
+  }
+
+  return v;
 }
 
 // -----------------------------------------------------------------------------
