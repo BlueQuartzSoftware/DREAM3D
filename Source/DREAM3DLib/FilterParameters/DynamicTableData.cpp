@@ -351,6 +351,20 @@ std::vector<std::vector<double> > DynamicTableData::ExpandData(std::vector<doubl
 void DynamicTableData::writeJson(QJsonObject &json)
 {
   json["Dynamic Table Data"] = writeData(tableData);
+
+  QJsonArray rHeaders;
+  foreach(QString header, rowHeaders)
+  {
+    rHeaders.push_back(header);
+  }
+  json["Row Headers"] = rHeaders;
+
+  QJsonArray cHeaders;
+  foreach(QString header, colHeaders)
+  {
+    cHeaders.push_back(header);
+  }
+  json["Column Headers"] = cHeaders;
 }
 
 // -----------------------------------------------------------------------------
@@ -361,6 +375,24 @@ bool DynamicTableData::readJson(QJsonObject &json)
   if (json["Dynamic Table Data"].isObject())
   {
     tableData = readData(json["Dynamic Table Data"].toObject());
+
+    QJsonArray rHeaders = json["Row Headers"].toArray();
+    foreach(QJsonValue val, rHeaders)
+    {
+      if (val.isString())
+      {
+        rowHeaders.push_back(val.toString());
+      }
+    }
+
+    QJsonArray cHeaders = json["Column Headers"].toArray();
+    foreach(QJsonValue val, cHeaders)
+    {
+      if (val.isString())
+      {
+        colHeaders.push_back(val.toString());
+      }
+    }
     return true;
   }
   return false;
@@ -419,6 +451,7 @@ std::vector<std::vector<double> > DynamicTableData::readData(QJsonObject object)
         }
       }
     }
+    return data;
   }
   return std::vector<std::vector<double> >();
 }

@@ -256,7 +256,7 @@ typedef struct
   {
     if (json["c30"].isDouble() && json["c03"].isDouble() && json["c21"].isDouble() && json["c12"].isDouble()
       && json["c20"].isDouble() && json["c02"].isDouble() && json["c11"].isDouble() && json["c10"].isDouble()
-      && json["c01"].isDouble() && json["v25"].isDouble())
+      && json["c01"].isDouble() && json["c00"].isDouble())
     {
       c30 = static_cast<float>(json["c30"].toDouble());
       c03 = static_cast<float>(json["c03"].toDouble());

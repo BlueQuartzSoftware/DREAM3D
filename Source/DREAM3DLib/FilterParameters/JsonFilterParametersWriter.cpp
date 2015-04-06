@@ -305,7 +305,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<int16_t> 
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(int16_t val, value)
   {
     jsonArray << QJsonValue(static_cast<double>(val));
   }
@@ -324,7 +324,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<int32_t> 
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(int32_t val, value)
   {
     jsonArray << QJsonValue(static_cast<double>(val));
   }
@@ -343,7 +343,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<int64_t> 
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(int64_t val, value)
   {
     jsonArray << QJsonValue(static_cast<double>(val));
   }
@@ -362,7 +362,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint8_t> 
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(uint8_t val, value)
   {
     jsonArray << QJsonValue(static_cast<double>(val));
   }
@@ -381,7 +381,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint16_t>
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(uint16_t val, value)
   {
     jsonArray << QJsonValue(static_cast<double>(val));
   }
@@ -400,7 +400,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint32_t>
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(uint32_t val, value)
   {
     jsonArray << QJsonValue(static_cast<double>(val));
   }
@@ -419,7 +419,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint64_t>
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(uint64_t val, value)
   {
     jsonArray << QJsonValue(static_cast<double>(val));
   }
@@ -438,9 +438,9 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<float> va
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(float val, value)
   {
-    jsonArray << QJsonValue(static_cast<double>(val));
+    jsonArray << static_cast<double>(val);
   }
 
   m_CurrentFilterIndex[name] = jsonArray; 
@@ -457,7 +457,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<double> v
 
   QJsonArray jsonArray;
 
-  foreach(int8_t val, value)
+  foreach(double val, value)
   {
     jsonArray << QJsonValue(val);
   }

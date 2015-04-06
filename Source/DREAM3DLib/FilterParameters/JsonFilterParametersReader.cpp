@@ -477,6 +477,8 @@ float JsonFilterParametersReader::readValue(const QString name, float value)
   if (m_CurrentFilterIndex.value(name).isDouble())
   {
     double val = m_CurrentFilterIndex.value(name).toDouble();
+    double max = std::numeric_limits<float>().max();
+    double min = std::numeric_limits<float>().min();
     if (val >= std::numeric_limits<float>().min() && val <= std::numeric_limits<float>().max())
     {
       return static_cast<float>(val);
@@ -851,7 +853,7 @@ IntVec3_t JsonFilterParametersReader::readIntVec3(const QString name, IntVec3_t 
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     IntVec3_t vec3;
@@ -875,7 +877,7 @@ FloatVec3_t JsonFilterParametersReader::readFloatVec3(const QString name, FloatV
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     FloatVec3_t vec3;
@@ -899,7 +901,7 @@ FloatVec4_t JsonFilterParametersReader::readFloatVec4(const QString name, FloatV
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     FloatVec4_t vec4;
@@ -923,7 +925,7 @@ FloatVec21_t JsonFilterParametersReader::readFloatVec21(const QString name, Floa
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     FloatVec21_t vec21;
@@ -947,7 +949,7 @@ Float2ndOrderPoly_t JsonFilterParametersReader::readFloat2ndOrderPoly(const QStr
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     Float2ndOrderPoly_t poly;
@@ -971,7 +973,7 @@ Float3rdOrderPoly_t JsonFilterParametersReader::readFloat3rdOrderPoly(const QStr
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     Float3rdOrderPoly_t poly;
@@ -995,7 +997,7 @@ Float4thOrderPoly_t JsonFilterParametersReader::readFloat4thOrderPoly(const QStr
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     Float4thOrderPoly_t poly;
@@ -1019,7 +1021,7 @@ FileListInfo_t JsonFilterParametersReader::readFileListInfo(const QString name, 
     return defaultValue;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  if (m_CurrentFilterIndex.value(name).isObject())
   {
     QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
     FileListInfo_t fLInfo;
@@ -1200,91 +1202,21 @@ QSet<QString> JsonFilterParametersReader::readArraySelections(const QString name
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy JsonFilterParametersReader::readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v)
 {
-  //BOOST_ASSERT(m_Prefs != NULL);
+  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  if (m_CurrentFilterIndex.contains(name) == false)
+  {
+    return v;
+  }
 
-  //DataContainerArrayProxy dcaProxy;
-  //QString defValue;
-  //int count = m_Prefs->beginReadArray(name);
-  ////  QStringList paths;
-  ////  QStringList flags;
+  DataContainerArrayProxy proxy;
+  if (m_CurrentFilterIndex[name].isObject())
+  {
+    QJsonObject obj = m_CurrentFilterIndex[name].toObject();
+    proxy.readJson(obj);
+    return proxy;
+  }
 
-  //for (int i = 0; i < count; i++)
-  //{
-  //  m_Prefs->setArrayIndex(i);
-  //  DataArrayPath dap(m_Prefs->value("Path", defValue).toString());
-  //  QString dcFlag = m_Prefs->value("DCFlag", defValue).toString();
-  //  QString attrFlag = m_Prefs->value("ATTRFlag", defValue).toString();
-  //  QString daFlag = m_Prefs->value("DAFlag", defValue).toString();
-  //  // Add the data container proxy if it does not exist
-  //  if (dcaProxy.contains(dap.getDataContainerName()) == false)
-  //  {
-  //    DataContainerProxy dcp(dap.getDataContainerName());
-  //    if (dcFlag.compare("0") == 0)
-  //    {
-  //      dcp.flag = Qt::Unchecked;
-  //    }
-  //    else if (dcFlag.compare("1") == 0)
-  //    {
-  //      dcp.flag = Qt::PartiallyChecked;
-  //    }
-  //    else
-  //    {
-  //      dcp.flag = Qt::Checked;
-  //    }
-  //    dcaProxy.dataContainers.insert(dcp.name, dcp);
-  //  }
-
-  //  // Now we check for the AttributeMatrix
-  //  if (dcaProxy.contains(dap.getDataContainerName()))
-  //  {
-  //    DataContainerProxy& dcProxy = dcaProxy.getDataContainerProxy(dap.getDataContainerName());
-  //    if (dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) == dcProxy.attributeMatricies.end() && dap.getAttributeMatrixName().isEmpty() == false)
-  //    {
-  //      AttributeMatrixProxy attrProxy(dap.getAttributeMatrixName());
-  //      if (attrFlag.compare("0") == 0)
-  //      {
-  //        attrProxy.flag = Qt::Unchecked;
-  //      }
-  //      else if (attrFlag.compare("1") == 0)
-  //      {
-  //        attrProxy.flag = Qt::PartiallyChecked;
-  //      }
-  //      else
-  //      {
-  //        attrProxy.flag = Qt::Checked;
-  //      }
-  //      dcProxy.attributeMatricies.insert(dap.getAttributeMatrixName(), attrProxy);
-  //    }
-
-  //    // Now we have the attribute matrix
-  //    if (dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) != dcProxy.attributeMatricies.end())
-  //    {
-  //      AttributeMatrixProxy& attrProxy = dcProxy.attributeMatricies[dap.getAttributeMatrixName()];
-  //      // Now check for the data array
-  //      if (attrProxy.dataArrays.find(dap.getDataArrayName()) == attrProxy.dataArrays.end() && dap.getDataArrayName().isEmpty() == false)
-  //      {
-  //        DataArrayProxy proxy(QString("%1|%2").arg(dap.getDataContainerName()).arg(dap.getAttributeMatrixName()), dap.getDataArrayName());
-  //        if (daFlag.compare("0") == 0)
-  //        {
-  //          proxy.flag = Qt::Unchecked;
-  //        }
-  //        else if (daFlag.compare("1") == 0)
-  //        {
-  //          proxy.flag = Qt::PartiallyChecked;
-  //        }
-  //        else
-  //        {
-  //          proxy.flag = Qt::Checked;
-  //        }
-  //        attrProxy.dataArrays.insert(dap.getDataArrayName(), proxy);
-  //      }
-  //    }
-  //  }
-  //}
-  //m_Prefs->endArray();
-  //return dcaProxy;
-
-  return DataContainerArrayProxy();
+  return v;
 }
 
 // -----------------------------------------------------------------------------
@@ -1292,17 +1224,21 @@ DataContainerArrayProxy JsonFilterParametersReader::readDataContainerArrayProxy(
 // -----------------------------------------------------------------------------
 DataArrayPath JsonFilterParametersReader::readDataArrayPath(const QString& name, DataArrayPath def)
 {
-  /*BOOST_ASSERT(m_Prefs != NULL);
-  if (m_Prefs->contains(name) == false)
+  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  if (m_CurrentFilterIndex.contains(name) == false)
   {
     return def;
   }
-  QString defPath("");
-  QString str = m_Prefs->value(name, defPath).toString();
-  DataArrayPath path(str);
-  return path;*/
 
-  return DataArrayPath();
+  DataArrayPath path;
+  if (m_CurrentFilterIndex[name].isObject())
+  {
+    QJsonObject obj = m_CurrentFilterIndex[name].toObject();
+    path.readJson(obj);
+    return path;
+  }
+
+  return def;
 }
 
 // -----------------------------------------------------------------------------
@@ -1310,27 +1246,30 @@ DataArrayPath JsonFilterParametersReader::readDataArrayPath(const QString& name,
 // -----------------------------------------------------------------------------
 QVector<DataArrayPath> JsonFilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
 {
-  /*BOOST_ASSERT(m_Prefs != NULL);
-
-  QVector<DataArrayPath> vector;
-
-  int size = m_Prefs->beginReadArray(name);
-  if (size <= 0)
+  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  if (m_CurrentFilterIndex.contains(name) == false)
   {
     return def;
   }
 
-  for (int i = 0; i < size; ++i) {
-    m_Prefs->setArrayIndex(i);
-    QString pathStr = m_Prefs->value(DREAM3D::IO::DAPSettingsHeader).toString();
-    DataArrayPath path = DataArrayPath::Deserialize(pathStr, "|");
-    vector.append(path);
+  QVector<DataArrayPath> paths;
+  if (m_CurrentFilterIndex[name].isArray())
+  {
+    QJsonArray jsonArray = m_CurrentFilterIndex[name].toArray();
+    foreach(QJsonValue val, jsonArray)
+    {
+      if (val.isObject())
+      {
+        DataArrayPath path;
+        QJsonObject obj = val.toObject();
+        path.readJson(obj);
+        paths.push_back(path);
+      }
+    }
+    return paths;
   }
-  m_Prefs->endArray();
 
-  return vector;*/
-
-  return QVector<DataArrayPath>();
+  return def;
 }
 
 // -----------------------------------------------------------------------------
@@ -1338,39 +1277,20 @@ QVector<DataArrayPath> JsonFilterParametersReader::readDataArrayPathVector(const
 // -----------------------------------------------------------------------------
 DynamicTableData JsonFilterParametersReader::readDynamicTableData(const QString& name, DynamicTableData def)
 {
-  /*BOOST_ASSERT(m_Prefs != NULL);
-
-  QString dataStr;
-  int numRows, numCols;
-  QStringList rHeaders;
-  QStringList cHeaders;
-
-  int size = m_Prefs->beginReadArray(name);
-  if (size <= 0)
+  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  if (m_CurrentFilterIndex.contains(name) == false)
   {
-    m_Prefs->endArray();
     return def;
   }
 
-  m_Prefs->setArrayIndex(0);
-  dataStr = m_Prefs->value(name, "").toString();
-  m_Prefs->setArrayIndex(1);
-  rHeaders = m_Prefs->value(name, "").toStringList();
-  m_Prefs->setArrayIndex(2);
-  numRows = m_Prefs->value(name, 0).toInt();
-  m_Prefs->setArrayIndex(3);
-  numCols = m_Prefs->value(name, 0).toInt();
-  m_Prefs->setArrayIndex(4);
-  cHeaders = m_Prefs->value(name, "").toStringList();
+  DynamicTableData data;
+  if (m_CurrentFilterIndex[name].isObject())
+  {
+    QJsonObject obj = m_CurrentFilterIndex[name].toObject();
+    data.readJson(obj);
+    return data;
+  }
 
-  m_Prefs->endArray();
-
-  std::vector<std::vector<double> > data = DynamicTableData::DeserializeData(dataStr, numRows, numCols, ',');
-
-  DynamicTableData tableData(data, rHeaders, cHeaders);
-
-  return tableData;*/
-
-  return DynamicTableData();
+  return def;
 }
 
