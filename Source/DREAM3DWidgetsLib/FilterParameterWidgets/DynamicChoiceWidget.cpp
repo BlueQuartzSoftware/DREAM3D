@@ -145,11 +145,11 @@ void DynamicChoiceWidget::updateComboBox()
     value->clear(); // Remove everything
 
 
-    if(choices.size() == 0)
-    {
-      value->addItem(m_FilterParameter->getDefaultValue().toString());
-    }
-    else
+//    if(choices.size() == 0)
+//    {
+//      value->addItem(m_FilterParameter->getDefaultValue().toString());
+//    }
+//    else
     {
       value->addItems(choices);
     }
