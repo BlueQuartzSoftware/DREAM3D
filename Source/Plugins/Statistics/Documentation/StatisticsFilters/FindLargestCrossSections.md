@@ -5,26 +5,27 @@ Find Feature Largest Cross-Sections {#findlargestcrosssections}
 Statistics Filters (Morphological)
 
 ## Description ##
-This filter calculates the largest cross-sectional area perpendicular to a user-defined direction for all **Features**.  The filter simply iterates through all **Cells** (on each section) asking the for **Feature** that owns them.  
-The count of **Cells** for each **Feature** is then converted to an area and stored as the *LargestCrossSection*.  This is done for all sections (only replacing the value of LargestCrossSection if it smaller than the area for the current section).
+This filter calculates the largest cross-sectional area on a user-defined plane for all **Features**.  The filter simply iterates through all **Cells** (on each section) asking for **Feature** that owns them.  
+On each section, the count of **Cells** for each **Feature** is then converted to an area and stored as the *LargestCrossSection* if the area for the current section is larger than the existing *LargestCrossSection* for that **Feature**.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Plane of Interest | Choice | Specifies which plane to consider when determining the maximum cross-section for each **Feature** |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | LargestCrossSection | Area (float) of largest cross-section for **Feature** perpendicular to specified direction. |  |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Feature | LargestCrossSection | Float | (1) | Area of largest cross-section for **Feature** perpendicular to the user specified direction. |
 
 ## Authors ##
 
