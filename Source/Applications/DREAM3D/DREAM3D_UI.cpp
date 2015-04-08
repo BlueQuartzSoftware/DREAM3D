@@ -198,20 +198,32 @@ void DREAM3D_UI::on_actionOpen_triggered()
   // Read Pipeline
   int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, Replace);
 
+  QFileInfo fi(filePath);
+
   // Set Current File Path
   if (err >= 0)
   {
     newInstance->setOpenedFilePath(filePath);
+
+    // Cache the last directory on new instance
+    newInstance->setOpenDialogLastDirectory(fi.path());
+
+    // Show the new instance
+    newInstance->setWindowModified(false);
+    newInstance->show();
+  }
+  else
+  {
+    // Show error message on old DREAM3D instance
+    QString errorMessage = newInstance->getPipelineViewWidget()->getStatusBar()->currentMessage();
+    pipelineViewWidget->getStatusBar()->showMessage(errorMessage);
+
+    // Delete new DREAM3D instance
+    delete newInstance;
   }
 
-  // Cache the last directory on both instances
-  QFileInfo fi(filePath);
-  newInstance->setOpenDialogLastDirectory(fi.path());
+  // Cache the last directory on old instance
   m_OpenDialogLastDirectory = fi.path();
-
-  // Show the new instance
-  newInstance->setWindowModified(false);
-  newInstance->show();
 }
 
 // -----------------------------------------------------------------------------

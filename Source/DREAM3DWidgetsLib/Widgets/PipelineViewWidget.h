@@ -100,6 +100,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     FilterPipeline::Pointer getFilterPipeline();
 
     /**
+    * @brief getStatusBar
+    * @return
+    */
+    QStatusBar* getStatusBar();
+
+    /**
      * @brief Returns a FilterPipeline Object with a new filter instance that has the input parameters copied
      * from the filter instance that is embedded in the PipelineFilterWidget instance. This function does NOT perform
      * a DEEP copy of the filter.

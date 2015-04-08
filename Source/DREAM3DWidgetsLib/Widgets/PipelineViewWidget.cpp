@@ -1129,3 +1129,14 @@ void PipelineViewWidget::showContextMenu(const QPoint& globalPos)
   }
   m_Menu.exec(globalPos);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStatusBar* PipelineViewWidget::getStatusBar()
+{
+  return m_StatusBar;
+}
+
+
+
