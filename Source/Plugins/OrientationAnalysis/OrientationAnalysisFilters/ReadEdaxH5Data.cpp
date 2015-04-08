@@ -90,15 +90,15 @@ ReadEdaxH5DataPrivate::ReadEdaxH5DataPrivate(ReadEdaxH5Data* ptr) :
 // -----------------------------------------------------------------------------
 ReadEdaxH5Data::ReadEdaxH5Data() :
   AbstractFilter(),
+   m_InputFile(""),
+   m_ScanName(""),
   m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_ReadPatternData(false),
+  m_FileWasRead(false),
   m_PhaseNameArrayName(DREAM3D::CellData::Phases),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
-  m_InputFile(""),
-  d_ptr(new ReadEdaxH5DataPrivate(this)),
-  m_FileWasRead(false),
-  m_ReadPatternData(false),
   m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -108,9 +108,11 @@ ReadEdaxH5Data::ReadEdaxH5Data() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
   m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
-  m_LatticeConstants(NULL)
+  m_LatticeConstants(NULL),
+  d_ptr(new ReadEdaxH5DataPrivate(this))
 {
   setupFilterParameters();
+  setPatternDims(QVector<int>(2, 0)); // initialize this with a 2 element vector
 }
 
 // -----------------------------------------------------------------------------
@@ -292,12 +294,21 @@ void ReadEdaxH5Data::dataCheck()
       cDims.resize(2);
       cDims[0] = getPatternDims().at(0);
       cDims[1] = getPatternDims().at(1);
-      tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Ang::PatternData);
-      m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if (NULL != m_CellPatternDataPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      if (cDims[0] != 0 && cDims[1] != 0)
       {
-        m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);
-      } /* Now assign the raw pointer to data from the DataArray<T> object */
+        tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Ang::PatternData);
+        m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        if (NULL != m_CellPatternDataPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+        {
+          m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);
+        } /* Now assign the raw pointer to data from the DataArray<T> object */
+      }
+      else
+      {
+        setErrorCondition(-998);
+        QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected.");
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
     }
 
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), DREAM3D::EnsembleData::MaterialName);
@@ -446,6 +457,7 @@ void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m,
       return;
     }
     setFileScanNames(scanNames);
+    reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
     reader->setHDF5Path(getScanName());
@@ -688,5 +700,31 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t> &tDims
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
+
+  if(getReadPatternData()) // Get the pattern Data from the
+  {
+    uint8_t* ptr = reader->getPatternData();
+    int pDims[2] = {0, 0};
+    reader->getPatternDims(pDims);
+
+    if(pDims[0] != 0 && pDims[1] != 0)
+    {
+      QVector<size_t> pDimsV(2);
+      pDimsV[0] = pDims[0];
+      pDimsV[1] = pDims[1];
+
+      UInt8ArrayType::Pointer patternData = UInt8ArrayType::WrapPointer(ptr, totalPoints, pDimsV, Ebsd::Ang::PatternData, true);
+
+      // Remove the current PatternData array
+      IDataArray::Pointer existingArray = ebsdAttrMat->getAttributeArray(Ebsd::Ang::PatternData);
+      ebsdAttrMat->removeAttributeArray(Ebsd::Ang::PatternData);
+
+      // Push in our own PatternData array
+      ebsdAttrMat->addAttributeArray(patternData->getName(), patternData);
+      // Set the readers pattern data pointer to NULL so that reader does not "free" the memory
+      reader->setPatternData(NULL);
+    }
+  }
+
 
 }

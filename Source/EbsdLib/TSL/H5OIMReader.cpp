@@ -60,9 +60,10 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 H5OIMReader::H5OIMReader() :
   AngReader(),
-  m_ReadAllArrays(true),
+  m_HDF5Path(),
   m_ReadPatternData(false),
-  m_PatternData(NULL)
+  m_PatternData(NULL),
+  m_ReadAllArrays(true)
 {
 
   m_HeaderMap.clear();
@@ -88,10 +89,8 @@ H5OIMReader::H5OIMReader() :
   m_HeaderMap[Ebsd::Ang::PatternWidth] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::PatternWidth);
   m_HeaderMap[Ebsd::Ang::PatternHeight] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::PatternHeight);
 
-
   m_PatternDims[0] = 0;
   m_PatternDims[1] = 0;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -445,20 +444,26 @@ int H5OIMReader::readHeader(hid_t parId)
 
   HDF_ERROR_HANDLER_OFF
   int value = 0;
-  // Read the Pattern Width - This may not exist
-  err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternWidth, value);
-  EbsdHeaderEntry::Pointer p = m_HeaderMap[Ebsd::Ang::PatternWidth];
-  AngHeaderIntType::Pointer c = boost::dynamic_pointer_cast<AngHeaderIntType>(p);
-  c->setValue(value);
-  m_PatternDims[1] = value;
+  if (QH5Lite::datasetExists(gid, Ebsd::Ang::PatternWidth))
+  {
+    // Read the Pattern Width - This may not exist
+    err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternWidth, value);
+    EbsdHeaderEntry::Pointer p = m_HeaderMap[Ebsd::Ang::PatternWidth];
+    AngHeaderIntType::Pointer c = boost::dynamic_pointer_cast<AngHeaderIntType>(p);
+    c->setValue(value);
+    m_PatternDims[1] = value;
+  }
 
   // Read the Pattern Height - This may not exist
   value = 0;
-  err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternHeight, value);
-  p = m_HeaderMap[Ebsd::Ang::PatternHeight];
-  c = boost::dynamic_pointer_cast<AngHeaderIntType>(p);
-  c->setValue(value);
-  m_PatternDims[0] = value;
+  if (QH5Lite::datasetExists(gid, Ebsd::Ang::PatternHeight))
+  {
+    err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternHeight, value);
+    EbsdHeaderEntry::Pointer p = m_HeaderMap[Ebsd::Ang::PatternHeight];
+    AngHeaderIntType::Pointer c = boost::dynamic_pointer_cast<AngHeaderIntType>(p);
+    c->setValue(value);
+    m_PatternDims[0] = value;
+  }
   HDF_ERROR_HANDLER_ON
 
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::Operator, gid, m_HeaderMap);
@@ -495,22 +500,22 @@ int H5OIMReader::readHeader(hid_t parId)
     AngPhase::Pointer m_CurrentPhase = AngPhase::New();
     m_CurrentPhase->setPhaseIndex(phaseGroupName.toInt());
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
+        READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
+        READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
-    QVector<float> fillerValues(6,0.0);
+        QVector<float> fillerValues(6,0.0);
     m_CurrentPhase->setLatticeConstants(fillerValues);
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantA, LatticeConstantA, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantB, LatticeConstantB, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantC, LatticeConstantC, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantAlpha, LatticeConstantAlpha, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantBeta, LatticeConstantBeta, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantGamma, LatticeConstantGamma, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantB, LatticeConstantB, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantC, LatticeConstantC, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantAlpha, LatticeConstantAlpha, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantBeta, LatticeConstantBeta, m_CurrentPhase)
+        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantGamma, LatticeConstantGamma, m_CurrentPhase)
 
 
-    if (m_CurrentPhase->getNumberFamilies() > 0)
+        if (m_CurrentPhase->getNumberFamilies() > 0)
     {
       // hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.toLatin1().data(), H5P_DEFAULT);
       // Only read the HKL Families if they are there. Trying to open the group will tell us if there
@@ -569,15 +574,17 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   {
     hsize_t dimsFam[1];
     int nDims = H5Sget_simple_extent_dims(dataspace, dimsFam, NULL);
-
-    data = boost::shared_array<HKLFamily_t>(new HKLFamily_t[dimsFam[0]]); // (HKLFamily_t *) calloc(dimsFam[0], sizeof(HKLFamily_t));
-    herr_t status = H5Dread (dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(data.get()) );
-    if (status < 0)
+    if(nDims> 0)
     {
-      setErrorCode(-90011);
-      QString ss = QObject::tr("H5OIMReader Error: Could not read the HKLFamily data");
-      setErrorMessage(ss);
-      return getErrorCode();
+      data = boost::shared_array<HKLFamily_t>(new HKLFamily_t[dimsFam[0]]); // (HKLFamily_t *) calloc(dimsFam[0], sizeof(HKLFamily_t));
+      herr_t status = H5Dread (dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(data.get()) );
+      if (status < 0)
+      {
+        setErrorCode(-90011);
+        QString ss = QObject::tr("H5OIMReader Error: Could not read the HKLFamily data");
+        setErrorMessage(ss);
+        return getErrorCode();
+      }
     }
   }
 
@@ -703,7 +710,6 @@ int H5OIMReader::readData(hid_t parId)
 
   ANG_READER_ALLOCATE_AND_READ(Fit, Ebsd::Ang::Fit, float);
 
-
   if (err < 0)
   {
     setNumFeatures(9);
@@ -723,7 +729,7 @@ int H5OIMReader::readData(hid_t parId)
     err = QH5Lite::getDatasetInfo(gid, Ebsd::Ang::PatternData, dims, type_class, type_size);
     if (err >= 0) // Only read the pattern data if the pattern data is available.
     {
-      totalDataRows = 1; // Calculate the totla number of elements to allocate for the pattern data
+      totalDataRows = 1; // Calculate the total number of elements to allocate for the pattern data
       for(qint32 i = 0; i < dims.size(); i++)
       {
         totalDataRows = totalDataRows * dims[i];

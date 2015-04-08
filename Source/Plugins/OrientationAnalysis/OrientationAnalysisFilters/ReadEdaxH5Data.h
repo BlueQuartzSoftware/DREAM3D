@@ -225,14 +225,14 @@ class ReadEdaxH5Data : public AbstractFilter
 
 
   private:
-    QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
+
+    QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
 
     ReadEdaxH5Data(const ReadEdaxH5Data&); // Copy Constructor Not Implemented
     void operator=(const ReadEdaxH5Data&); // Operator '=' Not Implemented
