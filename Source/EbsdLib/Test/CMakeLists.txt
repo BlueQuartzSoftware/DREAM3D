@@ -12,6 +12,7 @@
 project(EbsdLibTest)
 
 include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
+
 include_directories(${${PROJECT_NAME}_SOURCE_DIR})
 include_directories(${${PROJECT_NAME}_BINARY_DIR})
 include_directories(${EbsdLibTest_BINARY_DIR})
@@ -39,6 +40,11 @@ AddDREAM3DUnitTest(TESTNAME CtfReaderTest
                     SOURCES ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp
                     FOLDER "Test/EbsdLib" 
                     LINK_LIBRARIES Qt5::Core EbsdLib)
+
+AddDREAM3DUnitTest(TESTNAME EdaxOIMReaderTest
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/EdaxOIMReaderTest.cpp
+                    FOLDER "Test/EbsdLib" 
+                    LINK_LIBRARIES Qt5::Core H5Support EbsdLib)
 
 AddDREAM3DUnitTest(TESTNAME HedmReaderTest 
                     SOURCES ${EbsdLibTest_SOURCE_DIR}/HedmReaderTest.cpp

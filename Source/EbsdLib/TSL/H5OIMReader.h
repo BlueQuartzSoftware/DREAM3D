@@ -96,18 +96,30 @@ class EbsdLib_EXPORT H5OIMReader : public AngReader
      * @brief The HDF5 path to find the EBSD data
      */
     EBSD_INSTANCE_STRING_PROPERTY(HDF5Path)
+    EBSD_INSTANCE_PROPERTY(bool, ReadPatternData)
+    EBSD_INSTANCE_PROPERTY(uint8_t*, PatternData)
+    EBSD_INSTANCE_2DVECTOR_PROPERTY(int, PatternDims)
 
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumColumns, Ebsd::Ang::nColumns)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumRows, Ebsd::Ang::nRows)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStep, Ebsd::Ang::StepX)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStep, Ebsd::Ang::StepY)
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, Grid, Ebsd::Ang::GridType)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, PatternWidth, Ebsd::Ang::PatternWidth)
+    EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, PatternHeight, Ebsd::Ang::PatternHeight)
+
 
     /**
      * @brief Reads the file
      * @return error condition
      */
     virtual int readFile();
+
+    /**
+     * @brief readScanNames
+     * @return
+     */
+    virtual int readScanNames(QStringList& names);
 
     /**
      * @brief Reads the header section of the file
