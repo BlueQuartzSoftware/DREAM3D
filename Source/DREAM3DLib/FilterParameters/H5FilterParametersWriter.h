@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
@@ -55,6 +56,15 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     DREAM3D_SHARED_POINTERS(H5FilterParametersWriter)
     DREAM3D_STATIC_NEW_MACRO(H5FilterParametersWriter)
     DREAM3D_TYPE_MACRO_SUPER(H5FilterParametersWriter, AbstractFilterParametersWriter)
+
+    /**
+    * @brief WritePipelineToFile
+    * @param filePath
+    * @return
+    */
+    static int WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs = NULL);
+
+    DREAM3D_INSTANCE_PROPERTY(hid_t, PipelineGroupId)
 
 
     virtual ~H5FilterParametersWriter();

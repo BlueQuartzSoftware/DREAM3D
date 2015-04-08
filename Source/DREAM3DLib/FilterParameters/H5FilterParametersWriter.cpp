@@ -35,7 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "H5FilterParametersWriter.h"
 
-
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
@@ -56,6 +57,69 @@ H5FilterParametersWriter::H5FilterParametersWriter()
 // -----------------------------------------------------------------------------
 H5FilterParametersWriter::~H5FilterParametersWriter()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs)
+{
+  if (NULL == pipeline.get())
+  {
+    if (NULL != obs)
+    {
+      PipelineMessage pm(H5FilterParametersWriter::ClassName(), "FilterPipeline Object was NULL for writing", -1, PipelineMessage::Error);
+      obs->processPipelineMessage(pm);
+    }
+    return -1;
+  }
+
+  QFileInfo fileInfo(filePath);
+
+  // WRITE THE PIPELINE TO THE HDF5 FILE
+  H5FilterParametersWriter::Pointer writer = H5FilterParametersWriter::New();
+
+  hid_t fileId = -1;
+  if (fileInfo.exists() == false)
+  {
+    fileId = QH5Utilities::createFile(filePath);
+  }
+  else
+  {
+    fileId = QH5Utilities::openFile(filePath);
+  }
+
+  hid_t pipelineGroupId = QH5Utilities::createGroup(fileId, DREAM3D::StringConstants::PipelineGroupName);
+  writer->setGroupId(pipelineGroupId);
+
+  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
+
+  // Loop over each filter and write it's input parameters to the file
+  int count = filters.size();
+  int index = 0;
+  for (qint32 i = 0; i < count; ++i)
+  {
+    AbstractFilter::Pointer filter = filters.at(i);
+    if (NULL != filter.get())
+    {
+      index = filter->writeFilterParameters(writer.get(), index);
+    }
+    else
+    {
+      AbstractFilter::Pointer badFilter = AbstractFilter::New();
+      writer->openFilterGroup(badFilter.get(), i);
+      writer->writeValue("Unknown Filter", "ERROR: Filter instance was NULL within the PipelineFilterWidget instance. Report this error to the DREAM3D Developers");
+      writer->closeFilterGroup();
+    }
+  }
+
+  // Close group
+  H5Gclose(pipelineGroupId);
+
+  // Close file
+  QH5Utilities::closeFile(fileId);
+
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

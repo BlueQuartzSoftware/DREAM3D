@@ -105,6 +105,24 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void displayHelp(QString helpFile);
 
     /**
+    * @brief getPipelineViewWidget
+    * @param
+    */
+    PipelineViewWidget* getPipelineViewWidget();
+
+    /**
+    * @brief setOpenedFilePath
+    * @param filePath
+    */
+    void setOpenedFilePath(const QString &filePath);
+
+    /**
+    * @brief setOpenedFilePath
+    * @param path
+    */
+    void setOpenDialogLastDirectory(const QString &path);
+
+    /**
      * @brief versionCheckReply
      */
     void versionCheckReply(UpdateCheckData*);
@@ -120,8 +138,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     /* Menu Slots */
 
     // File Menu
-    void on_actionImportPipeline_triggered();
-    void on_actionExportPipeline_triggered();
+    void on_actionNew_triggered();
+    void on_actionOpen_triggered();
+    void on_actionSave_triggered();
+    void on_actionSaveAs_triggered();
     void on_actionExit_triggered();
 
     //Pipeline Menu
@@ -169,9 +189,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief pipelineFileLoaded
      * @param file
      * @param format
-     * @param append
+     * @param type
      */
-    void pipelineFileLoaded(QString file, QSettings::Format format, bool append);
+    void pipelineFileLoaded(QString file, ExtractionType type);
 
 
     void pipelineDidFinish();
@@ -244,7 +264,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void readWindowSettings();
     void readVersionSettings();
-    void readLastPipeline();
 
     void checkForUpdatesAtStartup();
 
@@ -306,7 +325,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QToolButton*        m_IssuesBtn;
     bool                m_ShouldRestart;
 
-
+    QString             m_OpenedFilePath;
     static QString    m_OpenDialogLastDirectory;
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
