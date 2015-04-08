@@ -39,18 +39,12 @@
 #include <QtCore/QtDebug>
 
 #include "EbsdLib/EbsdLib.h"
-
-
-#if EbsdLib_HDF5_SUPPORT
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
-#endif
-
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/H5OIMReader.h"
+#include "EbsdLib/Test/EbsdLibTestFileLocation.h"
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "EbsdLib/Test/EbsdLibTestFileLocation.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -72,6 +66,13 @@ void TestH5OIMReader()
   int err1 = 0;
   H5OIMReader::Pointer reader = H5OIMReader::New();
   reader->setFileName(UnitTest::AngImportTest::EdaxOIMH5File);
+  QStringList names;
+  err = reader->readScanNames(names);
+  DREAM3D_REQUIRED(err, >=, 0)
+  int count = names.size();
+  DREAM3D_REQUIRED(count, ==, 1)
+
+
   reader->setHDF5Path("Scan 1");
   err1 = reader->readHeaderOnly();
 
@@ -84,7 +85,7 @@ void TestH5OIMReader()
   int y = reader->getYDimension();
   DREAM3D_REQUIRED(y, ==, 151)
 
-
+  reader->setReadPatternData(true);
   err = reader->readFile();
       float* f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi1));
   DREAM3D_REQUIRE_VALID_POINTER(f1)
@@ -103,6 +104,12 @@ void TestH5OIMReader()
   int* phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Ebsd::Ang::PhaseData));
   DREAM3D_REQUIRE_VALID_POINTER(phasePtr)
 
+  uint8_t* patterns = reader->getPatternData();
+  DREAM3D_REQUIRE_VALID_POINTER(patterns)
+  int patternDims[2] = {0, 0};
+  reader->getPatternDims(patternDims);
+  DREAM3D_REQUIRED(patternDims[0], ==, 60)
+  DREAM3D_REQUIRED(patternDims[1], ==, 60)
 
 }
 

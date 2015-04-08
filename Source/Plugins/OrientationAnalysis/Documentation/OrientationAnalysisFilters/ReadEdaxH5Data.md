@@ -11,7 +11,7 @@ This filter will read a single .h5 file into a DataContainer backed by an ImageG
 
 ### Default TSL Transformations ###
 
-If the data has come from a TSL based acquisition system and the settings of the acquisition software were in the default modes then the following reference frame transformations may need to be performed based on the version of the OIM Analysis software being used to collect the data
+If the data has come from a TSL based acquisition system and the settings of the acquisition software were in the default modes then the following reference frame transformations may need to be performed based on the version of the OIM Analysis software being used to collect the data. The user is **strongly** encourages to seek the advice of the collecting personnel to verify their equipment setup. Newer versions of OIM Analysis have changed the defaults which may render the reference frame transformations unneeded. 
 
 + Sample Reference Frame: 180 Degrees about the <010> Axis
 + Crystal Reference Frame: 90 Degrees about the <001> Axis

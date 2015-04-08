@@ -91,11 +91,15 @@ class ReadEdaxH5Data : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
+    DREAM3D_FILTER_PARAMETER(bool, ReadPatternData)
+    Q_PROPERTY(bool ReadPatternData READ getReadPatternData WRITE setReadPatternData)
+
     DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
     Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -168,6 +172,10 @@ class ReadEdaxH5Data : public AbstractFilter
     DREAM3D_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
     Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
+    DREAM3D_PIMPL_PROPERTY_DECL(QStringList, FileScanNames)
+    Q_PROPERTY(QStringList FileScanNames READ getFileScanNames WRITE setFileScanNames)
+    DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, PatternDims)
+    Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -221,6 +229,8 @@ class ReadEdaxH5Data : public AbstractFilter
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
+
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
 

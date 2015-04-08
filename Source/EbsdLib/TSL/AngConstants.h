@@ -106,6 +106,9 @@
 #define ANG_Z_MAX "ZMax"
 #define ANG_CI "CI"
 #define ANG_IQ "IQ"
+#define ANG_PATTERN_DATA "Pattern"
+#define ANG_PATTERN_WIDTH "Pattern Width"
+#define ANG_PATTERN_HEIGHT "Pattern Height"
 
 
 namespace Ebsd
@@ -205,6 +208,9 @@ namespace Ebsd
     const QString YPosition(ANG_Y_POSITION);
     const QString SEMSignal(ANG_SEM_SIGNAL);
     const QString Fit(ANG_FIT);
+    const QString PatternData(ANG_PATTERN_DATA);
+    const QString PatternWidth(ANG_PATTERN_WIDTH);
+    const QString PatternHeight(ANG_PATTERN_HEIGHT);
 
     const QString SquareGrid(ANG_SQUARE_GRID);
     const QString HexGrid(ANG_HEX_GRID);
