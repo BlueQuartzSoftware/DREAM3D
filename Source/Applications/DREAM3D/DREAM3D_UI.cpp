@@ -133,18 +133,15 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // Do our own widget initializations
   setupGui();
 
-  // Set the title of the window
-  setWindowTitle("[*]UntitledPipeline - DREAM3D");
-
-  // The window starts off as modified, so that the user can save their work
-  setWindowModified(true);
-
   // Read other settings
   readVersionSettings();
 
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
+
+  // Set window modified to false
+  setWindowModified(false);
 }
 
 // -----------------------------------------------------------------------------

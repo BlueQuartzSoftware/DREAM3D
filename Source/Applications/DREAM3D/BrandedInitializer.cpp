@@ -142,6 +142,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 
   // Create main window.
   this->MainWindow = new DREAM3D_UI(NULL);
+  this->MainWindow->setWindowTitle("[*]UntitledPipeline - DREAM3D");
   this->MainWindow->setLoadedPlugins(plugins);
 
   // Open pipeline if DREAM3D was opened from a compatible file
@@ -149,8 +150,15 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   {
     char* two = argv[1];
     QString filePath = QString::fromLatin1(two);
-    this->MainWindow->getPipelineViewWidget()->openPipeline(filePath);
-    this->MainWindow->setWindowModified(false);
+    QFileInfo fi(filePath);
+    int err = this->MainWindow->getPipelineViewWidget()->openPipeline(filePath);
+
+    // If the pipeline was read correctly, change the title
+    if (err >= 0)
+    {
+      this->MainWindow->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
+      this->MainWindow->setWindowModified(false);
+    }
   }
 
   // give GUI components time to update before the mainwindow is shown
