@@ -127,18 +127,15 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // using the QDesigner program
   setupUi(this);
 
-  // Get the last window state and the dock widget state
-  readWindowSettings();
-
   // Do our own widget initializations
   setupGui();
-
-  // Read other settings
-  readVersionSettings();
 
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
+
+  // Read various settings
+  readSettings();
 
   // Set window modified to false
   setWindowModified(false);
@@ -207,6 +204,10 @@ void DREAM3D_UI::on_actionOpen_triggered()
 
     // Cache the last directory on new instance
     newInstance->setOpenDialogLastDirectory(fi.path());
+
+    // Add file path to the recent files list for both instances
+    QRecentFileList* list = QRecentFileList::instance();
+    list->addFile(filePath);
 
     // Show the new instance
     newInstance->setWindowModified(false);
@@ -333,9 +334,9 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
 }
 
 // -----------------------------------------------------------------------------
-//
+//  Read our settings from a file
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readWindowSettings()
+void DREAM3D_UI::readSettings()
 {
 #if defined (Q_OS_MAC)
   QSettings::Format format = QSettings::NativeFormat;
@@ -345,40 +346,51 @@ void DREAM3D_UI::readWindowSettings()
   QString filePath;
   {
     QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
     filePath = prefs.fileName();
-    bool ok = false;
-    prefs.beginGroup("WindowSettings");
-    if (prefs.contains(QString("MainWindowGeometry")) )
+    // Have the pipeline builder read its settings from the prefs file
+    readWindowSettings(prefs);
+    readVersionSettings(prefs);
+    readRecentsSettings(prefs);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::readWindowSettings(QSettings& prefs)
+{
+  QString filePath = prefs.fileName();
+  bool ok = false;
+  prefs.beginGroup("WindowSettings");
+  if (prefs.contains(QString("MainWindowGeometry")))
+  {
+    QByteArray geo_data = prefs.value(QString("MainWindowGeometry")).toByteArray();
+    ok = restoreGeometry(geo_data);
+    if (!ok)
     {
-      QByteArray geo_data = prefs.value(QString("MainWindowGeometry")).toByteArray();
-      ok = restoreGeometry(geo_data);
-      if (!ok)
-      {
-        qDebug() << "Error Restoring the Window Geometry" << "\n";
-      }
+      qDebug() << "Error Restoring the Window Geometry" << "\n";
     }
-
-    if (prefs.contains(QString("MainWindowState")))
-    {
-      std::cout << "Reading State of Main Window" << std::endl;
-      QByteArray layout_data = prefs.value(QString("MainWindowState")).toByteArray();
-      restoreState(layout_data);
-    }
-    readDockWidgetSettings(prefs, filterListDockWidget);
-    readDockWidgetSettings(prefs, filterLibraryDockWidget);
-    readDockWidgetSettings(prefs, favoritesDockWidget);
-    readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
-    readDockWidgetSettings(prefs, issuesDockWidget);
-
-    QByteArray splitterGeometry = prefs.value(QString("Splitter_Geometry")).toByteArray();
-    splitter->restoreGeometry(splitterGeometry);
-    QByteArray splitterSizes = prefs.value(QString("Splitter_Sizes")).toByteArray();
-    splitter->restoreState(splitterSizes);
-
-    prefs.endGroup();
-
   }
 
+  if (prefs.contains(QString("MainWindowState")))
+  {
+    std::cout << "Reading State of Main Window" << std::endl;
+    QByteArray layout_data = prefs.value(QString("MainWindowState")).toByteArray();
+    restoreState(layout_data);
+  }
+  readDockWidgetSettings(prefs, filterListDockWidget);
+  readDockWidgetSettings(prefs, filterLibraryDockWidget);
+  readDockWidgetSettings(prefs, favoritesDockWidget);
+  readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
+  readDockWidgetSettings(prefs, issuesDockWidget);
+
+  QByteArray splitterGeometry = prefs.value(QString("Splitter_Geometry")).toByteArray();
+  splitter->restoreGeometry(splitterGeometry);
+  QByteArray splitterSizes = prefs.value(QString("Splitter_Sizes")).toByteArray();
+  splitter->restoreState(splitterSizes);
+
+  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -398,21 +410,27 @@ void DREAM3D_UI::readDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readVersionSettings()
+void DREAM3D_UI::readVersionSettings(QSettings& prefs)
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QString filePath;
+  
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::readRecentsSettings(QSettings& prefs)
+{
+  int size = prefs.beginReadArray("RecentFiles");
+
+  QRecentFileList* recentsList = QRecentFileList::instance();
+  for (int i = 0; i < size; i++)
   {
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-
-    filePath = prefs.fileName();
-
+    prefs.setArrayIndex(i);
+    QString filePath = prefs.value("FilePath").toString();
+    recentsList->addFile(filePath);
   }
 
+  prefs.endArray();
 }
 
 // -----------------------------------------------------------------------------
@@ -434,6 +452,8 @@ void DREAM3D_UI::writeSettings()
     writeWindowSettings(prefs);
 
     writeVersionCheckSettings(prefs);
+
+    writeRecentsSettings(prefs);
   }
 }
 
@@ -468,6 +488,24 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
   prefs.setValue(QString("Splitter_Sizes"), splitterSizes);
 
   prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::writeRecentsSettings(QSettings& prefs)
+{
+  QStringList fileList = QRecentFileList::instance()->fileList();
+
+  prefs.beginWriteArray("RecentFiles");
+
+  for (int i = 0; i < fileList.size(); i++)
+  {
+    prefs.setArrayIndex(i);
+    prefs.setValue("FilePath", fileList[i]);
+  }
+
+  prefs.endArray();
 }
 
 // -----------------------------------------------------------------------------
@@ -540,6 +578,8 @@ void DREAM3D_UI::setupGui()
   //  favoritesDockWidget->connectFilterList(filterListDockWidget);
   //  prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
 
+  QRecentFileList* recentsList = QRecentFileList::instance();
+
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
   // or load an entire pipeline into the view
   connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
@@ -562,6 +602,9 @@ void DREAM3D_UI::setupGui()
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
+
+  connect(recentsList, SIGNAL(fileListChanged(const QString &)),
+    this, SLOT(updateRecentFileList(const QString &)));
 
   pipelineViewWidget->setStatusBar(statusbar);
 
@@ -1082,10 +1125,8 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::updateRecentFileList(const QString& file)
+void DREAM3D_UI::updateRecentFileList(const QString &file)
 {
-  // qDebug() << "DREAM3D_UI::updateRecentFileList" << "\n";
-
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
 
@@ -1100,7 +1141,6 @@ void DREAM3D_UI::updateRecentFileList(const QString& file)
     this->menu_RecentFiles->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1108,16 +1148,21 @@ void DREAM3D_UI::updateRecentFileList(const QString& file)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::openRecentFile()
 {
-  //qDebug() << "QRecentFileList::openRecentFile()" << "\n";
-
   QAction* action = qobject_cast<QAction*>(sender());
   if (action)
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
-    QString file = action->data().toString();
-    //TODO: use the 'file' object to figure out what to open
-  }
+    QString filePath = action->data().toString();
+    int err = getPipelineViewWidget()->openPipeline(filePath);
 
+    if (err >= 0)
+    {
+      QFileInfo fileInfo(filePath);
+      setWindowTitle("[*]" + fileInfo.baseName() + " - DREAM3D");
+      setOpenedFilePath(filePath);
+      setWindowModified(false);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------

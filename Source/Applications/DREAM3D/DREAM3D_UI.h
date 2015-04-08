@@ -128,6 +128,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void versionCheckReply(UpdateCheckData*);
 
     /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings();
+
+    /**
      * @brief Writes the preferences to the users pref file
      */
     void writeSettings();
@@ -178,7 +183,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * should be connected to the Signal QRecentFileList->fileListChanged
      * @param file The newly added file.
      */
-    void updateRecentFileList(const QString& file);
+    void updateRecentFileList(const QString &file);
 
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
@@ -260,10 +265,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void writeWindowSettings(QSettings& prefs);
     void writeVersionCheckSettings(QSettings& prefs);
+    void writeRecentsSettings(QSettings& prefs);
 
 
-    void readWindowSettings();
-    void readVersionSettings();
+    void readWindowSettings(QSettings& prefs);
+    void readVersionSettings(QSettings& prefs);
+    void readRecentsSettings(QSettings& prefs);
 
     void checkForUpdatesAtStartup();
 
