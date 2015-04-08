@@ -68,6 +68,7 @@ class CalcProjectedStatsImpl
 
     void convert(size_t start, size_t end) const
     {
+      //FIXME: NO Checks for NULL pointers in this code.
       int32_t point, newPoint;
       T val;
       for (size_t i = start; i < end; i++)
@@ -301,14 +302,14 @@ void FindProjectedImageStatistics::execute()
   bool doParallel = true;
 #endif
 
-  size_t xP, yP, zP;
+  size_t xP = 0, yP = 0, zP = 0;
   m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
 
   Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "startingPoints");
-  int32_t* startPoints;
-  size_t stride, yStride;
+  int32_t* startPoints = NULL;
+  size_t stride = 0, yStride = 0;
   size_t count = 0;
-  size_t depth;
+  size_t depth = 0;
   QVector<size_t> cDims(1, 1);
   if(m_Plane == 0)
   {

@@ -168,14 +168,14 @@ void EMMPM::execute()
   EMMPM_Data* data = getData().get();
 
   char msgbuff[256];
-  unsigned long long int millis = 0;
+  //unsigned long long int millis = 0;
   memset(msgbuff, 0, 256);
 
   // Copy the input image into data->y arrays
   EMMPMUtilities::ConvertInputImageToWorkingImage(m_Data);
-  millis = EMMPM_getMilliSeconds();
-  millis = millis << 32; // push off the high bits
-  millis = millis >> 32; // bring back the low bits
+//  millis = EMMPM_getMilliSeconds();
+//  millis = millis << 32; // push off the high bits
+//  millis = millis >> 32; // bring back the low bits
   //data->rngVars = init_genrand( (unsigned long)(millis));
 
   if (data->cancel) { data->progress = 100.0; return; }

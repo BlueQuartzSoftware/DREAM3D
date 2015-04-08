@@ -2664,8 +2664,8 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
   int gid = 1;
 
   float currentvol = 0.0;
-  float vol;
-  float diam;
+  float vol = 0.0f;
+  float diam = 0.0f;
   int volgood = 0;
   for (size_t j = 0; j < primaryPhasesLocal.size(); ++j)
   {

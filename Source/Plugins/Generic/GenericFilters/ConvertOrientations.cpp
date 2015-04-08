@@ -627,6 +627,8 @@ void ConvertOrientations::execute()
       totalPoints = m_CellAxisAnglesPtr.lock()->getNumberOfTuples();
     }
     break;
+    default:
+      totalPoints = 0;
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

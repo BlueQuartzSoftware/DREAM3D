@@ -253,7 +253,7 @@ void FindEllipsoidError::find_error2D()
 
     float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
     float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-    float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+    //float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
     float xsquared, ysquared, asquared, bsquared, xc, yc, theta;
     int32_t xcoord, ycoord;

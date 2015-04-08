@@ -187,11 +187,11 @@ void FindLargestCrossSections::find_crosssections()
   DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "FeatureCounts");
   double* featurecounts = m_FeatureCounts->getPointer(0);
 
-  int outPlane, inPlane1, inPlane2;
-  float res_scalar, area;
-  int stride1, stride2, stride3;
-  int istride, jstride, kstride;
-  int point, gnum;
+  int outPlane = 0, inPlane1 = 0, inPlane2 = 0;
+  float res_scalar = 0.0f, area = 0.0f;
+  int stride1 = 0, stride2 = 0, stride3 = 0;
+  int istride = 0, jstride = 0, kstride = 0;
+  int point = 0, gnum = 0;
 
   if(m_Plane == 0)
   {

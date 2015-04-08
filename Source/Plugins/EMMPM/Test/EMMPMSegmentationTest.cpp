@@ -118,7 +118,6 @@ void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString input
     AbstractFilter::Pointer filter = filterFactory->create();
 
     QVariant var;
-    int err = 0;
     bool propWasSet;
 
     var.setValue(inputFile);
@@ -150,7 +149,6 @@ void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, D
     AbstractFilter::Pointer filter = filterFactory->create();
 
     QVariant var;
-    int err = 0;
     bool propWasSet;
 
     var.setValue(path);
@@ -222,7 +220,6 @@ void createAndAddMultiEMMPMFilter(FilterPipeline::Pointer pipeline, QVector<Data
     AbstractFilter::Pointer filter = filterFactory->create();
 
     QVariant var;
-    int err = 0;
     bool propWasSet;
 
     var.setValue(input);

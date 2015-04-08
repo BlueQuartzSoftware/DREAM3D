@@ -232,12 +232,13 @@ int H5CtfReader::readHeader(hid_t parId)
       err = QH5Lite::readPointerDataset(gid, Ebsd::Ctf::name, _##name);\
       if (err < 0) {\
         deallocateArrayData(_##name); /*deallocate the array*/\
+        _##name = NULL;\
         setErrorCode(-90020);\
         ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
            "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
         setErrorMessage(ss.string());\
-        err = H5Gclose(gid);\
-        return -90020;\
+        err = H5Gclose(gid);if (err < 0) {}\
+        return getErrorCode();\
       }\
     }\
     setPointerByName(#name, _##name);\
@@ -256,7 +257,12 @@ int H5CtfReader::readData(hid_t parId)
   size_t yCells = getYCells();
   size_t xCells = getXCells();
   size_t totalDataRows = yCells * xCells;
-
+  if( totalDataRows == 0)
+  {
+    setErrorCode(-1);
+    setErrorMessage(QString("TotalDataRows = 0;"));
+    return -1;
+  }
 
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1(), H5P_DEFAULT);

@@ -131,13 +131,14 @@ class EbsdLib_EXPORT H5MicVolumeReader : public H5EbsdVolumeReader
     template<typename T>
     T* allocateArray(size_t numberOfElements)
     {
+      T* buffer = NULL;
+      if(numberOfElements == 0) { return buffer; }
 #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+      buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
 #else
-      T*  m_buffer = new T[numberOfElements];
+      buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
 #endif
-      //      m_NumberOfElements = numberOfElements;
-      return m_buffer;
+      return buffer;
     }
 
     /**

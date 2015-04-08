@@ -816,10 +816,8 @@ QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigure
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
-
   BOOST_ASSERT(false);
 
-  return rgb;
+  return RgbColor::dRgb(0, 0, 0, 0);
 }
 

@@ -358,9 +358,9 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   // generate the Features
   int gid = 1;
 
-  float currentvol = 0.0;
-  float vol;
-  float diam;
+  float currentvol = 0.0f;
+  float vol = 0.0f;
+  float diam = 0.0f;
   int volgood = 0;
   for (qint32 j = 0; j < primaryphases.size(); ++j)
   {

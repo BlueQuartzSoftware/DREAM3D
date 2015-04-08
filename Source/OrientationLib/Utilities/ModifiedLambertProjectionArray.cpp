@@ -337,8 +337,8 @@ void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, d
   hsize_t newDims[2];
   hsize_t offset[2];
   hsize_t hyperDims[2] = { 1, 0 };
-  int rank;
-  herr_t status;
+  int rank = 0;
+  herr_t status = -1;
   /*  printf("CPU [%d,%d] Expanding '%s' array with additional Row \n", home->myDomain, home->cycle, dsetName);
       fflush(stdout); */
   dataset = H5Dopen2(gid, dsetName.toLatin1().data(), H5P_DEFAULT);

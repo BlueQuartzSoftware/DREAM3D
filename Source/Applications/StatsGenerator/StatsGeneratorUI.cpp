@@ -766,6 +766,8 @@ void StatsGeneratorUI::on_actionOpen_triggered()
   if (err < 0)
   {
     delete window;
+    window = NULL;
+    return;
   }
 
   // Offset the window a bit from the current window

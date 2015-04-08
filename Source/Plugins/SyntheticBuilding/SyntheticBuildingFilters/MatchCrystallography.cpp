@@ -567,8 +567,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
   float random = 0;
   size_t counter = 0;
 
-  QuatF q1;
-  QuatF q2;
+  QuatF q1 = QuaternionMathF::New();
+  QuatF q2 = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   float ea1 = 0, ea2 = 0, ea3 = 0;

@@ -201,8 +201,8 @@ void GenerateVectorColors::execute()
     m_CellVectorColors[index + 1] = 0;
     m_CellVectorColors[index + 2] = 0;
 
-    float dir[3];
-    float r, g, b;
+    float dir[3] = { 0.0f, 0.0f, 0.0f };
+    float r = 0, g = 0, b = 0;
     DREAM3D::Rgb argb;
     if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
     {

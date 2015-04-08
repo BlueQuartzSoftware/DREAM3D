@@ -202,7 +202,7 @@ int H5PrecipitateStatsDataDelegate::readPrecipitateStatsData(PrecipitateStatsDat
   err = readDistributionData(groupId,
                              DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions,
                              data->getFeatureSize_Omegas());
-
+  
   // Read the Misorientation Bins
   FloatArrayType::Pointer misoBins = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::MisorientationBins);
   err = misoBins->readH5Data(groupId);

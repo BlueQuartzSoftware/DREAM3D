@@ -38,7 +38,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 #include "MorphFilt.h"
 
@@ -102,6 +102,7 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
   se_cols = 2*r + 1;
 
   erosion = (unsigned char*)malloc(cols * rows * sizeof(unsigned char));
+  ::memset(erosion, 0, cols * rows * sizeof(unsigned char));
 
   for (int i = 0; i < rows; i++)
   {
@@ -131,7 +132,7 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
     }
   }
 
-  h = r - -r + 1;
+  //h = r - -r + 1;
   w = r - -r + 1;
   for (int ii = -r; ii <= r; ii++)
   {
