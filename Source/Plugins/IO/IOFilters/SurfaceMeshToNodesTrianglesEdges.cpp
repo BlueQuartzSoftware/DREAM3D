@@ -332,7 +332,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  fprintf(triFile, "%lld\n", numTriangles);
+  fprintf(triFile, "%lld\n", (long long int)(numTriangles));
 
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
   for (int64_t j = 0; j < numTriangles; ++j)

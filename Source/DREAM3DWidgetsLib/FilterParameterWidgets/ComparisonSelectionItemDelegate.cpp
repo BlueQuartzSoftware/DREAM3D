@@ -36,6 +36,8 @@
 
 #include "ComparisonSelectionItemDelegate.h"
 
+#include <limits>
+
 #include <QtCore/QAbstractItemModel>
 #include <QtWidgets/QStyleOptionViewItemV4>
 #include <QtWidgets/QLineEdit>
