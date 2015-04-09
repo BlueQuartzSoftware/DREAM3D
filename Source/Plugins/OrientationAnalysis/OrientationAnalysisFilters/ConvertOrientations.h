@@ -36,20 +36,15 @@
 #ifndef _ConvertOrientations_H_
 #define _ConvertOrientations_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
-/*
- *
+/**
+ * @brief The ConvertOrientations class. See Filter documentation for details.
  */
 class  ConvertOrientations : public AbstractFilter
 {
@@ -135,17 +130,15 @@ class  ConvertOrientations : public AbstractFilter
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, RodriguesVectors)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisAngles)
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellRodriguesVectors)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellAxisAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, RodriguesVectors)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisAngles)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
@@ -153,10 +146,6 @@ class  ConvertOrientations : public AbstractFilter
 
     ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
     void operator=(const ConvertOrientations&); // Operator '=' Not Implemented
-
 };
 
 #endif /* ConvertOrientations_H_ */
-
-
-
