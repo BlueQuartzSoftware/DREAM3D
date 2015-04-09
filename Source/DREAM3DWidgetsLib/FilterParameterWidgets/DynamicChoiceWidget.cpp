@@ -178,12 +178,16 @@ void DynamicChoiceWidget::widgetChanged(int index)
 void DynamicChoiceWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   QString index = value->currentText();
-  QVariant v(index);
-  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
 
-  if(false == ok)
+  if (index.isEmpty() == false)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), m_FilterParameter);
+    QVariant v(index);
+    bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+
+    if (false == ok)
+    {
+      FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), m_FilterParameter);
+    }
   }
 }
 
