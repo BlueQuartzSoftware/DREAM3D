@@ -10,8 +10,7 @@
   <file>folder_blue@2x.png</file>
   <file>text.png</file>
   <file>text@2x.png</file>
-  <file>cubes.png</file>
-  <file>cubes@2x.png</file>
+
   <file>help2.png</file>
   <file>help2@2x.png</file>
   <file>information.png</file>
@@ -28,6 +27,8 @@
   <file>zoom_out@2x.png</file>
 
 <!-- These are low res icons -->
+  <file>Groups/cubes.png</file>
+  <file>Groups/cubes@2x.png</file>
   <file>Groups/Generic_Icon.png</file>
   <file>Groups/Processing_Icon.png</file>
   <file>Groups/Reconstruction_Icon.png</file>

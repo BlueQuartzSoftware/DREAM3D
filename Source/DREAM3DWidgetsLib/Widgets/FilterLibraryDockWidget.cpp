@@ -96,7 +96,7 @@ void FilterLibraryDockWidget::refreshFilterGroups()
 #if 1
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, DREAM3D::Settings::Library);
-  library->setIcon(0, QIcon(":/cubes.png"));
+  library->setIcon(0, QIcon(":/Groups/cubes.png"));
   library->setData(0, Qt::UserRole, QVariant(LIBRARY_NODE_TYPE) );
 #else
   QTreeWidgetItem* library = filterLibraryTree->invisibleRootItem();
@@ -107,14 +107,14 @@ void FilterLibraryDockWidget::refreshFilterGroups()
   {
     //   qDebug() << *iter << "\n";
     QString groupName = *iter;
-    QString iconName(":/");
+    QString iconName(":/Groups/");
     iconName.append(groupName);
     iconName.append("_Icon.png");
     // Validate the icon is in the resource system
     QFileInfo iconInfo(iconName);
     if (iconInfo.exists() == false)
     {
-      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+      iconName = ":/Groups/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
     }
     QIcon icon(iconName);
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
