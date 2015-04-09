@@ -6,6 +6,9 @@
 
 #include <QtCore/QString>
 
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
 #include "@PluginName@/@PluginName@Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -31,21 +34,23 @@
 void @ClassName@::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  
   /* There are several types of FilterParameter classes to choose from and several
   * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
+  * a single line if they want. For example, using the variables from the header file:
   */
+
+  // parameters.push_back(FilterParameter::New("Attribute Name", "Name", FilterParameterWidgetType::StringWidget, getName(), false));
+
+  // parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "", "", 1));
+
+  // parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
+
+  // parameters.push_back(FilterParameter::New("Size of Image", "ImageSize", FilterParameterWidgetType::IntWidget, getImageSize(), false, "", 0));
+
+  // parameters.push_back(FilterParameter::New("Image Decimal Value", "ImageDecimal", FilterParameterWidgetType::DoubleWidget, getImageDecimal(), false, "", 1));
+
+  // Set the filter parameters after creating them
   setFilterParameters(parameters);
 }
 
