@@ -161,7 +161,8 @@ private:
       if (val.isObject())
       {
         AttributeMatrixProxy am;
-        am.readJson(val.toObject());
+        QJsonObject obj = val.toObject();
+        am.readJson(obj);
         map.insert(am.name, am);
       }
     }

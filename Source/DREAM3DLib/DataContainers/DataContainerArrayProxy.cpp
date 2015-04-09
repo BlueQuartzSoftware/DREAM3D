@@ -507,7 +507,8 @@ QMap<QString, DataContainerProxy> DataContainerArrayProxy::readMap(QJsonArray js
     if (val.isObject())
     {
       DataContainerProxy dc;
-      dc.readJson(val.toObject());
+      QJsonObject obj = val.toObject();
+      dc.readJson(obj);
       map.insert(dc.name, dc);
     }
   }

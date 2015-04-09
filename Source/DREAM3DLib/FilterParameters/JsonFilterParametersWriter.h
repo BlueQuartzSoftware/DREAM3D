@@ -114,10 +114,10 @@ class DREAM3DLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParame
     virtual int writeValue(const QString name, DataContainerArrayProxy& v);
     virtual int writeValue(const QString name, AxisAngleInput_t v);
 
-    virtual int writeValue(const QString name, DataArrayPath& v);
-  virtual int writeValue(const QString name, QVector<DataArrayPath>& path);
+    virtual int writeValue(const QString name, const DataArrayPath& v);
+  virtual int writeValue(const QString name, const QVector<DataArrayPath>& path);
 
-  virtual int writeValue(const QString name, DynamicTableData& v);
+  virtual int writeValue(const QString name, const DynamicTableData& v);
 
   protected:
     JsonFilterParametersWriter();

@@ -903,7 +903,7 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, DataArrayPath& v)
+int QFilterParametersWriter::writeValue(const QString name, const DataArrayPath& v)
 {
   int err = 0;
   QString value = v.serialize();
@@ -914,7 +914,7 @@ int QFilterParametersWriter::writeValue(const QString name, DataArrayPath& v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, QVector<DataArrayPath>& v)
+int QFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
   int err = 0;
 
@@ -931,7 +931,7 @@ int QFilterParametersWriter::writeValue(const QString name, QVector<DataArrayPat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, DynamicTableData& v)
+int QFilterParametersWriter::writeValue(const QString name, const DynamicTableData& v)
 {
   int err = 0;
 

@@ -399,10 +399,10 @@ namespace FileListInfoTest
 {
   QString Key = "FileListInfo_t test";
 
-  qint32 PaddingDigits = 1.2;
-  quint32 Ordering = 2.65;
-  qint32 StartIndex = 3.975;
-  qint32 EndIndex = 4.6876;
+  qint32 PaddingDigits = -1;
+  quint32 Ordering = 2;
+  qint32 StartIndex = 66;
+  qint32 EndIndex = 2345654;
   QString InputPath = "TestString1";
   QString FilePrefix = "TestString2";
   QString FileSuffix = "TestString3";
@@ -1080,7 +1080,7 @@ int TestJsonReader()
   double oldNum = static_cast<double>(std::numeric_limits<int64_t>().max());
   double newNum = static_cast<double>(std::numeric_limits<int64_t>().max()) + 1;
 
-  JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();  
+  JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
   int err = reader->openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRE_EQUAL(err, 0)
 

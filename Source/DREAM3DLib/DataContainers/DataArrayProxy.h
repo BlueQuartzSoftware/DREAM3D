@@ -116,7 +116,7 @@ class DataArrayProxy
     * @param json
     * @return
     */
-    bool readJson(QJsonObject &json)
+    bool readJson(const QJsonObject &json)
     {
       if (json["Flag"].isDouble() && json["Version"].isDouble() && json["Path"].isString() && json["Name"].isString()
         && json["Object Type"].isString() && json["Tuple Dimensions"].isArray() && json["Component Dimensions"].isArray())

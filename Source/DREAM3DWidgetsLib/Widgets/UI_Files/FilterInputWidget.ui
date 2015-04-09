@@ -121,8 +121,6 @@ font-weight: bold;s
                </spacer>
               </item>
              </layout>
-             <zorder></zorder>
-             <zorder>verticalSpacer</zorder>
             </widget>
            </widget>
           </item>

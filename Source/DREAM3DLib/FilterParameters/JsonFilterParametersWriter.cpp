@@ -48,7 +48,7 @@
 JsonFilterParametersWriter::JsonFilterParametersWriter() :
 currentIndex(0)
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
   QFileInfo info(outputFile);
   QString parentPath = info.absolutePath();
   QDir parentDir(parentPath);
-  
+
   if (parentDir.exists() == false)
   {
     parentDir.mkpath(parentPath);
@@ -443,7 +443,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<float> va
     jsonArray << static_cast<double>(val);
   }
 
-  m_CurrentFilterIndex[name] = jsonArray; 
+  m_CurrentFilterIndex[name] = jsonArray;
 
   return err;
 }
@@ -696,7 +696,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, DataContainerArra
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int JsonFilterParametersWriter::writeValue(const QString name, DataArrayPath& v)
+int JsonFilterParametersWriter::writeValue(const QString name, const DataArrayPath& v)
 {
   int err = 0;
 
@@ -710,7 +710,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, DataArrayPath& v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int JsonFilterParametersWriter::writeValue(const QString name, QVector<DataArrayPath>& v)
+int JsonFilterParametersWriter::writeValue(const QString name, const QVector<DataArrayPath>& v)
 {
   int err = 0;
 
@@ -730,7 +730,7 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<DataArray
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int JsonFilterParametersWriter::writeValue(const QString name, DynamicTableData& v)
+int JsonFilterParametersWriter::writeValue(const QString name, const DynamicTableData& v)
 {
   int err = 0;
 

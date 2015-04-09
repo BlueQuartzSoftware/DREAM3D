@@ -49,23 +49,23 @@ DynamicTableData::DynamicTableData()
 // -----------------------------------------------------------------------------
 DynamicTableData::DynamicTableData(int nRows, int nCols)
 {
-	std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols, 0));
-	tableData = data;
+  std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols, 0));
+  m_TableData = data;
 
-	QStringList rHeaders, cHeaders;
+  QStringList rHeaders, cHeaders;
 
-	for (int i = 0; i < nRows; i++)
-	{
-		rHeaders << QString::number(i);
-	}
+  for (int i = 0; i < nRows; i++)
+  {
+    rHeaders << QString::number(i);
+  }
 
-	for (int i = 0; i < nCols; i++)
-	{
-		cHeaders << QString::number(i);
-	}
+  for (int i = 0; i < nCols; i++)
+  {
+    cHeaders << QString::number(i);
+  }
 
-	rowHeaders = rHeaders;
-	colHeaders = cHeaders;
+  m_RowHeaders = rHeaders;
+  m_ColHeaders = cHeaders;
 }
 
 // -----------------------------------------------------------------------------
@@ -73,14 +73,14 @@ DynamicTableData::DynamicTableData(int nRows, int nCols)
 // -----------------------------------------------------------------------------
 DynamicTableData::DynamicTableData(int nRows, int nCols, QStringList rHeaders, QStringList cHeaders)
 {
-	std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols, 0));
-	tableData = data;
+  std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols, 0));
+  m_TableData = data;
 
-	rowHeaders = rHeaders;
-	colHeaders = cHeaders;
+  m_RowHeaders = rHeaders;
+  m_ColHeaders = cHeaders;
 
-	// Adjust dimensions if they are not all the same
-	checkAndAdjustDimensions();
+  // Adjust dimensions if they are not all the same
+  checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
@@ -88,12 +88,12 @@ DynamicTableData::DynamicTableData(int nRows, int nCols, QStringList rHeaders, Q
 // -----------------------------------------------------------------------------
 DynamicTableData::DynamicTableData(std::vector<std::vector<double> > data, QStringList rHeaders, QStringList cHeaders)
 {
-	tableData = data;
-	rowHeaders = rHeaders;
-	colHeaders = cHeaders;
+  m_TableData = data;
+  m_RowHeaders = rHeaders;
+  m_ColHeaders = cHeaders;
 
-	// Adjust dimensions if they are not all the same
-	checkAndAdjustDimensions();
+  // Adjust dimensions if they are not all the same
+  checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
@@ -109,14 +109,14 @@ DynamicTableData::~DynamicTableData()
 // -----------------------------------------------------------------------------
 bool DynamicTableData::isEmpty()
 {
-	if (tableData.size() > 0 || rowHeaders.size() > 0 || colHeaders.size() > 0)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+  if (m_TableData.size() > 0 || m_RowHeaders.size() > 0 || m_ColHeaders.size() > 0)
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -124,84 +124,84 @@ bool DynamicTableData::isEmpty()
 // -----------------------------------------------------------------------------
 void DynamicTableData::checkAndAdjustDimensions()
 {
-	QSize dataSize(tableData.size(), 0);
-	QSize headerSize(rowHeaders.size(), colHeaders.size());
-	
-	if (tableData.size() > 0)
-	{
-		dataSize.setHeight(tableData[0].size());
-	}
+  QSize dataSize(m_TableData.size(), 0);
+  QSize headerSize(m_RowHeaders.size(), m_ColHeaders.size());
 
-	if (dataSize == headerSize)
-	{
-		return;
-	}
-	else
-	{
-		/* The header dimensions do not equal the data dimensions.
-		   The data dimensions will be used and will overwrite the current header dimensions.
-		   This may result in data loss.
-		*/
-		int nRows = dataSize.width();
-		int nCols = dataSize.height();
+  if (m_TableData.size() > 0)
+  {
+    dataSize.setHeight(m_TableData[0].size());
+  }
 
-		// If row header dimension is greater than default row dimension, remove the extra headers
-		if (rowHeaders.size() > nRows)
-		{
-			while (rowHeaders.size() > nRows)
-			{
-				rowHeaders.pop_back();
-			}
-		}
-		// If row header dimension is less than default row dimension, add blank headers
-		else
-		{
-			int count = rowHeaders.size();
-			while (rowHeaders.size() < nRows)
-			{
-				rowHeaders.push_back(QString::number(count));
-				count++;
-			}
-		}
-		// If column header dimension is greater than default column dimension, remove the extra headers
-		if (colHeaders.size() > nCols)
-		{
-			while (colHeaders.size() > nCols)
-			{
-				colHeaders.pop_back();
-			}
-		}
-		// If column header dimension is less than default column dimension, add blank headers
-		else
-		{
-			int count = colHeaders.size();
-			while (colHeaders.size() < nCols)
-			{
-				colHeaders.push_back(QString::number(count));
-				count++;
-			}
-		}
-	}
+  if (dataSize == headerSize)
+  {
+    return;
+  }
+  else
+  {
+    /* The header dimensions do not equal the data dimensions.
+       The data dimensions will be used and will overwrite the current header dimensions.
+       This may result in data loss.
+    */
+    int nRows = dataSize.width();
+    int nCols = dataSize.height();
+
+    // If row header dimension is greater than default row dimension, remove the extra headers
+    if (m_RowHeaders.size() > nRows)
+    {
+      while (m_RowHeaders.size() > nRows)
+      {
+        m_RowHeaders.pop_back();
+      }
+    }
+    // If row header dimension is less than default row dimension, add blank headers
+    else
+    {
+      int count = m_RowHeaders.size();
+      while (m_RowHeaders.size() < nRows)
+      {
+        m_RowHeaders.push_back(QString::number(count));
+        count++;
+      }
+    }
+    // If column header dimension is greater than default column dimension, remove the extra headers
+    if (m_ColHeaders.size() > nCols)
+    {
+      while (m_ColHeaders.size() > nCols)
+      {
+        m_ColHeaders.pop_back();
+      }
+    }
+    // If column header dimension is less than default column dimension, add blank headers
+    else
+    {
+      int count = m_ColHeaders.size();
+      while (m_ColHeaders.size() < nCols)
+      {
+        m_ColHeaders.push_back(QString::number(count));
+        count++;
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicTableData::serializeData(char delimiter)
+QString DynamicTableData::serializeData(char delimiter) const
 {
-	QString str;
-	QTextStream ss(&str);
+  QString str;
+  QTextStream ss(&str);
 
-	for (int row = 0; row < tableData.size(); row++)
-	{
-		for (int col = 0; col < tableData[row].size(); col++)
-		{
-			ss << tableData[row][col] << delimiter;
-		}
-	}
-	str.chop(1);	// Get rid of the last, unnecessary delimiter
+  for (int row = 0; row < m_TableData.size(); row++)
+  {
+    for (int col = 0; col < m_TableData[row].size(); col++)
+    {
+      ss << m_TableData[row][col] << delimiter;
+    }
+  }
+  str.chop(1);	// Get rid of the last, unnecessary delimiter
 
-	return str;
+  return str;
 }
 
 // -----------------------------------------------------------------------------
@@ -209,70 +209,70 @@ QString DynamicTableData::serializeData(char delimiter)
 // -----------------------------------------------------------------------------
 std::vector<std::vector<double> > DynamicTableData::DeserializeData(QString dataStr, int nRows, int nCols, char delimiter)
 {
-	std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols));
-	int row = 0, col = 0;
+  std::vector<std::vector<double> > data(nRows, std::vector<double>(nCols));
+  int row = 0, col = 0;
 
-	if (dataStr.isEmpty())
-	{
-		return data;
-	}
+  if (dataStr.isEmpty())
+  {
+    return data;
+  }
 
-	int start = 0;
-	int tokenIndex = 0;
+  int start = 0;
+  int tokenIndex = 0;
 
-	while (tokenIndex >= 0)
-	{
-		tokenIndex = dataStr.indexOf(delimiter, start);
-		QString valueStr = dataStr.mid(start, tokenIndex-start);
-		double value = valueStr.toDouble();
-		data[row][col] = value;
-		start = tokenIndex + 1;
+  while (tokenIndex >= 0)
+  {
+    tokenIndex = dataStr.indexOf(delimiter, start);
+    QString valueStr = dataStr.mid(start, tokenIndex-start);
+    double value = valueStr.toDouble();
+    data[row][col] = value;
+    start = tokenIndex + 1;
 
-		col++;
-		if (col == nCols)
-		{
-			row++;
-			col = 0;
-		}
-	}
+    col++;
+    if (col == nCols)
+    {
+      row++;
+      col = 0;
+    }
+  }
 
-	return data;
+  return data;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicTableData::serializeRowHeaders(char delimiter)
+QString DynamicTableData::serializeRowHeaders(char delimiter) const
 {
-	QString str = "";
-	QTextStream ss(&str);
+  QString str = "";
+  QTextStream ss(&str);
 
-	for (int i = 0; i < rowHeaders.size(); i++)
-	{
-		ss << rowHeaders[i];
-		ss << delimiter;
-	}
-	str.chop(1);	// Get rid of the last, unnecessary delimiter
+  for (int i = 0; i < m_RowHeaders.size(); i++)
+  {
+    ss << m_RowHeaders[i];
+    ss << delimiter;
+  }
+  str.chop(1);	// Get rid of the last, unnecessary delimiter
 
-	return str;
+  return str;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicTableData::serializeColumnHeaders(char delimiter)
+QString DynamicTableData::serializeColumnHeaders(char delimiter) const
 {
-	QString str = "";
-	QTextStream ss(&str);
+  QString str = "";
+  QTextStream ss(&str);
 
-	for (int i = 0; i < colHeaders.size(); i++)
-	{
-		ss << colHeaders[i];
-		ss << delimiter;
-	}
-	str.chop(1);	// Get rid of the last, unnecessary delimiter
+  for (int i = 0; i < m_ColHeaders.size(); i++)
+  {
+    ss << m_ColHeaders[i];
+    ss << delimiter;
+  }
+  str.chop(1);	// Get rid of the last, unnecessary delimiter
 
-	return str;
+  return str;
 }
 
 // -----------------------------------------------------------------------------
@@ -280,45 +280,45 @@ QString DynamicTableData::serializeColumnHeaders(char delimiter)
 // -----------------------------------------------------------------------------
 QStringList DynamicTableData::DeserializeHeaders(QString headersStr, char delimiter)
 {
-	QStringList headers;
+  QStringList headers;
 
-	if (headersStr.isEmpty())
-	{
-		return headers;
-	}
+  if (headersStr.isEmpty())
+  {
+    return headers;
+  }
 
-	int start = 0;
-	int tokenIndex = 0;
+  int start = 0;
+  int tokenIndex = 0;
 
-	while (tokenIndex >= 0)
-	{
-		tokenIndex = headersStr.indexOf(delimiter, start);
-		QString header = headersStr.mid(start, tokenIndex);
-		headers.push_back(header);
-		start = tokenIndex + 1;
-	}
+  while (tokenIndex >= 0)
+  {
+    tokenIndex = headersStr.indexOf(delimiter, start);
+    QString header = headersStr.mid(start, tokenIndex);
+    headers.push_back(header);
+    start = tokenIndex + 1;
+  }
 
-	return headers;
+  return headers;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> DynamicTableData::flattenData()
+QVector<double> DynamicTableData::flattenData() const
 {
-	int numRows = getNumRows();
-	int numCols = getNumCols();
+  int numRows = getNumRows();
+  int numCols = getNumCols();
 
-	QVector<double> flat(numRows*numCols);
-	for (int row = 0; row < numRows; row++)
-	{
-		for (int col = 0; col < numCols; col++)
-		{
-			flat[row*numCols + col] = tableData[row][col];
-		}
-	}
+  QVector<double> flat(numRows*numCols);
+  for (int row = 0; row < numRows; row++)
+  {
+    for (int col = 0; col < numCols; col++)
+    {
+      flat[row*numCols + col] = m_TableData[row][col];
+    }
+  }
 
-	return flat;
+  return flat;
 }
 
 // -----------------------------------------------------------------------------
@@ -326,41 +326,41 @@ QVector<double> DynamicTableData::flattenData()
 // -----------------------------------------------------------------------------
 std::vector<std::vector<double> > DynamicTableData::ExpandData(std::vector<double> orig, int nRows, int nCols)
 {
-	std::vector<std::vector<double> > expand(nRows, std::vector<double>(nCols));
+  std::vector<std::vector<double> > expand(nRows, std::vector<double>(nCols));
 
-	if (orig.size() != nRows*nCols)
-	{
-		// Something went wrong
-		return expand;
-	}
+  if (orig.size() != nRows*nCols)
+  {
+    // Something went wrong
+    return expand;
+  }
 
-	for (int row = 0; row < nRows; row++)
-	{
-		for (int col = 0; col < nCols; col++)
-		{
-			expand[row][col] = orig[row*nCols + col];
-		}
-	}
+  for (int row = 0; row < nRows; row++)
+  {
+    for (int col = 0; col < nCols; col++)
+    {
+      expand[row][col] = orig[row*nCols + col];
+    }
+  }
 
-	return expand;
+  return expand;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableData::writeJson(QJsonObject &json)
+void DynamicTableData::writeJson(QJsonObject &json) const
 {
-  json["Dynamic Table Data"] = writeData(tableData);
+  json["Dynamic Table Data"] = writeData();
 
   QJsonArray rHeaders;
-  foreach(QString header, rowHeaders)
+  foreach(QString header, m_RowHeaders)
   {
     rHeaders.push_back(header);
   }
   json["Row Headers"] = rHeaders;
 
   QJsonArray cHeaders;
-  foreach(QString header, colHeaders)
+  foreach(QString header, m_ColHeaders)
   {
     cHeaders.push_back(header);
   }
@@ -374,14 +374,14 @@ bool DynamicTableData::readJson(QJsonObject &json)
 {
   if (json["Dynamic Table Data"].isObject())
   {
-    tableData = readData(json["Dynamic Table Data"].toObject());
+    m_TableData = readData(json["Dynamic Table Data"].toObject());
 
     QJsonArray rHeaders = json["Row Headers"].toArray();
     foreach(QJsonValue val, rHeaders)
     {
       if (val.isString())
       {
-        rowHeaders.push_back(val.toString());
+        m_RowHeaders.push_back(val.toString());
       }
     }
 
@@ -390,7 +390,7 @@ bool DynamicTableData::readJson(QJsonObject &json)
     {
       if (val.isString())
       {
-        colHeaders.push_back(val.toString());
+        m_ColHeaders.push_back(val.toString());
       }
     }
     return true;
@@ -401,12 +401,12 @@ bool DynamicTableData::readJson(QJsonObject &json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QJsonObject DynamicTableData::writeData(std::vector<std::vector<double> > data)
+QJsonObject DynamicTableData::writeData() const
 {
   QJsonObject obj;
 
   QJsonArray rows;
-  foreach(std::vector<double> vector, data)
+  foreach(std::vector<double> vector, m_TableData)
   {
     QJsonArray cols;
     foreach(double val, vector)
@@ -461,7 +461,7 @@ std::vector<std::vector<double> > DynamicTableData::readData(QJsonObject object)
 // -----------------------------------------------------------------------------
 std::vector<std::vector<double> > DynamicTableData::getTableData()
 {
-	return tableData;
+  return m_TableData;
 }
 
 // -----------------------------------------------------------------------------
@@ -469,71 +469,71 @@ std::vector<std::vector<double> > DynamicTableData::getTableData()
 // -----------------------------------------------------------------------------
 void DynamicTableData::setTableData(std::vector<std::vector<double> > data)
 {
-	tableData = data;
+  m_TableData = data;
 
-	// Adjust dimensions
-	checkAndAdjustDimensions();
+  // Adjust dimensions
+  checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList DynamicTableData::getRowHeaders()
+QStringList DynamicTableData::getRowHeaders() const
 {
-	return rowHeaders;
+  return m_RowHeaders;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableData::setRowHeaders(QStringList rHeaders)
+void DynamicTableData::setRowHeaders(const QStringList& rHeaders)
 {
-	rowHeaders = rHeaders;
+  m_RowHeaders = rHeaders;
 
-	// Adjust dimensions
-	checkAndAdjustDimensions();
+  // Adjust dimensions
+  checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList DynamicTableData::getColHeaders()
+QStringList DynamicTableData::getColHeaders() const
 {
-	return colHeaders;
+  return m_ColHeaders;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableData::setColHeaders(QStringList cHeaders)
+void DynamicTableData::setColHeaders(const QStringList& cHeaders)
 {
-	colHeaders = cHeaders;
+  m_ColHeaders = cHeaders;
 
-	// Adjust dimensions
-	checkAndAdjustDimensions();
+  // Adjust dimensions
+  checkAndAdjustDimensions();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DynamicTableData::getNumRows()
+int DynamicTableData::getNumRows() const
 {
-	return tableData.size();
+  return m_TableData.size();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DynamicTableData::getNumCols()
+int DynamicTableData::getNumCols() const
 {
-	if (tableData.size() > 0)
-	{
-		return tableData[0].size();
-	}
-	else
-	{
-		return 0;
-	}
+  if (m_TableData.size() > 0)
+  {
+    return m_TableData[0].size();
+  }
+  else
+  {
+    return 0;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -541,9 +541,9 @@ int DynamicTableData::getNumCols()
 // -----------------------------------------------------------------------------
 DynamicTableData::DynamicTableData(const DynamicTableData& rhs)
 {
-	tableData = rhs.tableData;
-	rowHeaders = rhs.rowHeaders;
-	colHeaders = rhs.colHeaders;
+  m_TableData = rhs.m_TableData;
+  m_RowHeaders = rhs.m_RowHeaders;
+  m_ColHeaders = rhs.m_ColHeaders;
 }
 
 // -----------------------------------------------------------------------------
@@ -551,9 +551,9 @@ DynamicTableData::DynamicTableData(const DynamicTableData& rhs)
 // -----------------------------------------------------------------------------
 void DynamicTableData::operator=(const DynamicTableData& rhs)
 {
-	tableData = rhs.tableData;
-	rowHeaders = rhs.rowHeaders;
-	colHeaders = rhs.colHeaders;
+  m_TableData = rhs.m_TableData;
+  m_RowHeaders = rhs.m_RowHeaders;
+  m_ColHeaders = rhs.m_ColHeaders;
 }
 
 
