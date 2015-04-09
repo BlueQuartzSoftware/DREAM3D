@@ -70,7 +70,7 @@ font-weight: bold;s
          <enum>QTabWidget::South</enum>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="basicTab">
          <attribute name="title">
@@ -202,37 +202,6 @@ font-weight: bold;s
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="helpTab">
-         <attribute name="title">
-          <string>Help</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QWebView" name="helpWebView">
-            <property name="url">
-             <url>
-              <string>about:blank</string>
-             </url>
-            </property>
-            <property name="renderHints">
-             <set>QPainter::Antialiasing|QPainter::HighQualityAntialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
        </widget>
       </item>
       <item row="1" column="0">
@@ -289,13 +258,6 @@ font-weight: bold;s
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>

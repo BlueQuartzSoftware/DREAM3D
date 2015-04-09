@@ -81,7 +81,6 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     QPointer<FaderWidget> faderWidget;
     bool m_AdvFadedOut;
     QString m_BrandingLabel;
-	QWidget* advancedTab;
 
     FilterInputWidget(const FilterInputWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterInputWidget&); // Operator '=' Not Implemented

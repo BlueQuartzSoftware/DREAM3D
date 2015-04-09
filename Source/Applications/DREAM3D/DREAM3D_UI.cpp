@@ -75,6 +75,7 @@
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterLibraryDockWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PrebuiltPipelinesDockWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
@@ -1228,7 +1229,10 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 {
-  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
+  // Generate help page
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
+  DREAM3DUserManualDialog manualDialog(helpURL, this);
+  manualDialog.exec();
 }
 
 // -----------------------------------------------------------------------------

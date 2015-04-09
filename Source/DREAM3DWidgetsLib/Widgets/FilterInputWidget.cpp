@@ -66,8 +66,7 @@ enum TabIndices
 // -----------------------------------------------------------------------------
 FilterInputWidget::FilterInputWidget(QWidget* parent) :
   QWidget(parent),
-  m_AdvFadedOut(false),
-  advancedTab(NULL)
+  m_AdvFadedOut(false)
 {
   setupUi(this);
   setupGui();
@@ -222,10 +221,6 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   advInputsGrid->addWidget(w->getAdvancedInputsWidget());
   currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
-  // Generate web page in the help web view
-  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(w->getFilter()->getNameOfClass().toLower());
-  helpWebView->load(helpURL);
-
   bool showAdv = false;
   // Cases
 
@@ -234,17 +229,11 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   // If we do NOT have any advanced Parameters then hide the Advanced tab
   if(showAdv == false)
   {
-	  advancedTab = tabWidget->widget(ADVANCED_TAB);
-	  tabWidget->removeTab(ADVANCED_TAB);
+    tabWidget->widget(ADVANCED_TAB)->setDisabled(true);
   }
   else
   {
-	  // If the advanced tab has been removed before on the last interaction...
-	  if (NULL != advancedTab)
-	  {
-		  tabWidget->insertTab(ADVANCED_TAB, advancedTab, "Advanced");
-		  advancedTab = NULL;
-	  }
+    tabWidget->widget(ADVANCED_TAB)->setDisabled(false);
   }
 
   w->getBasicInputsWidget()->setVisible(true);
