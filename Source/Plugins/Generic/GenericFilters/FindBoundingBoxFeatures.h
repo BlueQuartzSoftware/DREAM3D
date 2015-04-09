@@ -37,23 +37,13 @@
 #ifndef _FindBoundingBoxFeatures_H_
 #define _FindBoundingBoxFeatures_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 /**
- * @class FindBoundingBoxFeatures FindBoundingBoxFeatures.h DREAM3DLib/GenericFilters/FindBoundingBoxFeatures.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindBoundingBoxFeatures class. See Filter documentation for details.
  */
 class  FindBoundingBoxFeatures : public AbstractFilter
 {

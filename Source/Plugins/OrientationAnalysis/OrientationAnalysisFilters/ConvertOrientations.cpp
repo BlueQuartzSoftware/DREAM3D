@@ -43,21 +43,17 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include <sstream>
-
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "OrientationLib/Math/OrientationMath.h"
 
-#include "Generic/GenericConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 class ConvertOrientationsImpl
 {
 
   public:
-    ConvertOrientationsImpl(float* inputEulers, float* inputQuats, float* inputRods, float* inputAxisAngles, float* outputEulers, float* outputQuats, float* outputRods, float* outputAxisAngles, int32_t* cellPhases, unsigned int* crystalStructures, int inputType, int outputType) :
+    ConvertOrientationsImpl(float* inputEulers, float* inputQuats, float* inputRods, float* inputAxisAngles, float* outputEulers, float* outputQuats, float* outputRods, float* outputAxisAngles, int32_t* cellPhases, uint32_t* crystalStructures, int inputType, int outputType) :
       m_InputEulerAngles(inputEulers),
       m_InputQuats(inputQuats),
       m_InputRods(inputRods),
@@ -76,13 +72,13 @@ class ConvertOrientationsImpl
     void convert(size_t start, size_t end) const
     {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //quats -> ?
+      // quats -> ?
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      if( 0 == m_InputType && 1 == m_OutputType )//euler angles->quats
+      if ( 0 == m_InputType && 1 == m_OutputType ) // euler angles->quats
       {
         QuatF* quats = reinterpret_cast<QuatF*>(m_OutputQuats);
-        QuatF q;
-        for(size_t i = start; i < end; i++)
+        QuatF q = QuaternionMathF::New();
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -96,9 +92,9 @@ class ConvertOrientationsImpl
           QuaternionMathF::Copy(q, quats[i]);
         }
       }
-      else if( 0 == m_InputType && 2 == m_OutputType )//euler angles->rods
+      else if ( 0 == m_InputType && 2 == m_OutputType ) // euler angles->rods
       {
-        for(size_t i = start; i < end; i++)
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -112,9 +108,9 @@ class ConvertOrientationsImpl
           }
         }
       }
-      else if( 0 == m_InputType && 3 == m_OutputType )//euler angles->axis angles
+      else if ( 0 == m_InputType && 3 == m_OutputType ) // euler angles->axis angles
       {
-        for(size_t i = start; i < end; i++)
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -130,13 +126,13 @@ class ConvertOrientationsImpl
         }
       }
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //quats -> ?
+      // quats -> ?
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      else if( 1 == m_InputType && 0 == m_OutputType )//quats->euler angles
+      else if ( 1 == m_InputType && 0 == m_OutputType ) // quats->euler angles
       {
         QuatF* cellQuats = reinterpret_cast<QuatF*>(m_InputQuats);
-        QuatF q;
-        for(size_t i = start; i < end; i++)
+        QuatF q = QuaternionMathF::New();
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -151,11 +147,11 @@ class ConvertOrientationsImpl
           }
         }
       }
-      else if( 1 == m_InputType && 2 == m_OutputType )//quats->rods
+      else if ( 1 == m_InputType && 2 == m_OutputType ) // quats->rods
       {
         QuatF* cellQuats = reinterpret_cast<QuatF*>(m_InputQuats);
-        QuatF q;
-        for(size_t i = start; i < end; i++)
+        QuatF q = QuaternionMathF::New();
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -170,11 +166,11 @@ class ConvertOrientationsImpl
           }
         }
       }
-      else if( 1 == m_InputType && 3 == m_OutputType )//quats->axis angles
+      else if ( 1 == m_InputType && 3 == m_OutputType ) // quats->axis angles
       {
         QuatF* cellQuats = reinterpret_cast<QuatF*>(m_InputQuats);
-        QuatF q;
-        for(size_t i = start; i < end; i++)
+        QuatF q = QuaternionMathF::New();
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -191,11 +187,11 @@ class ConvertOrientationsImpl
         }
       }
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //rods -> ?
+      // rods -> ?
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      else if( 2 == m_InputType && 0 == m_OutputType )//rods->euler angles
+      else if( 2 == m_InputType && 0 == m_OutputType ) // rods->euler angles
       {
-        for(size_t i = start; i < end; i++)
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -209,11 +205,11 @@ class ConvertOrientationsImpl
           }
         }
       }
-      else if( 2 == m_InputType && 1 == m_OutputType )//rods->quats
+      else if ( 2 == m_InputType && 1 == m_OutputType ) // rods->quats
       {
         QuatF* quats = reinterpret_cast<QuatF*>(m_OutputQuats);
-        QuatF q;
-        for(size_t i = start; i < end; i++)
+        QuatF q = QuaternionMathF::New();
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -227,9 +223,9 @@ class ConvertOrientationsImpl
           QuaternionMathF::Copy(q, quats[i]);
         }
       }
-      else if( 2 == m_InputType && 3 == m_OutputType )//rods->axis angles
+      else if ( 2 == m_InputType && 3 == m_OutputType ) // rods->axis angles
       {
-        for(size_t i = start; i < end; i++)
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -245,17 +241,17 @@ class ConvertOrientationsImpl
         }
       }
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //axis angles -> ?
+      // axis angles -> ?
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      else if( 3 == m_InputType && 0 == m_OutputType )//axis angles->euler angles (currently unsupported)
+      else if ( 3 == m_InputType && 0 == m_OutputType ) // axis angles->euler angles (currently unsupported)
       {
 
       }
-      else if( 3 == m_InputType && 1 == m_OutputType )//axis angles->quats
+      else if ( 3 == m_InputType && 1 == m_OutputType ) // axis angles->quats
       {
         QuatF* quats = reinterpret_cast<QuatF*>(m_OutputQuats);
-        QuatF q;
-        for(size_t i = start; i < end; i++)
+        QuatF q = QuaternionMathF::New();
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -269,9 +265,9 @@ class ConvertOrientationsImpl
           QuaternionMathF::Copy(q, quats[i]);
         }
       }
-      else if( 3 == m_InputType && 2 == m_OutputType )//axis angles->rods
+      else if ( 3 == m_InputType && 2 == m_OutputType ) // axis angles->rods
       {
-        for(size_t i = start; i < end; i++)
+        for (size_t i = start; i < end; i++)
         {
           if (m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::UnknownCrystalStructure)
           {
@@ -303,12 +299,11 @@ class ConvertOrientationsImpl
     float* m_OutputRods;
     float* m_OutputAxisAngles;
     int32_t* m_CellPhases;
-    unsigned int* m_CrystalStructures;
+    uint32_t* m_CrystalStructures;
     int m_InputType;
     int m_OutputType;
 
 };
-
 
 // -----------------------------------------------------------------------------
 //
@@ -386,16 +381,16 @@ void ConvertOrientations::setupFilterParameters()
   parameters.push_back(output);
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, "", 0));
-  parameters.push_back(FilterParameter::New("Cell Quats", "CellQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellQuatsArrayPath(), true, "", 1));
-  parameters.push_back(FilterParameter::New("Cell RodriguesVectors", "CellRodriguesVectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellRodriguesVectorsArrayPath(), true, "", 2));
-  parameters.push_back(FilterParameter::New("Cell Axis Angles", "CellAxisAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellAxisAnglesArrayPath(), true, "", 3));
-  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, "", 0));
+  parameters.push_back(FilterParameter::New("Quaternions", "CellQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellQuatsArrayPath(), true, "", 1));
+  parameters.push_back(FilterParameter::New("Rodrigues Vectors", "CellRodriguesVectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellRodriguesVectorsArrayPath(), true, "", 2));
+  parameters.push_back(FilterParameter::New("Axis Angles", "CellAxisAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellAxisAnglesArrayPath(), true, "", 3));
+  parameters.push_back(FilterParameter::New("Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Euler Angles", "EulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getEulerAnglesArrayName(), true, "", 0));
-  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayName", FilterParameterWidgetType::StringWidget, getQuatsArrayName(), true, "", 1));
-  parameters.push_back(FilterParameter::New("RodriguesVectors", "RodriguesVectorsArrayName", FilterParameterWidgetType::StringWidget, getRodriguesVectorsArrayName(), true, "", 2));
+  parameters.push_back(FilterParameter::New("Quaternions", "QuatsArrayName", FilterParameterWidgetType::StringWidget, getQuatsArrayName(), true, "", 1));
+  parameters.push_back(FilterParameter::New("Rodrigues Vectors", "RodriguesVectorsArrayName", FilterParameterWidgetType::StringWidget, getRodriguesVectorsArrayName(), true, "", 2));
   parameters.push_back(FilterParameter::New("Axis Angles", "AxisAnglesArrayName", FilterParameterWidgetType::StringWidget, getAxisAnglesArrayName(), true, "", 3));
   setFilterParameters(parameters);
 }
@@ -450,12 +445,13 @@ void ConvertOrientations::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
+  QVector<DataArrayPath> dataArrayPaths;
+
   if(getInputType() == getOutputType())
   {
     QString ss = QObject::tr("Input and output orientation representation types must be different");
     notifyErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1000);
-    return;
   }
 
   if(  (0 == getInputType() && 3 == getOutputType()) || (3 == getInputType() && 0 == getOutputType() ) )
@@ -463,12 +459,11 @@ void ConvertOrientations::dataCheck()
     QString ss = QObject::tr("Direct conversion between Axis Angle and Euler Angle is currently not implemented");
     notifyErrorMessage(getHumanLabel(), ss, -1001);
     setErrorCondition(-1001);
-    return;
   }
 
   switch(getInputType())
   {
-    case 0://euler angles
+    case 0: // euler angles
     {
       QVector<size_t> dims(1, 3);
       m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims);
@@ -478,7 +473,7 @@ void ConvertOrientations::dataCheck()
     }
     break;
 
-    case 1://quats
+    case 1: // quats
     {
       QVector<size_t> dims(1, 4);
       m_CellQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellQuatsArrayPath(), dims);
@@ -488,7 +483,7 @@ void ConvertOrientations::dataCheck()
     }
     break;
 
-    case 2://rods
+    case 2: // rods
     {
       QVector<size_t> dims(1, 3);
       m_CellRodriguesVectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellRodriguesVectorsArrayPath(), dims);
@@ -498,7 +493,7 @@ void ConvertOrientations::dataCheck()
     }
     break;
 
-    case 3://axis angle
+    case 3: // axis angle
     {
       QVector<size_t> dims(1, 4);
       m_CellAxisAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellAxisAnglesArrayPath(), dims);
@@ -511,70 +506,61 @@ void ConvertOrientations::dataCheck()
 
   switch(getOutputType())
   {
-    case 0://euler angles
+    case 0: // euler angles
     {
       QVector<size_t> dims(1, 3);
       tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getEulerAnglesArrayName() );
       m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
       if( NULL != m_EulerAnglesPtr.lock().get() )
       { m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0); }
+      if(getErrorCondition() >= 0) { dataArrayPaths.push_back(tempPath); }
     }
     break;
 
-    case 1://quats
+    case 1: // quats
     {
       QVector<size_t> dims(1, 4);
       tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getQuatsArrayName() );
       m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
       if( NULL != m_QuatsPtr.lock().get() )
       { m_Quats = m_QuatsPtr.lock()->getPointer(0); }
+      if(getErrorCondition() >= 0) { dataArrayPaths.push_back(tempPath); }
     }
     break;
 
-    case 2://rods
+    case 2: // rods
     {
       QVector<size_t> dims(1, 3);
       tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getRodriguesVectorsArrayName() );
       m_RodriguesVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
       if( NULL != m_RodriguesVectorsPtr.lock().get() )
       { m_RodriguesVectors = m_RodriguesVectorsPtr.lock()->getPointer(0); }
+      if(getErrorCondition() >= 0) { dataArrayPaths.push_back(tempPath); }
     }
     break;
 
-    case 3://axis angle
+    case 3: // axis angle
     {
       QVector<size_t> dims(1, 4);
       tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getAxisAnglesArrayName() );
       m_AxisAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
       if( NULL != m_AxisAnglesPtr.lock().get() )
       { m_AxisAngles = m_AxisAnglesPtr.lock()->getPointer(0); }
+      if(getErrorCondition() >= 0) { dataArrayPaths.push_back(tempPath); }
     }
     break;
   }
 
-
-  if( 0 != tempPath.getDataContainerName().compare(getCellPhasesArrayPath().getDataContainerName()))
-  {
-    QString ss = QObject::tr("'Cell Phases' and 'Input Orientation Representation' types must belong to the same Data Container");
-    notifyErrorMessage(getHumanLabel(), ss, -1002);
-    setErrorCondition(-1002);
-    return;
-  }
-  if( 0 != tempPath.getAttributeMatrixName().compare(getCellPhasesArrayPath().getAttributeMatrixName()))
-  {
-    QString ss = QObject::tr("'Cell Phases' and 'Input Orientation Representation' types must belong to the same Attribute Matrix");
-    notifyErrorMessage(getHumanLabel(), ss, -1003);
-    setErrorCondition(-1003);
-    return;
-  }
-
-  //get phase + crystal structure
+  // get phase + crystal structure
   QVector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
   if( NULL != m_CellPhasesPtr.lock().get() )
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); }
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
 
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims);
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
+
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims);
   if( NULL != m_CrystalStructuresPtr.lock().get() )
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); }
 }
@@ -601,28 +587,28 @@ void ConvertOrientations::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints;
+  size_t totalPoints = 0;
   switch(getInputType())
   {
-    case 0://euler angles
+    case 0: // euler angles
     {
       totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
     }
     break;
 
-    case 1://quats
+    case 1: // quats
     {
       totalPoints = m_CellQuatsPtr.lock()->getNumberOfTuples();
     }
     break;
 
-    case 2://rods
+    case 2: // rods
     {
       totalPoints = m_CellRodriguesVectorsPtr.lock()->getNumberOfTuples();
     }
     break;
 
-    case 3://axis angle
+    case 3: // axis angle
     {
       totalPoints = m_CellAxisAnglesPtr.lock()->getNumberOfTuples();
     }
@@ -667,21 +653,21 @@ AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return DREAM3D::FilterGroups::OrientationAnalysis; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+{ return DREAM3D::FilterSubGroups::ConversionFilters; }
 
 
 // -----------------------------------------------------------------------------
