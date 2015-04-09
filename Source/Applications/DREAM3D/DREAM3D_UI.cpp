@@ -130,8 +130,6 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // Do our own widget initializations
   setupGui();
 
-  // Get out initial Recent File List
-  this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
 
   // Read various settings
@@ -1141,6 +1139,9 @@ void DREAM3D_UI::updateRecentFileList(const QString &file)
     this->menu_RecentFiles->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
   }
+
+  this->menu_RecentFiles->addSeparator();
+  this->menu_RecentFiles->addAction(actionClearRecentFiles);
 }
 
 // -----------------------------------------------------------------------------
@@ -1378,6 +1379,18 @@ void DREAM3D_UI::on_actionClearPipeline_triggered()
   pipelineViewWidget->clearWidgets();
   pipelineTitle->setText("Untitled Pipeline");
   setWindowModified(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionClearRecentFiles_triggered()
+{
+  // Clear the Recent Items Menu
+  this->menu_RecentFiles->clear();
+
+  this->menu_RecentFiles->addSeparator();
+  this->menu_RecentFiles->addAction(actionClearRecentFiles);
 }
 
 // -----------------------------------------------------------------------------

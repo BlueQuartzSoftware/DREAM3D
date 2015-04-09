@@ -175,6 +175,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionPlugin_Information_triggered();
     void on_actionShow_User_Manual_triggered();
 
+    // Recent Files menu
+    void on_actionClearRecentFiles_triggered();
+
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();
 

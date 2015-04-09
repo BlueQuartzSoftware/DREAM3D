@@ -233,7 +233,7 @@ border: 2px solid;
      <property name="title">
       <string>Recent Files</string>
      </property>
-     <addaction name="actionREMOVE_ME"/>
+     <addaction name="actionClearRecentFiles"/>
     </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -520,6 +520,11 @@ border: 2px solid;
   <action name="actionClearPipeline_2">
    <property name="text">
     <string>Clear Pipeline</string>
+   </property>
+  </action>
+  <action name="actionClearRecentFiles">
+   <property name="text">
+    <string>Clear Recent Files</string>
    </property>
   </action>
  </widget>
