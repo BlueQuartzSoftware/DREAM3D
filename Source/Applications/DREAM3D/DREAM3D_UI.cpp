@@ -212,18 +212,9 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::closeEvent(QCloseEvent* event)
 {
-  //qint32 err = checkDirtyDocument();
-  qint32 err = 0;
-  if (err < 0)
-  {
-    event->ignore();
-  }
-  else
-  {
-    writeSettings();
-    on_actionClearPipeline_triggered();
-    event->accept();
-  }
+  writeSettings();
+  on_actionClearPipeline_triggered();
+  event->accept();
 
   if (m_ShouldRestart == true)
   {
@@ -350,19 +341,18 @@ void DREAM3D_UI::writeSettings()
 #else
   QSettings::Format format = QSettings::IniFormat;
 #endif
-  QString filePath;
+  // We scope these sections so that the QSettings object goes out of scope each
+  // time and is destructed
   {
     QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 
-    filePath = prefs.fileName();
     // Have the pipeline builder write its settings to the prefs file
     writeWindowSettings(prefs);
-
+    // Have the version check widet write its preferences.
     writeVersionCheckSettings(prefs);
   }
 
-  // We scope these sections so that the QSettings object goes out of scope each
-  // time and is destructed
+  // This section writes the current pipeline to a file in the users preferences area.
   {
   #if defined (Q_OS_MAC)
       QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
@@ -370,11 +360,12 @@ void DREAM3D_UI::writeSettings()
       QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
   #endif
     QString prefFile = prefs.fileName();
-
     QFileInfo prefFileInfo = QFileInfo(prefFile);
     QString parentPath = prefFileInfo.path();
     QString baseName = prefFileInfo.completeBaseName();
-    QString filePath = parentPath + QDir::separator() + baseName + "_LastPipeline.ini";
+
+    QString filePath = prefs.fileName();
+    filePath = parentPath + QDir::separator() + baseName + "_LastPipeline.ini";
 
     pipelineViewWidget->savePipeline(filePath, prefFileInfo.completeBaseName() + "_LastPipeline", QSettings::IniFormat);
   }

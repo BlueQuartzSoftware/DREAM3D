@@ -18,13 +18,17 @@ If the data has come from a HKL based acquisition system and the settings of the
 + Sample Reference Frame: 180 Degrees about the <010> Axis
 + Crystal Reference Frame: None
  
-The user also may want to assign unindexed pixels to be ignored and be assigned an RGB Color of Black. In this case the user can insert the [Single Threshold (Cell Data) Filter](singlethresholdcells.html) to define the "Good Voxels" cell data. For HKL data the "Error" column defines each point as being properly indexed (Value = 0) or an error occurred and the point was not indexed (Value > 0). 
+The user also may want to assign unindexed pixels to be ignored and be assigned an RGB Color of Black. In this case the user can insert the [Single Threshold (Cell Data) Filter](singlethresholdcells.html) to define the "Good Voxels" cell data. For HKL data the "Error" column defines each point as being properly indexed (Value = 0) or an error occurred and the point was not indexed (Value > 0).
+
+### Radians and Degrees ###
+
+2D CTF Files have their angles in **degrees**. Please be sure to insert a filter to convert the Euler Angles from Degrees to Radians before running any other filter.
 
 ## Parameters ##
 
 | Name             | Type |
 |------------------|------|
-| Input File | The Path to the .ang or .ctf file |
+| Input File | The Path to the .ctf file |
 
 ## Required Arrays ##
 
@@ -32,18 +36,24 @@ None
 
 ## Required DataContainers ##
 
-Voxel
-
+The filter will create a new DataContainer with an ImageGeometry object.
 
 ## Created Arrays ##
 
 Arrays are created based on the data read from the EBSD file.
 
 
-| Type | Default Array Name | Description | Comment |
+| Type | Array Name | Component Dimensions | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
+| Float  | BC | [1]     |  |
+| Float  | Euler Angle      | [3]     |    |
+| Float  | BS              | [1]     |    |
+| Float  | Bands    | [1] |    |
+| Int    | Phases             | [1] | Numbered starting from 1 for a valid phase   |
+| Float  | MAD       | [1] | Typical threshold value is < 1.8  |
+| Float  | X Position       | [1] |    |
+| Float  | Y Position       | [1] |    |
+| int  | Error       | [1] | Value=0 is a well indexed scan point   |
 
 
 

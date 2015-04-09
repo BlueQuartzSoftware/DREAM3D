@@ -800,10 +800,7 @@ QVector<UInt8ArrayType::Pointer> MonoclinicOps::generatePoleFigure(PoleFigureCon
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb MonoclinicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
-
   BOOST_ASSERT(false);
-
-  return rgb;
+  return RgbColor::dRgb(0, 0, 0, 0);
 }
 

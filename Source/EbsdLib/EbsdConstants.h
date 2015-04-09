@@ -53,6 +53,7 @@ namespace Ebsd
     TSL = 0,
     HKL = 1,
     HEDM = 2,
+    EDAX = 3,
     UnknownManufacturer
   };
 
@@ -79,7 +80,11 @@ namespace Ebsd
     const QString Index("Index");
     const QString Header("Header");
     const QString Phases("Phases");
+    const QString Phase("Phase");
     const QString Data("Data");
+    const QString EBSD("EBSD");
+    const QString SEM_PRIAS_Images("SEM-PRIAS Images");
+    const QString PatternCenterCalibration("Pattern Center Calibration");
 
 
     // Each Manufacturer has their own naming scheme for these variables but for

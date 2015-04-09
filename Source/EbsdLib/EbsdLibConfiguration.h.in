@@ -38,4 +38,9 @@
 
 #endif
 
+#if EbsdLib_HDF5_SUPPORT
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
+#endif
+
 #endif

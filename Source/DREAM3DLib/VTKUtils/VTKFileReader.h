@@ -183,16 +183,15 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
       if(getFileIsBinary() == true)
       {
         size_t totalSize = xDim * yDim * zDim;
-        T* buffer = new T[totalSize];
+        typename DataArray<T>::Pointer bufferPtr = DataArray<T>::CreateArray(totalSize, "JUNK");
         // Read all the xpoints in one shot into a buffer
-        inStream.read(reinterpret_cast<char*>(buffer), (totalSize * sizeof(T)));
+        inStream.read(reinterpret_cast<char*>(bufferPtr->getPointer(0)), (totalSize * sizeof(T)));
         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
         {
           qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
                    << (totalSize * sizeof(T)) ;
           return -1;
         }
-        delete buffer;
       }
       else
       {

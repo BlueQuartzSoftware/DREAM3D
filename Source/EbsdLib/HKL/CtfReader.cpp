@@ -338,9 +338,9 @@ int CtfReader::readData(QFile& in)
   {
     zCells = 1;
   }
-  size_t totalDataRows = yCells * xCells * zCells;
+  size_t totalScanPoints = yCells * xCells * zCells;
 
-  setNumberOfElements(totalDataRows);
+  setNumberOfElements(totalScanPoints);
 
   QByteArray buf;
 
@@ -359,19 +359,23 @@ int CtfReader::readData(QFile& in)
     pType = getPointerType(name);
     if(Ebsd::Int32 == pType)
     {
-      Int32Parser::Pointer dparser = Int32Parser::New(NULL, totalDataRows, name, i);
-      if( (didAllocate = dparser->allocateArray(totalDataRows)) == true)
+      Int32Parser::Pointer dparser = Int32Parser::New(NULL, totalScanPoints, name, i);
+      didAllocate = dparser->allocateArray(totalScanPoints);
+      //Q_ASSERT_X(dparser->getVoidPointer() != NULL, __FILE__, "Could not allocate memory for Integer data in CTF File.");
+      if( didAllocate == true)
       {
-        ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalDataRows);
+        ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalScanPoints);
         m_NamePointerMap.insert(name, dparser);
       }
     }
     else if(Ebsd::Float == pType)
     {
-      FloatParser::Pointer dparser = FloatParser::New(NULL, totalDataRows, name, i);
-      if( (didAllocate = dparser->allocateArray(totalDataRows)) == true)
+      FloatParser::Pointer dparser = FloatParser::New(NULL, totalScanPoints, name, i);
+      didAllocate = dparser->allocateArray(totalScanPoints);
+      //Q_ASSERT_X(dparser->getVoidPointer() != NULL, __FILE__, "Could not allocate memory for Integer data in CTF File.");
+      if( didAllocate == true)
       {
-        ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalDataRows);
+        ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalScanPoints);
         m_NamePointerMap.insert(name, dparser);
       }
     }
@@ -388,7 +392,14 @@ int CtfReader::readData(QFile& in)
     if(didAllocate == false)
     {
       setErrorCode(-106);
-      setErrorMessage("The CTF reader could not allocate memory for the data. Check the header for the number of X, Y and Z Cells.");
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "The CTF reader could not allocate memory for the data. Check the header for the number of X, Y and Z Cells.";
+      ss << "\n X Cells: " << getXCells();
+      ss << "\n Y Cells: " << getYCells();
+      ss << "\n Z Cells: " << getZCells();
+      ss << "\n Total Scan Points: " << totalScanPoints;
+      setErrorMessage(msg);
       return -106; // Could not allocate the memory
     }
 

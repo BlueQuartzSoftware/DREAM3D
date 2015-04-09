@@ -158,7 +158,6 @@ void CorrelateValuesWithVectorDirection::preflight()
 template<typename T>
 void addToLambert(IDataArray::Pointer correlatedData, size_t bin, size_t point, double* m_LambertProjection)
 {
-  float value = 0.0;
   DataArray<T>* correlatedArray = DataArray<T>::SafePointerDownCast(correlatedData.get());
   if (NULL == correlatedArray)
   {
@@ -332,8 +331,6 @@ int CorrelateValuesWithVectorDirection::determineSquareCoordsandBin(float xyz[3]
 // -----------------------------------------------------------------------------
 void CorrelateValuesWithVectorDirection::determineXYZCoords(float sqCoords[2], float xyz[3])
 {
-  float adjust = -1.0;
-
   if(fabs(sqCoords[0]) >= fabs(sqCoords[1]))
   {
     xyz[0] = (2.0*sqCoords[0]/DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi-((sqCoords[0]*sqCoords[0])/(1.0*1.0)))) * cosf((sqCoords[1]*DREAM3D::Constants::k_Pi)/(4.0*sqCoords[0]));

@@ -386,7 +386,6 @@ void TestFaithful()
   tDims[0] = Faithful_Rows;
   QVector<size_t> cDims(1);
   cDims[0] = 1;
-  int inum = 0;
   AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, Data_AMName, DREAM3D::AttributeMatrixType::Cell);
 
   DoubleArrayType::Pointer duration = DoubleArrayType::CreateArray(tDims, cDims, Duration_Name);

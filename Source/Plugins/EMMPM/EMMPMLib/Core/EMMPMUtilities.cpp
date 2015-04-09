@@ -410,7 +410,7 @@ void EMMPMUtilities::MonitorMeansAndVariances(EMMPM_Data::Pointer dt)
 {
   EMMPM_Data* data = dt.get();
 
-  size_t l, d, ld;
+  size_t l, d;
   size_t classes = data->classes;
   size_t dims = data->dims;
   char msgbuff[256];
@@ -422,7 +422,6 @@ void EMMPMUtilities::MonitorMeansAndVariances(EMMPM_Data::Pointer dt)
   {
     for (d = 0; d < dims; d++)
     {
-      ld = dims * l + d;
       printf("%d\t%d\t%3.3f\t%3.3f\n", (int)l, (int)d, data->mean[l], data->variance[l]);
     }
   }
