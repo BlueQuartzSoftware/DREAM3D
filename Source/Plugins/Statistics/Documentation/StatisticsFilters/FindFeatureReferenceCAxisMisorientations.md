@@ -1,33 +1,32 @@
-Find Feature Reference C-Axis Misorientations {#findfeaturereferencecaxismisorientations}
+Find Feature Reference C-Axis Misalignments {#findfeaturereferencecaxismisorientations}
 ======
 
 ## Group (Subgroup) ##
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This filter is essentially the same as the [Find Feature Reference Misorientations](FindGrainReferenceMisorientations.html "") filter, but with the misalignment between c-axes of interest, rather than full misorientations.  The average c-axis orientation for each **Feature** is compared with the c-axis orientation of each of the **Cells** within the **Feature**.
+This filter calculates the misorientation angle between the c-axis of each **Cell** within a **Feature** and the average c-axis for that **Feature** and stores that value for each **Cell**.  The average and standard deviation of those values for all **Cells** belonging to the same **Feature** is also stored for each **Feature**.
 
 ## Parameters ##
 None
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
-| Feature | AvgCAxes | This array is the direction <u,v,w> of the c-axis in the sample reference frame |  | Find Average C-Axis Orientations (Statistics) |
+| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Element | Quats | Float | (4) | Specifies the orientation of the **Element** in quaternion representation |
+| Element     | Phases            | Int | (1) | Specifies the **Ensemble** of the **Cell** |
+| Feature | AvgCAxes | Float | (3) | The direction <u,v,w> of the **Feature's** c-axis in the sample reference frame |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | GrainReferenceCAxisMisorientations |  |
-| Feature | GrainAvgCAxisMisorientations |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Element | FeatureReferenceCAxisMisorientations | Float | (1) | Misorientation angle (in degrees) between **Element**'s c-axis and the c-axis of the **Feature** that owns that **Element** |
+| Feature | FeatureAvgCAxisMisorientations | Float | (1) | Average of the *FeatureReferenceCAxisMisorientation* values for all of the **Elements** that belong to the **Feature** |
+| Feature | FeatureStdevCAxisMisorientations | Float | (1) | Standard deviation of the *FeatureReferenceCAxisMisorientation* values for all of the **Elements** that belong to the **Feature** |
 
 ## Authors ##
 

@@ -27,7 +27,7 @@ Not Applicable
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Feature | MisorientationLists | List of Floats | (1) | List of the misorientation angles with the contiguous neighboring **Features** for a given **Feature** |
-| Feature | AvgMisorientation | Float | (1) | Number weighted average of neighbor misorientations. |
+| Feature | AvgMisorientation | Float | (1) | Number weighted average of neighbor misorientations. Only created if Find Average Misorientation Per Feature is checked |
 
 ## Authors ##
 

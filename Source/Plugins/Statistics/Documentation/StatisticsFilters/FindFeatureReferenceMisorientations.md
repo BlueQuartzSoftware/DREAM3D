@@ -5,35 +5,33 @@ Find Feature Reference Misorientations {#findfeaturereferencemisorientations}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter calculates the misorientation angle between each **Cell** within a **Feature** and a *reference orientation* for that **Feature**.  The user can choose the *reference orientation* to be used for the **Features** from a drop-down menu.  The options for the *reference orientation* are the average orientation of the **Feature** or the orientation at the centroid of the **Feature**.
+This Filter calculates the misorientation angle between each **Cell** within a **Feature** and a *reference orientation* for that **Feature**.  The user can choose the *reference orientation* to be used for the **Features** from a drop-down menu.  The options for the *reference orientation* are the average orientation of the **Feature** or the orientation of the **Cell** that is furthest from the *boundary* of the **Feature**.
 
-Note: the average orientation of the **Feature** is a typical choice, but if the **Feature** has undergone plastic deformation and the amount of lattice rotation developed is of interest, then it may be more reasonable to use the orientation at the center of the grain as it may not have rotated and thus serve as a better *reference orientation*.
+Note: the average orientation of the **Feature** is a typical choice, but if the **Feature** has undergone plastic deformation and the amount of lattice rotation developed is of interest, then it may be more reasonable to use the orientation *near the center* of the **Feature** as it may not have rotated and thus serve as a better *reference orientation*.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Reference Orientation | Choice | Specifies the *reference orientation* to use when comparing to each **Cell** |
 
-| Name | Type |
-|------|------|
-| Reference Orientation | Choice |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
-| Feature | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
+| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Element | Quats | Float | (4) | Specifies the orientation of the **Element** in quaternion representation |
+| Element     | Phases            | Int | (1) | Specifies the **Ensemble** of the **Cell** |
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
+| Feature | AvgQuats | Float | (4) | Defines the average orientation of the **Feature** in quaternion representation  (<x,y,z>, w). Only required if the *reference orientation* is selected to be the average of the **Feature** |
+| Element | GBEuclideanDistances | Float | (1) | Distance the **Elements** are from the *boundary* of the **Feature** they belong to. |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | GrainReferenceMisorientations |  |  |
-| Feature | GrainAvgMisorientations |  |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Element | FeatureReferenceMisorientations | Float | (1) | Misorientation angle (in degrees) between **Element**'s orientation and the reference orientation of the **Feature** that owns that **Element** |
+| Feature | FeatureAvgMisorientations | Float | (1) | Average of the *FeatureReferenceMisorientation* values for all of the **Elements** that belong to the **Feature** |
 
 ## Authors ##
 
