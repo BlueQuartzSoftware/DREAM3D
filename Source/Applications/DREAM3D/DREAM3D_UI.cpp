@@ -349,7 +349,7 @@ void DREAM3D_UI::readSettings()
     // Have the pipeline builder read its settings from the prefs file
     readWindowSettings(prefs);
     readVersionSettings(prefs);
-    readRecentsSettings(prefs);
+    QRecentFileList::instance()->readList(prefs);
   }
 }
 
@@ -414,24 +414,6 @@ void DREAM3D_UI::readVersionSettings(QSettings& prefs)
 }
 
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::readRecentsSettings(QSettings& prefs)
-{
-  int size = prefs.beginReadArray("RecentFiles");
-
-  QRecentFileList* recentsList = QRecentFileList::instance();
-  for (int i = 0; i < size; i++)
-  {
-    prefs.setArrayIndex(i);
-    QString filePath = prefs.value("FilePath").toString();
-    recentsList->addFile(filePath);
-  }
-
-  prefs.endArray();
-}
-
-// -----------------------------------------------------------------------------
 //  Write our Prefs to file
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeSettings()
@@ -451,7 +433,7 @@ void DREAM3D_UI::writeSettings()
 
     writeVersionCheckSettings(prefs);
 
-    writeRecentsSettings(prefs);
+    QRecentFileList::instance()->writeList(prefs);
   }
 }
 
@@ -486,24 +468,6 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
   prefs.setValue(QString("Splitter_Sizes"), splitterSizes);
 
   prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::writeRecentsSettings(QSettings& prefs)
-{
-  QStringList fileList = QRecentFileList::instance()->fileList();
-
-  prefs.beginWriteArray("RecentFiles");
-
-  for (int i = 0; i < fileList.size(); i++)
-  {
-    prefs.setArrayIndex(i);
-    prefs.setValue("FilePath", fileList[i]);
-  }
-
-  prefs.endArray();
 }
 
 // -----------------------------------------------------------------------------

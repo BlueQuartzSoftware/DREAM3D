@@ -268,12 +268,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void writeWindowSettings(QSettings& prefs);
     void writeVersionCheckSettings(QSettings& prefs);
-    void writeRecentsSettings(QSettings& prefs);
 
 
     void readWindowSettings(QSettings& prefs);
     void readVersionSettings(QSettings& prefs);
-    void readRecentsSettings(QSettings& prefs);
 
     void checkForUpdatesAtStartup();
 
