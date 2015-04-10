@@ -1,5 +1,5 @@
 
- 
+
 
 # -------------------------------------------------------------
 # This function adds the necessary cmake code to find the ITK
@@ -10,7 +10,7 @@ function(AddITKCopyInstallRules)
   set(oneValueArgs LIBNAME)
   set(multiValueArgs TYPES)
   cmake_parse_arguments(Z "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-  
+
 
   set(INTER_DIR ".")
   set(Z_INSTALL_DIR "lib")
@@ -33,7 +33,7 @@ function(AddITKCopyInstallRules)
 
       GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} IMPORTED_LOCATION_${TYPE})
       GET_TARGET_PROPERTY(LibType ${Z_LIBNAME} TYPE)
-    
+
       if(0)
         message(STATUS "********************************************")
         message(STATUS "Z_LIBNAME: ${Z_LIBNAME}")
@@ -57,7 +57,8 @@ function(AddITKCopyInstallRules)
           ADD_CUSTOM_TARGET(ZZ_${Z_LIBNAME}_DLL_${TYPE}-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LibPath}
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
-                              COMMENT "Copy: ${LibPath} To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/")
+                          #    COMMENT "Copy: ${LibPath} To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/"
+                            )
           set_target_properties(ZZ_${Z_LIBNAME}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
         endif()
 
@@ -109,7 +110,7 @@ if(EXISTS "${ITK_DIR}")
 endif()
 
 # Set the list of ITK Modules that DREAM3D supports using
-set(DREAM3D_ITK_MODULES 
+set(DREAM3D_ITK_MODULES
    #Group Core
     ITKCommon
 
@@ -153,7 +154,7 @@ find_package(ITK COMPONENTS ${DREAM3D_ITK_MODULES} REQUIRED)
 MESSAGE(STATUS "${PROJECT_NAME}: ITK Location ${ITK_DIR}")
 message(STATUS "ITK Version: ${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
 
-# Include the ITK file 
+# Include the ITK file
 include(${ITK_USE_FILE})
 
 # Call this macro to make sure ITK actually behaves correctly
@@ -170,7 +171,7 @@ else()
   endif()
 endif()
 
-# On Apple Systems since we can use the embedded install_name we do not need 
+# On Apple Systems since we can use the embedded install_name we do not need
 # any of this copy stuff and the install will take care of itself. This loop
 # will iterate over all the ITK Modules, figure out if each is shared and if
 # it is shared (DLL), then create a copy rule and an install rule.
@@ -190,7 +191,7 @@ endif()
 if(0)
   IF(ITK_DIR)
     SET(DREAM3D_ITK_DIR "${ITK_DIR}" CACHE INTERNAL "Path to store itk binaries")
-    
+
 
     # Copy libraries to PLUS_EXECUTABLE_OUTPUT_PATH
     IF( ${CMAKE_GENERATOR} MATCHES "Visual Studio" )
