@@ -53,7 +53,7 @@ function(AddITKCopyInstallRules)
         # Create a rule to copy the dylib/DLL into the BUILD/Bin directory so the executables will run
         # but only if the specific copy rule has NOT already been generated
         if(NOT TARGET ZZ_${Z_LIBNAME}_DLL_${TYPE}-Copy)
-          message(STATUS "Creating Copy Rule Lib:${Z_LIBNAME} Location:${LibPath}")
+          #message(STATUS "Creating Copy Rule Lib:${Z_LIBNAME} Location:${LibPath}")
           ADD_CUSTOM_TARGET(ZZ_${Z_LIBNAME}_DLL_${TYPE}-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LibPath}
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
