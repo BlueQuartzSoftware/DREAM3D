@@ -49,6 +49,7 @@ class DREAM3DStyles : public QObject
     static QFont GetCategoryFont();
 
     static void LineEditErrorStyle(QLineEdit* lineEdit);
+    static void LineEditClearStyle(QLineEdit* lineEdit);
 
 };
 
