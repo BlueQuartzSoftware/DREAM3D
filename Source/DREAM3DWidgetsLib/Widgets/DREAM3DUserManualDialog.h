@@ -53,6 +53,11 @@ public:
 
   QWebView* getWebView();
 
+protected slots:
+  void on_backBtn_pressed();
+  void on_forwardBtn_pressed();
+  void on_refreshBtn_pressed();
+
 private:
 
 };
