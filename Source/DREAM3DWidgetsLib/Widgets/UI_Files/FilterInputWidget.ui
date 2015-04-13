@@ -67,10 +67,13 @@ font-weight: bold;s
          </sizepolicy>
         </property>
         <property name="tabPosition">
-         <enum>QTabWidget::South</enum>
+         <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
          <number>1</number>
+        </property>
+        <property name="tabsClosable">
+         <bool>false</bool>
         </property>
         <widget class="QWidget" name="basicTab">
          <attribute name="title">
@@ -90,7 +93,7 @@ font-weight: bold;s
            <number>0</number>
           </property>
           <item>
-           <widget class="QScrollArea" name="scrollArea_2">
+           <widget class="QScrollArea" name="basicScrollArea">
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
@@ -100,7 +103,7 @@ font-weight: bold;s
                <x>0</x>
                <y>0</y>
                <width>1219</width>
-               <height>776</height>
+               <height>335</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -144,7 +147,7 @@ font-weight: bold;s
            <number>0</number>
           </property>
           <item>
-           <widget class="QScrollArea" name="scrollArea_3">
+           <widget class="QScrollArea" name="advancedScrollArea">
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
@@ -154,7 +157,7 @@ font-weight: bold;s
                <x>0</x>
                <y>0</y>
                <width>1219</width>
-               <height>776</height>
+               <height>335</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -217,7 +220,7 @@ font-weight: bold;s
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="brandingLabel">
         <property name="text">
          <string>Branding Information</string>
@@ -252,6 +255,19 @@ font-weight: bold;s
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="4" column="0">
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>

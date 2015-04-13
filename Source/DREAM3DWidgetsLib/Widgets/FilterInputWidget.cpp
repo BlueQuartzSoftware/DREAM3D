@@ -226,14 +226,20 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   // First check to see if we even have advanced parameters and show/hide the buttons accordingly
   showAdv = static_cast<bool>(w->getAdvParameterCount());
-  // If we do NOT have any advanced Parameters then hide the Advanced tab
+  // If we do NOT have any advanced Parameters then disable the Advanced tab
   if(showAdv == false)
   {
-    tabWidget->widget(ADVANCED_TAB)->setDisabled(true);
+    if (tabWidget->widget(ADVANCED_TAB) != NULL)
+    {
+      tabWidget->widget(ADVANCED_TAB)->setDisabled(true);
+    }
   }
   else
   {
-    tabWidget->widget(ADVANCED_TAB)->setDisabled(false);
+    if (tabWidget->widget(ADVANCED_TAB) != NULL)
+    {
+      tabWidget->widget(ADVANCED_TAB)->setDisabled(false);
+    }
   }
 
   w->getBasicInputsWidget()->setVisible(true);
@@ -251,6 +257,8 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   // Set the current index to the basic tab by default
   tabWidget->setCurrentIndex(BASIC_TAB);
 
+  int basicHeight = basicScrollArea->height();
+  int advancedHeight = advancedScrollArea->height();
 }
 
 
