@@ -46,6 +46,8 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+
 #include "DREAM3DWidgetsLib/moc_FilterListDockWidget.cpp"
 
 
@@ -53,7 +55,9 @@
 //
 // -----------------------------------------------------------------------------
 FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
-  QDockWidget(parent)
+  QDockWidget(parent),
+  m_ContextMenu(new QMenu(this)),
+  m_Mapper(NULL)
 {
   setupUi(this);
 
@@ -84,6 +88,10 @@ void FilterListDockWidget::setupGui()
               background-color: #FFFFFF;\
               }");
   filterList->setStyleSheet(css);
+
+  filterList->setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenuForWidget(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -95,6 +103,49 @@ void FilterListDockWidget::setupSearchField()
   filterSearch->setPlaceholderText("Search for filter");
 
   connect(filterSearch, SIGNAL(textChanged(QString)), this, SLOT(searchFilters()));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::showContextMenuForWidget(const QPoint &pos)
+{
+  // Clear the existing context menu
+  m_ContextMenu->clear();
+
+  QListWidgetItem* item = filterList->itemAt(pos);
+  QString itemName = item->text();
+  //QString helpLabel = "'" + itemName + "' Help";
+
+  m_Mapper = new QSignalMapper(this);
+
+  QAction* actionLaunchHelp = new QAction(m_ContextMenu);
+  actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
+  actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
+  connect(actionLaunchHelp, SIGNAL(triggered()),
+    m_Mapper, SLOT(map()));
+  m_Mapper->setMapping(actionLaunchHelp, itemName);
+  connect(m_Mapper, SIGNAL(mapped(QString)),
+    this, SLOT(launchHelpForItem(QString)));
+
+  m_ContextMenu->addAction(actionLaunchHelp);
+  m_ContextMenu->exec(QCursor::pos());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::launchHelpForItem(QString name)
+{
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer factory = fm->getFactoryForFilterHumanName(name);
+  AbstractFilter::Pointer filter = factory->create();
+  QString className = filter->getNameOfClass();
+
+  // Generate help page
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
+  DREAM3DUserManualDialog manualDialog(helpURL, this);
+  manualDialog.exec();
 }
 
 // -----------------------------------------------------------------------------
