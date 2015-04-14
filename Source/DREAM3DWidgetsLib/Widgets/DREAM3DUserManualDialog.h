@@ -49,9 +49,27 @@ class DREAM3DWidgetsLib_EXPORT DREAM3DUserManualDialog : public QDialog, public 
   Q_OBJECT
 
 public:
-  DREAM3DUserManualDialog(QUrl url, QWidget* parent = 0);
 
-  QWebView* getWebView();
+  /**
+  * @brief Destructor
+  * @return
+  */
+  virtual ~DREAM3DUserManualDialog();
+
+  /**
+  * @brief Static instance to retrieve the global instance of this class
+  * @return
+  */
+  static DREAM3DUserManualDialog* Instance();
+
+  /**
+  * @brief Static function to launch the help dialog with the given URL
+  * @return
+  */
+  static void LaunchHelpDialog(QUrl url);
+
+protected:
+  DREAM3DUserManualDialog();
 
 protected slots:
   void on_backBtn_pressed();
@@ -59,6 +77,10 @@ protected slots:
   void on_refreshBtn_pressed();
 
 private:
+  static DREAM3DUserManualDialog* self;
+
+  DREAM3DUserManualDialog(const DREAM3DUserManualDialog&); // Copy Constructor Not Implemented
+  void operator=(const DREAM3DUserManualDialog&); // Operator '=' Not Implemented
 
 };
 

@@ -1218,12 +1218,11 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_User_Manual_triggered()
+void DREAM3D_UI::on_actionShowIndex_triggered()
 {
   // Generate help page
   QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
-  DREAM3DUserManualDialog manualDialog(helpURL, this);
-  manualDialog.exec();
+  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
 }
 
 // -----------------------------------------------------------------------------

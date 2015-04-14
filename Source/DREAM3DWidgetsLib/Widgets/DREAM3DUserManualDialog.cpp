@@ -42,20 +42,44 @@
 
 #include <QtWidgets/QMessageBox>
 
-DREAM3DUserManualDialog::DREAM3DUserManualDialog(QUrl url, QWidget* parent) :
-  QDialog(parent)
-{
-  setupUi(this);
+DREAM3DUserManualDialog* DREAM3DUserManualDialog::self = NULL;
 
-  webView->load(url);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3DUserManualDialog::DREAM3DUserManualDialog()
+{
+  Q_ASSERT_X(!self, "DREAM3DUserManualDialog", "There should be only one DREAM3DUserManualDialog object");
+
+  setupUi(this);
+  DREAM3DUserManualDialog::self = this;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QWebView* DREAM3DUserManualDialog::getWebView()
+DREAM3DUserManualDialog::~DREAM3DUserManualDialog() {}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3DUserManualDialog* DREAM3DUserManualDialog::Instance()
 {
-  return webView;
+  if (self == NULL)
+  {
+    self = new DREAM3DUserManualDialog();
+  }
+  return self;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUserManualDialog::LaunchHelpDialog(QUrl url)
+{
+  DREAM3DUserManualDialog* dialog = DREAM3DUserManualDialog::Instance();
+  dialog->webView->load(url);
+  dialog->show();
 }
 
 // -----------------------------------------------------------------------------

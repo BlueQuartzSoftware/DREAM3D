@@ -144,8 +144,7 @@ void FilterListDockWidget::launchHelpForItem(QString name)
 
   // Generate help page
   QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
-  DREAM3DUserManualDialog manualDialog(helpURL, this);
-  manualDialog.exec();
+  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
 }
 
 // -----------------------------------------------------------------------------
