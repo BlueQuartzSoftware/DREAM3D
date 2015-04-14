@@ -55,8 +55,9 @@ DataContainerReader::DataContainerReader() :
 AbstractFilter(),
 m_InputFile(""),
 m_OverwriteExistingDataContainers(false),
-m_InputFileDataContainerArrayProxy(),
-m_LastFileRead("")
+m_LastFileRead(""),
+m_LastRead(QDateTime::currentDateTime()),
+m_InputFileDataContainerArrayProxy()
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
@@ -630,40 +631,5 @@ const QString DataContainerReader::getHumanLabel()
 {
   return "Read DREAM3D Data File";
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainerArrayProxy DataContainerReader::getInputFileDataContainerArrayProxy()
-{
-  return m_InputFileDataContainerArrayProxy;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReader::setInputFileDataContainerArrayProxy(DataContainerArrayProxy proxy)
-{
-  m_InputFileDataContainerArrayProxy = proxy;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataContainerReader::getInputFile()
-{
-  return m_InputFile;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReader::setInputFile(QString filePath)
-{
-  m_InputFile = filePath;
-}
-
-
-
 
 

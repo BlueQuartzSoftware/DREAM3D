@@ -64,21 +64,19 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     virtual ~DataContainerReader();
 
-    QString getInputFile();
-    void setInputFile(QString filePath);
+    DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
     Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers)
 
-	DREAM3D_FILTER_PARAMETER(QString, LastFileRead)
-	Q_PROPERTY(QString LastFileRead READ getLastFileRead WRITE setLastFileRead)
+    DREAM3D_FILTER_PARAMETER(QString, LastFileRead)
+    Q_PROPERTY(QString LastFileRead READ getLastFileRead WRITE setLastFileRead)
 
-	DREAM3D_FILTER_PARAMETER(QDateTime, LastRead)
-	Q_PROPERTY(QDateTime LastRead READ getLastRead WRITE setLastRead)
+    DREAM3D_FILTER_PARAMETER(QDateTime, LastRead)
+    Q_PROPERTY(QDateTime LastRead READ getLastRead WRITE setLastRead)
 
-    DataContainerArrayProxy getInputFileDataContainerArrayProxy();
-    void setInputFileDataContainerArrayProxy(DataContainerArrayProxy proxy);
+    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, InputFileDataContainerArrayProxy)
     Q_PROPERTY(DataContainerArrayProxy InputFileDataContainerArrayProxy READ getInputFileDataContainerArrayProxy WRITE setInputFileDataContainerArrayProxy)
 
 
@@ -169,9 +167,6 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     void readData(bool preflight, DataContainerArrayProxy& proxy, DataContainerArray::Pointer dca);
 
   private:
-    DataContainerArrayProxy         m_InputFileDataContainerArrayProxy;
-
-    QString                         m_InputFile;
 
     FilterPipeline::Pointer         m_PipelineFromFile;
 

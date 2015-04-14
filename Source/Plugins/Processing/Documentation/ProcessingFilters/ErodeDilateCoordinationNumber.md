@@ -19,9 +19,9 @@ By default, the filter will only perform a single iteration and will not concern
 Image/Rectilinear Grid 
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
 None

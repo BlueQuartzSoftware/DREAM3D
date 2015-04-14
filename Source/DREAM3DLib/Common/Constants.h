@@ -114,6 +114,9 @@ namespace DREAM3D
   namespace Defaults
   {
     const DREAM3D_STRING AttributeMatrixName("AttributeMatrix");
+    const DREAM3D_STRING ElementAttributeMatrixName("ElementAttributeMatrix");
+    const DREAM3D_STRING FeatureAttributeMatrixName("FeatureAttributeMatrix");
+    const DREAM3D_STRING EnsembleAttributeMatrixName("EnsembleAttributeMatrix");
 
     const DREAM3D_STRING VertexDataContainerName("VertexDataContainer");
     const DREAM3D_STRING VertexAttributeMatrixName("VertexData");
@@ -158,6 +161,7 @@ namespace DREAM3D
   namespace FilterGroups
   {
     const DREAM3D_STRING GenericFilters("Generic");
+    const DREAM3D_STRING OrientationAnalysis("OrientationAnalysis");
     const DREAM3D_STRING IOFilters("IO");
     const DREAM3D_STRING ProcessingFilters("Processing");
     const DREAM3D_STRING ReconstructionFilters("Reconstruction");
@@ -185,6 +189,8 @@ namespace DREAM3D
     const DREAM3D_STRING ThresholdFilters("Threshold");
     const DREAM3D_STRING RegularizationFilters("Regularization");
     const DREAM3D_STRING ConversionFilters("Conversion");
+    const DREAM3D_STRING FusionFilters("Fusion");
+    const DREAM3D_STRING WarpingFilters("Warping");
     const DREAM3D_STRING AlignmentFilters("Alignment");
     const DREAM3D_STRING SegmentationFilters("Segmentation");
     const DREAM3D_STRING GroupingFilters("Grouping");
@@ -199,6 +205,7 @@ namespace DREAM3D
     const DREAM3D_STRING SmoothingFilters("Smoothing");
     const DREAM3D_STRING CurvatureFilters("Curvature");
     const DREAM3D_STRING ConnectivityArrangementFilters("Connectivity/Arrangement");
+    const DREAM3D_STRING MappingFilters("Mapping");
     const DREAM3D_STRING MiscFilters("Misc");
   }
 

@@ -195,7 +195,7 @@ void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
 {
 
   QString humanName = filter->getHumanLabel();
-  QString iconName(":/");
+  QString iconName(":/Groups/");
   iconName.append( filter->getGroupName() );
   iconName.append("_Icon.png");
 
@@ -203,7 +203,7 @@ void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
   QFileInfo iconInfo(iconName);
   if (iconInfo.exists() == false)
   {
-    iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+    iconName = ":/Groups/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
   }
 
   QIcon icon(iconName);

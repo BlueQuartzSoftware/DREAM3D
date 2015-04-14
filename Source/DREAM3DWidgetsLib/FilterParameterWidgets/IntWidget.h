@@ -76,8 +76,7 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public FilterParameterWidget, private
     */
     void setupGui();
 
-		QString generateStyleSheet(int style);
-		void setInputStyle(QLineEdit* lineEdit);
+    QString generateStyleSheet(int style);
 
   public slots:
     void widgetChanged(const QString& msg);

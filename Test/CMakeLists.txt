@@ -40,6 +40,7 @@ AddDREAM3DUnitTest(TESTNAME DataContainerBundleTest SOURCES ${DREAM3DTest_SOURCE
 
 AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
+AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
 
 

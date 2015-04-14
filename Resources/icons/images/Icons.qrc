@@ -1,17 +1,45 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
-  <file>Check-16x16.png</file>
-  <file>DREAM3D.png</file>
-  <file>Delete-16x16.png</file>
-  <file>Generic_Icon.png</file>
-  <file>IO_Icon.png</file>
-  <file>Link_Left.png</file>
-  <file>Link_Right.png</file>
-  <file>MaxCutOff_Eqn.png</file>
-  <file>MinCutOff_Eqn.png</file>
-  <file>Plugin_Icon.png</file>
-  <file>Processing_Icon.png</file>
+ <!--  These have HiDPI resources  -->
+  <file>delete2.png</file>
+  <file>delete2@2x.png</file>
+  <file>add2.png</file>
+  <file>add2@2x.png</file>
+  <file>folder_blue.png</file>
+  <file>folder_blue@2x.png</file>
+  <file>text.png</file>
+  <file>text@2x.png</file>
+
+  <file>help2.png</file>
+  <file>help2@2x.png</file>
+  <file>information.png</file>
+  <file>information@2x.png</file>
+  <file>warning.png</file>
+  <file>warning@2x.png</file>
+  <file>refresh.png</file>
+  <file>refresh@2x.png</file>
+  <file>gear.png</file>
+  <file>gear@2x.png</file>
+  <file>zoom_in.png</file>
+  <file>zoom_in@2x.png</file>
+  <file>zoom_out.png</file>
+  <file>zoom_out@2x.png</file>
+
+<!-- These are low res icons -->
+  <file>Groups/cubes.png</file>
+  <file>Groups/cubes@2x.png</file>
+  <file>Groups/Generic_Icon.png</file>
+  <file>Groups/Processing_Icon.png</file>
+  <file>Groups/Reconstruction_Icon.png</file>
+  <file>Groups/Sampling_Icon.png</file>
+  <file>Groups/SolidMeshing_Icon.png</file>
+  <file>Groups/Statistics_Icon.png</file>
+  <file>Groups/SurfaceMeshing_Icon.png</file>
+  <file>Groups/SyntheticBuilding_Icon.png</file>
+  <file>Groups/Plugin_Icon.png</file>
+  <file>Groups/IO_Icon.png</file>
+
   <file>QFilterWidgetHeaders/Generic_Header.png</file>
   <file>QFilterWidgetHeaders/IO_Header.png</file>
   <file>QFilterWidgetHeaders/Plugin_Header.png</file>
@@ -21,62 +49,37 @@
   <file>QFilterWidgetHeaders/Statistics_Header.png</file>
   <file>QFilterWidgetHeaders/Surface_Meshing_Header.png</file>
   <file>QFilterWidgetHeaders/Synthetic_Builder_Header.png</file>
-  <file>Reconstruction_Icon.png</file>
-  <file>Sampling_Icon.png</file>
-  <file>SolidMeshing_Icon.png</file>
-  <file>Statistics_Icon.png</file>
-  <file>SurfaceMeshing_Icon.png</file>
-  <file>SyntheticBuilding_Icon.png</file>
-  <file>add2.png</file>
-  <file>bookmark_add.png</file>
-  <file>bookmark_delete.png</file>
-  <file>bookmarks.png</file>
-  <file>bullet_ball_blue.png</file>
-  <file>bullet_ball_yellow.png</file>
+  <file>QFilterWidgetHeaders/filterWidgetBorder.png</file>
+  <file>QFilterWidgetHeaders/filterWidgetBorder_Error.png</file>
+  <file>QFilterWidgetHeaders/filterWidgetBorder_Warning.png</file>
+
+
+  <file>DREAM3D.png</file>
+
+  <!-- These are needed for Stats Generator  -->
+  <file>MaxCutOff_Eqn.png</file>
+  <file>MinCutOff_Eqn.png</file>
+
   <file>cube_molecule_add.png</file>
   <file>cube_molecule_delete.png</file>
-  <file>cube_molecule_gearwheel.png</file>
-  <file>cubes.png</file>
-  <file>debug_error.png</file>
+  <file>cube_molecule_view.png</file>
+  <file>cube_molecule_add@2x.png</file>
+  <file>cube_molecule_delete@2x.png</file>
+  <file>cube_molecule_view@2x.png</file>
+
+
+  <file>bullet_ball_blue.png</file>
+  <file>bullet_ball_yellow.png</file>
   <file>delete-corner-pressed.png</file>
   <file>delete-corner.png</file>
-  <file>delete.png</file>
-  <file>delete2.png</file>
-  <file>disk_blue.png</file>
-  <file>filterWidgetBorder.png</file>
-  <file>filterWidgetBorder_Error.png</file>
-  <file>filterWidgetBorder_Warning.png</file>
+ 
+  
   <file>fitToWindow.png</file>
-  <file>flag_blue_scroll.png</file>
-  <file>flash.png</file>
-  <file>flash_add.png</file>
-  <file>flash_delete.png</file>
-  <file>folder_blue.png</file>
-  <file>gear_add.png</file>
-  <file>gear_delete.png</file>
-  <file>gear_edit.png</file>
-  <file>gear.png</file>
-  <file>green-dot.png</file>
-  <file>help2.png</file>
-  <file>home.png</file>
-  <file>information.png</file>
   <file>minus.png</file>
-  <file>nav_left_green.png</file>
-  <file>nav_refresh_yellow.png</file>
-  <file>nav_right_green.png</file>
-  <file>open_pipeline.png</file>
   <file>plus.png</file>
-  <file>preferences.png</file>
   <file>red-dot.png</file>
-  <file>refresh.png</file>
-  <file>reload.png</file>
-  <file>signpost.png</file>
-  <file>text.png</file>
-  <file>view.png</file>
-  <file>view_add.png</file>
-  <file>warning.png</file>
-  <file>zoomIn.png</file>
-  <file>zoomOut.png</file>
+  <file>green-dot.png</file>
+ 
   <file>cube_gray.png</file>
 
 

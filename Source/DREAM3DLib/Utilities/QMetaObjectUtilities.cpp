@@ -36,6 +36,7 @@
 #include "QMetaObjectUtilities.h"
 
 #include <QtCore/QVector>
+#include <QtCore/QDataStream>
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"

@@ -65,6 +65,26 @@ class OrientationLib_EXPORT PoleFigureUtilities
     PoleFigureUtilities();
     virtual ~PoleFigureUtilities();
 
+    /**
+     * @brief CreateColorImage
+     * @param data
+     * @param width
+     * @param height
+     * @param nColors
+     * @param name
+     * @param min
+     * @param max
+     * @return
+     */
+    static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const QString& name, double min, double max);
+
+    /**
+     * @brief CreateColorImage
+     * @param data
+     * @param config
+     * @param image
+     */
+    static void CreateColorImage(DoubleArrayType* data, PoleFigureConfiguration_t& config, UInt8ArrayType* image);
 
     /**
      * @brief GenerateHexPoleFigures
@@ -102,6 +122,33 @@ class OrientationLib_EXPORT PoleFigureUtilities
     void operator=(const PoleFigureUtilities&); // Operator '=' Not Implemented
 
 
+};
+
+/**
+ * @brief The GeneratePoleFigureRgbaImageImpl class is a wrapper around generating the RGBA image (2D UChar Array with 4 Components) from the
+ * intensity image. This should be called from a TBB Task
+ */
+class GeneratePoleFigureRgbaImageImpl
+{
+  public:
+    GeneratePoleFigureRgbaImageImpl(DoubleArrayType* intensity, PoleFigureConfiguration_t* config, UInt8ArrayType* rgba) :
+      m_Intensity(intensity),
+      m_Config(config),
+      m_Rgba(rgba)
+    {}
+    virtual ~GeneratePoleFigureRgbaImageImpl() {}
+
+    void operator()() const
+    {
+      PoleFigureUtilities::CreateColorImage(m_Intensity, *m_Config, m_Rgba);
+    }
+  protected:
+    GeneratePoleFigureRgbaImageImpl() {}
+
+  private:
+    DoubleArrayType*    m_Intensity;
+    PoleFigureConfiguration_t* m_Config;
+    UInt8ArrayType* m_Rgba;
 };
 
 

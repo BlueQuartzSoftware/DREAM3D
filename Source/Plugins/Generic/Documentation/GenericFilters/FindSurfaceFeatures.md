@@ -22,15 +22,15 @@ Image/Rectilinear Grid
 
 ## Required Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | SurfaceFeatures | Boolean | (1,1) | Flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. |
+| Feature | SurfaceFeatures | Boolean | (1) | Flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. |
 
 ## Authors ##
 

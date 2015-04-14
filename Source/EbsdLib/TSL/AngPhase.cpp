@@ -131,12 +131,12 @@ void AngPhase::parseLatticeConstants(QList<QByteArray> tokens)
   m_LatticeConstants.clear();
 
   bool ok = false;
-  m_LatticeConstants.push_back(tokens[1].toFloat(&ok));
-  m_LatticeConstants.push_back(tokens[2].toFloat(&ok));
-  m_LatticeConstants.push_back(tokens[3].toFloat(&ok));
-  m_LatticeConstants.push_back(tokens[4].toFloat(&ok));
-  m_LatticeConstants.push_back(tokens[5].toFloat(&ok));
-  m_LatticeConstants.push_back(tokens[6].toFloat(&ok));
+  m_LatticeConstants.push_back(tokens[1].toFloat(&ok)); //A
+  m_LatticeConstants.push_back(tokens[2].toFloat(&ok)); //B
+  m_LatticeConstants.push_back(tokens[3].toFloat(&ok)); //C
+  m_LatticeConstants.push_back(tokens[4].toFloat(&ok)); // Alpha
+  m_LatticeConstants.push_back(tokens[5].toFloat(&ok)); // Beta
+  m_LatticeConstants.push_back(tokens[6].toFloat(&ok)); // Gamma
 
 }
 
@@ -283,3 +283,53 @@ unsigned int AngPhase::determineCrystalStructure()
   }
   return crystal_structure;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngPhase::setLatticeConstantA(float a)
+{
+  m_LatticeConstants[0] = a;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngPhase::setLatticeConstantB(float a)
+{
+  m_LatticeConstants[1] = a;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngPhase::setLatticeConstantC(float a)
+{
+  m_LatticeConstants[2] = a;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngPhase::setLatticeConstantAlpha(float a)
+{
+  m_LatticeConstants[3] = a;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngPhase::setLatticeConstantBeta(float a)
+{
+  m_LatticeConstants[4] = a;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngPhase::setLatticeConstantGamma(float a)
+{
+  m_LatticeConstants[5] = a;
+}
+

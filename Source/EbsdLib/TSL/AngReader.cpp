@@ -85,9 +85,9 @@ AngReader::AngReader() :
   m_HeaderMap[Ebsd::Ang::NColsOdd] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::NColsOdd);
   m_HeaderMap[Ebsd::Ang::NColsEven] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::NColsEven);
   m_HeaderMap[Ebsd::Ang::NRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::NRows);
-  m_HeaderMap[Ebsd::Ang::Operator] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::Operator);
-  m_HeaderMap[Ebsd::Ang::SampleId] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SampleId);
-  m_HeaderMap[Ebsd::Ang::ScanId] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::ScanId);
+  m_HeaderMap[Ebsd::Ang::OPERATOR] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::OPERATOR);
+  m_HeaderMap[Ebsd::Ang::SAMPLEID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SAMPLEID);
+  m_HeaderMap[Ebsd::Ang::ScanID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::ScanID);
 
 
   // Give these values some defaults

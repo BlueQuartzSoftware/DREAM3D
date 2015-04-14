@@ -43,11 +43,11 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 template<typename T>
 class CalcRelativeMotion
@@ -282,9 +282,9 @@ void FindRelativeMotionBetweenSlices::execute()
   int32_t* patchPoints = patchPointsPtr->getPointer(0);
   int32_t* searchPoints = searchPointsPtr->getPointer(0);
   bool* validPoints = validPointsPtr->getPointer(0);
-  size_t yStride, zStride;
+  size_t yStride = 0, zStride = 0;
   size_t count = 0;
-  size_t numPatchPoints, numSearchPoints;
+  size_t numPatchPoints = 0, numSearchPoints = 0;
   if(m_Plane == 0)
   {
     for(int j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)

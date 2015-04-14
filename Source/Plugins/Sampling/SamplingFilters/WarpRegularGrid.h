@@ -40,10 +40,10 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
@@ -89,7 +89,7 @@ class WarpRegularGrid : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::WarpingFilters; }
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();

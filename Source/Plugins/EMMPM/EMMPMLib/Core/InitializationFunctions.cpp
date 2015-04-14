@@ -106,10 +106,7 @@ void BasicInitialization::initialize(EMMPM_Data::Pointer data)
   unsigned char* y = data->y;
   size_t total;
 
-  rows = data->rows;
-  cols = data->columns;
-  total = data->rows * data->columns;
-
+  total = rows * cols;
 
   memset(msgbuff, 0, 256);
 
@@ -180,18 +177,11 @@ void UserDefinedAreasInitialization::initialize(EMMPM_Data::Pointer data)
   unsigned int i, j;
   size_t index;
   int c, l;
-  real_t mu, sigma;
-  unsigned int rows = data->rows;
+  real_t mu = 0.0;
   unsigned int cols = data->columns;
   char msgbuff[256];
   unsigned char* y = data->y;
-  //  unsigned char** xt = data->xt;
-  rows = data->rows;
-  cols = data->columns;
-
-  sigma = 0;
-  mu = 0;
-
+  
   if (data->dims != 1)
   {
     printf("User Defined Initialization ONLY works with GrayScale images and not vector images.\n  %s(%d)", __FILE__, __LINE__);

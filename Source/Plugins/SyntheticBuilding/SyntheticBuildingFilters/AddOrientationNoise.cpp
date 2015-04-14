@@ -40,13 +40,13 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 
 
 
@@ -170,7 +170,7 @@ void  AddOrientationNoise::add_orientation_noise()
   float newg[3][3];
   float rot[3][3];
   float w, n1, n2, n3;
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
     float ea1 = m_CellEulerAngles[3 * i + 0];

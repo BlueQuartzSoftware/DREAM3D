@@ -36,21 +36,13 @@
 #ifndef _GenerateVectorColors_H_
 #define _GenerateVectorColors_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @class GenerateVectorColors GenerateVectorColors.h DREAM3DLib/GenericFilters/GenerateVectorColors.h
- * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Feb 6, 2013
- * @version 1.0
+ * @brief The GenerateVectorColors class. See Filter documentation for details.
  */
 class  GenerateVectorColors : public AbstractFilter
 {
@@ -143,7 +135,4 @@ class  GenerateVectorColors : public AbstractFilter
 };
 
 #endif /* _GenerateVectorColors_H_ */
-
-
-
 

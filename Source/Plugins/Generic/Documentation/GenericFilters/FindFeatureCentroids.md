@@ -20,15 +20,15 @@ Image / Rectilinear Grid
 
 ## Required Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1,1) | Specifies to which **Feature** each **Cell** belongs. |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | Centroids | Float | (1,3) | X, Y, Z coordinates of **Feature** center of mass |
+| Feature | Centroids | Float | (3) | X, Y, Z coordinates of **Feature** center of mass |
 
 ## Authors ##
 

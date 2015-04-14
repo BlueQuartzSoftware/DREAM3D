@@ -54,7 +54,9 @@
 #define ANG_X_STAR           "x-star"
 #define ANG_Y_STAR           "y-star"
 #define ANG_Z_STAR           "z-star"
-#define ANG_WORKING_DISTANCE "WorkingDistance"
+#define ANG_PATTERN_CENTER_CALIBRATION "Pattern Center Calibration"
+#define ANG_WORKINGDISTANCE   "WorkingDistance"
+#define ANG_WORKING_DISTANCe  "Working Distance"
 #define ANG_PHASE             "Phase"
 #define ANG_MATERIAL_NAME     "MaterialName"
 #define ANG_FORMULA           "Formula"
@@ -62,17 +64,27 @@
 #define ANG_SYMMETRY          "Symmetry"
 #define ANG_LATTICE_CONSTANTS "LatticeConstants"
 #define ANG_NUMBER_FAMILIES   "NumberFamilies"
-#define ANG_HKL_FAMILIES      "hklFamilies"
+#define ANG_HKLFAMILIES       "hklFamilies"
+#define ANG_HKL_FAMILIES      "hkl Families"
 #define ANG_CATEGORIES        "Categories"
 #define ANG_GRID              "GRID"
+#define ANG_GRID_TYPE         "Grid Type"
 #define ANG_X_STEP            "XSTEP"
 #define ANG_Y_STEP            "YSTEP"
+#define ANG_STEP_X            "Step X"
+#define ANG_STEP_Y            "Step Y"
 #define ANG_NCOLS_ODD         "NCOLS_ODD"
 #define ANG_NCOLS_EVEN        "NCOLS_EVEN"
 #define ANG_NROWS             "NROWS"
+#define ANG_nColumns          "nColumns"
+#define ANG_nROWS             "nRows"
 #define ANG_OPERATOR          "OPERATOR"
 #define ANG_SAMPLE_ID         "SAMPLEID"
 #define ANG_SCAN_ID           "SCANID"
+#define ANG_Scan_ID            "Scan ID"
+
+#define ANG_Operator          "Operator"
+#define ANG_Sample_ID         "Sample ID"
 
 #define ANG_SQUARE_GRID       "SqrGrid"
 #define ANG_HEX_GRID          "HexGrid"
@@ -92,6 +104,11 @@
 #define ANG_Z_STEP "ZStep"
 #define ANG_Z_POS "ZPos"
 #define ANG_Z_MAX "ZMax"
+#define ANG_CI "CI"
+#define ANG_IQ "IQ"
+#define ANG_PATTERN_DATA "Pattern"
+#define ANG_PATTERN_WIDTH "Pattern Width"
+#define ANG_PATTERN_HEIGHT "Pattern Height"
 
 
 
@@ -146,11 +163,13 @@ namespace Ebsd
 
 
     const QString FileExt("ang");
+    const QString H5FileExt("h5");
     const QString TEMPIXPerUM(ANG_TEM_PIXPERUM);
-    const QString XStar(ANG_X_STAR  );
+    const QString XStar(ANG_X_STAR);
     const QString YStar(ANG_Y_STAR);
     const QString ZStar(ANG_Z_STAR);
-    const QString WorkingDistance(ANG_WORKING_DISTANCE);
+    const QString WorkingDistance(ANG_WORKINGDISTANCE);
+    const QString Working_Distance(ANG_WORKING_DISTANCe);
     const QString Phase(ANG_PHASE);
     const QString MaterialName(ANG_MATERIAL_NAME);
     const QString Formula(ANG_FORMULA);
@@ -158,28 +177,41 @@ namespace Ebsd
     const QString Symmetry(ANG_SYMMETRY);
     const QString LatticeConstants(ANG_LATTICE_CONSTANTS);
     const QString NumberFamilies(ANG_NUMBER_FAMILIES);
-    const QString HKLFamilies(ANG_HKL_FAMILIES);
+    const QString HKLFamilies(ANG_HKLFAMILIES);
+    const QString HKL_Families(ANG_HKL_FAMILIES);
     const QString Categories(ANG_CATEGORIES);
     const QString Grid(ANG_GRID);
+    const QString GridType(ANG_GRID_TYPE);
     const QString XStep(ANG_X_STEP);
     const QString YStep(ANG_Y_STEP);
+    const QString StepX(ANG_STEP_X);
+    const QString StepY(ANG_STEP_Y);
     const QString NColsOdd(ANG_NCOLS_ODD);
     const QString NColsEven(ANG_NCOLS_EVEN);
-//   const QString NCols(ANG_NCOLS);
+    const QString nColumns(ANG_nColumns);
     const QString NRows(ANG_NROWS);
-    const QString Operator(ANG_OPERATOR);
-    const QString SampleId(ANG_SAMPLE_ID);
-    const QString ScanId(ANG_SCAN_ID);
+    const QString nRows(ANG_nROWS);
+    const QString Operator(ANG_Operator);
+    const QString SampleID(ANG_Sample_ID);
+    const QString OPERATOR(ANG_OPERATOR);
+    const QString SAMPLEID(ANG_SAMPLE_ID);
+    const QString SCANID(ANG_SCAN_ID);
+    const QString ScanID(ANG_Scan_ID);
     const QString Phi1(ANG_PHI1);
     const QString Phi(ANG_PHI);
     const QString Phi2(ANG_PHI2);
     const QString ImageQuality(ANG_IMAGE_QUALITY);
     const QString ConfidenceIndex(ANG_CONFIDENCE_INDEX);
+    const QString CI(ANG_CI);
+    const QString IQ(ANG_IQ);
     const QString PhaseData(ANG_PHASE_DATA);
     const QString XPosition(ANG_X_POSITION);
     const QString YPosition(ANG_Y_POSITION);
     const QString SEMSignal(ANG_SEM_SIGNAL);
     const QString Fit(ANG_FIT);
+    const QString PatternData(ANG_PATTERN_DATA);
+    const QString PatternWidth(ANG_PATTERN_WIDTH);
+    const QString PatternHeight(ANG_PATTERN_HEIGHT);
 
     const QString SquareGrid(ANG_SQUARE_GRID);
     const QString HexGrid(ANG_HEX_GRID);
@@ -199,7 +231,7 @@ namespace Ebsd
 #define ANG_X_STAR_LOWER "x-star"
 #define ANG_Y_STAR_LOWER "y-star"
 #define ANG_Z_STAR_LOWER "z-star"
-#define ANG_WORKING_DISTANCE_LOWER "workingdistance"
+#define ANG_WORKINGDISTANCE_LOWER "workingdistance"
 
 #define ANG_PHASE_LOWER "phase"
 #define ANG_MATERIAL_NAME_LOWER "materialname"
@@ -250,7 +282,7 @@ namespace Ebsd
     const QString XStarLower(ANG_X_STAR_LOWER);
     const QString YStarLower(ANG_Y_STAR_LOWER);
     const QString ZStarLower(ANG_Z_STAR_LOWER);
-    const QString WorkingDistanceLower(ANG_WORKING_DISTANCE_LOWER);
+    const QString WorkingDistanceLower(ANG_WORKINGDISTANCE_LOWER);
     const QString PhaseLower(ANG_PHASE_LOWER);
     const QString MaterialNameLower(ANG_MATERIAL_NAME_LOWER);
     const QString FormulaLower(ANG_FORMULA_LOWER);
@@ -281,6 +313,13 @@ namespace Ebsd
     const QString YPositionLower(ANG_Y_POSITION_LOWER);
     const QString SEMSignalLower(ANG_SEM_SIGNAL_LOWER);
     const QString FitLower(ANG_FIT_LOWER);
+
+    const QString LatticeConstantA("Lattice Constant a");
+    const QString LatticeConstantB("Lattice Constant b");
+    const QString LatticeConstantC("Lattice Constant c");
+    const QString LatticeConstantAlpha("Lattice Constant alpha");
+    const QString LatticeConstantBeta("Lattice Constant beta");
+    const QString LatticeConstantGamma("Lattice Constant gamma");
   }
 
 }

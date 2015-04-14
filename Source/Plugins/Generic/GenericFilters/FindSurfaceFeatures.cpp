@@ -36,8 +36,6 @@
 
 #include "FindSurfaceFeatures.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -64,6 +62,7 @@ FindSurfaceFeatures::FindSurfaceFeatures() :
 FindSurfaceFeatures::~FindSurfaceFeatures()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,12 +70,15 @@ void FindSurfaceFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceFeatures", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), true, ""));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -109,17 +111,13 @@ void FindSurfaceFeatures::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+
   QVector<size_t> dims(1, 1);
-  // Cell Data
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  // Feature Data
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getSurfaceFeaturesArrayName() );
   m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -145,8 +143,6 @@ void FindSurfaceFeatures::preflight()
 void FindSurfaceFeatures::execute()
 {
   setErrorCondition(0);
-  QString ss;
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -156,7 +152,6 @@ void FindSurfaceFeatures::execute()
   if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_surfacefeatures2D(); }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
-
 }
 
 // -----------------------------------------------------------------------------
@@ -166,83 +161,87 @@ void FindSurfaceFeatures::find_surfacefeatures()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  size_t xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-  size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
-  size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+  int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  int zStride, yStride;
-  for(size_t i = 0; i < zPoints; i++)
+  int64_t zStride, yStride;
+  for (int64_t i = 0; i < zPoints; i++)
   {
     zStride = i * xPoints * yPoints;
-    for (size_t j = 0; j < yPoints; j++)
+    for (int64_t j = 0; j < yPoints; j++)
     {
       yStride = j * xPoints;
-      for(size_t k = 0; k < xPoints; k++)
+      for (int64_t k = 0; k < xPoints; k++)
       {
-        int gnum = m_FeatureIds[zStride + yStride + k];
-        if(m_SurfaceFeatures[gnum] == false)
+        int32_t gnum = m_FeatureIds[zStride + yStride + k];
+        if( m_SurfaceFeatures[gnum] == false)
         {
-          if(k <= 0) { m_SurfaceFeatures[gnum] = true; }
-          if(k >= xPoints - 1) { m_SurfaceFeatures[gnum] = true; }
-          if(j <= 0) { m_SurfaceFeatures[gnum] = true; }
-          if(j >= yPoints - 1) { m_SurfaceFeatures[gnum] = true; }
-          if(i <= 0) { m_SurfaceFeatures[gnum] = true; }
-          if(i >= zPoints - 1) { m_SurfaceFeatures[gnum] = true; }
-          if(m_SurfaceFeatures[gnum] == false)
+          if (k <= 0) { m_SurfaceFeatures[gnum] = true; }
+          if (k >= xPoints - 1) { m_SurfaceFeatures[gnum] = true; }
+          if (j <= 0) { m_SurfaceFeatures[gnum] = true; }
+          if (j >= yPoints - 1) { m_SurfaceFeatures[gnum] = true; }
+          if (i <= 0) { m_SurfaceFeatures[gnum] = true; }
+          if (i >= zPoints - 1) { m_SurfaceFeatures[gnum] = true; }
+          if (m_SurfaceFeatures[gnum] == false)
           {
-            if(m_FeatureIds[zStride + yStride + k - 1] == 0) { m_SurfaceFeatures[gnum] = true; }
-            if(m_FeatureIds[zStride + yStride + k + 1] == 0) { m_SurfaceFeatures[gnum] = true; }
-            if(m_FeatureIds[zStride + yStride + k - xPoints] == 0) { m_SurfaceFeatures[gnum] = true; }
-            if(m_FeatureIds[zStride + yStride + k + xPoints] == 0) { m_SurfaceFeatures[gnum] = true; }
-            if(m_FeatureIds[zStride + yStride + k - (xPoints * yPoints)] == 0) { m_SurfaceFeatures[gnum] = true; }
-            if(m_FeatureIds[zStride + yStride + k + (xPoints * yPoints)] == 0) { m_SurfaceFeatures[gnum] = true; }
+            if (m_FeatureIds[zStride + yStride + k - 1] == 0) { m_SurfaceFeatures[gnum] = true; }
+            if (m_FeatureIds[zStride + yStride + k + 1] == 0) { m_SurfaceFeatures[gnum] = true; }
+            if (m_FeatureIds[zStride + yStride + k - xPoints] == 0) { m_SurfaceFeatures[gnum] = true; }
+            if (m_FeatureIds[zStride + yStride + k + xPoints] == 0) { m_SurfaceFeatures[gnum] = true; }
+            if (m_FeatureIds[zStride + yStride + k - (xPoints * yPoints)] == 0) { m_SurfaceFeatures[gnum] = true; }
+            if (m_FeatureIds[zStride + yStride + k + (xPoints * yPoints)] == 0) { m_SurfaceFeatures[gnum] = true; }
           }
         }
       }
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindSurfaceFeatures::find_surfacefeatures2D()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  int xPoints = 0, yPoints = 0;
+  int64_t xPoints = 0, yPoints = 0;
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
+  if (m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
-    xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
-    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+    yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
   }
-  if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  if (m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
-    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+    yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
   }
-  if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  if (m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
-    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-    yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+    xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+    yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   }
 
-  int yStride;
-  for (int j = 0; j < yPoints; j++)
+  int64_t yStride;
+  for (int64_t j = 0; j < yPoints; j++)
   {
     yStride = j * xPoints;
-    for(int k = 0; k < xPoints; k++)
+    for (int64_t k = 0; k < xPoints; k++)
     {
-      int gnum = m_FeatureIds[yStride + k];
-      if(m_SurfaceFeatures[gnum] == false)
+      int32_t gnum = m_FeatureIds[yStride + k];
+      if (m_SurfaceFeatures[gnum] == false)
       {
-        if(k <= 0) { m_SurfaceFeatures[gnum] = true; }
-        if(k >= xPoints - 1) { m_SurfaceFeatures[gnum] = true; }
-        if(j <= 0) { m_SurfaceFeatures[gnum] = true; }
-        if(j >= yPoints - 1) { m_SurfaceFeatures[gnum] = true; }
-        if(m_SurfaceFeatures[gnum] == false)
+        if (k <= 0) { m_SurfaceFeatures[gnum] = true; }
+        if (k >= xPoints - 1) { m_SurfaceFeatures[gnum] = true; }
+        if (j <= 0) { m_SurfaceFeatures[gnum] = true; }
+        if (j >= yPoints - 1) { m_SurfaceFeatures[gnum] = true; }
+        if (m_SurfaceFeatures[gnum] == false)
         {
-          if(m_FeatureIds[yStride + k - 1] == 0) { m_SurfaceFeatures[gnum] = true; }
-          if(m_FeatureIds[yStride + k + 1] == 0) { m_SurfaceFeatures[gnum] = true; }
-          if(m_FeatureIds[yStride + k - m->getGeometryAs<ImageGeom>()->getXPoints()] == 0) { m_SurfaceFeatures[gnum] = true; }
-          if(m_FeatureIds[yStride + k + m->getGeometryAs<ImageGeom>()->getXPoints()] == 0) { m_SurfaceFeatures[gnum] = true; }
+          if (m_FeatureIds[yStride + k - 1] == 0) { m_SurfaceFeatures[gnum] = true; }
+          if (m_FeatureIds[yStride + k + 1] == 0) { m_SurfaceFeatures[gnum] = true; }
+          if (m_FeatureIds[yStride + k - static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints())] == 0) { m_SurfaceFeatures[gnum] = true; }
+          if (m_FeatureIds[yStride + k + static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints())] == 0) { m_SurfaceFeatures[gnum] = true; }
         }
       }
     }
@@ -268,20 +267,17 @@ AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterPa
 const QString FindSurfaceFeatures::getCompiledLibraryName()
 { return Generic::GenericBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceFeatures::getGroupName()
 { return DREAM3D::FilterGroups::GenericFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceFeatures::getSubGroupName()
 { return DREAM3D::FilterSubGroups::SpatialFilters; }
-
 
 // -----------------------------------------------------------------------------
 //

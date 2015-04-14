@@ -27,7 +27,7 @@ function(CopyQt5RunTimeLibraries)
 
   if(SUPPORT_LIB_OPTION EQUAL 0)
     # message(STATUS "SUPPORT_LIB_OPTION = 0")
-    
+
     foreach(qtlib ${P_LIBRARIES})
       set(TYPE "d")
       # message(STATUS "Copy Rule for Qt library ${P_PREFIX}${qtlib}${TYPE}.dll")
@@ -36,14 +36,16 @@ function(CopyQt5RunTimeLibraries)
       add_custom_target(ZZ_${P_PREFIX}${qtlib}${TYPE}-Debug-Copy ALL
                           COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${P_PREFIX}${qtlib}${TYPE}.dll
                           ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/
-                          COMMENT "Copying ${P_PREFIX}${qtlib}${TYPE}.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/")
+                          # COMMENT "Copying ${P_PREFIX}${qtlib}${TYPE}.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/"
+                          )
       set_target_properties(ZZ_${P_PREFIX}${qtlib}${TYPE}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
     #   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d.dll")
       set(TYPE "")
       add_custom_target(ZZ_${P_PREFIX}${qtlib}${TYPE}-Release-Copy ALL
                           COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${P_PREFIX}${qtlib}.dll
                           ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/
-                          COMMENT "Copying ${P_PREFIX}${qtlib}.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/")
+                          # COMMENT "Copying ${P_PREFIX}${qtlib}.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/"
+                          )
       set_target_properties(ZZ_${P_PREFIX}${qtlib}${TYPE}-Release-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
 
     endforeach(qtlib)
@@ -56,7 +58,7 @@ function(CopyQt5RunTimeLibraries)
       if( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
           set(TYPE "d")
       else()
-          
+
       endif()
 
       # message(STATUS "Copy Rule for Qt library ${P_PREFIX}${qtlib}${TYPE}.dll")
@@ -130,7 +132,7 @@ function(AddQt5SupportLibraryCopyInstallRules)
   # This should be the code path for Ninja/NMake/Makefiles all on NON-OS X systems
     set(SUFFIX "")
     if( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-        set(SUFFIX ${P_DEBUG_SUFFIX}) 
+        set(SUFFIX ${P_DEBUG_SUFFIX})
     endif()
     set(INT_DIR "")
     foreach(qtlib ${P_LIBRARIES})

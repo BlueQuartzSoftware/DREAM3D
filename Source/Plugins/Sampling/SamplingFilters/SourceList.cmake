@@ -13,7 +13,6 @@ START_FILTER_GROUP(${Sampling_BINARY_DIR} "${_filterGroupName}" "SamplingFilters
 set(_PublicFilters
   ChangeResolution
   CropVolume
-  CropSurfaceMesh
   ExtractFlaggedFeatures
   #RegularGridSampleSurfaceMesh
   RegularizeZSpacing

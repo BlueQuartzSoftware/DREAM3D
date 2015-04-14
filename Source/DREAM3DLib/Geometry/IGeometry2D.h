@@ -54,6 +54,107 @@ class DREAM3DLib_EXPORT IGeometry2D : public IGeometry
     virtual ~IGeometry2D();
 
 // -----------------------------------------------------------------------------
+// Inherited from SharedVertexOps
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief resizeVertexList
+     * @param newNumVertices
+     */
+    virtual void resizeVertexList(int64_t newNumVertices) = 0;
+
+    /**
+     * @brief setVertices
+     * @param vertices
+     */
+    virtual void setVertices(SharedVertexList::Pointer vertices) = 0;
+
+    /**
+     * @brief getVertices
+     * @return
+     */
+    virtual SharedVertexList::Pointer getVertices() = 0;
+
+    /**
+     * @brief setCoords
+     * @param vertId
+     * @param coords
+     */
+    virtual void setCoords(int64_t vertId, float coords[3]) = 0;
+
+    /**
+     * @brief getCoords
+     * @param vertId
+     * @param coords
+     */
+    virtual void getCoords(int64_t vertId, float coords[3]) = 0;
+
+    /**
+     * @brief getVertexPointer
+     * @param i
+     * @return
+     */
+    virtual float* getVertexPointer(int64_t i) = 0;
+
+    /**
+     * @brief getNumberOfVertices
+     * @return
+     */
+    virtual int64_t getNumberOfVertices() = 0;
+
+// -----------------------------------------------------------------------------
+// Inherited from SharedVertexOps
+// -----------------------------------------------------------------------------
+
+    /**
+     * @brief resizeEdgeList
+     * @param newNumEdges
+     */
+    virtual void resizeEdgeList(int64_t newNumEdges) = 0;
+
+    /**
+     * @brief getEdges
+     * @return
+     */
+    virtual SharedEdgeList::Pointer getEdges() = 0;
+
+    /**
+     * @brief setVerts
+     * @param edgeId
+     * @param verts
+     */
+    virtual void setVertsAtEdge(int64_t edgeId, int64_t verts[2]) = 0;
+
+    /**
+     * @brief getVerts
+     * @param edgeId
+     * @param verts
+     */
+    virtual void getVertsAtEdge(int64_t edgeId, int64_t verts[2]) = 0;
+
+    /**
+     * @brief getVertCoordsAtEdge
+     * @param edgeId
+     * @param vert1
+     * @param vert2
+     */
+    virtual void getVertCoordsAtEdge(int64_t edgeId, float vert1[3], float vert2[3]) = 0;
+
+    /**
+     * @brief getEdgePointer
+     * @param i
+     * @return
+     */
+    virtual int64_t* getEdgePointer(int64_t i) = 0;
+
+    /**
+     * @brief getNumberOfEdges
+     * @return
+     */
+    virtual int64_t getNumberOfEdges() = 0;
+
+
+// -----------------------------------------------------------------------------
 // Connectivity
 // -----------------------------------------------------------------------------
 
@@ -61,18 +162,12 @@ class DREAM3DLib_EXPORT IGeometry2D : public IGeometry
      * @brief findElementEdges
      * @return
      */
-    virtual int findElementEdges() = 0;
-
-    /**
-     * @brief getElementEdges
-     * @return
-     */
-    virtual SharedEdgeList::Pointer getElementEdges() = 0;
+    virtual int findEdges() = 0;
 
     /**
      * @brief deleteElementEdges
      */
-    virtual void deleteElementEdges() = 0;
+    virtual void deleteEdges() = 0;
 
 // -----------------------------------------------------------------------------
 // Topology
@@ -95,6 +190,12 @@ class DREAM3DLib_EXPORT IGeometry2D : public IGeometry
     virtual void deleteUnsharedEdges() = 0;
 
   protected:
+
+    /**
+     * @brief setEdges
+     * @param edges
+     */
+    virtual void setEdges(SharedEdgeList::Pointer edges) = 0;
 
     /**
      * @brief setUnsharedEdges

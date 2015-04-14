@@ -51,18 +51,18 @@
 #include <QtCore/QDir>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "SyntheticBuilding/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "OrientationLib/Math/OrientationMath.h"
 
 //// Macro to determine if we are going to show the Debugging Output files
 #define PPP_SHOW_DEBUG_OUTPUTS 0
@@ -631,11 +631,11 @@ void  TesselateFarFieldGrains::load_features()
 
     // variable for holding meta data
     int numPhases = 1;
-    int numFeatures;
+    int numFeatures = 0;
     unsigned int cStruct = Ebsd::CrystalStructure::UnknownCrystalStructure;
-    float beamCenter, beamThickness, globalZPos;
+    float beamCenter = 0.0f, beamThickness = 0.0f, globalZPos = 0.0f;
     std::string keywordStr, phaseName, crystruct;
-    float aRef, bRef, cRef, alphaRef, betaRef, gammaRef;
+    float aRef = 0.0f, bRef = 0.0f, cRef = 0.0f, alphaRef = 0.0f, betaRef = 0.0f, gammaRef = 0.0f;
 
     inFile >> keywordStr >> numFeatures;
     if (0 == numFeatures)
@@ -669,12 +669,12 @@ void  TesselateFarFieldGrains::load_features()
 
     size_t fId;
     int phase = 1;
-    float xC, yC, zC;
-    float a, b, c, alpha, beta, gamma;
-    float vol, eqRad;
-    float conf;
-    float phi1, PHI, phi2;
-    float dummy1, dummy2, dummy3;
+    float xC = 0.0f, yC = 0.0f, zC = 0.0f;
+    float a = 0.0f, b = 0.0f, c = 0.0f, alpha = 0.0f, beta = 0.0f, gamma = 0.0f;
+    float vol = 0.0f, eqRad = 0.0f;
+    float conf = 0.0f;
+    float phi1 = 0.0f, PHI = 0.0f, phi2 = 0.0f;
+    float dummy1 = 0.0f, dummy2 = 0.0f, dummy3 = 0.0f;
     float mat[3][3];
     float rt[3][3];
     float rtInv[3][3];
@@ -958,7 +958,7 @@ void TesselateFarFieldGrains::assign_gaps_only()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfTuples(), "Neighbors");
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "Neighbors");
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 

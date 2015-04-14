@@ -51,7 +51,7 @@
 #include <QtWidgets/QFileDialog>
 
 
-
+#include "QtSupport/DREAM3DStyles.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -63,6 +63,7 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
+
 
 #define PADDING 5
 #define BORDER 2
@@ -558,19 +559,20 @@ bool PipelineFilterWidget::isSelected()
 void PipelineFilterWidget::changeStyle()
 {
   QString style;
+  QTextStream ss(&style);
 
   if(m_HasPreflightWarnings)
   {
-    style.append("border: 2px solid rgb(172, 168, 0);");
+    ss << "border: 2px solid rgb(172, 168, 0);";
   }
   else if(m_IsSelected == true )
   {
-    style.append("border: 3px solid purple;");
+    ss << "border: 3px solid purple;";
   }
   else
   {
-    style.append("border: 1px solid #515151;");
-    style.append("margin: 1px;");
+    ss << "border: 1px solid #515151;";
+    ss << "margin: 1px;";
   }
   setBorderColorStyle(style);
   updateWidgetStyle();
@@ -582,42 +584,44 @@ void PipelineFilterWidget::changeStyle()
 void PipelineFilterWidget::updateWidgetStyle()
 {
   QString style;
+  QTextStream ss(&style);
 
-  style.append("PipelineFilterWidget {\n");
+  ss << "PipelineFilterWidget {\n";
 
 
   if (m_HasPreflightErrors == true)
   {
-    style.append("background-color: rgb(180, 60, 60);\ncolor: rgb(255, 255, 255);");
+    ss << "background-color: rgb(180, 60, 60);\ncolor: rgb(255, 255, 255);";
   }
   else
   {
-    style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
+    ss << "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n";
   }
 
-  style.append("background-position: top ;\n background-repeat: repeat-x;");
+  ss << "background-position: top ;\n background-repeat: repeat-x;";
 
-  style.append(getBorderColorStyle());
+  ss << getBorderColorStyle();
 
-  style.append("border-radius: 10px;");
-  style.append("padding: 0 0 0 0px;");
-  style.append("}\n");
+  ss << "border-radius: 10px;";
+  ss << "padding: 0 0 0 0px;";
+  ss << "}\n";
 
-  style.append("QLabel\n {\n");
+  ss << "QLabel\n {\n";
 
 #if defined(Q_OS_WIN)
-  style.append("font: 9pt \"Arial\";");
+  ss << "font: 9pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #elif defined(Q_OS_MAC)
-  style.append("font: 100 italic 12pt \"Arial\";");
+  ss << "font: 100 italic 12pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #else
-  style.append("font: 100 italic 10pt \"Arial\";");
+  ss << "font: 100 italic 10pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #endif
-  style.append("font-weight: bold; ");
+  ss << "font-weight: bold; ";
   if (m_HasPreflightErrors == true)
   {
-    style.append("color: rgb(255, 255, 255);");
+    ss << "color: rgb(255, 255, 255);";
   }
-  style.append("}\n");
+  ss << "}\n";
+
 
   setStyleSheet(style);
 }

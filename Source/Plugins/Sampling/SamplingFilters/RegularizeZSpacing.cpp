@@ -124,7 +124,7 @@ void RegularizeZSpacing::dataCheck()
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
-  float zval;
+  float zval = 0.0f;
   for (size_t iter = 0; iter < m->getGeometryAs<ImageGeom>()->getZPoints() + 1; iter++)
   {
     inFile >> zval;

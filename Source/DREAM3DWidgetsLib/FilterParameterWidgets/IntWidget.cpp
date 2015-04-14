@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "QtSupport/DREAM3DStyles.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -118,43 +120,43 @@ void IntWidget::widgetChanged(const QString& text)
 void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = true;
-	int i = getFilterParameter()->getDefaultValue().toInt();
-	if (!value->text().isEmpty())
-	{
-		i = value->text().toInt(&ok);
-	}
+  int defValue = getFilterParameter()->getDefaultValue().toInt();
+  int i = defValue;
 
-	setInputStyle(value);
+  // Next make sure there is something in the
+  if (!value->text().isEmpty())
+  {
+    i = value->text().toInt(&ok);
+    //  make sure we can convert the entered value to a 32 bit signed int
+    if (!ok)
+    {
+      errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+      errorLabel->setText("Value entered is beyond the representable range for a 32 bit integer. The filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
+      errorLabel->show();
+      DREAM3DStyles::LineEditErrorStyle(value);
+      i = defValue;
+    }
+    else
+    {
+      errorLabel->hide();
+      DREAM3DStyles::LineEditClearStyle(value);
+    }
+  }
+  else
+  {
+    DREAM3DStyles::LineEditErrorStyle(value);
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("No value entered. Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
+  }
 
-	if (ok)
-	{
-		QVariant v(i);
-		ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-		if (false == ok)
-		{
-			FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
-		}
-	}
-	else 	// Check for Empty String. If empty, show error dialog
-	{
-		// Some error message "Could not convert string to an integer"
-	}
-}
+  QVariant v(i);
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  if (false == ok)
+  {
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+  }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void IntWidget::setInputStyle(QLineEdit* lineEdit)
-{
-	
-	if (lineEdit->text().isEmpty())
-	{
-		lineEdit->setStyleSheet("border: 1px solid red;");
-	}
-	else
-	{
-		lineEdit->setStyleSheet("");
-	}
 }
 
 // -----------------------------------------------------------------------------
@@ -178,38 +180,38 @@ void IntWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 QString IntWidget::generateStyleSheet(int style)
 {
-	QString styleSheet;
-	QTextStream ss(&styleSheet);
+  QString styleSheet;
+  QTextStream ss(&styleSheet);
 
-	ss << "QLineEdit {";
+  ss << "QLineEdit {";
 #if defined(Q_OS_WIN)
-	ss << "font: italic 9 pt \"Arial\";";
+  ss << "font: italic 9 pt \"Arial\";";
 #elif defined(Q_OS_MAC)
-	ss << "font: italic 12 pt \"Arial\";";
+  ss << "font: italic 12 pt \"Arial\";";
 #else
-	ss << "font: italic 10 pt \"Arial\";";
+  ss << "font: italic 10 pt \"Arial\";";
 #endif
 
-	if (style == FS_STANDARD_STYLE)
-	{
+  if (style == FS_STANDARD_STYLE)
+  {
 
-	}
-	else if (style == FS_DRAGGING_STYLE)
-	{
-		ss << "border: 2px solid rgb(34, 170, 46);";
-		ss << "border-radius: 5px;";
-	}
-	else if (style == FS_DOESNOTEXIST_STYLE)
-	{
-		ss << "color: rgb(200, 50, 50); font: bold;";
-	}
-	else if (style == FS_WARNING_STYLE)
-	{
-		ss << "color: rgb(255, 140, 0); font: bold;";
-	}
+  }
+  else if (style == FS_DRAGGING_STYLE)
+  {
+    ss << "border: 2px solid rgb(34, 170, 46);";
+    ss << "border-radius: 5px;";
+  }
+  else if (style == FS_DOESNOTEXIST_STYLE)
+  {
+    ss << "color: rgb(200, 50, 50); font: bold;";
+  }
+  else if (style == FS_WARNING_STYLE)
+  {
+    ss << "color: rgb(255, 140, 0); font: bold;";
+  }
 
 
-	ss << "}";
+  ss << "}";
 
-	return styleSheet;
+  return styleSheet;
 }

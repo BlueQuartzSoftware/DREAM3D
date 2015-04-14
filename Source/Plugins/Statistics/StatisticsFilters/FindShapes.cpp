@@ -36,10 +36,10 @@
 
 #include "FindShapes.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -551,7 +551,7 @@ void FindShapes::find_axes()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axes2D()
 {
-  float Ixx, Iyy, Ixy;
+  float Ixx = 0.0f, Iyy = 0.0f, Ixy= 0.0f;
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 

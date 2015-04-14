@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "PoleFigureImageUtilities.h"
+
 #include <QtCore/QDebug>
 #include <QtGui/QColor>
 #include <QtGui/QPainter>
@@ -43,7 +43,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
-#include "DREAM3DLib/Utilities/ImageUtilities.h"
 
 // -----------------------------------------------------------------------------
 //

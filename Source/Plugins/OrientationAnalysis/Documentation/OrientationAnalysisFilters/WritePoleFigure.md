@@ -1,4 +1,4 @@
-WritePoleFigure {#writepolefigure}
+Write Pole Figure {#writepolefigure}
 =====
 
 ## Group (Subgroup) ##
@@ -12,6 +12,8 @@ If the "Good Voxels" array has been created from another filter this filter will
 
 The pole figure algorithm uses a "Modified Lambert Square" to perform the interpolations onto the circle. This is an alternate type of interpolation that the EBSD OEMs do not perform which may make the output from DREAM3D look slightly different than output obtained from the OEM programs.
 
+**Only an advanced user with intimate knowledge of the Modified Lambert Projection should attempt to change the value for the "Lamber Image Size (Pixels)" input parameter.**
+
 ![Example Pole Figure using the Square Layout option](images/PoleFigure_Example.png)
 
 
@@ -19,18 +21,24 @@ The pole figure algorithm uses a "Modified Lambert Square" to perform the interp
 | Name             | Type |
 |------------------|------|
 | Output Path | String |
-| Image Type | Constant Value |  
+| Image format | tif, bmp, png |  
 | Image Prefix| String |  
 | Size of Image | Int (Pixels) |
-
+| Image Layout | Horizontal=0, Vertical=1, Square=2 |
+| int  | Lambert Image Size  (32 Pixels is the default) |
+| int  | Number of Colors  (32 is the default)|
+ 
 
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | Phases           | ....        | other   |  
-| Float x 3  | Eulers           | ....        | Must be in Radians   |  
-|   Int | Crystal Structures           | ....        | Ensemble Array   |
+| Float x 3  | Eulers       |             | Must be in Radians   |  
+| Int  | Phases             | ....        | other   |  
+| Int | Crystal Structures  |             | Ensemble Array   |
+| bool | Good Voxels 			|			   |                 |
+
+
 
 
 ## Created Arrays ##

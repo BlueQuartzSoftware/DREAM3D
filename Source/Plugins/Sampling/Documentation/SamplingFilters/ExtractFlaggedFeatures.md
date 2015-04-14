@@ -1,32 +1,31 @@
-Extract Flagged Features {#extractflaggedfeatures}
+Extract Flagged Features (Rogues Gallery) {#extractflaggedfeatures}
 =====
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+Sampling Filters (Cropping/Cutting)
 
 
 ## Description ##
-This filter does the following...
+This filter, using a boolean array identifying **Features** to be *extracted*, crops out the smallest bounding box around each **Feature** of interest.  First, the filter determines the bounding box ((xMin-xMax), (yMin-yMax), (zMin-zMax)) for each **Feature**.  Then, the filter checks to see if the **Feature** has been 'flagged' for extraction.  If the **Feature** is to be extracted, the bounding box is used to define a volume for cropping.  The cropped volume for each extracted **Feature** is stored as a new *DataContainer*.  The cropped volumes will have their origins "updated" to ensure that the extracted **Features** remain in the same absolute position relative to each other.
+
+The utility of this filter is that complex thresholding based on **Feature** attributes can be difficult in *Paraview* (due to memory) and this can greatly reduce the amount of information that is loaded if only the extracted **Feature** *DataContainers* are loaded for viewing. 
+
+**Note that storing each extracted volume as a new *DataContainer* can result in a large number of *DataContainers* depending on how many **Features** are 'flagged'. 
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Feature Array Name | String |
+None
+
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| Feature | None | Boolean | (1) | Specifies whether each **Feature** should be *extracted* or not |
 
 ## Created Arrays ##
-
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
-
+None
 
 ## Authors ##
 

@@ -36,10 +36,10 @@
 
 #include "FindSurfaceAreaToVolume.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -165,9 +165,9 @@ void FindSurfaceAreaToVolume::execute()
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
-  size_t xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-  size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
-  size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+  int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
 
   size_t numFeatures = m_NumCellsPtr.lock()->getNumberOfTuples();

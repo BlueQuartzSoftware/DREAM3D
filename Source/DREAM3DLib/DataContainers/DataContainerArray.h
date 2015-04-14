@@ -508,7 +508,77 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       return dataArray;
     }
 
-
+    /**
+     * @brief validateNumberOfTuples This method will validate that all of the DataArray
+     * paths supplied are valid, return non-NULL DataArray pointers, and that all are
+     * have the same number of tuples.  It will return false if and any of the checks fail, or
+     * if the QVector of input paths has 0 or 1 element.
+     * @param filter The filter calling the validation
+     * @param paths The paths that should be checked
+     * @return bool Validation check
+     */
+    template<typename Filter>
+    bool validateNumberOfTuples(Filter* filter, QVector<DataArrayPath> paths)
+    {
+      if (paths.size() <= 1) { return false; }
+      QVector<IDataArray::Pointer> dataArrays;
+      bool valid = true;
+      QString ss;
+      if (paths.at(0).isValid() == false && NULL != filter)
+      {
+        filter->setErrorCondition(-10000);
+        ss = QObject::tr("DataContainerArray::validateNumberOfTuples Error at line %1. The DataArrayPath object was not valid meaning one of the strings in the object is empty. The path is %2").arg(__LINE__).arg(paths.at(0).serialize());
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        valid = false;
+      }
+      IDataArray::Pointer array0 = getPrereqIDataArrayFromPath<IDataArray, Filter>(filter, paths.at(0));
+      if (NULL == array0.get() && NULL != filter)
+      {
+        filter->setErrorCondition(-10100);
+        ss = QObject::tr("DataContainerArray::validateNumberOfTuples Error at line %1. The DataArray object was not available. The path is %2").arg(__LINE__).arg(paths.at(0).serialize());
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        valid = false;
+      }
+      else
+      {
+        dataArrays.push_back(array0);
+      }
+      for (int32_t i = 1; i < paths.size(); i++)
+      {
+        if (paths.at(i).isValid() == false && NULL != filter)
+        {
+          filter->setErrorCondition(-10000);
+          ss = QObject::tr("DataContainerArray::validateNumberOfTuples Error at line %1. The DataArrayPath object was not valid meaning one of the strings in the object is empty. The path is %2").arg(__LINE__).arg(paths.at(i).serialize());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          valid = false;
+        }
+        IDataArray::Pointer nextArray = getPrereqIDataArrayFromPath<IDataArray, Filter>(filter, paths.at(i));
+        if (NULL == nextArray.get() && NULL != filter)
+        {
+          filter->setErrorCondition(-10100);
+          ss = QObject::tr("DataContainerArray::validateNumberOfTuples Error at line %1. The DataArray object was not available. The path is %2").arg(__LINE__).arg(paths.at(i).serialize());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          valid = false;
+        }
+        else
+        {
+          dataArrays.push_back(nextArray);
+        }
+      }
+      size_t numTuples = dataArrays[0]->getNumberOfTuples();
+      for (int32_t i = 1; i < dataArrays.size(); i++)
+      {
+        if (numTuples != dataArrays[i]->getNumberOfTuples() && NULL != filter)
+        {
+          filter->setErrorCondition(-10200);
+          ss = QObject::tr("The number of Tuples for the DataArray '%1' is '%2' and for DataArray '%3' is '%4'. The number of tuples must match.")
+              .arg(dataArrays[i-1]->getName()).arg(dataArrays[i-1]->getNumberOfTuples()).arg(dataArrays[i]->getName()).arg(dataArrays[i]->getNumberOfTuples());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          valid = false;
+        }
+      }
+      return valid;
+    }
 
   protected:
     DataContainerArray();

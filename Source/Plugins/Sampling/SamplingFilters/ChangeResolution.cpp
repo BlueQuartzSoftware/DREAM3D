@@ -338,7 +338,7 @@ void ChangeResolution::execute()
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)
   {
-    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+    totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
     QVector<bool> activeObjects(totalFeatures, false);

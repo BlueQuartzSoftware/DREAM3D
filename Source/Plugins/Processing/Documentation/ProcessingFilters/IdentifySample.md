@@ -25,9 +25,9 @@ Note: if there are in fact "holes" in the sample, then this filter will "close" 
 Image/Rectilinear Grid
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GoodVoxels | Boolean | (1,1) | This is the "thresheld" array defining what is sample and what is not |
+| Cell | GoodVoxels | Boolean | (1) | This is the "thresheld" array defining what is sample and what is not |
 
 ## Created Arrays ##
 None

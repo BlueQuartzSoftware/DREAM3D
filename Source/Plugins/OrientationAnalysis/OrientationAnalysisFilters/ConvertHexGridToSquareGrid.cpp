@@ -44,16 +44,16 @@
 #include <QtCore/QFile>
 
 
-#include "EbsdLib/TSL/AngConstants.h"
-#include "EbsdLib/TSL/AngReader.h"
-#include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/EbsdMath.h"
+#include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/TSL/AngReader.h"
 
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 

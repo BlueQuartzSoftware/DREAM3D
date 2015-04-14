@@ -16,13 +16,16 @@ endmacro()
 
 function(AddDREAM3DUnitTest)
     set(options)
-    set(oneValueArgs TESTNAME)
+    set(oneValueArgs TESTNAME FOLDER)
     set(multiValueArgs SOURCES LINK_LIBRARIES)
     cmake_parse_arguments(Z "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     add_executable( ${Z_TESTNAME} "${Z_SOURCES}")
     target_link_libraries( ${Z_TESTNAME} ${Z_LINK_LIBRARIES})
-    set_target_properties( ${Z_TESTNAME} PROPERTIES FOLDER Test)
+    if("${Z_FOLDER}" STREQUAL "")
+        set(Z_FOLDER "Test")
+    endif()
+    set_target_properties( ${Z_TESTNAME} PROPERTIES FOLDER ${Z_FOLDER})
     add_test(${Z_TESTNAME} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${Z_TESTNAME})
 
 endfunction()

@@ -37,23 +37,13 @@
 #ifndef _FindSurfaceFeatures_H_
 #define _FindSurfaceFeatures_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @class FindSurfaceFeatures FindSurfaceFeatures.h DREAM3DLib/StatisticsFilters/FindSurfaceFeatures.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindSurfaceFeatures class. See Filter documentation for details.
  */
 class  FindSurfaceFeatures : public AbstractFilter
 {
@@ -64,6 +54,7 @@ class  FindSurfaceFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceFeatures, AbstractFilter)
 
     virtual ~FindSurfaceFeatures();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 

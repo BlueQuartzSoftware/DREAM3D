@@ -37,13 +37,13 @@
 
 #include <QtCore/QFileInfo>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 

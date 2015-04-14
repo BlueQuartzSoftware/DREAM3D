@@ -37,16 +37,16 @@
 
 #include <QtCore/QFileInfo>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 
@@ -358,9 +358,9 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   // generate the Features
   int gid = 1;
 
-  float currentvol = 0.0;
-  float vol;
-  float diam;
+  float currentvol = 0.0f;
+  float vol = 0.0f;
+  float diam = 0.0f;
   int volgood = 0;
   for (qint32 j = 0; j < primaryphases.size(); ++j)
   {

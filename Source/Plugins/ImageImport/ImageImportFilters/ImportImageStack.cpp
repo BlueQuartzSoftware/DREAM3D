@@ -47,9 +47,9 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 
 #include "ImageImport/ImageImportConstants.h"
@@ -318,6 +318,9 @@ void ImportImageStack::execute()
       else if (image.format() == QImage::Format_RGB32 || image.format() == QImage::Format_ARGB32)
       {
         pixelBytes = 4;
+      }
+      else {
+        Q_ASSERT_X(false, "", "");
       }
       QVector<size_t> compDims(1, pixelBytes);
 

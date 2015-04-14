@@ -45,10 +45,10 @@
 #include <tbb/task_group.h>
 #endif
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 
 
@@ -86,7 +86,7 @@ class FindEuclideanMap
     void operator()() const
     {
       // qDebug() << "  FindEuclideanMap: Loop = " << loop << "\n";
-      int64_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
+      int64_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
       int euclideanDistance = 0;
       size_t count = 1;

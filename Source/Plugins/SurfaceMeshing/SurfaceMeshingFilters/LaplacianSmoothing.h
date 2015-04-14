@@ -42,9 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
-
+#include "Plugins/SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 #define OUTPUT_DEBUG_VTK_FILES 1
@@ -91,13 +89,12 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
     DREAM3D_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
     Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
-    DREAM3D_INSTANCE_PROPERTY(bool, GenerateIterationOutputFiles)
 
 
     /* This class is designed to be subclassed so that thoes subclasses can add
      * more functionality such as constrained surface nodes or Triple Lines. We use
      * this array to assign each vertex a specific Lambda value. Subclasses can set
-     * this array then simply call the 'smooth' protected method to actuall run the
+     * this array then simply call the 'smooth' protected method to actually run the
      * smoothing iterations
      */
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
@@ -179,19 +176,9 @@ class LaplacianSmoothing : public SurfaceMeshFilter
      */
     virtual int edgeBasedSmoothing();
 
-    /**
-     * @brief vertexBasedSmoothing Uses the Vertex->Triangle connectivity information for its algorithm
-     * @return
-     */
-    virtual int vertexBasedSmoothing();
-
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-
-#if OUTPUT_DEBUG_VTK_FILES
-    void writeVTKFile(const QString& outputVtkFile);
-#endif
 
     LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented
     void operator=(const LaplacianSmoothing&); // Operator '=' Not Implemented
