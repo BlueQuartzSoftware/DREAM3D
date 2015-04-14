@@ -46,12 +46,11 @@
 #include <QtWidgets/QLineEdit>
 
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
-
-
 #include "QtSupport/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
@@ -132,6 +131,14 @@ void FilterInputWidget::setupGui()
   filterHumanLabel->setFont(humanLabelFont);
   brandingLabel->setFont(brandingFont);
   brandingLabel->installEventFilter(this);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::on_filterHelpBtn_pressed()
+{
+  DREAM3DUserManualDialog::LaunchHelpDialog(filterHumanLabel->text());
 }
 
 // -----------------------------------------------------------------------------

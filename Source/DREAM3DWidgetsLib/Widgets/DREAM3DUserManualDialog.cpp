@@ -42,6 +42,12 @@
 
 #include <QtWidgets/QMessageBox>
 
+#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+
+#include "DREAM3DLib/Common/FilterManager.h"
+
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+
 DREAM3DUserManualDialog* DREAM3DUserManualDialog::self = NULL;
 
 // -----------------------------------------------------------------------------
@@ -80,6 +86,21 @@ void DREAM3DUserManualDialog::LaunchHelpDialog(QUrl url)
   DREAM3DUserManualDialog* dialog = DREAM3DUserManualDialog::Instance();
   dialog->webView->load(url);
   dialog->show();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUserManualDialog::LaunchHelpDialog(QString humanLabel)
+{
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer factory = fm->getFactoryForFilterHumanName(humanLabel);
+  AbstractFilter::Pointer filter = factory->create();
+  QString className = filter->getNameOfClass();
+
+  // Generate help page
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
+  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
 }
 
 // -----------------------------------------------------------------------------

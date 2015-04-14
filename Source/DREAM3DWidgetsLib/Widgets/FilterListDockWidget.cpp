@@ -137,14 +137,8 @@ void FilterListDockWidget::showContextMenuForWidget(const QPoint &pos)
 // -----------------------------------------------------------------------------
 void FilterListDockWidget::launchHelpForItem(QString name)
 {
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer factory = fm->getFactoryForFilterHumanName(name);
-  AbstractFilter::Pointer filter = factory->create();
-  QString className = filter->getNameOfClass();
-
-  // Generate help page
-  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
-  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
+  // Launch the dialog
+  DREAM3DUserManualDialog::LaunchHelpDialog(name);
 }
 
 // -----------------------------------------------------------------------------

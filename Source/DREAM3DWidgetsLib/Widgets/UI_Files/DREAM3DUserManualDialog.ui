@@ -38,7 +38,7 @@
       <number>6</number>
      </property>
      <item>
-      <widget class="QPushButton" name="backBtn">
+      <widget class="HoverButton" name="backBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -47,14 +47,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>32</width>
+         <height>32</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>32</width>
+         <height>32</height>
         </size>
        </property>
        <property name="text">
@@ -76,7 +76,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="forwardBtn">
+      <widget class="HoverButton" name="forwardBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -85,14 +85,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>32</width>
+         <height>32</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>32</width>
+         <height>32</height>
         </size>
        </property>
        <property name="text">
@@ -114,7 +114,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="refreshBtn">
+      <widget class="HoverButton" name="refreshBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -123,14 +123,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>32</width>
+         <height>32</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>32</width>
+         <height>32</height>
         </size>
        </property>
        <property name="text">
@@ -203,6 +203,11 @@ rgb(162, 162, 162);
    <class>QWebView</class>
    <extends>QWidget</extends>
    <header>QtWebKitWidgets/QWebView</header>
+  </customwidget>
+  <customwidget>
+   <class>HoverButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">HoverButton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -25,6 +25,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QDroppableScrollArea.cpp
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.cpp
     ${QtSupport_SOURCE_DIR}/HelpDialog.cpp
+    ${QtSupport_SOURCE_DIR}/HoverButton.cpp
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DHelpUrlGenerator.cpp
     ${QtSupport_SOURCE_DIR}/PoleFigureImageUtilities.cpp
@@ -47,6 +48,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/QDroppableScrollArea.h
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.h
     ${QtSupport_SOURCE_DIR}/HelpDialog.h
+    ${QtSupport_SOURCE_DIR}/HoverButton.h
     ${QtSupport_SOURCE_DIR}/PoleFigureImageUtilities.h
     ${QtSupport_SOURCE_DIR}/DREAM3DGraphicsView.h
     ${QtSupport_SOURCE_DIR}/FaderWidget.h

@@ -68,6 +68,12 @@ public:
   */
   static void LaunchHelpDialog(QUrl url);
 
+  /**
+  * @brief Static function to launch the help dialog with the given filter human label
+  * @return
+  */
+  static void LaunchHelpDialog(QString humanLabel);
+
 protected:
   DREAM3DUserManualDialog();
 

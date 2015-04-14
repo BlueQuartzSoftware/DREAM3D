@@ -68,7 +68,9 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
 
   protected:
 
-  public slots:
+  public slots :
+    void on_filterHelpBtn_pressed();
+
     void clearInputWidgets();
     void displayFilterParameters(PipelineFilterWidget* w);
     void removeWidgetInputs(PipelineFilterWidget* w);
