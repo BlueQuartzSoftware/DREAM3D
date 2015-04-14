@@ -42,7 +42,8 @@
 
 #include <QtWidgets/QMessageBox>
 
-DREAM3DUserManualDialog::DREAM3DUserManualDialog(QUrl url, QWidget* parent)
+DREAM3DUserManualDialog::DREAM3DUserManualDialog(QUrl url, QWidget* parent) :
+  QDialog(parent)
 {
   setupUi(this);
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1233</width>
-    <height>860</height>
+    <width>760</width>
+    <height>412</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,7 +70,7 @@ font-weight: bold;s
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <property name="tabsClosable">
          <bool>false</bool>
@@ -102,11 +102,23 @@ font-weight: bold;s
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1219</width>
-               <height>335</height>
+               <width>746</width>
+               <height>310</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
+              <property name="leftMargin">
+               <number>2</number>
+              </property>
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="rightMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>2</number>
+              </property>
               <item>
                <layout class="QGridLayout" name="basicInputsGrid"/>
               </item>
@@ -156,11 +168,23 @@ font-weight: bold;s
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1219</width>
-               <height>335</height>
+               <width>746</width>
+               <height>310</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
+              <property name="leftMargin">
+               <number>2</number>
+              </property>
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="rightMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>2</number>
+              </property>
               <item>
                <layout class="QGridLayout" name="advInputsGrid"/>
               </item>
@@ -220,16 +244,6 @@ font-weight: bold;s
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="brandingLabel">
-        <property name="text">
-         <string>Branding Information</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="topMargin">
@@ -257,25 +271,20 @@ font-weight: bold;s
        </layout>
       </item>
       <item row="4" column="0">
-       <spacer name="verticalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+       <widget class="QLabel" name="brandingLabel">
+        <property name="text">
+         <string>Branding Information</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

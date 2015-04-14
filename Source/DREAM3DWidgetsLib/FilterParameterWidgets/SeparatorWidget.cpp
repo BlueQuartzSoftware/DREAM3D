@@ -70,7 +70,7 @@ QString SeparatorWidget::getLabelStyleSheet()
 #if defined(Q_OS_WIN)
   ss << "font: 10 pt \"Times New Roman\";";
 #elif defined(Q_OS_MAC)
-  ss << "font: 13 pt \"Times New Roman\";";
+  ss << "font: 13 pt \"Arial\";";
 #else
   ss << "font: 10 pt \"Times New Roman\"";
 #endif

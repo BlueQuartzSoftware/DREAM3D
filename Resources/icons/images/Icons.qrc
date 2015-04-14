@@ -78,5 +78,15 @@
   <file>zoomIn.png</file>
   <file>zoomOut.png</file>
   <file>cube_gray.png</file>
+
+
+  <file>nav_right_blue.png</file>
+  <file>nav_right_blue@2x.png</file>
+  <file>nav_left_blue.png</file>
+  <file>nav_left_blue@2x.png</file>
+  <file>nav_refresh_blue.png</file>
+  <file>nav_refresh_blue@2x.png</file>
+  
+
  </qresource>
  </RCC>
