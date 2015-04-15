@@ -66,8 +66,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
-//#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
-//#include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
 
 #include "QtSupport/QDroppableScrollArea.h"
 
@@ -416,7 +416,7 @@ void PipelineViewWidget::writePipeline(QString filePath)
   }
   else if (ext == "json")
   {
-    
+    err = JsonFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
   }
   else
   {
@@ -504,7 +504,7 @@ FilterPipeline::Pointer PipelineViewWidget::readPipelineFromFile(const QString &
   }
   else if (ext == "json")
   {
-    //pipeline = JsonFilterParametersReader::ReadPipelineFromFile(filePath);
+    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(filePath);
   }
   else
   {

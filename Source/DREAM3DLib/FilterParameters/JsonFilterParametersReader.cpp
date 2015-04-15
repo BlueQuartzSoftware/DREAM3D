@@ -69,6 +69,8 @@ JsonFilterParametersReader::~JsonFilterParametersReader()
 // -----------------------------------------------------------------------------
 FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString filePath, IObserver* obs)
 {
+  QFileInfo fInfo(filePath);
+
   if (filePath.isEmpty() == true)
   {
     return FilterPipeline::NullPointer();
@@ -84,24 +86,27 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
   filtManager->addFilterFactory("EmptyFilter", emptyFilterFactory);
 
   JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
-  reader->openFile(filePath);
+  int err = reader->openFile(filePath);
+
+  if (err < 0)
+  {
+    if (NULL != obs)
+    {
+      PipelineMessage pm(JsonFilterParametersReader::ClassName(), "File '" + fInfo.fileName() + "' could not be opened for reading.", -1, PipelineMessage::Error);
+      obs->processPipelineMessage(pm);
+    }
+    return FilterPipeline::NullPointer();
+  }
+
   reader->openGroup(DREAM3D::Settings::PipelineBuilderGroup);
-  bool ok = false;
   int filterCount = reader->readValue(DREAM3D::Settings::NumFilters, 0);
   reader->closeGroup();
 
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-
-  if (false == ok)
-  {
-    filterCount = 0;
-  }
-
   for (int i = 0; i < filterCount; ++i)
   {
     // Open the group to get the name of the filter then close again.
-    //qDebug() << " Current QSettings Group: " << prefs->group();
     reader->openFilterGroup(NULL, i);
     QString filterName = reader->readString(DREAM3D::Settings::FilterName, "");
     reader->closeFilterGroup();
@@ -154,8 +159,6 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
         obs->processPipelineMessage(pm);
       }
     }
-
-
   }
   return pipeline;
 }

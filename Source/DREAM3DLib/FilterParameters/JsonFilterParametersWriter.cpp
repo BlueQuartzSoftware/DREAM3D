@@ -84,12 +84,66 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
   m_Root[DREAM3D::Settings::PipelineBuilderGroup] = meta;
   QJsonDocument doc(m_Root);
 
+  if (outputFile.exists() == true)
+  {
+    outputFile.remove();
+  }
   if (outputFile.open(QIODevice::WriteOnly))
   {
     QByteArray byteArray = doc.toJson();
     int err = outputFile.write(doc.toJson());
+    int errorCode = outputFile.error();
     outputFile.close();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs)
+{
+  if (NULL == pipeline.get())
+  {
+    if (NULL != obs)
+    {
+      PipelineMessage pm(JsonFilterParametersWriter::ClassName(), "FilterPipeline Object was NULL for writing", -1, PipelineMessage::Error);
+      obs->processPipelineMessage(pm);
+    }
+    return -1;
+  }
+
+  QFileInfo fileInfo(filePath);
+
+  // WRITE THE PIPELINE TO THE JSON FILE
+  JsonFilterParametersWriter::Pointer writer = JsonFilterParametersWriter::New();
+  writer->setFileName(filePath);
+
+  // Write our File Version and DREAM3D Version strings
+  writer->writeValue(DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+  writer->writeValue(DREAM3D::HDF5::DREAM3DVersion, DREAM3DLib::Version::Complete());
+
+  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
+
+  // Loop over each filter and write it's input parameters to the file
+  int count = filters.size();
+  int index = 0;
+  for (qint32 i = 0; i < count; ++i)
+  {
+    AbstractFilter::Pointer filter = filters.at(i);
+    if (NULL != filter.get())
+    {
+      index = filter->writeFilterParameters(writer.get(), index);
+    }
+    else
+    {
+      AbstractFilter::Pointer badFilter = AbstractFilter::New();
+      writer->openFilterGroup(badFilter.get(), i);
+      writer->writeValue("Unknown Filter", "ERROR: Filter instance was NULL within the PipelineFilterWidget instance. Report this error to the DREAM3D Developers");
+      writer->closeFilterGroup();
+    }
+  }
+
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -100,6 +154,9 @@ int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int inde
   m_CurrentFilterIndex = QJsonObject();
   currentIndex = index;
 
+  writeValue(DREAM3D::Settings::FilterName, filter->getNameOfClass());
+  writeValue(DREAM3D::Settings::HumanLabel, filter->getHumanLabel());
+
   return 0;
 }
 
@@ -108,18 +165,8 @@ int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int inde
 // -----------------------------------------------------------------------------
 int JsonFilterParametersWriter::closeFilterGroup()
 {
-  {
-    QJsonDocument doc(m_CurrentFilterIndex);
-    QByteArray bytes = doc.toJson();
-  }
-
-  {
-    QString numStr = QString::number(currentIndex);
-    m_Root[numStr] = m_CurrentFilterIndex;
-
-    QJsonDocument doc(m_Root[numStr].toObject());
-    QByteArray bytes = doc.toJson();
-  }
+  QString numStr = QString::number(currentIndex);
+  m_Root[numStr] = m_CurrentFilterIndex;
 
   return 0;
 }
