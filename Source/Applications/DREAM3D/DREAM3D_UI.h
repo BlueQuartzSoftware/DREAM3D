@@ -105,9 +105,32 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void displayHelp(QString helpFile);
 
     /**
+    * @brief getPipelineViewWidget
+    * @param
+    */
+    PipelineViewWidget* getPipelineViewWidget();
+
+    /**
+    * @brief setOpenedFilePath
+    * @param filePath
+    */
+    void setOpenedFilePath(const QString &filePath);
+
+    /**
+    * @brief setOpenedFilePath
+    * @param path
+    */
+    void setOpenDialogLastDirectory(const QString &path);
+
+    /**
      * @brief versionCheckReply
      */
     void versionCheckReply(UpdateCheckData*);
+
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings();
 
     /**
      * @brief Writes the preferences to the users pref file
@@ -120,8 +143,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     /* Menu Slots */
 
     // File Menu
-    void on_actionImportPipeline_triggered();
-    void on_actionExportPipeline_triggered();
+    void on_actionNew_triggered();
+    void on_actionOpen_triggered();
+    void on_actionSave_triggered();
+    void on_actionSaveAs_triggered();
     void on_actionExit_triggered();
 
     //Pipeline Menu
@@ -150,6 +175,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionPlugin_Information_triggered();
     void on_actionShowIndex_triggered();
 
+    // Recent Files menu
+    void on_actionClearRecentFiles_triggered();
+
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();
 
@@ -158,7 +186,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * should be connected to the Signal QRecentFileList->fileListChanged
      * @param file The newly added file.
      */
-    void updateRecentFileList(const QString& file);
+    void updateRecentFileList(const QString &file);
 
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
@@ -169,9 +197,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief pipelineFileLoaded
      * @param file
      * @param format
-     * @param append
+     * @param type
      */
-    void pipelineFileLoaded(QString file, QSettings::Format format, bool append);
+    void pipelineFileLoaded(QString file, ExtractionType type);
 
 
     void pipelineDidFinish();
@@ -242,9 +270,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void writeVersionCheckSettings(QSettings& prefs);
 
 
-    void readWindowSettings();
-    void readVersionSettings();
-    void readLastPipeline();
+    void readWindowSettings(QSettings& prefs);
+    void readVersionSettings(QSettings& prefs);
 
     void checkForUpdatesAtStartup();
 
@@ -306,7 +333,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QToolButton*        m_IssuesBtn;
     bool                m_ShouldRestart;
 
-
+    QString             m_OpenedFilePath;
     static QString    m_OpenDialogLastDirectory;
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented

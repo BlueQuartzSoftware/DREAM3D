@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
@@ -55,6 +56,20 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     DREAM3D_SHARED_POINTERS(H5FilterParametersWriter)
     DREAM3D_STATIC_NEW_MACRO(H5FilterParametersWriter)
     DREAM3D_TYPE_MACRO_SUPER(H5FilterParametersWriter, AbstractFilterParametersWriter)
+
+    /**
+     * @brief WritePipelineToFile This function will write a pipeline to an HDF5 based
+     * DREAM3D file. The file path passed in <b>WILL BE OVER WRITTEN</b> by this
+     * function <b>WITHOUT WARNING</b>
+     * @param pipeline The pipeline to be written
+     * @param filePath The file path to write
+     * @param name The name of the pipeline (Typically the nameo of the file)
+     * @param obs Any observer that we can pass error/warning messages back to in case something goes wrong.
+     * @return
+     */
+    static int WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs = NULL);
+
+    DREAM3D_INSTANCE_PROPERTY(hid_t, PipelineGroupId)
 
 
     virtual ~H5FilterParametersWriter();

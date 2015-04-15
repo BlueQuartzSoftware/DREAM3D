@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DREAM3DFileDragMessageBox</class>
- <widget class="QWidget" name="DREAM3DFileDragMessageBox">
+ <class>FileDragMessageBox</class>
+ <widget class="QWidget" name="FileDragMessageBox">
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
@@ -20,7 +20,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>DREAM3D File Drop</string>
+   <string>Pipeline File Drop</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -38,7 +38,7 @@
         </font>
        </property>
        <property name="text">
-        <string>A .dream3d file has been dragged into the DREAM3D interface.</string>
+        <string>A pipeline file has been dragged into the DREAM3D interface.</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -67,7 +67,7 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="extractLayout">
        <item>
         <spacer name="horizontalSpacer_6">
          <property name="orientation">
@@ -88,6 +88,9 @@
         <widget class="QRadioButton" name="extractPipelineRadioBtn">
          <property name="text">
           <string>Extract Pipeline</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -110,7 +113,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <layout class="QHBoxLayout" name="addFilterLayout">
        <item>
         <spacer name="horizontalSpacer_9">
          <property name="orientation">
@@ -153,7 +156,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="buttonLayout">
        <item>
         <spacer name="horizontalSpacer_2">
          <property name="orientation">

@@ -35,13 +35,13 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DREAM3DFILEDRAGMESSAGEBOX_H_
-#define _DREAM3DFILEDRAGMESSAGEBOX_H_
+#ifndef _FileDragMessageBox_H_
+#define _FileDragMessageBox_H_
 
 
 #include <QDialog>
 
-#include "ui_DREAM3DFileDragMessageBox.h"
+#include "ui_FileDragMessageBox.h"
 
 enum ExtractionType
 {
@@ -51,15 +51,19 @@ enum ExtractionType
 };
 
 
-class DREAM3DFileDragMessageBox : public QDialog, private Ui::DREAM3DFileDragMessageBox
+class FileDragMessageBox : public QDialog, private Ui::FileDragMessageBox
 {
   Q_OBJECT
 
   public:
-    DREAM3DFileDragMessageBox(QWidget* parent = 0, int filterCount = -1);
+    FileDragMessageBox(QWidget* parent = 0, int filterCount = -1);
 
     QString getFilePath();
     void setFilePath(QString path);
+
+    QRadioButton* getAddFilterBtn();
+    QRadioButton* getExtractPipelineBtn();
+    QLabel* getDescriptionLabel();
 
   protected slots:
     void on_replacePipelineBtn_clicked();
@@ -78,4 +82,4 @@ class DREAM3DFileDragMessageBox : public QDialog, private Ui::DREAM3DFileDragMes
     int     filterCount;
 };
 
-#endif /* _DREAM3DFileDragMessageBox_H */
+#endif /* _FileDragMessageBox_H */

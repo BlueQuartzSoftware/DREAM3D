@@ -35,12 +35,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3DFileDragMessageBox.h"
+#include "FileDragMessageBox.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent, int filterCount)
+FileDragMessageBox::FileDragMessageBox(QWidget* parent, int filterCount)
 {
     setupUi(this);
 
@@ -64,7 +64,7 @@ DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent, int filter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DREAM3DFileDragMessageBox::getFilePath()
+QString FileDragMessageBox::getFilePath()
 {
     return filePath;
 }
@@ -72,7 +72,7 @@ QString DREAM3DFileDragMessageBox::getFilePath()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::setFilePath(QString path)
+void FileDragMessageBox::setFilePath(QString path)
 {
     filePath = path;
 }
@@ -80,7 +80,31 @@ void DREAM3DFileDragMessageBox::setFilePath(QString path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_replacePipelineBtn_clicked()
+QRadioButton* FileDragMessageBox::getAddFilterBtn()
+{
+  return addFilterRadioBtn;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QRadioButton* FileDragMessageBox::getExtractPipelineBtn()
+{
+  return extractPipelineRadioBtn;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* FileDragMessageBox::getDescriptionLabel()
+{
+  return descriptionLabel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FileDragMessageBox::on_replacePipelineBtn_clicked()
 {
     if (addFilterRadioBtn->isChecked())
     {
@@ -97,7 +121,7 @@ void DREAM3DFileDragMessageBox::on_replacePipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_appendPipelineBtn_clicked()
+void FileDragMessageBox::on_appendPipelineBtn_clicked()
 {
     if (addFilterRadioBtn->isChecked())
     {
@@ -115,7 +139,7 @@ void DREAM3DFileDragMessageBox::on_appendPipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_prependPipelineBtn_clicked()
+void FileDragMessageBox::on_prependPipelineBtn_clicked()
 {
     if (addFilterRadioBtn->isChecked())
     {
@@ -133,7 +157,7 @@ void DREAM3DFileDragMessageBox::on_prependPipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_cancelBtn_clicked()
+void FileDragMessageBox::on_cancelBtn_clicked()
 {
     // Close the dialog box
     close();
@@ -142,7 +166,7 @@ void DREAM3DFileDragMessageBox::on_cancelBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_addFilterRadioBtn_toggled()
+void FileDragMessageBox::on_addFilterRadioBtn_toggled()
 {
     if (addFilterRadioBtn->isChecked())
     {
