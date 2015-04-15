@@ -63,6 +63,8 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+
 
 
 #define PADDING 5
@@ -93,7 +95,8 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_BasicInputsWidget(NULL),
   m_AdvancedInputWidget(NULL),
   m_CurrentStructureWidget(NULL),
-  m_Observer(NULL)
+  m_Observer(NULL),
+  m_ContextMenu(NULL)
 {
   initialize(AbstractFilter::NullPointer());
 }
@@ -108,7 +111,8 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
   m_HasPreflightWarnings(false),
   m_BasicInputsWidget(NULL),
   m_AdvancedInputWidget(NULL),
-  m_Observer(observer)
+  m_Observer(observer),
+  m_ContextMenu(new QMenu(this))
 {
   initialize(filter);
 }
@@ -121,8 +125,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
   setContextMenuPolicy(Qt::CustomContextMenu);
 
-  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-          this, SLOT(showCustomContextMenu(const QPoint&)));
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenuForWidget(const QPoint&)));
 
   setupUi(this);
 
@@ -751,34 +754,36 @@ void PipelineFilterWidget::on_deleteBtn_clicked()
   emit filterWidgetRemoved(this);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::setContextMenuActions(QList<QAction*> list)
+void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
 {
-  m_MenuActions = list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineFilterWidget::showCustomContextMenu(const QPoint& pos)
-{
-  // Note: We must map the point to global from the viewport to
-  // account for the header.
-  showContextMenu(mapToGlobal(pos) );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineFilterWidget::showContextMenu(const QPoint& globalPos)
-{
-  m_Menu.clear();
-  for (int i = 0; i < m_MenuActions.size(); i++)
+  if (NULL != getFilter())
   {
-    m_Menu.addAction(m_MenuActions[i]);
+    // Clear the existing context menu
+    m_ContextMenu->clear();
+
+    QAction* actionLaunchHelp = new QAction(m_ContextMenu);
+    actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
+    actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
+    connect(actionLaunchHelp, SIGNAL(triggered()),
+      this, SLOT(launchHelpForItem()));
+
+    m_ContextMenu->addAction(actionLaunchHelp);
+    m_ContextMenu->exec(QCursor::pos());
   }
-  m_Menu.exec(globalPos);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::launchHelpForItem()
+{
+  QString name = getFilter()->getHumanLabel();
+
+  // Launch the dialog
+  DREAM3DUserManualDialog::LaunchHelpDialog(name);
+}
+
+

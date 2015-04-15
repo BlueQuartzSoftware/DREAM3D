@@ -155,10 +155,15 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     void adjustLayout(QWidget* w, int state);
 
     /**
-     * @brief onCustomContextMenuRequested
-     * @param pos
-     */
-    void showCustomContextMenu(const QPoint& pos);
+    * @brief showContextMenuForWidget
+    * @param pos
+    */
+    void showContextMenuForWidget(const QPoint &pos);
+
+    /**
+    * @brief launchHelpForItem
+    */
+    void launchHelpForItem();
 
   protected slots:
     /**
@@ -211,12 +216,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     virtual void mouseMoveEvent( QMouseEvent* event );
 
     /**
-     * @brief showContextMenu
-     * @param globalPos
-     */
-    void showContextMenu(const QPoint& globalPos);
-
-    /**
      * @brief layoutWidgets
      */
     void layoutWidgets();
@@ -249,9 +248,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     QWidget*                  m_AdvancedInputWidget;
     QWidget*                  m_CurrentStructureWidget;
     IObserver*                m_Observer;
-    QMenu                     m_Menu;
-    QList<QAction*>           m_MenuActions;
     QMap<QString, QWidget*>   m_PropertyToWidget;
+    QMenu*                    m_ContextMenu;
 
 
     /**
