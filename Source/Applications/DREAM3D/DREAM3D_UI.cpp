@@ -548,8 +548,8 @@ void DREAM3D_UI::setupGui()
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
 
-  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    pipelineViewWidget, SLOT(loadPipelineFile(QString, ExtractionType)));
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
+    pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
 
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
