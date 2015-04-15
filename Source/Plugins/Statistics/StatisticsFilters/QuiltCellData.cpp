@@ -254,12 +254,12 @@ float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t z
   int64_t zStride = 0, yStride = 0;
   float count = 0;
 
-  int xRangeMin = -std::floorf((float)pSize.x / 2.0f);
-  int xRangeMax = std::floorf((float)pSize.x / 2.0f);
-  int yRangeMin = -std::floorf((float)pSize.y / 2.0f);
-  int yRangeMax = std::floorf((float)pSize.y / 2.0f);
-  int zRangeMin = -std::floorf((float)pSize.z / 2.0f);
-  int zRangeMax = std::floorf((float)pSize.z / 2.0f);
+  int xRangeMin = -floorf((float)pSize.x / 2.0f);
+  int xRangeMax = floorf((float)pSize.x / 2.0f);
+  int yRangeMin = -floorf((float)pSize.y / 2.0f);
+  int yRangeMax = floorf((float)pSize.y / 2.0f);
+  int zRangeMin = -floorf((float)pSize.z / 2.0f);
+  int zRangeMax = floorf((float)pSize.z / 2.0f);
 
   if (pSize.x == 1)
   {
