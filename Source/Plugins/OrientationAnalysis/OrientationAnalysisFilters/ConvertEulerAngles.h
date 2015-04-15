@@ -33,22 +33,16 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _ConvertEulerAngles_H_
 #define _ConvertEulerAngles_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "Processing/ProcessingConstants.h"
 
 /**
- * @class ConvertEulerAngles ConvertEulerAngles.h DREAM3DLib/GenericFilters/ConvertEulerAngles.h
- * @brief This filter will convert the Euler Angles. Simply enter the conversion
- * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
- * to Degrees use 57.2957785
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 26, 2012
- * @version 1.0
+ * @brief The ConvertEulerAngles class. See Filter documentation for details.
  */
 class ConvertEulerAngles : public AbstractFilter
 {
@@ -59,18 +53,16 @@ class ConvertEulerAngles : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ConvertEulerAngles, AbstractFilter)
     virtual ~ConvertEulerAngles();
 
-    DREAM3D_FILTER_PARAMETER(int, ConversionType)
-    Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
-
-    virtual void preflight();
+    DREAM3D_FILTER_PARAMETER(int32_t, ConversionType)
+    Q_PROPERTY(int32_t ConversionType READ getConversionType WRITE setConversionType)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -90,6 +82,7 @@ class ConvertEulerAngles : public AbstractFilter
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
+    virtual void preflight();
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -110,7 +103,3 @@ class ConvertEulerAngles : public AbstractFilter
 };
 
 #endif /* CONVERTEULERANGLES_H_ */
-
-
-
-

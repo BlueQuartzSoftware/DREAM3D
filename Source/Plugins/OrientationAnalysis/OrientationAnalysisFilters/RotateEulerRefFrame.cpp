@@ -33,6 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "RotateEulerRefFrame.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -45,11 +46,9 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 class RotateEulerRefFrameImpl
 {
@@ -66,13 +65,13 @@ class RotateEulerRefFrameImpl
 
     void convert(size_t start, size_t end) const
     {
-      float rotMat[3][3];
+      float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
       OrientationMath::AxisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
       float ea1 = 0, ea2 = 0, ea3 = 0;
       float ea1new = 0, ea2new = 0, ea3new = 0;
-      float g[3][3];
-      float gNew[3][3];
+      float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      float gNew[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       for (size_t i = start; i < end; i++)
       {
         ea1 = m_CellEulerAngles[3 * i + 0];
@@ -102,14 +101,13 @@ class RotateEulerRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateEulerRefFrame::RotateEulerRefFrame() :
   AbstractFilter(),
-  m_RotationAngle(0.0),
+  m_RotationAngle(0.0f),
   m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL)
 {
-  m_RotationAxis.x = 0.0;
-  m_RotationAxis.y = 0.0;
-  m_RotationAxis.z = 1.0;
+  m_RotationAxis.x = 0.0f;
+  m_RotationAxis.y = 0.0f;
+  m_RotationAxis.z = 1.0f;
 
   setupFilterParameters();
 }
@@ -120,7 +118,6 @@ RotateEulerRefFrame::RotateEulerRefFrame() :
 RotateEulerRefFrame::~RotateEulerRefFrame()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -133,7 +130,6 @@ void RotateEulerRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Axis");
     parameter->setPropertyName("RotationAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    //parameter->setValueType("FloatVec3_t");
     parameter->setUnits("ijk");
     parameters.push_back(parameter);
   }
@@ -142,8 +138,6 @@ void RotateEulerRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Angle");
     parameter->setPropertyName("RotationAngle");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setValueType("float");
-    //parameter->setCastableValueType("double");
     parameter->setUnits("Degrees");
     parameters.push_back(parameter);
   }
@@ -210,11 +204,10 @@ void RotateEulerRefFrame::preflight()
 void RotateEulerRefFrame::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
   float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
@@ -257,8 +250,19 @@ AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateEulerRefFrame::getGroupName()
+{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateEulerRefFrame::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ConversionFilters; }
 
 // -----------------------------------------------------------------------------
 //

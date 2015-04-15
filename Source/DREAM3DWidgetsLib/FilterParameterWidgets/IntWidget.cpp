@@ -120,34 +120,43 @@ void IntWidget::widgetChanged(const QString& text)
 void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = true;
-  int i = getFilterParameter()->getDefaultValue().toInt();
+  int defValue = getFilterParameter()->getDefaultValue().toInt();
+  int i = defValue;
+
+  // Next make sure there is something in the
   if (!value->text().isEmpty())
   {
     i = value->text().toInt(&ok);
-    errorLabel->hide();
+    //  make sure we can convert the entered value to a 32 bit signed int
+    if (!ok)
+    {
+      errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+      errorLabel->setText("Value entered is beyond the representable range for a 32 bit integer. The filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
+      errorLabel->show();
+      DREAM3DStyles::LineEditErrorStyle(value);
+      i = defValue;
+    }
+    else
+    {
+      errorLabel->hide();
+      DREAM3DStyles::LineEditClearStyle(value);
+    }
   }
   else
   {
+    DREAM3DStyles::LineEditErrorStyle(value);
     errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
-    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->setText("No value entered. Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
     errorLabel->show();
   }
 
-  DREAM3DStyles::LineEditErrorStyle(value);
+  QVariant v(i);
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  if (false == ok)
+  {
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+  }
 
-  if (ok)
-  {
-    QVariant v(i);
-    ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-    if (false == ok)
-    {
-      FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
-    }
-  }
-  else 	// Check for Empty String. If empty, show error dialog
-  {
-    // Some error message "Could not convert string to an integer"
-  }
 }
 
 // -----------------------------------------------------------------------------

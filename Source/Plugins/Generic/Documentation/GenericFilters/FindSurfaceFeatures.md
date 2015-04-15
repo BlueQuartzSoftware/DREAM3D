@@ -2,38 +2,31 @@ Find Surface Features {#findsurfacefeatures}
 =============
 
 ## Group (Subgroup) ##
-
 Generic Filters (Spatial)
 
 ## Description ##
-
-This filter determines whether a **Feature** touches an outer surface of the sample. This is accomplished by simply querying the **Feature** owners of the **Cells** that sit at either xMin, xMax, yMin, yMax, zMin or zMax.
+This Filter determines whether a **Feature** touches an outer surface of the sample. This is accomplished by simply querying the **Feature** owners of the **Cells** that sit at either xMin, xMax, yMin, yMax, zMin or zMax.
 Any **Feature** that owns one of those **Cells** is said to touch an outer surface and all other **Features** are said to not touch an outer surface of the sample.
 
-NOTE: If the structure/data is actually 2D, then the dimension that is planar is not considered and only the **Features** touching the edges are considered surface **Features**.
+*Note:* If the structure/data is actually 2D, then the dimension that is planar is not considered and only the **Features** touching the edges are considered surface **Features**.
 
 ## Parameters ##
-
 None
 
 ## Required Geometry ##
-
-Image/Rectilinear Grid
+Image / Rectilinear Grid
 
 ## Required Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Feature | SurfaceFeatures | Boolean | (1) | Flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. |
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

@@ -44,10 +44,12 @@
 #endif
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
+
+#include "Processing/ProcessingConstants.h"
 
 template<typename T>
 class CalcRelativeMotion
@@ -116,7 +118,7 @@ class CalcRelativeMotion
 // -----------------------------------------------------------------------------
 FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
   AbstractFilter(),
-  m_SelectedArrayPath("", "", ""),
+  m_SelectedArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_Plane(0),
   m_MotionDirectionArrayName(DREAM3D::CellData::MotionDirection),
   m_MotionDirection(NULL)
@@ -143,7 +145,6 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    //parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
@@ -157,7 +158,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget, getSSize2(), false));
   parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget, getSliceStep(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("MotionDirection", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, getMotionDirectionArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Motion Direction", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, getMotionDirectionArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -203,15 +204,73 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 3);
-  tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName() );
-  m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if (image->getXPoints() <= 1 && image->getYPoints() <= 1 && image->getZPoints() <= 1)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage(getHumanLabel(), "The Image Geometry is not 3D and cannot be run through this filter", getErrorCondition());
+  }
+
+  if (getPSize1() <= 0 || getPSize2() <= 0)
+  {
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), "The patch dimensions must both be positive numbers", getErrorCondition());
+  }
+
+  if (getSSize1() <= 0 || getSSize2() <= 0)
+  {
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), "The search dimensions must both be positive numbers", getErrorCondition());
+  }
+
+  if (getPlane() == 0)
+  {
+    if (getSliceStep() >= static_cast<int64_t>(image->getZPoints()))
+    {
+      QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied slice step (%2)").arg(image->getZPoints()).arg(getSliceStep());
+      setErrorCondition(-5556);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
+
+  if (getPlane() == 1)
+  {
+    if (getSliceStep() >= static_cast<int64_t>(image->getYPoints()))
+    {
+      QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied slice step (%2)").arg(image->getYPoints()).arg(getSliceStep());
+      setErrorCondition(-5556);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
+
+  if (getPlane() == 2)
+  {
+    if (getSliceStep() >= static_cast<int64_t>(image->getXPoints()))
+    {
+      QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied slice step (%2)").arg(image->getXPoints()).arg(getSliceStep());
+      setErrorCondition(-5556);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
+
+  m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
+  if( NULL != m_InDataPtr.lock())
+  {
+    if (TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
+    {
+      QString ss = QObject::tr("Selected array cannot be of type bool.  The path is %1").arg(getSelectedArrayPath().serialize());
+      setErrorCondition(-11001);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
+
+  QVector<size_t> cDims(1, 3);
+  tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName() );
+  m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -238,59 +297,39 @@ void FindRelativeMotionBetweenSlices::execute()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
-
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getYPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getZPoints() <= 1)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
-    return;
-  }
-
-  QString ss;
-
-  QString dcName = m_SelectedArrayPath.getDataContainerName();
-  QString amName = m_SelectedArrayPath.getAttributeMatrixName();
-  QString daName = m_SelectedArrayPath.getDataArrayName();
-
-  // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
-  IDataArray::Pointer inputData = getDataContainerArray()->getDataContainer(dcName)->getAttributeMatrix(amName)->getAttributeArray(daName);
-  if (NULL == inputData.get())
-  {
-    ss = QObject::tr("Selected array with path: '%1' does not exist in the Data Container. Was it spelled correctly?").arg(getSelectedArrayPath().getDataArrayName());
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-  size_t xP, yP, zP;
-  m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
+  int64_t xP = static_cast<int64_t>(image->getXPoints());
+  int64_t yP = static_cast<int64_t>(image->getYPoints());
+  int64_t zP = static_cast<int64_t>(image->getZPoints());
   size_t totalPoints = xP * yP * zP;
 
   int32_t buffer1 = (m_PSize1 / 2) + (m_SSize1 / 2);
   int32_t buffer2 = (m_PSize2 / 2) + (m_SSize1 / 2);
 
   QVector<size_t> cDims(1, 4);
-  Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1 * m_PSize2), "patchPoints");
-  Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((m_SSize1 * m_SSize2), cDims, "searchPoints");
-  BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, "validPoints");
+  Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1 * m_PSize2), "_INTERNAL_USE_ONLY_patchPoints");
+  Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((m_SSize1 * m_SSize2), cDims, "_INTERNAL_USE_ONLY_searchPoints");
+  BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_validPoints");
   validPointsPtr->initializeWithValue(false);
   int32_t* patchPoints = patchPointsPtr->getPointer(0);
   int32_t* searchPoints = searchPointsPtr->getPointer(0);
   bool* validPoints = validPointsPtr->getPointer(0);
-  size_t yStride = 0, zStride = 0;
+  int64_t yStride = 0, zStride = 0;
   size_t count = 0;
   size_t numPatchPoints = 0, numSearchPoints = 0;
-  if(m_Plane == 0)
+
+  if (m_Plane == 0)
   {
-    for(int j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
+    for (int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
-      yStride = (j * xP);
-      for(int i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
+      yStride = j * xP;
+      for (int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
         patchPoints[count] = yStride + i;
         count++;
@@ -298,10 +337,10 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
+    for (int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
-      yStride = (j * xP);
-      for(int i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
+      yStride = j * xP;
+      for (int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
         searchPoints[4 * count] = (m_SliceStep * xP * yP) + yStride + i;
         searchPoints[4 * count + 1] = i;
@@ -311,25 +350,26 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for(size_t k = 0; k < zP - m_SliceStep; k++)
+    for (int64_t k = 0; k < zP - m_SliceStep; k++)
     {
       zStride = k * xP * yP;
-      for(size_t j = buffer2; j < (yP - buffer2); j++)
+      for (int64_t j = buffer2; j < (yP - buffer2); j++)
       {
         yStride = j * xP;
-        for(size_t i = buffer1; i < (xP - buffer1); i++)
+        for (int64_t i = buffer1; i < (xP - buffer1); i++)
         {
           validPoints[zStride + yStride + i] = true;
         }
       }
     }
   }
-  if(m_Plane == 1)
+
+  if (m_Plane == 1)
   {
-    for(int j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
+    for (int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for(int i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
+      for (int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
         patchPoints[count] = yStride + i;
         count++;
@@ -337,10 +377,10 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
+    for (int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for(int i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
+      for (int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
         searchPoints[count] = (m_SliceStep * xP) + yStride + i;
         searchPoints[4 * count + 1] = i;
@@ -350,25 +390,26 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for(size_t k = buffer2; k < (zP - buffer2); k++)
+    for (int64_t k = buffer2; k < (zP - buffer2); k++)
     {
       zStride = k * xP * yP;
-      for(size_t j = 0; j < yP - m_SliceStep; j++)
+      for (int64_t j = 0; j < yP - m_SliceStep; j++)
       {
         yStride = j * xP;
-        for(size_t i = buffer1; i < (xP - buffer1); i++)
+        for (int64_t i = buffer1; i < (xP - buffer1); i++)
         {
           validPoints[zStride + yStride + i] = true;
         }
       }
     }
   }
-  if(m_Plane == 2)
+
+  if (m_Plane == 2)
   {
-    for(int j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
+    for (int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for(int i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
+      for (int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
         patchPoints[count] = yStride + (i * xP);
         count++;
@@ -376,10 +417,10 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
+    for (int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for(int i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
+      for (int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
         searchPoints[count] = (m_SliceStep) + yStride + (i * xP);
         searchPoints[4 * count + 1] = m_SliceStep;
@@ -389,13 +430,13 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for(int k = buffer2; k < (zP - buffer2); k++)
+    for (int64_t k = buffer2; k < (zP - buffer2); k++)
     {
       zStride = k * xP * yP;
-      for(int j = buffer1; j < (yP - buffer1); j++)
+      for (int64_t j = buffer1; j < (yP - buffer1); j++)
       {
         yStride = j * xP;
-        for(int i = 0; i < xP - m_SliceStep; i++)
+        for (int64_t i = 0; i < xP - m_SliceStep; i++)
         {
           validPoints[zStride + yStride + i] = true;
         }
@@ -403,180 +444,177 @@ void FindRelativeMotionBetweenSlices::execute()
     }
   }
 
-  QString dType = inputData->getTypeAsString();
-  if (dType.compare("int8_t") == 0)
+  if (NULL == patchPoints || NULL == searchPoints || NULL == validPoints)
   {
-    DataArray<int8_t>* cellArray = DataArray<int8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    QString ss = QObject::tr("Unable to establish search space for supplied parameters");
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  if (TemplateHelpers::CanDynamicCast<Int8ArrayType>()(m_InDataPtr.lock()))
+  {
+    Int8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<int8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<int8_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint8_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint8_t>* cellArray = DataArray<uint8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<uint8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<uint8_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("int16_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<Int16ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<int16_t>* cellArray = DataArray<int16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    Int16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<int16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<int16_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint16_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint16_t>* cellArray = DataArray<uint16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<uint16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<uint16_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("int32_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<Int32ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<int32_t>* cellArray = DataArray<int32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    Int32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<int32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<int32_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint32_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint32_t>* cellArray = DataArray<uint32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<uint32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<uint32_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("int64_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<Int64ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<int64_t>* cellArray = DataArray<int64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    Int64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<int64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<int64_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint64_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint64_t>* cellArray = DataArray<uint64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<uint64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<uint64_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("float") == 0)
+  else if (TemplateHelpers::CanDynamicCast<FloatArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<float>* cellArray = DataArray<float>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    FloatArrayType::Pointer cellArray = boost::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<float>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<float>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<float> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("double") == 0)
+  else if (TemplateHelpers::CanDynamicCast<DoubleArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<double>* cellArray = DataArray<double>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    DoubleArrayType::Pointer cellArray = boost::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<double>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcRelativeMotion<double>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
       CalcRelativeMotion<double> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
-      serial.convert(0, totalPoints);
+      serial.convert(0, count);
     }
   }
-  else if (dType.compare("bool") == 0)
+  else
   {
-    ss = QObject::tr("Selected array with path: '%1' cannot be of type bool").arg(getSelectedArrayPath().getDataArrayName());
+    QString ss = QObject::tr("Selected array is of unsupported type. The type is %1").arg(m_InDataPtr.lock()->getTypeAsString());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -586,7 +624,7 @@ void FindRelativeMotionBetweenSlices::execute()
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
-  for(size_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
     v[0] = m_MotionDirection[3 * i + 0] * xRes;
     v[1] = m_MotionDirection[3 * i + 1] * yRes;
@@ -597,7 +635,7 @@ void FindRelativeMotionBetweenSlices::execute()
     m_MotionDirection[3 * i + 2] = v[2];
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindRelativeMotionBetweenSlices Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

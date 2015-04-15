@@ -36,17 +36,11 @@
 
 #include "ErodeDilateMask.h"
 
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
+#include "Processing/ProcessingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -59,8 +53,8 @@ ErodeDilateMask::ErodeDilateMask() :
   m_YDirOn(true),
   m_ZDirOn(true),
   m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
-  m_Mask(NULL)
+  m_Mask(NULL),
+  m_MaskCopy(NULL)
 {
   setupFilterParameters();
 }
@@ -78,7 +72,7 @@ ErodeDilateMask::~ErodeDilateMask()
 void ErodeDilateMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Mask Array", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Cell Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
@@ -136,16 +130,19 @@ void ErodeDilateMask::dataCheck()
 {
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 1);
-  m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getMaskArrayPath().getDataContainerName());
+
+  if (getNumIterations() <= 0)
+  {
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), "The number of iterations must be positive.", getErrorCondition());
+  }
+
+  QVector<size_t> cDims(1, 1);
+  m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getMaskArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -166,15 +163,15 @@ void ErodeDilateMask::preflight()
 void ErodeDilateMask::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
-  int64_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
 
-  BoolArrayType::Pointer maskCopyPtr = BoolArrayType::CreateArray(totalPoints, "MaskCopy");
+  BoolArrayType::Pointer maskCopyPtr = BoolArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_MaskCopy");
   m_MaskCopy = maskCopyPtr->getPointer(0);
+  maskCopyPtr->initializeWithValue(false);
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -190,38 +187,37 @@ void ErodeDilateMask::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  int good = 1;
-  size_t count = 0;
-  int kstride, jstride;
-  int neighpoint;
+  int32_t good = 1;
+  int64_t count = 0;
+  int64_t kstride = 0, jstride = 0;
+  int64_t neighpoint = 0;
 
-  int neighpoints[6];
-  neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<int>(-dims[0]);
-  neighpoints[2] = static_cast<int>(-1);
-  neighpoints[3] = static_cast<int>(1);
-  neighpoints[4] = static_cast<int>(dims[0]);
-  neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
+  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  neighpoints[0] = -dims[0] * dims[1];
+  neighpoints[1] = -dims[0];
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0] * dims[1];
 
-  for (int iteration = 0; iteration < m_NumIterations; iteration++)
+  for (int32_t iteration = 0; iteration < m_NumIterations; iteration++)
   {
-    for (int k = 0; k < dims[2]; k++)
+    for (DimType k = 0; k < dims[2]; k++)
     {
-      kstride = static_cast<int>( dims[0] * dims[1] * k );
-      for (int j = 0; j < dims[1]; j++)
+      kstride = dims[0] * dims[1] * k;
+      for (DimType j = 0; j < dims[1]; j++)
       {
-        jstride = static_cast<int>( dims[0] * j );
-        for (int i = 0; i < dims[0]; i++)
+        jstride = dims[0] * j;
+        for (DimType i = 0; i < dims[0]; i++)
         {
           count = kstride + jstride + i;
-
           m_MaskCopy[count] = m_Mask[count];
           if (m_Mask[count] == false)
           {
-            for (int l = 0; l < 6; l++)
+            for (int32_t l = 0; l < 6; l++)
             {
               good = 1;
-              neighpoint = static_cast<int>( count + neighpoints[l] );
+              neighpoint = count + neighpoints[l];
               if (l == 0 && (k == 0 || m_ZDirOn == false)) { good = 0; }
               else if (l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false)) { good = 0; }
               else if (l == 1 && (j == 0 || m_YDirOn == false)) { good = 0; }
@@ -244,7 +240,7 @@ void ErodeDilateMask::execute()
         }
       }
     }
-    for (int64_t j = 0; j < totalPoints; j++)
+    for (size_t j = 0; j < totalPoints; j++)
     {
       m_Mask[j] = m_MaskCopy[j];
     }
@@ -267,13 +263,11 @@ AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParame
   return filter;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getCompiledLibraryName()
 { return Processing::ProcessingBaseName; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -281,10 +275,14 @@ const QString ErodeDilateMask::getCompiledLibraryName()
 const QString ErodeDilateMask::getGroupName()
 { return DREAM3D::FilterGroups::ProcessingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateMask::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getHumanLabel()
 { return "Erode/Dilate Mask"; }
-

@@ -44,9 +44,11 @@
 #endif
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+
+#include "Processing/ProcessingConstants.h"
 
 template<typename T>
 class CalcProjectedStatsImpl
@@ -68,27 +70,26 @@ class CalcProjectedStatsImpl
 
     void convert(size_t start, size_t end) const
     {
-      //FIXME: NO Checks for NULL pointers in this code.
-      int32_t point, newPoint;
-      T val;
+      int32_t point = 0, newPoint = 0;
+      T val = static_cast<T>(0);
       for (size_t i = start; i < end; i++)
       {
         point = m_StartPoints[i];
         m_Min[point] = m_Data[point];
         m_Max[point] = m_Data[point];
         m_Avg[point] = m_Data[point];
-        for(size_t j = 0; j < m_Depth; j++)
+        for (size_t j = 0; j < m_Depth; j++)
         {
-          newPoint = point + (j * m_Stride);
+          newPoint = static_cast<int32_t>(point + (j * m_Stride));
           val = m_Data[newPoint];
-          if(val < m_Min[point]) { m_Min[point] = val; }
-          if(val > m_Max[point]) { m_Max[point] = val; }
+          if (val < m_Min[point]) { m_Min[point] = val; }
+          if (val > m_Max[point]) { m_Max[point] = val; }
           m_Avg[point] += val;
         }
         m_Avg[point] /= m_Depth;
-        for(size_t j = 0; j < m_Depth; j++)
+        for (size_t j = 0; j < m_Depth; j++)
         {
-          newPoint = point + (j * m_Stride);
+          newPoint = static_cast<int32_t>(point + (j * m_Stride));
           val = m_Data[newPoint];
           m_Min[newPoint] = m_Min[point];
           m_Max[newPoint] = m_Max[point];
@@ -98,7 +99,7 @@ class CalcProjectedStatsImpl
         m_Std[point] /= m_Depth;
         m_Var[point] = m_Std[point];
         m_Std[point] = sqrt(m_Std[point]);
-        for(size_t j = 0; j < m_Depth; j++)
+        for (size_t j = 0; j < m_Depth; j++)
         {
           newPoint = point + (j * m_Stride);
           m_Std[newPoint] = m_Std[point];
@@ -130,7 +131,7 @@ class CalcProjectedStatsImpl
 // -----------------------------------------------------------------------------
 FindProjectedImageStatistics::FindProjectedImageStatistics() :
   AbstractFilter(),
-  m_SelectedArrayPath("", "", ""),
+  m_SelectedArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_Plane(0),
   m_ProjectedImageMinArrayName(DREAM3D::CellData::ProjectedImageMin),
   m_ProjectedImageMaxArrayName(DREAM3D::CellData::ProjectedImageMax),
@@ -165,7 +166,6 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    //parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
@@ -174,11 +174,11 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("ProjectedImageMin", "ProjectedImageMinArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMinArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageMax", "ProjectedImageMaxArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMaxArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageAvg", "ProjectedImageAvgArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageAvgArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageStd", "ProjectedImageStdArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageStdArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageVar", "ProjectedImageVarArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageVarArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Projected Image Min", "ProjectedImageMinArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMinArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Projected Image Max", "ProjectedImageMaxArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMaxArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Projected Image Avg", "ProjectedImageAvgArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageAvgArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Projected Image Std", "ProjectedImageStdArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageStdArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Projected Image Var", "ProjectedImageVarArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageVarArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -222,33 +222,52 @@ void FindProjectedImageStatistics::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 1);
-  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMinArrayName() );
-  m_ProjectedImageMinPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ProjectedImageMinPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMaxArrayName() );
-  m_ProjectedImageMaxPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ProjectedImageMaxPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageAvgArrayName() );
-  m_ProjectedImageAvgPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ProjectedImageAvgPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageStdArrayName() );
-  m_ProjectedImageStdPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ProjectedImageStdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageVarArrayName() );
-  m_ProjectedImageVarPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-}
+  if(image->getXPoints() <= 1 && image->getYPoints() <= 1 && image->getZPoints() <= 1)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage(getHumanLabel(), "The Image Geometry is not 3D and cannot be run through this filter", getErrorCondition());
+  }
 
+  m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
+  if( NULL != m_InDataPtr.lock())
+  {
+    if (TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
+    {
+      QString ss = QObject::tr("Selected array cannot be of type bool.  The path is %1").arg(getSelectedArrayPath().serialize());
+      setErrorCondition(-11001);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
+
+  QVector<size_t> cDims(1, 1);
+  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMinArrayName() );
+  m_ProjectedImageMinPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageMinPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMaxArrayName() );
+  m_ProjectedImageMaxPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageMaxPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageAvgArrayName() );
+  m_ProjectedImageAvgPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageAvgPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageStdArrayName() );
+  m_ProjectedImageStdPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageStdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageVarArrayName() );
+  m_ProjectedImageVarPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -272,30 +291,7 @@ void FindProjectedImageStatistics::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  QString dcName = m_SelectedArrayPath.getDataContainerName();
-  QString amName = m_SelectedArrayPath.getAttributeMatrixName();
-  QString daName = m_SelectedArrayPath.getDataArrayName();
-
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
-
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getYPoints() <= 1 && m->getGeometryAs<ImageGeom>()->getZPoints() <= 1)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
-    return;
-  }
-
-  QString ss;
-
-  // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
-  IDataArray::Pointer inputData = getDataContainerArray()->getDataContainer(dcName)->getAttributeMatrix(amName)->getAttributeArray(daName);
-  if (NULL == inputData.get())
-  {
-    ss = QObject::tr("Selected array with path: '%1' does not exist in the Data Container. Was it spelled correctly?").arg(getSelectedArrayPath().getDataArrayName());
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName());
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -305,54 +301,53 @@ void FindProjectedImageStatistics::execute()
   size_t xP = 0, yP = 0, zP = 0;
   m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
 
-  Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "startingPoints");
+  Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_startingPoints");
   int32_t* startPoints = NULL;
   size_t stride = 0, yStride = 0;
   size_t count = 0;
   size_t depth = 0;
-  QVector<size_t> cDims(1, 1);
-  if(m_Plane == 0)
+  if (m_Plane == 0)
   {
     startingPoints->resize(xP * yP);
     startPoints = startingPoints->getPointer(0);
     stride = xP * yP;
     depth = zP;
-    for(size_t i = 0; i < yP; i++)
+    for (size_t i = 0; i < yP; i++)
     {
       yStride = i * xP;
-      for(size_t j = 0; j < xP; j++)
+      for (size_t j = 0; j < xP; j++)
       {
         startPoints[count] = yStride + j;
         count++;
       }
     }
   }
-  if(m_Plane == 1)
+  if (m_Plane == 1)
   {
     startingPoints->resize(xP * zP);
     startPoints = startingPoints->getPointer(0);
     stride = xP;
     depth = yP;
-    for(size_t i = 0; i < zP; i++)
+    for (size_t i = 0; i < zP; i++)
     {
       yStride = i * xP * yP;
-      for(size_t j = 0; j < xP; j++)
+      for (size_t j = 0; j < xP; j++)
       {
         startPoints[count] = yStride + j;
         count++;
       }
     }
   }
-  if(m_Plane == 2)
+  if (m_Plane == 2)
   {
     startingPoints->resize(yP * zP);
     startPoints = startingPoints->getPointer(0);
     stride = 1;
     depth = xP;
-    for(size_t i = 0; i < zP; i++)
+    for (size_t i = 0; i < zP; i++)
     {
       yStride = i * xP * yP;
-      for(size_t j = 0; j < yP; j++)
+      for (size_t j = 0; j < yP; j++)
       {
         startPoints[count] = yStride + (j * xP);
         count++;
@@ -360,11 +355,17 @@ void FindProjectedImageStatistics::execute()
     }
   }
 
-  QString dType = inputData->getTypeAsString();
-  if (dType.compare("int8_t") == 0)
+  if (NULL == startPoints)
   {
-    DataArray<int8_t>* cellArray = DataArray<int8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    QString ss = QObject::tr("Unable to establish starting location for supplied plane. The plane is %1").arg(m_Plane);
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  if (TemplateHelpers::CanDynamicCast<Int8ArrayType>()(m_InDataPtr.lock()))
+  {
+    Int8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -378,10 +379,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint8_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint8_t>* cellArray = DataArray<uint8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -395,10 +395,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("int16_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<Int16ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<int16_t>* cellArray = DataArray<int16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    Int16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -412,10 +411,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint16_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint16_t>* cellArray = DataArray<uint16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -429,10 +427,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("int32_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<Int32ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<int32_t>* cellArray = DataArray<int32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    Int32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -446,10 +443,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint32_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint32_t>* cellArray = DataArray<uint32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -463,10 +459,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("int64_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<Int64ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<int64_t>* cellArray = DataArray<int64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    Int64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -480,10 +475,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("uint64_t") == 0)
+  else if (TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<uint64_t>* cellArray = DataArray<uint64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    UInt64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -497,10 +491,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("float") == 0)
+  else if (TemplateHelpers::CanDynamicCast<FloatArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<float>* cellArray = DataArray<float>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    FloatArrayType::Pointer cellArray = boost::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -514,10 +507,9 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("double") == 0)
+  else if (TemplateHelpers::CanDynamicCast<DoubleArrayType>()(m_InDataPtr.lock()))
   {
-    DataArray<double>* cellArray = DataArray<double>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) { return; }
+    DoubleArrayType::Pointer cellArray = boost::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -531,15 +523,15 @@ void FindProjectedImageStatistics::execute()
       serial.convert(0, count);
     }
   }
-  else if (dType.compare("bool") == 0)
+  else
   {
-    ss = QObject::tr("Selected array with path: '%1' cannot be of type bool").arg(getSelectedArrayPath().getDataArrayName());
+    QString ss = QObject::tr("Selected array is of unsupported type. The type is %1").arg(m_InDataPtr.lock()->getTypeAsString());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindProjectedImageStatistics Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

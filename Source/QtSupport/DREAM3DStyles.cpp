@@ -128,7 +128,7 @@ QFont DREAM3DStyles::GetCategoryFont()
 // -----------------------------------------------------------------------------
 void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
 {
-  if (lineEdit->text().isEmpty())
+  //if (lineEdit->text().isEmpty())
   {
     QString str;
     QTextStream ss(&str);
@@ -138,8 +138,17 @@ void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
     ss << "}";
     lineEdit->setStyleSheet(str);
   }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
+//  else
+//  {
+//    lineEdit->setStyleSheet("");
+//  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DStyles::LineEditClearStyle(QLineEdit* lineEdit)
+{
+  lineEdit->setStyleSheet("");
+
 }

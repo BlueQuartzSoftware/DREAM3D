@@ -40,7 +40,8 @@ function(AddHDF5CopyInstallRules)
       ADD_CUSTOM_TARGET(ZZ_${Z_LIBVAR}_DLL_${TYPE}-Copy ALL
                           COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LibPath}
                           ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
-                          COMMENT "  Copy: ${LibPath}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/")
+                          # COMMENT "  Copy: ${LibPath} To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/"
+                          )
       set_target_properties(ZZ_${Z_LIBVAR}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
 
     endif()
@@ -68,7 +69,8 @@ function(AddHDF5CopyInstallRules)
       ADD_CUSTOM_TARGET(ZZ_${Z_LIBVAR}_SYMLINK_${TYPE}-Copy ALL
                           COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SYMLINK_PATH}
                           ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
-                          COMMENT "  Copy: ${SYMLINK_PATH}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/")
+                          # COMMENT "  Copy: ${SYMLINK_PATH} To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/"
+                          )
       set_target_properties(ZZ_${Z_LIBVAR}_SYMLINK_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
 
     endif()
@@ -103,14 +105,14 @@ endif()
 
 find_package(HDF5)
 if(HDF5_FOUND)
-  
+
   GET_FILENAME_COMPONENT (HDF5_LIBRARY_DIRS "${HDF5_INCLUDE_DIRS}" PATH)
   set(HDF5_LIBRARY_DIRS ${HDF5_LIBRARY_DIRS}/lib)
   file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
   # Add the library directory to the file that has all the search directories stored in it.
 
   include_directories(${HDF5_INCLUDE_DIRS} )
-  
+
   message(STATUS "HDF5 Location: ${HDF5_INSTALL}")
   message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
   if(MSVC_IDE)

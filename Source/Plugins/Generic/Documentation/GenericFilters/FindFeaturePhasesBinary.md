@@ -1,15 +1,13 @@
 Find Feature Phases Binary {#findfeaturephasesbinary}
-==========
+=============
 
 ## Group (Subgroup) ##
-
 Generic Filters (Misc)
 
 ## Description ##
+This Filter assigns a phase number to binary data. The *true* **Cells** will be phase 1, and *false* **Cells** will be phase 0. It is generally for use when the **Cell** phases were not known ahead of time. For example, if an image is segmented into precipitates and non-precipitates, this Filter will assign the precipitates to phase 1, and the non-precipitates to phase 0.
 
-This filter assigns a phase number to binary data. The 'true' **Cells** will be phase 1, and 'false' **Cells** will be phase 0. It is generally for use when the cell phases weren't known ahead of time. For example, if an image is segmented into precipitates and non-precipitates, this filter will assign the precipitates to phase 1, and the non-precipitates to phase 0.
-
-Additionally, this filter creates a Ensemble Attribute Matrix to hold ensemble data. 
+Additionally, this Filter creates an **Ensemble Attribute Matrix** to hold ensemble data. 
 
 ## Parameters ##
 None
@@ -27,11 +25,10 @@ Image / Rectilinear Grid
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | FeaturePhases | Int | (1) | Id specifying the phase of the **Feature** |
+| Feature | Phases | Int | (1) | Id specifying the phase of the **Feature** |
 
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

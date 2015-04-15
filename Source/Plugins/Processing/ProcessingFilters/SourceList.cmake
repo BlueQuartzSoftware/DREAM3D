@@ -22,9 +22,6 @@ set(_PublicFilters
   FillBadData
   FindProjectedImageStatistics
   FindRelativeMotionBetweenSlices
-  BadDataNeighborOrientationCheck
-  ConvertEulerAngles
-  RotateEulerRefFrame
   RemoveFlaggedFeatures
   IdentifySample
   MultiThresholdObjects

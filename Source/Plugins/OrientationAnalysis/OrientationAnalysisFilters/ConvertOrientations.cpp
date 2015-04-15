@@ -662,7 +662,7 @@ const QString ConvertOrientations::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysis; }
+{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
 
 
 // -----------------------------------------------------------------------------

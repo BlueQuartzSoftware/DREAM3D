@@ -1,11 +1,11 @@
 Clear Data (Mask) {#cleardatamask}
-======
+=============
 
 ## Group (Subgroup) ##
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter clears all attribute arrays for each **Element** that have a value of "false" in the "mask" array.  All **Elements** that have the value of "true" in the "mask" array will retain all their attributes.
+This Filter clears all attribute arrays for each **Element** that have a value of *false* in the _mask_ array.  All **Elements** that have the value of *true* in the _mask_ array will retain all their attributes.
 
 ## Parameters ##
 None
@@ -16,7 +16,7 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensionss | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GoodVoxels | Boolean | (1) | Used to define whether the **Cells** are part of the mask  |
+| Element | GoodVoxels | Boolean | (1) | Used to define whether the **Elements** are part of the mask  |
 
 ## Created Arrays ##
 None
