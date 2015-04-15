@@ -37,26 +37,14 @@
 #ifndef _ErodeDilateBadData_H_
 #define _ErodeDilateBadData_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @class ErodeDilateBadData ErodeDilateBadData.h DREAM3DLib/ReconstructionFilters/ErodeDilateBadData.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The ErodeDilateBadData class. See Filter documentation for details.
  */
 class ErodeDilateBadData : public AbstractFilter
 {
@@ -68,16 +56,21 @@ class ErodeDilateBadData : public AbstractFilter
 
     virtual ~ErodeDilateBadData();
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
-    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
-    DREAM3D_FILTER_PARAMETER(int, NumIterations)
-    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
+    DREAM3D_FILTER_PARAMETER(uint32_t, Direction)
+    Q_PROPERTY(uint32_t Direction READ getDirection WRITE setDirection)
+
+    DREAM3D_FILTER_PARAMETER(int32_t, NumIterations)
+    Q_PROPERTY(int32_t NumIterations READ getNumIterations WRITE setNumIterations)
+
     DREAM3D_FILTER_PARAMETER(bool, XDirOn)
     Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
+
     DREAM3D_FILTER_PARAMETER(bool, YDirOn)
     Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
+
     DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
+
     DREAM3D_FILTER_PARAMETER(bool, ReplaceBadData)
     Q_PROPERTY(bool ReplaceBadData READ getReplaceBadData WRITE setReplaceBadData)
 
@@ -87,7 +80,7 @@ class ErodeDilateBadData : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -117,10 +110,8 @@ class ErodeDilateBadData : public AbstractFilter
 
   private:
     int32_t* m_Neighbors;
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     void dataCheck();
 
@@ -129,8 +120,3 @@ class ErodeDilateBadData : public AbstractFilter
 };
 
 #endif /* ErodeDilateBadData_H_ */
-
-
-
-
-

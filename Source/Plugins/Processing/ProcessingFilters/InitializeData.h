@@ -37,22 +37,12 @@
 #ifndef _InitializeData_H_
 #define _InitializeData_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "Processing/ProcessingConstants.h"
-
 /**
- * @class InitializeData InitializeData.h DREAM3DLib/SyntheticBuilderFilters/InitializeData.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The InitializeData class. See Filter documentation for details.
  */
 class InitializeData : public AbstractFilter
 {
@@ -64,27 +54,31 @@ class InitializeData : public AbstractFilter
 
     virtual ~InitializeData();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(int, XMin)
-    Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
-    DREAM3D_FILTER_PARAMETER(int, YMin)
-    Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
-    DREAM3D_FILTER_PARAMETER(int, ZMin)
-    Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
+    DREAM3D_FILTER_PARAMETER(int32_t, XMin)
+    Q_PROPERTY(int32_t XMin READ getXMin WRITE setXMin)
 
-    DREAM3D_FILTER_PARAMETER(int, XMax)
-    Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
-    DREAM3D_FILTER_PARAMETER(int, YMax)
-    Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
-    DREAM3D_FILTER_PARAMETER(int, ZMax)
-    Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
+    DREAM3D_FILTER_PARAMETER(int32_t, YMin)
+    Q_PROPERTY(int32_t YMin READ getYMin WRITE setYMin)
+
+    DREAM3D_FILTER_PARAMETER(int32_t, ZMin)
+    Q_PROPERTY(int32_t ZMin READ getZMin WRITE setZMin)
+
+    DREAM3D_FILTER_PARAMETER(int32_t, XMax)
+    Q_PROPERTY(int32_t XMax READ getXMax WRITE setXMax)
+
+    DREAM3D_FILTER_PARAMETER(int32_t, YMax)
+    Q_PROPERTY(int32_t YMax READ getYMax WRITE setYMax)
+
+    DREAM3D_FILTER_PARAMETER(int32_t, ZMax)
+    Q_PROPERTY(int32_t ZMax READ getZMax WRITE setZMax)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -115,7 +109,6 @@ class InitializeData : public AbstractFilter
   protected:
     InitializeData();
 
-
   private:
 
     void dataCheck();
@@ -125,9 +118,3 @@ class InitializeData : public AbstractFilter
 };
 
 #endif /* InitializeData_H_ */
-
-
-
-
-
-

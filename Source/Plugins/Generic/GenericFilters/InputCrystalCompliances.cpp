@@ -36,6 +36,7 @@
 
 #include "InputCrystalCompliances.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -102,6 +103,8 @@ void InputCrystalCompliances::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InputCrystalCompliances::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
@@ -134,9 +137,9 @@ void InputCrystalCompliances::dataCheck()
   setErrorCondition(0);
 
   // create compliances
-  QVector<size_t> dims(2, 6); // 6 by 6 array
+  QVector<size_t> cDims(2, 6); // 6 by 6 array
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getCrystalCompliancesArrayName() );
-  m_CrystalCompliancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+  m_CrystalCompliancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
   if( NULL != m_CrystalCompliancesPtr.lock().get() )
   { m_CrystalCompliances = m_CrystalCompliancesPtr.lock()->getPointer(0); }
 }

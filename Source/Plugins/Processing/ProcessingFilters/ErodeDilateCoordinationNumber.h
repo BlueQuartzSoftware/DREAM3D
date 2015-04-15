@@ -37,26 +37,12 @@
 #ifndef _ErodeDilateCoordinationNumber_H_
 #define _ErodeDilateCoordinationNumber_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Processing/ProcessingConstants.h"
-
-
 /**
- * @class ErodeDilateCoordinationNumber ErodeDilateCoordinationNumber.h DREAM3DLib/ReconstructionFilters/ErodeDilateCoordinationNumber.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The ErodeDilateCoordinationNumber class. See Filter documentation for details.
  */
 class ErodeDilateCoordinationNumber : public AbstractFilter
 {
@@ -71,8 +57,8 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, Loop)
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-    DREAM3D_FILTER_PARAMETER(int, CoordinationNumber)
-    Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
+    DREAM3D_FILTER_PARAMETER(int32_t, CoordinationNumber)
+    Q_PROPERTY(int32_t CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -80,7 +66,7 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -95,7 +81,6 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
 
     virtual void execute();
     virtual void preflight();
@@ -114,9 +99,6 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     int32_t* m_Neighbors;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
 
     void dataCheck();
 

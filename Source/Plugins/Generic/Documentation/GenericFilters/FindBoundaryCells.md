@@ -1,5 +1,6 @@
 Find Boundary Cells {#findboundarycells}
 =============
+
 ## Group (Subgroup) ##
 Generic Filters (Spatial)
 
@@ -23,13 +24,11 @@ Image / Rectilinear Grid
 | Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | SurfaceCells | Int | (1) | The number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* |
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

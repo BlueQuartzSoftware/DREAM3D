@@ -5,7 +5,7 @@ Find Bounding Box Features {#findboundingboxfeatures}
 Generic Filters (Spatial)
 
 ## Description ##
-This filter determines which **Features** are _biased_ by the outer surfaces of the sample. Larger **Features** are more likely to intersect the outer surfaces and thus it is not sufficient to only note which **Features** touch the outer surfaces of the sample.
+This Filter determines which **Features** are _biased_ by the outer surfaces of the sample. Larger **Features** are more likely to intersect the outer surfaces and thus it is not sufficient to only note which **Features** touch the outer surfaces of the sample.
 Denoting which **Features** are biased is important so that they may be excluded from any statistical analyses. 
 The algorithm for determining whether a **Feature** is _biased_ is as follows: 
 
@@ -19,7 +19,7 @@ The algorithm for determining whether a **Feature** is _biased_ is as follows:
 By definition of the box, no **Feature** that intersects an outer surface of the sample can be considered _unbiased_, but it should be noted that **Features** that do not intersect the outer surfaces may still be considered _biased_ 
 This algorithm works to determine the biased **Features** because all **Features** have one (and only one) centroid, no matter their size. Generally, this method will deem more small **Features** biased than the set of **Features** that just intersect the outer surfaces - and this corrects for the increased likelihood that larger **Features** will touch an outer surface.
 
-**Filter is modification of algorithm from Dave Rowenhorst (Naval Research Laboratory)
+*Note:* Filter is a modification of an algorithm from Dave Rowenhorst (Naval Research Laboratory)
 
 ## Parameters ##
 None
@@ -28,7 +28,6 @@ None
 Image / Rectilinear Grid
 
 ## Required Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Feature | Centroids | Float | (3) | X, Y, Z coordinates of **Feature** center of mass |
@@ -40,7 +39,6 @@ Image / Rectilinear Grid
 | Feature | BiasedFeatures | Boolean | (1) | Flag of 1 if **Feature** is biased or of 0 if it is not |
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

@@ -33,6 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "FlattenImage.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -42,16 +43,17 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+
+#include "Processing/ProcessingConstants.h"
 
 class FlattenImageImpl
 {
 
   public:
-    FlattenImageImpl(unsigned char* data, unsigned char* newdata, float Rfactor, float Gfactor, float Bfactor, size_t comp) :
+    FlattenImageImpl(uint8_t* data, uint8_t* newdata, float Rfactor, float Gfactor, float Bfactor, size_t comp) :
       m_ImageData(data),
       m_FlatImageData(newdata),
       convRFactor(Rfactor),
@@ -65,7 +67,7 @@ class FlattenImageImpl
     {
       for (size_t i = start; i < end; i++)
       {
-        m_FlatImageData[i] = int((m_ImageData[numComp * i] * convRFactor) + (m_ImageData[numComp * i + 1] * convGFactor) + (m_ImageData[numComp * i + 2] * convBFactor));
+        m_FlatImageData[i] = int32_t((m_ImageData[numComp * i] * convRFactor) + (m_ImageData[numComp * i + 1] * convGFactor) + (m_ImageData[numComp * i + 2] * convBFactor));
       }
     }
 
@@ -76,16 +78,14 @@ class FlattenImageImpl
     }
 #endif
   private:
-    unsigned char* m_ImageData;
-    unsigned char* m_FlatImageData;
+    uint8_t* m_ImageData;
+    uint8_t* m_FlatImageData;
     float  convRFactor;
     float  convGFactor;
     float  convBFactor;
     size_t numComp;
 
 };
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -108,20 +108,18 @@ FlattenImage::~FlattenImage()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FlattenImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getImageDataArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Image Data", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getImageDataArrayPath(), false, ""));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Flattening Method");
     parameter->setPropertyName("FlattenMethod");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    ////parameter->setValueType("quint32");
     QVector<QString> choices;
     choices.push_back("Average");
     choices.push_back("Luminosity");
@@ -129,7 +127,7 @@ void FlattenImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("FlatImageData", "FlatImageDataArrayName", FilterParameterWidgetType::StringWidget, getFlatImageDataArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Flat Image Data", "FlatImageDataArrayName", FilterParameterWidgetType::StringWidget, getFlatImageDataArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -167,34 +165,22 @@ void FlattenImage::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  int numImageComp = 1;
+  int32_t numImageComp = 1;
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ImageDataArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(m_ImageDataArrayPath.getDataArrayName());
-  if(getErrorCondition() < 0) { return; }
+  IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());
   if(NULL != iDataArray.get())
   {
-    UInt8ArrayType* imageDataPtr = UInt8ArrayType::SafePointerDownCast(iDataArray.get());
-    if (NULL != imageDataPtr)
-    {
-      numImageComp = imageDataPtr->getNumberOfComponents();
-    }
+    numImageComp = iDataArray->getNumberOfComponents();
   }
 
-  QVector<size_t> dims(1, numImageComp);
-  m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned char>, AbstractFilter>(this, getImageDataArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, numImageComp);
+  m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getImageDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 1;
+
+  cDims[0] = 1;
   tempPath.update(m_ImageDataArrayPath.getDataContainerName(), m_ImageDataArrayPath.getAttributeMatrixName(), getFlatImageDataArrayName() );
-  m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<unsigned char>, AbstractFilter, unsigned char>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FlatImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FlatImageData = m_FlatImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -218,11 +204,10 @@ void FlattenImage::preflight()
 void FlattenImage::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m_ImageDataPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_ImageDataPtr.lock()->getNumberOfTuples();
 
   float Rfactor = 1.0f;
   float Gfactor = 1.0f;
@@ -245,7 +230,7 @@ void FlattenImage::execute()
   bool doParallel = true;
 #endif
 
-  size_t comp = m_ImageDataPtr.lock()->getNumberOfComponents();
+  int32_t comp = m_ImageDataPtr.lock()->getNumberOfComponents();
 
   //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -284,6 +269,17 @@ AbstractFilter::Pointer FlattenImage::newFilterInstance(bool copyFilterParameter
 const QString FlattenImage::getCompiledLibraryName()
 { return Processing::ProcessingBaseName; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FlattenImage::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FlattenImage::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ImageFilters; }
 
 // -----------------------------------------------------------------------------
 //
