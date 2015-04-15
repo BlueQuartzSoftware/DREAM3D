@@ -161,7 +161,7 @@ namespace DREAM3D
   namespace FilterGroups
   {
     const DREAM3D_STRING GenericFilters("Generic");
-    const DREAM3D_STRING OrientationAnalysis("OrientationAnalysis");
+    const DREAM3D_STRING OrientationAnalysisFilters("OrientationAnalysis");
     const DREAM3D_STRING IOFilters("IO");
     const DREAM3D_STRING ProcessingFilters("Processing");
     const DREAM3D_STRING ReconstructionFilters("Reconstruction");

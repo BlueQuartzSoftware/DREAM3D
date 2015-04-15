@@ -36,17 +36,11 @@
 
 #include "FillBadData.h"
 
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
+#include "Processing/ProcessingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -58,10 +52,10 @@ FillBadData::FillBadData() :
   m_MinAllowedDefectSize(1),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellPhases(NULL)
+  m_CellPhases(NULL),
+  m_AlreadyChecked(NULL),
+  m_Neighbors(NULL)
 {
   setupFilterParameters();
 }
@@ -86,10 +80,13 @@ void FillBadData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Replace Bad Data", "ReplaceBadData", FilterParameterWidgetType::BooleanWidget, getReplaceBadData(), false, ""));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -125,21 +122,25 @@ void FillBadData::dataCheck()
 {
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<DataArrayPath> dataArrayPaths;
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
 
   if(m_StoreAsNewPhase == true)
   {
-    m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
   }
+
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
 
 
@@ -162,18 +163,17 @@ void FillBadData::preflight()
 void FillBadData::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_Neighbors");
   m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValue(-1);
 
-  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
+  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_AlreadyChecked");
   m_AlreadyChecked = alreadCheckedPtr->getPointer(0);
   alreadCheckedPtr->initializeWithZeros();
 
@@ -191,66 +191,59 @@ void FillBadData::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  std::vector<int> neighs;
-  std::vector<int> remove;
   size_t count = 1;
-  //size_t point = 0;
-  int good = 1;
-  int neighbor;
-  int index = 0;
-  float x, y, z;
-  DimType column, row, plane;
-  int neighpoint;
-  int featurename, feature;
+  int32_t good = 1;
+  int64_t neighbor;
+  int64_t index = 0;
+  float x = 0.0f, y = 0.0f, z = 0.0f;
+  DimType column = 0, row = 0, plane = 0;
+  int64_t neighpoint = 0;
+  int32_t featurename = 0, feature = 0;
   size_t numfeatures = 0;
   size_t maxPhase = 0;
-  for(int64_t i = 0; i < totalPoints; i++)
+
+  for(size_t i = 0; i < totalPoints; i++)
   {
     featurename = m_FeatureIds[i];
-    if(featurename > numfeatures) { numfeatures = featurename; }
+    if (featurename > numfeatures) { numfeatures = featurename; }
   }
-  if(m_StoreAsNewPhase == true)
+
+  if (m_StoreAsNewPhase == true)
   {
-    for(int64_t i = 0; i < totalPoints; i++)
+    for(size_t i = 0; i < totalPoints; i++)
     {
-      if(m_CellPhases[i] > maxPhase) { maxPhase = m_CellPhases[i]; }
+      if (m_CellPhases[i] > maxPhase) { maxPhase = m_CellPhases[i]; }
     }
   }
-  if (numfeatures == 0)
-  {
-    setErrorCondition(-90001);
-    notifyErrorMessage(getHumanLabel(), "No features have been defined in the Feature map. A filter needs to be executed before this filter that defines the number of features.", getErrorCondition());
-    notifyStatusMessage(getHumanLabel(), "Completed with Errors");
-    return;
-  }
 
-  int neighpoints[6];
-  neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<int>(-dims[0]);
-  neighpoints[2] = static_cast<int>(-1);
-  neighpoints[3] = static_cast<int>(1);
-  neighpoints[4] = static_cast<int>(dims[0]);
-  neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-  std::vector<int> currentvlist;
+  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  neighpoints[0] = -dims[0] * dims[1];
+  neighpoints[1] = -dims[0];
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = dims[0];
+  neighpoints[5] = dims[0] * dims[1];
+  std::vector<int64_t> currentvlist;
 
-  for (int64_t iter = 0; iter < totalPoints; iter++)
+  for (size_t iter = 0; iter < totalPoints; iter++)
   {
     m_AlreadyChecked[iter] = false;
     if (m_FeatureIds[iter] != 0) { m_AlreadyChecked[iter] = true; }
   }
-  for (int64_t i = 0; i < totalPoints; i++)
+
+  for (size_t i = 0; i < totalPoints; i++)
   {
-    if(m_AlreadyChecked[i] == false && m_FeatureIds[i] == 0)
+    if (m_AlreadyChecked[i] == false && m_FeatureIds[i] == 0)
     {
-      currentvlist.push_back( static_cast<int>(i) );
+      currentvlist.push_back(static_cast<int64_t>(i));
       count = 0;
-      while(count < currentvlist.size())
+      while (count < currentvlist.size())
       {
         index = currentvlist[count];
         column = index % dims[0];
         row = (index / dims[0]) % dims[1];
         plane = index / (dims[0] * dims[1]);
-        for (DimType j = 0; j < 6; j++)
+        for (int32_t j = 0; j < 6; j++)
         {
           good = 1;
           neighbor = index + neighpoints[j];
@@ -268,17 +261,17 @@ void FillBadData::execute()
         }
         count++;
       }
-      if((int)currentvlist.size() >= m_MinAllowedDefectSize)
+      if ((int32_t)currentvlist.size() >= m_MinAllowedDefectSize)
       {
         for (size_t k = 0; k < currentvlist.size(); k++)
         {
           m_FeatureIds[currentvlist[k]] = 0;
-          if(m_StoreAsNewPhase == true) { m_CellPhases[currentvlist[k]] = maxPhase + 1; }
+          if (m_StoreAsNewPhase == true) { m_CellPhases[currentvlist[k]] = maxPhase + 1; }
         }
       }
-      if((int)currentvlist.size() < m_MinAllowedDefectSize)
+      if ((int32_t)currentvlist.size() < m_MinAllowedDefectSize)
       {
-        for (std::vector<int>::size_type k = 0; k < currentvlist.size(); k++)
+        for (std::vector<int64_t>::size_type k = 0; k < currentvlist.size(); k++)
         {
           m_FeatureIds[currentvlist[k]] = -1;
         }
@@ -287,14 +280,14 @@ void FillBadData::execute()
     }
   }
 
-  int current = 0;
-  int most = 0;
+  int32_t current = 0;
+  int32_t most = 0;
+  std::vector<int32_t> n(numfeatures + 1, 0);
 
-  std::vector<int> n(numfeatures + 1, 0);
   while (count != 0)
   {
     count = 0;
-    for (int i = 0; i < totalPoints; i++)
+    for (size_t i = 0; i < totalPoints; i++)
     {
       featurename = m_FeatureIds[i];
       if (featurename < 0)
@@ -305,10 +298,10 @@ void FillBadData::execute()
         x = static_cast<float>(i % dims[0]);
         y = static_cast<float>((i / dims[0]) % dims[1]);
         z = static_cast<float>(i / (dims[0] * dims[1]));
-        for (int j = 0; j < 6; j++)
+        for (int32_t j = 0; j < 6; j++)
         {
           good = 1;
-          neighpoint = i + neighpoints[j];
+          neighpoint = static_cast<int64_t>(i + neighpoints[j]);
           if (j == 0 && z == 0) { good = 0; }
           if (j == 5 && z == (dims[2] - 1)) { good = 0; }
           if (j == 1 && y == 0) { good = 0; }
@@ -330,7 +323,7 @@ void FillBadData::execute()
             }
           }
         }
-        for (int l = 0; l < 6; l++)
+        for (int32_t l = 0; l < 6; l++)
         {
           good = 1;
           neighpoint = i + neighpoints[l];
@@ -348,19 +341,20 @@ void FillBadData::execute()
         }
       }
     }
+
     QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
-    for (int64_t j = 0; j < totalPoints; j++)
+
+    for (size_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];
       neighbor = m_Neighbors[j];
       if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
       {
-        if(getReplaceBadData())
+        if (getReplaceBadData())
         {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            QString name = *iter;
             IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
             p->copyTuple(neighbor, j);
           }
@@ -374,7 +368,7 @@ void FillBadData::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -396,17 +390,20 @@ AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters
 const QString FillBadData::getCompiledLibraryName()
 { return Processing::ProcessingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FillBadData::getGroupName()
 { return DREAM3D::FilterGroups::ProcessingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FillBadData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FillBadData::getHumanLabel()
 { return "Fill Bad Data"; }
-

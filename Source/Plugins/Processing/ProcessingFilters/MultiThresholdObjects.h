@@ -33,25 +33,17 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _MultiThresholdObjects_H_
 #define _MultiThresholdObjects_H_
-
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "Processing/ProcessingConstants.h"
 
 /**
- * @class MultiThresholdObjects MultiThresholdObjects.h /GenericFilters/MultiThresholdObjects.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The MultiThresholdObjects class. See Filter documentation for details.
  */
 class MultiThresholdObjects : public AbstractFilter
 {
@@ -73,7 +65,7 @@ class MultiThresholdObjects : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -137,5 +129,3 @@ class MultiThresholdObjects : public AbstractFilter
 };
 
 #endif /* _MultiThresholdObjects_H_ */
-
-

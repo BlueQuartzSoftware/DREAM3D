@@ -1,11 +1,11 @@
 Initialize Data {#initializedata}
-======
+=============
 
 ## Group (Subgroup) ##
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter allows the user to define a subvolume of the dataset in which the filter will reset all data by writing *zeros (0)* into every array for every **Cell** within the subvolume.
+This Filter allows the user to define a subvolume of the dataset in which the Filter will reset all data by writing *zeros (0)* into every array for every **Cell** within the subvolume.
 
 ## Parameters ##
 | Name | Type | Description |
@@ -18,7 +18,7 @@ This filter allows the user to define a subvolume of the dataset in which the fi
 | Z Max | Integer | Maximum Z bound in voxels |
 
 ## Required Geometry ##
-Image/Rectilinear Grid
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 None
@@ -27,7 +27,6 @@ None
 None
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
