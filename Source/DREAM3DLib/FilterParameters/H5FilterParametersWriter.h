@@ -58,10 +58,15 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     DREAM3D_TYPE_MACRO_SUPER(H5FilterParametersWriter, AbstractFilterParametersWriter)
 
     /**
-    * @brief WritePipelineToFile
-    * @param filePath
-    * @return
-    */
+     * @brief WritePipelineToFile This function will write a pipeline to an HDF5 based
+     * DREAM3D file. The file path passed in <b>WILL BE OVER WRITTEN</b> by this
+     * function <b>WITHOUT WARNING</b>
+     * @param pipeline The pipeline to be written
+     * @param filePath The file path to write
+     * @param name The name of the pipeline (Typically the nameo of the file)
+     * @param obs Any observer that we can pass error/warning messages back to in case something goes wrong.
+     * @return
+     */
     static int WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs = NULL);
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, PipelineGroupId)
@@ -117,9 +122,9 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeArraySelections(const QString name, QSet<QString> v);
     virtual int writeValue(const QString name, DataContainerArrayProxy& v);
     virtual int writeValue(const QString name, const DataArrayPath& v);
-	virtual int writeValue(const QString name, const QVector<DataArrayPath>& v);
+  virtual int writeValue(const QString name, const QVector<DataArrayPath>& v);
 
-	virtual int writeValue(const QString name, const DynamicTableData& v);
+  virtual int writeValue(const QString name, const DynamicTableData& v);
 
   protected:
     H5FilterParametersWriter();

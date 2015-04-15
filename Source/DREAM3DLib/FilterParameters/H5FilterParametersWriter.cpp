@@ -80,16 +80,29 @@ int H5FilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeli
   H5FilterParametersWriter::Pointer writer = H5FilterParametersWriter::New();
 
   hid_t fileId = -1;
-  if (fileInfo.exists() == false)
+
+  fileId = QH5Utilities::createFile(filePath);
+  if (fileId < 0)
   {
-    fileId = QH5Utilities::createFile(filePath);
-  }
-  else
-  {
-    fileId = QH5Utilities::openFile(filePath);
+    if (NULL != obs)
+    {
+      PipelineMessage pm(H5FilterParametersWriter::ClassName(), "Output .dream3d file could not be created.", -1, PipelineMessage::Error);
+      obs->processPipelineMessage(pm);
+    }
+    return -1;
   }
 
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  // This will also take care of making sure all groups and file ids are closed
+  // before this method returns.
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+
+  // Write our File Version string to the Root "/" group
+  QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+  QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::DREAM3DVersion, DREAM3DLib::Version::Complete() );
+
   hid_t pipelineGroupId = QH5Utilities::createGroup(fileId, DREAM3D::StringConstants::PipelineGroupName);
+  scopedFileSentinel.addGroupId(&pipelineGroupId);
   writer->setGroupId(pipelineGroupId);
 
   FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
@@ -112,12 +125,6 @@ int H5FilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeli
       writer->closeFilterGroup();
     }
   }
-
-  // Close group
-  H5Gclose(pipelineGroupId);
-
-  // Close file
-  QH5Utilities::closeFile(fileId);
 
   return 0;
 }
