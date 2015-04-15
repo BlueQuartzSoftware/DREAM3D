@@ -36,19 +36,13 @@
 #ifndef _FindFeaturePhasesBinary_H_
 #define _FindFeaturePhasesBinary_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 /**
- *
+ * @brief The FindFeaturePhasesBinary class. See Filter documentation for details.
  */
 class  FindFeaturePhasesBinary : public AbstractFilter
 {
@@ -59,6 +53,7 @@ class  FindFeaturePhasesBinary : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindFeaturePhasesBinary, AbstractFilter)
 
     virtual ~FindFeaturePhasesBinary();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 

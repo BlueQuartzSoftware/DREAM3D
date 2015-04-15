@@ -2,7 +2,7 @@ Convert Orientations {#convertorientations}
 =======
 
 ## Group (Subgroup) ##
-Generic Filters (Crystallography)
+OrientationAnalysis Filters (Conversion)
 
 ## Description ##
 

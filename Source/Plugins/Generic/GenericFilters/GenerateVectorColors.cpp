@@ -38,21 +38,18 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/Math/OrientationMath.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "Generic/GenericConstants.h"
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
-  m_VectorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_VectorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::VectorData),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_UseGoodVoxels(false),
   m_VectorsArrayName(""),
@@ -82,9 +79,9 @@ void GenerateVectorColors::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("CellVectorColors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, getCellVectorColorsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Element Vector Colors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, getCellVectorColorsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -124,22 +121,19 @@ void GenerateVectorColors::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  if(m_VectorsArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
-    return;
-  }
+  QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> dims(1, 3);
   m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getVectorsArrayPath()); };
 
   tempPath.update(getVectorsArrayPath().getDataContainerName(), getVectorsArrayPath().getAttributeMatrixName(), getCellVectorColorsArrayName() );
   m_CellVectorColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellVectorColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to ignore it
   dims[0] = 1;
   if (getUseGoodVoxels() == true)
@@ -149,13 +143,15 @@ void GenerateVectorColors::dataCheck()
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); };
   }
   else
   {
     m_GoodVoxels = NULL;
   }
-}
 
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -175,13 +171,11 @@ void GenerateVectorColors::preflight()
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m_VectorsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_VectorsPtr.lock()->getNumberOfTuples();
 
   bool missingGoodVoxels = true;
   if (NULL != m_GoodVoxels)
@@ -194,7 +188,7 @@ void GenerateVectorColors::execute()
   //DREAM3D::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
-  for (int64_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
     index = i * 3;
     m_CellVectorColors[index] = 0;
@@ -204,30 +198,30 @@ void GenerateVectorColors::execute()
     float dir[3] = { 0.0f, 0.0f, 0.0f };
     float r = 0, g = 0, b = 0;
     DREAM3D::Rgb argb;
-    if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+    if (missingGoodVoxels == true || m_GoodVoxels[i] == true)
     {
       dir[0] = m_Vectors[index + 0];
       dir[1] = m_Vectors[index + 1];
       dir[2] = m_Vectors[index + 2];
       MatrixMath::Normalize3x1(dir);
-      if(dir[2] < 0) { MatrixMath::Multiply3x1withConstant(dir, -1); }
+      if (dir[2] < 0) { MatrixMath::Multiply3x1withConstant(dir, -1); }
       float trend = atan2f(dir[1], dir[0]) * (180.0 / DREAM3D::Constants::k_Pi);
       float plunge = acosf(dir[2]) * (180.0 / DREAM3D::Constants::k_Pi);
-      if(trend < 0.0) { trend += 360.0; }
-      if(trend <= 120.0)
+      if (trend < 0.0) { trend += 360.0; }
+      if (trend <= 120.0)
       {
         r = 255.0 * ((120.0 - trend) / 120.0);
         g = 255.0 * (trend / 120.0);
         b = 0.0;
       }
-      if(trend > 120.0 && trend <= 240.0)
+      if (trend > 120.0 && trend <= 240.0)
       {
         trend -= 120.0;
         r = 0.0;
         g = 255.0 * ((120.0 - trend) / 120.0);
         b = 255.0 * (trend / 120.0);
       }
-      if(trend > 240.0 && trend < 360.0)
+      if (trend > 240.0 && trend < 360.0)
       {
         trend -= 240.0;
         r = 255.0 * (trend / 120.0);
@@ -240,9 +234,9 @@ void GenerateVectorColors::execute()
       r += (deltaR * ((90.0 - plunge) / 90.0));
       g += (deltaG * ((90.0 - plunge) / 90.0));
       b += (deltaB * ((90.0 - plunge) / 90.0));
-      if(r > 255.0) { r = 255.0; }
-      if(g > 255.0) { g = 255.0; }
-      if(b > 255.0) { b = 255.0; }
+      if (r > 255.0) { r = 255.0; }
+      if (g > 255.0) { g = 255.0; }
+      if (b > 255.0) { b = 255.0; }
       argb = RgbColor::dRgb(r, g, b, 255);
       m_CellVectorColors[index] = RgbColor::dRed(argb);
       m_CellVectorColors[index + 1] = RgbColor::dGreen(argb);
@@ -273,13 +267,11 @@ AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterP
 const QString GenerateVectorColors::getCompiledLibraryName()
 { return Generic::GenericBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getGroupName()
 { return DREAM3D::FilterGroups::GenericFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -287,10 +279,8 @@ const QString GenerateVectorColors::getGroupName()
 const QString GenerateVectorColors::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getHumanLabel()
 { return "Generate Vector Colors"; }
-

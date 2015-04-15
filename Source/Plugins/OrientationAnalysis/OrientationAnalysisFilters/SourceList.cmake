@@ -18,6 +18,7 @@ set(_PublicFilters
   WriteStatsGenOdfAngleFile
   ReadCtfData
   ConvertHexGridToSquareGrid
+  ConvertOrientations
   EbsdToH5Ebsd
   GenerateEulerColors
   GenerateIPFColors
