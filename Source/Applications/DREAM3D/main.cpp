@@ -82,10 +82,6 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationName("BlueQuartz Software");
 
   QApplication qtapp(argc, argv);
-#if defined( Q_OS_MAC )
-  //Needed for typical Mac program behavior.
-  qtapp.setQuitOnLastWindowClosed( true );
-#endif //APPLE
 
   setlocale(LC_NUMERIC, "C");
   BrandedInitializer d3dInitializer;
