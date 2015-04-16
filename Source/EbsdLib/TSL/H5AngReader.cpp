@@ -196,7 +196,7 @@ int H5AngReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_DATA("H5AngReader", AngHeaderEntry<int>, int, NumRows, Ebsd::Ang::NRows, gid)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, OIMOperator, Ebsd::Ang::OPERATOR, gid)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, SampleID, Ebsd::Ang::SAMPLEID, gid)
-  READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, ScanID, Ebsd::Ang::SCANID, gid)
+  READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, SCANID, Ebsd::Ang::SCANID, gid)
 
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toLatin1().data(), H5P_DEFAULT);
   if (phasesGid < 0)

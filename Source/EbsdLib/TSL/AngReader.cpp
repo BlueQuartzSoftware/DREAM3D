@@ -87,7 +87,7 @@ AngReader::AngReader() :
   m_HeaderMap[Ebsd::Ang::NRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::NRows);
   m_HeaderMap[Ebsd::Ang::OPERATOR] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::OPERATOR);
   m_HeaderMap[Ebsd::Ang::SAMPLEID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SAMPLEID);
-  m_HeaderMap[Ebsd::Ang::ScanID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::ScanID);
+  m_HeaderMap[Ebsd::Ang::SCANID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SCANID);
 
 
   // Give these values some defaults
