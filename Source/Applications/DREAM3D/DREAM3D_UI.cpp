@@ -166,6 +166,7 @@ void DREAM3D_UI::on_actionNew_triggered()
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
   newInstance->setLoadedPlugins(plugins);
   newInstance->setWindowTitle("[*]UntitledPipeline - DREAM3D");
+  newInstance->move(this->x() + 45, this->y() + 45);
   newInstance->show();
 }
 
@@ -209,6 +210,7 @@ void DREAM3D_UI::on_actionOpen_triggered()
 
     // Show the new instance
     newInstance->setWindowModified(false);
+    newInstance->move(this->x() + 45, this->y() + 45);
     newInstance->show();
   }
   else
