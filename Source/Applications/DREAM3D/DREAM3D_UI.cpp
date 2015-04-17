@@ -616,7 +616,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
   actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite", 0));
   menuPipeline->addAction(actionAddFavorite);
-  QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key::Key_F);
+  QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_F);
   actionAddFavorite->setShortcut(actionAddFavKeySeq);
   connect(actionAddFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionAddFavorite_triggered() ) );
@@ -628,7 +628,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   actionAddFavoriteFolder->setObjectName(QString::fromUtf8("actionAddFavoriteFolder"));
   actionAddFavoriteFolder->setText(QApplication::translate("DREAM3D_UI", "Add Favorite Folder", 0));
   menuPipeline->addAction(actionAddFavoriteFolder);
-  QKeySequence actionAddFolderKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key::Key_F);
+  QKeySequence actionAddFolderKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_F);
   actionAddFavoriteFolder->setShortcut(actionAddFolderKeySeq);
   connect(actionAddFavoriteFolder, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionAddFavoriteFolder_triggered() ) );
@@ -641,7 +641,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   actionUpdateFavorite->setObjectName(QString::fromUtf8("actionUpdateFavorite"));
   actionUpdateFavorite->setText(QApplication::translate("DREAM3D_UI", "Update Favorite", 0));
   menuPipeline->addAction(actionUpdateFavorite);
-  QKeySequence actionUpdateFavKeySeq(Qt::CTRL + Qt::Key::Key_U);
+  QKeySequence actionUpdateFavKeySeq(Qt::CTRL + Qt::Key_U);
   actionUpdateFavorite->setShortcut(actionUpdateFavKeySeq);
   connect(actionUpdateFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionUpdateFavorite_triggered() ) );
