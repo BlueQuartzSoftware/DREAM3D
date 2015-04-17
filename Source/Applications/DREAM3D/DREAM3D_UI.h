@@ -216,6 +216,17 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_pipelineViewWidget_pipelineHasNoErrors();
     void on_pipelineViewWidget_pipelineFileDropped(QString& file);
 
+    /**
+    * @brief setFilterInputWidget
+    * @param widget
+    */
+    void setFilterInputWidget(FilterInputWidget* widget);
+
+    /**
+    * @brief clearFilterInputWidget
+    */
+    void clearFilterInputWidget();
+
 
     // Our Signals that we can emit custom for this class
   signals:

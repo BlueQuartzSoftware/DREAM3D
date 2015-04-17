@@ -42,13 +42,17 @@
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 
+#include "DREAM3DWidgetsLib/Widgets/FilterInputWidget.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-/*
-*
+/**
+* @brief The DREAM3DSplitter class is a sub-class of the QSplitter class.
 */
 class DREAM3DWidgetsLib_EXPORT DREAM3DSplitter : public QSplitter
 {
+  Q_OBJECT
+
 public:
   DREAM3DSplitter(QWidget* parent = 0);
   virtual ~DREAM3DSplitter();

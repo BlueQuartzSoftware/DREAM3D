@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1060</width>
+    <width>1104</width>
     <height>659</height>
    </rect>
   </property>
@@ -48,7 +48,7 @@ sss</string>
      <height>16777215</height>
     </size>
    </property>
-   <layout class="QGridLayout" name="widgetLayout">
+   <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -61,13 +61,13 @@ sss</string>
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item row="0" column="0">
      <widget class="DREAM3DSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="opaqueResize">
-       <bool>false</bool>
       </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -76,6 +76,9 @@ sss</string>
         </property>
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
         </property>
         <property name="bottomMargin">
          <number>0</number>
@@ -140,7 +143,7 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>642</width>
+             <width>528</width>
              <height>535</height>
             </rect>
            </property>
@@ -200,20 +203,31 @@ color: white;
         </item>
        </layout>
       </widget>
-      <widget class="FilterInputWidget" name="filterInputWidget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QFrame" name="fiwFrame">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
-       <property name="styleSheet">
-        <string notr="true">QDockWidget
-{
-  border-color: rgb(0, 0, 0);
-border: 2px solid;
-}</string>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
        </property>
+       <layout class="QVBoxLayout" name="fiwFrameVLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+       <zorder>splitter</zorder>
       </widget>
      </widget>
     </item>
@@ -224,7 +238,7 @@ border: 2px solid;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1060</width>
+     <width>1104</width>
      <height>21</height>
     </rect>
    </property>
@@ -537,12 +551,6 @@ border: 2px solid;
    <class>FilterListDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">FilterListDockWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>FilterInputWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">FilterInputWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

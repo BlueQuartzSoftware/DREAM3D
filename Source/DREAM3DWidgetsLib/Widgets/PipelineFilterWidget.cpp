@@ -96,7 +96,8 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_AdvancedInputWidget(NULL),
   m_CurrentStructureWidget(NULL),
   m_Observer(NULL),
-  m_ContextMenu(NULL)
+  m_ContextMenu(NULL),
+  m_FilterInputWidget(NULL)
 {
   initialize(AbstractFilter::NullPointer());
 }
@@ -112,9 +113,12 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
   m_BasicInputsWidget(NULL),
   m_AdvancedInputWidget(NULL),
   m_Observer(observer),
-  m_ContextMenu(new QMenu(this))
+  m_ContextMenu(new QMenu(this)),
+  m_FilterInputWidget(NULL)
 {
   initialize(filter);
+
+  setupFilterInputWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -144,6 +148,18 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
   // Layout the widgets in the parent widget
   layoutWidgets();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::setupFilterInputWidget()
+{
+  // Instantiate the filter input widget object
+  m_FilterInputWidget = new FilterInputWidget(this);
+
+  // Initialize the filter input widget with values
+  m_FilterInputWidget->displayFilterParameters(this);
 }
 
 // -----------------------------------------------------------------------------
@@ -784,6 +800,14 @@ void PipelineFilterWidget::launchHelpForItem()
 
   // Launch the dialog
   DREAM3DUserManualDialog::LaunchHelpDialog(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterInputWidget* PipelineFilterWidget::getFilterInputWidget()
+{
+  return m_FilterInputWidget;
 }
 
 

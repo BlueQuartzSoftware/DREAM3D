@@ -91,7 +91,6 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   m_AutoScroll(false),
   m_AutoScrollMargin(10),
   m_autoScrollCount(0),
-  m_InputParametersWidget(NULL),
   m_PipelineMessageObserver(NULL)
 {
   setupGui();
@@ -190,15 +189,6 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
   emit pipelineChanged();
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::setInputParametersWidget(QWidget* w)
-{
-  m_InputParametersWidget = w;
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -231,10 +221,12 @@ PipelineFilterWidget* PipelineViewWidget::filterWidgetAt(int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::resetLayout()
 {
-
   // Check to see if we have removed all the filters
   if (filterCount() <= 0)
   {
+    // Emit a signal to tell DREAM3D_UI to erase the Filter Input Widget.
+    emit noFilterWidgetsInPipeline();
+
     // Remove the current Layout
     QLayout* l = layout();
     if (NULL != l && l == m_FilterWidgetLayout)
@@ -247,7 +239,6 @@ void PipelineViewWidget::resetLayout()
     // and add the empty pipeline layout instead
     newEmptyPipelineViewLayout();
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -606,15 +597,6 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
   connect(w, SIGNAL(dragStarted(PipelineFilterWidget*)),
           this, SLOT(setFilterBeingDragged(PipelineFilterWidget*)) );
 
-  // Conditionally when the filter widget is selected, show the inputs on another widget
-  if (NULL != m_InputParametersWidget)
-  {
-    connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
-            m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
-    connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
-            m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
-  }
-
   connect(w, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
 
@@ -635,8 +617,6 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 
   // Emit that the pipeline changed
   emit pipelineChanged();
-
-
 }
 
 
@@ -748,12 +728,13 @@ void PipelineViewWidget::setFilterBeingDragged(PipelineFilterWidget* w)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setSelectedFilterWidget(PipelineFilterWidget* w)
 {
-
   if(NULL != m_SelectedFilterWidget && w != m_SelectedFilterWidget)
   {
     m_SelectedFilterWidget->setIsSelected(false);
   }
   m_SelectedFilterWidget = w;
+
+  emit filterInputWidgetChanged(w->getFilterInputWidget());
 }
 
 // -----------------------------------------------------------------------------

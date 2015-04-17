@@ -532,7 +532,6 @@ void DREAM3D_UI::setupGui()
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
-  pipelineViewWidget->setInputParametersWidget(filterInputWidget);
   pipelineViewWidget->setScrollArea(pipelineViewScrollArea);
 
   pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
@@ -569,6 +568,12 @@ void DREAM3D_UI::setupGui()
 
   connect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
+
+  connect(pipelineViewWidget, SIGNAL(filterInputWidgetChanged(FilterInputWidget*)),
+    this, SLOT(setFilterInputWidget(FilterInputWidget*)));
+
+  connect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
+    this, SLOT(clearFilterInputWidget()));
 
   pipelineViewWidget->setStatusBar(statusbar);
 
@@ -1332,7 +1337,9 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionClearPipeline_triggered()
 {
-  filterInputWidget->clearInputWidgets();
+  // Clear the filter input widget
+  clearFilterInputWidget();
+
   pipelineViewWidget->clearWidgets();
   pipelineTitle->setText("Untitled Pipeline");
   setWindowModified(true);
@@ -1444,6 +1451,36 @@ void DREAM3D_UI::setOpenedFilePath(const QString &filePath)
 void DREAM3D_UI::setOpenDialogLastDirectory(const QString &path)
 {
   m_OpenDialogLastDirectory = path;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::setFilterInputWidget(FilterInputWidget* widget)
+{
+  // Clear the filter input widget
+  clearFilterInputWidget();
+
+  // Set the widget into the frame
+  fiwFrameVLayout->addWidget(widget);
+  widget->show();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::clearFilterInputWidget()
+{
+  QLayoutItem* item = fiwFrameVLayout->takeAt(0);
+  if (item)
+  {
+    QWidget* w = item->widget();
+    if (w)
+    {
+      w->hide();
+      w->setParent(NULL);
+    }
+  }
 }
 
 

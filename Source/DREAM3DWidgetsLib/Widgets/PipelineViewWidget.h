@@ -160,12 +160,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     bool shouldAutoScroll(const QPoint& pos);
 
     /**
-     * @brief setInputParametersWidget
-     * @param w
-     */
-    void setInputParametersWidget(QWidget* w);
-
-    /**
      * @brief newEmptyPipelineViewLayout
      */
     void newEmptyPipelineViewLayout();
@@ -300,6 +294,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void pipelineIssuesCleared();
     void pipelineTitleUpdated(QString name);
     void pipelineChanged();
+
+    void filterInputWidgetChanged(FilterInputWidget* widget);
+    void noFilterWidgetsInPipeline();
 
   protected:
     void setupGui();

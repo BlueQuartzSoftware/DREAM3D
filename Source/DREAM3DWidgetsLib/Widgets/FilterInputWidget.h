@@ -47,7 +47,7 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 
-#include "ui_FilterInputWidget.h"
+#include "DREAM3DWidgetsLib/ui_FilterInputWidget.h"
 
 class PipelineFilterWidget;
 
