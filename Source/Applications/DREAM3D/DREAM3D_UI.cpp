@@ -899,9 +899,9 @@ void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 void DREAM3D_UI::pipelineFileLoaded(QString file, ExtractionType type)
 {
   QFileInfo fi(file);
-  pipelineTitle->setText(fi.fileName());
+  setWindowTitle(QString("[*]") + fi.fileName());
   setWindowFilePath(file);
-  // setWindowTitle(QString("[*] ") + fi.fileName());
+  setWindowModified(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -910,12 +910,6 @@ void DREAM3D_UI::pipelineFileLoaded(QString file, ExtractionType type)
 void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
 {
   setWindowModified(true);
-  QString title = pipelineTitle->text();
-  if(title.endsWith(" [modified]") == false)
-  {
-    title = title +  QString(" [modified]");
-    pipelineTitle->setText(title);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -923,7 +917,7 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_pipelineViewWidget_pipelineTitleUpdated(QString title)
 {
-  pipelineTitle->setText(title);
+  setWindowTitle(QString("[*]") + title);
 }
 
 // -----------------------------------------------------------------------------
@@ -948,7 +942,7 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineHasNoErrors()
 void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
 {
   QFileInfo fi(file);
-  pipelineTitle->setText(fi.fileName());
+  setWindowTitle(fi.fileName());
   setWindowFilePath(file);
   //  setWindowTitle(QString("[*] ") + fi.fileName());
   setWindowModified(false);
@@ -1347,7 +1341,7 @@ void DREAM3D_UI::on_actionClearPipeline_triggered()
   clearFilterInputWidget();
 
   pipelineViewWidget->clearWidgets();
-  pipelineTitle->setText("Untitled Pipeline");
+  setWindowTitle("[*]Untitled Pipeline");
   setWindowModified(true);
 }
 

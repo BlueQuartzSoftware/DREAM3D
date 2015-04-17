@@ -84,35 +84,6 @@ sss</string>
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="pipelineTitle">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>26</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLabel
-{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
-color: white;
-}</string>
-          </property>
-          <property name="text">
-           <string>Pipeline</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QScrollArea" name="pipelineViewScrollArea">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -143,8 +114,8 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>528</width>
-             <height>535</height>
+             <width>1011</width>
+             <height>562</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -227,7 +198,6 @@ color: white;
          <number>0</number>
         </property>
        </layout>
-       <zorder>splitter</zorder>
       </widget>
      </widget>
     </item>
