@@ -403,15 +403,18 @@ border: 2px solid;
   </action>
   <action name="actionShowIndex">
    <property name="text">
-    <string>Index</string>
+    <string>Show Index</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+M</string>
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionLicense_Information">
    <property name="text">
     <string>Show License</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actionAbout_DREAM3D">
