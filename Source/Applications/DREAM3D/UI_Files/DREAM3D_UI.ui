@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1060</width>
-    <height>674</height>
+    <height>659</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string/>
+   <string>[*]ActiveDocument.txt</string>
   </property>
   <property name="styleSheet">
    <string notr="true"> QStatusBar {
@@ -73,6 +73,9 @@ sss</string>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
          <number>1</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <property name="bottomMargin">
          <number>0</number>
@@ -138,7 +141,7 @@ color: white;
              <x>0</x>
              <y>0</y>
              <width>642</width>
-             <height>550</height>
+             <height>535</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -233,15 +236,16 @@ border: 2px solid;
      <property name="title">
       <string>Recent Files</string>
      </property>
+     <addaction name="separator"/>
      <addaction name="actionClearRecentFiles"/>
     </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
-    <addaction name="menu_RecentFiles"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
+    <addaction name="menu_RecentFiles"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -255,6 +259,13 @@ border: 2px solid;
     <addaction name="actionShow_Favorites"/>
     <addaction name="actionShow_Issues"/>
    </widget>
+   <widget class="QMenu" name="menuPipeline">
+    <property name="title">
+     <string>Pipeline</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
@@ -266,11 +277,6 @@ border: 2px solid;
     <addaction name="separator"/>
     <addaction name="actionAbout_DREAM3D"/>
     <addaction name="actionPlugin_Information"/>
-   </widget>
-   <widget class="QMenu" name="menuPipeline">
-    <property name="title">
-     <string>Pipeline</string>
-    </property>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -334,20 +340,20 @@ border: 2px solid;
     <bool>false</bool>
    </property>
   </action>
-  <action name="actionImportPipeline">
+  <action name="actionOpen">
    <property name="text">
-    <string>Import Pipeline</string>
+    <string>Open...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+I</string>
+    <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionExportPipeline">
+  <action name="actionNew">
    <property name="text">
-    <string>Export Pipeline</string>
+    <string>New...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+E</string>
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionSavePipelineAs">
@@ -374,9 +380,9 @@ border: 2px solid;
     <string>Ctrl+Shift+Backspace</string>
    </property>
   </action>
-  <action name="actionREMOVE_ME">
+  <action name="actionClearRecentFiles">
    <property name="text">
-    <string>REMOVE ME</string>
+    <string>Clear Recent Files</string>
    </property>
   </action>
   <action name="actionShow_Issues">
@@ -420,10 +426,7 @@ border: 2px solid;
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
-   </property>
-   <property name="shortcut">
-    <string>Esc</string>
+    <string>Exit DREAM3D</string>
    </property>
   </action>
   <action name="actionSaveAsNewFavorite">
@@ -485,14 +488,6 @@ border: 2px solid;
     <string>Plugin Information</string>
    </property>
   </action>
-  <action name="actionNew">
-   <property name="text">
-    <string>New...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
-  </action>
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
@@ -507,24 +502,6 @@ border: 2px solid;
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
-   </property>
-  </action>
-  <action name="actionOpen">
-   <property name="text">
-    <string>Open...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="actionClearPipeline_2">
-   <property name="text">
-    <string>Clear Pipeline</string>
-   </property>
-  </action>
-  <action name="actionClearRecentFiles">
-   <property name="text">
-    <string>Clear Recent Files</string>
    </property>
   </action>
  </widget>

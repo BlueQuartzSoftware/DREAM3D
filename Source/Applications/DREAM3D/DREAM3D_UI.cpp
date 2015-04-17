@@ -569,16 +569,8 @@ void DREAM3D_UI::setupGui()
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
 
-  // Add some key shortcuts
-  QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
-  actionImportPipeline->setShortcut(actionOpenKeySeq);
-
-  QKeySequence actionSaveKeySeq(Qt::CTRL + Qt::Key_S);
-  actionExportPipeline->setShortcut(actionSaveKeySeq);
-
   setupViewMenu();
   setupPipelineContextMenu();
-
 
   if(favoritesDockWidget)
   {
