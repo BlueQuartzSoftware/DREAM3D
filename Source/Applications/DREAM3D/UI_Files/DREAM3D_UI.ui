@@ -62,7 +62,7 @@ sss</string>
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QSplitter" name="splitter">
+     <widget class="DREAM3DSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -546,6 +546,12 @@ border: 2px solid;
    <class>IssuesDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">IssuesDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DREAM3DSplitter</class>
+   <extends>QSplitter</extends>
+   <header location="global">DREAM3DSplitter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
