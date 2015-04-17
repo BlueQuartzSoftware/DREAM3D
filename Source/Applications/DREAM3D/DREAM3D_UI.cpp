@@ -534,6 +534,10 @@ void DREAM3D_UI::setupGui()
 
   pipelineViewWidget->setScrollArea(pipelineViewScrollArea);
 
+  // Stretch Factors
+  splitter->setStretchFactor(0, 0);
+  splitter->setStretchFactor(1, 1);
+
   pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
 
   // Make the connections between the gui elements
