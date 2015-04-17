@@ -303,7 +303,11 @@ void DREAM3D_UI::on_actionSaveAs_triggered()
 // -----------------------------------------------------------------------------b
 void DREAM3D_UI::on_actionExit_triggered()
 {
+#if defined (Q_OS_WIN)
   this->close();
+#else
+  qApp->closeAllWindows();
+#endif
 }
 
 // -----------------------------------------------------------------------------
