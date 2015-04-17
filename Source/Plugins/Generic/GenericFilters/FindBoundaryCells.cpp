@@ -36,6 +36,7 @@
 
 #include "FindBoundaryCells.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -48,7 +49,6 @@ FindBoundaryCells::FindBoundaryCells() :
   AbstractFilter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_BoundaryCells(NULL)
 {
@@ -70,7 +70,7 @@ void FindBoundaryCells::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellsArrayName(), true, ""));
   setFilterParameters(parameters);
@@ -110,13 +110,13 @@ void FindBoundaryCells::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getBoundaryCellsArrayName() );
-  m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -149,7 +149,7 @@ void FindBoundaryCells::execute()
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0};
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
@@ -157,7 +157,7 @@ void FindBoundaryCells::execute()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  int32_t feature;
+  int32_t feature = 0;
   int32_t onsurf = 0;
   int32_t good = 0;
   int64_t neighbor = 0;

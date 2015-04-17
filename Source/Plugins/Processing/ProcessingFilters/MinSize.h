@@ -37,23 +37,12 @@
 #ifndef _MinSize_H_
 #define _MinSize_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
-#include "Processing/ProcessingConstants.h"
 
 /**
- * @class MinSize MinSize.h Processing/ProcessingFilters/MinSize.h
- * @brief This filter ensures each Feature or Region has a minimum number of voxels.
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The MinSize class. See Filter documentation for details.
  */
 class MinSize : public AbstractFilter
 {
@@ -65,12 +54,14 @@ class MinSize : public AbstractFilter
 
     virtual ~MinSize();
 
-    DREAM3D_FILTER_PARAMETER(int, MinAllowedFeatureSize)
-    Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
+    DREAM3D_FILTER_PARAMETER(int32_t, MinAllowedFeatureSize)
+    Q_PROPERTY(int32_t MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
+
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
-    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
-    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+
+    DREAM3D_FILTER_PARAMETER(int32_t, PhaseNumber)
+    Q_PROPERTY(int32_t PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -84,7 +75,7 @@ class MinSize : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -112,19 +103,16 @@ class MinSize : public AbstractFilter
   protected:
     MinSize();
 
+    virtual QVector<bool> remove_smallfeatures();
+    virtual void assign_badpoints();
+
+  private:
     int32_t* m_Neighbors;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
 
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
-
-    virtual QVector<bool> remove_smallfeatures();
-    virtual void assign_badpoints();
-
-  private:
     void dataCheck();
 
     MinSize(const MinSize&); // Copy Constructor Not Implemented
@@ -132,6 +120,3 @@ class MinSize : public AbstractFilter
 };
 
 #endif /* MinSize_H_ */
-
-
-

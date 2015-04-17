@@ -240,7 +240,7 @@ void QuiltCellData::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-float quiltData(IDataArray::Pointer inputData, int xc, int yc, int zc, IntVec3_t pSize, int xDim, int yDim, int zDim)
+float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3_t pSize, size_t xDim, size_t yDim, size_t zDim)
 {
   float value = 0.0;
   DataArray<T>* cellArray = DataArray<T>::SafePointerDownCast(inputData.get());
@@ -251,19 +251,46 @@ float quiltData(IDataArray::Pointer inputData, int xc, int yc, int zc, IntVec3_t
 
   T* cPtr = cellArray->getPointer(0);
 
-  int zStride, yStride;
+  int64_t zStride = 0, yStride = 0;
   float count = 0;
-  for(int k = -(pSize.z / 2); k < (pSize.z / 2); k++)
+
+  int xRangeMin = -floorf((float)pSize.x / 2.0f);
+  int xRangeMax = floorf((float)pSize.x / 2.0f);
+  int yRangeMin = -floorf((float)pSize.y / 2.0f);
+  int yRangeMax = floorf((float)pSize.y / 2.0f);
+  int zRangeMin = -floorf((float)pSize.z / 2.0f);
+  int zRangeMax = floorf((float)pSize.z / 2.0f);
+
+  if (pSize.x == 1)
+  {
+    xRangeMin = 0;
+    xRangeMax = 1;
+  }
+
+  if (pSize.y == 1)
+  {
+    yRangeMin = 0;
+    yRangeMax = 1;
+  }
+
+
+  if (pSize.z == 1)
+  {
+    zRangeMin = 0;
+    zRangeMax = 1;
+  }
+
+  for(int k = zRangeMin; k < zRangeMax; k++)
   {
     if((zc + k) >= 0 && (zc + k) < zDim)
     {
       zStride = ((zc + k) * xDim * yDim);
-      for(int j = -(pSize.y / 2); j < (pSize.y / 2); j++)
+      for(int j = yRangeMin; j < yRangeMax; j++)
       {
         if((yc + j) >= 0 && (yc + j) < yDim)
         {
           yStride = ((yc + j) * xDim);
-          for(int i = -(pSize.x / 2); i < (pSize.x / 2); i++)
+          for(int i = xRangeMin; i < xRangeMax; i++)
           {
             if((xc + i) >= 0 && (xc + i) < xDim)
             {
@@ -275,7 +302,14 @@ float quiltData(IDataArray::Pointer inputData, int xc, int yc, int zc, IntVec3_t
       }
     }
   }
-  value /= count;
+  if (count == 0)
+  {
+    value = 0;
+  }
+  else
+  {
+    value /= count;
+  }
   return value;
 }
 
@@ -308,19 +342,20 @@ void QuiltCellData::execute()
 
   QString dType = inputData->getTypeAsString();
 
-  int zStride, yStride;
-  int xc, yc, zc;
-  for(int k = 0; k < dc2Dims[2]; k++)
+  int64_t zStride = 0, yStride = 0;
+  int64_t xc = 0, yc = 0, zc = 0;
+  for(int64_t k = 0; k < dc2Dims[2]; k++)
   {
     zStride = (k * dc2Dims[0] * dc2Dims[1]);
-    for(int j = 0; j < dc2Dims[1]; j++)
+    for(int64_t j = 0; j < dc2Dims[1]; j++)
     {
       yStride = (j * dc2Dims[0]);
-      for(int i = 0; i < dc2Dims[0]; i++)
+      for(int64_t i = 0; i < dc2Dims[0]; i++)
       {
         xc = i * m_QuiltStep.x + m_QuiltStep.x / 2;
         yc = j * m_QuiltStep.y + m_QuiltStep.y / 2;
-        zc = k * m_QuiltStep.z + m_QuiltStep.z / 2;
+        //zc = k * m_QuiltStep.z + m_QuiltStep.z / 2;
+        zc = 0;
         if (dType.compare("int8_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<int8_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);

@@ -33,12 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _FindFeaturePhases_H_
 #define _FindFeaturePhases_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**

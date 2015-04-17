@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,44 +33,50 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _RotateEulerRefFrame_H_
-#define _RotateEulerRefFrame_H_
+
+#ifndef _BadDataNeighborOrientationCheck_H_
+#define _BadDataNeighborOrientationCheck_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "Processing/ProcessingConstants.h"
+#include "OrientationLib/OrientationOps/OrientationOps.h"
 
 /**
- * @class RotateEulerRefFrame RotateEulerRefFrame.h DREAM3DLib/GenericFilters/RotateEulerRefFrame.h
- * @brief This filter will convert the Euler Angles. Simply enter the conversion
- * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
- * to Degrees use 57.2957785
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 26, 2012
- * @version 1.0
+ * @brief The BadDataNeighborOrientationCheck class. See Filter documentation for details.
  */
-class RotateEulerRefFrame : public AbstractFilter
+class BadDataNeighborOrientationCheck : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RotateEulerRefFrame)
-    DREAM3D_STATIC_NEW_MACRO(RotateEulerRefFrame)
-    DREAM3D_TYPE_MACRO_SUPER(RotateEulerRefFrame, AbstractFilter)
-    virtual ~RotateEulerRefFrame();
+    DREAM3D_SHARED_POINTERS(BadDataNeighborOrientationCheck)
+    DREAM3D_STATIC_NEW_MACRO(BadDataNeighborOrientationCheck)
+    DREAM3D_TYPE_MACRO_SUPER(BadDataNeighborOrientationCheck, AbstractFilter)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
-    Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
-    DREAM3D_FILTER_PARAMETER(float, RotationAngle)
-    Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
+    virtual ~BadDataNeighborOrientationCheck();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
+    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+
+    DREAM3D_FILTER_PARAMETER(int32_t, NumberOfNeighbors)
+    Q_PROPERTY(int32_t NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -86,11 +92,8 @@ class RotateEulerRefFrame : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-    virtual void preflight();
     virtual void execute();
+    virtual void preflight();
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -99,17 +102,20 @@ class RotateEulerRefFrame : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    RotateEulerRefFrame();
+    BadDataNeighborOrientationCheck();
+
+  private:
+    QVector<OrientationOps::Pointer> m_OrientationOps;
+
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
     void dataCheck();
 
-  private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-
-    RotateEulerRefFrame(const RotateEulerRefFrame&); // Copy Constructor Not Implemented
-    void operator=(const RotateEulerRefFrame&); // Operator '=' Not Implemented
+    BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&); // Copy Constructor Not Implemented
+    void operator=(const BadDataNeighborOrientationCheck&); // Operator '=' Not Implemented
 };
 
-#endif /* RotateEulerRefFrame_H_ */
-
-
+#endif /* BadDataNeighborOrientationCheck_H_ */

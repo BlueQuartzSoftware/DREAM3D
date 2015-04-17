@@ -13,6 +13,8 @@ START_FILTER_GROUP(${OrientationAnalysis_BINARY_DIR} "${_filterGroupName}" "Orie
 #---------
 # List your public filters here
 set(_PublicFilters
+  BadDataNeighborOrientationCheck
+  ConvertEulerAngles
   WritePoleFigure
   WriteIPFStandardTriangle
   WriteStatsGenOdfAngleFile
@@ -30,7 +32,7 @@ set(_PublicFilters
   ReadAngData
   ReadMicData
   ReadEdaxH5Data
-
+  RotateEulerRefFrame
 )
 
 

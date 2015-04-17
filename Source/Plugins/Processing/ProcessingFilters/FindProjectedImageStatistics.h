@@ -37,23 +37,12 @@
 #ifndef _FindProjectedImageStatistics_H_
 #define _FindProjectedImageStatistics_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "Processing/ProcessingConstants.h"
-
 /**
- * @class FindProjectedImageStatistics FindProjectedImageStatistics.h DREAM3DLib/GenericFilters/FindProjectedImageStatistics.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindProjectedImageStatistics class. See Filter documentation for details.
  */
 class FindProjectedImageStatistics : public AbstractFilter
 {
@@ -68,8 +57,8 @@ class FindProjectedImageStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
     Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
-    Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
+    DREAM3D_FILTER_PARAMETER(uint32_t, Plane)
+    Q_PROPERTY(uint32_t Plane READ getPlane WRITE setPlane)
 
     DREAM3D_FILTER_PARAMETER(QString, ProjectedImageMinArrayName)
     Q_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
@@ -132,6 +121,8 @@ class FindProjectedImageStatistics : public AbstractFilter
     void find_crosssections();
 
   private:
+    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InData)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageMin)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageMax)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageAvg)
@@ -145,8 +136,3 @@ class FindProjectedImageStatistics : public AbstractFilter
 };
 
 #endif /* FindProjectedImageStatistics_H_ */
-
-
-
-
-

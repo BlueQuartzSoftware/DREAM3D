@@ -38,25 +38,12 @@
 #ifndef _RemoveFlaggedFeatures_H_
 #define _RemoveFlaggedFeatures_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-//
-#include "Processing/ProcessingConstants.h"
-
 /**
- * @class RemoveFlaggedFeatures RemoveFlaggedFeatures.h Processing/ProcessingFilters/RemoveFlaggedFeatures.h
- * @brief This filter ensures each Feature or Region has a minimum number of voxels.
- * @author
- * @date Jun 26, 2014
- * @version 5.0
+ * @brief The RemoveFlaggedFeatures class. See Filter documentation for details.
  */
 class RemoveFlaggedFeatures : public AbstractFilter
 {
@@ -77,7 +64,7 @@ class RemoveFlaggedFeatures : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -121,6 +108,3 @@ class RemoveFlaggedFeatures : public AbstractFilter
 };
 
 #endif /* RemoveFlaggedFeatures_H_ */
-
-
-
