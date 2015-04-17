@@ -85,7 +85,13 @@ void DREAM3DUserManualDialog::LaunchHelpDialog(QUrl url)
 {
   DREAM3DUserManualDialog* dialog = DREAM3DUserManualDialog::Instance();
   dialog->webView->load(url);
-  dialog->show();
+
+  if (dialog->isVisible() == false)
+  {
+    dialog->show();
+  }
+
+  dialog->activateWindow();
 }
 
 // -----------------------------------------------------------------------------
