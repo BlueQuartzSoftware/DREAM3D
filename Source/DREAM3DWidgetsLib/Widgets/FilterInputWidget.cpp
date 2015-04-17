@@ -214,17 +214,11 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   // If we do NOT have any advanced Parameters then disable the Advanced tab
   if(showAdv == false)
   {
-    if (tabWidget->widget(ADVANCED_TAB) != NULL)
-    {
-      tabWidget->widget(ADVANCED_TAB)->setDisabled(true);
-    }
+    tabWidget->setTabEnabled(ADVANCED_TAB, false);
   }
   else
   {
-    if (tabWidget->widget(ADVANCED_TAB) != NULL)
-    {
-      tabWidget->widget(ADVANCED_TAB)->setDisabled(false);
-    }
+    tabWidget->setTabEnabled(ADVANCED_TAB, true);
   }
 
   w->getBasicInputsWidget()->setVisible(true);
