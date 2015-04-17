@@ -49,7 +49,6 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtGui/QCloseEvent>
-#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QListWidget>
 #include <QtGui/QDesktopServices>
 #include <QtWidgets/QToolButton>
@@ -315,7 +314,14 @@ void DREAM3D_UI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::closeEvent(QCloseEvent* event)
 {
-  checkDirtyDocument();
+  QMessageBox::StandardButton choice = checkDirtyDocument();
+
+  if (choice == QMessageBox::Cancel)
+  {
+    event->ignore();
+    return;
+  }
+
   writeSettings();
   on_actionClearPipeline_triggered();
   event->accept();
@@ -1040,7 +1046,7 @@ void DREAM3D_UI::dropEvent(QDropEvent* e)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-qint32 DREAM3D_UI::checkDirtyDocument()
+QMessageBox::StandardButton DREAM3D_UI::checkDirtyDocument()
 {
   qint32 err = -1;
 
@@ -1054,22 +1060,19 @@ qint32 DREAM3D_UI::checkDirtyDocument()
     if (r == QMessageBox::Save)
     {
       on_actionSave_triggered();
+      return QMessageBox::Save;
     }
     else if (r == QMessageBox::Discard)
     {
-      err = 1;
+      return QMessageBox::Discard;
     }
     else if (r == QMessageBox::Cancel)
     {
-      err = -1;
+      return QMessageBox::Cancel;
     }
   }
-  else
-  {
-    err = 1;
-  }
-
-  return err;
+  
+  return QMessageBox::Ignore;
 }
 
 // -----------------------------------------------------------------------------

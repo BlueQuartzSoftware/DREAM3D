@@ -47,6 +47,7 @@
 #include <QtCore/QSettings>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QResizeEvent>
 #include <QtWidgets/QToolBar>
 
@@ -301,9 +302,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     /**
      * @brief Checks the currently open file for changes that need to be saved
-     * @return
+     * @return QMessageBox::StandardButton
      */
-    qint32 checkDirtyDocument();
+    QMessageBox::StandardButton checkDirtyDocument();
 
     /**
      * @brief Over ride the resize event
