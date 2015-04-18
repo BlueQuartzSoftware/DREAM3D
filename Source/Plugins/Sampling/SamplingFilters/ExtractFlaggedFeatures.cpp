@@ -180,7 +180,7 @@ void ExtractFlaggedFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Minimum Size Filter Complete");
+  notifyStatusMessage(getHumanLabel(), "Extract Flagged Features Filter Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -19,6 +19,7 @@ set(_PublicFilters
   FindAvgScalarValueForFeatures
   FindBoundaryStrengths
   FindCAxisLocations
+  FindCoherentTwinNormals
   FindDirectionalModuli
   FindEllipsoidError
   FindEuclideanDistMap
