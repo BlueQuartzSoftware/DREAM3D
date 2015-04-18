@@ -44,7 +44,7 @@
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @brief The ErodeDilateBadData class. See Filter documentation for details.
+ * @brief The ErodeDilateBadData class. See [Filter documentation](@ref erodedilatebaddata) for details.
  */
 class ErodeDilateBadData : public AbstractFilter
 {

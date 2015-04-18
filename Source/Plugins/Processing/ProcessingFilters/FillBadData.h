@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FillBadData class. See Filter documentation for details.
+ * @brief The FillBadData class. See [Filter documentation](@ref fillbaddata) for details.
  */
 class FillBadData : public AbstractFilter
 {

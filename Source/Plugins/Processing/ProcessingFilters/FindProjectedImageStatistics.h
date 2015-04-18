@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindProjectedImageStatistics class. See Filter documentation for details.
+ * @brief The FindProjectedImageStatistics class. See [Filter documentation](@ref findprojectedimagestatistics) for details.
  */
 class FindProjectedImageStatistics : public AbstractFilter
 {
@@ -118,7 +118,6 @@ class FindProjectedImageStatistics : public AbstractFilter
 
   protected:
     FindProjectedImageStatistics();
-    void find_crosssections();
 
   private:
     DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InData)

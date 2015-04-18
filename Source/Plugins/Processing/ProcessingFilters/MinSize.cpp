@@ -78,7 +78,7 @@ void MinSize::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
+  parameters.push_back(FilterParameter::New("Phase Number On Which To Run Min Size Filter", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
@@ -127,6 +127,13 @@ void MinSize::dataCheck()
 
   QVector<DataArrayPath> dataArrayPaths;
 
+  if (getMinAllowedFeatureSize() < 0)
+  {
+    QString ss = QObject::tr("The minimum Feature size (%1) must be 0 or positive.").arg(getMinAllowedFeatureSize());
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
@@ -171,6 +178,34 @@ void MinSize::execute()
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+
+  // If running on a single phase, validate that the user has not entered a phase number
+  // that is not in the system ; the filter would not crash otherwise, but the user should
+  // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
+  // we don't have acces to the data yet
+  if (m_ApplyToSinglePhase == true)
+  {
+    AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
+    size_t numFeatures = featAttrMat->getNumTuples();
+    bool unavailablePhase = true;
+
+    for (size_t i = 0; i < numFeatures; i++)
+    {
+      if (m_FeaturePhases[i] == m_PhaseNumber)
+      {
+        unavailablePhase = false;
+        break;
+      }
+    }
+
+    if (unavailablePhase == true)
+    {
+      QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
+      setErrorCondition(-5555);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
 
   QVector<bool> activeObjects = remove_smallfeatures();
   if(getErrorCondition() < 0) { return; }
@@ -342,7 +377,7 @@ QVector<bool> MinSize::remove_smallfeatures()
   if (good == false)
   {
     setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "The minimum size is larger than the largest Feature.  All Features would be removed.  The filter has quit.", -1);
+    notifyErrorMessage(getHumanLabel(), "The minimum size is larger than the largest Feature.  All Features would be removed", -1);
     return activeObjects;
   }
   for (size_t i = 0; i < totalPoints; i++)

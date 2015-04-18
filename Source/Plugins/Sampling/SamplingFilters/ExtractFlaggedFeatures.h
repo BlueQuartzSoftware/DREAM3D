@@ -37,25 +37,12 @@
 #ifndef _ExtractFlaggedFeatures_H_
 #define _ExtractFlaggedFeatures_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-//
-#include "Sampling/SamplingConstants.h"
 
 /**
- * @class ExtractFlaggedFeatures ExtractFlaggedFeatures.h Sampling/SamplingFilters/ExtractFlaggedFeatures.h
- * @brief This filter ensures each Feature or Region has a minimum number of voxels.
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The ExtractFlaggedFeatures class. See [Filter documentation](@ref extractflaggedfeatures) for details.
  */
 class ExtractFlaggedFeatures : public AbstractFilter
 {
@@ -104,15 +91,18 @@ class ExtractFlaggedFeatures : public AbstractFilter
   protected:
     ExtractFlaggedFeatures();
 
+    /**
+     * @brief find_feature_bounds Determines the bounding box for each Feature. The bounding box determines the Feature cropping.
+     */
+    void find_feature_bounds();
+
+  private:
     Int32ArrayType::Pointer boundsPtr;
     int32_t* m_FeatureBounds;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
 
-    virtual void find_feature_bounds();
-
-  private:
     void dataCheck();
 
     ExtractFlaggedFeatures(const ExtractFlaggedFeatures&); // Copy Constructor Not Implemented
@@ -120,6 +110,3 @@ class ExtractFlaggedFeatures : public AbstractFilter
 };
 
 #endif /* ExtractFlaggedFeatures_H_ */
-
-
-

@@ -44,7 +44,7 @@
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @brief The IdentifySample class. See Filter documentation for details.
+ * @brief The IdentifySample class. See [Filter documentation](@ref identifysample) for details.
  */
 class IdentifySample : public AbstractFilter
 {

@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ErodeDilateMask class. See Filter documentation for details.
+ * @brief The ErodeDilateMask class. See [Filter documentation](@ref erodedilatemask) for details.
  */
 class ErodeDilateMask : public AbstractFilter
 {

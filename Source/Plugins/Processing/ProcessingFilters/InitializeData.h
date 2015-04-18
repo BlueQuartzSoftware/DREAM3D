@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The InitializeData class. See Filter documentation for details.
+ * @brief The InitializeData class. See [Filter documentation](@ref initializedata) for details.
  */
 class InitializeData : public AbstractFilter
 {

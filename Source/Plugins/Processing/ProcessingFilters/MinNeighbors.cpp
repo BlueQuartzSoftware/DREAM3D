@@ -78,7 +78,7 @@ void MinNeighbors::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
+  parameters.push_back(FilterParameter::New("Phase Number On Which To Run Min Neighbors Filter", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
@@ -127,6 +127,13 @@ void MinNeighbors::dataCheck()
 
   QVector<DataArrayPath> dataArrayPaths;
 
+  if (getMinNumNeighbors() < 0)
+  {
+    QString ss = QObject::tr("The minimum number of neighbors (%1) must be 0 or positive.").arg(getMinNumNeighbors());
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
@@ -139,7 +146,7 @@ void MinNeighbors::dataCheck()
   { m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getNumNeighborsArrayPath()); }
 
-  if(m_ApplyToSinglePhase == true)
+  if (getApplyToSinglePhase() == true)
   {
     m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -171,6 +178,34 @@ void MinNeighbors::execute()
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+
+  // If running on a single phase, validate that the user has not entered a phase number
+  // that is not in the system ; the filter would not crash otherwise, but the user should
+  // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
+  // we don't have acces to the data yet
+  if (m_ApplyToSinglePhase == true)
+  {
+    AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
+    size_t numFeatures = featAttrMat->getNumTuples();
+    bool unavailablePhase = true;
+
+    for (size_t i = 0; i < numFeatures; i++)
+    {
+      if (m_FeaturePhases[i] == m_PhaseNumber)
+      {
+        unavailablePhase = false;
+        break;
+      }
+    }
+
+    if (unavailablePhase == true)
+    {
+      QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
+      setErrorCondition(-5555);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
 
   QVector<bool> activeObjects = merge_containedfeatures();
   if(getErrorCondition() < 0) { return; }
@@ -343,7 +378,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
   if (good == false)
   {
     setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed.  The filter has quit.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed", getErrorCondition());
     return activeObjects;
   }
   for (size_t i = 0; i < totalPoints; i++)

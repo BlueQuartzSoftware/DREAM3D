@@ -50,6 +50,10 @@
 
 #include "Processing/ProcessingConstants.h"
 
+/**
+ * @brief The CalcProjectedStatsImpl class implements a templated threaded algorithm for
+ * determining the projected image statistics of a given volume.
+ */
 template<typename T>
 class CalcProjectedStatsImpl
 {
@@ -219,17 +223,9 @@ int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
-  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-
-  if(image->getXPoints() <= 1 && image->getYPoints() <= 1 && image->getZPoints() <= 1)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The Image Geometry is not 3D and cannot be run through this filter", getErrorCondition());
-  }
+  DataArrayPath tempPath;
 
   m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
   if( NULL != m_InDataPtr.lock())
@@ -267,6 +263,15 @@ void FindProjectedImageStatistics::dataCheck()
   m_ProjectedImageVarPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
+  if(image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage(getHumanLabel(), "The Image Geometry is not 3D and cannot be run through this Filter", getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------

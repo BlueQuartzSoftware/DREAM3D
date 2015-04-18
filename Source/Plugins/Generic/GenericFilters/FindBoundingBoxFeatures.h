@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindBoundingBoxFeatures class. See Filter documentation for details.
+ * @brief The FindBoundingBoxFeatures class. See [Filter documentation](@ref findboundingboxfeatures) for details.
  */
 class  FindBoundingBoxFeatures : public AbstractFilter
 {
@@ -113,7 +113,14 @@ class  FindBoundingBoxFeatures : public AbstractFilter
 
     void dataCheck();
 
+    /**
+     * @brief find_boundingboxfeatures Determines which Features are biased by the outer surface of a 3D volume.
+     */
     void find_boundingboxfeatures();
+
+    /**
+     * @brief find_boundingboxfeatures2D Determines which Features are biased by the outer surface of a 2D area.
+     */
     void find_boundingboxfeatures2D();
 
     FindBoundingBoxFeatures(const FindBoundingBoxFeatures&); // Copy Constructor Not Implemented

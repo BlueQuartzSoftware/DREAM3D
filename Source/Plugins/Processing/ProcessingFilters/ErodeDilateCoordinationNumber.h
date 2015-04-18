@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ErodeDilateCoordinationNumber class. See Filter documentation for details.
+ * @brief The ErodeDilateCoordinationNumber class. See [Filter documentation](@ref erodedilatecoordinationnumber) for details.
  */
 class ErodeDilateCoordinationNumber : public AbstractFilter
 {

@@ -134,8 +134,9 @@ void ErodeDilateMask::dataCheck()
 
   if (getNumIterations() <= 0)
   {
+    QString ss = QObject::tr("The number of iterations (%1) must be positive").arg(getNumIterations());
     setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), "The number of iterations must be positive.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> cDims(1, 1);

@@ -44,7 +44,7 @@
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @brief The MinNeighbors class. See Filter documentation for details.
+ * @brief The MinNeighbors class. See [Filter documentation](@ref minneighbors) for details.
  */
 class MinNeighbors : public AbstractFilter
 {
@@ -101,7 +101,18 @@ class MinNeighbors : public AbstractFilter
   protected:
     MinNeighbors();
 
+    /**
+     * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any Features
+     * that do not have the required number of neighbors.  The coarsening is intended to fill gaps left by the
+     * removed Features and proceeds via an isotropic growth process.
+     */
     void assign_badpoints();
+
+    /**
+     * @brief merge_containedfeatures Assigns a boolean value to Features dependent upon whether they meet
+     * the supplied criterion for the minimum number of neighbors.
+     * @return QVector<bool> A vector of boolean values whose length is the number of Features.
+     */
     QVector<bool> merge_containedfeatures();
 
   private:

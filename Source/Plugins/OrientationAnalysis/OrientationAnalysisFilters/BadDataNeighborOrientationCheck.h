@@ -43,7 +43,7 @@
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 /**
- * @brief The BadDataNeighborOrientationCheck class. See Filter documentation for details.
+ * @brief The BadDataNeighborOrientationCheck class. See [Filter documentation](@ref baddataneighbororientationcheck) for details.
  */
 class BadDataNeighborOrientationCheck : public AbstractFilter
 {

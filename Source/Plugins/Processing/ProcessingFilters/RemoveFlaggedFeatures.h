@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The RemoveFlaggedFeatures class. See Filter documentation for details.
+ * @brief The RemoveFlaggedFeatures class. See [Filter documentation](@ref removeflaggedfeatures) for details.
  */
 class RemoveFlaggedFeatures : public AbstractFilter
 {
@@ -92,15 +92,25 @@ class RemoveFlaggedFeatures : public AbstractFilter
   protected:
     RemoveFlaggedFeatures();
 
+    /**
+     * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any flagged Features.
+     * The coarsening is intended to fill gaps left by the removed Features and proceeds via an isotropic growth process.
+     */
+    void assign_badpoints();
+
+    /**
+     * @brief remove_flaggedfeatures Assigns a boolean value to Features dependent upon whether they meet
+     * the supplied criterion for the minimum size.
+     * @return QVector<bool> A vector of boolean values whose length is the number of Features.
+     */
+    QVector<bool> remove_flaggedfeatures();
+
+  private:
     int32_t* m_Neighbors;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
 
-    virtual QVector<bool> remove_flaggedfeatures();
-    virtual void assign_badpoints();
-
-  private:
     void dataCheck();
 
     RemoveFlaggedFeatures(const RemoveFlaggedFeatures&); // Copy Constructor Not Implemented

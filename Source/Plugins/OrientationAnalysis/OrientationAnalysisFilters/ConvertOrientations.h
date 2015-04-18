@@ -44,7 +44,7 @@
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 /**
- * @brief The ConvertOrientations class. See Filter documentation for details.
+ * @brief The ConvertOrientations class. See [Filter documentation](@ref convertorientations) for details.
  */
 class  ConvertOrientations : public AbstractFilter
 {

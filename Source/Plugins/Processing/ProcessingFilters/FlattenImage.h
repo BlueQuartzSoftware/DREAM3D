@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FlattenImage class. See Filter documentation for details.
+ * @brief The FlattenImage class. See [Filter documentation](@ref flattenimage) for details.
  */
 class FlattenImage : public AbstractFilter
 {

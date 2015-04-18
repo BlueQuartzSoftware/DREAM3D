@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindRelativeMotionBetweenSlices class. See Filter documentation for details.
+ * @brief The FindRelativeMotionBetweenSlices class. See [Filter documentation](@ref findrelativemotionbetweenslices) for details.
  */
 class FindRelativeMotionBetweenSlices : public AbstractFilter
 {
@@ -121,7 +121,6 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
 
   protected:
     FindRelativeMotionBetweenSlices();
-    void find_crosssections();
 
   private:
     DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InData)
