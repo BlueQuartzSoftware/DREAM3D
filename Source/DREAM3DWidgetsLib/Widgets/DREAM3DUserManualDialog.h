@@ -81,6 +81,7 @@ protected slots:
   void on_backBtn_pressed();
   void on_forwardBtn_pressed();
   void on_refreshBtn_pressed();
+  void on_webView_loadFinished(bool ok);
 
 private:
   static DREAM3DUserManualDialog* self;

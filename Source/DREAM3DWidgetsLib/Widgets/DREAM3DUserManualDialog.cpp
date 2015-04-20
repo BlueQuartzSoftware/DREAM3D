@@ -42,6 +42,9 @@
 
 #include <QtWidgets/QMessageBox>
 
+#include <QWebHistory>
+#include <QWebHistoryItem>
+
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -143,6 +146,34 @@ void DREAM3DUserManualDialog::on_forwardBtn_pressed()
 void DREAM3DUserManualDialog::on_refreshBtn_pressed()
 {
   webView->reload();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUserManualDialog::on_webView_loadFinished(bool ok)
+{
+  QWebHistory* history = webView->history();
+
+  // Check forwards navigation
+  if (history->canGoForward() == false)
+  {
+    forwardBtn->setDisabled(true);
+  }
+  else
+  {
+    forwardBtn->setEnabled(true);
+  }
+
+  // Check backwards navigation
+  if (history->canGoBack() == false || history->backItem().url().toDisplayString() == "about:blank")
+  {
+    backBtn->setDisabled(true);
+  }
+  else
+  {
+    backBtn->setEnabled(true);
+  }
 }
 
 
