@@ -55,7 +55,6 @@ class MultiThresholdObjects : public AbstractFilter
 
     virtual ~MultiThresholdObjects();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, DestinationArrayName)
     Q_PROPERTY(QString DestinationArrayName READ getDestinationArrayName WRITE setDestinationArrayName)
 

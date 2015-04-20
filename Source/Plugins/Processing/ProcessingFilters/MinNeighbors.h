@@ -56,14 +56,14 @@ class MinNeighbors : public AbstractFilter
 
     virtual ~MinNeighbors();
 
-    DREAM3D_FILTER_PARAMETER(int32_t, MinNumNeighbors)
-    Q_PROPERTY(int32_t MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
+    DREAM3D_FILTER_PARAMETER(int, MinNumNeighbors)
+    Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
 
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, PhaseNumber)
-    Q_PROPERTY(int32_t PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

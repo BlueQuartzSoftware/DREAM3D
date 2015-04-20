@@ -54,14 +54,14 @@ class MinSize : public AbstractFilter
 
     virtual ~MinSize();
 
-    DREAM3D_FILTER_PARAMETER(int32_t, MinAllowedFeatureSize)
-    Q_PROPERTY(int32_t MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
+    DREAM3D_FILTER_PARAMETER(int, MinAllowedFeatureSize)
+    Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
 
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, PhaseNumber)
-    Q_PROPERTY(int32_t PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

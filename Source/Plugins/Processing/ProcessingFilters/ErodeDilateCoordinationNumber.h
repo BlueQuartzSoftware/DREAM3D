@@ -57,8 +57,8 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, Loop)
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, CoordinationNumber)
-    Q_PROPERTY(int32_t CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
+    DREAM3D_FILTER_PARAMETER(int, CoordinationNumber)
+    Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
