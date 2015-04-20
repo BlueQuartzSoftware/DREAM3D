@@ -58,7 +58,10 @@ bool HoverButton::event(QEvent *event)
 {
   if (event->type() == QEvent::HoverEnter)
   {
-    setFlat(false);
+    if (isEnabled())
+    {
+      setFlat(false);
+    }
   }
 
   if (event->type() == QEvent::HoverLeave)
