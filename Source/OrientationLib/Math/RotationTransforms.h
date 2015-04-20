@@ -1,3 +1,36 @@
+/* ============================================================================
+ * Copyright (c) 2015 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Jackson, BlueQuartz Software nor the names of
+ * its contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ *
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                 FA8650-07-D-5800 & FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _RotationTransforms_H_
 #define _RotationTransforms_H_
 
@@ -21,12 +54,11 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-// The C++ Math include MUST be after the above "DREAM3DMath.h" include.
-//#include <cmath>
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Math/RotArray.hpp"
+
 
 /* This comment block is commented as Markdown. if you paste this into a text
  * editor then render it with a Markdown aware system a nice table should show
@@ -68,7 +100,7 @@
 
 
 namespace LambertParametersType {
-  double Pi=3.1415926535897930;     // pi
+  double Pi=M_PI;     // pi
   double iPi=0.3183098861837910 ;   // 1/pi
   double sPi=1.7724538509055160 ;   // sqrt(pi)
   double sPio2=1.2533141373155000;  // sqrt(pi/2)
@@ -127,11 +159,9 @@ namespace Rotations {
   }
 }
 
+
+// Add some shorten namespace alias
 namespace RConst = Rotations::Constants;
-
-#define ROT_SCALAR_VECTOR 0
-#define ROT_VECTOR_SCALAR 1
-
 namespace DConst = DREAM3D::Constants;
 
 
@@ -332,15 +362,15 @@ class OrientationLib_EXPORT RotationTransforms
       ResultType res;
       res.result = 1;
 
-      if ((eu[0] < 0.0) || (eu[0] > (2.0*M_PI))) {
+      if ((eu[0] < 0.0) || (eu[0] > (DREAM3D::Constants::k_2Pi))) {
         res.msg = "rotations:eu_check:: phi1 Euler angle outside of valid range [0,2pi]";
         res.result = 0;
       }
-      if ((eu[1] < 0.0) || (eu[1] > M_PI)) {
+      if ((eu[1] < 0.0) || (eu[1] > DREAM3D::Constants::k_Pi)) {
         res.msg = "rotations:eu_check:: phi Euler angle outside of valid range [0,pi]";
         res.result = 0;
       }
-      if ((eu[2] < 0.0) || (eu[2] > (2.0*M_PI))) {
+      if ((eu[2] < 0.0) || (eu[2] > (DREAM3D::Constants::k_2Pi))) {
         res.msg = "rotations:eu_check:: phi2 Euler angle outside of valid range [0,2pi]";
         res.result = 0;
       }
@@ -483,7 +513,7 @@ class OrientationLib_EXPORT RotationTransforms
     {
       ResultType res;
       res.result = 1;
-      if ((ax[3] < 0.0) || (ax[3] > M_PI)) {
+      if ((ax[3] < 0.0) || (ax[3] > DREAM3D::Constants::k_Pi)) {
         res.msg = "rotations:ax_check: angle must be in range [0,pi]";
         res.result = 0;
         return res;
@@ -544,7 +574,7 @@ class OrientationLib_EXPORT RotationTransforms
       return res;
     }
 
-
+#if 0
     /**: genrot
     *
     * @author Marc De Graef, Carnegie Mellon University
@@ -557,24 +587,39 @@ class OrientationLib_EXPORT RotationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
+    template<typename T, typename K>
+    void genrot(const T& av, K omega, T& res)
+    {
+      //*** use local
+      //*** use constants
+      //*** use error
+      //*** IMPLICIT NONE
+      //real(kind=sgl),INTENT(IN)       :: av[2]
+      //real(kind=sgl),INTENT(IN)       :: omega
+      type(orientationtype)           :: res;
+      K axang[4];
+      K s;
 
-    void genrot(float* av, float omega, float* res);
+      if ((omega < 0.0) || (omega > M_PI)) {
+        assert(false);
+      }
 
+      axang[0] = -RConst::epsijk * av[0];
+      axang[1] = -RConst::epsijk * av[1];
+      axang[2] = -RConst::epsijk * av[2];
+      axang[3] = omega;
+      s = sqrt(sumofSquares(av));
 
-    /**: genrot_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief generate a passive rotation representation, given the unit axis vector and the rotation angle
-    *
-    * @param av 3-component vector (double precision)
-    * @param omega rotation angle (radians)
-    *
-    *
-    * @date 9/30/14   MDG 1.0 original
-    */
+      if (s != 0.0) {
+        axang[0] = axang[0]/s;
+        axang[1] = axang[1]/s;
+        axang[2] = axang[2]/s;
+      } else {
+        assert(false);
+      }
+      init_orientation(axang, 'ax', res);
+    }
 
-    void genrot(double* av, double omega, double* res);
 
 
     /**: init_orientation
@@ -591,24 +636,11 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 9/30/14   MDG 1.1 added testing of valid ranges
     */
 
-    void init_orientation(float* orient, char intype[2], bool rotcheck, float* res);
+    template<typename T, typename K>
+    void init_orientation(const T& orient, char intype[2], bool rotcheck, T& res)
+    {
 
-    /**: init_orientation_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief take an orientation representation with 3 components and init all others (double precision)
-    *
-    * @param orient 3-component vector (double precision)
-    * @param intype input type ['eu', 'ro', 'ho', 'cu']
-    * @param rotcheck  optional parameter to enforce strict range checking
-    *
-    *
-    * @date 8/04/13   MDG 1.0 original
-    * @date 9/30/14   MDG 1.1 added testing of valid ranges
-    */
-
-    void init_orientation(double* orient, char intype[2], bool rotcheck, double* res);
+    }
 
     /**: init_orientation_om
     *
@@ -625,22 +657,7 @@ class OrientationLib_EXPORT RotationTransforms
     */
 
     void init_orientation_om(float* orient, char intype[2], bool rotcheck, float* res);
-
-    /**: init_orientation_om_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief take an orientation representation with 3x3 components and init all others (double precision)
-    *
-    * @param orient r-component vector (double precision)
-    * @param intype input type ['om']
-    * @param rotcheck  optional parameter to enforce strict range checking
-    *
-    *
-    * @date 8/04/13   MDG 1.0 original
-    */
-
-    void init_orientation_om(double* orient, char intype[2], bool rotcheck, double* res);
+#endif
 
     /**: eu2om
     *
@@ -695,14 +712,14 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void eu2ax(const T& e, T& res)
     {
-      K thr = 1.0E-6;
-      K alpha = 0.0;
+      K thr = 1.0E-6f;
+      K alpha = 0.0f;
       K t = tan(e[1]*0.5);
       K sig = 0.5*(e[0]+e[2]);
       K del = 0.5*(e[0]-e[2]);
       K tau = sqrt(t*t+sin(sig)*sin(sig));
       if (sig == DREAM3D::Constants::k_PiOver2) {  //Infinity
-        alpha = M_PI;
+        alpha = DREAM3D::Constants::k_Pi;
       } else {
         alpha = 2.0 * atan(tau/cos(sig)); //! return a default identity axis-angle pair
       }
@@ -736,11 +753,11 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void eu2ro(const T& e, T& res)
     {
-      K thr = 1.0E-6;
+      K thr = 1.0E-6f;
 
       eu2ax<T, K>(e, res);
       K t = res[3];
-      if (std::abs(t - M_PI) < thr) {
+      if (std::abs(t - DREAM3D::Constants::k_Pi) < thr) {
         res[3] = std::numeric_limits<K>::infinity();
         return;
       }
@@ -768,10 +785,10 @@ class OrientationLib_EXPORT RotationTransforms
     */
 
     template<typename T, typename K>
-    void eu2qu(const T& e, T& res, int layout=ROT_SCALAR_VECTOR)
+    void eu2qu(const T& e, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t a = 0, b=1, c=2, d=3;
-      if(layout == ROT_VECTOR_SCALAR)
+      if(layout == QuaternionMath<K>::QuaternionScalarVector)
       {
         a = 3;
         b = 2;
@@ -779,13 +796,13 @@ class OrientationLib_EXPORT RotationTransforms
         d = 0;
       }
 
-      K ee[3];
-      K cPhi;
-      K cp;
-      K cm;
-      K sPhi;
-      K sp;
-      K sm;
+      K ee[3] = { 0.0f, 0.0f, 0.0f};
+      K cPhi = 0.0f;
+      K cp = 0.0f;
+      K cm = 0.0f;
+      K sPhi = 0.0f;
+      K sp = 0.0f;
+      K sm = 0.0f;
 
       ee[0] = 0.5*e[0];
       ee[1] = 0.5*e[1];
@@ -845,7 +862,7 @@ class OrientationLib_EXPORT RotationTransforms
           res[2] = 0.0;
         } else {
           res[0] =-atan2(-o[1],o[0]);
-          res[1] = M_PI;
+          res[1] = DREAM3D::Constants::k_Pi;
           res[2] = 0.0;
         }
       }
@@ -876,10 +893,10 @@ class OrientationLib_EXPORT RotationTransforms
       //*** IMPLICIT NONE
       //real(kind=sgl),INTENT(IN)       :: a[3]         // axis angle pair
 
-      K q;
-      K c;
-      K s;
-      K omc;
+      K q = 0.0f;
+      K c = 0.0f;
+      K s = 0.0f;
+      K omc = 0.0f;
 
       c = cosf(a[3]);
       s = sinf(a[3]);
@@ -919,12 +936,12 @@ class OrientationLib_EXPORT RotationTransforms
     void qu2eu(const T& q, T& res)
     {
       T qq(4);
-      K q12;
-      K q03;
-      K chi;
-      K Phi;
-      K phi1;
-      K phi2;
+      K q12 = 0.0f;
+      K q03 = 0.0f;
+      K chi = 0.0f;
+      K Phi = 0.0f;
+      K phi1 = 0.0f;
+      K phi2 = 0.0f;
 
       qq = q;
       q03 = qq[0]*qq[0]+qq[3]*qq[3];
@@ -942,7 +959,7 @@ class OrientationLib_EXPORT RotationTransforms
             phi1 = atan2( 2.0*qq[0]*qq[3],qq[0]*qq[0]-qq[3]*qq[3]);
           }
         } else {
-          Phi = M_PI;
+          Phi = DREAM3D::Constants::k_Pi;
           phi2 = 0.0;                //arbitrarily due to degeneracy
           phi1 = atan2(2.0*qq[1]*qq[2],qq[1]*qq[1]-qq[2]*qq[2]);
         }
@@ -1001,7 +1018,7 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void ho2ax(const T& h, T &res)
     {
-      K thr = 1.0E-8;
+      K thr = 1.0E-8f;
 
       K hmag = sumofSquares<T,K>(h);
       if (hmag == 0.0) {
@@ -1023,9 +1040,9 @@ class OrientationLib_EXPORT RotationTransforms
         res[0] = hn[0];
         res[1] = hn[1];
         res[2] = hn[2];
-        K delta = std::fabs(s - M_PI);
+        K delta = std::fabs(s - DREAM3D::Constants::k_Pi);
         if ( delta < thr) {
-          res[3] = M_PI;
+          res[3] = DREAM3D::Constants::k_Pi;
         } else {
           res[3] = s;
         }
@@ -1055,7 +1072,7 @@ class OrientationLib_EXPORT RotationTransforms
 #else
       bool useEigen = true;
 #endif
-      K thr = 1.0E-7;
+      K thr = 1.0E-7f;
       // Transpose array to be Column Major Format for the BLAS/LAPACK routine
       T om = transpose(in);
       K t = 0.50*(om[0]+om[4]+om[8] - 1.0);
@@ -1198,7 +1215,7 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void ax2ro(const T& r, T& res)
     {
-      K  thr = 1.0E-7;
+      K  thr = 1.0E-7f;
 
       if (r[3] == 0.0) {
         res[0] = 0.0;
@@ -1210,7 +1227,7 @@ class OrientationLib_EXPORT RotationTransforms
       res[0] = r[0];
       res[1] = r[1];
       res[2] = r[2];
-      if (abs(r[3] - M_PI) < thr) {
+      if (abs(r[3] - DREAM3D::Constants::k_Pi) < thr) {
         res[3] = std::numeric_limits<K>::infinity();
       } else {
         res[3] = tan( r[3] * 0.5 );
@@ -1274,7 +1291,7 @@ class OrientationLib_EXPORT RotationTransforms
         return;
       }
       if (r[3] == std::numeric_limits<K>::infinity()) {
-        f = 0.75 * M_PI;
+        f = 0.75 * DREAM3D::Constants::k_Pi;
       } else {
         K t = 2.0*atan(r[3]);
         f = 0.75 * (t - sin(t));
@@ -1419,7 +1436,7 @@ class OrientationLib_EXPORT RotationTransforms
           res[0] = q[1];
           res[1] = q[2];
           res[2] = q[3];
-          res[3] = M_PI;
+          res[3] = DREAM3D::Constants::k_Pi;
         }
       }
     }
@@ -1439,7 +1456,7 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void qu2ro(const T& q, T& res)
     {
-      float thr = 1.0E-8;
+      float thr = 1.0E-8f;
       res[0] = q[1];
       res[1] = q[2];
       res[2] = q[3];
@@ -1514,12 +1531,15 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void ho2cu(const T& q, T& res)
     {
-      float ierr;
-      res = LambertBallToCube(q,ierr);
+      //float ierr;
+      //res = LambertBallToCube(q,ierr);
     }
 
-    template<typename T, typename K>
-    T LambertBallToCube(const T&q, K ierr){}
+    //template<typename T, typename K>
+    //T LambertBallToCube(const T&q, K ierr)
+    //{
+    //
+    //}
 
     /**: cu2ho
     *
@@ -1535,24 +1555,6 @@ class OrientationLib_EXPORT RotationTransforms
     */
 
     void cu2ho(float* c, float* res);
-
-
-    /**: cu2ho_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief convert cubochoric to homochoric
-    *
-    * @param c cubochoric coordinates (double precision)
-    *
-    *
-    * @note calling program MUST have initialized the Lambert parameters first!!!
-    *
-    *
-    * @date 8/12/13   MDG 1.0 original
-    */
-
-    void cu2ho(double* c, double* res);
 
 
     /**: ro2eu
@@ -1896,20 +1898,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void cu2eu(float* c, float* res);
 
-    /**: cu2eu_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief convert cubochoric to euler angles
-    *
-    * @param c cubochoric coordinates (double precision)
-    *
-    *
-    *
-    * @date 8/12/13   MDG 1.0 original
-    */
-
-    void cu2eu(double* c, double* res);
 
     /**: cu2om
     *
@@ -1926,20 +1914,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void cu2om(float* c, float* res);
 
-    /**: cu2om_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief convert cubochoric to orientation matrix
-    *
-    * @param c cubochoric coordinates  (double precision)
-    *
-    *
-    *
-    * @date 8/12/13   MDG 1.0 original
-    */
-
-    void cu2om(double* c, double* res);
 
     /**: cu2ax
     *
@@ -1956,21 +1930,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void cu2ax(float* c, float* res);
 
-    /**: cu2ax_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief convert cubochoric to axis angle
-    *
-    * @param c cubochoric coordinates  (double precision)
-    *
-    *
-    *
-    * @date 8/12/13   MDG 1.0 original
-    */
-
-    void cu2ax(double* c, double* res);
-
     /**: cu2ro
     *
     * @author Marc De Graef, Carnegie Mellon University
@@ -1986,20 +1945,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void cu2ro(float* c, float* res);
 
-    /**: cu2ro_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief convert cubochoric to Rodrigues
-    *
-    * @param c cubochoric coordinates  (double precision)
-    *
-    *
-    *
-    * @date 8/12/13   MDG 1.0 original
-    */
-
-    void cu2ro(double* c, double* res);
 
     /**: cu2qu
     *
@@ -2016,20 +1961,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void cu2qu(float* c, float* res);
 
-    /**: cu2qu_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief convert cubochoric to quaternion
-    *
-    * @param c cubochoric coordinates  (double precision)
-    *
-    *
-    *
-    * @date 8/12/13   MDG 1.0 original
-    */
-
-    void cu2qu(double* c, double* res);
 
     /**: RotVec_om
     *
@@ -2053,27 +1984,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void RotVec_om(float* vec, float* om, char ap, float* res);
 
-    /**: RotVec_om_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief rotate a vector using a rotation matrix, active or passive (double precision)
-    *
-    * @details This routine provides a way for the user to transform a vector
-    * and it returns the new vector components.  The user can use either a
-    * rotation matrix or a quaternion to define the transformation, and must
-    * also specifiy whether an active or passive result is needed.
-    *
-    *
-    * @param vec input vector components (double precision)
-    * @param om orientation matrix (double precision)
-    * @param ap active/passive switch
-    *
-    *
-    * @date 8/18/14   MDG 1.0 original
-    */
-
-    void RotVec_om(double* vec, double* om, char ap, double* res);
 
     /**: RotVec_qu
     *
@@ -2097,28 +2007,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void RotVec_qu(float* vec, float* qu, char ap, float* res);
 
-    /**: RotVec_qu_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief rotate a vector using a quaternion, active or passive (double precision)
-    *
-    * @details This routine provides a way for the user to transform a vector
-    * and it returns the new vector components.  The user can use either a
-    * rotation matrix or a quaternion to define the transformation, and must
-    * also specifiy whether an active or passive result is needed.
-    *
-    *
-    * @param vec input vector components (double precision)
-    * @param qu quaternion (double precision)
-    * @param ap active/passive switch
-    *
-    *
-    * @date 8/18/14   MDG 1.0 original
-    */
-
-    void RotVec_qu(double* vec, float* qu, char ap, double* res);
-
     /**: RotTensor2_om
     *
     * @author Marc De Graef, Carnegie Mellon University
@@ -2135,21 +2023,6 @@ class OrientationLib_EXPORT RotationTransforms
 
     void RotTensor2_om(float* tensor, float* om, char ap, float* res);
 
-    /**: RotTensor2_om_d
-    *
-    * @author Marc De Graef, Carnegie Mellon University
-    *
-    * @brief rotate a second rank tensor using a rotation matrix, active or passive (double precision)
-    *
-    * @param tensor input tensor components (double precision)
-    * @param om orientation matrix (double precision)
-    * @param ap active/passive switch
-    *
-    *
-    * @date 8/18/14   MDG 1.0 original
-    */
-
-    void RotTensor2_om(double* tensor, double* om, char ap, double* res);
 
     /**
     * SUBROUTINE: print_orientation

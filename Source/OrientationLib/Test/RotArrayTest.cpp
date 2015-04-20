@@ -30,7 +30,7 @@ using namespace DREAM3D::Constants;
 #include "OrientationLib/Test/OrientationLibTestFileLocations.h"
 
 
-typedef RotArray<float> RotArrayType;
+typedef RotationRepresentation<float> RotArrayType;
 typedef std::vector<float> FloatVectorType;
 typedef QVector<float> FloatQVectorType;
 
@@ -55,34 +55,22 @@ T transfer_sign(T a, T b)
 // -----------------------------------------------------------------------------
 void TestRotArray()
 {
-  RotArrayF ro(3);
+  FloatRotationRepresentation_t ro(3);
   ro[0] = 2;
   ro[1] = 4;
   ro[2] = 6;
-  float sum = ro.sum();
-  DREAM3D_REQUIRE_EQUAL(sum, 12);
+//  float sum = ro.sum();
+//  DREAM3D_REQUIRE_EQUAL(sum, 12);
 
-  DREAM3D_REQUIRE_EQUAL(ro.size(), 3);
+//  DREAM3D_REQUIRE_EQUAL(ro.size(), 3);
 
-  DREAM3D_REQUIRE_EQUAL(ro.maxval(), 6);
-  DREAM3D_REQUIRE_EQUAL(ro.minval(), 2);
+//  DREAM3D_REQUIRE_EQUAL(ro.maxval(), 6);
+//  DREAM3D_REQUIRE_EQUAL(ro.minval(), 2);
 
-  RotArrayF ro2(3, 0);
-  RotArrayF result = ro * ro2;
-  DREAM3D_REQUIRE_EQUAL(result[0], 0);
-  DREAM3D_REQUIRE_EQUAL(result[1], 0);
-  DREAM3D_REQUIRE_EQUAL(result[2], 0);
-
-  ro2 = ro;
-  result = ro * ro2;
-  DREAM3D_REQUIRE_EQUAL(result[0], 4);
-  DREAM3D_REQUIRE_EQUAL(result[1], 16);
-  DREAM3D_REQUIRE_EQUAL(result[2], 36);
-
-  float pro = ro.product();
-  DREAM3D_REQUIRE_EQUAL(pro, 48);
-  sum = result.sum();
-  float max = result.maxval();
+//  float pro = ro.product();
+//  DREAM3D_REQUIRE_EQUAL(pro, 48);
+//  sum = result.sum();
+//  float max = result.maxval();
 }
 
 
@@ -104,14 +92,14 @@ void Test_eu_check()
   result = rt.eu_check<float*>(eu);
   DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-  RotArrayF eu_r(3);
+  FloatRotationRepresentation_t eu_r(3);
   eu_r[0] = 1.0f;
   eu_r[1] = 0.4f;
   eu_r[2] = 0.9f;
-  result = rt.eu_check<RotArrayF>(eu_r);
+  result = rt.eu_check<FloatRotationRepresentation_t>(eu_r);
   DREAM3D_REQUIRE_EQUAL(result.result, 1);
   eu_r[0] = -1.0;
-  result = rt.eu_check<RotArrayF>(eu_r);
+  result = rt.eu_check<FloatRotationRepresentation_t>(eu_r);
   DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
   FloatVectorType eu_v(3);
@@ -150,16 +138,16 @@ void Test_ro_check()
   typedef QVector<float> FloatQVectorType;
 
   {
-    RotArrayF ro(4);
+    FloatRotationRepresentation_t ro(4);
     ro[0] = 1.0f;
     ro[1] = 1.0f;
     ro[2] = 1.0f;
     ro[3] = 1.0f;
     MatrixMath::Normalize3x1(&(ro[0]));
-    result = rt.ro_check<RotArrayF, float>(ro);
+    result = rt.ro_check<FloatRotationRepresentation_t, float>(ro);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
     ro[3] = -1.0;
-    result = rt.ro_check<RotArrayF, float>(ro);
+    result = rt.ro_check<FloatRotationRepresentation_t, float>(ro);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -206,14 +194,14 @@ void Test_ho_check()
   typedef QVector<float> FloatQVectorType;
 
   {
-    RotArrayF ho(3);
+    FloatRotationRepresentation_t ho(3);
     ho[0] = 0.5f;
     ho[1] = 0.5f;
     ho[2] = 0.5f;
-    result = rt.ho_check<RotArrayF, float>(ho);
+    result = rt.ho_check<FloatRotationRepresentation_t, float>(ho);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
     ho[2] = 8.0;
-    result = rt.ho_check<RotArrayF, float>(ho);
+    result = rt.ho_check<FloatRotationRepresentation_t, float>(ho);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -256,14 +244,14 @@ void Test_cu_check()
   typedef QVector<float> FloatQVectorType;
 
   {
-    RotArrayF v(3);
+    FloatRotationRepresentation_t v(3);
     v[0] = 0.5f;
     v[1] = 0.5f;
     v[2] = 0.5f;
-    result = rt.cu_check<RotArrayF, float>(v);
+    result = rt.cu_check<FloatRotationRepresentation_t, float>(v);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
     v[2] = 8.0;
-    result = rt.cu_check<RotArrayF, float>(v);
+    result = rt.cu_check<FloatRotationRepresentation_t, float>(v);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -308,23 +296,23 @@ void Test_qu_check()
   QuaternionMathF::UnitQuaternion(quat);
 
   {
-    RotArrayF qu(4);
+    FloatRotationRepresentation_t qu(4);
     qu[0] = quat.x;
     qu[1] = quat.y;
     qu[2] = quat.z;
     qu[3] = quat.w;
     MatrixMath::Normalize3x1(&(qu[0]));
-    result = rt.qu_check<RotArrayF, float>(qu);
+    result = rt.qu_check<FloatRotationRepresentation_t, float>(qu);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
     qu[0] = 1.5f;
     qu[1] = 3.0f;
     qu[2] = 2.0f;
-    result = rt.qu_check<RotArrayF, float>(qu);
+    result = rt.qu_check<FloatRotationRepresentation_t, float>(qu);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
     qu[0] = -1.0;
-    result = rt.qu_check<RotArrayF, float>(qu);
+    result = rt.qu_check<FloatRotationRepresentation_t, float>(qu);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -386,20 +374,20 @@ void Test_ax_check()
   typedef QVector<float> FloatQVectorType;
 
   {
-    RotArrayF ax(4);
+    FloatRotationRepresentation_t ax(4);
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = M_PI-0.00001;
-    result = rt.ax_check<RotArrayF, float>(ax);
+    ax[3] = DREAM3D::Constants::k_Pi-0.00001f;
+    result = rt.ax_check<FloatRotationRepresentation_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
     ax[0] = 1.0;
-    result = rt.ax_check<RotArrayF, float>(ax);
+    result = rt.ax_check<FloatRotationRepresentation_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = M_PI + 1.0;
-    result = rt.ax_check<RotArrayF, float>(ax);
+    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
+    result = rt.ax_check<FloatRotationRepresentation_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -408,7 +396,7 @@ void Test_ax_check()
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = M_PI-0.00001;
+    ax[3] = DREAM3D::Constants::k_Pi-0.00001f;
     result = rt.ax_check<FloatVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
@@ -416,7 +404,7 @@ void Test_ax_check()
     result = rt.ax_check<FloatVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = M_PI + 1.0;
+    ax[3] = DREAM3D::Constants::k_Pi + 1.0;
     result = rt.ax_check<FloatVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -426,15 +414,15 @@ void Test_ax_check()
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = M_PI-0.00001;
+    ax[3] = DREAM3D::Constants::k_Pi-0.00001f;
     result = rt.ax_check<FloatQVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
-    ax[0] = 1.0;
+    ax[0] = 1.0f;
     result = rt.ax_check<FloatQVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = M_PI + 1.0;
+    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
     result = rt.ax_check<FloatQVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -447,7 +435,6 @@ void Test_ax_check()
 // -----------------------------------------------------------------------------
 void Test_om_check()
 {
-
   RotationTransforms rt;
   RotationTransforms::ResultType result;
 
@@ -455,7 +442,7 @@ void Test_om_check()
   typedef QVector<float> FloatQVectorType;
 
   {
-    RotArrayF ax(9);
+    FloatRotationRepresentation_t ax(9);
     ax[0] = 1.0f;
     ax[1] = 0.0f;
     ax[2] = 0.0f;
@@ -465,16 +452,16 @@ void Test_om_check()
     ax[6] = 0.0f;
     ax[7] = 0.0f;
     ax[8] = 1.0f;
-    result = rt.om_check<RotArrayF, float>(ax);
+    result = rt.om_check<FloatRotationRepresentation_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
-    ax[1] = -16.0;
-    ax[6] = -12.0;
-    result = rt.om_check<RotArrayF, float>(ax);
+    ax[1] = -16.0f;
+    ax[6] = -12.0f;
+    result = rt.om_check<FloatRotationRepresentation_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = M_PI + 1.0;
-    result = rt.om_check<RotArrayF, float>(ax);
+    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
+    result = rt.om_check<FloatRotationRepresentation_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -492,12 +479,12 @@ void Test_om_check()
     result = rt.om_check<FloatVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
-    ax[1] = -16.0;
-    ax[6] = -12.0;
+    ax[1] = -16.0f;
+    ax[6] = -12.0f;
     result = rt.om_check<FloatVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = M_PI + 1.0;
+    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
     result = rt.om_check<FloatVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -516,15 +503,43 @@ void Test_om_check()
     result = rt.om_check<FloatQVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
-    ax[1] = -16.0;
-    ax[6] = -12.0;
+    ax[1] = -16.0f;
+    ax[6] = -12.0f;
     result = rt.om_check<FloatQVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = M_PI + 1.0;
+    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
     result = rt.om_check<FloatQVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T, typename K>
+void GenRotTest(K* in, K omega)
+{
+  T eu(3);
+  eu[0] = in[0];
+  eu[1] = in[1];
+  eu[2] = in[2];
+
+  T res(4);
+  RotationTransforms rt;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Test_GenRot()
+{
+
+  float eu[3] = { 1.0f, 0.0f, 0.0f};
+  float omega = DREAM3D::Constants::k_PiOver2;
+  GenRotTest<RotArrayType, float>(eu, omega);
+  GenRotTest<FloatVectorType, float>(eu, omega);
+  GenRotTest<FloatQVectorType, float>(eu, omega);
 
 }
 
@@ -936,7 +951,7 @@ void HO_2_XXX(K* in)
 void Test_ho2_XXX()
 {
   std::cout << "Test_ho2_XXX  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;
-  float ho[3] = {0.000000, 0.000000, -0.7536693215};
+  float ho[3] = {0.000000f, 0.000000f, -0.7536693215f};
   Print_HO<float*>(ho);
   HO_2_XXX<RotArrayType>(ho);
   HO_2_XXX<std::vector<float> >(ho);
@@ -958,6 +973,7 @@ int main(int argc, char* argv[])
   DREAM3D_REGISTER_TEST( Test_qu_check() );
   DREAM3D_REGISTER_TEST( Test_ax_check() );
   DREAM3D_REGISTER_TEST( Test_om_check() );
+  DREAM3D_REGISTER_TEST( Test_GenRot() )
 
 
   DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
