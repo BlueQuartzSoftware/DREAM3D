@@ -5,37 +5,33 @@ Find Kernel Average Misorientations {#findkernelavgmisorientations}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter determines the Kernel Average Misorientation (KAM) for each **Cell**.  The user can select the size of the kernel to be used in teh calculation.  The kernel size entered by the user is the *radius* of the kernel (i.e. entering values of *1* and *2* will result in a *3x3* and a *5x5* kernel, respectively).  The algorithm for determination of KAM is as follows:
+This filter determines the Kernel Average Misorientation (KAM) for each **Cell**.  The user can select the size of the kernel to be used in the calculation.  The kernel size entered by the user is the *radius* of the kernel (i.e. entering values of *1*, *2*, *3* will result in a kernel that is *3*, *5*, and *7* **Cells** in size in the x, y and z directions, respectively).  The algorithm for determination of KAM is as follows:
 
 1. Calculate the misorientation angle between each **Cell** in a kernel and the central **Cell** of the kernel.
 2. Average all of the misorientations for the kernel and store at the central **Cell**.
 
-
+*Note that all **Cells** in the kernel are weighted equally during the averaging, though they are not equidistant from the central **Cell**.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Kernel Radius | Int (x3) | Size of the kernel in the x, y, and z directions (in number of **Cells**) |
 
-| Name | Type |
-|------|------|
-| Kernel Size | Integer |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
-
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Cell | Quats | Float | (4) | Specifies the orientation of the **Cell** in quaternion representation |
+| Cell | CellPhases | Int | (1) | Specifies the **Ensemble** of the **Cell** |
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | KernelAverageMisorientations |  |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | KernelAverageMisorientations | Float | (1) | Average misorientation for all **Cells** within the kernel and the central **Cell** |
 
 ## Authors ##
 

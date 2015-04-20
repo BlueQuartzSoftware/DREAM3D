@@ -7,15 +7,14 @@ Statistics Filters (Morphological)
 ## Description ##
 This Filter calculates the second-order moments of each **Feature** in order to determine the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
 
-1. Obtain the centroid for each **Feature**.
-2. For each **Cell**, determine the x, y and z distance to the centroid of the **Feature** that owns the **Cell**.
-3. For each **Cell**, calculate Ixx, Iyy, Izz, Ixy, Ixz and Iyz using the x, y and z distances determined in step 2.
-4. Sum the individual Ixx, Iyy, Izz, Ixy, Ixz and Iyz values for all **Cells** belonging to the same **Feature**.
-5. Find the *eigenvalues* and *eigenvectors* of the *3x3* symmetric matrix defined by the *6* values calculated in step 4 for each **Feature**.
-6. Use the relationship of *principal moments* to the *principal axis lengths* for an ellipsoid, which can be found in [4], to determine the *Axis Lengths*
-7. Calculate the *Aspect Ratios* from the *Axis Lengths* found in step 6.
-8. Determine the Euler angles required to represent the *principal axis directions* in the *sample reference frame* and store them as the **Feature**'s *Axis Euler Angles*.
-9. Calculate the moment variant Omega3 as definied in [2] and is discussed further in [1] and [3].
+1. For each **Cell**, determine the x, y and z distance to the centroid of the **Feature** that owns the **Cell**.
+2. For each **Cell**, calculate Ixx, Iyy, Izz, Ixy, Ixz and Iyz using the x, y and z distances determined in step 1.
+3. Sum the individual Ixx, Iyy, Izz, Ixy, Ixz and Iyz values for all **Cells** belonging to the same **Feature**.
+4. Find the *eigenvalues* and *eigenvectors* of the *3x3* symmetric matrix defined by the *6* values calculated in step 3 for each **Feature**.
+5. Use the relationship of *principal moments* to the *principal axis lengths* for an ellipsoid, which can be found in [4], to determine the *Axis Lengths*
+6. Calculate the *Aspect Ratios* from the *Axis Lengths* found in step 5.
+7. Determine the Euler angles required to represent the *principal axis directions* in the *sample reference frame* and store them as the **Feature**'s *Axis Euler Angles*.
+8. Calculate the moment variant Omega3 as definied in [2] and is discussed further in [1] and [3].
 
 
 ------------
@@ -38,25 +37,23 @@ _
 ## Parameters ##
 None
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image/Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass | Filter will calculate **Feature** centroids if not previously calculated | Find Feature Centroids (Generic) |
-| Feature | Volumes | Volume (float) in um^3 of the **Feature**. | Filter will calculate volume of each **Feature** if not already calculated | Find Feature Sizes (Statistics) | 
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Feature | Centroids | Float | (3) | X, Y, Z coordinates of **Feature** center of mass |
+| Feature | Volumes |  Float | (1) | Volume (in units^3) of the **Feature**. This value may be "redundant" from the NumCells value if all **Cells** are the same size and is calculable from the EquivalentDiameters value. | 
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | AspectRatios |  |  |
-| Feature | AxisEulerAngles |  |  |
-| Feature | AxisLengths |  |  |
-| Feature | Omega3s |  |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Feature | AspectRatios | Float | (2) | Ratio of axis lengths (b/a and c/a) for best-fit ellipsoid to **Feature** |
+| Feature | AxisEulerAngles | Float | (3) | Euler angles (in radians) necessary to rotate the sample reference frame to the reference frame of the **Feature**, where the prinicpal axes of the best-fit ellipsoid are (x,y,z). |
+| Feature | AxisLengths | Float | (3) | Axis lengths (a, b, c) for best-fit ellipsoid to **Feature** |
+| Feature | Omega3s | Float | (1) | 3rd invariant of the second-order moment matrix for the **Feature**, does not assume a shape type (ie ellipsoid) |
 
 ## Authors ##
 

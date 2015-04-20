@@ -5,34 +5,32 @@ Find Feature Neighborhoods {#findneighborhoods}
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter determines the number of **Features** whose *centroids* lie within a distance of one *Equivalent Sphere Diameter* from a each **Feature**.  The algorithm for determining the number of **Features** is given below:
+This Filter determines the number of **Features**, for each **Feature**, whose *centroids* lie within a distance equal to a user defined multiple of the average *Equivalent Sphere Diameter* (*average of all **Features**).  The algorithm for determining the number of **Features** is given below:
 
-1. Find the *centroid* of a **Feature**.
-2. Define a sphere centered at the the **Feature**'s *centroid*  and with radius equal to the **Feature**'s *Equivalent Sphere Diameter*.
-3. Check every other **Feature**'s centroid to see if it lies within the sphere and keep count of those that satisfy.
-4. Repeat 1-3 for all **Features**.
-
-
+1. Define a sphere centered at the **Feature**'s *centroid* and with radius equal to the average equivalent sphere diameter multiplied by the user defined multiple.
+2. Check every other **Feature**'s *centroid* to see if it lies within the sphere and keep count and list of those that satisfy.
+3. Repeat 1&2 for all **Features**.
 
 ## Parameters ##
-| Multiples Of Average Diameter | Float |
+| Name | Type | Description |
+|------|------| ----------- |
+| Multiples Of Average Diameter | Float | Defines the search radius to use when looking for "neighboring" **Features** |
 
-## Required DataContainers ##
-Volume
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass | Filter will calculate **Feature** centroids if not previously calculated | Find Feature Centroids (Generic) |
-| Feature | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Feature**. | Filter will calculate equivalent diameters for the **Features** if not already calculated | Find Feature Sizes (Statistics) |
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | Centroids | Float | (3) | X, Y, Z coordinates of **Feature** center of mass |
+| Feature | EquivalentDiameters | Float | (1) | Diameter of a sphere with the same volume as the **Feature**. |
+| Feature | FeaturePhases | Int | (1) | Specifies the phase of the **Feature** - Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | Neighborhoods | Number (int) of **Features** that have their centroid within one equivalent sphere diameter of each **Feature** | **Features** do not need to actually touch each other, only be within a distance equal to the reference **Feature**'s equivalent diameter |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Feature | Neighborhoods | Int | (1) | Number of **Features** that have their centroid within the user specified multiple of equivalent sphere diameters from each **Feature** |
+| Feature | NeighborhoodLists | List of Ints | (1) | List of the **Features** whose centroids are within the user specified multiple of equivalent sphere diameter from each **Feature** |
 
 ## Authors ##
 

@@ -25,9 +25,9 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Element** belongs. |
 | Element | Quats | Float | (4) | Specifies the orientation of the **Element** in quaternion representation |
-| Element | CellPhases | Int | (1) | Specifies the **Ensemble** of the **Cell** |
+| Element | CellPhases | Int | (1) | Specifies the **Ensemble** of the **Element** |
 | Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
 
 ## Created Arrays ##
