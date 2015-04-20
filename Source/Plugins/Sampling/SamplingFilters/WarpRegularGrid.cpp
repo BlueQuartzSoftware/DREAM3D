@@ -36,14 +36,11 @@
 
 #include "WarpRegularGrid.h"
 
-#include <QtCore/QMap>
-
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+#include "Sampling/SamplingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -115,13 +112,13 @@ void WarpRegularGrid::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), true));
   setFilterParameters(parameters);
 }
 
-
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -163,22 +160,16 @@ int WarpRegularGrid::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::dataCheck()
 {
-  DataContainer::Pointer m;
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
+
   if(m_SaveAsNewDataContainer == false)
   {
-    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
-    if(getErrorCondition() < 0) { return; }
-
-    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   }
   else
   {
     getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
-    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
   }
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -199,12 +190,9 @@ void WarpRegularGrid::preflight()
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-
-  DREAM3D_RANDOMNG_NEW()
 
   DataContainer::Pointer m;
   if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
@@ -213,31 +201,31 @@ void WarpRegularGrid::execute()
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   AttributeMatrix::Pointer newCellAttrMat = cellAttrMat->deepCopy();
 
-  size_t dims[3];
+  size_t dims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
-  float res[3];
+  float res[3] = { 0.0f, 0.0f, 0.0f };
   m->getGeometryAs<ImageGeom>()->getResolution(res);
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
-  float x, y, z;
-  float newX, newY;
-  int col, row, plane;
-  int index;
-  int index_old;
+  float x = 0.0f, y = 0.0f, z = 0.0f;
+  float newX = 0.0f, newY = 0.0f;
+  int col = 0.0f, row = 0.0f, plane = 0.0f;
+  size_t index;
+  size_t index_old;
   std::vector<size_t> newindicies(totalPoints);
   std::vector<bool> goodPoint(totalPoints, true);
 
-  for (int i = 0; i < dims[2]; i++)
+  for (size_t i = 0; i < dims[2]; i++)
   {
     QString ss = QObject::tr("Warping Data - %1 Percent Complete").arg(((float)i / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    for (int j = 0; j < dims[1]; j++)
+    for (size_t j = 0; j < dims[1]; j++)
     {
-      for (int k = 0; k < dims[0]; k++)
+      for (size_t k = 0; k < dims[0]; k++)
       {
-        x = (k * res[0]);
-        y = (j * res[1]);
-        z = (i * res[2]);
+        x = static_cast<float>((k * res[0]));
+        y = static_cast<float>((j * res[1]));
+        z = static_cast<float>((i * res[2]));
         index = (i * dims[0] * dims[1]) + (j * dims[0]) + k;
 
         determine_warped_coordinates(x, y, newX, newY);
@@ -247,7 +235,7 @@ void WarpRegularGrid::execute()
 
         index_old = (plane * dims[0] * dims[1]) + (row * dims[0]) + col;
         newindicies[index] = index_old;
-        if(col > 0 && col < dims[0] && row > 0 && row < dims[1]) goodPoint[index] = true;
+        if (col > 0 && col < dims[0] && row > 0 && row < dims[1]) goodPoint[index] = true;
         else goodPoint[index] = false;
       }
     }
@@ -256,7 +244,6 @@ void WarpRegularGrid::execute()
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    QString name = *iter;
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
@@ -310,6 +297,7 @@ void WarpRegularGrid::determine_warped_coordinates(float x, float y, float &newX
 
   }
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -329,13 +317,17 @@ AbstractFilter::Pointer WarpRegularGrid::newFilterInstance(bool copyFilterParame
 const QString WarpRegularGrid::getCompiledLibraryName()
 { return Sampling::SamplingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WarpRegularGrid::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::WarpingFilters; }
 
 // -----------------------------------------------------------------------------
 //

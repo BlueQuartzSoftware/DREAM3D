@@ -30,6 +30,6 @@ AddDREAM3DUnitTest(TESTNAME QuaternionMathTest SOURCES ${${PROJECT_NAME}_SOURCE_
 AddDREAM3DUnitTest(TESTNAME OrientationMathTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationMathTest.cpp LINK_LIBRARIES ${OrientationLib_Link_Libs})
 AddDREAM3DUnitTest(TESTNAME TextureTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/TextureTest.cpp LINK_LIBRARIES ${OrientationLib_Link_Libs})
 AddDREAM3DUnitTest(TESTNAME ODFTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ODFTest.cpp LINK_LIBRARIES ${OrientationLib_Link_Libs})
-# AddDREAM3DUnitTest(TESTNAME RotArrayTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/RotArrayTest.cpp LINK_LIBRARIES ${OrientationLib_Link_Libs})
+AddDREAM3DUnitTest(TESTNAME RotArrayTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/RotArrayTest.cpp LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 

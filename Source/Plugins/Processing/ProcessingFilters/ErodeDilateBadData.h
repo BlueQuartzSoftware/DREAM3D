@@ -44,7 +44,7 @@
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @brief The ErodeDilateBadData class. See Filter documentation for details.
+ * @brief The ErodeDilateBadData class. See [Filter documentation](@ref erodedilatebaddata) for details.
  */
 class ErodeDilateBadData : public AbstractFilter
 {
@@ -56,11 +56,11 @@ class ErodeDilateBadData : public AbstractFilter
 
     virtual ~ErodeDilateBadData();
 
-    DREAM3D_FILTER_PARAMETER(uint32_t, Direction)
-    Q_PROPERTY(uint32_t Direction READ getDirection WRITE setDirection)
+    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
+    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, NumIterations)
-    Q_PROPERTY(int32_t NumIterations READ getNumIterations WRITE setNumIterations)
+    DREAM3D_FILTER_PARAMETER(int, NumIterations)
+    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
 
     DREAM3D_FILTER_PARAMETER(bool, XDirOn)
     Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)

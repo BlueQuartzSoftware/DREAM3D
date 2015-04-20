@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ErodeDilateMask class. See Filter documentation for details.
+ * @brief The ErodeDilateMask class. See [Filter documentation](@ref erodedilatemask) for details.
  */
 class ErodeDilateMask : public AbstractFilter
 {
@@ -54,11 +54,11 @@ class ErodeDilateMask : public AbstractFilter
 
     virtual ~ErodeDilateMask();
 
-    DREAM3D_FILTER_PARAMETER(uint32_t, Direction)
-    Q_PROPERTY(uint32_t Direction READ getDirection WRITE setDirection)
+    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
+    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, NumIterations)
-    Q_PROPERTY(int32_t NumIterations READ getNumIterations WRITE setNumIterations)
+    DREAM3D_FILTER_PARAMETER(int, NumIterations)
+    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
 
     DREAM3D_FILTER_PARAMETER(bool, XDirOn)
     Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)

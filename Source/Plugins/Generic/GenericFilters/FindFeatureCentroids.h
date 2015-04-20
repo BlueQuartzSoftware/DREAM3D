@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindFeatureCentroids class.  See Filter documentation for details.
+ * @brief The FindFeatureCentroids class.  See [Filter documentation](@ref findfeaturecentroids) for details.
  */
 class  FindFeatureCentroids : public AbstractFilter
 {
@@ -100,6 +100,9 @@ class  FindFeatureCentroids : public AbstractFilter
   protected:
     FindFeatureCentroids();
 
+    /**
+     * @brief find_centroids Determines the centroids of a list of Features.
+     */
     void find_centroids();
 
   private:

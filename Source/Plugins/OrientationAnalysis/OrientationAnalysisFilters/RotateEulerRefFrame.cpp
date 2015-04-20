@@ -50,6 +50,10 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+/**
+ * @brief The RotateEulerRefFrameImpl class implements a threaded algorithm that rotates an array of Euler
+ * angles about the supplied axis-angle pair.
+ */
 class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
@@ -269,4 +273,3 @@ const QString RotateEulerRefFrame::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getHumanLabel()
 { return "Rotate Euler Reference Frame"; }
-

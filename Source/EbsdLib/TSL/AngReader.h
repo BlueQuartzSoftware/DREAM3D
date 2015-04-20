@@ -83,9 +83,9 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumOddCols, Ebsd::Ang::NColsOdd)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumEvenCols, Ebsd::Ang::NColsEven)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumRows, Ebsd::Ang::NRows)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, OIMOperator, Ebsd::Ang::Operator)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, OIMOperator, Ebsd::Ang::OPERATOR)
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, SampleID, Ebsd::Ang::SAMPLEID)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, ScanID, Ebsd::Ang::SCANID)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, SCANID, Ebsd::Ang::SCANID)
 
     EBSD_INSTANCE_PROPERTY(QVector<AngPhase::Pointer>, PhaseVector)
 

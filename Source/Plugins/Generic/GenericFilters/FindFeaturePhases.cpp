@@ -114,8 +114,9 @@ int FindFeaturePhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindFeaturePhases::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+
+  DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
 

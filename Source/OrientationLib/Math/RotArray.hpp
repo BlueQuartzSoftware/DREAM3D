@@ -4,7 +4,7 @@
 #ifndef _RotArray_H_
 #define _RotArray_H_
 
-
+#include <assert.h>
 #include <string.h>
 
 
@@ -52,14 +52,18 @@ class OrientationLib_EXPORT RotArray
      * @brief RotArray
      * @param rhs
      */
-    RotArray(const RotArray<T>& rhs)
+    RotArray(const RotArray<T>& rhs) :
+    m_Ptr(NULL),
+    m_Size(rhs.m_Size),
+    m_Owns(true)
     {
-      m_Size = rhs.m_Size;
-      m_Owns = true;
       allocate();
       ::memcpy(m_Ptr, rhs.m_Ptr, sizeof(T) * m_Size); // Copy the bytes over to the new array
     }
 
+    /**
+     * @brief ~RotArray
+     */
     virtual ~RotArray() {
       if(m_Ptr != NULL && m_Owns == true)
       {
@@ -154,6 +158,91 @@ class OrientationLib_EXPORT RotArray
       return pro;
     }
 
+    /**
+     * @brief resize
+     * @param elements
+     */
+    void resize(size_t size)
+    {
+      T* newArray;
+      size_t newSize;
+      size_t oldSize;
+
+      if (size == m_Size) // Requested size is equal to current size.  Do nothing.
+      {
+        return;
+      }
+      //If we do NOT own the array then there is no way to resize the array without
+      // detaching and making a copy. Not sure what we would want to do so I am
+      // going to assert here and die.
+      assert(m_Owns);
+
+      newSize = size;
+      oldSize = m_Size;
+
+      // Wipe out the array completely if new size is zero.
+      if (newSize == 0)
+      {
+        if(m_Ptr != NULL && m_Owns == true)
+        {
+          free(m_Ptr);
+        }
+        m_Ptr = NULL;
+        m_Owns = false;
+        m_Size = 0;
+        return;
+      }
+      // OS X's realloc does not free memory if the new block is smaller.  This
+      // is a very serious problem and causes huge amount of memory to be
+      // wasted. Do not use realloc on the Mac.
+      bool dontUseRealloc = false;
+#if defined __APPLE__
+      dontUseRealloc = true;
+#endif
+
+      if (!dontUseRealloc)
+      {
+        // Try to reallocate with minimal memory usage and possibly avoid copying.
+        newArray = (T*)realloc(m_Ptr, newSize * sizeof(T));
+        if (!newArray)
+        {
+          free(m_Ptr);
+          m_Ptr = NULL;
+          m_Owns = false;
+          m_Size = 0;
+          return;
+        }
+      }
+      else
+      {
+        newArray = (T*)malloc(newSize * sizeof(T));
+        if (!newArray)
+        {
+          free(m_Ptr);
+          m_Ptr = NULL;
+          m_Owns = false;
+          m_Size = 0;
+          return;
+        }
+
+        // Copy the data from the old array.
+        if (m_Ptr != NULL)
+        {
+          memcpy(newArray, m_Ptr, (newSize < m_Size ? newSize : m_Size) * sizeof(T));
+        }
+        // Free the old array
+        free(m_Ptr);
+        m_Ptr = NULL;
+      }
+
+      // Allocation was successful.  Save it.
+      m_Size = newSize;
+      m_Ptr = newArray;
+
+      // This object has now allocated its memory and owns it.
+      m_Owns = true;
+
+    }
 
     /**
      * @brief operator *

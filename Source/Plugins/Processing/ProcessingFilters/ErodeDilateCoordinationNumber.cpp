@@ -113,8 +113,9 @@ void ErodeDilateCoordinationNumber::dataCheck()
 
   if (getCoordinationNumber() < 0 || getCoordinationNumber() > 6)
   {
+    QString ss = QObject::tr("The coordination number (%1) must be on the interval [0,6]").arg(getCoordinationNumber());
     setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), "The coordination number must be on the interval [0,6]", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> cDims(1, 1);

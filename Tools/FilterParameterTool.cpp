@@ -71,7 +71,7 @@ void writeOutput(bool didReplace, QStringList &outLines, QString filename)
   if(didReplace == true)
   {
     QFileInfo fi2(filename);
-#if 1
+#if 0
     QFile hOut(filename);
 #else
     QString tmpPath = "/tmp/" + fi2.fileName();
@@ -94,7 +94,7 @@ void writeOutput(bool didReplace, QVector<QString> &outLines, QString filename)
   if(didReplace == true)
   {
     QFileInfo fi2(filename);
-#if 1
+#if 0
     QFile hOut(filename);
 #else
     QString tmpPath = "/tmp/" + fi2.fileName();
@@ -439,10 +439,10 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    //    if (fi.baseName().compare("GenerateVectorColors") != 0)
-    //    {
-    //      return false;
-    //    }
+//        if (fi.baseName().compare("CropVolume") != 0)
+//        {
+//          return false;
+//        }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
@@ -454,8 +454,8 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
   QStringList names;
   bool didReplace = false;
 
-  QString searchString = "virtual const QString getHumanLabel() {";
-  QString replaceString = "    virtual const QString getHumanLabel();";
+  QString searchString = "virtual const QString getSubGroupName() {";
+  QString replaceString = "    virtual const QString getSubGroupName();";
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
@@ -497,7 +497,7 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
   out << "// -----------------------------------------------------------------------------\n";
   out << "//\n";
   out << "// -----------------------------------------------------------------------------\n";
-  out << "const QString " << cName << "::getHumanLabel()\n";
+  out << "const QString " << cName << "::getSubGroupName()\n";
   out << body << "\n\n";
 
   list = contents.split(QRegExp("\\n"));
@@ -837,12 +837,12 @@ void GenerateFilterParametersCode()
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
     //CorrectInitializerList(filter, h, cpp);
-    //SplitFilterHeaderCodes(filter, h, cpp);
+    SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
     //FindFiltersWithMultipleDataArrayPaths(filter);
-    GroupIncludes(filter, cpp);
-    GroupIncludes(filter, h);
+    //GroupIncludes(filter, cpp);
+    //GroupIncludes(filter, h);
 
   }
 
@@ -854,7 +854,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

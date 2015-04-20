@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindFeaturePhasesBinary class. See Filter documentation for details.
+ * @brief The FindFeaturePhasesBinary class. See [Filter documentation](@ref findfeaturephasesbinary) for details.
  */
 class  FindFeaturePhasesBinary : public AbstractFilter
 {

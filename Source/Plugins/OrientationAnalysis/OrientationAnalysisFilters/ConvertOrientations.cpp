@@ -49,6 +49,10 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+/**
+ * @brief The ConvertOrientationsImpl class implements a threaded algorithm to convert the incoming orientation
+ * representation to the selected output orientation representation.
+ */
 class ConvertOrientationsImpl
 {
 
