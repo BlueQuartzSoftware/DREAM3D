@@ -117,8 +117,9 @@ int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+
+  DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
 

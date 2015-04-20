@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The RotateEulerRefFrame class. See Filter documentation for details.
+ * @brief The RotateEulerRefFrame class. See [Filter documentation](@ref rotateeulerrefframe) for details.
  */
 class RotateEulerRefFrame : public AbstractFilter
 {

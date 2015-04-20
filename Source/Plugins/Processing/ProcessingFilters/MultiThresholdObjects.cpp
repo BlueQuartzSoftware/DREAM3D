@@ -123,6 +123,7 @@ void MultiThresholdObjects::dataCheck()
     int32_t count = m_SelectedThresholds.size();
     QSet<QString> dcSet;
     QSet<QString> amSet;
+
     // Loop through each selected threshold item which will have the complete path and check that path
     for(int32_t i = 0; i < count; i++)
     {

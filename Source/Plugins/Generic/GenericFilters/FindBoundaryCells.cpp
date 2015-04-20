@@ -105,8 +105,9 @@ int FindBoundaryCells::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+
+  DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 

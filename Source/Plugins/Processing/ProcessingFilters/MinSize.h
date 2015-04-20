@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The MinSize class. See Filter documentation for details.
+ * @brief The MinSize class. See [Filter documentation](@ref minsize) for details.
  */
 class MinSize : public AbstractFilter
 {
@@ -54,14 +54,14 @@ class MinSize : public AbstractFilter
 
     virtual ~MinSize();
 
-    DREAM3D_FILTER_PARAMETER(int32_t, MinAllowedFeatureSize)
-    Q_PROPERTY(int32_t MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
+    DREAM3D_FILTER_PARAMETER(int, MinAllowedFeatureSize)
+    Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
 
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, PhaseNumber)
-    Q_PROPERTY(int32_t PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -103,8 +103,19 @@ class MinSize : public AbstractFilter
   protected:
     MinSize();
 
-    virtual QVector<bool> remove_smallfeatures();
-    virtual void assign_badpoints();
+    /**
+     * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any Features
+     * that do not have the required size.  The coarsening is intended to fill gaps left by the
+     * removed Features and proceeds via an isotropic growth process.
+     */
+    void assign_badpoints();
+
+    /**
+     * @brief remove_smallfeatures Assigns a boolean value to Features dependent upon whether they meet
+     * the supplied criterion for the minimum size.
+     * @return QVector<bool> A vector of boolean values whose length is the number of Features.
+     */
+    QVector<bool> remove_smallfeatures();
 
   private:
     int32_t* m_Neighbors;

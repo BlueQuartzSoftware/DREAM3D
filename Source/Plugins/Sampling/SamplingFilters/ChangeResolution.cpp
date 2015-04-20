@@ -36,14 +36,11 @@
 
 #include "ChangeResolution.h"
 
-#include <QtCore/QMap>
-
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+#include "Sampling/SamplingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -56,7 +53,6 @@ ChangeResolution::ChangeResolution() :
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   m_Resolution.x = 1.0f;
@@ -80,7 +76,7 @@ void ChangeResolution::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), false));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, ""));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, false));
@@ -89,13 +85,14 @@ void ChangeResolution::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), true));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), true));
   setFilterParameters(parameters);
 }
 
-
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -133,8 +130,6 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void ChangeResolution::updateCellInstancePointers()
 {
-  setErrorCondition(0);
-
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -144,30 +139,43 @@ void ChangeResolution::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void ChangeResolution::dataCheck()
 {
-  DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false)
-  {
-    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
-    if(getErrorCondition() < 0) { return; }
+  setErrorCondition(0);
 
-    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if (getResolution().x <= 0)
+  {
+    QString ss = QObject::tr("The X resolution (%1) must be positive").arg(getResolution().x);
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if (getResolution().y <= 0)
+  {
+    QString ss = QObject::tr("The Y resolution (%1) must be positive").arg(getResolution().y);
+    setErrorCondition(-5556);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if (getResolution().z <= 0)
+  {
+    QString ss = QObject::tr("The  resolution (%1) must be positive").arg(getResolution().z);
+    setErrorCondition(-5557);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if (getSaveAsNewDataContainer() == false)
+  {
+    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   }
   else
   {
     getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
-    m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
-    if(getErrorCondition() < 0) { return; }
-
-    ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   }
-  if(getErrorCondition() < 0 || NULL == m) { return; }
 
-  if (m_RenumberFeatures == true)
+  if (getRenumberFeatures() == true)
   {
-    QVector<size_t> dims(1, 1);
-    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    QVector<size_t> cDims(1, 1);
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -183,8 +191,7 @@ void ChangeResolution::preflight()
   emit updateFilterParameters(this);
   dataCheck();
 
-
-  if(getErrorCondition() < 0)
+  if (getErrorCondition() < 0)
   {
     emit preflightExecuted();
     setInPreflight(false);
@@ -192,7 +199,7 @@ void ChangeResolution::preflight()
   }
 
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false)
+  if (m_SaveAsNewDataContainer == false)
   {
     m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -201,18 +208,18 @@ void ChangeResolution::preflight()
     m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
   }
 
-  size_t dims[3];
+  size_t dims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   float sizex = (dims[0]) * m->getGeometryAs<ImageGeom>()->getXRes();
   float sizey = (dims[1]) * m->getGeometryAs<ImageGeom>()->getYRes();
   float sizez = (dims[2]) * m->getGeometryAs<ImageGeom>()->getZRes();
-  int m_XP = int(sizex / m_Resolution.x);
-  int m_YP = int(sizey / m_Resolution.y);
-  int m_ZP = int(sizez / m_Resolution.z);
-  if(m_XP == 0) { m_XP = 1; }
-  if(m_YP == 0) { m_YP = 1; }
-  if(m_ZP == 0) { m_ZP = 1; }
+  size_t m_XP = size_t(sizex / m_Resolution.x);
+  size_t m_YP = size_t(sizey / m_Resolution.y);
+  size_t m_ZP = size_t(sizez / m_Resolution.z);
+  if (m_XP == 0) { m_XP = 1; }
+  if (m_YP == 0) { m_YP = 1; }
+  if (m_ZP == 0) { m_ZP = 1; }
 
   m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
@@ -238,16 +245,19 @@ void ChangeResolution::preflight()
 // -----------------------------------------------------------------------------
 void ChangeResolution::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DREAM3D_RANDOMNG_NEW()
-
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
+  if(m_SaveAsNewDataContainer == false)
+  {
+    m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+  }
+  else
+  {
+    m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
+  }
 
   if(m->getGeometryAs<ImageGeom>()->getXRes() == m_Resolution.x
       && m->getGeometryAs<ImageGeom>()->getYRes() == m_Resolution.y
@@ -258,40 +268,40 @@ void ChangeResolution::execute()
 
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
 
-  size_t dims[3];
+  size_t dims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   float sizex = (dims[0]) * m->getGeometryAs<ImageGeom>()->getXRes();
   float sizey = (dims[1]) * m->getGeometryAs<ImageGeom>()->getYRes();
   float sizez = (dims[2]) * m->getGeometryAs<ImageGeom>()->getZRes();
-  int m_XP = int(sizex / m_Resolution.x);
-  int m_YP = int(sizey / m_Resolution.y);
-  int m_ZP = int(sizez / m_Resolution.z);
-  if(m_XP == 0) { m_XP = 1; }
-  if(m_YP == 0) { m_YP = 1; }
-  if(m_ZP == 0) { m_ZP = 1; }
-  int64_t totalPoints = m_XP * m_YP * m_ZP;
+  size_t m_XP = size_t(sizex / m_Resolution.x);
+  size_t m_YP = size_t(sizey / m_Resolution.y);
+  size_t m_ZP = size_t(sizez / m_Resolution.z);
+  if (m_XP == 0) { m_XP = 1; }
+  if (m_YP == 0) { m_YP = 1; }
+  if (m_ZP == 0) { m_ZP = 1; }
+  size_t totalPoints = m_XP * m_YP * m_ZP;
 
-  float x, y, z;
-  int col, row, plane;
-  int index;
-  int index_old;
+  float x = 0.0f, y = 0.0f, z = 0.0f;
+  size_t col = 0, row = 0, plane = 0;
+  size_t index;
+  size_t index_old;
   std::vector<size_t> newindicies(totalPoints);
 
-  for (int i = 0; i < m_ZP; i++)
+  for (size_t i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getGeometryAs<ImageGeom>()->getZPoints()) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    for (int j = 0; j < m_YP; j++)
+    for (size_t j = 0; j < m_YP; j++)
     {
-      for (int k = 0; k < m_XP; k++)
+      for (size_t k = 0; k < m_XP; k++)
       {
         x = (k * m_Resolution.x);
         y = (j * m_Resolution.y);
         z = (i * m_Resolution.z);
-        col = int(x / m->getGeometryAs<ImageGeom>()->getXRes());
-        row = int(y / m->getGeometryAs<ImageGeom>()->getYRes());
-        plane = int(z / m->getGeometryAs<ImageGeom>()->getZRes());
+        col = size_t(x / m->getGeometryAs<ImageGeom>()->getXRes());
+        row = size_t(y / m->getGeometryAs<ImageGeom>()->getYRes());
+        plane = size_t(z / m->getGeometryAs<ImageGeom>()->getZRes());
         index_old = (plane * m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) + (row * m->getGeometryAs<ImageGeom>()->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         newindicies[index] = index_old;
@@ -308,11 +318,10 @@ void ChangeResolution::execute()
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    QString name = *iter;
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
-    // the same name. At least in theory
+    // the same name. At least in theory.
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->getComponentDimensions(), p->getName());
     data->resize(totalPoints);
     void* source = NULL;
@@ -322,7 +331,6 @@ void ChangeResolution::execute()
     for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
     {
       newIndicies_I = newindicies[i];
-
       source = p->getVoidPointer((nComp * newIndicies_I));
       destination = data->getVoidPointer((data->getNumberOfComponents() * i));
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
@@ -344,15 +352,14 @@ void ChangeResolution::execute()
     QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
     {
-      notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
-      notifyStatusMessage(getHumanLabel(), "Completed");
+      notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
       return;
     }
 
     updateCellInstancePointers();
 
     // Find the unique set of feature ids
-    for (int64_t i = 0; i < totalPoints; ++i)
+    for (size_t i = 0; i < totalPoints; ++i)
     {
       activeObjects[m_FeatureIds[i]] = true;
     }
@@ -381,13 +388,17 @@ AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParam
 const QString ChangeResolution::getCompiledLibraryName()
 { return Sampling::SamplingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ChangeResolution::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ChangeResolution::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //

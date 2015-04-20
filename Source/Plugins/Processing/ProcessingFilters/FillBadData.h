@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FillBadData class. See Filter documentation for details.
+ * @brief The FillBadData class. See [Filter documentation](@ref fillbaddata) for details.
  */
 class FillBadData : public AbstractFilter
 {
@@ -60,8 +60,8 @@ class FillBadData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, ReplaceBadData)
     Q_PROPERTY(bool ReplaceBadData READ getReplaceBadData WRITE setReplaceBadData)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, MinAllowedDefectSize)
-    Q_PROPERTY(int32_t MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
+    DREAM3D_FILTER_PARAMETER(int, MinAllowedDefectSize)
+    Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

@@ -1,11 +1,11 @@
 Regularize Z Spacing {#regularizezspacing}
-======
+=============
 
 ## Group (Subgroup) ##
 Sampling Filters (Resolution)
 
 ## Description ##
-This filter "resamples" the 3D array in the *Z*-direction (which is generally taken as the sectioning direction).  The *Image/Rectilinear Grid* geometry assumes all **Cells** are of the same size(dX x dY x dZ).  If the *Z* locations (i.e. slice positions) are not uniform, then the user can enter a list of the actual *Z* locations and a desired uniform "resolution".  The filter will then create a new volume with uniform *Z* locations and determine which of the old "slices" should be copied to the new "slices". Below is an example:
+This Filter "resamples" the 3D array in the Z-direction (which is generally taken as the sectioning direction).  The **Image / Rectilinear Grid Geometry** assumes all **Cells** are of the same size (dX x dY x dZ).  If the Z locations (i.e. slice positions) are not uniform, then the user can enter a list of the actual Z locations and a desired uniform "resolution".  The filter will then create a new volume with uniform Z locations and determine which of the old "slices" should be copied to the new "slices". Below is an example:
 
 If a dataset had 10 sections with the following locations:
 
@@ -39,7 +39,7 @@ and the user wanted a uniform resolution of *3*, then the following mapping woul
 |10|30|8|
 |11|33|9|
 
-Note: there is no interpolation of the data and the nearest "old slice" is copied to a given "new slice".
+*Note:* No interpolation of the data is performed and the nearest "old slice" is copied to a given "new slice".
 
 ## Parameters ##
 | Name | Type | Description |
@@ -48,7 +48,7 @@ Note: there is no interpolation of the data and the nearest "old slice" is copie
 | Z Res | Double | Uniform resolution desired in the Z direction of the new grid |
 
 ## Required Geometry ##
-Image/Rectilinear Grid
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 None
@@ -57,7 +57,6 @@ None
 None
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

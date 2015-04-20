@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ClearDataMask class. See Filter documentation for details.
+ * @brief The ClearDataMask class. See [Filter documentation](@ref cleardatamask) for details.
  */
 class ClearDataMask : public AbstractFilter
 {

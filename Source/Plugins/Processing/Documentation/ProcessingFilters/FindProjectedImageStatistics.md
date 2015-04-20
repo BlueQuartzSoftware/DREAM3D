@@ -6,7 +6,7 @@ Processing Filters (Image)
 
 ## Description ##
 This Filter calculates statistics (minimum, maximum, average, standard deviation and variance) for each *stack* of **Cells** perpendicular to a user selected plane of interest (XY, XZ, YZ).  Each **Cell** in the *stack* is then assigned the statistic(s) for the whole stack.  
-For example, if there was a 100x200x300 **Cell** volume and the plane of interest was selected as *XY*, then a 100x200 temporary *image* would be created.  Each **Cell** in the temporary *image* would represent a 300 **Cell** *stack* in the z-direction.  The statistics listed previously would be calculated for each 300 **Cell** *stack* and stored at the corresponding **Cell** in the 100x200 temporary *image*.  Finally, the values for each of the statistics stored in the temp *image* are assigned to all 300 **Cells** in the *stack* that they describe, which is equivalent to "extruding" the 100x200 temporary *image* 300 *Cells** in the z-direction. 
+For example, if there was a 100x200x300 **Cell** volume and the plane of interest was selected as *XY*, then a 100x200 temporary *image* would be created.  Each **Cell** in the temporary *image* would represent a 300 **Cell** *stack* in the Z direction.  The statistics listed previously would be calculated for each 300 **Cell** *stack* and stored at the corresponding **Cell** in the 100x200 temporary *image*.  Finally, the values for each of the statistics stored in the temp *image* are assigned to all 300 **Cells** in the *stack* that they describe, which is equivalent to "extruding" the 100x200 temporary *image* 300 *Cells** in the Z direction. 
 
 ## Parameters ##
 | Name | Type | Description |

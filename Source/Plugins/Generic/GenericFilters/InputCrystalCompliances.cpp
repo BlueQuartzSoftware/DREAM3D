@@ -133,8 +133,9 @@ int InputCrystalCompliances::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void InputCrystalCompliances::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+
+  DataArrayPath tempPath;
 
   // create compliances
   QVector<size_t> cDims(2, 6); // 6 by 6 array

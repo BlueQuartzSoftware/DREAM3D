@@ -43,7 +43,7 @@
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 /**
- * @brief The BadDataNeighborOrientationCheck class. See Filter documentation for details.
+ * @brief The BadDataNeighborOrientationCheck class. See [Filter documentation](@ref baddataneighbororientationcheck) for details.
  */
 class BadDataNeighborOrientationCheck : public AbstractFilter
 {
@@ -58,8 +58,8 @@ class BadDataNeighborOrientationCheck : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, NumberOfNeighbors)
-    Q_PROPERTY(int32_t NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
+    DREAM3D_FILTER_PARAMETER(int, NumberOfNeighbors)
+    Q_PROPERTY(int NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
