@@ -37,22 +37,12 @@
 #ifndef _ClearDataMask_H_
 #define _ClearDataMask_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "Processing/ProcessingConstants.h"
-
 /**
- * @class ClearDataMask ClearDataMask.h DREAM3DLib/SyntheticBuilderFilters/ClearDataMask.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The ClearDataMask class. See [Filter documentation](@ref cleardatamask) for details.
  */
 class ClearDataMask : public AbstractFilter
 {
@@ -70,7 +60,7 @@ class ClearDataMask : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -101,9 +91,9 @@ class ClearDataMask : public AbstractFilter
   protected:
     ClearDataMask();
 
-
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, Mask)
+
     void dataCheck();
 
     ClearDataMask(const ClearDataMask&); // Copy Constructor Not Implemented
@@ -111,9 +101,3 @@ class ClearDataMask : public AbstractFilter
 };
 
 #endif /* ClearDataMask_H_ */
-
-
-
-
-
-

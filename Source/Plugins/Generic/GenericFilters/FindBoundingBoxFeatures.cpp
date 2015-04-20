@@ -39,11 +39,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "Generic/GenericConstants.h"
 
-//FIXME: Need to change this to apply to a specific phase at a time. For example, currently a matrix phase can completely throw off the boundingbox for the precipitate phase.
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -54,11 +52,8 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   m_PhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_PhasesArrayName(DREAM3D::FeatureData::Centroids),
   m_Phases(NULL),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
   m_BiasedFeatures(NULL)
 {
@@ -71,6 +66,7 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
 FindBoundingBoxFeatures::~FindBoundingBoxFeatures()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -80,14 +76,17 @@ void FindBoundingBoxFeatures::setupFilterParameters()
   QStringList linkedProps("PhasesArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply Phase by Phase", "CalcByPhase", getCalcByPhase(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceFeatures", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Phases", "PhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "PhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getPhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayName", FilterParameterWidgetType::StringWidget, getBiasedFeaturesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayName", FilterParameterWidgetType::StringWidget, getBiasedFeaturesArrayName(), true, ""));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -123,41 +122,41 @@ int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 3);
-  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  DataArrayPath tempPath;
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCentroidsArrayPath().getDataContainerName());
+
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 3);
+  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCentroidsArrayPath()); }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  dims[0] = 1;
-  m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 1;
+  m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceFeaturesArrayPath()); }
 
   tempPath.update(getCentroidsArrayPath().getDataContainerName(), getCentroidsArrayPath().getAttributeMatrixName(), getBiasedFeaturesArrayName() );
-  m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (getCalcByPhase() == true)
   {
-    m_PhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_PhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_PhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Phases = m_PhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
-  else
-  {
-    m_Phases = NULL;
+    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getPhasesArrayPath()); }
   }
 
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -177,7 +176,6 @@ void FindBoundingBoxFeatures::preflight()
 void FindBoundingBoxFeatures::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -185,6 +183,7 @@ void FindBoundingBoxFeatures::execute()
 
   if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_boundingboxfeatures(); }
   if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_boundingboxfeatures2D(); }
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -196,25 +195,33 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
 
   size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
-  float boundbox[7];
-  float coords[7];
-  float x, y, z;
-  float dist[7];
-  float mindist;
-  int sidetomove, move;
+  float boundbox[7] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, };
+  float coords[7] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, };
+  float x = 0.0f;
+  float y = 0.0f;
+  float z = 0.0f;
+  float dist[7] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, };
+  float mindist = std::numeric_limits<float>::max();
+  int32_t sidetomove = 0;
+  int32_t move = 0;
 
-  //loop first to determine number of phases if calcByPhase is being used
-  int numPhases = 1;
-  if(m_CalcByPhase == true)
+  // loop first to determine number of phases if calcByPhase is being used
+  int32_t numPhases = 1;
+  if (m_CalcByPhase == true)
   {
     for (size_t i = 1; i < size; i++)
     {
-      if(m_Phases[i] > numPhases) { numPhases = m_Phases[i]; }
+      if (m_Phases[i] > numPhases) { numPhases = m_Phases[i]; }
     }
   }
-  for(int iter = 1; iter <= numPhases; iter++)
+  for (int32_t iter = 1; iter <= numPhases; iter++)
   {
-    //reset boundbox for each phase
+    if (m_CalcByPhase == true)
+    {
+      QString ss = QObject::tr("Working on Phase %1 of %2").arg(iter).arg(numPhases);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    }
+    // reset boundbox for each phase
     boundbox[1] = 0;
     boundbox[2] = m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getXRes();
     boundbox[3] = 0;
@@ -223,10 +230,10 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
     boundbox[6] = m->getGeometryAs<ImageGeom>()->getZPoints() * m->getGeometryAs<ImageGeom>()->getZRes();
     for (size_t i = 1; i < size; i++)
     {
-      if(m_SurfaceFeatures[i] == true && (m_CalcByPhase == false || m_Phases[i] == iter))
+      if (m_SurfaceFeatures[i] == true && (m_CalcByPhase == false || m_Phases[i] == iter))
       {
         move = 1;
-        mindist = 10000000000.0;
+        mindist = std::numeric_limits<float>::max();
         x = m_Centroids[3 * i];
         y = m_Centroids[3 * i + 1];
         z = m_Centroids[3 * i + 2];
@@ -236,74 +243,80 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
         coords[4] = y;
         coords[5] = z;
         coords[6] = z;
-        for(int j = 1; j < 7; j++)
+        for (int32_t j = 1; j < 7; j++)
         {
-          dist[j] = 10000000000.0;
-          if(j % 2 == 1)
+          dist[j] = std::numeric_limits<float>::max();
+          if (j % 2 == 1)
           {
-            if(coords[j] > boundbox[j]) { dist[j] = (coords[j] - boundbox[j]); }
-            if(coords[j] <= boundbox[j]) { move = 0; }
+            if (coords[j] > boundbox[j]) { dist[j] = (coords[j] - boundbox[j]); }
+            if (coords[j] <= boundbox[j]) { move = 0; }
           }
-          if(j % 2 == 0)
+          if (j % 2 == 0)
           {
-            if(coords[j] < boundbox[j]) { dist[j] = (boundbox[j] - coords[j]); }
-            if(coords[j] >= boundbox[j]) { move = 0; }
+            if (coords[j] < boundbox[j]) { dist[j] = (boundbox[j] - coords[j]); }
+            if (coords[j] >= boundbox[j]) { move = 0; }
           }
-          if(dist[j] < mindist) { mindist = dist[j], sidetomove = j; }
+          if (dist[j] < mindist) { mindist = dist[j], sidetomove = j; }
         }
-        if(move == 1) { boundbox[sidetomove] = coords[sidetomove]; }
+        if (move == 1) { boundbox[sidetomove] = coords[sidetomove]; }
       }
     }
     for (size_t j = 1; j < size; j++)
     {
-      if(m_CalcByPhase == false || m_Phases[j] == iter)
+      if (m_CalcByPhase == false || m_Phases[j] == iter)
       {
-        if(m_Centroids[3 * j] <= boundbox[1])
+        if (m_Centroids[3 * j] <= boundbox[1])
         { m_BiasedFeatures[j] = true; }
-        if(m_Centroids[3 * j] >= boundbox[2])
+        if (m_Centroids[3 * j] >= boundbox[2])
         { m_BiasedFeatures[j] = true; }
-        if(m_Centroids[3 * j + 1] <= boundbox[3])
+        if (m_Centroids[3 * j + 1] <= boundbox[3])
         { m_BiasedFeatures[j] = true; }
-        if(m_Centroids[3 * j + 1] >= boundbox[4])
+        if (m_Centroids[3 * j + 1] >= boundbox[4])
         { m_BiasedFeatures[j] = true; }
-        if(m_Centroids[3 * j + 2] <= boundbox[5])
+        if (m_Centroids[3 * j + 2] <= boundbox[5])
         { m_BiasedFeatures[j] = true; }
-        if(m_Centroids[3 * j + 2] >= boundbox[6])
+        if (m_Centroids[3 * j + 2] >= boundbox[6])
         { m_BiasedFeatures[j] = true; }
       }
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
 
   size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
-  float boundbox[5];
-  float coords[5];
-  float x, y;
-  float dist[5];
-  float mindist;
-  int sidetomove, move;
+  float boundbox[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+  float coords[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+  float x = 0.0f;
+  float y = 0.0f;
+  float dist[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+  float mindist = std::numeric_limits<float>::max();
+  int32_t sidetomove = 0;
+  int32_t move = 0;
 
-  int xPoints = 0, yPoints = 0;
+  int32_t xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f;
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
+  if (m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getYRes();
     yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
     yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  if (m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getXRes();
     yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
     yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  if (m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getXRes();
@@ -320,16 +333,16 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
     if(m_SurfaceFeatures[i] == true)
     {
       move = 1;
-      mindist = 10000000000.0;
+      mindist = std::numeric_limits<float>::max();
       x = m_Centroids[3 * i];
       y = m_Centroids[3 * i + 1];
       coords[1] = x;
       coords[2] = x;
       coords[3] = y;
       coords[4] = y;
-      for(int j = 1; j < 5; j++)
+      for(int32_t j = 1; j < 5; j++)
       {
-        dist[j] = 10000000000.0;
+        dist[j] = std::numeric_limits<float>::max();
         if(j % 2 == 1)
         {
           if(coords[j] > boundbox[j]) { dist[j] = (coords[j] - boundbox[j]); }

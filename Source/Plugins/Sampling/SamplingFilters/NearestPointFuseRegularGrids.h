@@ -37,22 +37,12 @@
 #ifndef _NearestPointFuseRegularGrids_H_
 #define _NearestPointFuseRegularGrids_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Sampling/SamplingConstants.h"
 /**
- * @class NearestPointFuseRegularGrids NearestPointFuseRegularGrids.h DREAM3DLib/SamplingFilters/NearestPointFuseRegularGrids.h
- * @brief
- * @author
- * @date Jun 10, 2014
- * @version 1.0
+ * @brief The NearestPointFuseRegularGrids class. See [Filter documentation](@ref nearestpointfuseregulargrids) for details.
  */
 class NearestPointFuseRegularGrids : public AbstractFilter
 {
@@ -63,15 +53,17 @@ class NearestPointFuseRegularGrids : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(NearestPointFuseRegularGrids, AbstractFilter)
 
     virtual ~NearestPointFuseRegularGrids();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ReferenceCellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SamplingCellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -102,7 +94,6 @@ class NearestPointFuseRegularGrids : public AbstractFilter
   protected:
     NearestPointFuseRegularGrids();
 
-
   private:
 
     void dataCheck();
@@ -112,8 +103,3 @@ class NearestPointFuseRegularGrids : public AbstractFilter
 };
 
 #endif /* NearestPointFuseRegularGrids_H_ */
-
-
-
-
-

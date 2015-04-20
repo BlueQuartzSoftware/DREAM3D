@@ -37,25 +37,14 @@
 #ifndef _MinNeighbors_H_
 #define _MinNeighbors_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @class MinNeighbors MinNeighbors.h DREAM3DLib/ReconstructionFilters/MinNeighbors.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The MinNeighbors class. See [Filter documentation](@ref minneighbors) for details.
  */
 class MinNeighbors : public AbstractFilter
 {
@@ -69,8 +58,10 @@ class MinNeighbors : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, MinNumNeighbors)
     Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
+
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
+
     DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
@@ -86,7 +77,7 @@ class MinNeighbors : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -110,11 +101,21 @@ class MinNeighbors : public AbstractFilter
   protected:
     MinNeighbors();
 
+    /**
+     * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any Features
+     * that do not have the required number of neighbors.  The coarsening is intended to fill gaps left by the
+     * removed Features and proceeds via an isotropic growth process.
+     */
     void assign_badpoints();
+
+    /**
+     * @brief merge_containedfeatures Assigns a boolean value to Features dependent upon whether they meet
+     * the supplied criterion for the minimum number of neighbors.
+     * @return QVector<bool> A vector of boolean values whose length is the number of Features.
+     */
     QVector<bool> merge_containedfeatures();
 
   private:
-    bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
@@ -128,8 +129,3 @@ class MinNeighbors : public AbstractFilter
 };
 
 #endif /* MinNeighbors_H_ */
-
-
-
-
-

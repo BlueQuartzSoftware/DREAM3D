@@ -1,16 +1,16 @@
 Flatten Image {#flattenimage}
-======
+=============
 
 ## Group (Subgroup) ##
 Processing Filters (Image)
 
 ## Description ##
-This filter allows the user to selected a "flattening" method for turning an array of RGB or RGBa values to grayscale values.  The options available in this filter are "Average" and "Luminosity".  If "Average" is selected, then the R, G and B values are averaged to get a single grayscale value.  If "Luminosity" is selected, then the grayscale value equals (R*0.21)+(G*0.72)+(B*0.07).
+This Filter allows the user to select a *flattening* method for turning an array of RGB or RGBa values into grayscale values.  The options available in this Filter are *Average* and *Luminosity*.  If *Average* is selected, then the R, G and B values are averaged to get a single grayscale value.  If *Luminosity* is selected, then the grayscale value equals (R*0.21)+(G*0.72)+(B*0.07).
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Flattening Method | Selection | Tells filter which method to use when flattening the RGB array.
+| Flattening Method | Selection | Tells the Filter which method to use when flattening the RGB array.
 
 ## Required Geometry ##
 Not Applicable
@@ -27,7 +27,6 @@ Not Applicable
 
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
@@ -35,6 +34,8 @@ Not Applicable
 **Version:** 1.0.0
 
 **License:**  See the License.txt file that came with DREAM3D.
+
+
 
 
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)

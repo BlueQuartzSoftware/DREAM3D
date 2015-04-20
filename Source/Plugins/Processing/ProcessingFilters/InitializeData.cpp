@@ -36,21 +36,18 @@
 
 #include "InitializeData.h"
 
-#include <QtCore/QMap>
-
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "Processing/ProcessingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 InitializeData::InitializeData() :
   AbstractFilter(),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_XMin(0),
   m_YMin(0),
   m_ZMin(0),
@@ -74,7 +71,7 @@ InitializeData::~InitializeData()
 void InitializeData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixName(), false));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), false));
   parameters.push_back(FilterParameter::New("X Min", "XMin", FilterParameterWidgetType::IntWidget, getXMin(), false, "Column"));
   parameters.push_back(FilterParameter::New("Y Min", "YMin", FilterParameterWidgetType::IntWidget, getYMin(), false, "Row"));
   parameters.push_back(FilterParameter::New("Z Min", "ZMin", FilterParameterWidgetType::IntWidget, getZMin(), false, "Plane"));
@@ -83,11 +80,14 @@ void InitializeData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Z Max", "ZMax", FilterParameterWidgetType::IntWidget, getZMax(), false, "Plane"));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void InitializeData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellAttributeMatrixName( reader->readDataArrayPath("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
+  setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
@@ -104,7 +104,7 @@ int InitializeData::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(XMin)
   DREAM3D_FILTER_WRITE_PARAMETER(YMin)
   DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
@@ -122,68 +122,66 @@ void InitializeData::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_CellAttributeMatrixName.getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
 
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  if(NULL == image.get()) { return; }
 
   if (getXMax() < getXMin())
   {
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5551);
     setErrorCondition(-5551);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getYMax() < getYMin())
   {
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5552);
     setErrorCondition(-5552);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getZMax() < getZMin())
   {
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5553);
     setErrorCondition(-5553);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getXMin() < 0)
   {
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5554);
     setErrorCondition(-5554);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getYMin() < 0)
   {
     QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getZMin() < 0)
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5556);
     setErrorCondition(-5556);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getXMax() > (static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints()) - 1))
+  if (getXMax() > (static_cast<int64_t>(image->getXPoints()) - 1))
   {
-    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5557);
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(image->getXPoints()) - 1);
     setErrorCondition(-5557);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getYMax() > (static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints()) - 1))
+  if (getYMax() > (static_cast<int64_t>(image->getYPoints()) - 1))
   {
-    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5558);
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(image->getYPoints()) - 1);
     setErrorCondition(-5558);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getZMax() > (static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints()) - 1))
+  if (getZMax() > (static_cast<int64_t>(image->getZPoints()) - 1))
   {
-    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5559);
+    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(image->getZPoints()) - 1);
     setErrorCondition(-5559);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -203,13 +201,11 @@ void InitializeData::preflight()
 // -----------------------------------------------------------------------------
 void InitializeData::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
-
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellAttributeMatrixName.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellAttributeMatrixPath.getDataContainerName());
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -223,18 +219,17 @@ void InitializeData::execute()
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
   int index;
-  QString attrMatName = m_CellAttributeMatrixName.getAttributeMatrixName();
+  QString attrMatName = m_CellAttributeMatrixPath.getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
-  for (int k = m_ZMin; k < m_ZMax + 1; k++)
+  for (int32_t k = m_ZMin; k < m_ZMax + 1; k++)
   {
-    for (int j = m_YMin; j < m_YMax + 1; j++)
+    for (int32_t j = m_YMin; j < m_YMax + 1; j++)
     {
-      for (int i = m_XMin; i < m_XMax + 1; i++)
+      for (int32_t i = m_XMin; i < m_XMax + 1; i++)
       {
         index = (k * dims[0] * dims[1]) + (j * dims[0]) + i;
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
           p->initializeTuple(index, 0);
         }
@@ -242,7 +237,7 @@ void InitializeData::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -264,17 +259,20 @@ AbstractFilter::Pointer InitializeData::newFilterInstance(bool copyFilterParamet
 const QString InitializeData::getCompiledLibraryName()
 { return Processing::ProcessingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeData::getGroupName()
 { return DREAM3D::FilterGroups::ProcessingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InitializeData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeData::getHumanLabel()
 { return "Initialize Data"; }
-

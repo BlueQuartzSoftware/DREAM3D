@@ -198,7 +198,7 @@ class OrientationLib_EXPORT ModifiedLambertProjection
 
 
 /**
-* @class This class is a wrapper around simply generating a stereo graphically projected intensity "image" (2D Array) based
+* @class GenerateIntensityMapImpl This class is a wrapper around simply generating a stereo graphically projected intensity "image" (2D Array) based
 * off the intended final size of an image and a modified Lambert projection for a set of XYZ coordinates that represent
 * the Coords generated from Euler Angles. This all feeds into generating a pole figure.
 */

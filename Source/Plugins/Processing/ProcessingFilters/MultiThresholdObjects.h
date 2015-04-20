@@ -33,25 +33,17 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _MultiThresholdObjects_H_
 #define _MultiThresholdObjects_H_
-
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "Processing/ProcessingConstants.h"
 
 /**
- * @class MultiThresholdObjects MultiThresholdObjects.h /GenericFilters/MultiThresholdObjects.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The MultiThresholdObjects class. See [Filter documentation](@ref multithresholdobjects) for details.
  */
 class MultiThresholdObjects : public AbstractFilter
 {
@@ -63,7 +55,6 @@ class MultiThresholdObjects : public AbstractFilter
 
     virtual ~MultiThresholdObjects();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, DestinationArrayName)
     Q_PROPERTY(QString DestinationArrayName READ getDestinationArrayName WRITE setDestinationArrayName)
 
@@ -73,7 +64,7 @@ class MultiThresholdObjects : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -119,14 +110,6 @@ class MultiThresholdObjects : public AbstractFilter
   protected:
     MultiThresholdObjects();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
@@ -137,5 +120,3 @@ class MultiThresholdObjects : public AbstractFilter
 };
 
 #endif /* _MultiThresholdObjects_H_ */
-
-

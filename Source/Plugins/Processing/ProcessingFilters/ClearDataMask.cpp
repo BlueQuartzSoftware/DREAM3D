@@ -36,21 +36,18 @@
 
 #include "ClearDataMask.h"
 
-#include <QtCore/QMap>
-
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "Processing/ProcessingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ClearDataMask::ClearDataMask() :
   AbstractFilter(),
-  m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_Mask(NULL)
 {
   setupFilterParameters();
@@ -69,9 +66,12 @@ ClearDataMask::~ClearDataMask()
 void ClearDataMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Element Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), false));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void ClearDataMask::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -99,21 +99,11 @@ void ClearDataMask::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
-  if( NULL == m)
-  {
-    QString ss = QObject::tr("DataContainer was NULL");
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
-    setErrorCondition(-5550);
-    return;
-  }
-
-  QVector<size_t> dims(1, 1);
-  m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -133,41 +123,39 @@ void ClearDataMask::preflight()
 // -----------------------------------------------------------------------------
 void ClearDataMask::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
-
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_MaskArrayPath.getDataContainerName());
-  int64_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
 
-  //get list of array names
+  // get list of array names
   QString attrMatName = m_MaskArrayPath.getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
-  //convert to list of pointers
+  // convert to list of pointers
   std::vector<IDataArray::Pointer> arrayList;
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    QString name = *iter;
     IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
     arrayList.push_back(p);
   }
-  int numArrays = arrayList.size();
 
-  for (int64_t i = 0; i < totalPoints; i++)
+  int32_t numArrays = arrayList.size();
+
+  for (size_t i = 0; i < totalPoints; i++)
   {
-    if(!m_Mask[i])
+    if (!m_Mask[i])
     {
-      for (int j = 0; j < numArrays; j++)
+      for (int32_t j = 0; j < numArrays; j++)
       {
         arrayList[j]->initializeTuple(i, 0);
       }
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -189,17 +177,20 @@ AbstractFilter::Pointer ClearDataMask::newFilterInstance(bool copyFilterParamete
 const QString ClearDataMask::getCompiledLibraryName()
 { return Processing::ProcessingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ClearDataMask::getGroupName()
 { return DREAM3D::FilterGroups::ProcessingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ClearDataMask::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ClearDataMask::getHumanLabel()
 { return "Clear Data (Mask)"; }
-

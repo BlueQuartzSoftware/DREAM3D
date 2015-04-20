@@ -33,22 +33,16 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _FindBoundaryCells_H_
 #define _FindBoundaryCells_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-/*
- *
+/**
+ * @brief The FindBoundaryCells class. See [Filter documentation](@ref findboundarycells) for details.
  */
 class  FindBoundaryCells : public AbstractFilter
 {
@@ -110,6 +104,3 @@ class  FindBoundaryCells : public AbstractFilter
 };
 
 #endif /* FindBoundaryCells_H_ */
-
-
-

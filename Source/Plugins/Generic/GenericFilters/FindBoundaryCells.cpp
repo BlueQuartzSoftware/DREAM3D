@@ -36,10 +36,7 @@
 
 #include "FindBoundaryCells.h"
 
-#include <sstream>
-
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -52,7 +49,6 @@ FindBoundaryCells::FindBoundaryCells() :
   AbstractFilter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_BoundaryCells(NULL)
 {
@@ -66,6 +62,7 @@ FindBoundaryCells::FindBoundaryCells() :
 FindBoundaryCells::~FindBoundaryCells()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -73,11 +70,14 @@ void FindBoundaryCells::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("BoundaryCells", "BoundaryCellsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -105,20 +105,19 @@ int FindBoundaryCells::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  DataArrayPath tempPath;
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getBoundaryCellsArrayName() );
-  m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -147,11 +146,11 @@ void FindBoundaryCells::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
-  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
-  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
+  int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  int neighpoints[6];
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
@@ -159,36 +158,35 @@ void FindBoundaryCells::execute()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  //float column, row, plane;
-  int feature;
-  int onsurf = 0;
-  int good = 0;
-  int neighbor = 0;
+  int32_t feature = 0;
+  int32_t onsurf = 0;
+  int32_t good = 0;
+  int64_t neighbor = 0;
 
-  int zStride, yStride;
-  for(int i = 0; i < zPoints; i++)
+  int64_t zStride = 0, yStride = 0;
+  for (int64_t i = 0; i < zPoints; i++)
   {
     zStride = i * xPoints * yPoints;
-    for (int j = 0; j < yPoints; j++)
+    for (int64_t j = 0; j < yPoints; j++)
     {
       yStride = j * xPoints;
-      for(int k = 0; k < xPoints; k++)
+      for (int64_t k = 0; k < xPoints; k++)
       {
         onsurf = 0;
         feature = m_FeatureIds[zStride + yStride + k];
-        if(feature > 0)
+        if (feature > 0)
         {
-          for (int l = 0; l < 6; l++)
+          for (int64_t l = 0; l < 6; l++)
           {
             good = 1;
-            neighbor = static_cast<int>( zStride + yStride + k + neighpoints[l] );
-            if(l == 0 && i == 0) { good = 0; }
-            if(l == 5 && i == (zPoints - 1)) { good = 0; }
-            if(l == 1 && j == 0) { good = 0; }
-            if(l == 4 && j == (yPoints - 1)) { good = 0; }
-            if(l == 2 && k == 0) { good = 0; }
-            if(l == 3 && k == (xPoints - 1)) { good = 0; }
-            if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
+            neighbor =  zStride + yStride + k + neighpoints[l];
+            if (l == 0 && i == 0) { good = 0; }
+            if (l == 5 && i == (zPoints - 1)) { good = 0; }
+            if (l == 1 && j == 0) { good = 0; }
+            if (l == 4 && j == (yPoints - 1)) { good = 0; }
+            if (l == 2 && k == 0) { good = 0; }
+            if (l == 3 && k == (xPoints - 1)) { good = 0; }
+            if (good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
             {
               onsurf++;
             }
@@ -221,13 +219,11 @@ AbstractFilter::Pointer FindBoundaryCells::newFilterInstance(bool copyFilterPara
 const QString FindBoundaryCells::getCompiledLibraryName()
 { return Generic::GenericBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryCells::getGroupName()
 { return DREAM3D::FilterGroups::GenericFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -235,10 +231,8 @@ const QString FindBoundaryCells::getGroupName()
 const QString FindBoundaryCells::getSubGroupName()
 { return DREAM3D::FilterSubGroups::SpatialFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryCells::getHumanLabel()
-{ return "Find Boundary Cells"; }
-
+{ return "Find Boundary Cells (Image)"; }

@@ -37,22 +37,12 @@
 #ifndef _ChangeResolution_H_
 #define _ChangeResolution_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Sampling/SamplingConstants.h"
 /**
- * @class ChangeResolution ChangeResolution.h DREAM3DLib/SamplingFilters/ChangeResolution.h
- * @brief
- * @author
- * @date Jun 10, 2014
- * @version 1.0
+ * @brief The ChangeResolution class. See [Filter documentation](@ref changeresolution) for details.
  */
 class ChangeResolution : public AbstractFilter
 {
@@ -63,17 +53,22 @@ class ChangeResolution : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter)
 
     virtual ~ChangeResolution();
+
     DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+
     DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
     Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
+
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
     Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
@@ -83,7 +78,7 @@ class ChangeResolution : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -126,8 +121,3 @@ class ChangeResolution : public AbstractFilter
 };
 
 #endif /* CHANGERESOLUTION_H_ */
-
-
-
-
-

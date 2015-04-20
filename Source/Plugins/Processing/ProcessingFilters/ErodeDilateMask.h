@@ -37,26 +37,12 @@
 #ifndef _ErodeDilateMask_H_
 #define _ErodeDilateMask_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-
-#include "Processing/ProcessingConstants.h"
-
 /**
- * @class ErodeDilateMask ErodeDilateMask.h DREAM3DLib/ReconstructionFilters/ErodeDilateMask.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The ErodeDilateMask class. See [Filter documentation](@ref erodedilatemask) for details.
  */
 class ErodeDilateMask : public AbstractFilter
 {
@@ -70,12 +56,16 @@ class ErodeDilateMask : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
     Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
+
     DREAM3D_FILTER_PARAMETER(int, NumIterations)
     Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
+
     DREAM3D_FILTER_PARAMETER(bool, XDirOn)
     Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
+
     DREAM3D_FILTER_PARAMETER(bool, YDirOn)
     Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
+
     DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
@@ -85,7 +75,7 @@ class ErodeDilateMask : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -115,10 +105,8 @@ class ErodeDilateMask : public AbstractFilter
 
   private:
     bool* m_MaskCopy;
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, Mask)
 
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, Mask)
 
     void dataCheck();
 
@@ -127,7 +115,3 @@ class ErodeDilateMask : public AbstractFilter
 };
 
 #endif /* ErodeDilateMask_H_ */
-
-
-
-

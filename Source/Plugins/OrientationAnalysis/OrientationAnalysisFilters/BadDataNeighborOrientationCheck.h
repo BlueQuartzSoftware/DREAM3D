@@ -33,51 +33,36 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ConvertOrientations_H_
-#define _ConvertOrientations_H_
 
-#include <vector>
-#include <QtCore/QString>
+#ifndef _BadDataNeighborOrientationCheck_H_
+#define _BadDataNeighborOrientationCheck_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
-/*
- *
+/**
+ * @brief The BadDataNeighborOrientationCheck class. See [Filter documentation](@ref baddataneighbororientationcheck) for details.
  */
-class  ConvertOrientations : public AbstractFilter
+class BadDataNeighborOrientationCheck : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ConvertOrientations)
-    DREAM3D_STATIC_NEW_MACRO(ConvertOrientations)
-    DREAM3D_TYPE_MACRO_SUPER(ConvertOrientations, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(BadDataNeighborOrientationCheck)
+    DREAM3D_STATIC_NEW_MACRO(BadDataNeighborOrientationCheck)
+    DREAM3D_TYPE_MACRO_SUPER(BadDataNeighborOrientationCheck, AbstractFilter)
 
-    virtual ~ConvertOrientations();
+    virtual ~BadDataNeighborOrientationCheck();
 
-    DREAM3D_FILTER_PARAMETER(int, InputType)
-    Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
+    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
+    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
-    DREAM3D_FILTER_PARAMETER(int, OutputType)
-    Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
+    DREAM3D_FILTER_PARAMETER(int, NumberOfNeighbors)
+    Q_PROPERTY(int NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellQuatsArrayPath)
-    Q_PROPERTY(DataArrayPath CellQuatsArrayPath READ getCellQuatsArrayPath WRITE setCellQuatsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellRodriguesVectorsArrayPath)
-    Q_PROPERTY(DataArrayPath CellRodriguesVectorsArrayPath READ getCellRodriguesVectorsArrayPath WRITE setCellRodriguesVectorsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAxisAnglesArrayPath)
-    Q_PROPERTY(DataArrayPath CellAxisAnglesArrayPath READ getCellAxisAnglesArrayPath WRITE setCellAxisAnglesArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
@@ -85,17 +70,8 @@ class  ConvertOrientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, EulerAnglesArrayName)
-    Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, QuatsArrayName)
-    Q_PROPERTY(QString QuatsArrayName READ getQuatsArrayName WRITE setQuatsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, RodriguesVectorsArrayName)
-    Q_PROPERTY(QString RodriguesVectorsArrayName READ getRodriguesVectorsArrayName WRITE setRodriguesVectorsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, AxisAnglesArrayName)
-    Q_PROPERTY(QString AxisAnglesArrayName READ getAxisAnglesArrayName WRITE setAxisAnglesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -103,12 +79,7 @@ class  ConvertOrientations : public AbstractFilter
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
     virtual void setupFilterParameters();
-
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -131,32 +102,20 @@ class  ConvertOrientations : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ConvertOrientations();
+    BadDataNeighborOrientationCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, RodriguesVectors)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisAngles)
-
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellRodriguesVectors)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellAxisAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-
     QVector<OrientationOps::Pointer> m_OrientationOps;
+
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
     void dataCheck();
 
-    ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
-    void operator=(const ConvertOrientations&); // Operator '=' Not Implemented
-
+    BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&); // Copy Constructor Not Implemented
+    void operator=(const BadDataNeighborOrientationCheck&); // Operator '=' Not Implemented
 };
 
-#endif /* ConvertOrientations_H_ */
-
-
-
+#endif /* BadDataNeighborOrientationCheck_H_ */

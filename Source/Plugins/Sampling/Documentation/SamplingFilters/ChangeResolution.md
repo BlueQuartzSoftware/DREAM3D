@@ -1,5 +1,5 @@
 Change Resolution {#changeresolution}
-======
+=============
 
 ## Group (Subgroup) ##
 Sampling Filters (Resolution)
@@ -14,11 +14,11 @@ A new grid of **Cells** is created and "overlaid" on the existing grid of **Cell
 | Name | Type | Description |
 |------|------|------|
 | Resolution | Double (x3) | Vector of new resolution values (dx, dy, dz) |
-| Save as New DataContainer | Boolean | Specifies if the new grid of **Cells** should replace the current geometry or if a new DataContainer should be created to hold it |
+| Save as New DataContainer | Boolean | Specifies if the new grid of **Cells** should replace the current geometry or if a new **Data Container** should be created to hold it |
 | Renumber Features | Boolean | Specifies if the **Features** should be renumbered if some **Features** 'disappear' when changing the resolution (ie coarsening the resolution may cause small **Features** to be removed. |
 
 ## Required Geometry ##
-Image/Rectilinear Grid
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
@@ -29,7 +29,6 @@ Image/Rectilinear Grid
 None
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

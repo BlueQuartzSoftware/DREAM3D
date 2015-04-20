@@ -36,22 +36,19 @@
 
 #include "NearestPointFuseRegularGrids.h"
 
-#include <QtCore/QMap>
-
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+#include "Sampling/SamplingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 NearestPointFuseRegularGrids::NearestPointFuseRegularGrids() :
   AbstractFilter(),
-  m_ReferenceCellAttributeMatrixPath("", "", ""),
-  m_SamplingCellAttributeMatrixPath("", "", "")
+  m_ReferenceCellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_SamplingCellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "")
 {
   setupFilterParameters();
 }
@@ -74,7 +71,8 @@ void NearestPointFuseRegularGrids::setupFilterParameters()
   setFilterParameters(parameters);
 }
 
-
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -102,22 +100,19 @@ int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::dataCheck()
 {
-  int err = 0;
-  AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_ReferenceCellAttributeMatrixPath, 80000);
-  AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_SamplingCellAttributeMatrixPath, 80000);
+  setErrorCondition(0);
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getReferenceCellAttributeMatrixPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSamplingCellAttributeMatrixPath().getDataContainerName());
+
+  AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getReferenceCellAttributeMatrixPath(), -301);
+  AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSamplingCellAttributeMatrixPath(), -301);
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer imageRef = getDataContainerArray()->getDataContainer(getReferenceCellAttributeMatrixPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == imageRef.get()) { return; }
-
-  ImageGeom::Pointer imageSample = getDataContainerArray()->getDataContainer(getSamplingCellAttributeMatrixPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == imageSample.get()) { return; }
-
-  //create arrays on the reference grid to hold data present on the sampling grid
+  // Create arrays on the reference grid to hold data present on the sampling grid
   QList<QString> voxelArrayNames = sampleAttrMat->getAttributeArrayNames();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    QString name = *iter;
     IDataArray::Pointer p = sampleAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
@@ -125,7 +120,6 @@ void NearestPointFuseRegularGrids::dataCheck()
     IDataArray::Pointer data = p->createNewArray(refAttrMat->getNumTuples(), p->getComponentDimensions(), p->getName());
     refAttrMat->addAttributeArray(p->getName(), data);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -146,44 +140,71 @@ void NearestPointFuseRegularGrids::preflight()
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer refDC = getDataContainerArray()->getDataContainer(getReferenceCellAttributeMatrixPath().getDataContainerName());
-  DataContainer::Pointer sampleDC = getDataContainerArray()->getDataContainer(getSamplingCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer refDC = getDataContainerArray()->getDataContainer(m_ReferenceCellAttributeMatrixPath.getDataContainerName());
+  DataContainer::Pointer sampleDC = getDataContainerArray()->getDataContainer(m_SamplingCellAttributeMatrixPath.getDataContainerName());
 
   AttributeMatrix::Pointer refAttrMat = refDC->getAttributeMatrix(m_ReferenceCellAttributeMatrixPath.getAttributeMatrixName());
   AttributeMatrix::Pointer sampleAttrMat = sampleDC->getAttributeMatrix(m_SamplingCellAttributeMatrixPath.getAttributeMatrixName());
 
-  //get dimensions and resolutions of two grids
-  size_t refDims[3];
-  size_t sampleDims[3];
-  float refRes[3];
-  float sampleRes[3];
-  float refOrigin[3];
-  float sampleOrigin[3];
-  refDC->getGeometryAs<ImageGeom>()->getDimensions(refDims);
-  sampleDC->getGeometryAs<ImageGeom>()->getDimensions(sampleDims);
+  // Get dimensions and resolutions of two grids
+  size_t _refDims[3] = { 0, 0, 0 };
+  size_t _sampleDims[3] = { 0, 0, 0 };
+  float refRes[3] = { 0.0f, 0.0f, 0.0f };
+  float sampleRes[3] = { 0.0f, 0.0f, 0.0f };
+  float refOrigin[3] = { 0.0f, 0.0f, 0.0f };
+  float sampleOrigin[3] = { 0.0f, 0.0f, 0.0f };
+  refDC->getGeometryAs<ImageGeom>()->getDimensions(_refDims);
+  sampleDC->getGeometryAs<ImageGeom>()->getDimensions(_sampleDims);
   refDC->getGeometryAs<ImageGeom>()->getResolution(refRes);
   sampleDC->getGeometryAs<ImageGeom>()->getResolution(sampleRes);
   refDC->getGeometryAs<ImageGeom>()->getOrigin(refOrigin);
   sampleDC->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
 
-  size_t numRefTuples = refDims[0]*refDims[1]*refDims[2];
+  // Further down we divide by sampleRes, so here check to make sure that no components of the resolution are 0
+  // This would be incredible unusual behavior if it were to occur, hence why we don't spend the time
+  // doing the validation up in the dataCheck
+  bool zeroRes = false;
+  for (size_t i = 0; i < 3; i++)
+  {
+    if (sampleRes[i] == 0.0f)
+    {
+      zeroRes = true;
+      break;
+    }
+  }
 
-  float x, y, z;
-  size_t col, row, plane;
-  size_t refIndex;
-  size_t sampleIndex;
-  size_t planeComp, rowComp;
+  if (zeroRes == true)
+  {
+    QString ss = QObject::tr("A component of the resolution for the Image Geometry associated with DataContainer '%1' is zero. This would result in a division by 0 operation").arg(m_SamplingCellAttributeMatrixPath.getDataContainerName());
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
-  //create arrays on the reference grid to hold data present on the sampling grid
+  int64_t refDims[3] = { 0, 0, 0 };
+  int64_t sampleDims[3] = { 0, 0, 0 };
+  for (size_t i = 0; i < 3; i++)
+  {
+    refDims[i] = static_cast<int64_t>(_refDims[i]);
+    sampleDims[i] = static_cast<int64_t>(_sampleDims[i]);
+  }
+
+  int64_t numRefTuples = refDims[0]*refDims[1]*refDims[2];
+
+  float x = 0.0f, y = 0.0f, z = 0.0f;
+  int64_t col = 0, row = 0, plane = 0;
+  int64_t refIndex = 0;
+  int64_t sampleIndex = 0;
+  int64_t planeComp = 0, rowComp = 0;
+
+  // Create arrays on the reference grid to hold data present on the sampling grid
   QList<QString> voxelArrayNames = sampleAttrMat->getAttributeArrayNames();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    QString name = *iter;
     IDataArray::Pointer p = sampleAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
@@ -193,32 +214,31 @@ void NearestPointFuseRegularGrids::execute()
   }
 
   bool outside  = false;
-  for (int i = 0; i < refDims[2]; i++)
+  for (int64_t i = 0; i < refDims[2]; i++)
   {
-    planeComp = i*refDims[0]*refDims[1];
-    for (int j = 0; j < refDims[1]; j++)
+    planeComp = i * refDims[0] * refDims[1];
+    for (int64_t j = 0; j < refDims[1]; j++)
     {
-      rowComp = j*refDims[0];
-      for (int k = 0; k < refDims[0]; k++)
+      rowComp = j * refDims[0];
+      for (int64_t k = 0; k < refDims[0]; k++)
       {
         outside = false;
         x = (k * refRes[0] + refOrigin[0]);
         y = (j * refRes[1] + refOrigin[1]);
         z = (i * refRes[2] + refOrigin[2]);
-        if((x - sampleOrigin[0]) < 0) outside = true;
-        else col = int((x - sampleOrigin[0]) / sampleRes[0]);
-        if((y - sampleOrigin[1]) < 0) outside = true;
-        else row = int((y - sampleOrigin[1]) / sampleRes[1]);
-        if((z - sampleOrigin[2]) < 0) outside = true;
-        else plane = int((z - sampleOrigin[2]) / sampleRes[2]);
-        if(col > sampleDims[0] ||  row > sampleDims[1] ||  plane > sampleDims[2]) outside = true;
-        if(outside == false)
+        if ((x - sampleOrigin[0]) < 0) outside = true;
+        else col = int64_t((x - sampleOrigin[0]) / sampleRes[0]);
+        if ((y - sampleOrigin[1]) < 0) outside = true;
+        else row = int64_t((y - sampleOrigin[1]) / sampleRes[1]);
+        if ((z - sampleOrigin[2]) < 0) outside = true;
+        else plane = int64_t((z - sampleOrigin[2]) / sampleRes[2]);
+        if (col > sampleDims[0] ||  row > sampleDims[1] ||  plane > sampleDims[2]) outside = true;
+        if (outside == false)
         {
           sampleIndex = (plane * sampleDims[0] * sampleDims[1]) + (row * sampleDims[0]) + col;
           refIndex = planeComp + rowComp + k;
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            QString name = *iter;
             IDataArray::Pointer p = sampleAttrMat->getAttributeArray(*iter);
             // Make a copy of the 'p' array that has the same name. When placed into
             // the data container this will over write the current array with
@@ -259,17 +279,20 @@ AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool cop
 const QString NearestPointFuseRegularGrids::getCompiledLibraryName()
 { return Sampling::SamplingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NearestPointFuseRegularGrids::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getHumanLabel()
-{ return "Fuse Regular Grid Datasets"; }
-
+{ return "Fuse Regular Grids (Nearest Point)"; }

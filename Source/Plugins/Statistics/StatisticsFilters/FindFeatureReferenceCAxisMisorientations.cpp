@@ -349,5 +349,5 @@ const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceCAxisMisorientations::getHumanLabel()
-{ return "Find Feature Reference C-Axis Misorientations"; }
+{ return "Find Feature Reference C-Axis Misalignments"; }
 

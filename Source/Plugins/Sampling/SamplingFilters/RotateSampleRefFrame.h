@@ -40,13 +40,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "Sampling/SamplingConstants.h"
 /**
- * @class RotateSampleRefFrame RotateSampleRefFrame.h DREAM3DLib/GenericFilters/RotateSampleRefFrame.h
- * @brief This filter will
- * @author
- * @date Apr 26, 2012
- * @version 1.0
+ * @brief The RotateSampleRefFrame class. See [Filter documentation](@ref rotatesamplerefframe) for details.
  */
 class RotateSampleRefFrame : public AbstractFilter
 {
@@ -55,6 +50,7 @@ class RotateSampleRefFrame : public AbstractFilter
     DREAM3D_SHARED_POINTERS(RotateSampleRefFrame)
     DREAM3D_STATIC_NEW_MACRO(RotateSampleRefFrame)
     DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
+
     virtual ~RotateSampleRefFrame();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
@@ -62,16 +58,18 @@ class RotateSampleRefFrame : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
     Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
+
     DREAM3D_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
+
     // This is getting exposed because other filters that are calling this filter needs to set this value
     DREAM3D_FILTER_PARAMETER(bool, SliceBySlice)
     Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -111,5 +109,3 @@ class RotateSampleRefFrame : public AbstractFilter
 };
 
 #endif /* RotateSampleRefFrame_H_ */
-
-

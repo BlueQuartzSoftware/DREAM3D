@@ -37,23 +37,12 @@
 #ifndef _FindBoundingBoxFeatures_H_
 #define _FindBoundingBoxFeatures_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 /**
- * @class FindBoundingBoxFeatures FindBoundingBoxFeatures.h DREAM3DLib/GenericFilters/FindBoundingBoxFeatures.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindBoundingBoxFeatures class. See [Filter documentation](@ref findboundingboxfeatures) for details.
  */
 class  FindBoundingBoxFeatures : public AbstractFilter
 {
@@ -124,7 +113,14 @@ class  FindBoundingBoxFeatures : public AbstractFilter
 
     void dataCheck();
 
+    /**
+     * @brief find_boundingboxfeatures Determines which Features are biased by the outer surface of a 3D volume.
+     */
     void find_boundingboxfeatures();
+
+    /**
+     * @brief find_boundingboxfeatures2D Determines which Features are biased by the outer surface of a 2D area.
+     */
     void find_boundingboxfeatures2D();
 
     FindBoundingBoxFeatures(const FindBoundingBoxFeatures&); // Copy Constructor Not Implemented

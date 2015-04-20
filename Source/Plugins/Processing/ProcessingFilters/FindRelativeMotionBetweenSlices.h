@@ -37,23 +37,12 @@
 #ifndef _FindRelativeMotionBetweenSlices_H_
 #define _FindRelativeMotionBetweenSlices_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "Processing/ProcessingConstants.h"
-
 /**
- * @class FindRelativeMotionBetweenSlices FindRelativeMotionBetweenSlices.h DREAM3DLib/GenericFilters/FindRelativeMotionBetweenSlices.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindRelativeMotionBetweenSlices class. See [Filter documentation](@ref findrelativemotionbetweenslices) for details.
  */
 class FindRelativeMotionBetweenSlices : public AbstractFilter
 {
@@ -66,20 +55,25 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     virtual ~FindRelativeMotionBetweenSlices();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath NOTIFY parametersChanged)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
-    Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
+    Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
+
     DREAM3D_FILTER_PARAMETER(int, PSize1)
-    Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1 NOTIFY parametersChanged)
+    Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
+
     DREAM3D_FILTER_PARAMETER(int, PSize2)
-    Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2 NOTIFY parametersChanged)
+    Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
+
     DREAM3D_FILTER_PARAMETER(int, SSize1)
-    Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1 NOTIFY parametersChanged)
+    Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
+
     DREAM3D_FILTER_PARAMETER(int, SSize2)
-    Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2 NOTIFY parametersChanged)
+    Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
+
     DREAM3D_FILTER_PARAMETER(int, SliceStep)
-    Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep NOTIFY parametersChanged)
+    Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
 
     DREAM3D_FILTER_PARAMETER(QString, MotionDirectionArrayName)
     Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
@@ -127,9 +121,10 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
 
   protected:
     FindRelativeMotionBetweenSlices();
-    void find_crosssections();
 
   private:
+    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InData)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, MotionDirection)
 
     void dataCheck();
@@ -139,7 +134,3 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
 };
 
 #endif /* FindRelativeMotionBetweenSlices_H_ */
-
-
-
-

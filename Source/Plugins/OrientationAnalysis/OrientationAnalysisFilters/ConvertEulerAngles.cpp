@@ -33,58 +33,42 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "RotateEulerRefFrame.h"
+
+#include "ConvertEulerAngles.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
-#include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
-class RotateEulerRefFrameImpl
+/**
+ * @brief The ConvertEulerAnglesImpl class implements a threaded algorithm to convert an array of
+ * Euler angles from raidans to degrees or degrees to radians, depending upon the incoming
+ * conversion factor.
+ */
+class ConvertEulerAnglesImpl
 {
-    float* m_CellEulerAngles;
-    float angle;
-    FloatVec3_t axis;
+
   public:
-    RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3_t rotAxis) :
+    ConvertEulerAnglesImpl(float* data, float factor) :
       m_CellEulerAngles(data),
-      angle(rotAngle),
-      axis(rotAxis)
+      convFactor(factor)
     {}
-    virtual ~RotateEulerRefFrameImpl() {}
+    virtual ~ConvertEulerAnglesImpl() {}
 
     void convert(size_t start, size_t end) const
     {
-      float rotMat[3][3];
-
-      OrientationMath::AxisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
-      float ea1 = 0, ea2 = 0, ea3 = 0;
-      float ea1new = 0, ea2new = 0, ea3new = 0;
-      float g[3][3];
-      float gNew[3][3];
       for (size_t i = start; i < end; i++)
       {
-        ea1 = m_CellEulerAngles[3 * i + 0];
-        ea2 = m_CellEulerAngles[3 * i + 1];
-        ea3 = m_CellEulerAngles[3 * i + 2];
-        OrientationMath::EulertoMat(ea1, ea2, ea3, g);
-        MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
-        MatrixMath::Normalize3x3(gNew);
-        OrientationMath::MattoEuler(gNew, ea1new, ea2new, ea3new);
-        m_CellEulerAngles[3 * i + 0] = ea1new;
-        m_CellEulerAngles[3 * i + 1] = ea2new;
-        m_CellEulerAngles[3 * i + 2] = ea3new;
+        m_CellEulerAngles[i] = m_CellEulerAngles[i] * convFactor;
       }
     }
 
@@ -94,86 +78,73 @@ class RotateEulerRefFrameImpl
       convert(r.begin(), r.end());
     }
 #endif
+  private:
+    float* m_CellEulerAngles;
+    float  convFactor;
 
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotateEulerRefFrame::RotateEulerRefFrame() :
+ConvertEulerAngles::ConvertEulerAngles() :
   AbstractFilter(),
-  m_RotationAngle(0.0),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL)
 {
-  m_RotationAxis.x = 0.0;
-  m_RotationAxis.y = 0.0;
-  m_RotationAxis.z = 1.0;
-
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotateEulerRefFrame::~RotateEulerRefFrame()
+ConvertEulerAngles::~ConvertEulerAngles()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::setupFilterParameters()
+void ConvertEulerAngles::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Rotation Axis");
-    parameter->setPropertyName("RotationAxis");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    //parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("ijk");
-    parameters.push_back(parameter);
-  }
-  {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Rotation Angle");
-    parameter->setPropertyName("RotationAngle");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setValueType("float");
-    //parameter->setCastableValueType("double");
-    parameter->setUnits("Degrees");
+    parameter->setHumanLabel("Conversion Type");
+    parameter->setPropertyName("ConversionType");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    QVector<QString> choices;
+    choices.push_back("Degrees To Radians");
+    choices.push_back("Radians To Degrees");
+    parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Element Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  setRotationAxis( reader->readFloatVec3("RotationAxis", getRotationAxis() ) );
-  setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
+  setConversionType( reader->readValue("ConversionType", getConversionType()) );
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(RotationAxis)
-  DREAM3D_FILTER_WRITE_PARAMETER(RotationAngle)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -181,12 +152,12 @@ int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::dataCheck()
+void ConvertEulerAngles::dataCheck()
 {
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 3);
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 3);
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -194,7 +165,7 @@ void RotateEulerRefFrame::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::preflight()
+void ConvertEulerAngles::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -207,33 +178,41 @@ void RotateEulerRefFrame::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::execute()
+void ConvertEulerAngles::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
-
-  float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
+  int64_t totalPoints = static_cast<int64_t>(m_CellEulerAnglesPtr.lock()->getNumberOfTuples());
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
+  float conversionFactor = 1.0f;
+  if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
+  {
+    conversionFactor = static_cast<float>( M_PI / 180.0f );
+  }
+  else if (conversionFactor == DREAM3D::EulerAngleConversionType::RadiansToDegrees)
+  {
+    conversionFactor = static_cast<float>( 180.0f / M_PI );
+  }
+
+  totalPoints *= 3;
+  //  qDebug() << "ConvertEulerAngles: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      RotateEulerRefFrameImpl(m_CellEulerAngles, rotAngle, m_RotationAxis), tbb::auto_partitioner());
-
+                      ConvertEulerAnglesImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    RotateEulerRefFrameImpl serial(m_CellEulerAngles, rotAngle, m_RotationAxis);
+    ConvertEulerAnglesImpl serial(m_CellEulerAngles, conversionFactor);
     serial.convert(0, totalPoints);
   }
 
@@ -243,9 +222,9 @@ void RotateEulerRefFrame::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ConvertEulerAngles::newFilterInstance(bool copyFilterParameters)
 {
-  RotateEulerRefFrame::Pointer filter = RotateEulerRefFrame::New();
+  ConvertEulerAngles::Pointer filter = ConvertEulerAngles::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -256,13 +235,23 @@ AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
-
+const QString ConvertEulerAngles::getCompiledLibraryName()
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getHumanLabel()
-{ return "Rotate Euler Reference Frame"; }
+const QString ConvertEulerAngles::getGroupName()
+{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertEulerAngles::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ConversionFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertEulerAngles::getHumanLabel()
+{ return "Convert Euler Angles"; }

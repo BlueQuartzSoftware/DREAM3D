@@ -33,22 +33,16 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _FindFeatureCentroids_H_
 #define _FindFeatureCentroids_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-/*
- *
+/**
+ * @brief The FindFeatureCentroids class.  See [Filter documentation](@ref findfeaturecentroids) for details.
  */
 class  FindFeatureCentroids : public AbstractFilter
 {
@@ -59,6 +53,7 @@ class  FindFeatureCentroids : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindFeatureCentroids, AbstractFilter)
 
     virtual ~FindFeatureCentroids();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -105,14 +100,14 @@ class  FindFeatureCentroids : public AbstractFilter
   protected:
     FindFeatureCentroids();
 
+    /**
+     * @brief find_centroids Determines the centroids of a list of Features.
+     */
     void find_centroids();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)
-
-    DECLARE_WRAPPED_ARRAY(featurecenters, m_FeatureCenters, float) // N x 5 Array
-
 
     void dataCheck();
 

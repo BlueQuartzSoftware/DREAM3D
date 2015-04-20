@@ -37,26 +37,12 @@
 #ifndef _FillBadData_H_
 #define _FillBadData_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-
-#include "Processing/ProcessingConstants.h"
-
 /**
- * @class FillBadData FillBadData.h DREAM3DLib/ReconstructionFilters/FillBadData.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FillBadData class. See [Filter documentation](@ref fillbaddata) for details.
  */
 class FillBadData : public AbstractFilter
 {
@@ -86,7 +72,7 @@ class FillBadData : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -117,9 +103,6 @@ class FillBadData : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
 
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
-
     void dataCheck();
 
     FillBadData(const FillBadData&); // Copy Constructor Not Implemented
@@ -127,8 +110,3 @@ class FillBadData : public AbstractFilter
 };
 
 #endif /* FillBadData_H_ */
-
-
-
-
-

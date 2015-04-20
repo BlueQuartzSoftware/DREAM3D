@@ -36,13 +36,9 @@
 
 #include "InputCrystalCompliances.h"
 
-#include <sstream>
-
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "OrientationLib/Math/OrientationMath.h"
 
 #include "Generic/GenericConstants.h"
 
@@ -51,8 +47,8 @@
 // -----------------------------------------------------------------------------
 InputCrystalCompliances::InputCrystalCompliances() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
-  m_CrystalCompliancesArrayName("CrystalCompliances"),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, ""),
+  m_CrystalCompliancesArrayName("Crystal Compliances"),
   m_CrystalCompliances(NULL)
 {
   m_Compliances.v11 = 1;
@@ -91,6 +87,7 @@ InputCrystalCompliances::InputCrystalCompliances() :
 InputCrystalCompliances::~InputCrystalCompliances()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -99,12 +96,14 @@ void InputCrystalCompliances::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Compliance Values", "Compliances", FilterParameterWidgetType::Symmetric6x6Widget, getCompliances(), true, "10^-11 Pa^-1"));
+  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("CrystalCompliances", "CrystalCompliancesArrayName", FilterParameterWidgetType::StringWidget, getCrystalCompliancesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayName", FilterParameterWidgetType::StringWidget, getCrystalCompliancesArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void InputCrystalCompliances::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -134,16 +133,16 @@ int InputCrystalCompliances::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void InputCrystalCompliances::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
-  //create compliances
-  QVector<size_t> dims(2, 6);//6 by 6 array
+  DataArrayPath tempPath;
+
+  // create compliances
+  QVector<size_t> cDims(2, 6); // 6 by 6 array
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getCrystalCompliancesArrayName() );
-  m_CrystalCompliancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+  m_CrystalCompliancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
   if( NULL != m_CrystalCompliancesPtr.lock().get() )
   { m_CrystalCompliances = m_CrystalCompliancesPtr.lock()->getPointer(0); }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -168,10 +167,10 @@ void InputCrystalCompliances::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  //determine number of phases
+  // determine number of phases
   size_t numPhases = m_CrystalCompliancesPtr.lock()->getNumberOfTuples();
 
-  //convert from 10^-2 GPa^-1 to Pa^-1
+  // convert from 10^-2 GPa^-1 to Pa^-1
   m_Compliances.v11 /= 100000000000;
   m_Compliances.v12 /= 100000000000;
   m_Compliances.v13 /= 100000000000;
@@ -200,7 +199,7 @@ void InputCrystalCompliances::execute()
   m_Compliances.v66 /= 100000000000;
 
   //loop over each phase
-  for(size_t i = 0; i < numPhases; i++)
+  for (size_t i = 0; i < numPhases; i++)
   {
     //for now just give every phase the same values
     size_t index = 36 * i;
@@ -269,13 +268,11 @@ AbstractFilter::Pointer InputCrystalCompliances::newFilterInstance(bool copyFilt
 const QString InputCrystalCompliances::getCompiledLibraryName()
 { return Generic::GenericBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InputCrystalCompliances::getGroupName()
 { return DREAM3D::FilterGroups::GenericFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -283,10 +280,8 @@ const QString InputCrystalCompliances::getGroupName()
 const QString InputCrystalCompliances::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InputCrystalCompliances::getHumanLabel()
 { return "Input Crystal Compliances"; }
-

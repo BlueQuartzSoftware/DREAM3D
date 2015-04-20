@@ -33,15 +33,15 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "MultiThresholdObjects.h"
-
-#include <vector>
-
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/ThresholdFilterHelper.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
+#include "Processing/ProcessingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -49,6 +49,7 @@
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
   m_DestinationArrayName(DREAM3D::GeneralData::ThresholdArray),
+  m_SelectedThresholds(),
   m_Destination(NULL)
 {
   setupFilterParameters();
@@ -110,9 +111,6 @@ int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::dataCheck()
 {
-  QVector<size_t> dims;
-  int numComp;
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
   if (m_SelectedThresholds.size() == 0)
@@ -122,12 +120,12 @@ void MultiThresholdObjects::dataCheck()
   }
   else
   {
-
-    int count = m_SelectedThresholds.size();
+    int32_t count = m_SelectedThresholds.size();
     QSet<QString> dcSet;
     QSet<QString> amSet;
+
     // Loop through each selected threshold item which will have the complete path and check that path
-    for(int i = 0; i < count; i++)
+    for(int32_t i = 0; i < count; i++)
     {
       ComparisonInput_t comp = m_SelectedThresholds[i];
       dcSet.insert(comp.dataContainerName);
@@ -140,64 +138,45 @@ void MultiThresholdObjects::dataCheck()
       setErrorCondition(-13090);
       QString ss = QObject::tr("Threshold selections must come from the same DataContainer. %1 were selected").arg(dcSet.size());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
     }
     if(amSet.size() != 1)
     {
       setErrorCondition(-13091);
       QString ss = QObject::tr("Threshold selections must come from the same AttributeMatrix. %1 were selected").arg(amSet.size());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
     }
 
-    // Now that we passed all those tests, create our output array
-    DataContainerArray::Pointer dca = getDataContainerArray();
-    if(NULL == dca.get() )
-    {
-      setErrorCondition(-12001);
-      notifyErrorMessage(getHumanLabel(), "The DataContainerArray was NULL.", getErrorCondition());
-    }
-    else
-    {
-      ComparisonInput_t comp = m_SelectedThresholds[0];
-      // At this point we are going to just grab the DataContainer Name and AttributeMatrix Name
-      // from the first entry and use that to create a new AttributeArray
-      QVector<size_t> dims(1, 1);
-      tempPath.update(comp.dataContainerName, comp.attributeMatrixName, getDestinationArrayName() );
-      m_DestinationPtr = dca->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-    }
     ComparisonInput_t comp = m_SelectedThresholds[0];
-    DataContainer::Pointer m = dca->getPrereqDataContainer<AbstractFilter>(this, comp.dataContainerName, false);
-    if(getErrorCondition() < 0) { return; }
-
+    QVector<size_t> cDims(1, 1);
+    DataArrayPath tempPath(comp.dataContainerName, comp.attributeMatrixName, getDestinationArrayName());
+    m_DestinationPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     // Do not allow non-scalar arrays
     for (size_t i = 0; i < m_SelectedThresholds.size(); ++i)
     {
-      IDataArray::Pointer inputData = m->getAttributeMatrix(comp.attributeMatrixName)->getAttributeArray(m_SelectedThresholds[i].attributeArrayName);
-      dims = inputData->getComponentDimensions();
-      numComp = dims[0];
-      for (int d = 1; d < dims.size(); d++)
+      ComparisonInput_t comp = m_SelectedThresholds[i];
+      tempPath.update(comp.dataContainerName, comp.attributeMatrixName, comp.attributeArrayName);
+      IDataArray::Pointer inputData = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, tempPath);
+      if(getErrorCondition() >= 0)
       {
-        numComp *= dims[d];
-      }
-      if (numComp > 1)
-      {
-        QString ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedThresholds[i].attributeArrayName);
-        setErrorCondition(-11003);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
+        cDims = inputData->getComponentDimensions();
+        int32_t numComp = static_cast<int32_t>(cDims[0]);
+        for (int32_t d = 1; d < cDims.size(); d++)
+        {
+          numComp *= cDims[d];
+        }
+        if (numComp > 1)
+        {
+          QString ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedThresholds[i].attributeArrayName);
+          setErrorCondition(-11003);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
       }
     }
-
   }
-
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -217,11 +196,8 @@ void MultiThresholdObjects::preflight()
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::execute()
 {
-  QVector<size_t> dims;
-  QString ss;
-  int err = 0;
+  int32_t err = 0;
   setErrorCondition(err);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -241,8 +217,10 @@ void MultiThresholdObjects::execute()
     err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(comp_0.attributeArrayName).get(), m_DestinationPtr.lock().get());
     if (err < 0)
     {
+      DataArrayPath tempPath(comp_0.dataContainerName, comp_0.attributeMatrixName, comp_0.attributeArrayName);
+      QString ss = QObject::tr("Error Executing threshold filter on first array. The path is %1").arg(tempPath.serialize());
       setErrorCondition(-13001);
-      notifyErrorMessage(getHumanLabel(), "Error Executing threshold filter on first array", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }
@@ -250,11 +228,11 @@ void MultiThresholdObjects::execute()
   if (m_SelectedThresholds.size() > 1)
   {
     // Get the total number of tuples, create and initialize an array to use for these results
-    int64_t totalTuples = m->getAttributeMatrix(amName)->getNumTuples();
-    BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(totalTuples, "TEMP");
+    int64_t totalTuples = static_cast<int64_t>(m->getAttributeMatrix(amName)->getNumTuples());
+    BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(totalTuples, "_INTERNAL_USE_ONLY_TEMP");
 
     // Loop on the remaining Comparison objects updating our final result array as we go
-    for(size_t i = 1; i < m_SelectedThresholds.size(); ++i)
+    for (int64_t i = 1; i < m_SelectedThresholds.size(); ++i)
     {
       // Initialize the array to false
       currentArrayPtr->initializeWithZeros();
@@ -268,13 +246,15 @@ void MultiThresholdObjects::execute()
       err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(compRef.attributeArrayName).get(), currentArrayPtr.get());
       if (err < 0)
       {
+        DataArrayPath tempPath(compRef.dataContainerName, compRef.attributeMatrixName, compRef.attributeArrayName);
+        QString ss = QObject::tr("Error Executing threshold filter on array. The path is %1").arg(tempPath.serialize());
         setErrorCondition(-13002);
-        notifyErrorMessage(getHumanLabel(), "Error Executing threshold filter on array", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       for (int64_t p = 0; p < totalTuples; ++p)
       {
-        if(m_Destination[p] == false || currentArray[p] == false)
+        if (m_Destination[p] == false || currentArray[p] == false)
         {
           m_Destination[p] = false;
         }
@@ -305,17 +285,20 @@ AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilter
 const QString MultiThresholdObjects::getCompiledLibraryName()
 { return Processing::ProcessingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getGroupName()
 { return DREAM3D::FilterGroups::ProcessingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiThresholdObjects::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ThresholdFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getHumanLabel()
 { return "Threshold Objects"; }
-

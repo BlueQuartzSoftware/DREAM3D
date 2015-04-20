@@ -128,6 +128,21 @@ class DREAM3DLib_EXPORT MatrixMath
      * @param g Input Matrix
      * @param v Value to mutliply each element by.
      */
+    template<typename T>
+    static void Divide4x1withConstant(T g[4], T v)
+    {
+      g[0] = g[0]/v;
+      g[1] = g[1]/v;
+      g[2] = g[2]/v;
+      g[3] = g[3]/v;
+    }
+
+
+    /**
+     * @brief Multiplies each element of a 3x1 matrix by the value v.
+     * @param g Input Matrix
+     * @param v Value to mutliply each element by.
+     */
     static void Multiply3x3withConstant(float g[3][3], float v);
 
     /**
@@ -242,13 +257,23 @@ class DREAM3DLib_EXPORT MatrixMath
      * @brief Returns the magnitude of the 3x1 vector. Double Precision Variant
      * @param a
      */
-    static double Magnitude3x1(double a[3]);
+    template<typename T>
+    static T Magnitude3x1(T a[3])
+    {
+      return (sqrt((a[0] * a[0]) + (a[1] * a[1]) + (a[2] * a[2])));
+    }
 
     /**
-     * @brief Returns the magnitude of the 3x1 vector. Single Precision Variant
+     * @brief Returns the magnitude of the 4x1 vector. Single Precision Variant
      * @param a
      */
-    static float Magnitude3x1(float a[3]);
+    static float Magnitude4x1(float a[4]);
+
+    /**
+     * @brief Returns the magnitude of the 4x1 vector. Single Precision Variant
+     * @param a
+     */
+    static double Magnitude4x1(double a[4]);
 
     /**
      * @brief The dot product of 2 vectors a & b. Double Precision Variant

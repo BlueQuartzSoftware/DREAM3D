@@ -33,22 +33,16 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _FlattenImage_H_
 #define _FlattenImage_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "Processing/ProcessingConstants.h"
 
 /**
- * @class FlattenImage FlattenImage.h DREAM3DLib/GenericFilters/FlattenImage.h
- * @brief This filter will convert the Euler Angles. Simply enter the conversion
- * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
- * to Degrees use 57.2957785
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 26, 2012
- * @version 1.0
+ * @brief The FlattenImage class. See [Filter documentation](@ref flattenimage) for details.
  */
 class FlattenImage : public AbstractFilter
 {
@@ -59,10 +53,8 @@ class FlattenImage : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FlattenImage, AbstractFilter)
     virtual ~FlattenImage();
 
-    DREAM3D_FILTER_PARAMETER(quint32, FlattenMethod)
-    Q_PROPERTY(quint32 FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
-
-    virtual void preflight();
+    DREAM3D_FILTER_PARAMETER(unsigned int, FlattenMethod)
+    Q_PROPERTY(unsigned int FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
@@ -72,8 +64,8 @@ class FlattenImage : public AbstractFilter
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ImageFilters; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -94,6 +86,8 @@ class FlattenImage : public AbstractFilter
      */
     virtual void execute();
 
+    virtual void preflight();
+
   signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
@@ -106,15 +100,12 @@ class FlattenImage : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned char, ImageData)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned char, FlatImageData)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, ImageData)
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, FlatImageData)
 
     FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
     void operator=(const FlattenImage&); // Operator '=' Not Implemented
 };
 
 #endif /* FlattenImage_H_ */
-
-
-
-

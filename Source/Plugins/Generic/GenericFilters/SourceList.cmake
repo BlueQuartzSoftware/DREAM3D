@@ -15,13 +15,11 @@ START_FILTER_GROUP(${Generic_BINARY_DIR} "${_filterGroupName}" "Generic")
 set(_PublicFilters
 FindBoundaryCells
 FindBoundingBoxFeatures
-FindCellQuats
 FindFeatureCentroids
 FindFeaturePhases
 FindFeaturePhasesBinary
 FindSurfaceFeatures
 GenerateVectorColors
-ConvertOrientations
 InputCrystalCompliances
 )
 

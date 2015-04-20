@@ -1,34 +1,27 @@
 Find Volume Fractions of Phases {#findvolfractions}
 ======
 
-
 ## Group (Subgroup) ##
-
 Statistics Filters (Morphological)
 
-
-
 ## Description ##
-This filter determines the volume fraction of each phase and stores it in an **Ensemble** array.
-
+This filter determines the volume fraction of each **Ensemble**.  Technically, the filter counts the number of **Elements** belonging to each **Ensemble** and stores the number fraction.  In the case of an *Image Geometry* (or any geometry with **Elements** of a single size), this will also be the volume fraction
 
 ## Parameters ##
 None 
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell**| | ReadH5Ebsd (IO) |
+| Element | CellPhases | Int | (1) | Id specifying the **Ensemble** of the **Element** |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Ensemble | VolFractions | Fraction (float) of volume that belongs to each phases. |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Ensemble | VolFractions | Float | (1) | Fraction of volume that belongs to each **Ensemble** |
 
 ## Authors ##
 

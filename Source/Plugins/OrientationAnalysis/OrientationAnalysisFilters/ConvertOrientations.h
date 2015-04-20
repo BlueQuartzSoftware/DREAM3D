@@ -33,36 +33,46 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FindCellQuats_H_
-#define _FindCellQuats_H_
-
-#include <vector>
-#include <QtCore/QString>
+#ifndef _ConvertOrientations_H_
+#define _ConvertOrientations_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
-/*
- *
+/**
+ * @brief The ConvertOrientations class. See [Filter documentation](@ref convertorientations) for details.
  */
-class  FindCellQuats : public AbstractFilter
+class  ConvertOrientations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindCellQuats)
-    DREAM3D_STATIC_NEW_MACRO(FindCellQuats)
-    DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ConvertOrientations)
+    DREAM3D_STATIC_NEW_MACRO(ConvertOrientations)
+    DREAM3D_TYPE_MACRO_SUPER(ConvertOrientations, AbstractFilter)
 
-    virtual ~FindCellQuats();
+    virtual ~ConvertOrientations();
+
+    DREAM3D_FILTER_PARAMETER(int, InputType)
+    Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
+
+    DREAM3D_FILTER_PARAMETER(int, OutputType)
+    Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellQuatsArrayPath)
+    Q_PROPERTY(DataArrayPath CellQuatsArrayPath READ getCellQuatsArrayPath WRITE setCellQuatsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellRodriguesVectorsArrayPath)
+    Q_PROPERTY(DataArrayPath CellRodriguesVectorsArrayPath READ getCellRodriguesVectorsArrayPath WRITE setCellRodriguesVectorsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAxisAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath CellAxisAnglesArrayPath READ getCellAxisAnglesArrayPath WRITE setCellAxisAnglesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
@@ -70,8 +80,17 @@ class  FindCellQuats : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, EulerAnglesArrayName)
+    Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
+
     DREAM3D_FILTER_PARAMETER(QString, QuatsArrayName)
     Q_PROPERTY(QString QuatsArrayName READ getQuatsArrayName WRITE setQuatsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, RodriguesVectorsArrayName)
+    Q_PROPERTY(QString RodriguesVectorsArrayName READ getRodriguesVectorsArrayName WRITE setRodriguesVectorsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AxisAnglesArrayName)
+    Q_PROPERTY(QString AxisAnglesArrayName READ getAxisAnglesArrayName WRITE setAxisAnglesArrayName)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -107,24 +126,26 @@ class  FindCellQuats : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    FindCellQuats();
+    ConvertOrientations();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellRodriguesVectors)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellAxisAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, RodriguesVectors)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisAngles)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck();
 
-    FindCellQuats(const FindCellQuats&); // Copy Constructor Not Implemented
-    void operator=(const FindCellQuats&); // Operator '=' Not Implemented
-
+    ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
+    void operator=(const ConvertOrientations&); // Operator '=' Not Implemented
 };
 
-#endif /* FindCellQuats_H_ */
-
-
-
+#endif /* ConvertOrientations_H_ */
