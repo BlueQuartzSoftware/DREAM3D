@@ -2,7 +2,7 @@ Find C-Axis Locations {#findcaxislocations}
 ======
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Orientation Analysis Filters (Statistics)
 
 ## Description ##
 This Filter determines the direction <u,v,w> of the c-axis for each **Element** by applying the quaternion of the **Element** to the <001> direction, which is the c-axis for *Hexagonal* materials.  This will tell where the c-axis of the **Element** sits in the *sample reference frame*.

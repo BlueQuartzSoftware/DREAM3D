@@ -2,7 +2,7 @@ Find Feature Average Orientations {#findavgorientations}
 ======
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Orientation Analysis Filters (Statistics)
 
 ## Description ##
 This Filter determines the average orientation of each **Feature** by the following algorithm:

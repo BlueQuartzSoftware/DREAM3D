@@ -2,7 +2,7 @@ Find Feature Reference Misorientations {#findfeaturereferencemisorientations}
 ======
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Orientation Analysis Filters (Statistics)
 
 ## Description ##
 This Filter calculates the misorientation angle between each **Cell** within a **Feature** and a *reference orientation* for that **Feature**.  The user can choose the *reference orientation* to be used for the **Features** from a drop-down menu.  The options for the *reference orientation* are the average orientation of the **Feature** or the orientation of the **Cell** that is furthest from the *boundary* of the **Feature**.

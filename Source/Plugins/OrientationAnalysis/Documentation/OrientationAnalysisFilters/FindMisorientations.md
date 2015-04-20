@@ -2,7 +2,7 @@ Find Feature Neighbor Misorientations {#findmisorientations}
 ==========
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Orientation Analysis Filters (Statistics)
 
 ## Description ##
 This filter determines, for each **Feature**, the misorientations with each of the **Features** that are in contact with it.  The misorientations are stored as a list (for each **Feature**) of angles (in degrees).  The axis of the misorientation is not stored by this filter.

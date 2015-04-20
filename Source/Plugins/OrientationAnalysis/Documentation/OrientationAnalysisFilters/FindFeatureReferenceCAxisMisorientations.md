@@ -2,7 +2,7 @@ Find Feature Reference C-Axis Misalignments {#findfeaturereferencecaxismisorient
 ======
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Orientation Analysis Filters (Statistics)
 
 ## Description ##
 This filter calculates the misorientation angle between the c-axis of each **Cell** within a **Feature** and the average c-axis for that **Feature** and stores that value for each **Cell**.  The average and standard deviation of those values for all **Cells** belonging to the same **Feature** is also stored for each **Feature**.

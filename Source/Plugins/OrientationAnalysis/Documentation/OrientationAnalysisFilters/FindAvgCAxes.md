@@ -2,7 +2,7 @@ Find Feature Average C-Axes {#findavgcaxes}
 ======
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Orientation Analysis Filters (Statistics)
 
 ## Description ##
 This Filter determines the average c-axis location of each **Feature** by the following algorithm:
