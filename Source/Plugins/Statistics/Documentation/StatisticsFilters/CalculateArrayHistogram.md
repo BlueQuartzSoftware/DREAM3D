@@ -2,7 +2,7 @@ Calculate Frequency Histogram {#calculatearrayhistogram}
 ==========
 
 ## Group (Subgroup) ##
-Statistics Filters
+Statistics Filters (Ensemble)
 
 ## Description ##
 This filter will create a "Frequency Distribution" histogram of a specified scalar **Array**. The user will select the number of bins (a value greater than zero). The user will enter a new attribute matrix name and a new histogram array name. If the user clicks the new Data Container check box, a new data container name must be entered. Otherwise the current data container will be used.
@@ -49,27 +49,22 @@ Also See Histogram Quick Reference at https://plot.ly/histogram/.
 
 | Name | Type | Description |
 |------|------| ----------- |
-| Scalar Array To Bin | various | Create a histogram of this scalar array. |
-| Number Of Bins | Integer greater than zero |  |
-| Use Min & Max Range | The user can set the range of the data (min & max) | The magnitude of the bin is based on the range of data / the number of bins. |
-| Min Value | The min value in the range of data | The user can set this value if the "Use Min & Max Range" is true |
-| Max Value | The max value in the range of data | The user can set this value if the "Use Min & Max Range" is true |
-| New DataContainer name | The user can create a new data container |  |
-| New AttributeMatrix name | The user can create a new attribute matrix to put the data into |  |
-| New Histogram Array name | The user should set the name of the histogram output array |  |
-
+| Number Of Bins | Integer | Specifies number of histogram bins ( greater than zero) |
+| Use Min & Max Range | Boolean | Specifies whether the user can set the Min and Max values to consider for the histogram or if the Min and Max of the data will be used |
+| Min Value | Double | The user can set this value if the "Use Min & Max Range" is true |
+| Max Value | Double | The user can set this value if the "Use Min & Max Range" is true |
+| New Data Container | Boolean | Specifies if the output array will be stored in a new **DataContainer** or the existing one |
 
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Any  | None         | Must be a scalar array | None |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any  | None         | Any | (1) | Array to calculate histogram of (must be a scalar array) |
 
 ## Created Arrays ##
-| Type | Default Name | Component | Description |
-|------|--------------|-------------|---------|
-| Double | User set | 2 | [Bin cutoff {right side}, Frequency] values for each bin. |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Double | User set | Double | (2) | The output array is a two component array with [Bin cutoff {right side}, Frequency] values for each bin. |
 
 ## Authors ##
 

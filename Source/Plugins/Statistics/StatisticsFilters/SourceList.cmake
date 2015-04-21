@@ -13,39 +13,20 @@ START_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics")
 set(_PublicFilters
   CorrelateValuesWithVectorDirection
   CalculateArrayHistogram
-  FindBasalLoadingFactor
-  FindAvgCAxes
-  FindAvgOrientations
   FindAvgScalarValueForFeatures
-  FindBoundaryStrengths
-  FindCAxisLocations
-  FindDirectionalModuli
   FindEllipsoidError
   FindEuclideanDistMap
   FindFeatureClustering
   FindFeatureHistogram
-  FindFeatureNeighborCAxisMisalignments
-  FindFeatureReferenceCAxisMisorientations
-  FindFeatureReferenceMisorientations
-  FindKernelAvgMisorientations
   FindLargestCrossSections
-  FindLocalAverageCAxisMisalignments
-  FindMicroTextureRegions
-  FindMisorientations
-  FindModulusMismatch
   FindNeighborhoods
   FindNeighbors
   FindNumFeatures
-  FindOrientationFieldCurl
-  FindSchmids
   FindShapes
   FindSizes
   FindSaltykovSizes
-  FindSlipTransmissionMetrics
   FindSurfaceAreaToVolume
-  #FindBoundaryCellFractions
-  FindTwinBoundaries
-  FindTwinBoundarySchmidFactors
+  FindBoundaryCellFractions
   FindVolFractions
   FitFeatureData
   FitCorrelatedFeatureData

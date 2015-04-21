@@ -22,6 +22,25 @@ set(_PublicFilters
   ConvertHexGridToSquareGrid
   ConvertOrientations
   EbsdToH5Ebsd
+  FindAvgCAxes
+  FindAvgOrientations
+  FindBasalLoadingFactor
+  FindBoundaryStrengths
+  FindCAxisLocations
+  FindDirectionalModuli
+  FindFeatureNeighborCAxisMisalignments
+  FindFeatureReferenceCAxisMisorientations
+  FindFeatureReferenceMisorientations
+  FindKernelAvgMisorientations
+  FindLocalAverageCAxisMisalignments
+  FindMicroTextureRegions
+  FindMisorientations
+  FindModulusMismatch
+  FindOrientationFieldCurl
+  FindSchmids
+  FindSlipTransmissionMetrics
+  FindTwinBoundaries
+  FindTwinBoundarySchmidFactors
   GenerateEulerColors
   GenerateIPFColors
   GenerateMisorientationColors
