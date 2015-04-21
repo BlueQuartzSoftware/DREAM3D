@@ -317,7 +317,7 @@ QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> na
 				name.replace("@PluginName@", pluginName);
 			}
 
-			replaceStr.append("  namespace " + name + "Test\n");
+			replaceStr.append("namespace " + name + "Test\n");
 			replaceStr.append("  {\n");
 			replaceStr.append("    const QString TestFile1(\"@TEST_TEMP_DIR@/TestFile1.txt\");\n");
 			replaceStr.append("    const QString TestFile2(\"@TEST_TEMP_DIR@/TestFile2.txt\");\n");

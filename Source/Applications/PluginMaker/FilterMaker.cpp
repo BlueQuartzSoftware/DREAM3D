@@ -79,7 +79,7 @@ void FilterMaker::setupGui()
   errorString->setTextFormat(Qt::PlainText);
   errorString->setTextInteractionFlags(Qt::NoTextInteraction);
   errorString->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
-  errorString->setHidden(true);
+  errorString->setText("");
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ void FilterMaker::on_pluginDir_textChanged(const QString& text)
   if (true == text.isEmpty())
   {
     generateBtn->setEnabled(false);
-    errorString->setHidden(true);
+    errorString->setText("");
     return;
   }
 
@@ -134,20 +134,17 @@ void FilterMaker::on_pluginDir_textChanged(const QString& text)
     if (fi.exists() == false)
     {
       generateBtn->setEnabled(false);
-      errorString->setText("The specified directory is not a valid plugin directory.  Please select a valid plugin directory.");
-      errorString->setVisible(true);
-      return;
+      errorString->setText("The specified directory is not a valid plugin directory.\nPlease select a valid plugin directory.");
     }
     else if (filterName->text().isEmpty())
     {
       generateBtn->setEnabled(false);
-      errorString->setHidden(true);
+      errorString->setText("");
     }
     else
     {
       generateBtn->setEnabled(true);
       errorString->setText("");
-      errorString->setHidden(true);
     }
   }
 }
@@ -216,9 +213,9 @@ void FilterMaker::on_filterName_textChanged(const QString& text)
   if (text.isEmpty())
   {
     generateBtn->setEnabled(false);
-    errorString->setHidden(true);
+    errorString->setText("");
   }
-  else if (text.contains(QRegExp("[^a-zA-Z_-/\s]|(Filter|Plugin)$")))
+  else if (text.contains(QRegExp("[^a-zA-Z_-/\s]")))
   {
     generateBtn->setEnabled(false);
 
@@ -226,17 +223,20 @@ void FilterMaker::on_filterName_textChanged(const QString& text)
     errorString->setText("The name that you chose has illegal characters. " + linkText);
     errorString->setTextFormat(Qt::RichText);
     errorString->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    errorString->setHidden(false);
+  }
+  else if (text.contains(QRegExp("(Filter|Plugin)$")))
+  {
+    generateBtn->setEnabled(false);
+    errorString->setText("Filter names cannot contain the words 'Filter' or 'Plugin' at the end of the name.\nPlease choose a different filter name.");
   }
   else if (pluginDir->text().isEmpty())
   {
     generateBtn->setEnabled(false);
-    errorString->setHidden(true);
+    errorString->setText("");
   }
   else
   {
     generateBtn->setEnabled(true);
-    errorString->setHidden(true);
     errorString->setText("");
     errorString->setTextFormat(Qt::PlainText);
     errorString->setTextInteractionFlags(Qt::NoTextInteraction);
@@ -250,7 +250,7 @@ void FilterMaker::on_errorString_linkActivated(const QString &link)
 {
   QMessageBox msgBox;
   msgBox.setWindowTitle("Naming Restrictions");
-  msgBox.setText("Names can only contain letters, numbers, underscores, and dashes.\n\nNames cannot contain the words 'Filter' or 'Plugin' at the end of the name.");
+  msgBox.setText("Names can only contain letters, numbers, underscores, and dashes.");
   msgBox.setInformativeText("No special characters or spaces allowed due to file system restrictions.");
   msgBox.setStandardButtons(QMessageBox::Ok);
   msgBox.setDefaultButton(QMessageBox::Ok);

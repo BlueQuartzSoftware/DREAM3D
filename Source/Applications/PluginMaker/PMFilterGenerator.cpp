@@ -135,14 +135,14 @@ void PMFilterGenerator::generateOutput()
     QTextStream in(&rfile);
     QString text = in.readAll();
     text.replace("@PluginName@", pluginName);
-	text.replace("@ClassName@", m_ClassName.replace("@PluginName@", getPluginName()));
+	text.replace("@ClassName@", m_ClassName.replace("@PluginName@", pluginName));
     text.replace("@MD_FILE_NAME@", m_ClassName + ".md");
     text.replace("@ClassNameLowerCase@", classNameLowerCase);
     text.replace("@FilterGroup@", pluginName);
     text.replace("@FilterSubgroup@", pluginName);
 
 
-    QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
+    QString parentPath = pluginDir + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
     parentPath = QDir::toNativeSeparators(parentPath);
 
     QDir dir(parentPath);
