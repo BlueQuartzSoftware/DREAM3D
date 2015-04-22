@@ -56,10 +56,10 @@
 
 enum TabIndices
 {
-	BASIC_TAB,
-	ADVANCED_TAB,
-	CURRENT_STRUCTURE_TAB,
-	HELP_TAB
+  BASIC_TAB,
+  ADVANCED_TAB,
+  CURRENT_STRUCTURE_TAB,
+  HELP_TAB
 };
 
 // -----------------------------------------------------------------------------
@@ -80,28 +80,6 @@ FilterInputWidget::FilterInputWidget(QWidget* parent) :
 FilterInputWidget::~FilterInputWidget()
 {
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FilterInputWidget::getLabelStyleSheet()
-{
-  QString styleSheet;
-  QTextStream ss(&styleSheet);
-
-  ss << "QLabel#label {";
-#if defined(Q_OS_WIN)
-  ss << "font: 10 pt \"Times New Roman\";";
-#elif defined(Q_OS_MAC)
-  ss << "font: 13 pt \"Times New Roman\";";
-#else
-  ss << "font: 10 pt \"Times New Roman\"";
-#endif
-  ss << "  font-weight: bold;  }";
-  return styleSheet;
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -189,7 +167,6 @@ void FilterInputWidget::clearInputWidgets()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 {
-
   w->getBasicInputsWidget()->setParent(w);
   w->getAdvancedInputsWidget()->setParent(w);
   clearInputWidgets();

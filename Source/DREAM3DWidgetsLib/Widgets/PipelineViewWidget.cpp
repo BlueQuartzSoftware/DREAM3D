@@ -563,8 +563,8 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 
     m_FilterWidgetLayout = new QVBoxLayout(this);
     m_FilterWidgetLayout->setObjectName(QString::fromUtf8("m_FilterWidgetLayout"));
-    m_FilterWidgetLayout->setContentsMargins(5, 6, 5, 6);
-    m_FilterWidgetLayout->setSpacing(5);
+    m_FilterWidgetLayout->setContentsMargins(2, 2, 2, 2);
+    m_FilterWidgetLayout->setSpacing(3);
     addSpacer = true;
 
     if(index < 0)

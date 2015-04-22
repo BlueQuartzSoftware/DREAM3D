@@ -66,8 +66,26 @@ sss</string>
     </property>
     <item row="0" column="0">
      <widget class="DREAM3DSplitter" name="splitter">
+      <property name="styleSheet">
+       <string notr="true">QSplitter::handle {
+    
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.166 rgba(255, 255, 0, 255), stop:0.333 rgba(0, 255, 0, 255), stop:0.5 rgba(0, 255, 255, 255), stop:0.666 rgba(0, 0, 255, 255), stop:0.833 rgba(255, 0, 255, 255), stop:1 rgba(255, 0, 0, 255));
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="lineWidth">
+       <number>4</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="opaqueResize">
+       <bool>false</bool>
+      </property>
+      <property name="handleWidth">
+       <number>5</number>
       </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -76,6 +94,12 @@ sss</string>
         </property>
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
         </property>
         <property name="rightMargin">
          <number>0</number>
@@ -106,6 +130,15 @@ sss</string>
           <property name="acceptDrops">
            <bool>true</bool>
           </property>
+          <property name="frameShape">
+           <enum>QFrame::Panel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="lineWidth">
+           <number>1</number>
+          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -114,8 +147,8 @@ sss</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1011</width>
-             <height>562</height>
+             <width>1032</width>
+             <height>556</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -136,19 +169,25 @@ sss</string>
            <property name="acceptDrops">
             <bool>true</bool>
            </property>
+           <property name="styleSheet">
+            <string notr="true">PipelineViewWidget
+  {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(233, 236, 241, 255), stop:1.0 rgba(211, 216, 224, 255));
+  }</string>
+           </property>
           </widget>
          </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
-           <number>6</number>
+           <number>5</number>
           </property>
           <property name="leftMargin">
            <number>4</number>
           </property>
           <property name="rightMargin">
-           <number>4</number>
+           <number>0</number>
           </property>
           <property name="bottomMargin">
            <number>0</number>
@@ -175,6 +214,12 @@ sss</string>
        </layout>
       </widget>
       <widget class="QFrame" name="fiwFrame">
+       <property name="styleSheet">
+        <string notr="true">PipelineViewWidget
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(233, 236, 241, 255), stop:1.0 rgba(211, 216, 224, 255));
+}</string>
+       </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -209,7 +254,7 @@ sss</string>
      <x>0</x>
      <y>0</y>
      <width>1104</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

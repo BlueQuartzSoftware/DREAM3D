@@ -29,18 +29,10 @@
    <item>
     <widget class="QFrame" name="contents">
      <property name="styleSheet">
-      <string notr="true">QFrame::contents
-{
-  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));
-border: 1px solid #515151;
-border-radius: 10px;
-padding: 0 0 0 0px;
-font: 100 italic 12pt &quot;Arial&quot;;
-font-weight: bold;s
-}</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
@@ -58,7 +50,7 @@ font-weight: bold;s
       <property name="bottomMargin">
        <number>2</number>
       </property>
-      <item row="3" column="0">
+      <item row="2" column="0">
        <widget class="QTabWidget" name="tabWidget">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -70,9 +62,15 @@ font-weight: bold;s
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
+        </property>
+        <property name="documentMode">
+         <bool>false</bool>
         </property>
         <property name="tabsClosable">
+         <bool>false</bool>
+        </property>
+        <property name="tabBarAutoHide">
          <bool>false</bool>
         </property>
         <widget class="QWidget" name="basicTab">
@@ -102,8 +100,8 @@ font-weight: bold;s
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>746</width>
-               <height>308</height>
+               <width>754</width>
+               <height>325</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -168,8 +166,8 @@ font-weight: bold;s
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>746</width>
-               <height>308</height>
+               <width>754</width>
+               <height>325</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -231,19 +229,6 @@ font-weight: bold;s
         </widget>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="Line" name="line">
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="lineWidth">
-         <number>2</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="topMargin">
@@ -282,10 +267,16 @@ font-weight: bold;s
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>24</width>
+            <height>24</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
-            <width>32</width>
-            <height>32</height>
+            <width>24</width>
+            <height>24</height>
            </size>
           </property>
           <property name="text">
@@ -308,7 +299,7 @@ font-weight: bold;s
         </item>
        </layout>
       </item>
-      <item row="4" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="brandingLabel">
         <property name="text">
          <string>Branding Information</string>

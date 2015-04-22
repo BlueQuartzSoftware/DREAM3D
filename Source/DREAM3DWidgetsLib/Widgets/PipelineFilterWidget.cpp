@@ -176,6 +176,7 @@ void PipelineFilterWidget::layoutWidgets()
   // If the filter is valid then instantiate all the FilterParameterWidgets
   // Create the Widget that will be placed into the Basic Inputs Scroll Area
   m_BasicInputsWidget = new QWidget(this);
+
   QString basicname = QString::fromUtf8("basicInputsScrollWidget1_") + m_Filter->getNameOfClass();
   m_BasicInputsWidget->setObjectName(basicname);
   m_BasicInputsWidget->setGeometry(QRect(0, 0, 250, 267));

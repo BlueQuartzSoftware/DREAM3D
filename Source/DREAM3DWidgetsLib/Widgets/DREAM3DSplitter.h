@@ -46,6 +46,8 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
+class QSplitterHandle;
+
 /**
 * @brief The DREAM3DSplitter class is a sub-class of the QSplitter class.
 */
@@ -56,6 +58,8 @@ class DREAM3DWidgetsLib_EXPORT DREAM3DSplitter : public QSplitter
 public:
   DREAM3DSplitter(QWidget* parent = 0);
   virtual ~DREAM3DSplitter();
+
+  QSplitterHandle* createHandle();
 
 private:
 
