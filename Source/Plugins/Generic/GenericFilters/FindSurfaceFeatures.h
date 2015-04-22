@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindSurfaceFeatures class. See Filter documentation for details.
+ * @brief The FindSurfaceFeatures class. See [Filter documentation](@ref findsurfacefeatures) for details.
  */
 class  FindSurfaceFeatures : public AbstractFilter
 {
@@ -98,7 +98,14 @@ class  FindSurfaceFeatures : public AbstractFilter
   protected:
     FindSurfaceFeatures();
 
+    /**
+     * @brief find_surfacefeatures Determines which Features intersect the outer surface of a 3D volume.
+     */
     void find_surfacefeatures();
+
+    /**
+     * @brief find_surfacefeatures2D Determines which Features intersect the outer boundary of a 2D area.
+     */
     void find_surfacefeatures2D();
 
   private:

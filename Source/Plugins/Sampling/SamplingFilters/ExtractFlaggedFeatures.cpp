@@ -36,18 +36,12 @@
 
 #include "ExtractFlaggedFeatures.h"
 
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+#include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingFilters/CropVolume.h"
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -55,11 +49,10 @@
 ExtractFlaggedFeatures::ExtractFlaggedFeatures() :
   AbstractFilter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FlaggedFeaturesArrayPath("", "" , ""),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FlaggedFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIds(NULL),
-  m_FlaggedFeaturesArrayName(""),
-  m_FlaggedFeatures(NULL)
+  m_FlaggedFeatures(NULL),
+  m_FeatureBounds(NULL)
 {
   setupFilterParameters();
 }
@@ -78,7 +71,7 @@ void ExtractFlaggedFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFlaggedFeaturesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
@@ -114,16 +107,14 @@ void ExtractFlaggedFeatures::dataCheck()
 {
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  m_FlaggedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getFlaggedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FlaggedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getFlaggedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FlaggedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FlaggedFeatures = m_FlaggedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -147,7 +138,6 @@ void ExtractFlaggedFeatures::preflight()
 void ExtractFlaggedFeatures::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -180,7 +170,7 @@ void ExtractFlaggedFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Minimum Size Filter Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -190,8 +180,7 @@ void ExtractFlaggedFeatures::find_feature_bounds()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  //int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  int64_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -207,30 +196,31 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   };
 
   QVector<size_t> cDims(1, 6);
-  boundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "Bounds");
+  boundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds");
   m_FeatureBounds = boundsPtr->getPointer(0);
   boundsPtr->initializeWithValue(-1);
 
-  size_t kstride, jstride, count;
-  int featureShift, feature;
+  DimType kstride = 0, jstride = 0, count = 0;
+  DimType featureShift = 0;
+  int32_t feature = 0;
 
   for (DimType k = 0; k < dims[2]; k++)
   {
-    kstride = static_cast<int>( dims[0] * dims[1] * k );
+    kstride = dims[0] * dims[1] * k;
     for (DimType j = 0; j < dims[1]; j++)
     {
-      jstride = static_cast<int>( dims[0] * j );
+      jstride = dims[0] * j;
       for (DimType i = 0; i < dims[0]; i++)
       {
         count = kstride + jstride + i;
         feature = m_FeatureIds[count];
         featureShift = 6 * feature;
-        if(m_FeatureBounds[featureShift] == -1 || m_FeatureBounds[featureShift] > i)  { m_FeatureBounds[featureShift] = i; }
-        if(m_FeatureBounds[featureShift + 1] == -1 || m_FeatureBounds[featureShift + 1] < i)  { m_FeatureBounds[featureShift + 1] = i; }
-        if(m_FeatureBounds[featureShift + 2] == -1 || m_FeatureBounds[featureShift + 2] > j)  { m_FeatureBounds[featureShift + 2] = j; }
-        if(m_FeatureBounds[featureShift + 3] == -1 || m_FeatureBounds[featureShift + 3] < j)  { m_FeatureBounds[featureShift + 3] = j; }
-        if(m_FeatureBounds[featureShift + 4] == -1 || m_FeatureBounds[featureShift + 4] > k)  { m_FeatureBounds[featureShift + 4] = k; }
-        if(m_FeatureBounds[featureShift + 5] == -1 || m_FeatureBounds[featureShift + 5] < k)  { m_FeatureBounds[featureShift + 5] = k; }
+        if (m_FeatureBounds[featureShift] == -1 || m_FeatureBounds[featureShift] > i) { m_FeatureBounds[featureShift] = i; }
+        if (m_FeatureBounds[featureShift + 1] == -1 || m_FeatureBounds[featureShift + 1] < i) { m_FeatureBounds[featureShift + 1] = i; }
+        if (m_FeatureBounds[featureShift + 2] == -1 || m_FeatureBounds[featureShift + 2] > j) { m_FeatureBounds[featureShift + 2] = j; }
+        if (m_FeatureBounds[featureShift + 3] == -1 || m_FeatureBounds[featureShift + 3] < j) { m_FeatureBounds[featureShift + 3] = j; }
+        if (m_FeatureBounds[featureShift + 4] == -1 || m_FeatureBounds[featureShift + 4] > k) { m_FeatureBounds[featureShift + 4] = k; }
+        if( m_FeatureBounds[featureShift + 5] == -1 || m_FeatureBounds[featureShift + 5] < k) { m_FeatureBounds[featureShift + 5] = k; }
       }
     }
   }
@@ -273,4 +263,3 @@ const QString ExtractFlaggedFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getHumanLabel()
 { return "Extract Flagged Features (Rogues Gallery)"; }
-

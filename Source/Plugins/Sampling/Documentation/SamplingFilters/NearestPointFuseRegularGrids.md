@@ -1,20 +1,19 @@
-Fuse Regular Grids {#nearestpointfuseregulargrids}
-======
+Fuse Regular Grids (Nearest Points) {#nearestpointfuseregulargrids}
+=============
 
 ## Group (Subgroup) ##
 Sampling Filters (Fusion)
 
 ## Description ##
-This Filter fuses two *Image/Rectilinear Grid* data sets together. The grid of **Cells** in the *Reference DataContainer* is overlaid on the grid of **Cells** in the *Sampling DataContainer*.  Each **Cell** in the *Reference DataContainer** is associated with the nearest point in the *Sampling DataContainer* (ie there is currently no *interpolation* performed).  All the attributes of the **Cell** in the *Sampling DataContainer* are then assigned to the **Cell** in the *Reference DataContainer*.
+This Filter fuses two *Image / Rectilinear Grid* data sets together. The grid of **Cells** in the *Reference* **Data Container** is overlaid on the grid of **Cells** in the *Sampling* **Data Container**.  Each **Cell** in the *Reference* **Data Container** is associated with the nearest point in the *Sampling* **Data Container** (i.e. no *interpolation* is performed).  All the attributes of the **Cell** in the *Sampling* **Data Container** are then assigned to the **Cell** in the *Reference* **Data Container**.
 
-**Note that the *Sampling DataContainer* remains identical after this filter, but the *Reference DataContainer*, while 'geometrically identical', gains all the attribute arrays from the *Sampling DataContainer*.
-
+*Note:* The *Sampling* **Data Container** remains identical after this filter, but the *Reference* **Data Container**, while "geometrically identical", gains all the attribute arrays from the *Sampling* **Data Container**.
 
 ## Parameters ##
 None
 
 ## Required Geometry ##
-Image/Rectilinear Grid (x2)
+Image / Rectilinear Grid (x2)
 
 ## Required Arrays ##
 None
@@ -22,10 +21,9 @@ None
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | None | Variable | Variable | Depends on the contents of the *Sampling DataContainer* - all arrays will have analogue created in the *Reference DataContainer* |
+| Cell | None | Variable | Variable | Depends on the contents of the *Sampling* **Data Container** - all arrays will have analogue created in the *Reference* **Data Container** |
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2015 BlueQuartz Software
- * *
+ * Copyright (c) 2015 BlueQuartz Software, LLC
+ *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
@@ -12,9 +12,9 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Jackson, BlueQuartz Software nor the names of
- * its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * its contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ *
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                 FA8650-07-D-5800 & FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "H5OIMReader.h"
@@ -84,7 +84,7 @@ H5OIMReader::H5OIMReader() :
   m_HeaderMap[Ebsd::Ang::nRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::nRows);
   m_HeaderMap[Ebsd::Ang::Operator] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::Operator);
   m_HeaderMap[Ebsd::Ang::SampleID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SampleID);
-  m_HeaderMap[Ebsd::Ang::ScanID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::ScanID);
+  m_HeaderMap[Ebsd::Ang::SCANID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SCANID);
 
   m_HeaderMap[Ebsd::Ang::PatternWidth] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::PatternWidth);
   m_HeaderMap[Ebsd::Ang::PatternHeight] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::PatternHeight);
@@ -468,7 +468,7 @@ int H5OIMReader::readHeader(hid_t parId)
 
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::Operator, gid, m_HeaderMap);
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::SampleID, gid, m_HeaderMap);
-  ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::ScanID, gid, m_HeaderMap);
+  ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::SCANID, gid, m_HeaderMap);
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::GridType, gid, m_HeaderMap);
 
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phase.toLatin1().data(), H5P_DEFAULT);

@@ -44,7 +44,7 @@
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @brief The MinNeighbors class. See Filter documentation for details.
+ * @brief The MinNeighbors class. See [Filter documentation](@ref minneighbors) for details.
  */
 class MinNeighbors : public AbstractFilter
 {
@@ -56,14 +56,14 @@ class MinNeighbors : public AbstractFilter
 
     virtual ~MinNeighbors();
 
-    DREAM3D_FILTER_PARAMETER(int32_t, MinNumNeighbors)
-    Q_PROPERTY(int32_t MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
+    DREAM3D_FILTER_PARAMETER(int, MinNumNeighbors)
+    Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
 
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
-    DREAM3D_FILTER_PARAMETER(int32_t, PhaseNumber)
-    Q_PROPERTY(int32_t PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -101,7 +101,18 @@ class MinNeighbors : public AbstractFilter
   protected:
     MinNeighbors();
 
+    /**
+     * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any Features
+     * that do not have the required number of neighbors.  The coarsening is intended to fill gaps left by the
+     * removed Features and proceeds via an isotropic growth process.
+     */
     void assign_badpoints();
+
+    /**
+     * @brief merge_containedfeatures Assigns a boolean value to Features dependent upon whether they meet
+     * the supplied criterion for the minimum number of neighbors.
+     * @return QVector<bool> A vector of boolean values whose length is the number of Features.
+     */
     QVector<bool> merge_containedfeatures();
 
   private:

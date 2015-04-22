@@ -37,22 +37,12 @@
 #ifndef _WarpRegularGrid_H_
 #define _WarpRegularGrid_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Sampling/SamplingConstants.h"
 /**
- * @class WarpRegularGrid WarpRegularGrid.h DREAM3DLib/SamplingFilters/WarpRegularGrid.h
- * @brief
- * @author
- * @date Jun 10, 2014
- * @version 1.0
+ * @brief The WarpRegularGrid class. See [Filter documentation](@ref warpregulargrid) for details.
  */
 class WarpRegularGrid : public AbstractFilter
 {
@@ -63,8 +53,10 @@ class WarpRegularGrid : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(WarpRegularGrid, AbstractFilter)
 
     virtual ~WarpRegularGrid();
+
     DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
@@ -73,23 +65,29 @@ class WarpRegularGrid : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderACoeff)
     Q_PROPERTY(Float2ndOrderPoly_t SecondOrderACoeff READ getSecondOrderACoeff WRITE setSecondOrderACoeff)
+
     DREAM3D_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderBCoeff)
     Q_PROPERTY(Float2ndOrderPoly_t SecondOrderBCoeff READ getSecondOrderBCoeff WRITE setSecondOrderBCoeff)
+
     DREAM3D_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderACoeff)
     Q_PROPERTY(Float3rdOrderPoly_t ThirdOrderACoeff READ getThirdOrderACoeff WRITE setThirdOrderACoeff)
+
     DREAM3D_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderBCoeff)
     Q_PROPERTY(Float3rdOrderPoly_t ThirdOrderBCoeff READ getThirdOrderBCoeff WRITE setThirdOrderBCoeff)
+
     DREAM3D_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderACoeff)
     Q_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
+
     DREAM3D_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderBCoeff)
     Q_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
+
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
     Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::WarpingFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -120,6 +118,13 @@ class WarpRegularGrid : public AbstractFilter
   protected:
     WarpRegularGrid();
 
+    /**
+     * @brief determine_warped_coordinates Warps the supplied x and y coordinates by the supplied polynomial coefficients.
+     * @param x Input x coordinate to be warped.
+     * @param y Input y coordinate to be warped.
+     * @param newX Output warped x coordinate.
+     * @param newY Output warped y coordiante.
+     */
     void determine_warped_coordinates(float x, float y, float &newX, float &newY);
 
   private:
@@ -131,8 +136,3 @@ class WarpRegularGrid : public AbstractFilter
 };
 
 #endif /* WarpRegularGrid_H_ */
-
-
-
-
-

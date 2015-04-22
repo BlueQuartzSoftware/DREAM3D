@@ -36,18 +36,11 @@
 
 #include "RegularizeZSpacing.h"
 
-#include <QtCore/QMap>
-#include <QtCore/QtDebug>
-#include <fstream>
-#include <sstream>
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-using namespace std;
-
+#include "Sampling/SamplingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -113,31 +106,42 @@ void RegularizeZSpacing::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
-  if (getErrorCondition() < 0) { return; }
+  if (getNewZRes() <= 0)
+  {
+    QString ss = QObject::tr("The new Z resolution Y (%1) must be positive").arg(getNewZRes());
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  ifstream inFile;
+  std::ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
+  if (!inFile.good())
+  {
+    QString ss = QObject::tr("Unable to open input file with name '%1").arg(getInputFile());
+    setErrorCondition(-5556);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
+  if(getErrorCondition() < 0) { return; }
+
   float zval = 0.0f;
-  for (size_t iter = 0; iter < m->getGeometryAs<ImageGeom>()->getZPoints() + 1; iter++)
+  for (size_t iter = 0; iter < image->getZPoints() + 1; iter++)
   {
     inFile >> zval;
   }
   size_t zP = static_cast<size_t>(zval / getNewZRes());
   if(zP == 0) { zP = 1; }
 
-  if(getInPreflight())
+  if (getInPreflight())
   {
-    m->getGeometryAs<ImageGeom>()->setDimensions(m->getGeometryAs<ImageGeom>()->getXPoints(), m->getGeometryAs<ImageGeom>()->getYPoints(), zP);
+    image->setDimensions(image->getXPoints(), image->getYPoints(), zP);
     QVector<size_t> tDims(3, 0);
-    tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
-    tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
+    tDims[0] = image->getXPoints();
+    tDims[1] = image->getYPoints();
     tDims[2] = zP;
     cellAttrMat->resizeAttributeArrays(tDims);
   }
@@ -163,21 +167,19 @@ void RegularizeZSpacing::preflight()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DREAM3D_RANDOMNG_NEW()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   size_t dims[3];
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  ifstream inFile;
+  std::ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
-  float zval;
+  float zval = 0.0f;
   std::vector<float> zboundvalues(dims[2] + 1, 0.0);
   for (size_t iter = 0; iter < dims[2] + 1; iter++)
   {
@@ -193,18 +195,18 @@ void RegularizeZSpacing::execute()
   size_t m_XP = dims[0];
   size_t m_YP = dims[1];
   size_t m_ZP = static_cast<size_t>(sizez / m_NewZRes);
-  if(m_ZP == 0) { m_ZP = 1; }
-  int64_t totalPoints = m_XP * m_YP * m_ZP;
+  if (m_ZP == 0) { m_ZP = 1; }
+  size_t totalPoints = m_XP * m_YP * m_ZP;
 
-  int index, oldindex;
-  int plane;
+  size_t index = 0, oldindex = 0;
+  size_t plane = 0;
   std::vector<size_t> newindicies(totalPoints, 0);
   for (size_t i = 0; i < m_ZP; i++)
   {
     plane = 0;
     for (size_t iter = 1; iter < dims[2]; iter++)
     {
-      if((i * m_NewZRes) > zboundvalues[iter]) { plane = iter; }
+      if ((i * m_NewZRes) > zboundvalues[iter]) { plane = iter; }
     }
     for (size_t j = 0; j < m_YP; j++)
     {
@@ -227,7 +229,6 @@ void RegularizeZSpacing::execute()
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    //QString name = *iter;
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
@@ -254,7 +255,7 @@ void RegularizeZSpacing::execute()
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
-  notifyStatusMessage(getHumanLabel(), "Changing Resolution Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -262,10 +263,6 @@ void RegularizeZSpacing::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * InputFile
-  * NewZRes
-  */
   RegularizeZSpacing::Pointer filter = RegularizeZSpacing::New();
   if(true == copyFilterParameters)
   {
@@ -280,17 +277,20 @@ AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterPar
 const QString RegularizeZSpacing::getCompiledLibraryName()
 { return Sampling::SamplingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RegularizeZSpacing::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getHumanLabel()
 { return "Regularize Z Spacing"; }
-

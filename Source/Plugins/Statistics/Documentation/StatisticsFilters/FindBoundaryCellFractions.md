@@ -23,7 +23,7 @@ Not Applicable
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | SurfaceVoxelFractions | Float | (1) | Fraction of **Elements** belonging to the **Feature** that are "surface" **Elements**. |  |
+| Feature | SurfaceVoxelFractions | Float | (1) | Fraction of **Elements** belonging to the **Feature** that are "surface" **Elements**. |
 
 ## Authors ##
 

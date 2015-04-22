@@ -5,30 +5,29 @@ Fit Feature Data {#fitfeaturedata}
 Statistics Filters (Ensemble)
 
 ## Description ##
-This filter will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can chose both which attributes to fit and with what distribution to fit them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.
+This filter will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can chose both which attributes to fit and with what distribution to fit them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.  The user also has the option to remove *biased* **Features** from the fitting process.
+
+Note: The array selected must be a scalar array
 
 ## Parameters ##
-
 | Name | Type | Description |
 |------|------| ----------- |
-| Feature Array To Fit | String | Feature to be fit to a distribution. |
-| Distribution Type | Choice | Choose from a lognormal, power and beta distribution. |
-| Remove Biased Features | Boolean | TRUE if biased features are to be omitted from the binning counts. |
+| Distribution Type | Choice | Specifies distribution type to fit to the data (options include lognormal, power and beta distributions) |
+| Remove Biased Features | Boolean | Specifies if biased features are to be omitted from the binning counts. |
 
-## Required DataContainers ##
-Volume
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not. | | Find Biased Features (Generic) |
-| Feature | SelectedFeature | Selected feature to be binned. | | |
+| Feature | BiasedFeatures | Boolean | (1) | Flag of 1 if **Feature** is biased or of 0 if it is not (only required if *Remove Biased Features* is checked |
+| Feature | *None* | *Variable* | (1) | Selected feature array to be fit. |
 
 ## Created Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Ensemble | Statistics |  |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Ensemble | Statistics | Float | (2) or (3) | Parameters of the fit distribution | 
 
 ## Authors ##
 

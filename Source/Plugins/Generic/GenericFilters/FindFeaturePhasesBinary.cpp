@@ -117,8 +117,9 @@ int FindFeaturePhasesBinary::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void FindFeaturePhasesBinary::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+
+  DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
 

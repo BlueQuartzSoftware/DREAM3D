@@ -122,8 +122,9 @@ int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+
+  DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCentroidsArrayPath().getDataContainerName());
 
@@ -215,6 +216,11 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
   }
   for (int32_t iter = 1; iter <= numPhases; iter++)
   {
+    if (m_CalcByPhase == true)
+    {
+      QString ss = QObject::tr("Working on Phase %1 of %2").arg(iter).arg(numPhases);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    }
     // reset boundbox for each phase
     boundbox[1] = 0;
     boundbox[2] = m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getXRes();

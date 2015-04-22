@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FlattenImage class. See Filter documentation for details.
+ * @brief The FlattenImage class. See [Filter documentation](@ref flattenimage) for details.
  */
 class FlattenImage : public AbstractFilter
 {
@@ -53,8 +53,8 @@ class FlattenImage : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FlattenImage, AbstractFilter)
     virtual ~FlattenImage();
 
-    DREAM3D_FILTER_PARAMETER(quint32, FlattenMethod)
-    Q_PROPERTY(quint32 FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
+    DREAM3D_FILTER_PARAMETER(unsigned int, FlattenMethod)
+    Q_PROPERTY(unsigned int FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)

@@ -162,9 +162,9 @@ int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 void FlattenImage::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
+  DataArrayPath tempPath;
   int32_t numImageComp = 1;
 
   IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());

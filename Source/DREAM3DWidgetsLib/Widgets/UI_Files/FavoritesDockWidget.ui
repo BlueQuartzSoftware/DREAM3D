@@ -48,7 +48,7 @@ padding-left: 5px;
      <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>0</number>
+     <number>4</number>
     </property>
     <item>
      <widget class="FilterLibraryTreeWidget" name="filterLibraryTree">

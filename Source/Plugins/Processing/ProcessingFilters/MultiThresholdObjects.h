@@ -43,7 +43,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 /**
- * @brief The MultiThresholdObjects class. See Filter documentation for details.
+ * @brief The MultiThresholdObjects class. See [Filter documentation](@ref multithresholdobjects) for details.
  */
 class MultiThresholdObjects : public AbstractFilter
 {
@@ -55,7 +55,6 @@ class MultiThresholdObjects : public AbstractFilter
 
     virtual ~MultiThresholdObjects();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, DestinationArrayName)
     Q_PROPERTY(QString DestinationArrayName READ getDestinationArrayName WRITE setDestinationArrayName)
 
@@ -111,14 +110,6 @@ class MultiThresholdObjects : public AbstractFilter
   protected:
     MultiThresholdObjects();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:

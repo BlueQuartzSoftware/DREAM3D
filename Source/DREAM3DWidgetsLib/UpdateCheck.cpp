@@ -92,7 +92,10 @@ void UpdateCheck::checkVersion(QUrl website)
 
   QNetworkRequest request;
   request.setUrl(website);
-  request.setRawHeader("User-Agent", "DREAM3D");
+
+  QString header = "DREAM3D Version ";
+  header.append(DREAM3DLib::Version::Complete());
+  request.setRawHeader("User-Agent", header.toLatin1());
 
   m_Nam->get(request);
 }

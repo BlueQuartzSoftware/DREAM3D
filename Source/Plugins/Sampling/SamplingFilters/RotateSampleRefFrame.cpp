@@ -33,6 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "RotateSampleRefFrame.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -42,25 +43,25 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 
+#include "Sampling/SamplingConstants.h"
 
 typedef struct
 {
-  size_t   xp;
-  size_t   yp;
-  size_t   zp;
+  int64_t   xp;
+  int64_t   yp;
+  int64_t   zp;
   float   xRes;
   float   yRes;
   float   zRes;
-  size_t   xpNew;
-  size_t   ypNew;
-  size_t   zpNew;
+  int64_t   xpNew;
+  int64_t   ypNew;
+  int64_t   zpNew;
   float   xResNew;
   float   yResNew;
   float   zResNew;
@@ -71,8 +72,8 @@ typedef struct
 } RotateSampleRefFrameImplArg_t;
 
 /**
- * @brief The RotateSampleRefFrameImpl class does that actual computation of the rotation
- * applying the rotation to each euler angle
+ * @brief The RotateSampleRefFrameImpl class implements a threaded algorithm to do the
+ * actual computation of the rotation by applying the rotation to each Euler angle
  */
 class RotateSampleRefFrameImpl
 {
@@ -101,24 +102,24 @@ class RotateSampleRefFrameImpl
     }
     virtual ~RotateSampleRefFrameImpl() {}
 
-    void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
+    void convert(int64_t zStart, int64_t zEnd, int64_t yStart, int64_t yEnd, int64_t xStart, int64_t xEnd) const
     {
 
       int64_t* newindicies = newIndicesPtr->getPointer(0);
       int64_t index = 0;
-      int64_t ktot, jtot;
+      int64_t ktot = 0, jtot = 0;
       //      float rotMatrixInv[3][3];
-      float coords[3];
-      float coordsNew[3];
-      int32_t colOld, rowOld, planeOld;
+      float coords[3] = { 0.0f, 0.0f, 0.0f };
+      float coordsNew[3] = { 0.0f, 0.0f, 0.0f };
+      int64_t colOld = 0, rowOld = 0, planeOld = 0;
 
-      for (size_t k = zStart; k < zEnd; k++)
+      for (int64_t k = zStart; k < zEnd; k++)
       {
         ktot = (m_params->xpNew * m_params->ypNew) * k;
-        for (size_t j = yStart; j < yEnd; j++)
+        for (int64_t j = yStart; j < yEnd; j++)
         {
           jtot = (m_params->xpNew) * j;
-          for (size_t i = xStart; i < xEnd; i++)
+          for (int64_t i = xStart; i < xEnd; i++)
           {
             index = ktot + jtot + i;
             newindicies[index] = -1;
@@ -142,7 +143,7 @@ class RotateSampleRefFrameImpl
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range3d<size_t, size_t, size_t>& r) const
+    void operator()(const tbb::blocked_range3d<int64_t, int64_t, int64_t>& r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
@@ -188,7 +189,6 @@ void RotateSampleRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Axis");
     parameter->setPropertyName("RotationAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-//   //parameter->setValueType("FloatVec3_t");
     parameter->setUnits("ijk");
     parameters.push_back(parameter);
   }
@@ -197,8 +197,6 @@ void RotateSampleRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Angle");
     parameter->setPropertyName("RotationAngle");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-//   //parameter->setValueType("float");
-//   parameter->setCastableValueType("double");
     parameter->setUnits("Degrees");
     parameters.push_back(parameter);
   }
@@ -237,7 +235,6 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 void RotateSampleRefFrame::dataCheck()
 {
   setErrorCondition(0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -254,27 +251,25 @@ void RotateSampleRefFrame::preflight()
 
   if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0) { setInPreflight(false); return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
-  if (getErrorCondition() < 0 || NULL == cellAttrMat.get()) { setInPreflight(false); return; }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
+  if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
-  int32_t xp, yp, zp;
-  float xRes, yRes, zRes;
-  int32_t xpNew, ypNew, zpNew;
-  float xResNew, yResNew, zResNew;
+  int64_t xp = 0, yp = 0, zp = 0;
+  float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
+  int64_t xpNew = 0, ypNew = 0, zpNew = 0;
+  float xResNew = 0.0f, yResNew = 0.0f, zResNew = 0.0f;
   RotateSampleRefFrameImplArg_t params;
 
-  xp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  xp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  yp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  zp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+  zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
   zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   params.xp = xp;
@@ -284,60 +279,65 @@ void RotateSampleRefFrame::preflight()
   params.zp = zp;
   params.zRes = zRes;
 
-  size_t col, row, plane;
-  float rotMat[3][3];
-  float coords[3];
-  float newcoords[3];
-  float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
+  size_t col = 0, row = 0, plane = 0;
+  float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float coords[3] = { 0.0f, 0.0f, 0.0f };
+  float newcoords[3] = { 0.0f, 0.0f, 0.0f };
+  float xMin = std::numeric_limits<float>::max();
+  float xMax = std::numeric_limits<float>::min();
+  float yMin = std::numeric_limits<float>::max();
+  float yMax = std::numeric_limits<float>::min();
+  float zMin = std::numeric_limits<float>::max();
+  float zMax = std::numeric_limits<float>::min();
 
   OrientationMath::AxisAngletoMat(rotAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
-  for(int i = 0; i < 8; i++)
+  for (int32_t i = 0; i < 8; i++)
   {
-    if(i == 0) { col = 0, row = 0, plane = 0; }
-    if(i == 1) { col = xp - 1, row = 0, plane = 0; }
-    if(i == 2) { col = 0, row = yp - 1, plane = 0; }
-    if(i == 3) { col = xp - 1, row = yp - 1, plane = 0; }
-    if(i == 4) { col = 0, row = 0, plane = zp - 1; }
-    if(i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
-    if(i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
-    if(i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
-    coords[0] = col * xRes;
-    coords[1] = row * yRes;
-    coords[2] = plane * zRes;
+    if (i == 0) { col = 0, row = 0, plane = 0; }
+    if (i == 1) { col = xp - 1, row = 0, plane = 0; }
+    if (i == 2) { col = 0, row = yp - 1, plane = 0; }
+    if (i == 3) { col = xp - 1, row = yp - 1, plane = 0; }
+    if (i == 4) { col = 0, row = 0, plane = zp - 1; }
+    if (i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
+    if (i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
+    if (i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
+    coords[0] = static_cast<float>(col * xRes);
+    coords[1] = static_cast<float>(row * yRes);
+    coords[2] = static_cast<float>(plane * zRes);
     MatrixMath::Multiply3x3with3x1(rotMat, coords, newcoords);
-    if(newcoords[0] < xMin) { xMin = newcoords[0]; }
-    if(newcoords[0] > xMax) { xMax = newcoords[0]; }
-    if(newcoords[1] < yMin) { yMin = newcoords[1]; }
-    if(newcoords[1] > yMax) { yMax = newcoords[1]; }
-    if(newcoords[2] < zMin) { zMin = newcoords[2]; }
-    if(newcoords[2] > zMax) { zMax = newcoords[2]; }
+    if (newcoords[0] < xMin) { xMin = newcoords[0]; }
+    if (newcoords[0] > xMax) { xMax = newcoords[0]; }
+    if (newcoords[1] < yMin) { yMin = newcoords[1]; }
+    if (newcoords[1] > yMax) { yMax = newcoords[1]; }
+    if (newcoords[2] < zMin) { zMin = newcoords[2]; }
+    if (newcoords[2] > zMax) { zMax = newcoords[2]; }
   }
   float xAxis[3] = {1, 0, 0};
   float yAxis[3] = {0, 1, 0};
   float zAxis[3] = {0, 0, 1};
-  float xAxisNew[3];
-  float yAxisNew[3];
-  float zAxisNew[3];
+  float xAxisNew[3] = { 0.0f, 0.0f, 0.0f };
+  float yAxisNew[3] = { 0.0f, 0.0f, 0.0f };
+  float zAxisNew[3] = { 0.0f, 0.0f, 0.0f };
   MatrixMath::Multiply3x3with3x1(rotMat, xAxis, xAxisNew);
   MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
   MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
-  float closestAxis;
+  float closestAxis = 0.0f;
   xResNew = xRes;
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, xAxisNew));
-  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
-  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
   yResNew = yRes;
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, yAxisNew));
-  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
-  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
   zResNew = zRes;
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, zAxisNew));
-  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
-  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
-  xpNew = ((xMax - xMin) / xResNew) + 1;
-  ypNew = ((yMax - yMin) / yResNew) + 1;
-  zpNew = ((zMax - zMin) / zResNew) + 1;
+  xpNew = static_cast<int64_t>(((xMax - xMin) / xResNew) + 1);
+  ypNew = static_cast<int64_t>(((yMax - yMin) / yResNew) + 1);
+  zpNew = static_cast<int64_t>(((zMax - zMin) / zResNew) + 1);
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
@@ -367,17 +367,17 @@ void RotateSampleRefFrame::execute()
 
   float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
-  int32_t xp, yp, zp;
-  float xRes, yRes, zRes;
-  int32_t xpNew, ypNew, zpNew;
-  float xResNew, yResNew, zResNew;
+  int64_t xp = 0, yp = 0, zp = 0;
+  float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
+  int64_t xpNew = 0, ypNew = 0, zpNew = 0;
+  float xResNew = 0.0f, yResNew = 0.0f, zResNew = 0.0f;
   RotateSampleRefFrameImplArg_t params;
 
-  xp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  xp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  yp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  zp = static_cast<int32_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+  zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
   zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   params.xp = xp;
@@ -387,63 +387,65 @@ void RotateSampleRefFrame::execute()
   params.zp = zp;
   params.zRes = zRes;
 
-  int32_t col = 0, row = 0, plane = 0;
-  float rotMat[3][3];
-  float coords[3];
-  float newcoords[3];
-  float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
+  size_t col = 0, row = 0, plane = 0;
+  float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float coords[3] = { 0.0f, 0.0f, 0.0f };
+  float newcoords[3] = { 0.0f, 0.0f, 0.0f };
+  float xMin = std::numeric_limits<float>::max();
+  float xMax = std::numeric_limits<float>::min();
+  float yMin = std::numeric_limits<float>::max();
+  float yMax = std::numeric_limits<float>::min();
+  float zMin = std::numeric_limits<float>::max();
+  float zMax = std::numeric_limits<float>::min();
 
   OrientationMath::AxisAngletoMat(rotAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
-  for(int i = 0; i < 8; i++)
+  for (int32_t i = 0; i < 8; i++)
   {
-    if(i == 0) { col = 0, row = 0, plane = 0; }
-    if(i == 1) { col = xp - 1, row = 0, plane = 0; }
-    if(i == 2) { col = 0, row = yp - 1, plane = 0; }
-    if(i == 3) { col = xp - 1, row = yp - 1, plane = 0; }
-    if(i == 4) { col = 0, row = 0, plane = zp - 1; }
-    if(i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
-    if(i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
-    if(i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
-    if(col < 0) { col = 0; }
-    if(row < 0) { row = 0; }
-    if(plane < 0) { plane = 0; }
-    coords[0] = col * xRes;
-    coords[1] = row * yRes;
-    coords[2] = plane * zRes;
+    if (i == 0) { col = 0, row = 0, plane = 0; }
+    if (i == 1) { col = xp - 1, row = 0, plane = 0; }
+    if (i == 2) { col = 0, row = yp - 1, plane = 0; }
+    if (i == 3) { col = xp - 1, row = yp - 1, plane = 0; }
+    if (i == 4) { col = 0, row = 0, plane = zp - 1; }
+    if (i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
+    if (i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
+    if (i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
+    coords[0] = static_cast<float>(col * xRes);
+    coords[1] = static_cast<float>(row * yRes);
+    coords[2] = static_cast<float>(plane * zRes);
     MatrixMath::Multiply3x3with3x1(rotMat, coords, newcoords);
-    if(newcoords[0] < xMin) { xMin = newcoords[0]; }
-    if(newcoords[0] > xMax) { xMax = newcoords[0]; }
-    if(newcoords[1] < yMin) { yMin = newcoords[1]; }
-    if(newcoords[1] > yMax) { yMax = newcoords[1]; }
-    if(newcoords[2] < zMin) { zMin = newcoords[2]; }
-    if(newcoords[2] > zMax) { zMax = newcoords[2]; }
+    if (newcoords[0] < xMin) { xMin = newcoords[0]; }
+    if (newcoords[0] > xMax) { xMax = newcoords[0]; }
+    if (newcoords[1] < yMin) { yMin = newcoords[1]; }
+    if (newcoords[1] > yMax) { yMax = newcoords[1]; }
+    if (newcoords[2] < zMin) { zMin = newcoords[2]; }
+    if (newcoords[2] > zMax) { zMax = newcoords[2]; }
   }
   float xAxis[3] = {1, 0, 0};
   float yAxis[3] = {0, 1, 0};
   float zAxis[3] = {0, 0, 1};
-  float xAxisNew[3];
-  float yAxisNew[3];
-  float zAxisNew[3];
+  float xAxisNew[3] = { 0.0f, 0.0f, 0.0f };
+  float yAxisNew[3] = { 0.0f, 0.0f, 0.0f };
+  float zAxisNew[3] = { 0.0f, 0.0f, 0.0f };
   MatrixMath::Multiply3x3with3x1(rotMat, xAxis, xAxisNew);
   MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
   MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
-  float closestAxis;
+  float closestAxis = 0.0f;
   xResNew = xRes;
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, xAxisNew));
-  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
-  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis) { xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis) { xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)); }
   yResNew = yRes;
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, yAxisNew));
-  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
-  if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis) { yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis) { yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)); }
   zResNew = zRes;
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, zAxisNew));
-  if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
-  if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
+  if (fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
-  xpNew = ((xMax - xMin) / xResNew) + 1;
-  ypNew = ((yMax - yMin) / yResNew) + 1;
-  zpNew = ((zMax - zMin) / zResNew) + 1;
+  xpNew = static_cast<int64_t>(((xMax - xMin) / xResNew) + 1);
+  ypNew = static_cast<int64_t>(((yMax - yMin) / yResNew) + 1);
+  zpNew = static_cast<int64_t>(((zMax - zMin) / zResNew) + 1);
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
@@ -455,9 +457,9 @@ void RotateSampleRefFrame::execute()
   params.zResNew = zResNew;
   params.zMinNew = zMin;
 
-  size_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
+  int64_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
 
-  DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, "RotateSampleRef_NewIndicies");
+  DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, "_INTERNAL_USE_ONLY_RotateSampleRef_NewIndicies");
   newIndiciesPtr->initializeWithValue(-1);
   int64_t* newindicies = newIndiciesPtr->getPointer(0);
 
@@ -466,11 +468,10 @@ void RotateSampleRefFrame::execute()
   bool doParallel = true;
 #endif
 
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
+    tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
                       RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat, m_SliceBySlice), tbb::auto_partitioner());
   }
   else
@@ -494,7 +495,6 @@ void RotateSampleRefFrame::execute()
 
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    //QString name = *iter;
     IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
@@ -503,7 +503,7 @@ void RotateSampleRefFrame::execute()
     void* source = NULL;
     void* destination = NULL;
     int64_t newIndicies_I = 0;
-    int nComp = data->getNumberOfComponents();
+    int32_t nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
     {
       newIndicies_I = newindicies[i];
@@ -539,11 +539,6 @@ void RotateSampleRefFrame::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * RotationAxis
-  * RotationAngle
-  * SliceBySlice
-  */
   RotateSampleRefFrame::Pointer filter = RotateSampleRefFrame::New();
   if(true == copyFilterParameters)
   {
@@ -558,6 +553,17 @@ AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterP
 const QString RotateSampleRefFrame::getCompiledLibraryName()
 { return Sampling::SamplingBaseName; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateSampleRefFrame::getGroupName()
+{ return DREAM3D::FilterGroups::SamplingFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateSampleRefFrame::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
 
 // -----------------------------------------------------------------------------
 //

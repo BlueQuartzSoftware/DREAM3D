@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindBoundaryCells class. See Filter documentation for details.
+ * @brief The FindBoundaryCells class. See [Filter documentation](@ref findboundarycells) for details.
  */
 class  FindBoundaryCells : public AbstractFilter
 {

@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ConvertEulerAngles class. See Filter documentation for details.
+ * @brief The ConvertEulerAngles class. See [Filter documentation](@ref converteulerangles) for details.
  */
 class ConvertEulerAngles : public AbstractFilter
 {
@@ -53,8 +53,8 @@ class ConvertEulerAngles : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ConvertEulerAngles, AbstractFilter)
     virtual ~ConvertEulerAngles();
 
-    DREAM3D_FILTER_PARAMETER(int32_t, ConversionType)
-    Q_PROPERTY(int32_t ConversionType READ getConversionType WRITE setConversionType)
+    DREAM3D_FILTER_PARAMETER(int, ConversionType)
+    Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)

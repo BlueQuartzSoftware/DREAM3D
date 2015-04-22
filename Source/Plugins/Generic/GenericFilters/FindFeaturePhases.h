@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The FindFeaturePhases class. See Filter documentation for details.
+ * @brief The FindFeaturePhases class. See [Filter documentation](@ref findfeaturephases) for details.
  */
 class  FindFeaturePhases : public AbstractFilter
 {

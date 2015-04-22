@@ -49,6 +49,11 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+/**
+ * @brief The ConvertEulerAnglesImpl class implements a threaded algorithm to convert an array of
+ * Euler angles from raidans to degrees or degrees to radians, depending upon the incoming
+ * conversion factor.
+ */
 class ConvertEulerAnglesImpl
 {
 

@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The GenerateVectorColors class. See Filter documentation for details.
+ * @brief The GenerateVectorColors class. See [Filter documentation](@ref generatevectorcolors) for details.
  */
 class  GenerateVectorColors : public AbstractFilter
 {
@@ -115,14 +115,6 @@ class  GenerateVectorColors : public AbstractFilter
   protected:
     GenerateVectorColors();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:

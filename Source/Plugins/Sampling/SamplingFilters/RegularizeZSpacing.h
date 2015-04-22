@@ -37,22 +37,12 @@
 #ifndef _RegularizeZSpacing_H_
 #define _RegularizeZSpacing_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Sampling/SamplingConstants.h"
 /**
- * @class RegularizeZSpacing RegularizeZSpacing.h DREAM3DLib/SyntheticBuilderFilters/RegularizeZSpacing.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The RegularizeZSpacing class. See [Filter documentation](@ref regularizezspacing) for details.
  */
 class RegularizeZSpacing : public AbstractFilter
 {
@@ -76,7 +66,7 @@ class RegularizeZSpacing : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -107,7 +97,6 @@ class RegularizeZSpacing : public AbstractFilter
   protected:
     RegularizeZSpacing();
 
-
   private:
     void dataCheck();
 
@@ -116,5 +105,3 @@ class RegularizeZSpacing : public AbstractFilter
 };
 
 #endif /* RegularizeZSpacing_H_ */
-
-
