@@ -64,6 +64,12 @@ class PMFileGenerator : public PMDirGenerator
 
     QString getFileName();
 
+    void setSetupFPContents(QString contents);
+    void setReadFPContents(QString contents);
+    void setWriteFPContents(QString contents);
+    void setDataCheckContents(QString contents);
+    void setFPContents(QString contents);
+
     virtual QString generateFileContents(QString replaceStr = "");
 
 	QString createReplacementString(FileType type, QSet<QString> names);
@@ -75,7 +81,19 @@ class PMFileGenerator : public PMDirGenerator
 	virtual void generateOutputWithFilterNames(QSet<QString> names);
 
   private:
+    QString setupFPContents;
+    QString fpContents;
+    QString readFPContents;
+    QString writeFPContents;
+    QString dataCheckContents;
+
     QString m_FileName;
+
+    QString getDefaultSetupFPContents();
+    QString getDefaultReadFPContents();
+    QString getDefaultWriteFPContents();
+    QString getDefaultDataCheckContents();
+    QString getDefaultFPContents();
 
 };
 

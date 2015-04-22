@@ -35,68 +35,71 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FilterMaker_H_
-#define _FilterMaker_H_
+#include "ApplicationFileInfo.h"
 
-#include <QtCore/QObject>
-#include <QtWidgets/QWidget>
+#include <QtCore/QDir>
 
-#include "PluginMaker/AddFilterParameter.h"
+#include <QtWidgets/QApplication>
 
-#include "ui_FilterMaker.h"
-
-enum FPColumnIndex
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ApplicationFileInfo::ApplicationFileInfo()
 {
-  VAR_NAME,
-  HUMAN_NAME,
-  TYPE
-};
-
-class FilterMaker : public QMainWindow, public Ui::FilterMaker
-{
-  Q_OBJECT
-
-public:
-  FilterMaker(QWidget* parent = 0);
-  ~FilterMaker();
-
-  QString getFilterName();
-  QString getPluginDir();
-  bool isPublic();
-
-protected:
-  void setupGui();
-
-protected slots:
-  void on_selectBtn_clicked();
-  void on_codeChooser_currentIndexChanged(const QString &text);
-  void on_pluginDir_textChanged(const QString& text);
-  void on_filterName_textChanged(const QString& text);
-  void on_generateBtn_clicked();
-  void on_cancelBtn_clicked();
-  void on_addFilterParameterBtn_clicked();
-  void on_removeFilterParameterBtn_clicked();
-  void on_errorString_linkActivated(const QString &link);
-
-  void addFilterParameterToTable(AddFilterParameter* widget);
-
-signals:
-  void generateBtnPressed();
-  void cancelBtnPressed();
-
-private:
-  QString                     m_OpenDialogLastDirectory;
   
+}
 
-  void generateFilterFiles();
-  void updateSourceList();
-  void updateTestLocations();
-  void updateTestList();
-  QString createNamespaceString();
-  void validityCheck();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ApplicationFileInfo::~ApplicationFileInfo()
+{
 
-  FilterMaker(const FilterMaker&);    // Copy Constructor Not Implemented
-  void operator=(const FilterMaker&);  // Operator '=' Not Implemented
-};
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ApplicationFileInfo::GenerateFileSystemPath(QString pathEnding)
+{
+  QString appPath = qApp->applicationDirPath();
+
+  QDir dir = QDir(appPath);
+
+#if defined(Q_OS_WIN)
+
+#elif defined(Q_OS_MAC)
+  if (pluginMakerDir.dirName() == "MacOS")
+  {
+    pluginMakerDir.cdUp();
+    pluginMakerDir.cdUp();
+    pluginMakerDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  QFileInfo fi(pluginMakerDir.absolutePath() + pathEnding);
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from the build tree.
+    // Try up one more directory
+    pluginMakerDir.cdUp();
+  }
 #endif
+
+#if defined(Q_OS_WIN)
+  QFileInfo fi(dir.absolutePath() + pathEnding);
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    dir.cdUp();
+  }
+#endif
+
+  QString filePath = dir.absolutePath() + pathEnding;
+  filePath = QDir::toNativeSeparators(filePath);
+  return filePath;
+}
+
+
+

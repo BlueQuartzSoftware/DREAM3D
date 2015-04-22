@@ -44,6 +44,8 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
 
+#include "QtSupport/ApplicationFileInfo.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -60,6 +62,13 @@ PMFileGenerator::PMFileGenerator(QString outputDir,
   {
     wi->setText(0, fileName);
   }
+
+  // Set the contents variables to their defaults.  We can change this later with our own value if we want.
+  setupFPContents = getDefaultSetupFPContents();
+  fpContents = getDefaultFPContents();
+  readFPContents = getDefaultReadFPContents();
+  writeFPContents = getDefaultWriteFPContents();
+  dataCheckContents = getDefaultDataCheckContents();
 }
 
 // -----------------------------------------------------------------------------
@@ -156,6 +165,13 @@ void PMFileGenerator::generateOutput()
     text.replace("@ClassNameLowerCase@", className.toLower());
     text.replace("@FilterGroup@", pluginName);
     text.replace("@FilterSubgroup@", pluginName);
+
+    // Replace function contents with the string that we have stored
+    text.replace("@SetupFPContents@", setupFPContents);
+    text.replace("@FPContents@", fpContents);
+    text.replace("@ReadFPContents@", readFPContents);
+    text.replace("@WriteFPContents@", writeFPContents);
+    text.replace("@DataCheckContents@", dataCheckContents);
 
     QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
     parentPath = QDir::toNativeSeparators(parentPath);
@@ -266,6 +282,13 @@ QString PMFileGenerator::generateFileContents(QString replaceStr)
 		text.replace("@ClassName@", className);
 		text.replace("@ClassNameLowerCase@", className.toLower());
 
+    // Replace function contents with the string that we have stored
+    text.replace("@SetupFPContents@", setupFPContents);
+    text.replace("@FPContents@", fpContents);
+    text.replace("@ReadFPContents@", readFPContents);
+    text.replace("@WriteFPContents@", writeFPContents);
+    text.replace("@DataCheckContents@", dataCheckContents);
+
 		if (replaceStr.isEmpty() == false)
 		{
 			text.replace("@AddTestText@", replaceStr);		// Replace token for Test/CMakeLists.txt file
@@ -331,6 +354,136 @@ QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> na
 	}
 
 	return replaceStr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::getDefaultSetupFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/SetupFilterParameters.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::getDefaultReadFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/ReadFilterParameters.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::getDefaultWriteFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/WriteFilterParameters.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::getDefaultDataCheckContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/DataCheck.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::getDefaultFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/Q_PROPERTY_FILTER_PARAMETER.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setSetupFPContents(QString contents)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setReadFPContents(QString contents)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setWriteFPContents(QString contents)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setDataCheckContents(QString contents)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setFPContents(QString contents)
+{
+
 }
 
 

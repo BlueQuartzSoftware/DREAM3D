@@ -67,7 +67,17 @@ AddFilterParameter::~AddFilterParameter()
 // -----------------------------------------------------------------------------
 void AddFilterParameter::setupGui()
 {
+  // Populate the type combo box
+  QStringList typeList = getTypeList();
+  for (int i = 0; i < typeList.size(); i++)
+  {
+    type->insertItem(i, typeList[i]);
+  }
 
+  errorString->setText("");
+
+  // Update the "Add" button
+  addFilterParameterBtn->setEnabled(filledOutCheck());
 }
 
 // -----------------------------------------------------------------------------
@@ -78,6 +88,24 @@ void AddFilterParameter::on_addFilterParameterBtn_clicked()
   /* SLOT: FilterMaker::addFilterParameterToTable()
      CONNECT: FilterMaker::on_addFilterParameterBtn_clicked() */
   emit addBtnPressed(this);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::on_varName_textChanged(const QString &text)
+{
+  // Update the "Add" button
+  addFilterParameterBtn->setEnabled(filledOutCheck());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::on_humanName_textChanged(const QString &text)
+{
+  // Update the "Add" button
+  addFilterParameterBtn->setEnabled(filledOutCheck());
 }
 
 // -----------------------------------------------------------------------------
@@ -111,6 +139,33 @@ QString AddFilterParameter::getHumanName()
 QString AddFilterParameter::getType()
 {
   return type->currentText();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList AddFilterParameter::getTypeList()
+{
+  QStringList list;
+  list.append("IntWidget");
+  list.append("DoubleWidget");
+  list.append("BooleanWidget");
+  return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AddFilterParameter::filledOutCheck()
+{
+  if (type->currentIndex() >= 0 && varName->text().isEmpty() == false && humanName->text().isEmpty() == false)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 

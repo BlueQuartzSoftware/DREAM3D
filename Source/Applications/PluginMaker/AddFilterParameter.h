@@ -54,6 +54,7 @@ public:
   QString getVariableName();
   QString getHumanName();
   QString getType();
+  QStringList getTypeList();
 
 protected:
   void setupGui();
@@ -64,8 +65,12 @@ signals:
   protected slots:
   void on_addFilterParameterBtn_clicked();
   void on_cancelBtn_clicked();
+  void on_varName_textChanged(const QString &text);
+  void on_humanName_textChanged(const QString &text);
 
 private:
+
+  bool filledOutCheck();
 
   AddFilterParameter(const AddFilterParameter&);    // Copy Constructor Not Implemented
   void operator=(const AddFilterParameter&);  // Operator '=' Not Implemented

@@ -34,6 +34,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QFSDropLabel.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DFileDragMessageBox.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DStyles.cpp
+    ${QtSupport_SOURCE_DIR}/ApplicationFileInfo.cpp
 )
 
 set(QtSupport_HDRS
@@ -54,6 +55,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/QFSDropLabel.h
     ${QtSupport_SOURCE_DIR}/DREAM3DFileDragMessageBox.h
     ${QtSupport_SOURCE_DIR}/DREAM3DStyles.h
+    ${QtSupport_SOURCE_DIR}/ApplicationFileInfo.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 

@@ -139,6 +139,9 @@
         </item>
         <item row="0" column="2" rowspan="4">
          <widget class="QTableWidget" name="filterParametersTable">
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
           <column>
            <property name="text">
             <string>Variable Name</string>

@@ -35,68 +35,24 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FilterMaker_H_
-#define _FilterMaker_H_
+#ifndef _ApplicationFileInfo_H_
+#define _ApplicationFileInfo_H_
 
-#include <QtCore/QObject>
-#include <QtWidgets/QWidget>
+#include <QtCore/QString>
 
-#include "PluginMaker/AddFilterParameter.h"
-
-#include "ui_FilterMaker.h"
-
-enum FPColumnIndex
+class ApplicationFileInfo
 {
-  VAR_NAME,
-  HUMAN_NAME,
-  TYPE
-};
-
-class FilterMaker : public QMainWindow, public Ui::FilterMaker
-{
-  Q_OBJECT
 
 public:
-  FilterMaker(QWidget* parent = 0);
-  ~FilterMaker();
+  ApplicationFileInfo();
+  ~ApplicationFileInfo();
 
-  QString getFilterName();
-  QString getPluginDir();
-  bool isPublic();
-
-protected:
-  void setupGui();
-
-protected slots:
-  void on_selectBtn_clicked();
-  void on_codeChooser_currentIndexChanged(const QString &text);
-  void on_pluginDir_textChanged(const QString& text);
-  void on_filterName_textChanged(const QString& text);
-  void on_generateBtn_clicked();
-  void on_cancelBtn_clicked();
-  void on_addFilterParameterBtn_clicked();
-  void on_removeFilterParameterBtn_clicked();
-  void on_errorString_linkActivated(const QString &link);
-
-  void addFilterParameterToTable(AddFilterParameter* widget);
-
-signals:
-  void generateBtnPressed();
-  void cancelBtnPressed();
+  static QString GenerateFileSystemPath(QString pathEnding);
 
 private:
-  QString                     m_OpenDialogLastDirectory;
-  
 
-  void generateFilterFiles();
-  void updateSourceList();
-  void updateTestLocations();
-  void updateTestList();
-  QString createNamespaceString();
-  void validityCheck();
-
-  FilterMaker(const FilterMaker&);    // Copy Constructor Not Implemented
-  void operator=(const FilterMaker&);  // Operator '=' Not Implemented
+  ApplicationFileInfo(const ApplicationFileInfo&);    // Copy Constructor Not Implemented
+  void operator=(const ApplicationFileInfo&);  // Operator '=' Not Implemented
 };
 
-#endif
+#endif /* _ApplicationFileInfo_H */

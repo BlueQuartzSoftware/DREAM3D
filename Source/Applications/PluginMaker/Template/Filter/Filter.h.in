@@ -32,26 +32,8 @@ class @ClassName@ : public AbstractFilter
     /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
      * or other instance variables.
      * If you declare a filter parameter, then you MUST create a Q_PROPERTY for that FilterParameter. */
-     
-    /* String FilterParameter Example */
-    // DREAM3D_FILTER_PARAMETER(QString, Name)
-    // Q_PROPERTY(QString Name READ getName WRITE setName)
 
-    /* Input File FilterParameter Example */
-    // DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    // Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-
-    /* Output File FilterParameter Example */
-    // DREAM3D_FILTER_PARAMETER(QString, OutputFile)
-    // Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
-
-    /* Integer FilterParameter Example */
-    // DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
-
-    /* Double FilterParameter Example */
-    // DREAM3D_FILTER_PARAMETER(double, ImageDecimal)
-    // Q_PROPERTY(int ImageDecimal READ getImageDecimal WRITE setImageDecimal)
+@FPContents@
 
 
     /**

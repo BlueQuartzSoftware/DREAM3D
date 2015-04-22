@@ -48,6 +48,8 @@
 #include "PluginMaker/PMFilterGenerator.h"
 #include "PluginMaker/PMGeneratorTreeItem.h"
 
+#include "QtSupport/ApplicationFileInfo.h"
+
 #include <iostream>
 
 
@@ -80,6 +82,8 @@ void FilterMaker::setupGui()
   errorString->setTextInteractionFlags(Qt::NoTextInteraction);
   errorString->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
   errorString->setText("");
+
+  generateBtn->setEnabled(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -111,42 +115,17 @@ QString FilterMaker::getPluginDir()
 // -----------------------------------------------------------------------------
 void FilterMaker::on_pluginDir_textChanged(const QString& text)
 {
-  if (true == text.isEmpty())
-  {
-    generateBtn->setEnabled(false);
-    errorString->setText("");
-    return;
-  }
+  // Check whether or not we need to show an error and disable the Generate button.
+  validityCheck();
+}
 
-  QString pluginPath = QDir::toNativeSeparators(text);
-
-  // Store the last used directory into the private instance variable
-  QFileInfo fi(pluginPath);
-  m_OpenDialogLastDirectory = fi.path();
-
-  QString filtersDir = pluginPath;
-  QTextStream ss(&filtersDir);
-  QString lastDir = fi.baseName();
-  ss << "/" << lastDir << "Filters";
-
-  {
-    QFileInfo fi(filtersDir);
-    if (fi.exists() == false)
-    {
-      generateBtn->setEnabled(false);
-      errorString->setText("The specified directory is not a valid plugin directory.\nPlease select a valid plugin directory.");
-    }
-    else if (filterName->text().isEmpty())
-    {
-      generateBtn->setEnabled(false);
-      errorString->setText("");
-    }
-    else
-    {
-      generateBtn->setEnabled(true);
-      errorString->setText("");
-    }
-  }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::on_filterName_textChanged(const QString& text)
+{
+  // Check whether or not we need to show an error and disable the Generate button.
+  validityCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -179,19 +158,18 @@ void FilterMaker::on_codeChooser_currentIndexChanged(const QString &text)
 void FilterMaker::on_generateBtn_clicked()
 {
   QString filterName = this->filterName->text();
-  QString pluginDir = this->pluginDir->text();
 
   // Generate the implementation, header, and test files
-  generateFilterFiles(filterName, pluginDir);
+  generateFilterFiles();
 
   // Add to the SourceList.cmake file
-  updateSourceList(filterName, pluginDir, isPublic());
+  updateSourceList();
 
   // Add to the Test Locations file
-  updateTestLocations(filterName, pluginDir);
+  updateTestLocations();
 
   // Add to the CMakeLists.txt file in the Test folder
-  updateTestList(filterName, pluginDir);
+  updateTestList();
 
   statusbar->showMessage("'" + filterName + "' Generation Completed");
 }
@@ -220,6 +198,15 @@ void FilterMaker::on_addFilterParameterBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterMaker::on_removeFilterParameterBtn_clicked()
+{
+  int row = filterParametersTable->currentRow();
+  filterParametersTable->removeRow(row);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
 {
   QString varName = widget->getVariableName();
@@ -233,55 +220,12 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   QTableWidgetItem* item1 = new QTableWidgetItem(humanName);
   QTableWidgetItem* item2 = new QTableWidgetItem(type);
 
-  // Insert Variable Name item
-  filterParametersTable->insertRow(filterParametersTable->rowCount());
-  filterParametersTable->setItem(filterParametersTable->rowCount(), 0, item0);
-
-  // Insert Human Name Item
-  filterParametersTable->insertRow(filterParametersTable->rowCount());
-  filterParametersTable->setItem(filterParametersTable->rowCount(), 1, item1);
-
-  // Insert Type Item
-  filterParametersTable->insertRow(filterParametersTable->rowCount());
-  filterParametersTable->setItem(filterParametersTable->rowCount(), 2, item2);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterMaker::on_filterName_textChanged(const QString& text)
-{
-  if (text.isEmpty())
-  {
-    generateBtn->setEnabled(false);
-    errorString->setText("");
-  }
-  else if (text.contains(QRegExp("[^a-zA-Z_-/\s]")))
-  {
-    generateBtn->setEnabled(false);
-
-    QString linkText = "<a href=#openWindow>Learn More.</a>";
-    errorString->setText("The name that you chose has illegal characters. " + linkText);
-    errorString->setTextFormat(Qt::RichText);
-    errorString->setTextInteractionFlags(Qt::TextBrowserInteraction);
-  }
-  else if (text.contains(QRegExp("(Filter|Plugin)$")))
-  {
-    generateBtn->setEnabled(false);
-    errorString->setText("Filter names cannot contain the words 'Filter' or 'Plugin' at the end of the name.\nPlease choose a different filter name.");
-  }
-  else if (pluginDir->text().isEmpty())
-  {
-    generateBtn->setEnabled(false);
-    errorString->setText("");
-  }
-  else
-  {
-    generateBtn->setEnabled(true);
-    errorString->setText("");
-    errorString->setTextFormat(Qt::PlainText);
-    errorString->setTextInteractionFlags(Qt::NoTextInteraction);
-  }
+  // Insert items
+  int row = filterParametersTable->rowCount();
+  filterParametersTable->insertRow(row);
+  filterParametersTable->setItem(row, VAR_NAME, item0);
+  filterParametersTable->setItem(row, HUMAN_NAME, item1);
+  filterParametersTable->setItem(row, TYPE, item2);
 }
 
 // -----------------------------------------------------------------------------
@@ -301,52 +245,11 @@ void FilterMaker::on_errorString_linkActivated(const QString &link)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FilterMaker::generateFileSystemPath(QString pathEnding)
+void FilterMaker::generateFilterFiles()
 {
-  QString appPath = qApp->applicationDirPath();
+  QString filterName = this->filterName->text();
+  QString pluginDir = this->pluginDir->text();
 
-  QDir pluginMakerDir = QDir(appPath);
-
-#if defined(Q_OS_WIN)
-
-#elif defined(Q_OS_MAC)
-  if (pluginMakerDir.dirName() == "MacOS")
-  {
-    pluginMakerDir.cdUp();
-    pluginMakerDir.cdUp();
-    pluginMakerDir.cdUp();
-  }
-#else
-  // We are on Linux - I think
-  QFileInfo fi(pluginMakerDir.absolutePath() + pathEnding);
-  if (fi.exists() == false)
-  {
-    // The help file does not exist at the default location because we are probably running from the build tree.
-    // Try up one more directory
-    pluginMakerDir.cdUp();
-  }
-#endif
-
-#if defined(Q_OS_WIN)
-  QFileInfo fi(pluginMakerDir.absolutePath() + pathEnding);
-  if (fi.exists() == false)
-  {
-    // The help file does not exist at the default location because we are probably running from visual studio.
-    // Try up one more directory
-    pluginMakerDir.cdUp();
-  }
-#endif
-
-  QString filePath = pluginMakerDir.absolutePath() + pathEnding;
-  filePath = QDir::toNativeSeparators(filePath);
-  return filePath;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterMaker::generateFilterFiles(QString filterName, QString pluginDir)
-{
   if (pluginDir.isEmpty() || filterName.isEmpty())
   {
     return;
@@ -356,7 +259,7 @@ void FilterMaker::generateFilterFiles(QString filterName, QString pluginDir)
 
   // Filter.cpp file
   QString pathTemplate = "@PluginName@Filters/";
-  QString resourceTemplate = generateFileSystemPath("/Template/Filter/Filter.cpp.in");
+  QString resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Filter/Filter.cpp.in");
   PMFilterGenerator* cppgen = new PMFilterGenerator(pluginDir,
     pathTemplate,
     QString(filterName + ".cpp"),
@@ -373,7 +276,7 @@ void FilterMaker::generateFilterFiles(QString filterName, QString pluginDir)
 
   // Filter.h file
   pathTemplate = "@PluginName@Filters/";
-  resourceTemplate = generateFileSystemPath("/Template/Filter/Filter.h.in");
+  resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Filter/Filter.h.in");
   PMFilterGenerator* hgen = new PMFilterGenerator(pluginDir,
     pathTemplate,
     QString(filterName + ".h"),
@@ -391,7 +294,7 @@ void FilterMaker::generateFilterFiles(QString filterName, QString pluginDir)
 
   // Documentation.md file
   pathTemplate = "Documentation/@PluginName@Filters/";
-  resourceTemplate = generateFileSystemPath("/Template/Documentation/Filter/Documentation.md.in");
+  resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Documentation/Filter/Documentation.md.in");
   PMFilterGenerator* htmlgen = new PMFilterGenerator(pluginDir,
     pathTemplate,
     QString(filterName + ".md"),
@@ -408,7 +311,7 @@ void FilterMaker::generateFilterFiles(QString filterName, QString pluginDir)
 
   // FilterTest.cpp file
   pathTemplate = "Test";
-  resourceTemplate = generateFileSystemPath("/Template/Test/FilterTest.cpp.in");
+  resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Test/FilterTest.cpp.in");
   PMFilterGenerator* testgen = new PMFilterGenerator(pluginDir,
     pathTemplate,
     QString(filterName + "Test.cpp"),
@@ -427,8 +330,11 @@ void FilterMaker::generateFilterFiles(QString filterName, QString pluginDir)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterMaker::updateSourceList(QString filterName, QString pluginDir, bool isPublic)
+void FilterMaker::updateSourceList()
 {
+  QString filterName = this->filterName->text();
+  QString pluginDir = this->pluginDir->text();
+
   QString pluginName = QFileInfo(pluginDir).baseName();
 
   QString sourceListPath = pluginDir + "/" + pluginName + "Filters/SourceList.cmake";
@@ -442,7 +348,7 @@ void FilterMaker::updateSourceList(QString filterName, QString pluginDir, bool i
 
     QString fileData(byteArray);
     QString str = "";
-    if (isPublic == true)
+    if (isPublic() == true)
     {
       str = "set(_PublicFilters";
     }
@@ -467,8 +373,11 @@ void FilterMaker::updateSourceList(QString filterName, QString pluginDir, bool i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterMaker::updateTestLocations(QString filterName, QString pluginDir)
+void FilterMaker::updateTestLocations()
 {
+  QString filterName = this->filterName->text();
+  QString pluginDir = this->pluginDir->text();
+
   QString testPath = pluginDir + "/Test/TestFileLocations.h.in";
   testPath = QDir::toNativeSeparators(testPath);
 
@@ -482,7 +391,7 @@ void FilterMaker::updateTestLocations(QString filterName, QString pluginDir)
     QString str = "const QString DREAM3DProjDir(\"@DREAM3DProj_SOURCE_DIR@\");";
     int index = fileData.indexOf(str);
     index = index + str.size();
-    QString namespaceStr = createNamespaceString(filterName);
+    QString namespaceStr = createNamespaceString();
     fileData.insert(index, namespaceStr);
 
     file.remove();
@@ -497,8 +406,11 @@ void FilterMaker::updateTestLocations(QString filterName, QString pluginDir)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterMaker::updateTestList(QString filterName, QString pluginDir)
+void FilterMaker::updateTestList()
 {
+  QString filterName = this->filterName->text();
+  QString pluginDir = this->pluginDir->text();
+
   QString testPath = pluginDir + "/Test/CMakeLists.txt";
   testPath = QDir::toNativeSeparators(testPath);
 
@@ -541,8 +453,10 @@ void FilterMaker::updateTestList(QString filterName, QString pluginDir)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FilterMaker::createNamespaceString(QString filterName)
+QString FilterMaker::createNamespaceString()
 {
+  QString filterName = this->filterName->text();
+
   QString addition = "\n\n";
   addition.append("  namespace " + filterName + "Test");
   addition.append("\n  {\n");
@@ -551,6 +465,69 @@ QString FilterMaker::createNamespaceString(QString filterName)
   addition.append("\n  }");
 
   return addition;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::validityCheck()
+{
+  QString filterName = this->filterName->text();
+  QString pluginDir = this->pluginDir->text();
+
+  QString pluginPath = QDir::toNativeSeparators(pluginDir);
+
+  // Store the last used directory into the private instance variable
+  QFileInfo pluginPathInfo(pluginPath);
+  m_OpenDialogLastDirectory = pluginPathInfo.path();
+
+  QString filtersDir = pluginPath;
+  QTextStream ss(&filtersDir);
+  QString lastDir = pluginPathInfo.baseName();
+  ss << "/" << lastDir << "Filters";
+  filtersDir = QDir::toNativeSeparators(filtersDir);
+
+  QFileInfo filtersDirInfo(filtersDir);
+
+  if (filterName.isEmpty() == false && filterName.contains(QRegExp("[^a-zA-Z_-/\s]")) == false
+    && filterName.contains(QRegExp("(Filter|Plugin)$")) == false && pluginDir.isEmpty() == false
+    && filtersDirInfo.exists() == true)
+  {
+    // No Errors
+    generateBtn->setEnabled(true);
+    errorString->setText("");
+    errorString->setTextFormat(Qt::PlainText);
+    errorString->setTextInteractionFlags(Qt::NoTextInteraction);
+  }
+  else
+  {
+    // There is an error, so disable the button and hide the error message until we know what the message is going to be.
+    generateBtn->setEnabled(false);
+    errorString->setText("");
+    errorString->setTextFormat(Qt::PlainText);
+    errorString->setTextInteractionFlags(Qt::NoTextInteraction);
+
+    if (filterName.contains(QRegExp("[^a-zA-Z_-/\s]")) == true)
+    {
+      // Filter name has illegal characters
+      QString linkText = "<a href=#openWindow>Learn More.</a>";
+      errorString->setText("The name that you chose has illegal characters. " + linkText);
+      errorString->setTextFormat(Qt::RichText);
+      errorString->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    }
+    else if (filterName.contains(QRegExp("(Filter|Plugin)$")) == true)
+    {
+      // Filter name has "Filter" or "Plugin" at the end of the name
+      generateBtn->setEnabled(false);
+      errorString->setText("Filter names cannot contain the words 'Filter' or 'Plugin' at the end of the name.\nPlease choose a different filter name.");
+    }
+    else if (filtersDirInfo.exists() == false)
+    {
+      // The directory is not a specified plugin directory
+      generateBtn->setEnabled(false);
+      errorString->setText("The specified directory is not a valid plugin directory.\nPlease select a valid plugin directory.");
+    }
+  }
 }
 
 
