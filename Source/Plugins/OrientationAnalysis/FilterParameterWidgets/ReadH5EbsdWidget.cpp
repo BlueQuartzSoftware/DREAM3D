@@ -43,6 +43,7 @@
 #include "EbsdLib/HKL/CtfFields.h"
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "QtSupport/QFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"

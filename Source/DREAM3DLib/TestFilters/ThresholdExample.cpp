@@ -36,7 +36,7 @@
 
 #include "ThresholdExample.h"
 
-
+#include "DREAM3DLib/FilterParameters/ComparisonFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------

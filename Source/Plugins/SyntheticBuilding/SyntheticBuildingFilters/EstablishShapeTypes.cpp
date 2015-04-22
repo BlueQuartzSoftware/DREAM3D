@@ -44,6 +44,7 @@
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ShapeTypesFilterParameter.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 

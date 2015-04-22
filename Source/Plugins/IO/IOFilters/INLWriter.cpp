@@ -49,6 +49,7 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "OrientationLib/OrientationOps/CubicLowOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"

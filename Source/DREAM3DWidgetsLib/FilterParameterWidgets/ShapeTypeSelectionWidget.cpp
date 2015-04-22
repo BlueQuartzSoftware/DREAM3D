@@ -43,6 +43,7 @@
 
 #include "DREAM3DLib/Common/ShapeType.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DLib/FilterParameters/ShapeTypesFilterParameter.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
