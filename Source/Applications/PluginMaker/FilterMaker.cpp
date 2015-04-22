@@ -208,6 +208,47 @@ void FilterMaker::on_cancelBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterMaker::on_addFilterParameterBtn_clicked()
+{
+  AddFilterParameter* dialog = new AddFilterParameter();
+
+  connect(dialog, SIGNAL(addBtnPressed(AddFilterParameter*)), this, SLOT(addFilterParameterToTable(AddFilterParameter*)));
+
+  dialog->show();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
+{
+  QString varName = widget->getVariableName();
+  QString humanName = widget->getHumanName();
+  QString type = widget->getType();
+
+  // Close the widget, since we have all the data that we need
+  widget->close();
+
+  QTableWidgetItem* item0 = new QTableWidgetItem(varName);
+  QTableWidgetItem* item1 = new QTableWidgetItem(humanName);
+  QTableWidgetItem* item2 = new QTableWidgetItem(type);
+
+  // Insert Variable Name item
+  filterParametersTable->insertRow(filterParametersTable->rowCount());
+  filterParametersTable->setItem(filterParametersTable->rowCount(), 0, item0);
+
+  // Insert Human Name Item
+  filterParametersTable->insertRow(filterParametersTable->rowCount());
+  filterParametersTable->setItem(filterParametersTable->rowCount(), 1, item1);
+
+  // Insert Type Item
+  filterParametersTable->insertRow(filterParametersTable->rowCount());
+  filterParametersTable->setItem(filterParametersTable->rowCount(), 2, item2);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterMaker::on_filterName_textChanged(const QString& text)
 {
   if (text.isEmpty())

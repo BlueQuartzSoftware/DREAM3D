@@ -35,60 +35,40 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FilterMaker_H_
-#define _FilterMaker_H_
+#ifndef _AddFilterParameter_H_
+#define _AddFilterParameter_H_
 
 #include <QtCore/QObject>
 #include <QtWidgets/QWidget>
 
-#include "PluginMaker/AddFilterParameter.h"
+#include "ui_AddFilterParameter.h"
 
-#include "ui_FilterMaker.h"
-
-class FilterMaker : public QMainWindow, public Ui::FilterMaker
+class AddFilterParameter : public QWidget, public Ui::AddFilterParameter
 {
   Q_OBJECT
 
 public:
-  FilterMaker(QWidget* parent = 0);
-  ~FilterMaker();
+  AddFilterParameter(QWidget* parent = 0);
+  ~AddFilterParameter();
 
-  QString getFilterName();
-  QString getPluginDir();
-  bool isPublic();
+  QString getVariableName();
+  QString getHumanName();
+  QString getType();
 
 protected:
   void setupGui();
-  QString generateFileSystemPath(QString);
-
-protected slots:
-  void on_selectBtn_clicked();
-  void on_codeChooser_currentIndexChanged(const QString &text);
-  void on_pluginDir_textChanged(const QString& text);
-  void on_filterName_textChanged(const QString& text);
-  void on_generateBtn_clicked();
-  void on_cancelBtn_clicked();
-  void on_addFilterParameterBtn_clicked();
-  void on_errorString_linkActivated(const QString &link);
-
-  void addFilterParameterToTable(AddFilterParameter* widget);
 
 signals:
-  void generateBtnPressed();
-  void cancelBtnPressed();
+  void addBtnPressed(AddFilterParameter* widget);
+
+  protected slots:
+  void on_addFilterParameterBtn_clicked();
+  void on_cancelBtn_clicked();
 
 private:
-  QString                     m_OpenDialogLastDirectory;
-  
 
-  void generateFilterFiles(QString filterName, QString pluginDir);
-  void updateSourceList(QString filterName, QString pluginDir, bool isPublic);
-  void updateTestLocations(QString filterName, QString pluginDir);
-  void updateTestList(QString filterName, QString pluginDir);
-  QString createNamespaceString(QString filterName);
-
-  FilterMaker(const FilterMaker&);    // Copy Constructor Not Implemented
-  void operator=(const FilterMaker&);  // Operator '=' Not Implemented
+  AddFilterParameter(const AddFilterParameter&);    // Copy Constructor Not Implemented
+  void operator=(const AddFilterParameter&);  // Operator '=' Not Implemented
 };
 
 #endif

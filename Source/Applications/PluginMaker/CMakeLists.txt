@@ -29,6 +29,7 @@ set(PluginMaker_SRCS
   ${PluginMaker_SOURCE_DIR}/PluginMaker.cpp
   ${PluginMaker_SOURCE_DIR}/FilterMaker.cpp
   ${PluginMaker_SOURCE_DIR}/DevHelper.cpp
+  ${PluginMaker_SOURCE_DIR}/AddFilterParameter.cpp
   ${PluginMaker_SOURCE_DIR}/HelpWidget.cpp
   ${PluginMaker_SOURCE_DIR}/PMDirGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/PMFileGenerator.cpp
@@ -47,6 +48,7 @@ SET(PluginMaker_MOC_HDRS
     ${PluginMaker_SOURCE_DIR}/PluginMaker.h
     ${PluginMaker_SOURCE_DIR}/FilterMaker.h
     ${PluginMaker_SOURCE_DIR}/DevHelper.h
+    ${PluginMaker_SOURCE_DIR}/AddFilterParameter.h
     ${PluginMaker_SOURCE_DIR}/HelpWidget.h
     ${PluginMaker_SOURCE_DIR}/PMDirGenerator.h
     ${PluginMaker_SOURCE_DIR}/PMFileGenerator.h
@@ -61,6 +63,7 @@ SET(PluginMaker_UIS
   ${PluginMaker_SOURCE_DIR}/UI_Files/PluginMaker.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/FilterMaker.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/DevHelper.ui
+  ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterParameter.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/HelpWidget.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterWidget.ui
 #    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/UI_Files/ApplicationAboutBoxDialog.ui

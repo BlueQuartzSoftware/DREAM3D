@@ -35,7 +35,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DevHelper.h"
+#include "AddFilterParameter.h"
 
 #include "PluginMaker/PluginMaker.h"
 #include "PluginMaker/FilterMaker.h"
@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DevHelper::DevHelper(QWidget* parent) :
+AddFilterParameter::AddFilterParameter(QWidget* parent) :
 QWidget(parent)
 {
   setupUi(this);
@@ -57,7 +57,7 @@ QWidget(parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DevHelper::~DevHelper()
+AddFilterParameter::~AddFilterParameter()
 {
 
 }
@@ -65,7 +65,7 @@ DevHelper::~DevHelper()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DevHelper::setupGui()
+void AddFilterParameter::setupGui()
 {
 
 }
@@ -73,23 +73,44 @@ void DevHelper::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DevHelper::on_newPluginBtn_clicked()
+void AddFilterParameter::on_addFilterParameterBtn_clicked()
 {
-  PluginMaker* pluginMaker = new PluginMaker;
-  pluginMaker->show();
-
-  this->close();
+  /* SLOT: FilterMaker::addFilterParameterToTable()
+     CONNECT: FilterMaker::on_addFilterParameterBtn_clicked() */
+  emit addBtnPressed(this);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DevHelper::on_newFilterBtn_clicked()
+void AddFilterParameter::on_cancelBtn_clicked()
 {
-  FilterMaker* filterMaker = new FilterMaker();
-  filterMaker->show();
+  // Close the widget
+  close();
+}
 
-  this->close();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AddFilterParameter::getVariableName()
+{
+  return varName->text();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AddFilterParameter::getHumanName()
+{
+  return humanName->text();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AddFilterParameter::getType()
+{
+  return type->currentText();
 }
 
 
