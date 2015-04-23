@@ -165,27 +165,154 @@ class PackPrimaryPhases : public AbstractFilter
   protected:
     PackPrimaryPhases();
 
+    /**
+     * @brief initialize_packinggrid Initializes internal variables for packing grid dimensions based on
+     * the incoming grid set by the user
+     * @return
+     */
     Int32ArrayType::Pointer initialize_packinggrid();
 
+    /**
+     * @brief place_features Organizes the placement of Features into the packing volume while ensuring
+     * proper size and morphological statistics are maintained
+     * @param featureOwnersPtr Array of Feature Ids for each packing point
+     */
     void place_features(Int32ArrayType::Pointer featureOwnersPtr);
-    void generate_feature(int32_t phase, int64_t Seed, Feature* feature, uint32_t shapeclass);
+
+    /**
+     * @brief generate_feature Creates a Feature by sampling the size and morphological statistical distributions
+     * @param phase Index of the Ensemble type for the Feature to be generated
+     * @param Seed Value to intialized random number generator
+     * @param feature Feature struct pointer to be intialized
+     * @param shapeclass Type of Feature shape to be generated
+     */
+    void generate_feature(int32_t phase, uint64_t Seed, Feature* feature, uint32_t shapeclass);
+
+    /**
+     * @brief load_features Reads a list of Features from to be used as the packed volume
+     */
     void load_features();
+
+    /**
+     * @brief transfer_attributes Moves variables held in the Feature struct into other arrays
+     * @param gnum Id for the Feature to be copied
+     * @param feature Feature struct pointer to be copied
+     */
     void transfer_attributes(int32_t gnum, Feature* feature);
-    void insert_feature(size_t featureNum);
-    void move_feature(size_t featureNum, float xc, float yc, float zc);
+
+    /**
+     * @brief insert_feature Performs the insertion of a Feature into the packing volume
+     * @param gnum Id for the Feature to be inserted
+     */
+    void insert_feature(size_t gnum);
+
+    /**
+     * @brief move_feature Moves a Feature to the supplied (x,y,z) centroid coordinate
+     * @param gnum Id for the Feature to be moved
+     * @param xc x centroid coordinate
+     * @param yc y centroid coordinate
+     * @param zc z centroid coordinate
+     */
+    void move_feature(size_t gnum, float xc, float yc, float zc);
+
+    /**
+     * @brief check_sizedisterror Computes the error between the current Feature size distribution
+     * and the goal Feature size distribution
+     * @param feature Feature struct pointer used to determine the Ensemble type
+     * @return Float error value between two distributions
+     */
     float check_sizedisterror(Feature* feature);
-    void determine_neighbors(size_t featureNum, int32_t add);
+
+    /**
+     * @brief determine_neighbors Determines the neighbors for a given Feature
+     * @param gnum Id for the Feature for which to find neighboring Features
+     * @param add Value that determines whether to add or remove a Feature from the
+     * list of neighbors
+     */
+    void determine_neighbors(size_t gnum, bool add);
+
+    /**
+     * @brief check_neighborhooderror Computes the error between the current Feature neighbor distribution
+     * and the goal Feature neighbor distribution
+     * @param gadd Value that determines whether to add a Feature for the neighbor list computation
+     * @param gremove Value that determines whether to remove a Feature for the neighbor list computation
+     * @return Float error value between two distributions
+     */
     float check_neighborhooderror(int32_t gadd, int32_t gremove);
+
+    /**
+     * @brief check_fillingerror Computes the percentage of unassigned or "garbage" packing points
+     * @param gadd Value that determines whether to add point Ids to be filled
+     * @param gremove Value that determines whether to add point Ids to be removed
+     * @param featureOwnersPtr Array of Feature Ids for each packing point
+     * @param exclusionOwnersPtr Array of exlusion Ids for each packing point
+     * @return Float percentage value for the ratio of unassinged/"garbage" packing points
+     */
     float check_fillingerror(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr);
+
+    /**
+     * @brief update_availablepoints Updates the maps used to associate packing points with an "available" state
+     * @param availablePoints Map between Feature owners and number of available points
+     * @param availablePointsInv Inverse associations for the availablePoints map
+     */
     void update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv);
+
+    /**
+     * @brief assign_voxels Assigns Feature Id values to voxels within the packing grid
+     */
     void assign_voxels();
+
+    /**
+     * @brief assign_gaps_only Assigns Feature Id values to unassigned gaps within the packing grid
+     */
     void assign_gaps_only();
+
+    /**
+     * @brief cleanup_features Assigns Feature Id values by cleaning up boundaries between Features
+     */
     void cleanup_features();
+
+    /**
+     * @brief write_goal_attributes Outputs important algorithm data
+     */
     void write_goal_attributes();
+
+    /**
+     * @brief compare_1Ddistributions Computes the 1D Bhattacharyya distance
+     * @param sqrerror Float 1D Bhattacharyya distance
+     */
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float& sqrerror);
+
+    /**
+     * @brief compare_2Ddistributions Computes the 2D Bhattacharyya distance
+     * @param sqrerror Float 1D Bhattacharyya distance
+     */
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float& sqrerror);
+
+    /**
+     * @brief compare_3Ddistributions Computes the 3D Bhattacharyya distance
+     * @param sqrerror Float 1D Bhattacharyya distance
+     */
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
+
+    /**
+     * @brief writeVtkFile Outputs a debug VTK file for visualization
+     * @param featureOwners Array of Feature Ids for each packing point
+     * @param exclusionZonesPtr Array of exlusion Ids for each packing point
+     * @return Integer error code
+     */
     int32_t writeVtkFile(int32_t* featureOwners, int32_t* exclusionZonesPtr);
+
+    /**
+     * @brief estimate_numfeatures Estimates the number of Features that will be generated based on the supplied statistics
+     * @param xpoints Extent of x dimension
+     * @param ypoints Extent of y dimension
+     * @param zpoints Extent of z dimension
+     * @param xres Resolution of x dimension
+     * @param yres Resolution of y dimension
+     * @param zres Resolution of z dimension
+     * @return Integer number of esimtated Features
+     */
     int32_t estimate_numfeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres);
 
   private:
@@ -196,7 +323,7 @@ class PackPrimaryPhases : public AbstractFilter
     QString m_AxisEulerAnglesArrayName;
     QString m_Omega3sArrayName;
     QString m_EquivalentDiametersArrayName;
-    int32_t* m_Neighbors;
+    int64_t* m_Neighbors;
 
     // Cell Data - make sure these are all initialized to NULL in the constructor
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
@@ -238,7 +365,7 @@ class PackPrimaryPhases : public AbstractFilter
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
 
-    int64_t m_Seed;
+    uint64_t m_Seed;
 
     int32_t firstPrimaryFeature;
 

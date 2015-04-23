@@ -95,7 +95,7 @@ class AssignVoxelsGapsImpl
 
   public:
     AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* featureIds, float* radCur,
-                         float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int cur_feature,
+                         float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
                          Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_FeatureIds(featureIds),
       m_ShapeOps(shapeOps),
@@ -135,27 +135,26 @@ class AssignVoxelsGapsImpl
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void convert(int zStart, int zEnd, int yStart, int yEnd, int xStart, int xEnd) const
+    void convert(DimType zStart, DimType zEnd, DimType yStart, DimType yEnd, DimType xStart, DimType xEnd) const
     {
-
-      int column = 0;
-      int row = 0;
-      int plane = 0;
-      int index = 0;
-      float gaCopy[3][3];
-      float gaT[3][3];
-      float coords[3] = {0.0f, 0.0f, 0.0f};
+      DimType column = 0;
+      DimType row = 0;
+      DimType plane = 0;
+      DimType index = 0;
+      float gaCopy[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      float coords[3] = { 0.0f, 0.0f, 0.0f };
       float inside = 0.0f;
       //   float dist = 0.0f;
       //   float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
-      float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
+      float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
       int32_t* newowners = newownersPtr->getPointer(0);
       float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
-      //making a copy because the transpose function used later can't deal with the const nature of ga
-      for(int i = 0; i < 3; i++)
+      // making a copy because the transpose function used later can't deal with the const nature of ga
+      for (int32_t i = 0; i < 3; i++)
       {
-        for(int j = 0; j < 3; j++)
+        for (int32_t j = 0; j < 3; j++)
         {
           gaCopy[i][j] = ga[i][j];
         }
@@ -181,9 +180,9 @@ class AssignVoxelsGapsImpl
             if (iter3 < 0) { plane = iter3 + dims[2]; }
             else if (iter3 > dims[2] - 1) { plane = iter3 - dims[2]; }
 
-            index = static_cast<int>( (plane * dim0_dim_1) + (row_dim) + column );
+            index = static_cast<DimType>( (plane * dim0_dim_1) + (row_dim) + column );
 
-            inside = -1;
+            inside = -1.0f;
             coords[0] = float(iter1) * res[0];
             coords[1] = float(iter2) * res[1];
             coords[2] = float(iter3) * res[2];
@@ -216,7 +215,7 @@ class AssignVoxelsGapsImpl
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range3d<int, int, int>& r) const
+    void operator()(const tbb::blocked_range3d<DimType, DimType, DimType>& r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
@@ -575,17 +574,18 @@ void PackPrimaryPhases::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  if(m_HaveFeatures == false)
+  if (m_HaveFeatures == false)
   {
     notifyStatusMessage(getHumanLabel(), "Packing Features - Initializing Volume");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
     Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
-
+    if(getErrorCondition() < 0) { return; }
     notifyStatusMessage(getHumanLabel(), "Packing Features - Placing Features");
     place_features(featureOwnersPtr);
+    if(getErrorCondition() < 0) { return; }
   }
 
-  if(m_HaveFeatures == true)
+  if (m_HaveFeatures == true)
   {
     notifyStatusMessage(getHumanLabel(), "Loading Features");
     load_features();
@@ -594,6 +594,7 @@ void PackPrimaryPhases::execute()
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Assigning Voxels");
   assign_voxels();
+  if(getErrorCondition() < 0) { return; }
   if (getCancel() == true) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Assigning Gaps");
@@ -604,10 +605,11 @@ void PackPrimaryPhases::execute()
   //  cleanup_features();
   if (getCancel() == true) { return; }
 
-  if(m_WriteGoalAttributes == true)
+  if (m_WriteGoalAttributes == true)
   {
     write_goal_attributes();
   }
+  if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
@@ -620,19 +622,18 @@ void PackPrimaryPhases::execute()
   cellFeatureAttrMat->removeAttributeArray(m_NeighborhoodsArrayName);
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Packing Features Complete");
-
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusionZones)
+int32_t PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusionZones)
 {
   size_t featureOwnersIdx = 0;
   std::ofstream outFile;
   outFile.open(m_VtkOutputFile.toLatin1().data(), std::ios_base::binary);
-  if(outFile.is_open() == false)
+  if (outFile.is_open() == false)
   {
     qDebug() << "m_VtkOutputFile: " << m_VtkOutputFile << "\n";
     notifyErrorMessage(getHumanLabel(), "Could not open Vtk File for writing from PackFeatures", -1);
@@ -651,33 +652,33 @@ int PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusionZo
   outFile << "\n";
   outFile << "SCALARS NumOwners int  1" << "\n";
   outFile << "LOOKUP_TABLE default" << "\n";
-  for (int i = 0; i < (m_PackingPoints[2]); i++)
+  for (int64_t i = 0; i < (m_PackingPoints[2]); i++)
   {
-    for (int j = 0; j < (m_PackingPoints[1]); j++)
+    for (int64_t j = 0; j < (m_PackingPoints[1]); j++)
     {
-      for (int k = 0; k < (m_PackingPoints[0]); k++)
+      for (int64_t k = 0; k < (m_PackingPoints[0]); k++)
       {
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * i) + (m_PackingPoints[0] * j) + k;
-        int name = featureOwners[featureOwnersIdx];
-        if(i % 20 == 0 && i > 0) { outFile << "\n"; }
+        int32_t name = featureOwners[featureOwnersIdx];
+        if (i % 20 == 0 && i > 0) { outFile << "\n"; }
         outFile << "     ";
-        if(name < 100) { outFile << " "; }
-        if(name < 10) { outFile << " "; }
+        if (name < 100) { outFile << " "; }
+        if (name < 10) { outFile << " "; }
         outFile << name;
       }
     }
   }
   outFile << "SCALARS ExclusionZone int  1" << "\n";
   outFile << "LOOKUP_TABLE default" << "\n";
-  for (int i = 0; i < (m_PackingPoints[2]); i++)
+  for (int64_t i = 0; i < (m_PackingPoints[2]); i++)
   {
-    for (int j = 0; j < (m_PackingPoints[1]); j++)
+    for (int64_t j = 0; j < (m_PackingPoints[1]); j++)
     {
-      for (int k = 0; k < (m_PackingPoints[0]); k++)
+      for (int64_t k = 0; k < (m_PackingPoints[0]); k++)
       {
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * i) + (m_PackingPoints[0] * j) + k;
         int32_t val = exclusionZones[featureOwnersIdx];
-        if(i % 20 == 0 && i > 0) { outFile << "\n"; }
+        if (i % 20 == 0 && i > 0) { outFile << "\n"; }
         outFile << "       ";
         outFile << val;
       }
@@ -690,25 +691,24 @@ int PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusionZo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  PackPrimaryPhases::load_features()
+void PackPrimaryPhases::load_features()
 {
-
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
 
   std::ifstream inFile;
   inFile.open(getFeatureInputFile().toLatin1().data(), std::ios_base::binary);
-  if(!inFile)
+  if (!inFile)
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getFeatureInputFile());
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
-  int numFeatures;
+  int32_t numFeatures = 0;
   inFile >> numFeatures;
   if (0 == numFeatures)
   {
-    notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
+    notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
   }
 
   firstPrimaryFeature = 1;
@@ -717,15 +717,15 @@ void  PackPrimaryPhases::load_features()
   cellFeatureAttrMat->setTupleDimensions(tDims);
   updateFeatureInstancePointers();
 
-  int phase;
-  float xC, yC, zC;
-  float axisA, axisB, axisC;
-  float vol, eqDiam;
-  float omega3;
-  float phi1, PHI, phi2;
+  int32_t phase = 1;
+  float xC = 0.0f, yC = 0.0f, zC = 0.0f;
+  float axisA = 0.0f, axisB = 0.0f, axisC = 0.0f;
+  float vol = 0.0f, eqDiam = 0.0f;
+  float omega3 = 0.0f;
+  float phi1 = 0.0f, PHI = 0.0f, phi2 = 0.0f;
   size_t currentFeature = firstPrimaryFeature;
   const float fourThirds = 4.0f / 3.0f;
-  for(int i = 0; i < numFeatures; i++)
+  for (int32_t i = 0; i < numFeatures; i++)
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
     vol = fourThirds * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
@@ -754,7 +754,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 {
   bool writeErrorFile = false;
   std::ofstream outFile;
-  if(m_ErrorOutputFile.isEmpty() == false)
+  if (m_ErrorOutputFile.isEmpty() == false)
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
     writeErrorFile = outFile.is_open();
@@ -801,7 +801,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   size_t totalVox = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
   for (size_t i = 0; i < totalVox; i++)
   {
-    if(m_FeatureIds[i] <= 0) { totalprimaryvolTEMP++; }
+    if (m_FeatureIds[i] <= 0) { totalprimaryvolTEMP++; }
   }
   float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
   totalprimaryvol = totalprimaryvol * (m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes());
@@ -820,7 +820,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   // find which phases are primary phases
   for (size_t i = 1; i < totalEnsembles; ++i)
   {
-
     if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
@@ -845,8 +844,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
   }
 
-  QVector<size_t> dim(1, 1);
-  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(featureOwnersPtr->getNumberOfTuples(), dim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
+  QVector<size_t> cDim(1, 1);
+  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(featureOwnersPtr->getNumberOfTuples(), cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
   if (NULL == exclusionOwnersPtr.get())
   {
     QString ss = QObject::tr("Unable to allocate exclusionOwnersPtr");
@@ -863,14 +862,14 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   // Get a pointer to the Feature Owners that was just initialized in the initialize_packinggrid() method
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
   int32_t* exclusionOwners = exclusionOwnersPtr->getPointer(0);
-  size_t featureOwnersIdx = 0;
+  int64_t featureOwnersIdx = 0;
 
   // initialize the sim and goal size distributions for the primary phases
   featuresizedist.resize(primaryphases.size());
   simfeaturesizedist.resize(primaryphases.size());
   featuresizediststep.resize(primaryphases.size());
-  size_t numPhases = primaryphases.size();
-  for (size_t i = 0; i < numPhases; i++)
+  size_t numPrimaryPhases = primaryphases.size();
+  for (size_t i = 0; i < numPrimaryPhases; i++)
   {
     phase = primaryphases[i];
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
@@ -903,7 +902,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   if (getCancel() == true)
   {
     std::cout << "PackPrimaryPhases: " << this << std::endl;
-    QString ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Cancelled");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
@@ -925,7 +924,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   curphasevol.resize(primaryphases.size());
   float factor = 1.0f;
   size_t iter = 0;
-  size_t numPrimaryPhases = primaryphases.size();
   for (size_t j = 0; j < numPrimaryPhases; ++j)
   {
     curphasevol[j] = 0;
@@ -938,15 +936,15 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       generate_feature(phase, m_Seed, &feature, m_ShapeTypes[phase]);
       currentsizedisterror = check_sizedisterror(&feature);
       change = (currentsizedisterror) - (oldsizedisterror);
-      if (change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
+      if (change > 0 || currentsizedisterror > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
       {
         QString ss = QObject::tr("Packing Features (1/2) - Generating Feature #%1").arg(gid);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-        if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()))
+        if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()))
         {
-          tDims[0] = gid + 1;
+          tDims[0] = static_cast<size_t>(gid + 1);
           m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
-          //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
+          // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
           updateFeatureInstancePointers();
         }
 
@@ -958,7 +956,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       }
       if (getCancel() == true)
       {
-        QString ss = QObject::tr("Filter Cancelled.");
+        QString ss = QObject::tr("Cancelled");
         notifyErrorMessage(getHumanLabel(), ss, -1);
         setErrorCondition(-1);
         return;
@@ -969,12 +967,12 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   if (m_PeriodicBoundaries == false)
   {
     iter = 0;
-    int xfeatures, yfeatures, zfeatures;
-    xfeatures = int(powf((m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
-    yfeatures = int(xfeatures * (sizey / sizex) + 1);
-    zfeatures = int(xfeatures * (sizez / sizex) + 1);
+    int32_t xfeatures = 0, yfeatures = 0, zfeatures = 0;
+    xfeatures = static_cast<int32_t>(powf((m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples() * (sizex / sizey) * (sizex / sizez)), (1.0f / 3.0f)) + 1);
+    yfeatures = static_cast<int32_t>(xfeatures * (sizey / sizex) + 1);
+    zfeatures = static_cast<int32_t>(xfeatures * (sizez / sizex) + 1);
     factor = 0.25f * (1.0f - (float((xfeatures - 2) * (yfeatures - 2) * (zfeatures - 2)) / float(xfeatures * yfeatures * zfeatures)));
-    for (size_t j = 0; j < primaryphases.size(); ++j)
+    for (size_t j = 0; j < numPrimaryPhases; ++j)
     {
       float curphasetotalvol = totalprimaryvol * primaryphasefractions[j];
       while (curphasevol[j] < ((1 + factor) * curphasetotalvol))
@@ -982,16 +980,16 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         iter++;
         m_Seed++;
         phase = primaryphases[j];
-        generate_feature(phase, static_cast<int>(m_Seed), &feature, m_ShapeTypes[phase]);
+        generate_feature(phase, static_cast<int32_t>(m_Seed), &feature, m_ShapeTypes[phase]);
         currentsizedisterror = check_sizedisterror(&feature);
         change = (currentsizedisterror) - (oldsizedisterror);
-        if (change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
+        if (change > 0 || currentsizedisterror > (1.0f - (iter * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
         {
           QString ss = QObject::tr("Packing Features (2/2) - Generating Feature #%1").arg(gid);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-          if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()) )
+          if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()) )
           {
-            tDims[0] = gid + 1;
+            tDims[0] = static_cast<size_t>(gid + 1);
             m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
             //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
             updateFeatureInstancePointers();
@@ -1004,7 +1002,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         }
         if (getCancel() == true)
         {
-          QString ss = QObject::tr("Filter Cancelled.");
+          QString ss = QObject::tr("Cancelled");
           notifyErrorMessage(getHumanLabel(), ss, -1);
           setErrorCondition(-1);
           return;
@@ -1013,7 +1011,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
-  tDims[0] = gid;
+  tDims[0] = static_cast<size_t>(gid);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
@@ -1021,7 +1019,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   if (getCancel() == true)
   {
-    QString ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Cancelled");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
@@ -1033,32 +1031,33 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   neighbordist.resize(primaryphases.size());
   simneighbordist.resize(primaryphases.size());
   neighbordiststep.resize(primaryphases.size());
-  for (size_t i = 0; i < primaryphases.size(); i++)
+  for (size_t i = 0; i < numPrimaryPhases; i++)
   {
     phase = primaryphases[i];
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     neighbordist[i].resize(pp->getBinNumbers()->getSize());
     simneighbordist[i].resize(pp->getBinNumbers()->getSize());
     VectorOfFloatArray Neighdist = pp->getFeatureSize_Neighbors();
-    float normalizer = 0;
-    for (size_t j = 0; j < neighbordist[i].size(); j++)
+    float normalizer = 0.0f;
+    size_t numNeighborDistBins = neighbordist[i].size();
+    for (size_t j = 0; j < numNeighborDistBins; j++)
     {
       neighbordist[i][j].resize(40);
-      float input = 0;
-      float previoustotal = 0;
+      float input = 0.0f;
+      float previoustotal = 0.0f;
       float avg = Neighdist[0]->getValue(j);
       float stdev = Neighdist[1]->getValue(j);
       neighbordiststep[i] = 2;
       float denominatorConst = 1.0 / sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
-      for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+      for (size_t k = 0; k < 40; k++)
       {
         input = (float(k + 1) * neighbordiststep[i]);
         float logInput = logf(input);
-        if(logInput <= avg)
+        if (logInput <= avg)
         {
           neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) * denominatorConst )) - previoustotal;
         }
-        if(logInput > avg)
+        if (logInput > avg)
         {
           neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) * denominatorConst)) - previoustotal;
         }
@@ -1066,10 +1065,10 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       }
       normalizer = normalizer + previoustotal;
     }
-    normalizer = 1.0 / normalizer;
-    for (size_t j = 0; j < neighbordist[i].size(); j++)
+    normalizer = 1.0f / normalizer;
+    for (size_t j = 0; j < numNeighborDistBins; j++)
     {
-      for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+      for (size_t k = 0; k < 40; k++)
       {
         neighbordist[i][j][k] = neighbordist[i][j][k] * normalizer;
       }
@@ -1078,39 +1077,34 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   if (getCancel() == true)
   {
-
-    QString ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Cancelled");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
-
-  //  for each feature : select centroid, determine voxels in feature, monitor filling error and decide of the 10 placements which
-  // is the most beneficial, then the feature is added and its neighbors are determined
 
   columnlist.resize(totalFeatures);
   rowlist.resize(totalFeatures);
   planelist.resize(totalFeatures);
   ellipfunclist.resize(totalFeatures);
   packqualities.resize(totalFeatures);
-  fillingerror = 1;
+  fillingerror = 1.0f;
 
-  int count = 0;
-  int column, row, plane;
-  int progFeature = 0;
-  int progFeatureInc = totalFeatures * .01;
+  int64_t count = 0;
+  int64_t column = 0, row = 0, plane = 0;
+  int32_t progFeature = 0;
+  int32_t progFeatureInc = static_cast<int32_t>(totalFeatures * 0.01f);
   for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
-    if ((int)i > progFeature + progFeatureInc)
+    if ((int32_t)i > progFeature + progFeatureInc)
     {
-
       QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(totalFeatures);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       progFeature = i;
     }
 
-    //we always put the feature in the center of the box to make sure the feature has the optimal chance to not touch the edge of the box
-    //this is because in the insert function below we are just determining which voxels relative to the centroid are in the feature
+    // we always put the feature in the center of the box to make sure the feature has the optimal chance to not touch the edge of the box
+    // this is because in the insert function below we are just determining which voxels relative to the centroid are in the feature
     xc = sizex * 0.5f;
     yc = sizey * 0.5f;
     zc = sizez * 0.5f;
@@ -1118,25 +1112,26 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
     insert_feature(i);
+    if(getErrorCondition() < 0) { return; }
     count = 0;
-    //now we randomly pick a place to try to place the feature
+    // now we randomly pick a place to try to place the feature
     xc = static_cast<float>(rg.genrand_res53() * sizex);
     yc = static_cast<float>(rg.genrand_res53() * sizey);
     zc = static_cast<float>(rg.genrand_res53() * sizez);
-    column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-    row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-    plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+    column = static_cast<int64_t>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+    row = static_cast<int64_t>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+    plane = static_cast<int64_t>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
     featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
-    //now we walk til we find a point that is not in an exclusion zone
-    while(exclusionOwners[featureOwnersIdx] > 0 && count < m_TotalPackingPoints)
+    // now we walk til we find a point that is not in an exclusion zone
+    while (exclusionOwners[featureOwnersIdx] > 0 && count < m_TotalPackingPoints)
     {
       featureOwnersIdx++;
-      if(featureOwnersIdx >= m_TotalPackingPoints) { featureOwnersIdx = 0; }
+      if (featureOwnersIdx >= m_TotalPackingPoints) { featureOwnersIdx = 0; }
       count++;
     }
-    column = featureOwnersIdx % m_PackingPoints[0];
-    row = int(featureOwnersIdx / m_PackingPoints[0]) % m_PackingPoints[1];
-    plane = featureOwnersIdx / (m_PackingPoints[0] * m_PackingPoints[1]);
+    column = static_cast<int64_t>(featureOwnersIdx % m_PackingPoints[0]);
+    row = static_cast<int64_t>(featureOwnersIdx / m_PackingPoints[0]) % m_PackingPoints[1];
+    plane = static_cast<int64_t>(featureOwnersIdx / (m_PackingPoints[0] * m_PackingPoints[1]));
     xc = static_cast<float>((column * m_PackingRes[0]) + (m_PackingRes[0] * 0.5));
     yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
     zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
@@ -1145,7 +1140,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
     if (getCancel() == true)
     {
-      QString ss = QObject::tr("Filter Cancelled.");
+      QString ss = QObject::tr("Cancelled");
       notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
       return;
@@ -1154,7 +1149,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Determining Neighbors");
   progFeature = 0;
-  progFeatureInc = totalFeatures * .01;
+  progFeatureInc = static_cast<int32_t>(totalFeatures * 0.01f);
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
@@ -1175,34 +1170,36 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
       millis = QDateTime::currentMSecsSinceEpoch();
     }
-    determine_neighbors(i, 1);
+    determine_neighbors(i, true);
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
-  // begin swaping/moving/adding/removing features to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * (totalFeatures - 1));
 
-  //determine initial set of available points
+  // begin swaping/moving/adding/removing features to try to improve packing
+  int32_t totalAdjustments = static_cast<int32_t>(100 * (totalFeatures - 1));
+
+  // determine initial set of available points
   availablePointsCount = 0;
-  for(int i = 0; i < m_TotalPackingPoints; i++)
+  for (int64_t i = 0; i < m_TotalPackingPoints; i++)
   {
-    if(exclusionOwners[i] == 0)
+    if (exclusionOwners[i] == 0)
     {
       availablePoints[i] = availablePointsCount;
       availablePointsInv[availablePointsCount] = i;
       availablePointsCount++;
     }
   }
+
   // and clear the pointsToRemove and pointsToAdd vectors from the initial packing
   pointsToRemove.clear();
   pointsToAdd.clear();
 
   millis = QDateTime::currentMSecsSinceEpoch();
   startMillis = millis;
-  bool good;
-  size_t key;
-  float xshift, yshift, zshift;
-  int lastIteration = 0;
-  for (int iteration = 0; iteration < totalAdjustments; ++iteration)
+  bool good = false;
+  size_t key = 0;
+  float xshift = 0.0f, yshift = 0.0f, zshift = 0.0f;
+  int32_t lastIteration = 0;
+  for (int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 5000)
@@ -1221,42 +1218,42 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
     if (getCancel() == true)
     {
-      QString ss = QObject::tr("Filter Cancelled.");
+      QString ss = QObject::tr("Cancelled");
       notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
       return;
     }
 
-    int option = iteration % 2;
+    int32_t option = iteration % 2;
 
-    if(writeErrorFile == true && iteration % 25 == 0)
+    if (writeErrorFile == true && iteration % 25 == 0)
     {
       outFile << iteration << " " << fillingerror << "  " << availablePoints.size() << "  " << availablePointsCount << " " << totalFeatures << " " << acceptedmoves << "\n";
     }
 
     // JUMP - this option moves one feature to a random spot in the volume
-    if(option == 0)
+    if (option == 0)
     {
-      randomfeature = firstPrimaryFeature + int(rg.genrand_res53() * (totalFeatures - firstPrimaryFeature));
+      randomfeature = firstPrimaryFeature + int32_t(rg.genrand_res53() * (totalFeatures - firstPrimaryFeature));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int>((totalFeatures - firstPrimaryFeature)) )
+      while (good == false && count < static_cast<int32_t>((totalFeatures - firstPrimaryFeature)) )
       {
         xc = m_Centroids[3 * randomfeature];
         yc = m_Centroids[3 * randomfeature + 1];
         zc = m_Centroids[3 * randomfeature + 2];
-        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+        column = static_cast<int64_t>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+        row = static_cast<int64_t>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+        plane = static_cast<int64_t>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
-        if(featureOwners[featureOwnersIdx] > 1) { good = true; }
+        if (featureOwners[featureOwnersIdx] > 1) { good = true; }
         else { randomfeature++; }
-        if(static_cast<size_t>(randomfeature) >= totalFeatures) { randomfeature = firstPrimaryFeature; }
+        if (static_cast<size_t>(randomfeature) >= totalFeatures) { randomfeature = firstPrimaryFeature; }
         count++;
       }
       m_Seed++;
 
-      if(availablePoints.size() > 0)
+      if (availablePoints.size() > 0)
       {
         key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
         featureOwnersIdx = availablePointsInv[key];
@@ -1266,10 +1263,10 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
       }
 
-      //find the column row and plane of that point
-      column = featureOwnersIdx % m_PackingPoints[0];
-      row = int(featureOwnersIdx / m_PackingPoints[0]) % m_PackingPoints[1];
-      plane = featureOwnersIdx / (m_PackingPoints[0] * m_PackingPoints[1]);
+      // find the column row and plane of that point
+      column = static_cast<int64_t>(featureOwnersIdx % m_PackingPoints[0]);
+      row = static_cast<int64_t>(featureOwnersIdx / m_PackingPoints[0]) % m_PackingPoints[1];
+      plane = static_cast<int64_t>(featureOwnersIdx / (m_PackingPoints[0] * m_PackingPoints[1]));
       xc = static_cast<float>((column * m_PackingRes[0]) + (m_PackingRes[0] * 0.5));
       yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
       zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
@@ -1277,43 +1274,44 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       oldyc = m_Centroids[3 * randomfeature + 1];
       oldzc = m_Centroids[3 * randomfeature + 2];
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
+      fillingerror = check_fillingerror(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
       move_feature(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
+      fillingerror = check_fillingerror(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
       currentneighborhooderror = check_neighborhooderror(-1000, randomfeature);
-      if(fillingerror <= oldfillingerror)
+      if (fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         update_availablepoints(availablePoints, availablePointsInv);
         acceptedmoves++;
       }
-      else if(fillingerror > oldfillingerror)
+      else if (fillingerror > oldfillingerror)
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
+        fillingerror = check_fillingerror(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
         move_feature(randomfeature, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
+        fillingerror = check_fillingerror(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
         pointsToRemove.clear();
         pointsToAdd.clear();
       }
     }
+
     // NUDGE - this option moves one feature to a spot close to its current centroid
-    if(option == 1)
+    if (option == 1)
     {
-      randomfeature = firstPrimaryFeature + int(rg.genrand_res53() * (totalFeatures - firstPrimaryFeature));
+      randomfeature = firstPrimaryFeature + int32_t(rg.genrand_res53() * (totalFeatures - firstPrimaryFeature));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int>((totalFeatures - firstPrimaryFeature)) )
+      while (good == false && count < static_cast<int32_t>((totalFeatures - firstPrimaryFeature)) )
       {
         xc = m_Centroids[3 * randomfeature];
         yc = m_Centroids[3 * randomfeature + 1];
         zc = m_Centroids[3 * randomfeature + 2];
-        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+        column = static_cast<int64_t>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+        row = static_cast<int64_t>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+        plane = static_cast<int64_t>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + column;
-        if(featureOwners[featureOwnersIdx] > 1) { good = true; }
+        if (featureOwners[featureOwnersIdx] > 1) { good = true; }
         else { randomfeature++; }
-        if(static_cast<size_t>(randomfeature) >= totalFeatures) { randomfeature = firstPrimaryFeature; }
+        if (static_cast<size_t>(randomfeature) >= totalFeatures) { randomfeature = firstPrimaryFeature; }
         count++;
       }
       m_Seed++;
@@ -1323,27 +1321,27 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       xshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])) );
       yshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])) );
       zshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])) );
-      if((oldxc + xshift) < sizex && (oldxc + xshift) > 0) { xc = oldxc + xshift; }
+      if ((oldxc + xshift) < sizex && (oldxc + xshift) > 0) { xc = oldxc + xshift; }
       else { xc = oldxc; }
-      if((oldyc + yshift) < sizey && (oldyc + yshift) > 0) { yc = oldyc + yshift; }
+      if ((oldyc + yshift) < sizey && (oldyc + yshift) > 0) { yc = oldyc + yshift; }
       else { yc = oldyc; }
-      if((oldzc + zshift) < sizez && (oldzc + zshift) > 0) { zc = oldzc + zshift; }
+      if ((oldzc + zshift) < sizez && (oldzc + zshift) > 0) { zc = oldzc + zshift; }
       else { zc = oldzc; }
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
+      fillingerror = check_fillingerror(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
       move_feature(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
+      fillingerror = check_fillingerror(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
       currentneighborhooderror = check_neighborhooderror(-1000, randomfeature);
       //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       //      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
-      if(fillingerror <= oldfillingerror)
+      if (fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         update_availablepoints(availablePoints, availablePointsInv);
         acceptedmoves++;
       }
       //      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
-      else if(fillingerror > oldfillingerror)
+      else if (fillingerror > oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
         move_feature(randomfeature, oldxc, oldyc, oldzc);
@@ -1356,11 +1354,14 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Feature Adjustment Complete");
 
-  if(m_VtkOutputFile.isEmpty() == false)
+  if (m_VtkOutputFile.isEmpty() == false)
   {
     int32_t err = writeVtkFile(featureOwnersPtr->getPointer(0), exclusionOwnersPtr->getPointer(0));
-    if(err < 0)
+    if (err < 0)
     {
+      QString ss = QObject::tr("Error writing Vtk file");
+      notifyErrorMessage(getHumanLabel(), ss, -1);
+      setErrorCondition(-1);
       return;
     }
   }
@@ -1411,7 +1412,7 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::generate_feature(int32_t phase, int64_t Seed, Feature* feature, unsigned int shapeclass)
+void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature* feature, uint32_t shapeclass)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
@@ -1532,18 +1533,18 @@ void PackPrimaryPhases::transfer_attributes(int32_t gnum, Feature* feature)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::move_feature(size_t gnum, float xc, float yc, float zc)
 {
-  int occolumn, ocrow, ocplane;
-  int nccolumn, ncrow, ncplane;
-  int shiftcolumn, shiftrow, shiftplane;
+  int64_t occolumn = 0, ocrow = 0, ocplane = 0;
+  int64_t nccolumn = 0, ncrow = 0, ncplane = 0;
+  int64_t shiftcolumn = 0, shiftrow = 0, shiftplane = 0;
   float oxc = m_Centroids[3 * gnum];
   float oyc = m_Centroids[3 * gnum + 1];
   float ozc = m_Centroids[3 * gnum + 2];
-  occolumn = static_cast<int>( (oxc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-  ocrow = static_cast<int>( (oyc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-  ocplane = static_cast<int>( (ozc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-  nccolumn = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-  ncrow = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-  ncplane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+  occolumn = static_cast<int64_t>( (oxc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+  ocrow = static_cast<int64_t>( (oyc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+  ocplane = static_cast<int64_t>( (ozc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+  nccolumn = static_cast<int64_t>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+  ncrow = static_cast<int64_t>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+  ncplane = static_cast<int64_t>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
@@ -1566,22 +1567,22 @@ void PackPrimaryPhases::move_feature(size_t gnum, float xc, float yc, float zc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
+void PackPrimaryPhases::determine_neighbors(size_t gnum, bool add)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  float x, y, z;
-  float xn, yn, zn;
-  float dia, dia2;
-  float dx, dy, dz;
+  float x = 0.0f, y = 0.0f, z = 0.0f;
+  float xn = 0.0f, yn = 0.0f, zn = 0.0f;
+  float dia = 0.0f, dia2 = 0.0f;
+  float dx = 0.0f, dy = 0.0f, dz = 0.0f;
   x = m_Centroids[3 * gnum];
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
   dia = m_EquivalentDiameters[gnum];
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   int32_t increment = 0;
-  if(add > 0) { increment = 1; }
-  if(add < 0) { increment = -1; }
+  if (add == true) { increment = 1; }
+  if (add == false) { increment = -1; }
   for (size_t n = firstPrimaryFeature; n < totalFeatures; n++)
   {
     xn = m_Centroids[3 * n];
@@ -1591,11 +1592,11 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
     dx = fabs(x - xn);
     dy = fabs(y - yn);
     dz = fabs(z - zn);
-    if(dx < dia && dy < dia && dz < dia)
+    if (dx < dia && dy < dia && dz < dia)
     {
       m_Neighborhoods[gnum] = m_Neighborhoods[gnum] + increment;
     }
-    if(dx < dia2 && dy < dia2 && dz < dia2)
+    if (dx < dia2 && dy < dia2 && dz < dia2)
     {
       m_Neighborhoods[n] = m_Neighborhoods[n] + increment;
     }
@@ -1605,24 +1606,25 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
+float PackPrimaryPhases::check_neighborhooderror(int32_t gadd, int32_t gremove)
 {
   // Optimized Code
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
-  float neighborerror;
-  float bhattdist;
-  float dia;
-  int nnum;
+  float neighborerror = 0.0f;
+  float bhattdist = 0.0f;
+  float dia = 0.0f;
+  int32_t nnum = 0;
   size_t diabin = 0;
   size_t nnumbin = 0;
-  int index = 0;
+  int32_t index = 0;
+  int32_t phase = 0;
 
-  int phase;
   typedef std::vector<std::vector<float> > VectOfVectFloat_t;
-  for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
+  size_t numPhases = simneighbordist.size();
+  for (size_t iter = 0; iter < numPhases; ++iter)
   {
     phase = primaryphases[iter];
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
@@ -1630,7 +1632,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     size_t curSImNeighborDist_Size = curSimNeighborDist.size();
     float oneOverNeighborDistStep = 1.0f / neighbordiststep[iter];
 
-    std::vector<int> count(curSImNeighborDist_Size, 0);
+    std::vector<int32_t> count(curSImNeighborDist_Size, 0);
     for (size_t i = 0; i < curSImNeighborDist_Size; i++)
     {
       curSimNeighborDist[i].resize(40);
@@ -1639,13 +1641,13 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         curSimNeighborDist[i][j] = 0;
       }
     }
-    if(gadd > 0 && m_FeaturePhases[gadd] == phase)
+    if (gadd > 0 && m_FeaturePhases[gadd] == phase)
     {
-      determine_neighbors(gadd, 1);
+      determine_neighbors(gadd, true);
     }
-    if(gremove > 0 && m_FeaturePhases[gremove] == phase)
+    if (gremove > 0 && m_FeaturePhases[gremove] == phase)
     {
-      determine_neighbors(gremove, -1);
+      determine_neighbors(gremove, false);
     }
 
     float maxFeatureDia = pp->getMaxFeatureDiameter();
@@ -1656,26 +1658,28 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
     {
       nnum = 0;
-      index = i;
-      if(index != gremove && m_FeaturePhases[index] == phase)
+      index = static_cast<int32_t>(i);
+      if (index != gremove && m_FeaturePhases[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
-        if(dia > maxFeatureDia) { dia = maxFeatureDia; }
-        if(dia < minFeatureDia) { dia = minFeatureDia; }
+        if (dia > maxFeatureDia) { dia = maxFeatureDia; }
+        if (dia < minFeatureDia) { dia = minFeatureDia; }
         diabin = static_cast<size_t>(((dia - minFeatureDia) * oneOverBinStepSize) );
+        if (diabin >= curSImNeighborDist_Size) { diabin = curSImNeighborDist_Size - 1; }
         nnum = m_Neighborhoods[index];
         nnumbin = static_cast<size_t>( nnum * oneOverNeighborDistStep );
-        if(nnumbin >= 40) { nnumbin = 39; }
+        if (nnumbin >= 40) { nnumbin = 39; }
         curSimNeighborDist[diabin][nnumbin]++;
         count[diabin]++;
       }
     }
-    if(gadd > 0 && m_FeaturePhases[gadd] == phase)
+    if (gadd > 0 && m_FeaturePhases[gadd] == phase)
     {
       dia = m_EquivalentDiameters[gadd];
-      if(dia > maxFeatureDia) { dia = maxFeatureDia; }
-      if(dia < minFeatureDia) { dia = minFeatureDia; }
+      if (dia > maxFeatureDia) { dia = maxFeatureDia; }
+      if (dia < minFeatureDia) { dia = minFeatureDia; }
       diabin = static_cast<size_t>(((dia - minFeatureDia) * oneOverBinStepSize) );
+      if (diabin >= curSImNeighborDist_Size) { diabin = curSImNeighborDist_Size - 1; }
       nnum = m_Neighborhoods[gadd];
       nnumbin = static_cast<size_t>( nnum * oneOverNeighborDistStep );
       if(nnumbin >= 40) { nnumbin = 39; }
@@ -1691,7 +1695,6 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         for (size_t j = 0; j < 40; j++)
         {
           curSimNeighborDist[i][j] = 0.0f;
-          runningtotal = runningtotal + 0.0f;
         }
       }
       else
@@ -1714,14 +1717,14 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       }
     }
 
-    if(gadd > 0 && m_FeaturePhases[gadd] == phase)
+    if (gadd > 0 && m_FeaturePhases[gadd] == phase)
     {
-      determine_neighbors(gadd, -1);
+      determine_neighbors(gadd, false);
     }
 
-    if(gremove > 0 && m_FeaturePhases[gremove] == phase)
+    if (gremove > 0 && m_FeaturePhases[gremove] == phase)
     {
-      determine_neighbors(gremove, 1);
+      determine_neighbors(gremove, true);
     }
   }
   compare_3Ddistributions(simneighbordist, neighbordist, bhattdist);
@@ -1734,10 +1737,11 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
-  bhattdist = 0;
-  for (size_t i = 0; i < array1.size(); i++)
+  bhattdist = 0.0f;
+  size_t array1Size = array1.size();
+  for (size_t i = 0; i < array1Size; i++)
   {
-    bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
+    bhattdist = bhattdist + sqrtf((array1[i] * array2[i]));
   }
 }
 
@@ -1746,12 +1750,14 @@ void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float& bhattdist)
 {
-  bhattdist = 0;
-  for (size_t i = 0; i < array1.size(); i++)
+  bhattdist = 0.0f;
+  size_t array1Size = array1.size();
+  for (size_t i = 0; i < array1Size; i++)
   {
-    for (size_t j = 0; j < array1[i].size(); j++)
+    size_t array2Size = array1[i].size();
+    for (size_t j = 0; j < array2Size; j++)
     {
-      bhattdist = bhattdist + sqrt((array1[i][j] * array2[i][j]));
+      bhattdist = bhattdist + sqrtf((array1[i][j] * array2[i][j]));
     }
   }
 }
@@ -1761,12 +1767,15 @@ void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> >
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float& bhattdist)
 {
-  bhattdist = 0;
-  for (size_t i = 0; i < array1.size(); i++)
+  bhattdist = 0.0f;
+  size_t array1Size = array1.size();
+  for (size_t i = 0; i < array1Size; i++)
   {
-    for (size_t j = 0; j < array1[i].size(); j++)
+    size_t array2Size = array1[i].size();
+    for (size_t j = 0; j < array2Size; j++)
     {
-      for (size_t k = 0; k < array1[i][j].size(); k++)
+      size_t array3Size = array1[i][j].size();
+      for (size_t k = 0; k < array3Size; k++)
       {
         bhattdist = bhattdist + sqrtf((array1[i][j][k] * array2[i][j][k]));
       }
@@ -1815,18 +1824,18 @@ float PackPrimaryPhases::check_sizedisterror(Feature* feature)
         dia = (dia - halfMinFeatureDiameter) * oneOverCurFeatureSizeDistStep;
         if (dia < 0) { dia = 0.0f; }
         if (dia > curFeatureSizeDistSize - 1.0f) { dia = curFeatureSizeDistSize - 1.0f; }
-        curSimFeatureSizeDist[int(dia)]++;
+        curSimFeatureSizeDist[int32_t(dia)]++;
         count++;
       }
     }
 
-    if(feature->m_FeaturePhases == phase)
+    if (feature->m_FeaturePhases == phase)
     {
       dia = feature->m_EquivalentDiameters;
       dia = (dia - halfMinFeatureDiameter) * oneOverCurFeatureSizeDistStep;
       if (dia < 0) { dia = 0.0f; }
       if (dia > curFeatureSizeDistSize - 1.0f) { dia = curFeatureSizeDistSize - 1.0f; }
-      curSimFeatureSizeDist[int(dia)]++;
+      curSimFeatureSizeDist[int32_t(dia)]++;
       count++;
     }
     float oneOverCount = 1.0f / count;
@@ -1851,81 +1860,80 @@ float PackPrimaryPhases::check_sizedisterror(Feature* feature)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr)
+float PackPrimaryPhases::check_fillingerror(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr)
 {
   size_t featureOwnersIdx = 0;
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
   int32_t* exclusionOwners = exclusionOwnersPtr->getPointer(0);
 
   fillingerror = fillingerror * float(m_TotalPackingPoints);
-  int col, row, plane;
-  int k1 = 0, k2 = 0, k3 = 0;
-  if(gadd > 0)
+  int64_t col = 0, row = 0, plane = 0;
+  int32_t k1 = 0, k2 = 0, k3 = 0;
+  if (gadd > 0)
   {
     //size_t key, val;
     k1 = 2;
     k2 = -1;
     k3 = 1;
-    size_t size = columnlist[gadd].size();
+    size_t numVoxelsForCurrentGrain = columnlist[gadd].size();
     std::vector<int64_t>& cl = columnlist[gadd];
     std::vector<int64_t>& rl = rowlist[gadd];
     std::vector<int64_t>& pl = planelist[gadd];
     std::vector<float>& efl = ellipfunclist[gadd];
     float packquality = 0;
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < numVoxelsForCurrentGrain; i++)
     {
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      if(m_PeriodicBoundaries == true)
+      if (m_PeriodicBoundaries == true)
       {
-        if(col < 0) { col = col + m_PackingPoints[0]; }
-        if(col > m_PackingPoints[0] - 1) { col = col - m_PackingPoints[0]; }
-        if(row < 0) { row = row + m_PackingPoints[1]; }
-        if(row > m_PackingPoints[1] - 1) { row = row - m_PackingPoints[1]; }
-        if(plane < 0) { plane = plane + m_PackingPoints[2]; }
-        if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
+        if (col < 0) { col = col + m_PackingPoints[0]; }
+        if (col > m_PackingPoints[0] - 1) { col = col - m_PackingPoints[0]; }
+        if (row < 0) { row = row + m_PackingPoints[1]; }
+        if (row > m_PackingPoints[1] - 1) { row = row - m_PackingPoints[1]; }
+        if (plane < 0) { plane = plane + m_PackingPoints[2]; }
+        if (plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
-        int currentFeatureOwner = featureOwners[featureOwnersIdx];
-        if(exclusionOwners[featureOwnersIdx] > 0) {  }
-        if(efl[i] > 0.1)
+        int32_t currentFeatureOwner = featureOwners[featureOwnersIdx];
+        if (efl[i] > 0.1f)
         {
-          if(exclusionOwners[featureOwnersIdx] == 0)
+          if (exclusionOwners[featureOwnersIdx] == 0)
           {
             pointsToRemove.push_back(featureOwnersIdx);
           }
           exclusionOwners[featureOwnersIdx]++;
         }
-        fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
+        fillingerror = static_cast<float>(fillingerror + ((k1 * currentFeatureOwner  + k2)));
         //        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
-        packquality = packquality + ((currentFeatureOwner) * (currentFeatureOwner));
+        packquality = static_cast<float>(packquality + ((currentFeatureOwner) * (currentFeatureOwner)));
       }
       else
       {
-        if(col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
+        if (col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
         {
           featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
-          int currentFeatureOwner = featureOwners[featureOwnersIdx];
-          if(exclusionOwners[featureOwnersIdx] > 0) {  }
-          if(efl[i] > 0.1)
+          int32_t currentFeatureOwner = featureOwners[featureOwnersIdx];
+          if (exclusionOwners[featureOwnersIdx] > 0) {  }
+          if (efl[i] > 0.1f)
           {
-            if(exclusionOwners[featureOwnersIdx] == 0)
+            if (exclusionOwners[featureOwnersIdx] == 0)
             {
               pointsToRemove.push_back(featureOwnersIdx);
             }
             exclusionOwners[featureOwnersIdx]++;
           }
-          fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
+          fillingerror = static_cast<float>(fillingerror + ((k1 * currentFeatureOwner  + k2)));
           //        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
-          packquality = packquality + ((currentFeatureOwner) * (currentFeatureOwner));
+          packquality = static_cast<float>(packquality + ((currentFeatureOwner) * (currentFeatureOwner)));
         }
       }
     }
-    packqualities[gadd] = static_cast<int>( packquality / float(size) );
+    packqualities[gadd] = static_cast<int64_t>( packquality / float(numVoxelsForCurrentGrain) );
   }
-  if(gremove > 0)
+  if (gremove > 0)
   {
     k1 = -2;
     k2 = 3;
@@ -1940,46 +1948,43 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-
-      if(m_PeriodicBoundaries == true)
+      if (m_PeriodicBoundaries == true)
       {
-        if(col < 0) { col = col + m_PackingPoints[0]; }
-        if(col > m_PackingPoints[0] - 1) { col = col - m_PackingPoints[0]; }
-        if(row < 0) { row = row + m_PackingPoints[1]; }
-        if(row > m_PackingPoints[1] - 1) { row = row - m_PackingPoints[1]; }
-        if(plane < 0) { plane = plane + m_PackingPoints[2]; }
-        if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
+        if (col < 0) { col = col + m_PackingPoints[0]; }
+        if (col > m_PackingPoints[0] - 1) { col = col - m_PackingPoints[0]; }
+        if (row < 0) { row = row + m_PackingPoints[1]; }
+        if (row > m_PackingPoints[1] - 1) { row = row - m_PackingPoints[1]; }
+        if (plane < 0) { plane = plane + m_PackingPoints[2]; }
+        if (plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
-        int currentFeatureOwner = featureOwners[featureOwnersIdx];
-        if(exclusionOwners[featureOwnersIdx] > 1) { }
-        if(efl[i] > 0.1)
+        int32_t currentFeatureOwner = featureOwners[featureOwnersIdx];
+        if (efl[i] > 0.1f)
         {
           exclusionOwners[featureOwnersIdx]--;
-          if(exclusionOwners[featureOwnersIdx] == 0)
+          if (exclusionOwners[featureOwnersIdx] == 0)
           {
             pointsToAdd.push_back(featureOwnersIdx);
           }
         }
-        fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
+        fillingerror = static_cast<float>(fillingerror + ((k1 * currentFeatureOwner  + k2)));
         //        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
       }
       else
       {
-        if(col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
+        if (col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
         {
           featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
-          int currentFeatureOwner = featureOwners[featureOwnersIdx];
-          if(exclusionOwners[featureOwnersIdx] > 1) { }
-          if(efl[i] > 0.1)
+          int32_t currentFeatureOwner = featureOwners[featureOwnersIdx];
+          if (efl[i] > 0.1f)
           {
             exclusionOwners[featureOwnersIdx]--;
-            if(exclusionOwners[featureOwnersIdx] == 0)
+            if (exclusionOwners[featureOwnersIdx] == 0)
             {
               pointsToAdd.push_back(featureOwnersIdx);
             }
           }
-          fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
+          fillingerror = static_cast<float>(fillingerror + ((k1 * currentFeatureOwner  + k2)));
           //          fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
         }
@@ -1997,23 +2002,23 @@ void PackPrimaryPhases::update_availablepoints(std::map<size_t, size_t>& availab
 {
   size_t removeSize = pointsToRemove.size();
   size_t addSize = pointsToAdd.size();
-  size_t featureOwnersIdx;
-  size_t key, val;
-  for(size_t i = 0; i < removeSize; i++)
+  size_t featureOwnersIdx = 0;
+  size_t key = 0, val = 0;
+  for (size_t i = 0; i < removeSize; i++)
   {
     featureOwnersIdx = pointsToRemove[i];
     key = availablePoints[featureOwnersIdx];
     //  availablePoints.erase(featureOwnersIdx);
     val = availablePointsInv[availablePointsCount - 1];
     //  availablePointsInv.erase(availablePointsCount-1);
-    if(key < availablePointsCount - 1)
+    if (key < availablePointsCount - 1)
     {
       availablePointsInv[key] = val;
       availablePoints[val] = key;
     }
     availablePointsCount--;
   }
-  for(size_t i = 0; i < addSize; i++)
+  for (size_t i = 0; i < addSize; i++)
   {
     featureOwnersIdx = pointsToAdd[i];
     availablePoints[featureOwnersIdx] = availablePointsCount;
@@ -2031,22 +2036,31 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW();
 
-  float inside = -1;
-  int column, row, plane;
-  int centercolumn, centerrow, centerplane;
-  int xmin, xmax, ymin, ymax, zmin, zmax;
-  float xc, yc, zc;
-  float coordsRotated[3];
-  float coords[3];
+  float inside = -1.0f;
+  int64_t column = 0, row = 0, plane = 0;
+  int64_t centercolumn = 0, centerrow = 0, centerplane = 0;
+  int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
+  float xc = 0.0f, yc = 0.0f, zc = 0.0f;
+  float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
+  float coords[3] = { 0.0f, 0.0f, 0.0f };
   float volcur = m_Volumes[gnum];
   float bovera = m_AxisLengths[3 * gnum + 1];
   float covera = m_AxisLengths[3 * gnum + 2];
   float omega3 = m_Omega3s[gnum];
-  float radcur1 = 1;
-  unsigned int shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
+  float radcur1 = 1.0f;
+  uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
+
+  // Bail if the shapeclass is not one of our enumerated types
+  if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
+  {
+    QString ss = QObject::tr("Undefined shape class for array m_ShapeTypes");
+    notifyErrorMessage(getHumanLabel(), ss, -666);
+    setErrorCondition(-666);
+    return;
+  }
 
   // init any values for each of the Shape Ops
-  for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
     ops.value()->init();
   }
@@ -2064,36 +2078,36 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   float phi1 = m_AxisEulerAngles[3 * gnum];
   float PHI = m_AxisEulerAngles[3 * gnum + 1];
   float phi2 = m_AxisEulerAngles[3 * gnum + 2];
-  float ga[3][3];
-  float gaT[3][3];
+  float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
   xc = m_Centroids[3 * gnum];
   yc = m_Centroids[3 * gnum + 1];
   zc = m_Centroids[3 * gnum + 2];
-  centercolumn = static_cast<int>( (xc - (m_PackingRes[0] * 0.5)) * m_OneOverPackingRes[0] );
-  centerrow = static_cast<int>( (yc - (m_PackingRes[1] * 0.5)) * m_OneOverPackingRes[1] );
-  centerplane = static_cast<int>( (zc - (m_PackingRes[2] * 0.5)) * m_OneOverPackingRes[2] );
-  xmin = int(centercolumn - ((radcur1 * m_OneOverPackingRes[0]) + 1));
-  xmax = int(centercolumn + ((radcur1 * m_OneOverPackingRes[0]) + 1));
-  ymin = int(centerrow - ((radcur1 * m_OneOverPackingRes[1]) + 1));
-  ymax = int(centerrow + ((radcur1 * m_OneOverPackingRes[1]) + 1));
-  zmin = int(centerplane - ((radcur1 * m_OneOverPackingRes[2]) + 1));
-  zmax = int(centerplane + ((radcur1 * m_OneOverPackingRes[2]) + 1));
-  if(xmin < -m_PackingPoints[0]) { xmin = -m_PackingPoints[0]; }
-  if(xmax > 2 * m_PackingPoints[0] - 1) { xmax = (2 * m_PackingPoints[0] - 1); }
-  if(ymin < -m_PackingPoints[1]) { ymin = -m_PackingPoints[1]; }
-  if(ymax > 2 * m_PackingPoints[1] - 1) { ymax = (2 * m_PackingPoints[1] - 1); }
-  if(zmin < -m_PackingPoints[2]) { zmin = -m_PackingPoints[2]; }
-  if(zmax > 2 * m_PackingPoints[2] - 1) { zmax = (2 * m_PackingPoints[2] - 1); }
+  centercolumn = static_cast<int64_t>( (xc - (m_PackingRes[0] * 0.5f)) * m_OneOverPackingRes[0] );
+  centerrow = static_cast<int64_t>( (yc - (m_PackingRes[1] * 0.5f)) * m_OneOverPackingRes[1] );
+  centerplane = static_cast<int64_t>( (zc - (m_PackingRes[2] * 0.5f)) * m_OneOverPackingRes[2] );
+  xmin = static_cast<int64_t>(centercolumn - ((radcur1 * m_OneOverPackingRes[0]) + 1));
+  xmax = static_cast<int64_t>(centercolumn + ((radcur1 * m_OneOverPackingRes[0]) + 1));
+  ymin = static_cast<int64_t>(centerrow - ((radcur1 * m_OneOverPackingRes[1]) + 1));
+  ymax = static_cast<int64_t>(centerrow + ((radcur1 * m_OneOverPackingRes[1]) + 1));
+  zmin = static_cast<int64_t>(centerplane - ((radcur1 * m_OneOverPackingRes[2]) + 1));
+  zmax = static_cast<int64_t>(centerplane + ((radcur1 * m_OneOverPackingRes[2]) + 1));
+  if (xmin < -m_PackingPoints[0]) { xmin = -m_PackingPoints[0]; }
+  if (xmax > 2 * m_PackingPoints[0] - 1) { xmax = (2 * m_PackingPoints[0] - 1); }
+  if (ymin < -m_PackingPoints[1]) { ymin = -m_PackingPoints[1]; }
+  if (ymax > 2 * m_PackingPoints[1] - 1) { ymax = (2 * m_PackingPoints[1] - 1); }
+  if (zmin < -m_PackingPoints[2]) { zmin = -m_PackingPoints[2]; }
+  if (zmax > 2 * m_PackingPoints[2] - 1) { zmax = (2 * m_PackingPoints[2] - 1); }
 
-  float OneOverRadcur1 = 1.0 / radcur1;
-  float OneOverRadcur2 = 1.0 / radcur2;
-  float OneOverRadcur3 = 1.0 / radcur3;
-  for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
+  float OneOverRadcur1 = 1.0f / radcur1;
+  float OneOverRadcur2 = 1.0f / radcur2;
+  float OneOverRadcur3 = 1.0f / radcur3;
+  for (int64_t iter1 = xmin; iter1 < xmax + 1; iter1++)
   {
-    for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
+    for (int64_t iter2 = ymin; iter2 < ymax + 1; iter2++)
     {
-      for (int iter3 = zmin; iter3 < zmax + 1; iter3++)
+      for (int64_t iter3 = zmin; iter3 < zmax + 1; iter3++)
       {
         column = iter1;
         row = iter2;
@@ -2101,7 +2115,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
         coords[0] = float(column) * m_PackingRes[0];
         coords[1] = float(row) * m_PackingRes[1];
         coords[2] = float(plane) * m_PackingRes[2];
-        inside = -1;
+        inside = -1.0f;
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
@@ -2111,7 +2125,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
         float axis2comp = coordsRotated[1] * OneOverRadcur2;
         float axis3comp = coordsRotated[2] * OneOverRadcur3;
         inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-        if(inside >= 0)
+        if (inside >= 0)
         {
           columnlist[gnum].push_back(column);
           rowlist[gnum].push_back(row);
@@ -2132,9 +2146,9 @@ void PackPrimaryPhases::assign_voxels()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
 
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   DimType dims[3] =
@@ -2150,22 +2164,22 @@ void PackPrimaryPhases::assign_voxels()
   bool doParallel = true;
 #endif
 
-  DimType column, row, plane;
-  float xc, yc, zc;
-  float size[3] = {sizex, sizey, sizez};
+  DimType column = 0, row = 0, plane = 0;
+  float xc = 0.0f, yc = 0.0f, zc = 0.0f;
+  float size[3] = { sizex, sizey, sizez };
 
-  DimType xmin, xmax, ymin, ymax, zmin, zmax;
+  DimType xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
 
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
   float res[3] = {xRes, yRes, zRes};
 
-  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "newowners");
+  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_newowners");
   newownersPtr->initializeWithValue(-1);
   int32_t* newowners = newownersPtr->getPointer(0);
 
-  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totalPoints, "ellipfuncs");
+  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_ellipfuncs");
   ellipfuncsPtr->initializeWithValue(-1);
   float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
@@ -2196,10 +2210,18 @@ void PackPrimaryPhases::assign_voxels()
     zc = m_Centroids[3 * i + 2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    unsigned int shapeclass = m_ShapeTypes[m_FeaturePhases[i]];
+    uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[i]];
+
+    if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
+    {
+      QString ss = QObject::tr("Undefined shape class for array m_ShapeTypes");
+      notifyErrorMessage(getHumanLabel(), ss, -666);
+      setErrorCondition(-666);
+      return;
+    }
 
     // init any values for each of the Shape Ops
-    for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
       ops.value()->init();
     }
@@ -2217,17 +2239,17 @@ void PackPrimaryPhases::assign_voxels()
     float phi1 = m_AxisEulerAngles[3 * i];
     float PHI = m_AxisEulerAngles[3 * i + 1];
     float phi2 = m_AxisEulerAngles[3 * i + 2];
-    float ga[3][3];
+    float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
     column = static_cast<DimType>( xc / xRes );
     row = static_cast<DimType>( yc / yRes );
     plane = static_cast<DimType>( zc / zRes );
-    xmin = int(column - ((radcur1 / xRes) + 1));
-    xmax = int(column + ((radcur1 / xRes) + 1));
-    ymin = int(row - ((radcur1 / yRes) + 1)); // <======================
-    ymax = int(row + ((radcur1 / yRes) + 1)); // <======================
-    zmin = int(plane - ((radcur1 / zRes) + 1)); // <======================
-    zmax = int(plane + ((radcur1 / zRes) + 1)); // <======================
+    xmin = DimType(column - ((radcur1 / xRes) + 1));
+    xmax = DimType(column + ((radcur1 / xRes) + 1));
+    ymin = DimType(row - ((radcur1 / yRes) + 1)); // <======================
+    ymax = DimType(row + ((radcur1 / yRes) + 1)); // <======================
+    zmin = DimType(plane - ((radcur1 / zRes) + 1)); // <======================
+    zmax = DimType(plane + ((radcur1 / zRes) + 1)); // <======================
 
     if (m_PeriodicBoundaries == true)
     {
@@ -2255,7 +2277,7 @@ void PackPrimaryPhases::assign_voxels()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
+      tbb::parallel_for(tbb::blocked_range3d<DimType, DimType, DimType>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
                         AssignVoxelsGapsImpl(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
     }
@@ -2265,49 +2287,47 @@ void PackPrimaryPhases::assign_voxels()
       AssignVoxelsGapsImpl serial(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
       serial.convert(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1);
     }
-
-
   }
 
   QVector<bool> activeObjects(totalFeatures, false);
-  int gnum;
-  for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
+  int32_t gnum = 0;
+  for (size_t i = 0; i < totalPoints; i++)
   {
 //    if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
-    if(ellipfuncs[i] >= 0 && (m_UseMask == false || (m_UseMask == true && m_Mask[i] == true))) { m_FeatureIds[i] = newowners[i]; }
-    if(m_UseMask == true && m_Mask[i] == false) { m_FeatureIds[i] = 0; }
+    if (ellipfuncs[i] >= 0 && (m_UseMask == false || (m_UseMask == true && m_Mask[i] == true))) { m_FeatureIds[i] = newowners[i]; }
+    if (m_UseMask == true && m_Mask[i] == false) { m_FeatureIds[i] = 0; }
     gnum = m_FeatureIds[i];
-    if(gnum >= 0) { activeObjects[gnum] = true; }
+    if (gnum >= 0) { activeObjects[gnum] = true; }
     newowners[i] = -1;
-    ellipfuncs[i] = -1.0;
+    ellipfuncs[i] = -1.0f;
   }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
-  //need to update pointers after removing inactive objects
+  // need to update pointers after removing inactive objects
   updateFeatureInstancePointers();
   totalFeatures = cellFeatureAttrMat->getNumTuples();
-  //counting the number of features for each phase
-  for(int64_t i = 1; i < totalFeatures; i++)
+  // counting the number of features for each phase
+  for (int64_t i = 1; i < totalFeatures; i++)
   {
-    int phase = m_FeaturePhases[i];
-    if(phase >= 0) { m_NumFeatures[phase]++; }
+    int32_t phase = m_FeaturePhases[i];
+    if (phase >= 0) { m_NumFeatures[phase]++; }
   }
 
-  //need to update pointers after resize, but do not need to run full data check because pointers are still valid
+  // need to update pointers after resize, but do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
   if (getCancel() == true)
   {
-    QString ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Cancelled");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
   }
 
-  for(int64_t i = 0; i < totalPoints; i++)
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
-    if(gnum >= 0)
+    if (gnum >= 0)
     {
       m_CellPhases[i] = m_FeaturePhases[gnum];
     }
@@ -2323,23 +2343,22 @@ void PackPrimaryPhases::assign_gaps_only()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  int featurename, feature;
-  int current = 0;
-  int most = 0;
-  int count = 1;
-  int fixedCount = 1;
-  int counter = 0;
-  int neighpoint;
-  int good;
-  int neighbor;
+  int32_t featurename = 0, feature = 0;
+  int32_t current = 0;
+  int32_t most = 0;
+  int64_t gapVoxelCount = 1;
+  int32_t iterationCounter = 0;
+  int64_t neighpoint;
+  bool good = false;
+  int32_t neighbor = 0;
 
-  int xPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getXPoints());
-  int yPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getYPoints());
-  int zPoints = static_cast<int>(m->getGeometryAs<ImageGeom>()->getZPoints());
+  int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
-  int neighpoints[6];
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
@@ -2347,45 +2366,44 @@ void PackPrimaryPhases::assign_gaps_only()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "Neighbors");
+  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors");
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 
-  QVector<int > n(totalFeatures + 1, 0);
+  QVector<int32_t> n(totalFeatures + 1, 0);
   //uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   //uint64_t currentMillis = millis;
 
-  while (count != 0)
+  while (gapVoxelCount != 0)
   {
-    counter++;
-    count = 0;
-    fixedCount = 0;
-    int zStride, yStride;
-    for(int i = 0; i < zPoints; i++)
+    iterationCounter++;
+    gapVoxelCount = 0;
+    int64_t zStride, yStride;
+    for (int64_t i = 0; i < zPoints; i++)
     {
       zStride = i * xPoints * yPoints;
-      for (int j = 0; j < yPoints; j++)
+      for (int64_t j = 0; j < yPoints; j++)
       {
         yStride = j * xPoints;
-        for(int k = 0; k < xPoints; k++)
+        for (int64_t k = 0; k < xPoints; k++)
         {
           featurename = m_FeatureIds[zStride + yStride + k];
           if (featurename < 0)
           {
-            count++;
+            gapVoxelCount++;
             current = 0;
             most = 0;
-            for (int l = 0; l < 6; l++)
+            for (int32_t l = 0; l < 6; l++)
             {
-              good = 1;
+              good = true;
               neighpoint = zStride + yStride + k + neighpoints[l];
-              if (l == 0 && i == 0) { good = 0; }
-              if (l == 5 && i == (zPoints - 1)) { good = 0; }
-              if (l == 1 && j == 0) { good = 0; }
-              if (l == 4 && j == (yPoints - 1)) { good = 0; }
-              if (l == 2 && k == 0) { good = 0; }
-              if (l == 3 && k == (xPoints - 1)) { good = 0; }
-              if (good == 1)
+              if (l == 0 && i == 0) { good = false; }
+              if (l == 5 && i == (zPoints - 1)) { good = false; }
+              if (l == 1 && j == 0) { good = false; }
+              if (l == 4 && j == (yPoints - 1)) { good = false; }
+              if (l == 2 && k == 0) { good = false; }
+              if (l == 3 && k == (xPoints - 1)) { good = false; }
+              if (good == true)
               {
                 feature = m_FeatureIds[neighpoint];
                 if (feature > 0)
@@ -2400,20 +2418,20 @@ void PackPrimaryPhases::assign_gaps_only()
                 }
               }
             }
-            for (int l = 0; l < 6; l++)
+            for (int32_t l = 0; l < 6; l++)
             {
-              good = 1;
+              good = true;
               neighpoint = zStride + yStride + k + neighpoints[l];
-              if (l == 0 && i == 0) { good = 0; }
-              if (l == 5 && i == (zPoints - 1)) { good = 0; }
-              if (l == 1 && j == 0) { good = 0; }
-              if (l == 4 && j == (yPoints - 1)) { good = 0; }
-              if (l == 2 && k == 0) { good = 0; }
-              if (l == 3 && k == (xPoints - 1)) { good = 0; }
-              if (good == 1)
+              if (l == 0 && i == 0) { good = false; }
+              if (l == 5 && i == (zPoints - 1)) { good = false; }
+              if (l == 1 && j == 0) { good = false; }
+              if (l == 4 && j == (yPoints - 1)) { good = false; }
+              if (l == 2 && k == 0) { good = false; }
+              if (l == 3 && k == (xPoints - 1)) { good = false; }
+              if (good == true)
               {
                 feature = m_FeatureIds[neighpoint];
-                if(feature > 0) { n[feature] = 0; }
+                if (feature > 0) { n[feature] = 0; }
               }
             }
           }
@@ -2428,12 +2446,11 @@ void PackPrimaryPhases::assign_gaps_only()
       {
         m_FeatureIds[j] = m_FeatureIds[neighbor];
         m_CellPhases[j] = m_FeaturePhases[m_FeatureIds[neighbor]];
-        fixedCount++;
       }
     }
-    if(counter >= 1)
+    if (iterationCounter >= 1)
     {
-      QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
+      QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
   }
@@ -2452,7 +2469,7 @@ void PackPrimaryPhases::cleanup_features()
 
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -2466,7 +2483,7 @@ void PackPrimaryPhases::cleanup_features()
     static_cast<DimType>(udims[2]),
   };
 
-  DimType neighpoints[6];
+  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   DimType xp = dims[0];
   DimType yp = dims[1];
   DimType zp = dims[2];
@@ -2610,7 +2627,7 @@ void PackPrimaryPhases::cleanup_features()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres)
+int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres)
 {
   float ptotalvol = 0.0f;
   int32_t phase = 0;
@@ -2722,17 +2739,16 @@ int PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, size
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::write_goal_attributes()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(m_CsvOutputFile);
   QDir parentPath = fi.path();
-  if(!parentPath.mkpath("."))
+  if (!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -2745,7 +2761,7 @@ void PackPrimaryPhases::write_goal_attributes()
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
     setErrorCondition(-200);
-    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return;
   }
 
@@ -2765,11 +2781,11 @@ void PackPrimaryPhases::write_goal_attributes()
   // Print the FeatureIds Header before the rest of the headers
   dStream << DREAM3D::FeatureData::FeatureID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getAttributeArray(*iter);
-    if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+    if (p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->getNumberOfComponents() == 1)
       {
@@ -2777,7 +2793,7 @@ void PackPrimaryPhases::write_goal_attributes()
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for(int k = 0; k < p->getNumberOfComponents(); ++k)
+        for (int k = 0; k < p->getNumberOfComponents(); ++k)
         {
           dStream << space << (*iter) << "_" << k;
         }
@@ -2794,7 +2810,7 @@ void PackPrimaryPhases::write_goal_attributes()
   float threshold = 0.0f;
 
   // Skip the first feature
-  for(size_t i = firstPrimaryFeature; i < numTuples; ++i)
+  for (size_t i = firstPrimaryFeature; i < numTuples; ++i)
   {
     if (((float)i / numTuples) * 100.0f > threshold)
     {
