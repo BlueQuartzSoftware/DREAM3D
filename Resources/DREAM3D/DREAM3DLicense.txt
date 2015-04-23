@@ -35,11 +35,6 @@ Copyright (c) 2009-2015 BlueQuartz Software, LLC, All rights reserved.
 BlueQuartz Software, LLC
 400 S. Pioneer Blvd.
 Springboro, Ohio 45066
-
-Copyright (c) 2009-2015 US Air Force, All rights reserved.
-U.S. Air Force Research Laboratory
-2230 Tenth St., Ste. 1
-Wright-Patterson AFB, OH 45433-7817
 </pre>
 
 

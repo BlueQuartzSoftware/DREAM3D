@@ -72,13 +72,16 @@ class QuaternionMath
       T w;
     } Quaternion;
 
-
+    enum Order {
+      QuaternionScalarVector = 0,
+      QuaternionVectorScalar = 1
+    };
 
     QuaternionMath()
     {
-      m_Quat.w = 0.0;
-      m_Quat.x = 0.0;
-      m_Quat.y = 0.0;
+      m_Quat.w = 0.0f;
+      m_Quat.x = 0.0f;
+      m_Quat.y = 0.0f;
       m_Quat.z = 0.0f;
     }
     virtual ~QuaternionMath() {}
@@ -305,11 +308,6 @@ class QuaternionMath
       out.x = q2.x * q1.w + q2.w * q1.x + q2.z * q1.y - q2.y * q1.z;
       out.y = q2.y * q1.w + q2.w * q1.y + q2.x * q1.z - q2.z * q1.x;
       out.z = q2.z * q1.w + q2.w * q1.z + q2.y * q1.x - q2.x * q1.y;
-
-      /* Dave R.
-       out.vec = w1(q2.vec) + w2(q1.vec) + cross(q1.vec, q2.vec)
-       */
-
       /* Verified */
       out.w = q2.w * q1.w - q2.x * q1.x - q2.y * q1.y - q2.z * q1.z;
     }
@@ -441,11 +439,11 @@ class QuaternionMath
       */
 
       /*
-       * qv = {v[0], v[1], v[2], 0} 
+       * qv = {v[0], v[1], v[2], 0}
        * qv' = q^-1 * qv * q
        * out[0] = qv'.x; out[1] = qv'.y; out[2] = qv.z;
        *
-       * q^-1 * qv = 
+       * q^-1 * qv =
        *  x: v[0] * q.w - v[2] * q.y + v[1] * q.z;
        *  y: v[1] * q.w - v[0] * q.z + v[2] * q.x;
        *  z: v[2] * q.w - v[1] * q.x + v[0] * q.y;
@@ -478,7 +476,7 @@ class QuaternionMath
        *  z: v[2] * (q.z * q.z - q.x * q.x - q.y * q.y + q.w * q.w) + 2 * ( v[0] * (q.z * q.x + q.y * q.w) + v[1] * (q.z * q.y - q.x * q.w) );
        *
        */
-       
+
        T qx2 = q.x * q.x;
        T qy2 = q.y * q.y;
        T qz2 = q.z * q.z;
@@ -491,7 +489,7 @@ class QuaternionMath
        T qxw = q.x * q.w;
        T qyw = q.y * q.w;
        T qzw = q.z * q.w;
-      
+
        out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
        out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );
        out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx + qyw) + v[1] * (qyz - qxw) );
@@ -519,12 +517,12 @@ typedef QuaternionMath<double> QuaternionMathD;
 /**
  * @brief QuatF 32 Bit Floating point Quaternion for convenience.
  */
-typedef QuaternionMath<float>::Quaternion  QuatF;
+typedef QuaternionMath<float>::Quaternion QuatF;
 
 /**
  * @brief QuatD 64 Bit Floating point Quaternion for convenience.
  */
-typedef QuaternionMath<double>::Quaternion  QuatD;
+typedef QuaternionMath<double>::Quaternion QuatD;
 
 
 #endif /* _QuaternionMath_H_ */
