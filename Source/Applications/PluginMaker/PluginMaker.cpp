@@ -65,7 +65,6 @@
 #include "FilterBundler.h"
 #include "PMDirGenerator.h"
 #include "PMFileGenerator.h"
-#include "PMFilterGenerator.h"
 #include "PMGeneratorTreeItem.h"
 
 
@@ -415,10 +414,9 @@ void PluginMaker::setupGui()
   F_test_filterTest->setText(0, tr("Unknown Plugin Name"));
   pathTemplate = "@PluginName@/Test";
   resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Test/FilterTest.cpp.in");
-  PMFilterGenerator* testgen = new PMFilterGenerator(m_OutputDir->text(),
+  PMFileGenerator* testgen = new PMFileGenerator(m_OutputDir->text(),
 	  pathTemplate,
-	  QString(""),
-	  QString("@PluginName@Filter"),
+	  QString("@PluginName@"),
 	  resourceTemplate,
 	  F_test_filterTest,
 	  this);
@@ -863,10 +861,9 @@ void PluginMaker::on_addFilterBtn_clicked()
     filt2cpp->setText(0, filterTitle + ".cpp");
     QString pathTemplate = "@PluginName@/@PluginName@Filters/";
     QString resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Filter/Filter.cpp.in");
-    PMFilterGenerator* cppgen = new PMFilterGenerator(m_OutputDir->text(),
+    PMFileGenerator* cppgen = new PMFileGenerator(m_OutputDir->text(),
                                                       pathTemplate,
                                                       QString(filterTitle + ".cpp"),
-                                                      QString(filterTitle),
                                                       resourceTemplate,
                                                       filt2cpp,
                                                       this);
@@ -893,10 +890,9 @@ void PluginMaker::on_addFilterBtn_clicked()
     filt2h->setText(0, filterTitle + ".h");
     pathTemplate = "@PluginName@/@PluginName@Filters/";
     resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Filter/Filter.h.in");
-    PMFilterGenerator* hgen = new PMFilterGenerator(m_OutputDir->text(),
+    PMFileGenerator* hgen = new PMFileGenerator(m_OutputDir->text(),
                                                     pathTemplate,
                                                     QString(filterTitle + ".h"),
-                                                    QString(filterTitle),
                                                     resourceTemplate,
                                                     filt2h,
                                                     this);
@@ -923,10 +919,9 @@ void PluginMaker::on_addFilterBtn_clicked()
     filt2html->setText(0, filterTitle + ".md");
     pathTemplate = "@PluginName@/Documentation/@PluginName@Filters/";
     resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Documentation/Filter/Documentation.md.in");
-    PMFilterGenerator* htmlgen = new PMFilterGenerator(m_OutputDir->text(),
+    PMFileGenerator* htmlgen = new PMFileGenerator(m_OutputDir->text(),
                                                        pathTemplate,
                                                        QString(filterTitle + ".md"),
-                                                       QString(filterTitle),
                                                        resourceTemplate,
                                                        filt2html,
                                                        this);
@@ -951,10 +946,9 @@ void PluginMaker::on_addFilterBtn_clicked()
 	filt2test->setText(0, tr("Unknown Plugin Name"));
 	pathTemplate = "@PluginName@/Test";
   resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Test/FilterTest.cpp.in");
-	PMFilterGenerator* testgen = new PMFilterGenerator(m_OutputDir->text(),
+	PMFileGenerator* testgen = new PMFileGenerator(m_OutputDir->text(),
 		pathTemplate,
 		QString(filterTitle + "Test.cpp"),
-		QString(filterTitle),
 		resourceTemplate,
 		filt2test,
 		this);
@@ -1080,16 +1074,6 @@ void PluginMaker::on_treeWidget_itemSelectionChanged()
 
 	  QString replaceStr = fileGen->createReplacementString(CMAKELISTS, m_TestFileLocationNames);
 	  text = fileGen->generateFileContents(replaceStr);
-  }
-  else if (NULL != parent
-	  && parent->text(0) == "Test")
-  {
-	  PMFilterGenerator* fileGen = qobject_cast<PMFilterGenerator*> (currentFile->getFileGenPtr());
-	  if (!fileGen)
-	  {
-		  return;
-	  }
-	  text = fileGen->generateFileContents();
   }
   else
   {

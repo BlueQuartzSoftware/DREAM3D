@@ -42,6 +42,7 @@
 #include <QtWidgets/QWidget>
 
 #include "PluginMaker/AddFilterParameter.h"
+#include "PluginMaker/PMFileGenerator.h"
 
 #include "ui_FilterMaker.h"
 
@@ -67,9 +68,15 @@ public:
 protected:
   void setupGui();
 
+  QString getDefaultSetupFPContents();
+  QString getDefaultReadFPContents();
+  QString getDefaultWriteFPContents();
+  QString getDefaultDataCheckContents();
+  QString getDefaultFPContents();
+
 protected slots:
   void on_selectBtn_clicked();
-  void on_codeChooser_currentIndexChanged(const QString &text);
+  void on_codeChooser_currentIndexChanged(int index);
   void on_pluginDir_textChanged(const QString& text);
   void on_filterName_textChanged(const QString& text);
   void on_generateBtn_clicked();
@@ -86,14 +93,21 @@ signals:
 
 private:
   QString                     m_OpenDialogLastDirectory;
+  PMFileGenerator*            cppGenerator;
+  PMFileGenerator*            hGenerator;
+  PMFileGenerator*            htmlGenerator;
+  PMFileGenerator*            testGenerator;
   
 
+  void updateFilterFileGenerators();
   void generateFilterFiles();
   void updateSourceList();
   void updateTestLocations();
   void updateTestList();
   QString createNamespaceString();
-  void validityCheck();
+  bool validityCheck();
+
+  QMap<QString, QString> getFunctionContents();
 
   FilterMaker(const FilterMaker&);    // Copy Constructor Not Implemented
   void operator=(const FilterMaker&);  // Operator '=' Not Implemented

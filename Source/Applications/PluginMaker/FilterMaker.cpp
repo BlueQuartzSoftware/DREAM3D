@@ -44,20 +44,31 @@
 
 #include "PluginMaker/FilterBundler.h"
 #include "PluginMaker/PMDirGenerator.h"
-#include "PluginMaker/PMFileGenerator.h"
-#include "PluginMaker/PMFilterGenerator.h"
 #include "PluginMaker/PMGeneratorTreeItem.h"
+#include "PluginMaker/CodeGenFactory.hpp"
+#include "PluginMaker/FPCodeGenerator.h"
 
 #include "QtSupport/ApplicationFileInfo.h"
 
 #include <iostream>
 
+enum CodeChooserIndex
+{
+  H_INDEX,
+  CPP_INDEX,
+  DOC_INDEX,
+  TEST_INDEX
+};
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FilterMaker::FilterMaker(QWidget* parent) :
-QMainWindow(parent)
+QMainWindow(parent),
+cppGenerator(NULL),
+hGenerator(NULL),
+htmlGenerator(NULL),
+testGenerator(NULL)
 {
   setupUi(this);
 
@@ -124,8 +135,8 @@ void FilterMaker::on_pluginDir_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void FilterMaker::on_filterName_textChanged(const QString& text)
 {
-  // Check whether or not we need to show an error and disable the Generate button.
-  validityCheck();
+  // Update the code viewer
+  on_codeChooser_currentIndexChanged(codeChooser->currentIndex());
 }
 
 // -----------------------------------------------------------------------------
@@ -147,9 +158,29 @@ void FilterMaker::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterMaker::on_codeChooser_currentIndexChanged(const QString &text)
+void FilterMaker::on_codeChooser_currentIndexChanged(int index)
 {
-  
+  if (validityCheck() == false)
+  {
+    codeViewer->clear();
+    return;
+  }
+
+  // Update generators with new information from table
+  updateFilterFileGenerators();
+
+  if (index == H_INDEX)
+  {
+    codeViewer->setText(hGenerator->generateFileContents());
+  }
+  else if (index == CPP_INDEX)
+  {
+    codeViewer->setText(cppGenerator->generateFileContents());
+  }
+  else if (index == DOC_INDEX)
+  {
+    codeViewer->setText(htmlGenerator->generateFileContents());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -158,6 +189,9 @@ void FilterMaker::on_codeChooser_currentIndexChanged(const QString &text)
 void FilterMaker::on_generateBtn_clicked()
 {
   QString filterName = this->filterName->text();
+
+  // Update all filter file generators with information from table
+  updateFilterFileGenerators();
 
   // Generate the implementation, header, and test files
   generateFilterFiles();
@@ -202,6 +236,12 @@ void FilterMaker::on_removeFilterParameterBtn_clicked()
 {
   int row = filterParametersTable->currentRow();
   filterParametersTable->removeRow(row);
+
+  // Update the filter file generators with the new information
+  updateFilterFileGenerators();
+
+  // Show the new code in the code viewer
+  on_codeChooser_currentIndexChanged(codeChooser->currentIndex());
 }
 
 // -----------------------------------------------------------------------------
@@ -226,6 +266,12 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   filterParametersTable->setItem(row, VAR_NAME, item0);
   filterParametersTable->setItem(row, HUMAN_NAME, item1);
   filterParametersTable->setItem(row, TYPE, item2);
+
+  // Update the filter file generators with the new information
+  updateFilterFileGenerators();
+
+  // Show the new code in the code viewer
+  on_codeChooser_currentIndexChanged(codeChooser->currentIndex());
 }
 
 // -----------------------------------------------------------------------------
@@ -245,86 +291,187 @@ void FilterMaker::on_errorString_linkActivated(const QString &link)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterMaker::generateFilterFiles()
+void FilterMaker::updateFilterFileGenerators()
 {
   QString filterName = this->filterName->text();
-  QString pluginDir = this->pluginDir->text();
+  QString pluginDirText = this->pluginDir->text();
 
-  if (pluginDir.isEmpty() || filterName.isEmpty())
+  if (pluginDirText.isEmpty() || filterName.isEmpty())
   {
     return;
   }
 
-  QFileInfo fi(pluginDir);
+  QFileInfo fi(pluginDirText);
+
+  QMap<QString, QString> contentsMap = getFunctionContents();
 
   // Filter.cpp file
   QString pathTemplate = "@PluginName@Filters/";
   QString resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Filter/Filter.cpp.in");
-  PMFilterGenerator* cppgen = new PMFilterGenerator(pluginDir,
+
+  if (NULL != cppGenerator)
+  {
+    delete cppGenerator;
+    cppGenerator = NULL;
+  }
+  cppGenerator = new PMFileGenerator(pluginDirText,
     pathTemplate,
     QString(filterName + ".cpp"),
-    QString(filterName),
     resourceTemplate,
     NULL,
     this);
 
-  connect(cppgen, SIGNAL(outputError(const QString&)),
+  connect(cppGenerator, SIGNAL(outputError(const QString&)),
     this, SLOT(generationError(const QString&)));
-  cppgen->setDoesGenerateOutput(true);
-  cppgen->setPluginName(fi.baseName());
-  cppgen->generateOutput();
+  cppGenerator->setDoesGenerateOutput(true);
+  cppGenerator->setPluginName(fi.baseName());
+
+  if (contentsMap.size() > 0)
+  {
+    cppGenerator->setSetupFPContents(contentsMap["Setup Filter Parameters"]);
+    cppGenerator->setReadFPContents(contentsMap["Read Filter Parameters"]);
+    cppGenerator->setWriteFPContents(contentsMap["Write Filter Parameters"]);
+  }
+  else
+  {
+    cppGenerator->setSetupFPContents(getDefaultSetupFPContents());
+    cppGenerator->setReadFPContents(getDefaultReadFPContents());
+    cppGenerator->setWriteFPContents(getDefaultWriteFPContents());
+  }
 
   // Filter.h file
   pathTemplate = "@PluginName@Filters/";
   resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Filter/Filter.h.in");
-  PMFilterGenerator* hgen = new PMFilterGenerator(pluginDir,
+
+  if (NULL != hGenerator)
+  {
+    delete hGenerator;
+    hGenerator = NULL;
+  }
+  hGenerator = new PMFileGenerator(pluginDirText,
     pathTemplate,
     QString(filterName + ".h"),
-    QString(filterName),
     resourceTemplate,
     NULL,
     this);
 
-  connect(hgen, SIGNAL(outputError(const QString&)),
+  connect(hGenerator, SIGNAL(outputError(const QString&)),
     this, SLOT(generationError(const QString&)));
-  hgen->setDoesGenerateOutput(true);
-  hgen->setPluginName(fi.baseName());
-  hgen->generateOutput();
+  hGenerator->setDoesGenerateOutput(true);
+  hGenerator->setPluginName(fi.baseName());
+
+  if (contentsMap.size() > 0)
+  {
+    hGenerator->setFPContents(contentsMap["Filter Parameters"]);
+  }
+  else
+  {
+    hGenerator->setFPContents(getDefaultFPContents());
+  }
 
 
   // Documentation.md file
   pathTemplate = "Documentation/@PluginName@Filters/";
   resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Documentation/Filter/Documentation.md.in");
-  PMFilterGenerator* htmlgen = new PMFilterGenerator(pluginDir,
+
+  if (NULL != htmlGenerator)
+  {
+    delete htmlGenerator;
+    htmlGenerator = NULL;
+  }
+  htmlGenerator = new PMFileGenerator(pluginDirText,
     pathTemplate,
     QString(filterName + ".md"),
-    QString(filterName),
     resourceTemplate,
     NULL,
     this);
 
-  connect(htmlgen, SIGNAL(outputError(const QString&)),
+  connect(htmlGenerator, SIGNAL(outputError(const QString&)),
     this, SLOT(generationError(const QString&)));
-  htmlgen->setDoesGenerateOutput(true);
-  htmlgen->setPluginName(fi.baseName());
-  htmlgen->generateOutput();
+  htmlGenerator->setDoesGenerateOutput(true);
+  htmlGenerator->setPluginName(fi.baseName());
 
   // FilterTest.cpp file
   pathTemplate = "Test";
   resourceTemplate = ApplicationFileInfo::GenerateFileSystemPath("/Template/Test/FilterTest.cpp.in");
-  PMFilterGenerator* testgen = new PMFilterGenerator(pluginDir,
+
+  if (NULL != testGenerator)
+  {
+    delete testGenerator;
+    testGenerator = NULL;
+  }
+  testGenerator = new PMFileGenerator(pluginDirText,
     pathTemplate,
     QString(filterName + "Test.cpp"),
-    QString(filterName),
     resourceTemplate,
     NULL,
     this);
 
-  connect(testgen, SIGNAL(outputError(const QString&)),
+  connect(testGenerator, SIGNAL(outputError(const QString&)),
     this, SLOT(generationError(const QString&)));
-  testgen->setDoesGenerateOutput(true);
-  testgen->setPluginName(fi.baseName());
-  testgen->generateOutput();
+  testGenerator->setDoesGenerateOutput(true);
+  testGenerator->setPluginName(fi.baseName());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::generateFilterFiles()
+{
+  // Generate all the output
+  cppGenerator->generateOutput();
+  hGenerator->generateOutput();
+  htmlGenerator->generateOutput();
+  testGenerator->generateOutput();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, QString> FilterMaker::getFunctionContents()
+{
+  QMap<QString, QString> map;
+
+  if (filterParametersTable->rowCount() <= 0)
+  {
+    return map;
+  }
+
+  QString setupFPContents = "";
+  QString readFPContents = "";
+  QString writeFPContents = "";
+  QString dataCheckContents = "";
+  QString FPContents = "";
+
+  CodeGenFactory::Pointer factory = CodeGenFactory::New();
+  for (int row = 0; row < filterParametersTable->rowCount(); row++)
+  {
+    QString propertyName = filterParametersTable->item(row, VAR_NAME)->text();
+    QString humanName = filterParametersTable->item(row, HUMAN_NAME)->text();
+    QString type = filterParametersTable->item(row, TYPE)->text();
+
+    FPCodeGenerator::Pointer generator = factory->create(humanName, propertyName, type);
+    setupFPContents.append(generator->generateSetupFilterParameters() + "\n");
+    readFPContents.append(generator->generateReadFilterParameters() + "\n");
+    writeFPContents.append(generator->generateWriteFilterParameters() + "\n");
+    dataCheckContents.append(generator->generateDataCheck() + "\n");
+    FPContents.append(generator->generateFilterParameters() + "\n\n");
+  }
+
+  // Chop off the last, un-needed new-line character from each contents
+  setupFPContents.chop(1);
+  readFPContents.chop(1);
+  writeFPContents.chop(1);
+  dataCheckContents.chop(1);
+  FPContents.chop(1);
+
+  map.insert("Setup Filter Parameters", setupFPContents);
+  map.insert("Read Filter Parameters", readFPContents);
+  map.insert("Write Filter Parameters", writeFPContents);
+  map.insert("Data Check", dataCheckContents);
+  map.insert("Filter Parameters", FPContents);
+
+  return map;
 }
 
 // -----------------------------------------------------------------------------
@@ -470,7 +617,7 @@ QString FilterMaker::createNamespaceString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterMaker::validityCheck()
+bool FilterMaker::validityCheck()
 {
   QString filterName = this->filterName->text();
   QString pluginDir = this->pluginDir->text();
@@ -498,6 +645,7 @@ void FilterMaker::validityCheck()
     errorString->setText("");
     errorString->setTextFormat(Qt::PlainText);
     errorString->setTextInteractionFlags(Qt::NoTextInteraction);
+    return true;
   }
   else
   {
@@ -521,14 +669,121 @@ void FilterMaker::validityCheck()
       generateBtn->setEnabled(false);
       errorString->setText("Filter names cannot contain the words 'Filter' or 'Plugin' at the end of the name.\nPlease choose a different filter name.");
     }
+    else if (pluginDir.isEmpty() == true)
+    {
+      // The directory is empty
+      generateBtn->setEnabled(false);
+      errorString->setText("The plugin directory cannot be empty.\nPlease select a valid plugin directory.");
+    }
     else if (filtersDirInfo.exists() == false)
     {
       // The directory is not a specified plugin directory
       generateBtn->setEnabled(false);
       errorString->setText("The specified directory is not a valid plugin directory.\nPlease select a valid plugin directory.");
     }
+    else if (filterName.isEmpty() == true)
+    {
+      // The directory is empty
+      generateBtn->setEnabled(false);
+      errorString->setText("The filter name cannot be empty.\nPlease select a valid filter name.");
+    }
+
+    return false;
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultSetupFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/SetupFilterParameters.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultReadFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/ReadFilterParameters.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultWriteFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/WriteFilterParameters.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultDataCheckContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/DataCheck.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultFPContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/Q_PROPERTY_FILTER_PARAMETER.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+
+
 
 
 
