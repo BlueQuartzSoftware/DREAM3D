@@ -54,7 +54,8 @@ public:
   QString getVariableName();
   QString getHumanName();
   QString getType();
-  QStringList getTypeList();
+  QList<QString> getTypeList();
+  QString getInitValue();
 
 protected:
   void setupGui();
@@ -67,6 +68,7 @@ signals:
   void on_cancelBtn_clicked();
   void on_varName_textChanged(const QString &text);
   void on_humanName_textChanged(const QString &text);
+  //void on_initValue_textChanged(const QString &text);
 
 private:
 

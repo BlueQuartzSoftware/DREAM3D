@@ -206,7 +206,6 @@ void GenericExample::setupFilterParameters()
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
   parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", FilterParameterWidgetType::MultiDataArraySelectionWidget, paths, false, 0));
 
-
   setFilterParameters(parameters);
 }
 

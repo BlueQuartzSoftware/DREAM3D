@@ -35,16 +35,11 @@ set(PluginMaker_SRCS
   ${PluginMaker_SOURCE_DIR}/PMFileGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/AddFilterWidget.cpp
   ${PluginMaker_SOURCE_DIR}/FilterBundler.cpp
-  ${PluginMaker_SOURCE_DIR}/FPCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/IntWidgetCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/DoubleWidgetCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/BooleanWidgetCodeGenerator.cpp
   )
 
 SET(PluginMaker_HDRS
     ${PluginMaker_SOURCE_DIR}/FilterBundler.h
     ${PluginMaker_SOURCE_DIR}/PMGeneratorTreeItem.h
-    ${PluginMaker_SOURCE_DIR}/CodeGenFactory.hpp
   )
 
 SET(PluginMaker_MOC_HDRS
@@ -55,13 +50,94 @@ SET(PluginMaker_MOC_HDRS
     ${PluginMaker_SOURCE_DIR}/HelpWidget.h
     ${PluginMaker_SOURCE_DIR}/PMDirGenerator.h
     ${PluginMaker_SOURCE_DIR}/PMFileGenerator.h
-    ${PluginMaker_SOURCE_DIR}/FPCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/AddFilterWidget.h
-  ${PluginMaker_SOURCE_DIR}/IntWidgetCodeGenerator.h
-  ${PluginMaker_SOURCE_DIR}/DoubleWidgetCodeGenerator.h
-  ${PluginMaker_SOURCE_DIR}/BooleanWidgetCodeGenerator.h
   )
-cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS}" "${PluginMaker_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+
+set(PluginMaker_CodeGenerator_HDRS
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/CodeGenFactory.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AttributeMatrixSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AxisAngleWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/BooleanWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ChoiceWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ComparisonSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArrayCreationWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArraySelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataBundleSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerArrayProxyWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerReaderWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DoubleWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicChoiceWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicTableWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FileListInfoWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FilterParameterWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec3WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec4WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FourthOrderPolynomialWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FPCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputFileWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputPathWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntVec3WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/LinkedBooleanWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/MultiDataArraySelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputFileWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputPathWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PhaseTypeSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PreflightUpdatedValueWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SecondOrderPolynomialWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SeparatorWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ShapeTypeSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/StringWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/Symmetric6x6WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ThirdOrderPolynomialWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/UnknownWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/VolumeDataContainerInfoWidgetCodeGenerator.h
+  )
+
+set(PluginMaker_CodeGenerator_SRCS
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/CodeGenFactory.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AttributeMatrixSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AxisAngleWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/BooleanWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ChoiceWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ComparisonSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArrayCreationWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArraySelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataBundleSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerArrayProxyWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerReaderWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DoubleWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicChoiceWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicTableWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FileListInfoWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FilterParameterWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec3WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec4WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FourthOrderPolynomialWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FPCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputFileWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputPathWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntVec3WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/LinkedBooleanWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/MultiDataArraySelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputFileWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputPathWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PhaseTypeSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PreflightUpdatedValueWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SecondOrderPolynomialWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SeparatorWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ShapeTypeSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/StringWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/Symmetric6x6WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ThirdOrderPolynomialWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/UnknownWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/VolumeDataContainerInfoWidgetCodeGenerator.cpp
+  )
+
+cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS};${PluginMaker_CodeGenerator_HDRS}" "${PluginMaker_SRCS};${PluginMaker_CodeGenerator_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
 # The UI files As generated by Qt Designer
 SET(PluginMaker_UIS
@@ -101,6 +177,8 @@ set(${PROJECT_NAME}_PROJECT_SRCS
   ${PluginMaker_MOC_HDRS}
     ${PluginMaker_Generated_RC_SRCS}
     ${PluginMaker_Generated_UI_HDRS}
+    ${PluginMaker_CodeGenerator_SRCS}
+    ${PluginMaker_CodeGenerator_HDRS}
 #    ${PluginMaker_Generated_MOC_SRCS}
   )
 #message(STATUS "${PROJECT_NAME}_PROJECT_SRCS: ${${PROJECT_NAME}_PROJECT_SRCS}")

@@ -50,7 +50,8 @@ enum FPColumnIndex
 {
   VAR_NAME,
   HUMAN_NAME,
-  TYPE
+  TYPE,
+  INIT_VALUE
 };
 
 class FilterMaker : public QMainWindow, public Ui::FilterMaker
@@ -73,6 +74,9 @@ protected:
   QString getDefaultWriteFPContents();
   QString getDefaultDataCheckContents();
   QString getDefaultFPContents();
+  QString getDefaultInitListContents();
+  QString getDefaultFilterHIncludesContents();
+  QString getDefaultFilterCPPIncludesContents();
 
 protected slots:
   void on_selectBtn_clicked();

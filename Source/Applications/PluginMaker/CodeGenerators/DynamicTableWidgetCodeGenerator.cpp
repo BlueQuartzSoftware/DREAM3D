@@ -34,80 +34,88 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FPCodeGenerator.h"
+#include "DynamicTableWidgetCodeGenerator.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FPCodeGenerator::FPCodeGenerator(QString humanLabel, QString propertyName) :
-m_PropertyName(propertyName),
-m_HumanLabel(humanLabel)
+DynamicTableWidgetCodeGenerator::DynamicTableWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, initValue)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableWidgetCodeGenerator::~DynamicTableWidgetCodeGenerator()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FPCodeGenerator::~FPCodeGenerator()
-{}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FPCodeGenerator::getPropertyName()
+QString DynamicTableWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return m_PropertyName;
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FPCodeGenerator::getHumanLabel()
+QString DynamicTableWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return m_HumanLabel;
+  return FPCodeGenerator::generateReadFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FPCodeGenerator::generateReadFilterParameters()
+QString DynamicTableWidgetCodeGenerator::generateWriteFilterParameters()
 {
-  return "  set" + m_PropertyName + "(reader->readValue(\"" + m_PropertyName + "\", get" + m_PropertyName + "()));";
+  return FPCodeGenerator::generateWriteFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FPCodeGenerator::generateWriteFilterParameters()
+QString DynamicTableWidgetCodeGenerator::generateDataCheck()
 {
-  return "  DREAM3D_FILTER_WRITE_PARAMETER(" + m_PropertyName + ")";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FPCodeGenerator::generateSetupFilterParameters()
-{
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
   return "";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FPCodeGenerator::generateDataCheck()
+QString DynamicTableWidgetCodeGenerator::generateFilterParameters()
 {
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
+  QString contents;
+  QTextStream ss(&contents);
+  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DynamicTableWidgetCodeGenerator::generateInitializationList()
+{
+  return FPCodeGenerator::generateInitializationList();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DynamicTableWidgetCodeGenerator::generateHIncludes()
+{
   return "";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FPCodeGenerator::generateFilterParameters()
+QString DynamicTableWidgetCodeGenerator::generateCPPIncludes()
 {
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
   return "";
 }

@@ -34,13 +34,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "IntWidgetCodeGenerator.h"
+#include "PreflightUpdatedValueWidgetCodeGenerator.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IntWidgetCodeGenerator::IntWidgetCodeGenerator(QString humanLabel, QString propertyName) :
-FPCodeGenerator(humanLabel, propertyName)
+PreflightUpdatedValueWidgetCodeGenerator::PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, initValue)
 {
 
 }
@@ -48,13 +48,13 @@ FPCodeGenerator(humanLabel, propertyName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IntWidgetCodeGenerator::~IntWidgetCodeGenerator()
+PreflightUpdatedValueWidgetCodeGenerator::~PreflightUpdatedValueWidgetCodeGenerator()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString IntWidgetCodeGenerator::generateSetupFilterParameters()
+QString PreflightUpdatedValueWidgetCodeGenerator::generateSetupFilterParameters()
 {
   return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
 }
@@ -62,7 +62,23 @@ QString IntWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString IntWidgetCodeGenerator::generateDataCheck()
+QString PreflightUpdatedValueWidgetCodeGenerator::generateReadFilterParameters()
+{
+  return FPCodeGenerator::generateReadFilterParameters();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PreflightUpdatedValueWidgetCodeGenerator::generateWriteFilterParameters()
+{
+  return FPCodeGenerator::generateWriteFilterParameters();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PreflightUpdatedValueWidgetCodeGenerator::generateDataCheck()
 {
   return "";
 }
@@ -70,7 +86,7 @@ QString IntWidgetCodeGenerator::generateDataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString IntWidgetCodeGenerator::generateFilterParameters()
+QString PreflightUpdatedValueWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
@@ -78,4 +94,28 @@ QString IntWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PreflightUpdatedValueWidgetCodeGenerator::generateInitializationList()
+{
+  return FPCodeGenerator::generateInitializationList();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PreflightUpdatedValueWidgetCodeGenerator::generateHIncludes()
+{
+  return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PreflightUpdatedValueWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "";
 }

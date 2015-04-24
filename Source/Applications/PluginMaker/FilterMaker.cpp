@@ -45,8 +45,8 @@
 #include "PluginMaker/FilterBundler.h"
 #include "PluginMaker/PMDirGenerator.h"
 #include "PluginMaker/PMGeneratorTreeItem.h"
-#include "PluginMaker/CodeGenFactory.hpp"
-#include "PluginMaker/FPCodeGenerator.h"
+#include "PluginMaker/CodeGenerators/CodeGenFactory.h"
+#include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
 
 #include "QtSupport/ApplicationFileInfo.h"
 
@@ -252,6 +252,7 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   QString varName = widget->getVariableName();
   QString humanName = widget->getHumanName();
   QString type = widget->getType();
+  QString initValue = widget->getInitValue();
 
   // Close the widget, since we have all the data that we need
   widget->close();
@@ -259,6 +260,7 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   QTableWidgetItem* item0 = new QTableWidgetItem(varName);
   QTableWidgetItem* item1 = new QTableWidgetItem(humanName);
   QTableWidgetItem* item2 = new QTableWidgetItem(type);
+  QTableWidgetItem* item3 = new QTableWidgetItem(initValue);
 
   // Insert items
   int row = filterParametersTable->rowCount();
@@ -266,6 +268,7 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   filterParametersTable->setItem(row, VAR_NAME, item0);
   filterParametersTable->setItem(row, HUMAN_NAME, item1);
   filterParametersTable->setItem(row, TYPE, item2);
+  filterParametersTable->setItem(row, INIT_VALUE, item3);
 
   // Update the filter file generators with the new information
   updateFilterFileGenerators();
@@ -331,12 +334,16 @@ void FilterMaker::updateFilterFileGenerators()
     cppGenerator->setSetupFPContents(contentsMap["Setup Filter Parameters"]);
     cppGenerator->setReadFPContents(contentsMap["Read Filter Parameters"]);
     cppGenerator->setWriteFPContents(contentsMap["Write Filter Parameters"]);
+    cppGenerator->setInitListContents(contentsMap["Initialization List"]);
+    cppGenerator->setFilterCPPIncludesContents(contentsMap["Filter Implementation Includes"]);
   }
   else
   {
     cppGenerator->setSetupFPContents(getDefaultSetupFPContents());
     cppGenerator->setReadFPContents(getDefaultReadFPContents());
     cppGenerator->setWriteFPContents(getDefaultWriteFPContents());
+    cppGenerator->setInitListContents(getDefaultInitListContents());
+    cppGenerator->setFilterCPPIncludesContents(getDefaultFilterCPPIncludesContents());
   }
 
   // Filter.h file
@@ -363,10 +370,12 @@ void FilterMaker::updateFilterFileGenerators()
   if (contentsMap.size() > 0)
   {
     hGenerator->setFPContents(contentsMap["Filter Parameters"]);
+    hGenerator->setFilterHIncludesContents(contentsMap["Filter Header Includes"]);
   }
   else
   {
     hGenerator->setFPContents(getDefaultFPContents());
+    hGenerator->setFilterHIncludesContents(getDefaultFilterHIncludesContents());
   }
 
 
@@ -442,6 +451,9 @@ QMap<QString, QString> FilterMaker::getFunctionContents()
   QString writeFPContents = "";
   QString dataCheckContents = "";
   QString FPContents = "";
+  QString initListContents = "  AbstractFilter(),\n";
+  QString filterHIncludes = "";
+  QString filterCPPIncludes = "";
 
   CodeGenFactory::Pointer factory = CodeGenFactory::New();
   for (int row = 0; row < filterParametersTable->rowCount(); row++)
@@ -449,13 +461,17 @@ QMap<QString, QString> FilterMaker::getFunctionContents()
     QString propertyName = filterParametersTable->item(row, VAR_NAME)->text();
     QString humanName = filterParametersTable->item(row, HUMAN_NAME)->text();
     QString type = filterParametersTable->item(row, TYPE)->text();
+    QString initValue = filterParametersTable->item(row, INIT_VALUE)->text();
 
-    FPCodeGenerator::Pointer generator = factory->create(humanName, propertyName, type);
+    FPCodeGenerator::Pointer generator = factory->create(humanName, propertyName, type, initValue);
     setupFPContents.append(generator->generateSetupFilterParameters() + "\n");
     readFPContents.append(generator->generateReadFilterParameters() + "\n");
     writeFPContents.append(generator->generateWriteFilterParameters() + "\n");
     dataCheckContents.append(generator->generateDataCheck() + "\n");
     FPContents.append(generator->generateFilterParameters() + "\n\n");
+    initListContents.append(generator->generateInitializationList() + "\n");
+    filterHIncludes.append(generator->generateHIncludes() + "\n");
+    filterCPPIncludes.append(generator->generateCPPIncludes() + "\n");
   }
 
   // Chop off the last, un-needed new-line character from each contents
@@ -464,12 +480,21 @@ QMap<QString, QString> FilterMaker::getFunctionContents()
   writeFPContents.chop(1);
   dataCheckContents.chop(1);
   FPContents.chop(1);
+  initListContents.chop(1);
+  filterHIncludes.chop(1);
+  filterCPPIncludes.chop(1);
+
+  // Chop off last comma from initialization list
+  initListContents.chop(1);
 
   map.insert("Setup Filter Parameters", setupFPContents);
   map.insert("Read Filter Parameters", readFPContents);
   map.insert("Write Filter Parameters", writeFPContents);
   map.insert("Data Check", dataCheckContents);
   map.insert("Filter Parameters", FPContents);
+  map.insert("Initialization List", initListContents);
+  map.insert("Filter Header Includes", filterHIncludes);
+  map.insert("Filter Implementation Includes", filterCPPIncludes);
 
   return map;
 }
@@ -773,6 +798,60 @@ QString FilterMaker::getDefaultFPContents()
 
   //Open file
   QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/Q_PROPERTY_FILTER_PARAMETER.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultInitListContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/InitList.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultFilterHIncludesContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/FilterHIncludes.in"));
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QTextStream in(&file);
+    contents = in.readAll();
+  }
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterMaker::getDefaultFilterCPPIncludesContents()
+{
+  QString contents = "";
+
+  //Open file
+  QFile file(ApplicationFileInfo::GenerateFileSystemPath("/Template/Contents/FilterCPPIncludes.in"));
   if (file.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QTextStream in(&file);

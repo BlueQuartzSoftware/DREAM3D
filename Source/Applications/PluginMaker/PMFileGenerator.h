@@ -69,6 +69,9 @@ class PMFileGenerator : public PMDirGenerator
     void setWriteFPContents(QString contents);
     void setDataCheckContents(QString contents);
     void setFPContents(QString contents);
+    void setInitListContents(QString contents);
+    void setFilterHIncludesContents(QString contents);
+    void setFilterCPPIncludesContents(QString contents);
 
     virtual QString generateFileContents(QString replaceStr = "");
 
@@ -88,6 +91,9 @@ protected:
   QString readFPContents;
   QString writeFPContents;
   QString dataCheckContents;
+  QString initListContents;
+  QString filterHIncludesContents;
+  QString filterCPPIncludesContents;
 
   private:
     QString m_FileName;

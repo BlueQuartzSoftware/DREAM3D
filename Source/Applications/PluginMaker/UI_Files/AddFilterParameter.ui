@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>443</width>
-    <height>121</height>
+    <width>444</width>
+    <height>147</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,28 +19,28 @@
   <property name="minimumSize">
    <size>
     <width>0</width>
-    <height>121</height>
+    <height>147</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>121</height>
+    <height>147</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Add Filter Parameter</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="2">
+    <widget class="QLineEdit" name="varName"/>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="varNameLabel">
      <property name="text">
       <string>Variable Name:</string>
      </property>
     </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLineEdit" name="varName"/>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="humanNameLabel">
@@ -49,7 +49,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="1" column="2">
     <widget class="QLineEdit" name="humanName"/>
    </item>
    <item row="2" column="0">
@@ -59,10 +59,10 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="2">
     <widget class="QComboBox" name="type"/>
    </item>
-   <item row="3" column="1">
+   <item row="4" column="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QFSDropLabel" name="errorString">
@@ -92,6 +92,16 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="initValueLabel">
+     <property name="text">
+      <string>Initial Value:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLineEdit" name="initValue"/>
    </item>
   </layout>
  </widget>

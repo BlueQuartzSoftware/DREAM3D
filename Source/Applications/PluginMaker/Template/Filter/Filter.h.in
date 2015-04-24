@@ -10,6 +10,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+@Filter_H_Includes@
+
 
 /**
  * @class @ClassName@ @ClassName@.h @PluginName@/@PluginName@Filters/@ClassName@.h

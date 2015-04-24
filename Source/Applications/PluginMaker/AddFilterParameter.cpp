@@ -68,7 +68,7 @@ AddFilterParameter::~AddFilterParameter()
 void AddFilterParameter::setupGui()
 {
   // Populate the type combo box
-  QStringList typeList = getTypeList();
+  QList<QString> typeList = getTypeList();
   for (int i = 0; i < typeList.size(); i++)
   {
     type->insertItem(i, typeList[i]);
@@ -108,6 +108,15 @@ void AddFilterParameter::on_humanName_textChanged(const QString &text)
   addFilterParameterBtn->setEnabled(filledOutCheck());
 }
 
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+//void AddFilterParameter::on_initValue_textChanged(const QString &text)
+//{
+//  // Update the "Add" button
+//  addFilterParameterBtn->setEnabled(filledOutCheck());
+//}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -144,13 +153,17 @@ QString AddFilterParameter::getType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList AddFilterParameter::getTypeList()
+QList<QString> AddFilterParameter::getTypeList()
 {
-  QStringList list;
-  list.append("IntWidget");
-  list.append("DoubleWidget");
-  list.append("BooleanWidget");
-  return list;
+#include "DREAM3DWidgetsLib/Filter_Parameter_TypeList.cpp"
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AddFilterParameter::getInitValue()
+{
+  return initValue->text();
 }
 
 // -----------------------------------------------------------------------------
@@ -158,7 +171,8 @@ QStringList AddFilterParameter::getTypeList()
 // -----------------------------------------------------------------------------
 bool AddFilterParameter::filledOutCheck()
 {
-  if (type->currentIndex() >= 0 && varName->text().isEmpty() == false && humanName->text().isEmpty() == false)
+  if (type->currentIndex() >= 0 && varName->text().isEmpty() == false 
+    && humanName->text().isEmpty() == false /* && initValue->text().isEmpty() == false */)
   {
     return true;
   }

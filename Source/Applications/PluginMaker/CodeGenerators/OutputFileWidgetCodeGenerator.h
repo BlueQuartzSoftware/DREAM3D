@@ -34,40 +34,50 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _BooleanWidgetCodeGenerator_H_
-#define _BooleanWidgetCodeGenerator_H_
+#ifndef _OutputFileWidgetCodeGenerator_H_
+#define _OutputFileWidgetCodeGenerator_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "PluginMaker/FPCodeGenerator.h"
+#include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
 
-class BooleanWidgetCodeGenerator : public FPCodeGenerator
+class OutputFileWidgetCodeGenerator : public FPCodeGenerator
 {
 public:
-  DREAM3D_SHARED_POINTERS(BooleanWidgetCodeGenerator)
+  DREAM3D_SHARED_POINTERS(OutputFileWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName)
+    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
   {
-    Pointer sharedPtr(new BooleanWidgetCodeGenerator(humanLabel, propertyName));
+    Pointer sharedPtr(new OutputFileWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
   }
 
-  virtual ~BooleanWidgetCodeGenerator();
+  virtual ~OutputFileWidgetCodeGenerator();
 
   virtual QString generateSetupFilterParameters();
+
+  virtual QString generateReadFilterParameters();
+
+  virtual QString generateWriteFilterParameters();
 
   virtual QString generateDataCheck();
 
   virtual QString generateFilterParameters();
 
+  virtual QString generateInitializationList();
+
+  virtual QString generateHIncludes();
+
+  virtual QString generateCPPIncludes();
+
 protected:
-  BooleanWidgetCodeGenerator(QString humanLabel, QString propertyName);
+  OutputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
 
 private:
 
-  BooleanWidgetCodeGenerator(const BooleanWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const BooleanWidgetCodeGenerator&); // Operator '=' Not Implemented
+  OutputFileWidgetCodeGenerator(const OutputFileWidgetCodeGenerator&); // Copy Constructor Not Implemented
+  void operator=(const OutputFileWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
-#endif /* BooleanWidgetCodeGenerator_H_ */
+#endif /* OutputFileWidgetCodeGenerator_H_ */

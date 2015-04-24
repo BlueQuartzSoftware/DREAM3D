@@ -34,40 +34,70 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DoubleWidgetCodeGenerator_H_
-#define _DoubleWidgetCodeGenerator_H_
+#ifndef _FPCodeGenerator_H_
+#define _FPCodeGenerator_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "PluginMaker/FPCodeGenerator.h"
+// stringised version of line number (must be done in two steps)
+#define STRINGISE(N) #N
+#define EXPAND_THEN_STRINGISE(N) STRINGISE(N)
+#define __LINE_STR__ EXPAND_THEN_STRINGISE(__LINE__)
 
-class DoubleWidgetCodeGenerator : public FPCodeGenerator
+// MSVC-suitable routines for formatting <#pragma message>
+#define __LOC__ __FILE__ "(" __LINE_STR__ ")"
+#define __OUTPUT_FORMAT__(type) __LOC__ " : " type " : "
+
+// specific message types for <#pragma message>
+#define __WARN__ __OUTPUT_FORMAT__("warning")
+#define __ERR__ __OUTPUT_FORMAT__("error")
+#define __MSG__ __OUTPUT_FORMAT__("programmer's message")
+#define __TODO__ __OUTPUT_FORMAT__("to do")
+
+class FPCodeGenerator
 {
 public:
-  DREAM3D_SHARED_POINTERS(DoubleWidgetCodeGenerator)
+  DREAM3D_SHARED_POINTERS(FPCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName)
+  static Pointer New(QString humanLabel, QString propertyName, QString initValue)
   {
-    Pointer sharedPtr(new DoubleWidgetCodeGenerator(humanLabel, propertyName));
+    Pointer sharedPtr(new FPCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
   }
 
-  virtual ~DoubleWidgetCodeGenerator();
+  virtual ~FPCodeGenerator();
 
   virtual QString generateSetupFilterParameters();
+
+  virtual QString generateReadFilterParameters();
+
+  virtual QString generateWriteFilterParameters();
 
   virtual QString generateDataCheck();
 
   virtual QString generateFilterParameters();
 
+  virtual QString generateInitializationList();
+
+  virtual QString generateHIncludes();
+
+  virtual QString generateCPPIncludes();
+
 protected:
-  DoubleWidgetCodeGenerator(QString humanLabel, QString propertyName);
+  FPCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+
+  QString getPropertyName();
+  QString getHumanLabel();
+  QString getInitValue();
 
 private:
+  QString m_PropertyName;
+  QString m_HumanLabel;
+  QString m_InitValue;
 
-  DoubleWidgetCodeGenerator(const DoubleWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DoubleWidgetCodeGenerator&); // Operator '=' Not Implemented
+  FPCodeGenerator(const FPCodeGenerator&); // Copy Constructor Not Implemented
+  void operator=(const FPCodeGenerator&); // Operator '=' Not Implemented
 };
 
-#endif /* DoubleWidgetCodeGenerator_H_ */
+#endif /* FPCodeGenerator_H_ */

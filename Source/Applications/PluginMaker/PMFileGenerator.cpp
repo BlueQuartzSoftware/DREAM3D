@@ -61,7 +61,10 @@ PMFileGenerator::PMFileGenerator(QString outputDir,
   readFPContents(""),
   writeFPContents(""),
   dataCheckContents(""),
-  fpContents("")
+  fpContents(""),
+  initListContents(""),
+  filterHIncludesContents(""),
+  filterCPPIncludesContents("")
 {
   if (NULL != wi)
   {
@@ -219,6 +222,9 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
     text.replace("@ReadFPContents@", readFPContents);
     text.replace("@WriteFPContents@", writeFPContents);
     text.replace("@DataCheckContents@", dataCheckContents);
+    text.replace("@InitList@", initListContents);
+    text.replace("@Filter_H_Includes@", filterHIncludesContents);
+    text.replace("@Filter_CPP_Includes@", filterCPPIncludesContents);
 
     if (replaceStr.isEmpty() == false)
     {
@@ -399,6 +405,30 @@ void PMFileGenerator::setDataCheckContents(QString contents)
 void PMFileGenerator::setFPContents(QString contents)
 {
   fpContents = contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setInitListContents(QString contents)
+{
+  initListContents = contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setFilterHIncludesContents(QString contents)
+{
+  filterHIncludesContents = contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMFileGenerator::setFilterCPPIncludesContents(QString contents)
+{
+  filterCPPIncludesContents = contents;
 }
 
 

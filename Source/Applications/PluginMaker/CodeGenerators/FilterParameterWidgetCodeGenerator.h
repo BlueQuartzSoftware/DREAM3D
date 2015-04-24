@@ -34,48 +34,50 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "BooleanWidgetCodeGenerator.h"
+#ifndef _FilterParameterWidgetCodeGenerator_H_
+#define _FilterParameterWidgetCodeGenerator_H_
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-BooleanWidgetCodeGenerator::BooleanWidgetCodeGenerator(QString humanLabel, QString propertyName) :
-FPCodeGenerator(humanLabel, propertyName)
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
+
+class FilterParameterWidgetCodeGenerator : public FPCodeGenerator
 {
+public:
+  DREAM3D_SHARED_POINTERS(FilterParameterWidgetCodeGenerator)
 
-}
+    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+  {
+    Pointer sharedPtr(new FilterParameterWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    return sharedPtr;
+  }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-BooleanWidgetCodeGenerator::~BooleanWidgetCodeGenerator()
-{}
+  virtual ~FilterParameterWidgetCodeGenerator();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString BooleanWidgetCodeGenerator::generateSetupFilterParameters()
-{
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::BooleanWidget, get" + getPropertyName() + "(), false));";
-}
+  virtual QString generateSetupFilterParameters();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString BooleanWidgetCodeGenerator::generateDataCheck()
-{
-  return "";
-}
+  virtual QString generateReadFilterParameters();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString BooleanWidgetCodeGenerator::generateFilterParameters()
-{
-  QString contents;
-  QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(bool, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(bool " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  virtual QString generateWriteFilterParameters();
 
-  return contents;
-}
+  virtual QString generateDataCheck();
+
+  virtual QString generateFilterParameters();
+
+  virtual QString generateInitializationList();
+
+  virtual QString generateHIncludes();
+
+  virtual QString generateCPPIncludes();
+
+protected:
+  FilterParameterWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+
+private:
+
+  FilterParameterWidgetCodeGenerator(const FilterParameterWidgetCodeGenerator&); // Copy Constructor Not Implemented
+  void operator=(const FilterParameterWidgetCodeGenerator&); // Operator '=' Not Implemented
+};
+
+#endif /* FilterParameterWidgetCodeGenerator_H_ */

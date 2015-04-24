@@ -9,14 +9,15 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
+@Filter_CPP_Includes@
+
 #include "@PluginName@/@PluginName@Constants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 @ClassName@::@ClassName@() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+@InitList@
 {
   setupFilterParameters();
 }

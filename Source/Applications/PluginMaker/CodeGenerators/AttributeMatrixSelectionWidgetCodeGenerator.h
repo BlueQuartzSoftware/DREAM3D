@@ -34,47 +34,50 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FPCodeGenerator_H_
-#define _FPCodeGenerator_H_
+#ifndef _AttributeMatrixSelectionWidgetCodeGenerator_H_
+#define _AttributeMatrixSelectionWidgetCodeGenerator_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-class FPCodeGenerator
+#include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
+
+class AttributeMatrixSelectionWidgetCodeGenerator : public FPCodeGenerator
 {
 public:
-  DREAM3D_SHARED_POINTERS(FPCodeGenerator)
+  DREAM3D_SHARED_POINTERS(AttributeMatrixSelectionWidgetCodeGenerator)
 
-  static Pointer New(QString humanLabel, QString propertyName)
+    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
   {
-    Pointer sharedPtr(new FPCodeGenerator(humanLabel, propertyName));
+    Pointer sharedPtr(new AttributeMatrixSelectionWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
   }
 
-  virtual ~FPCodeGenerator();
+  virtual ~AttributeMatrixSelectionWidgetCodeGenerator();
 
   virtual QString generateSetupFilterParameters();
 
-  QString generateReadFilterParameters();
+  virtual QString generateReadFilterParameters();
 
-  QString generateWriteFilterParameters();
+  virtual QString generateWriteFilterParameters();
 
   virtual QString generateDataCheck();
 
   virtual QString generateFilterParameters();
 
-protected:
-  FPCodeGenerator(QString humanLabel, QString propertyName);
+  virtual QString generateInitializationList();
 
-  QString getPropertyName();
-  QString getHumanLabel();
+  virtual QString generateHIncludes();
+
+  virtual QString generateCPPIncludes();
+
+protected:
+  AttributeMatrixSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
 
 private:
-  QString m_PropertyName;
-  QString m_HumanLabel;
 
-  FPCodeGenerator(const FPCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const FPCodeGenerator&); // Operator '=' Not Implemented
+  AttributeMatrixSelectionWidgetCodeGenerator(const AttributeMatrixSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+  void operator=(const AttributeMatrixSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
-#endif /* FPCodeGenerator_H_ */
+#endif /* AttributeMatrixSelectionWidgetCodeGenerator_H_ */

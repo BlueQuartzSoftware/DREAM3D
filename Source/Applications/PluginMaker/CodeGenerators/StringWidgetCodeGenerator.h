@@ -34,48 +34,50 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DoubleWidgetCodeGenerator.h"
+#ifndef _StringWidgetCodeGenerator_H_
+#define _StringWidgetCodeGenerator_H_
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DoubleWidgetCodeGenerator::DoubleWidgetCodeGenerator(QString humanLabel, QString propertyName) :
-FPCodeGenerator(humanLabel, propertyName)
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
+
+class StringWidgetCodeGenerator : public FPCodeGenerator
 {
+public:
+  DREAM3D_SHARED_POINTERS(StringWidgetCodeGenerator)
 
-}
+    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+  {
+    Pointer sharedPtr(new StringWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    return sharedPtr;
+  }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DoubleWidgetCodeGenerator::~DoubleWidgetCodeGenerator()
-{}
+  virtual ~StringWidgetCodeGenerator();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateSetupFilterParameters()
-{
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DoubleWidget, get" + getPropertyName() + "(), false));";
-}
+  virtual QString generateSetupFilterParameters();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateDataCheck()
-{
-  return "";
-}
+  virtual QString generateReadFilterParameters();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateFilterParameters()
-{
-  QString contents;
-  QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(double, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(double " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  virtual QString generateWriteFilterParameters();
 
-  return contents;
-}
+  virtual QString generateDataCheck();
+
+  virtual QString generateFilterParameters();
+
+  virtual QString generateInitializationList();
+
+  virtual QString generateHIncludes();
+
+  virtual QString generateCPPIncludes();
+
+protected:
+  StringWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+
+private:
+
+  StringWidgetCodeGenerator(const StringWidgetCodeGenerator&); // Copy Constructor Not Implemented
+  void operator=(const StringWidgetCodeGenerator&); // Operator '=' Not Implemented
+};
+
+#endif /* StringWidgetCodeGenerator_H_ */

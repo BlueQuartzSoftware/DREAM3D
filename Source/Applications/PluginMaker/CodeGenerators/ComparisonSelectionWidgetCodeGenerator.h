@@ -34,55 +34,50 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CodeGenFactory_H_
-#define _CodeGenFactory_H_
+#ifndef _ComparisonSelectionWidgetCodeGenerator_H_
+#define _ComparisonSelectionWidgetCodeGenerator_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "PluginMaker/IntWidgetCodeGenerator.h"
-#include "PluginMaker/DoubleWidgetCodeGenerator.h"
-#include "PluginMaker/BooleanWidgetCodeGenerator.h"
 
-class CodeGenFactory
+#include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
+
+class ComparisonSelectionWidgetCodeGenerator : public FPCodeGenerator
 {
 public:
-  DREAM3D_SHARED_POINTERS(CodeGenFactory)
-  DREAM3D_STATIC_NEW_MACRO(CodeGenFactory)
+  DREAM3D_SHARED_POINTERS(ComparisonSelectionWidgetCodeGenerator)
 
-    /**
-    * @brief Creates a new instance for this code generator.
-    * @return
-    */
-    FPCodeGenerator::Pointer create(QString humanLabel, QString propertyName, QString fpType)
+    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
   {
-    if (fpType == "IntWidget")
-    {
-      IntWidgetCodeGenerator::Pointer ptr = IntWidgetCodeGenerator::New(humanLabel, propertyName);
-      return ptr;
-    }
-    else if (fpType == "DoubleWidget")
-    {
-      DoubleWidgetCodeGenerator::Pointer ptr = DoubleWidgetCodeGenerator::New(humanLabel, propertyName);
-      return ptr;
-    }
-    else if (fpType == "BooleanWidget")
-    {
-      BooleanWidgetCodeGenerator::Pointer ptr = BooleanWidgetCodeGenerator::New(humanLabel, propertyName);
-      return ptr;
-    }
-    else
-    {
-      FPCodeGenerator::Pointer ptr = FPCodeGenerator::New(humanLabel, propertyName);
-      return ptr;
-    }
+    Pointer sharedPtr(new ComparisonSelectionWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    return sharedPtr;
   }
 
+  virtual ~ComparisonSelectionWidgetCodeGenerator();
+
+  virtual QString generateSetupFilterParameters();
+
+  virtual QString generateReadFilterParameters();
+
+  virtual QString generateWriteFilterParameters();
+
+  virtual QString generateDataCheck();
+
+  virtual QString generateFilterParameters();
+
+  virtual QString generateInitializationList();
+
+  virtual QString generateHIncludes();
+
+  virtual QString generateCPPIncludes();
+
 protected:
-  CodeGenFactory() {}
+  ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
 
 private:
 
-  CodeGenFactory(const CodeGenFactory&); // Copy Constructor Not Implemented
-  void operator=(const CodeGenFactory&); // Operator '=' Not Implemented
+  ComparisonSelectionWidgetCodeGenerator(const ComparisonSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+  void operator=(const ComparisonSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
-#endif /* FilterFACTORY_H_ */
+
+#endif /* ComparisonSelectionWidgetCodeGenerator_H_ */

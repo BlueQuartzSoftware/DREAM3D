@@ -34,40 +34,50 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _IntWidgetCodeGenerator_H_
-#define _IntWidgetCodeGenerator_H_
+#ifndef _DynamicChoiceWidgetCodeGenerator_H_
+#define _DynamicChoiceWidgetCodeGenerator_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "PluginMaker/FPCodeGenerator.h"
+#include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
 
-class IntWidgetCodeGenerator : public FPCodeGenerator
+class DynamicChoiceWidgetCodeGenerator : public FPCodeGenerator
 {
 public:
-  DREAM3D_SHARED_POINTERS(IntWidgetCodeGenerator)
-  
-  static Pointer New(QString humanLabel, QString propertyName)
+  DREAM3D_SHARED_POINTERS(DynamicChoiceWidgetCodeGenerator)
+
+    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
   {
-    Pointer sharedPtr(new IntWidgetCodeGenerator(humanLabel, propertyName));
+    Pointer sharedPtr(new DynamicChoiceWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
   }
 
-  virtual ~IntWidgetCodeGenerator();
+  virtual ~DynamicChoiceWidgetCodeGenerator();
 
   virtual QString generateSetupFilterParameters();
+
+  virtual QString generateReadFilterParameters();
+
+  virtual QString generateWriteFilterParameters();
 
   virtual QString generateDataCheck();
 
   virtual QString generateFilterParameters();
 
+  virtual QString generateInitializationList();
+
+  virtual QString generateHIncludes();
+
+  virtual QString generateCPPIncludes();
+
 protected:
-  IntWidgetCodeGenerator(QString humanLabel, QString propertyName);
+  DynamicChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
 
 private:
 
-  IntWidgetCodeGenerator(const IntWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const IntWidgetCodeGenerator&); // Operator '=' Not Implemented
+  DynamicChoiceWidgetCodeGenerator(const DynamicChoiceWidgetCodeGenerator&); // Copy Constructor Not Implemented
+  void operator=(const DynamicChoiceWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
-#endif /* IntWidgetCodeGenerator_H_ */
+#endif /* DynamicChoiceWidgetCodeGenerator_H_ */
