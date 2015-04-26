@@ -72,7 +72,7 @@ QString ComparisonSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readComparisonInputs(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -125,5 +125,5 @@ QString ComparisonSelectionWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/ComparisonFilterParameter.h\"";
 }

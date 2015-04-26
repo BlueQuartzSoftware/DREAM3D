@@ -56,7 +56,15 @@ DynamicTableWidgetCodeGenerator::~DynamicTableWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  QString contents;
+  QTextStream ss(&contents);
+
+  ss << "  // DynamicTableWidget - Fill in row headers, column headers, and table data\n";
+  ss << "  {\n";
+  ss << "    QStringList rHeaders, cHeaders;\n";
+  ss << "    std::vector<std::vector<double> > defaultTable;\n";
+  ss << "    parameters.push_back(DynamicTableFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, false, false, false, 0));\n";
+  ss << "  }";
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +72,7 @@ QString DynamicTableWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readDynamicTableData(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -90,8 +98,8 @@ QString DynamicTableWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    DREAM3D_FILTER_PARAMETER(DynamicTableData, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(DynamicTableData " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }
@@ -109,7 +117,7 @@ QString DynamicTableWidgetCodeGenerator::generateInitializationList()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateHIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/DynamicTableData.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -117,5 +125,5 @@ QString DynamicTableWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h\"";
 }

@@ -64,7 +64,7 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateSetupFilterParameter
 // -----------------------------------------------------------------------------
 QString DataContainerArrayProxyWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readDataContainerArrayProxy(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -117,5 +117,5 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DataContainerArrayProxyWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/DataContainerArrayProxyFilterParameter.h\"";
 }

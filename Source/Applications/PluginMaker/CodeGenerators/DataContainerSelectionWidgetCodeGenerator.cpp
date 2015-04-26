@@ -56,7 +56,7 @@ DataContainerSelectionWidgetCodeGenerator::~DataContainerSelectionWidgetCodeGene
 // -----------------------------------------------------------------------------
 QString DataContainerSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataContainerSelectionWidget, get" + getPropertyName() + "(), false));";
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ QString DataContainerSelectionWidgetCodeGenerator::generateSetupFilterParameters
 // -----------------------------------------------------------------------------
 QString DataContainerSelectionWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readString(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ QString DataContainerSelectionWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    DREAM3D_FILTER_PARAMETER(QString, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }

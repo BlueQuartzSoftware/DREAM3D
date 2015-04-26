@@ -56,7 +56,20 @@ DataContainerReaderWidgetCodeGenerator::~DataContainerReaderWidgetCodeGenerator(
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  QString contents;
+  QTextStream ss(&contents);
+
+  ss << "  {\n";
+  ss << "    DataContainerReaderFilterParameter::Pointer parameter = DataContainerReaderFilterParameter::New();\n";
+  ss << "    parameter->setHumanLabel(\"" + getHumanLabel() + "\");\n";
+  ss << "    parameter->setPropertyName(\"" + getPropertyName() + "\");\n";
+  ss << "    parameter->setWidgetType(FilterParameterWidgetType::DataContainerReaderWidget);\n";
+  ss << "    parameter->setDefaultFlagValue(Qt::Checked);\n";
+  ss << "    parameter->setInputFileProperty(\"InputFilePropertyName\");    // Set this property name, if needed\n";
+  ss << "    parameters.push_back(parameter);\n";
+  ss << "  }";
+
+  return contents;
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +77,7 @@ QString DataContainerReaderWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readDataContainerArrayProxy(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -90,8 +103,8 @@ QString DataContainerReaderWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(DataContainerArrayProxy " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }
@@ -109,7 +122,7 @@ QString DataContainerReaderWidgetCodeGenerator::generateInitializationList()
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateHIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/DataContainers/DataContainerArrayProxy.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -117,5 +130,5 @@ QString DataContainerReaderWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h\"";
 }

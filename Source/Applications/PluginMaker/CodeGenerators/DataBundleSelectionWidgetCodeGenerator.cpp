@@ -64,7 +64,7 @@ QString DataBundleSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataBundleSelectionWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readString(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
