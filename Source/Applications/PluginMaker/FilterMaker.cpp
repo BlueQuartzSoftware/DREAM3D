@@ -261,6 +261,18 @@ void FilterMaker::on_removeFilterParameterBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterMaker::on_filterParametersTable_itemChanged(QTableWidgetItem* item)
+{
+  // Update the filter file generators with the new information
+  updateFilterFileGenerators();
+
+  // Show the new code in the code viewer
+  on_codeChooser_currentIndexChanged(codeChooser->currentIndex());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
 {
   QString varName = widget->getVariableName();
@@ -271,10 +283,10 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   // Close the widget, since we have all the data that we need
   widget->close();
 
-  QTableWidgetItem* item0 = new QTableWidgetItem(varName);
-  QTableWidgetItem* item1 = new QTableWidgetItem(humanName);
-  QTableWidgetItem* item2 = new QTableWidgetItem(type);
-  QTableWidgetItem* item3 = new QTableWidgetItem(initValue);
+  QTableWidgetItem* varNameItem = new QTableWidgetItem(varName);
+  QTableWidgetItem* humanNameItem = new QTableWidgetItem(humanName);
+  QTableWidgetItem* typeItem = new QTableWidgetItem(type);
+  QTableWidgetItem* initValueItem = new QTableWidgetItem(initValue);
 
   // Insert items
   int row = filterParametersTable->rowCount();
@@ -282,14 +294,19 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
 
   if (type == "SeparatorWidget")
   {
-    item0->setFlags(Qt::NoItemFlags);
-    item3->setFlags(Qt::NoItemFlags);
+    varNameItem->setFlags(Qt::NoItemFlags);
+    initValueItem->setFlags(Qt::NoItemFlags);
   }
 
-  filterParametersTable->setItem(row, VAR_NAME, item0);
-  filterParametersTable->setItem(row, HUMAN_NAME, item1);
-  filterParametersTable->setItem(row, TYPE, item2);
-  filterParametersTable->setItem(row, INIT_VALUE, item3);
+  // Block type cell from being edited
+  typeItem->setFlags(Qt::NoItemFlags);
+
+  filterParametersTable->blockSignals(true);
+  filterParametersTable->setItem(row, VAR_NAME, varNameItem);
+  filterParametersTable->setItem(row, HUMAN_NAME, humanNameItem);
+  filterParametersTable->setItem(row, TYPE, typeItem);
+  filterParametersTable->setItem(row, INIT_VALUE, initValueItem);
+  filterParametersTable->blockSignals(false);
 
   // Update the filter file generators with the new information
   updateFilterFileGenerators();
@@ -945,22 +962,14 @@ void FilterMaker::readSettings()
   for (int i = 0; i < fpSize; i++)
   {
     prefs.setArrayIndex(i);
-    filterParametersTable->insertRow(filterParametersTable->rowCount());
-    QTableWidgetItem* varNameItem = new QTableWidgetItem(prefs.value("Variable Name").toString());
-    QTableWidgetItem* humanLabelItem = new QTableWidgetItem(prefs.value("Human Label").toString());
-    QTableWidgetItem* typeItem = new QTableWidgetItem(prefs.value("Type").toString());
-    QTableWidgetItem* initValueItem = new QTableWidgetItem(prefs.value("Initial Value").toString());
 
-    if (typeItem->text() == "SeparatorWidget")
-    {
-      varNameItem->setFlags(Qt::NoItemFlags);
-      initValueItem->setFlags(Qt::NoItemFlags);
-    }
+    AddFilterParameter addFilterParameter;
+    addFilterParameter.setVariableName(prefs.value("Variable Name").toString());
+    addFilterParameter.setHumanName(prefs.value("Human Label").toString());
+    addFilterParameter.setType(prefs.value("Type").toString());
+    addFilterParameter.setInitValue(prefs.value("Initial Value").toString());
 
-    filterParametersTable->setItem(i, VAR_NAME, varNameItem);
-    filterParametersTable->setItem(i, HUMAN_NAME, humanLabelItem);
-    filterParametersTable->setItem(i, TYPE, typeItem);
-    filterParametersTable->setItem(i, INIT_VALUE, initValueItem);
+    addFilterParameterToTable(&addFilterParameter);
   }
   prefs.endArray();
   readWindowSettings(prefs);

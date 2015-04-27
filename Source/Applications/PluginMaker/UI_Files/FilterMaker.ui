@@ -92,7 +92,14 @@
            <string>Delete Filter Parameter</string>
           </property>
           <property name="text">
-           <string>-</string>
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+            <normaloff>:/delete2.png</normaloff>:/delete2.png</iconset>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -133,7 +140,14 @@
            <string>Add Filter Parameter</string>
           </property>
           <property name="text">
-           <string>+</string>
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+            <normaloff>:/add2.png</normaloff>:/add2.png</iconset>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -332,6 +346,8 @@
    <header>QtSupport/QFSDropLabel.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

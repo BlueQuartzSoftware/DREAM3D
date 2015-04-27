@@ -212,6 +212,38 @@ QString AddFilterParameter::getInitValue()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AddFilterParameter::setVariableName(QString varName)
+{
+  this->varName->setText(varName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::setHumanName(QString humanName)
+{
+  this->humanName->setText(humanName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::setType(QString type)
+{
+  this->type->setCurrentText(type);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::setInitValue(QString initValue)
+{
+  this->initValue->setText(initValue);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool AddFilterParameter::filledOutCheck()
 {
   if (type->currentIndex() >= 0 && varName->text().isEmpty() == false 

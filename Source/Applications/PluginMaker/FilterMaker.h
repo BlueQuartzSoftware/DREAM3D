@@ -85,6 +85,7 @@ protected slots:
   void on_codeChooser_currentIndexChanged(int index);
   void on_pluginDir_textChanged(const QString& text);
   void on_filterName_textChanged(const QString& text);
+  void on_filterParametersTable_itemChanged(QTableWidgetItem* item);
   void on_generateBtn_clicked();
   void on_cancelBtn_clicked();
   void on_addFilterParameterBtn_clicked();

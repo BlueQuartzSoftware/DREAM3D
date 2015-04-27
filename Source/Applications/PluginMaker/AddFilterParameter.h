@@ -57,6 +57,11 @@ public:
   QList<QString> getTypeList();
   QString getInitValue();
 
+  void setVariableName(QString varName);
+  void setHumanName(QString humanName);
+  void setType(QString type);
+  void setInitValue(QString initValue);
+
 protected:
   void setupGui();
 
