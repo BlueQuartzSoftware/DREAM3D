@@ -282,14 +282,11 @@ void PMFileGenerator::generateOutputWithFilterNames(QSet<QString> names)
       {
         QString replaceStr = createReplacementString(TESTFILELOCATIONS, names);
         text.replace("@Namespaces@", replaceStr);		// Replace token for Test/TestFileLocations.h.in file
-        qDebug() << text;
       }
       else if (getFileName() == "CMakeLists.txt")
       {
         QString replaceStr = createReplacementString(CMAKELISTS, names);
         text.replace("@AddTestText@", replaceStr);		// Replace token for Test/CMakeLists.txt file
-        std::cout << text.toStdString();
-        qDebug() << text;
       }
     }
 
