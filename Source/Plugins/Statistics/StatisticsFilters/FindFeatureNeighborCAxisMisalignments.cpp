@@ -304,7 +304,7 @@ AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureNeighborCAxisMisalignments::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

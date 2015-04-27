@@ -447,7 +447,7 @@ AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString FeatureFaceCurvatureFilter::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -380,7 +380,7 @@ AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

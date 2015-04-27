@@ -250,7 +250,7 @@ AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

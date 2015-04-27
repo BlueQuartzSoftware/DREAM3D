@@ -535,7 +535,7 @@ AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

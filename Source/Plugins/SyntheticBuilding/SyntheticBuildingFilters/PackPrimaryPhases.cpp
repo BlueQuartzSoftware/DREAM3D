@@ -2817,7 +2817,7 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString PackPrimaryPhases::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

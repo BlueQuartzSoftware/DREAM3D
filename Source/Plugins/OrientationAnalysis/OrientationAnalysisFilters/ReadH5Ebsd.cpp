@@ -1160,7 +1160,7 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

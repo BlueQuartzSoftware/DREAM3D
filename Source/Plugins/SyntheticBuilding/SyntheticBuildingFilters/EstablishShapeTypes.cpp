@@ -227,7 +227,7 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

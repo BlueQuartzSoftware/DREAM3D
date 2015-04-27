@@ -557,7 +557,7 @@ AbstractFilter::Pointer FindProjectedImageStatistics::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString FindProjectedImageStatistics::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 
 // -----------------------------------------------------------------------------

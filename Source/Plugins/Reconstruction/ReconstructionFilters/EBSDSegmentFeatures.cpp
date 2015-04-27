@@ -441,7 +441,7 @@ AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString EBSDSegmentFeatures::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

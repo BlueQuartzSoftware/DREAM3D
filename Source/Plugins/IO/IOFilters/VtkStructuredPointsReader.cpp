@@ -1219,7 +1219,7 @@ AbstractFilter::Pointer VtkStructuredPointsReader::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

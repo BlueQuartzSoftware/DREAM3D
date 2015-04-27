@@ -411,7 +411,7 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
     // -----------------------------------------------------------------------------
     const QString EnsembleInfoReader::getCompiledLibraryName()
     {
-      return IO::IOBaseName;
+      return IOConstants::IOBaseName;
     }
 
 

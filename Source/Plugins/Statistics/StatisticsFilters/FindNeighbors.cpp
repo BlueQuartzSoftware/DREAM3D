@@ -414,7 +414,7 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

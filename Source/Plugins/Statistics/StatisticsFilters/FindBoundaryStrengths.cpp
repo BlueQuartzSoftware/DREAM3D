@@ -333,7 +333,7 @@ AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryStrengths::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

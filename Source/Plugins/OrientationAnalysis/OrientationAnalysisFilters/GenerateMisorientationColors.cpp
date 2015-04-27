@@ -379,7 +379,7 @@ AbstractFilter::Pointer GenerateMisorientationColors::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString GenerateMisorientationColors::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

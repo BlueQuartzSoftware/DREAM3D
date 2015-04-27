@@ -238,7 +238,7 @@ AbstractFilter::Pointer ConvertEulerAngles::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString ConvertEulerAngles::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 // -----------------------------------------------------------------------------
 //

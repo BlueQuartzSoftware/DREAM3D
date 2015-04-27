@@ -3,7 +3,7 @@
 
 #include <QtCore/QString>
 
-namespace ImageImport
+namespace ImageImportConstants
 {
 
   const QString ImageImportPluginFile("ImageImportPlugin");

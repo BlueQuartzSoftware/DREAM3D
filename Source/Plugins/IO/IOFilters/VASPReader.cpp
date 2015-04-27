@@ -408,7 +408,7 @@ AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

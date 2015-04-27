@@ -277,7 +277,7 @@ AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

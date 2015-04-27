@@ -522,7 +522,7 @@ AbstractFilter::Pointer YSChoiAbaqusReader::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString YSChoiAbaqusReader::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

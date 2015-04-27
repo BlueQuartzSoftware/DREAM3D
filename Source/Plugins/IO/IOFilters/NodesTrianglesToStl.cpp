@@ -477,7 +477,7 @@ AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

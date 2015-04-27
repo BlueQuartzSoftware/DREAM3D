@@ -461,7 +461,7 @@ AbstractFilter::Pointer CAxisSegmentFeatures::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString CAxisSegmentFeatures::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

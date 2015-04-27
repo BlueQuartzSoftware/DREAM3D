@@ -1069,7 +1069,7 @@ AbstractFilter::Pointer TesselateFarFieldGrains::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString TesselateFarFieldGrains::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

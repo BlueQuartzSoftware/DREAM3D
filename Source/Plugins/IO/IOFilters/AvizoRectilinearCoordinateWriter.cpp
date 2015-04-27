@@ -333,7 +333,7 @@ AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool
 //
 // -----------------------------------------------------------------------------
 const QString AvizoRectilinearCoordinateWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

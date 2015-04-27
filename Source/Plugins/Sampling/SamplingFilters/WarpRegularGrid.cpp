@@ -318,7 +318,7 @@ AbstractFilter::Pointer WarpRegularGrid::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

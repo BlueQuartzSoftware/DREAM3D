@@ -233,7 +233,7 @@ AbstractFilter::Pointer FindBasalLoadingFactor::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString FindBasalLoadingFactor::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

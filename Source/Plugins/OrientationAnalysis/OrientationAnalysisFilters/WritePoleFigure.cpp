@@ -529,7 +529,7 @@ AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

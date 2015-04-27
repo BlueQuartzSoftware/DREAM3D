@@ -357,7 +357,7 @@ AbstractFilter::Pointer SaveImages::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString SaveImages::getCompiledLibraryName()
-{ return ImageImport::ImageImportBaseName; }
+{ return ImageImportConstants::ImageImportBaseName; }
 
 
 // -----------------------------------------------------------------------------

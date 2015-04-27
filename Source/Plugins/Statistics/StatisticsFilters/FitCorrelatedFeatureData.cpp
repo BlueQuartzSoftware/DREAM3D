@@ -465,7 +465,7 @@ AbstractFilter::Pointer FitCorrelatedFeatureData::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString FitCorrelatedFeatureData::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

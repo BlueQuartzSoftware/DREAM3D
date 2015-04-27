@@ -366,7 +366,7 @@ AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

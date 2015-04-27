@@ -387,7 +387,7 @@ AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString ChangeResolution::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

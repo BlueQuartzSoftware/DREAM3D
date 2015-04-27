@@ -344,7 +344,7 @@ AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -227,7 +227,7 @@ AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString AddBadData::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

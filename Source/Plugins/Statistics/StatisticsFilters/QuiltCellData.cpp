@@ -426,7 +426,7 @@ AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString QuiltCellData::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 
 #include <QtCore/QString>
 
-namespace SyntheticBuilding
+namespace SyntheticBuildingConstants
 {
   const QString SyntheticBuildingPluginFile("SyntheticBuildingPlugin");
   const QString SyntheticBuildingPluginDisplayName("Synthetic Building");

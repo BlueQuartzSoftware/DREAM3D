@@ -553,7 +553,7 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

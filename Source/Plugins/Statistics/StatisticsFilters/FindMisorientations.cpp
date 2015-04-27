@@ -276,7 +276,7 @@ AbstractFilter::Pointer FindMisorientations::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString FindMisorientations::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

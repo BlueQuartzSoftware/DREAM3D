@@ -240,7 +240,7 @@ AbstractFilter::Pointer FindAvgCAxes::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

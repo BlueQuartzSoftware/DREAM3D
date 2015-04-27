@@ -319,7 +319,7 @@ AbstractFilter::Pointer BadDataNeighborOrientationCheck::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 // -----------------------------------------------------------------------------
 //

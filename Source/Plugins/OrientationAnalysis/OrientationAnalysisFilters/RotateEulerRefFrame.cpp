@@ -255,7 +255,7 @@ AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 // -----------------------------------------------------------------------------
 //

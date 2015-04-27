@@ -399,7 +399,7 @@ AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToStl::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

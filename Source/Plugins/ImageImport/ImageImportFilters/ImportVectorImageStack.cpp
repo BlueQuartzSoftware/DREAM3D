@@ -447,7 +447,7 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getCompiledLibraryName()
-{ return ImageImport::ImageImportBaseName; }
+{ return ImageImportConstants::ImageImportBaseName; }
 
 
 // -----------------------------------------------------------------------------

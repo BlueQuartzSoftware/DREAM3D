@@ -292,7 +292,7 @@ AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

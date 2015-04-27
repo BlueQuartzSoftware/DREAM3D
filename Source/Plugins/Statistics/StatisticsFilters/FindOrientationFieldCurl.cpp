@@ -456,7 +456,7 @@ AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

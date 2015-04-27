@@ -662,7 +662,7 @@ AbstractFilter::Pointer FindRelativeMotionBetweenSlices::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 
 // -----------------------------------------------------------------------------

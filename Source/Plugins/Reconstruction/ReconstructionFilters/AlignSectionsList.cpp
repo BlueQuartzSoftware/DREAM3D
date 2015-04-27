@@ -210,7 +210,7 @@ AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

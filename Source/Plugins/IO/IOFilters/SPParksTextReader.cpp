@@ -214,7 +214,7 @@ void SPParksTextReader::preflight()
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getCompiledLibraryName()
 {
-  return IO::IOBaseName;
+  return IOConstants::IOBaseName;
 }
 
 // -----------------------------------------------------------------------------

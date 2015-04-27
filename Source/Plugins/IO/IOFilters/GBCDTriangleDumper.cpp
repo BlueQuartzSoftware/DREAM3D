@@ -285,7 +285,7 @@ AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString GBCDTriangleDumper::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

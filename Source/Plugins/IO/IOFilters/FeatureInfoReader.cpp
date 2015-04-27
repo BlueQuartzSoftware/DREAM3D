@@ -334,7 +334,7 @@ AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString FeatureInfoReader::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

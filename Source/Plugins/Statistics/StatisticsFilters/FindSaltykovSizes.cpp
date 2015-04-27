@@ -415,7 +415,7 @@ AbstractFilter::Pointer FindSaltykovSizes::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

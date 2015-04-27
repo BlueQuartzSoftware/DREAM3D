@@ -466,7 +466,7 @@ AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureClustering::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

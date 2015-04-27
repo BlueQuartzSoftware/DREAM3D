@@ -419,7 +419,7 @@ AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString InitializeSyntheticVolume::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

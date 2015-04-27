@@ -270,7 +270,7 @@ AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

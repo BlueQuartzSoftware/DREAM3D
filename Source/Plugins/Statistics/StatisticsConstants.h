@@ -3,7 +3,7 @@
 
 #include <QtCore/QString>
 
-namespace Statistics
+namespace StatisticsConstants
 {
   const QString StatisticsPluginFile("StatisticsPlugin");
   const QString StatisticsPluginDisplayName("StatisticsPlugin");

@@ -313,7 +313,7 @@ AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -574,7 +574,7 @@ AbstractFilter::Pointer FindEuclideanDistMap::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString FindEuclideanDistMap::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

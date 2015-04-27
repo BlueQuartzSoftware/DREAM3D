@@ -1350,7 +1350,7 @@ AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEnsembleStatistics::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

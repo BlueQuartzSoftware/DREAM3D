@@ -410,7 +410,7 @@ AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString MinNeighbors::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

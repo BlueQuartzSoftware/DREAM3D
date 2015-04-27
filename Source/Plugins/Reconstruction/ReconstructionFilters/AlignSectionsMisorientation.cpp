@@ -395,7 +395,7 @@ AbstractFilter::Pointer AlignSectionsMisorientation::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMisorientation::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

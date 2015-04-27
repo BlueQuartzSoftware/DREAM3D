@@ -375,7 +375,7 @@ AbstractFilter::Pointer SurfaceMeshToNodesTrianglesEdges::newFilterInstance(bool
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToNodesTrianglesEdges::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

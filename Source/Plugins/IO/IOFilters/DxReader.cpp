@@ -536,7 +536,7 @@ AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString DxReader::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

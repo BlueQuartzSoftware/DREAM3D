@@ -334,7 +334,7 @@ void ReadCtfData::execute()
 // -----------------------------------------------------------------------------
 const QString ReadCtfData::getCompiledLibraryName()
 {
-  return OrientationAnalysis::OrientationAnalysisBaseName;
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
 // -----------------------------------------------------------------------------

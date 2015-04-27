@@ -798,7 +798,7 @@ AbstractFilter::Pointer SurfaceMeshToVtk::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToVtk::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

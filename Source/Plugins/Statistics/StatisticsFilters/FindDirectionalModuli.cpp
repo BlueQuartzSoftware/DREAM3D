@@ -429,7 +429,7 @@ AbstractFilter::Pointer FindDirectionalModuli::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString FindDirectionalModuli::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

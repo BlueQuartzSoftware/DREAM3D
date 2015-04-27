@@ -409,7 +409,7 @@ AbstractFilter::Pointer MinSize::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString MinSize::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

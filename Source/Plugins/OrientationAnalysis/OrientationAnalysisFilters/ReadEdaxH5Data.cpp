@@ -376,7 +376,7 @@ void ReadEdaxH5Data::execute()
 // -----------------------------------------------------------------------------
 const QString ReadEdaxH5Data::getCompiledLibraryName()
 {
-  return OrientationAnalysis::OrientationAnalysisBaseName;
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
 

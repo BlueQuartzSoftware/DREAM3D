@@ -269,7 +269,7 @@ AbstractFilter::Pointer FindLargestCrossSections::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString FindLargestCrossSections::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

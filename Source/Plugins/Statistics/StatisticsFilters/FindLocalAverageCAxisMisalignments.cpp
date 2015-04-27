@@ -313,7 +313,7 @@ AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bo
 //
 // -----------------------------------------------------------------------------
 const QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

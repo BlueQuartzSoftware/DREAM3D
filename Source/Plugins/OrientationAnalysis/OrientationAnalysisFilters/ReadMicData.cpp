@@ -556,7 +556,7 @@ AbstractFilter::Pointer ReadMicData::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 const QString ReadMicData::getCompiledLibraryName()
 {
-  return OrientationAnalysis::OrientationAnalysisBaseName;
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
 

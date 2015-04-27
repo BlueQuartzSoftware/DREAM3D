@@ -385,7 +385,7 @@ AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundingBoxFeatures::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return GenericConstants::GenericBaseName; }
 
 
 // -----------------------------------------------------------------------------

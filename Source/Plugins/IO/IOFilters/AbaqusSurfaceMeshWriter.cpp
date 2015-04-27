@@ -387,7 +387,7 @@ AbstractFilter::Pointer AbaqusSurfaceMeshWriter::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusSurfaceMeshWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

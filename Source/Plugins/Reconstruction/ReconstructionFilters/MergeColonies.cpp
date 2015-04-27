@@ -656,7 +656,7 @@ AbstractFilter::Pointer MergeColonies::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString MergeColonies::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

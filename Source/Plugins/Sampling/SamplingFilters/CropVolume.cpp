@@ -566,7 +566,7 @@ AbstractFilter::Pointer CropVolume::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString CropVolume::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

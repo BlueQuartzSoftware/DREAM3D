@@ -277,7 +277,7 @@ AbstractFilter::Pointer SPParksWriter::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString SPParksWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

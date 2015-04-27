@@ -278,7 +278,7 @@ AbstractFilter::Pointer FindMicroTextureRegions::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString FindMicroTextureRegions::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -169,7 +169,7 @@ void V4DataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 const QString V4DataContainerReader::getCompiledLibraryName()
 {
-  return IO::IOBaseName;
+  return IOConstants::IOBaseName;
 }
 
 // -----------------------------------------------------------------------------

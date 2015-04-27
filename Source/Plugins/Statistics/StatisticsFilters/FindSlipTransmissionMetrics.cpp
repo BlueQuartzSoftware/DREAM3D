@@ -283,7 +283,7 @@ AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString FindSlipTransmissionMetrics::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

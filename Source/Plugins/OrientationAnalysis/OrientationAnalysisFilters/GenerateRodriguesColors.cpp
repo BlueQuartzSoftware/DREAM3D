@@ -278,7 +278,7 @@ AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -339,7 +339,7 @@ AbstractFilter::Pointer ErodeDilateBadData::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateBadData::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

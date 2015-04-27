@@ -236,7 +236,7 @@ AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -1061,7 +1061,7 @@ AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString QuickSurfaceMesh::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -448,7 +448,7 @@ AbstractFilter::Pointer FindTwinBoundarySchmidFactors::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString FindTwinBoundarySchmidFactors::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

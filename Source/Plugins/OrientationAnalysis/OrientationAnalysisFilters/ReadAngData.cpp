@@ -340,7 +340,7 @@ void ReadAngData::execute()
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getCompiledLibraryName()
 {
-  return OrientationAnalysis::OrientationAnalysisBaseName;
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
 

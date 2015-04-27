@@ -311,7 +311,7 @@ AbstractFilter::Pointer FeatureDataCSVWriter::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

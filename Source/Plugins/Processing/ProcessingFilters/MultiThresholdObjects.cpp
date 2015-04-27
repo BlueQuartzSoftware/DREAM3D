@@ -284,7 +284,7 @@ AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

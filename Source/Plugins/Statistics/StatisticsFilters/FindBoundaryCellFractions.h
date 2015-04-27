@@ -76,7 +76,7 @@ class FindBoundaryCellFractions : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, BoundaryCellFractionsArrayName)
     Q_PROPERTY(QString BoundaryCellFractionsArrayName READ getBoundaryCellFractionsArrayName WRITE setBoundaryCellFractionsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName() { return StatisticsConstants::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }

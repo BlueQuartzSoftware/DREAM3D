@@ -372,7 +372,7 @@ AbstractFilter::Pointer FindEllipsoidError::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString FindEllipsoidError::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

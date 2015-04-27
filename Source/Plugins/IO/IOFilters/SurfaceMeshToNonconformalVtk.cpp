@@ -895,7 +895,7 @@ AbstractFilter::Pointer SurfaceMeshToNonconformalVtk::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

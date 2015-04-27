@@ -404,7 +404,7 @@ AbstractFilter::Pointer CalculateArrayHistogram::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

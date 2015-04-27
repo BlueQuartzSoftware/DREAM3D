@@ -283,7 +283,7 @@ AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

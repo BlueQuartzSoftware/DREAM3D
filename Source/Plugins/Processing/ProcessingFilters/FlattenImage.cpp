@@ -269,7 +269,7 @@ AbstractFilter::Pointer FlattenImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString FlattenImage::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

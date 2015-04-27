@@ -389,7 +389,7 @@ AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString FillBadData::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

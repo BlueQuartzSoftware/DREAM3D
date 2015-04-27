@@ -341,7 +341,7 @@ AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString FindSchmids::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

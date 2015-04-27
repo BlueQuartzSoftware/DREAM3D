@@ -348,7 +348,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getCompiledLibraryName()
 {
-  return EMMPMPlugin::EMMPMBaseName;
+  return EMMPMConstants::EMMPMBaseName;
 }
 
 // -----------------------------------------------------------------------------

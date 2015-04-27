@@ -282,7 +282,7 @@ AbstractFilter::Pointer NeighborCICorrelation::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString NeighborCICorrelation::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

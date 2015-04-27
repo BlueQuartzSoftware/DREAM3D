@@ -552,7 +552,7 @@ AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString RotateSampleRefFrame::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

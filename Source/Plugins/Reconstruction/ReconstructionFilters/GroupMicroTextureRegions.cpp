@@ -518,7 +518,7 @@ AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -280,7 +280,7 @@ AbstractFilter::Pointer AlignSectionsFeatureCentroid::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeatureCentroid::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

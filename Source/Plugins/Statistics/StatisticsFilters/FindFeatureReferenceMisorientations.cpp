@@ -355,7 +355,7 @@ AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(b
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceMisorientations::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -600,7 +600,7 @@ AbstractFilter::Pointer NodesTrianglesToVtk::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

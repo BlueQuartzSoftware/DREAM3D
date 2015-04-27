@@ -321,7 +321,7 @@ void MultiEmmpmFilter::execute()
 // -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getCompiledLibraryName()
 {
-  return EMMPMPlugin::EMMPMBaseName;
+  return EMMPMConstants::EMMPMBaseName;
 }
 
 // -----------------------------------------------------------------------------

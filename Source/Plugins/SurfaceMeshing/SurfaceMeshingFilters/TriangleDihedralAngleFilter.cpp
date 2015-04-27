@@ -283,7 +283,7 @@ AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

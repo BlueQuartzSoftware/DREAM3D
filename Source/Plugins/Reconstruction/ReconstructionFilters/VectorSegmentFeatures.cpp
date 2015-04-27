@@ -414,7 +414,7 @@ AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

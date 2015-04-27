@@ -2283,7 +2283,7 @@ AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString InsertPrecipitatePhases::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -594,7 +594,7 @@ AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDPoleFigure::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

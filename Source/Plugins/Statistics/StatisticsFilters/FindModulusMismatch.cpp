@@ -217,7 +217,7 @@ AbstractFilter::Pointer FindModulusMismatch::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString FindModulusMismatch::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

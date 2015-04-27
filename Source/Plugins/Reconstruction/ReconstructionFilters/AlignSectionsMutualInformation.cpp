@@ -586,7 +586,7 @@ AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

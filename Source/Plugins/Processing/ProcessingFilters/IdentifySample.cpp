@@ -296,7 +296,7 @@ AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 
 // -----------------------------------------------------------------------------

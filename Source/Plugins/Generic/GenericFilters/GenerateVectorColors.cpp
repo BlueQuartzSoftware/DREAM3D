@@ -265,7 +265,7 @@ AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return GenericConstants::GenericBaseName; }
 
 // -----------------------------------------------------------------------------
 //

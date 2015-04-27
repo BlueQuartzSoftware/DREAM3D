@@ -264,7 +264,7 @@ AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString LosAlamosFFTWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

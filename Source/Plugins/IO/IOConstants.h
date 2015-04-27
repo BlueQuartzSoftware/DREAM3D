@@ -41,7 +41,7 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace IO
+namespace IOConstants
 {
   const QString IOPluginFile("IOPlugin");
   const QString IOPluginDisplayName("IOPlugin");

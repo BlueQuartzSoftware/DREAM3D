@@ -266,7 +266,7 @@ AbstractFilter::Pointer InputCrystalCompliances::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString InputCrystalCompliances::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return GenericConstants::GenericBaseName; }
 
 // -----------------------------------------------------------------------------
 //

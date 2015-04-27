@@ -660,7 +660,7 @@ AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

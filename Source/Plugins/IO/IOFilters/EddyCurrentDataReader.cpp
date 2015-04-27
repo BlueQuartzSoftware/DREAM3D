@@ -581,7 +581,7 @@ AbstractFilter::Pointer EddyCurrentDataReader::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString EddyCurrentDataReader::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

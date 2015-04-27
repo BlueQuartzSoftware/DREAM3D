@@ -349,7 +349,7 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString FitFeatureData::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

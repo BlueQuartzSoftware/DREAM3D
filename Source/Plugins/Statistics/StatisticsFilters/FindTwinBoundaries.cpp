@@ -412,7 +412,7 @@ AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString FindTwinBoundaries::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -190,7 +190,7 @@ AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString FindCAxisLocations::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

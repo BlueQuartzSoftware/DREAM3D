@@ -672,7 +672,7 @@ AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 const QString AbaqusHexahedronWriter::getCompiledLibraryName()
 {
-  return IO::IOBaseName;
+  return IOConstants::IOBaseName;
 }
 
 // -----------------------------------------------------------------------------

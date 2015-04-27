@@ -276,7 +276,7 @@ AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

@@ -247,7 +247,7 @@ AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

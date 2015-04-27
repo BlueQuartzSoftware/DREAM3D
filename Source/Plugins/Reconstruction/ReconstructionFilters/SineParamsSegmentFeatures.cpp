@@ -400,7 +400,7 @@ AbstractFilter::Pointer SineParamsSegmentFeatures::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString SineParamsSegmentFeatures::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------
