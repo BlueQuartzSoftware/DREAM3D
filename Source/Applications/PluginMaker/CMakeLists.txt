@@ -144,7 +144,9 @@ cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
 
 # and finally any resource files
 # SET(PluginMaker_RCS ${PluginMaker_SOURCE_DIR}/Templates.qrc)
-SET(PluginMaker_RCS "")
+SET(PluginMaker_RCS
+    ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
+)
 
 # -- Run MOC and UIC on the necessary files
 QT5_ADD_RESOURCES( PluginMaker_Generated_RC_SRCS ${PluginMaker_RCS} ${QRC_LICENSE_FILES})
