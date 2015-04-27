@@ -34,75 +34,79 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindBoundaryCellFractions.h"
+#include "FindAvgCAxes.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "OrientationLib/Math/OrientationMath.h"
+
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryCellFractions::FindBoundaryCellFractions() :
+FindAvgCAxes::FindAvgCAxes() :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_BoundaryCellsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::BoundaryCells),
-  m_BoundaryCellFractionsArrayName(DREAM3D::FeatureData::SurfaceCellFractions),
+  m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
-  m_BoundaryCells(NULL),
-  m_BoundaryCellFractions(NULL)
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_Quats(NULL),
+  m_AvgCAxes(NULL)
 {
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryCellFractions::~FindBoundaryCellFractions()
+FindAvgCAxes::~FindAvgCAxes()
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::setupFilterParameters()
+void FindAvgCAxes::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Surface Cells", "BoundaryCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBoundaryCellsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Surface Cell Fractions", "BoundaryCellFractionsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellFractionsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("AvgCAxes", "AvgCAxesArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxesArrayName(), true, ""));
   setFilterParameters(parameters);
 }
-
-
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setBoundaryCellFractionsArrayName(reader->readString("BoundaryCellFractionsArrayName", getBoundaryCellFractionsArrayName() ) );
-  setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() ) );
+  setAvgCAxesArrayName(reader->readString("AvgCAxesArrayName", getAvgCAxesArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindBoundaryCellFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellFractionsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -110,29 +114,30 @@ int FindBoundaryCellFractions::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::dataCheck()
+void FindAvgCAxes::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 1);
+  QVector<size_t> dims(1, 4);
+  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  dims[0] = 1;
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getBoundaryCellFractionsArrayName() );
-  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BoundaryCellFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
+  dims[0] = 3;
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAvgCAxesArrayName() );
+  m_AvgCAxesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_AvgCAxesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::preflight()
+void FindAvgCAxes::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -141,60 +146,122 @@ void FindBoundaryCellFractions::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::execute()
+void FindAvgCAxes::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  find_surface_voxel_fractions();
-
-  notifyStatusMessage(getHumanLabel(), "FindBoundaryCellFractions Completed");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::find_surface_voxel_fractions()
-{
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  size_t numfeatures = m_BoundaryCellFractionsPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_AvgCAxesPtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer m_SurfVoxCounts = DataArray<float>::CreateArray(numfeatures, "SurfVoxCounts");
-  float* surfvoxcounts = m_SurfVoxCounts->getPointer(0);
-  DataArray<float>::Pointer m_VoxCounts = DataArray<float>::CreateArray(numfeatures, "VoxCounts");
-  float* voxcounts = m_VoxCounts->getPointer(0);
+  //int phase;
+  QuatF q1;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  float g1[3][3];
+  float g1t[3][3];
+  float caxis[3] = {0, 0, 1};
+  float c1[3];
 
-  // Initialize every element to 0.0
-  for (size_t i = 0; i < numfeatures * 1; i++)
+  std::vector<int> counter(totalFeatures, 0);
+
+  for (size_t i = 1; i < totalFeatures; i++)
   {
-    surfvoxcounts[i] = 0.0f;
-    voxcounts[i] = 0.0f;
+    m_AvgCAxes[3 * i] = 0.0;
+    m_AvgCAxes[3 * i + 1] = 0.0;
+    m_AvgCAxes[3 * i + 2] = 0.0;
   }
-  for (int64_t j = 0; j < totalPoints; j++)
+  float curCAxis[3];
+  size_t index;
+  float w;
+  for(int i = 0; i < totalPoints; i++)
   {
-    int gnum = m_FeatureIds[j];
-    voxcounts[gnum]++;
-    if(m_BoundaryCells[j] > 0) { surfvoxcounts[gnum]++; }
+    if(m_FeatureIds[i] > 0)
+    {
+      index = 3 * m_FeatureIds[i];
+      QuaternionMathF::Copy(quats[i], q1);
+
+      OrientationMath::QuattoMat(q1, g1);
+      //transpose the g matricies so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+      //normalize so that the magnitude is 1
+      MatrixMath::Normalize3x1(c1);
+      curCAxis[0] = m_AvgCAxes[index] / counter[m_FeatureIds[i]];
+      curCAxis[1] = m_AvgCAxes[index + 1] / counter[m_FeatureIds[i]];
+      curCAxis[2] = m_AvgCAxes[index + 2] / counter[m_FeatureIds[i]];
+      MatrixMath::Normalize3x1(curCAxis);
+      w = GeometryMath::CosThetaBetweenVectors(c1, curCAxis);
+      if (w < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
+      counter[m_FeatureIds[i]]++;
+      m_AvgCAxes[index] += c1[0];
+      m_AvgCAxes[index + 1] += c1[1];
+      m_AvgCAxes[index + 2] += c1[2];
+    }
   }
-  for (size_t i = 1; i < numfeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
-    m_BoundaryCellFractions[i] = surfvoxcounts[i] / voxcounts[i];
+    if(counter[i] == 0)
+    {
+      m_AvgCAxes[3 * i] = 0;
+      m_AvgCAxes[3 * i + 1] = 0;
+      m_AvgCAxes[3 * i + 2] = 1;
+    }
+    else
+    {
+      m_AvgCAxes[3 * i] /= counter[i];
+      m_AvgCAxes[3 * i + 1] /= counter[i];
+      m_AvgCAxes[3 * i + 2] /= counter[i];
+    }
   }
+
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindBoundaryCellFractions::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindAvgCAxes::newFilterInstance(bool copyFilterParameters)
 {
-  FindBoundaryCellFractions::Pointer filter = FindBoundaryCellFractions::New();
+  FindAvgCAxes::Pointer filter = FindAvgCAxes::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgCAxes::getCompiledLibraryName()
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgCAxes::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgCAxes::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgCAxes::getHumanLabel()
+{ return "Find Average C-Axis Orientations"; }
+
