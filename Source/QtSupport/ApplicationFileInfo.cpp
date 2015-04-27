@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 ApplicationFileInfo::ApplicationFileInfo()
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -69,20 +69,20 @@ QString ApplicationFileInfo::GenerateFileSystemPath(QString pathEnding)
 #if defined(Q_OS_WIN)
 
 #elif defined(Q_OS_MAC)
-  if (pluginMakerDir.dirName() == "MacOS")
+  if (dir.dirName() == "MacOS")
   {
-    pluginMakerDir.cdUp();
-    pluginMakerDir.cdUp();
-    pluginMakerDir.cdUp();
+    dir.cdUp();
+    dir.cdUp();
+    dir.cdUp();
   }
 #else
   // We are on Linux - I think
-  QFileInfo fi(pluginMakerDir.absolutePath() + pathEnding);
+  QFileInfo fi(dir.absolutePath() + pathEnding);
   if (fi.exists() == false)
   {
     // The help file does not exist at the default location because we are probably running from the build tree.
     // Try up one more directory
-    pluginMakerDir.cdUp();
+    dir.cdUp();
   }
 #endif
 
