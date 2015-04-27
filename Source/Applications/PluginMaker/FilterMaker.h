@@ -91,6 +91,7 @@ protected slots:
   void on_addFilterParameterBtn_clicked();
   void on_removeFilterParameterBtn_clicked();
   void on_errorString_linkActivated(const QString &link);
+  void generationError(const QString& test);
 
   void addFilterParameterToTable(AddFilterParameter* widget);
 

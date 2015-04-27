@@ -1001,6 +1001,14 @@ void FilterMaker::readWindowSettings(QSettings& prefs)
   prefs.endGroup();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::generationError(const QString& test)
+{
+
+}
+
 
 
 
