@@ -56,7 +56,7 @@ InputFileWidgetCodeGenerator::~InputFileWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString InputFileWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputFileWidget, get" + getPropertyName() + "(), false, \"\", \"*.raw *.bin\"));";
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ QString InputFileWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 QString InputFileWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readString(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ QString InputFileWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    DREAM3D_FILTER_PARAMETER(QString, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }
@@ -117,5 +117,5 @@ QString InputFileWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString InputFileWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/FileSystemFilterParameter.h\"";
 }

@@ -65,6 +65,8 @@ QString DynamicTableWidgetCodeGenerator::generateSetupFilterParameters()
   ss << "    std::vector<std::vector<double> > defaultTable;\n";
   ss << "    parameters.push_back(DynamicTableFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, false, false, false, 0));\n";
   ss << "  }";
+
+  return contents;
 }
 
 // -----------------------------------------------------------------------------

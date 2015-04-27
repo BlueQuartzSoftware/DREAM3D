@@ -56,7 +56,13 @@ DynamicChoiceWidgetCodeGenerator::~DynamicChoiceWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DynamicChoiceWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(DynamicChoiceFilterParameter::New(\"" + getHumanLabel() + "\",  \"" + getPropertyName() + "\", get" + getPropertyName() + "(), \"ListPropertyName\", false));   \\ Fill in ListPropertyName string, if needed";
+  QString contents;
+  QTextStream ss(&contents);
+
+  ss << "  // Fill in ListPropertyName string, if needed\n";
+  ss << "  parameters.push_back(DynamicChoiceFilterParameter::New(\"" + getHumanLabel() + "\",  \"" + getPropertyName() + "\", get" + getPropertyName() + "(), \"ListPropertyName\", false));";
+
+  return contents;
 }
 
 // -----------------------------------------------------------------------------
@@ -117,5 +123,5 @@ QString DynamicChoiceWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DynamicChoiceWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/DynamicChoiceFilterParameter.h\"";
 }

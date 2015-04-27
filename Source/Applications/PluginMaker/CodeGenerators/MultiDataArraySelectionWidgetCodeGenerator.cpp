@@ -56,7 +56,7 @@ MultiDataArraySelectionWidgetCodeGenerator::~MultiDataArraySelectionWidgetCodeGe
 // -----------------------------------------------------------------------------
 QString MultiDataArraySelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  return "  // MultiDataArraySelectionFilterParameter - Please pass in a default vector of DataArrayPaths\n  parameters.push_back(MultiDataArraySelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::MultiDataArraySelectionWidget, QVector<DataArrayPath>(), false, 0));";
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateSetupFilterParameter
 // -----------------------------------------------------------------------------
 QString MultiDataArraySelectionWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readDataArrayPathVector(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(QVector<DataArrayPath> " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }
@@ -117,5 +117,5 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString MultiDataArraySelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h\"";
 }

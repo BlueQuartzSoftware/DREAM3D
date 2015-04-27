@@ -39,6 +39,8 @@
 #define _FilterMaker_H_
 
 #include <QtCore/QObject>
+#include <QtCore/QSettings>
+
 #include <QtWidgets/QWidget>
 
 #include "PluginMaker/AddFilterParameter.h"
@@ -94,6 +96,7 @@ protected slots:
 signals:
   void generateBtnPressed();
   void cancelBtnPressed();
+  void filterMakerClosing();
 
 private:
   QString                     m_OpenDialogLastDirectory;
@@ -102,6 +105,12 @@ private:
   PMFileGenerator*            htmlGenerator;
   PMFileGenerator*            testGenerator;
   
+  void closeEvent(QCloseEvent* event);
+
+  void writeSettings();
+  void readSettings();
+  void readWindowSettings(QSettings& prefs);
+  void writeWindowSettings(QSettings& prefs);
 
   void updateFilterFileGenerators();
   void generateFilterFiles();

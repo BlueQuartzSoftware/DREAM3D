@@ -56,7 +56,7 @@ FloatVec3WidgetCodeGenerator::~FloatVec3WidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString FloatVec3WidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::FloatVec3Widget, get" + getPropertyName() + "(), false));";
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ QString FloatVec3WidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 QString FloatVec3WidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readFloatVec3(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ QString FloatVec3WidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    DREAM3D_FILTER_PARAMETER(FloatVec3_t, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(FloatVec3_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }

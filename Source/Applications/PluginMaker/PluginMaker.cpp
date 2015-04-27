@@ -511,6 +511,7 @@ void PluginMaker::setupGui()
   cppFilterGen->setDisplaySuffix("Filter.cpp");
   cppFilterGen->setDoesGenerateOutput(true);
   cppFilterGen->setNameChangeable(true);
+  cppFilterGen->setInitListContents("  AbstractFilter()");
   connect(m_PluginName, SIGNAL(textChanged(const QString&)),
           cppFilterGen, SLOT(pluginNameChanged(const QString&)));
   connect(m_OutputDir, SIGNAL(textChanged(const QString&)),
@@ -1105,6 +1106,10 @@ void PluginMaker::closeEvent(QCloseEvent* event)
     writeSettings();
     event->accept();
   }
+
+  /* SLOT - DevHelper::showDevHelper()
+     CONNECT - DevHelper::on_newPluginBtn_clicked() */
+  emit pluginMakerClosing();
 }
 
 // -----------------------------------------------------------------------------
@@ -1154,11 +1159,12 @@ void PluginMaker::writeSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
 
+  prefs.beginGroup("PluginMaker");
   //Save the Plugin Name and Output Directory features to the QSettings object
   prefs.setValue("Plugin Name", m_PluginName->text());
   prefs.setValue("Output Directory", m_OutputDir->text());
-
   writeWindowSettings(prefs);
+  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -1186,11 +1192,12 @@ void PluginMaker::readSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
 
+  prefs.beginGroup("PluginMaker");
   // Have the PipelineBuilder Widget read its settings
   m_PluginName->setText( prefs.value("Plugin Name").toString() );
   m_OutputDir->setText( prefs.value("Output Directory").toString() );
-
   readWindowSettings(prefs);
+  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------

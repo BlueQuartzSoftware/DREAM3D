@@ -70,7 +70,6 @@ set(PluginMaker_CodeGenerator_HDRS
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicChoiceWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicTableWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FileListInfoWidgetCodeGenerator.h
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FilterParameterWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec3WidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec4WidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FourthOrderPolynomialWidgetCodeGenerator.h
@@ -83,16 +82,12 @@ set(PluginMaker_CodeGenerator_HDRS
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/MultiDataArraySelectionWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputFileWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputPathWidgetCodeGenerator.h
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PhaseTypeSelectionWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/PreflightUpdatedValueWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/SecondOrderPolynomialWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/SeparatorWidgetCodeGenerator.h
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ShapeTypeSelectionWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/StringWidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/Symmetric6x6WidgetCodeGenerator.h
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/ThirdOrderPolynomialWidgetCodeGenerator.h
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/UnknownWidgetCodeGenerator.h
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/VolumeDataContainerInfoWidgetCodeGenerator.h
   )
 
 set(PluginMaker_CodeGenerator_SRCS
@@ -112,7 +107,6 @@ set(PluginMaker_CodeGenerator_SRCS
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicChoiceWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicTableWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FileListInfoWidgetCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FilterParameterWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec3WidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec4WidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/FourthOrderPolynomialWidgetCodeGenerator.cpp
@@ -125,16 +119,12 @@ set(PluginMaker_CodeGenerator_SRCS
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/MultiDataArraySelectionWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputFileWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputPathWidgetCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PhaseTypeSelectionWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/PreflightUpdatedValueWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/SecondOrderPolynomialWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/SeparatorWidgetCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ShapeTypeSelectionWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/StringWidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/Symmetric6x6WidgetCodeGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/CodeGenerators/ThirdOrderPolynomialWidgetCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/UnknownWidgetCodeGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/CodeGenerators/VolumeDataContainerInfoWidgetCodeGenerator.cpp
   )
 
 cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS};${PluginMaker_CodeGenerator_HDRS}" "${PluginMaker_SRCS};${PluginMaker_CodeGenerator_SRCS}" "${PROJECT_INSTALL_HEADERS}")

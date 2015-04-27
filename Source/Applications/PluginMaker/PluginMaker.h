@@ -80,6 +80,7 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
 
   signals:
 	void clicked(QSet<QString> names);
+  void pluginMakerClosing();
 
   private:
     QString m_OpenDialogLastDirectory;

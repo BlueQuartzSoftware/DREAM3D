@@ -76,9 +76,10 @@ void DevHelper::setupGui()
 void DevHelper::on_newPluginBtn_clicked()
 {
   PluginMaker* pluginMaker = new PluginMaker;
+  connect(pluginMaker, SIGNAL(pluginMakerClosing()), this, SLOT(showDevHelper()));
   pluginMaker->show();
 
-  this->close();
+  this->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -87,9 +88,18 @@ void DevHelper::on_newPluginBtn_clicked()
 void DevHelper::on_newFilterBtn_clicked()
 {
   FilterMaker* filterMaker = new FilterMaker();
+  connect(filterMaker, SIGNAL(filterMakerClosing()), this, SLOT(showDevHelper()));
   filterMaker->show();
 
-  this->close();
+  this->hide();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DevHelper::showDevHelper()
+{
+  this->show();
 }
 
 

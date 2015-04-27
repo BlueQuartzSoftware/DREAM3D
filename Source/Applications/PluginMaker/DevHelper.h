@@ -57,6 +57,7 @@ protected:
   protected slots:
   void on_newPluginBtn_clicked();
   void on_newFilterBtn_clicked();
+  void showDevHelper();
 
 private:
 

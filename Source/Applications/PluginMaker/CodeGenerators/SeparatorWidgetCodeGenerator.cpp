@@ -56,7 +56,7 @@ SeparatorWidgetCodeGenerator::~SeparatorWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"\", FilterParameterWidgetType::SeparatorWidget, \"\", false));";
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ QString SeparatorWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "";
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ QString SeparatorWidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateWriteFilterParameters()
 {
-  return FPCodeGenerator::generateWriteFilterParameters();
+  return "";
 }
 
 // -----------------------------------------------------------------------------
@@ -88,12 +88,7 @@ QString SeparatorWidgetCodeGenerator::generateDataCheck()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateFilterParameters()
 {
-  QString contents;
-  QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
-
-  return contents;
+  return "";
 }
 
 // -----------------------------------------------------------------------------
@@ -101,7 +96,7 @@ QString SeparatorWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateInitializationList()
 {
-  return FPCodeGenerator::generateInitializationList();
+  return "";
 }
 
 // -----------------------------------------------------------------------------

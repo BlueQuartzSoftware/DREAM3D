@@ -56,7 +56,7 @@ SecondOrderPolynomialWidgetCodeGenerator::~SecondOrderPolynomialWidgetCodeGenera
 // -----------------------------------------------------------------------------
 QString SecondOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::SecondOrderPolynomialWidget, get" + getPropertyName() + "(), false, \"\"));";
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ QString SecondOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters(
 // -----------------------------------------------------------------------------
 QString SecondOrderPolynomialWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return FPCodeGenerator::generateReadFilterParameters();
+  return "  set" + getPropertyName() + "(reader->readFloat2ndOrderPoly(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
@@ -90,8 +90,8 @@ QString SecondOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    DREAM3D_FILTER_PARAMETER(Float2ndOrderPoly_t, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(Float2ndOrderPoly_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }

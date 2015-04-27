@@ -68,11 +68,13 @@ signals:
   void on_cancelBtn_clicked();
   void on_varName_textChanged(const QString &text);
   void on_humanName_textChanged(const QString &text);
+  void on_type_currentTextChanged(const QString &text);
   //void on_initValue_textChanged(const QString &text);
 
 private:
 
   bool filledOutCheck();
+  bool filledOutCheck_NoVarName();
 
   AddFilterParameter(const AddFilterParameter&);    // Copy Constructor Not Implemented
   void operator=(const AddFilterParameter&);  // Operator '=' Not Implemented

@@ -56,7 +56,7 @@ FilterParameterWidgetCodeGenerator::~FilterParameterWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString FilterParameterWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::FilterParameterWidget, get" + getPropertyName() + "(), false));";
 }
 
 // -----------------------------------------------------------------------------

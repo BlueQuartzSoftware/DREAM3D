@@ -73,6 +73,8 @@ testGenerator(NULL)
   setupUi(this);
 
   setupGui();
+
+  readSettings();
 }
 
 // -----------------------------------------------------------------------------
@@ -95,6 +97,18 @@ void FilterMaker::setupGui()
   errorString->setText("");
 
   generateBtn->setEnabled(false);
+}
+
+// -----------------------------------------------------------------------------
+//  Called when the main window is closed.
+// -----------------------------------------------------------------------------
+void FilterMaker::closeEvent(QCloseEvent* event)
+{
+  writeSettings();
+
+  /* SLOT - DevHelper::showDevHelper()
+  CONNECT - DevHelper::on_newFilterBtn_clicked() */
+  emit filterMakerClosing();
 }
 
 // -----------------------------------------------------------------------------
@@ -265,6 +279,13 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   // Insert items
   int row = filterParametersTable->rowCount();
   filterParametersTable->insertRow(row);
+
+  if (type == "SeparatorWidget")
+  {
+    item0->setFlags(Qt::NoItemFlags);
+    item3->setFlags(Qt::NoItemFlags);
+  }
+
   filterParametersTable->setItem(row, VAR_NAME, item0);
   filterParametersTable->setItem(row, HUMAN_NAME, item1);
   filterParametersTable->setItem(row, TYPE, item2);
@@ -859,6 +880,116 @@ QString FilterMaker::getDefaultFilterCPPIncludesContents()
   }
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//  Write our Prefs to file
+// -----------------------------------------------------------------------------
+void FilterMaker::writeSettings()
+{
+  // qDebug() << "writeSettings" << "\n";
+#if defined (Q_OS_MAC)
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+
+  prefs.beginGroup("FilterMaker");
+  //Save the Plugin Name and Output Directory features to the QSettings object
+  prefs.setValue("Plugin Directory", pluginDir->text());
+  prefs.setValue("Filter Name", filterName->text());
+  prefs.beginWriteArray("FilterParameters");
+  for (int i = 0; i < filterParametersTable->rowCount(); i++)
+  {
+    prefs.setArrayIndex(i);
+    prefs.setValue("Variable Name", filterParametersTable->item(i, VAR_NAME)->text());
+    prefs.setValue("Human Label", filterParametersTable->item(i, HUMAN_NAME)->text());
+    prefs.setValue("Type", filterParametersTable->item(i, TYPE)->text());
+    prefs.setValue("Initial Value", filterParametersTable->item(i, INIT_VALUE)->text());
+  }
+  prefs.endArray();
+  writeWindowSettings(prefs);
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::writeWindowSettings(QSettings& prefs)
+{
+  prefs.beginGroup("WindowSettings");
+  QByteArray geo_data = saveGeometry();
+  QByteArray layout_data = saveState();
+  prefs.setValue(QString("Geometry"), geo_data);
+  prefs.setValue(QString("Layout"), layout_data);
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::readSettings()
+{
+  // qDebug() << "Read Settings" << "\n";
+#if defined (Q_OS_MAC)
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+
+  prefs.beginGroup("FilterMaker");
+  // Have the PipelineBuilder Widget read its settings
+  pluginDir->setText(prefs.value("Plugin Directory").toString());
+  filterName->setText(prefs.value("Filter Name").toString());
+  int fpSize = prefs.beginReadArray("FilterParameters");
+  for (int i = 0; i < fpSize; i++)
+  {
+    prefs.setArrayIndex(i);
+    filterParametersTable->insertRow(filterParametersTable->rowCount());
+    QTableWidgetItem* varNameItem = new QTableWidgetItem(prefs.value("Variable Name").toString());
+    QTableWidgetItem* humanLabelItem = new QTableWidgetItem(prefs.value("Human Label").toString());
+    QTableWidgetItem* typeItem = new QTableWidgetItem(prefs.value("Type").toString());
+    QTableWidgetItem* initValueItem = new QTableWidgetItem(prefs.value("Initial Value").toString());
+
+    if (typeItem->text() == "SeparatorWidget")
+    {
+      varNameItem->setFlags(Qt::NoItemFlags);
+      initValueItem->setFlags(Qt::NoItemFlags);
+    }
+
+    filterParametersTable->setItem(i, VAR_NAME, varNameItem);
+    filterParametersTable->setItem(i, HUMAN_NAME, humanLabelItem);
+    filterParametersTable->setItem(i, TYPE, typeItem);
+    filterParametersTable->setItem(i, INIT_VALUE, initValueItem);
+  }
+  prefs.endArray();
+  readWindowSettings(prefs);
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterMaker::readWindowSettings(QSettings& prefs)
+{
+  bool ok = false;
+  prefs.beginGroup("WindowSettings");
+  if (prefs.contains(QString("Geometry")))
+  {
+    QByteArray geo_data = prefs.value(QString("Geometry")).toByteArray();
+    ok = restoreGeometry(geo_data);
+    if (!ok)
+    {
+      qDebug() << "Error Restoring the Window Geometry" << "\n";
+    }
+  }
+
+  if (prefs.contains(QString("Layout")))
+  {
+    QByteArray layout_data = prefs.value(QString("Layout")).toByteArray();
+    restoreState(layout_data);
+  }
+  prefs.endGroup();
 }
 
 

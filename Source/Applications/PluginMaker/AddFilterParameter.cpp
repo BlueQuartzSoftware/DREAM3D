@@ -96,7 +96,14 @@ void AddFilterParameter::on_addFilterParameterBtn_clicked()
 void AddFilterParameter::on_varName_textChanged(const QString &text)
 {
   // Update the "Add" button
-  addFilterParameterBtn->setEnabled(filledOutCheck());
+  if (type->currentText() == "SeparatorWidget")
+  {
+    addFilterParameterBtn->setEnabled(filledOutCheck_NoVarName());
+  }
+  else
+  {
+    addFilterParameterBtn->setEnabled(filledOutCheck());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +112,43 @@ void AddFilterParameter::on_varName_textChanged(const QString &text)
 void AddFilterParameter::on_humanName_textChanged(const QString &text)
 {
   // Update the "Add" button
-  addFilterParameterBtn->setEnabled(filledOutCheck());
+  if (type->currentText() == "SeparatorWidget")
+  {
+    addFilterParameterBtn->setEnabled(filledOutCheck_NoVarName());
+  }
+  else
+  {
+    addFilterParameterBtn->setEnabled(filledOutCheck());
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::on_type_currentTextChanged(const QString &text)
+{
+  if (text == "SeparatorWidget")
+  {
+    varName->clear();
+    initValue->clear();
+    varName->setEnabled(false);
+    initValue->setEnabled(false);
+  }
+  else
+  {
+    varName->setEnabled(true);
+    initValue->setEnabled(true);
+  }
+
+  // Update the "Add" button
+  if (type->currentText() == "SeparatorWidget")
+  {
+    addFilterParameterBtn->setEnabled(filledOutCheck_NoVarName());
+  }
+  else
+  {
+    addFilterParameterBtn->setEnabled(filledOutCheck());
+  }
 }
 
 //// -----------------------------------------------------------------------------
@@ -173,6 +216,21 @@ bool AddFilterParameter::filledOutCheck()
 {
   if (type->currentIndex() >= 0 && varName->text().isEmpty() == false 
     && humanName->text().isEmpty() == false /* && initValue->text().isEmpty() == false */)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AddFilterParameter::filledOutCheck_NoVarName()
+{
+  if (type->currentIndex() >= 0 && humanName->text().isEmpty() == false /* && initValue->text().isEmpty() == false */)
   {
     return true;
   }

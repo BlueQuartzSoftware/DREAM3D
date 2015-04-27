@@ -56,7 +56,13 @@ LinkedBooleanWidgetCodeGenerator::~LinkedBooleanWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString LinkedBooleanWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::IntWidget, get" + getPropertyName() + "(), false));";
+  QString contents;
+  QTextStream ss(&contents);
+
+  ss << "  // Please add a QStringList of linked property names to the second-to-last parameter.  It is generated as blank by default.\n";
+  ss << "  parameters.push_back(LinkedBooleanFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), QStringList(), true));";
+
+  return contents;
 }
 
 // -----------------------------------------------------------------------------
@@ -117,5 +123,5 @@ QString LinkedBooleanWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString LinkedBooleanWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h\"";
 }

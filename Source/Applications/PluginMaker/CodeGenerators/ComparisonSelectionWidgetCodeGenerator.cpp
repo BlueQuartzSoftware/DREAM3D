@@ -117,7 +117,7 @@ QString ComparisonSelectionWidgetCodeGenerator::generateInitializationList()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateHIncludes()
 {
-  return "";
+  return "#include \"DREAM3DLib/Common/ComparisonInputs.h\"";
 }
 
 // -----------------------------------------------------------------------------

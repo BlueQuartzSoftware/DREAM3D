@@ -26,27 +26,24 @@ set(DREAM3D_PARAMETER_WIDGETS
       AttributeMatrixSelectionWidget
       DataContainerSelectionWidget
       DataBundleSelectionWidget
-      ShapeTypeSelectionWidget
       PreflightUpdatedValueWidget
       DataArrayCreationWidget
       SeparatorWidget
       DynamicTableWidget
       LinkedBooleanWidget
-      PhaseTypeSelectionWidget
-      VolumeDataContainerInfoWidget
       DataContainerReaderWidget
       DynamicChoiceWidget
 	  SecondOrderPolynomialWidget
 	  ThirdOrderPolynomialWidget
 	  FourthOrderPolynomialWidget
 	  Symmetric6x6Widget
-#      CellArrayComparisonSelectionWidget
-#      FeatureArrayComparisonSelectionWidget
-#      EnsembleArrayComparisonSelectionWidget
-#      VertexArrayComparisonSelectionWidget
-#      FaceArrayComparisonSelectionWidget
-#      EdgeArrayComparisonSelectionWidget
+)
+
+set(DREAM3D_PARAMETER_WIDGETS_NO_CODEGEN
+      PhaseTypeSelectionWidget
+      ShapeTypeSelectionWidget
       UnknownWidget
+      VolumeDataContainerInfoWidget
 )
 
 set(REGISTER_KNOWN_WIDGETS ${DREAM3DWidgetsLib_BINARY_DIR}/FilterWidgetManager_RegisterWidgets_tmp.cpp)
@@ -95,6 +92,24 @@ foreach(FPW ${DREAM3D_PARAMETER_WIDGETS})
       file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "  return ptr;\n}\n\n")
 
   set(loopCounter loopCounter+1)
+endforeach()
+
+foreach(FPW ${DREAM3D_PARAMETER_WIDGETS_NO_CODEGEN})
+  set(DREAM3DWidgetsLib_ParameterWidgets_HDRS ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
+    ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/${FPW}.h
+    )
+  set(DREAM3DWidgetsLib_ParameterWidgets_SRCS ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
+    ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/${FPW}.cpp
+    )
+  set(DREAM3DWidgetsLib_ParameterWidgets_UIS ${DREAM3DWidgetsLib_ParameterWidgets_UIS}
+    ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/UI_Files/${FPW}.ui
+    )
+
+  file(APPEND  ${REGISTER_KNOWN_WIDGETS} "{\n")
+  file(APPEND  ${REGISTER_KNOWN_WIDGETS} "  PipelineFilterWidgetFactory<${FPW}>::Pointer factory = PipelineFilterWidgetFactory<${FPW}>::New();\n")
+  file(APPEND  ${REGISTER_KNOWN_WIDGETS} "  idManager->addFilterWidgetFactory( \"${FPW}\", factory );\n")
+  file(APPEND  ${REGISTER_KNOWN_WIDGETS} "}\n")
+  file(APPEND  ${FILTER_WIDGET_HEADERS} "#include \"DREAM3DWidgetsLib/FilterParameterWidgets/${FPW}.h\"\n")
 endforeach()
 
 file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "else {\n")
