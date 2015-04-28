@@ -232,6 +232,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void disableMenuItems();
 
+    /**
+    * @brief markDocumentAsDirty
+    */
+    void markDocumentAsDirty();
+
 
     // Our Signals that we can emit custom for this class
   signals:

@@ -586,6 +586,9 @@ void DREAM3D_UI::setupGui()
   connect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
     this, SLOT(clearFilterInputWidget()));
 
+  connect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
+    this, SLOT(markDocumentAsDirty()));
+
   pipelineViewWidget->setStatusBar(statusbar);
 
   // This will set the initial list of filters in the filterListDockWidget
@@ -1498,6 +1501,14 @@ void DREAM3D_UI::disableMenuItems()
   actionSave->setDisabled(true);
   actionSaveAs->setDisabled(true);
   actionPlugin_Information->setDisabled(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::markDocumentAsDirty()
+{
+  setWindowModified(true);
 }
 
 

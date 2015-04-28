@@ -232,6 +232,8 @@ void PipelineFilterWidget::layoutWidgets()
     // Connect up some signals and slots
     connect(w, SIGNAL(parametersChanged() ),
             parent(), SLOT(preflightPipeline() ) );
+    connect(w, SIGNAL(parametersChanged()),
+      this, SLOT(handleFilterParameterChanged()));
     connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
             this, SLOT(displayFilterParameterWidgetError(const QString&)));
 
@@ -250,6 +252,16 @@ void PipelineFilterWidget::layoutWidgets()
   //  curStructName = QString::fromUtf8("verticalLayout3");
   //  m_CurrStrucVerticalLayout->setObjectName(curStructName);
 
+}
+
+// -----------------------------------------------------------------------------
+//  CONNECT - PipelineFilterWidget::layoutWidgets()
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::handleFilterParameterChanged()
+{
+  /* SLOT - PipelineViewWidget::handleFilterParameterChanged() 
+     CONNECT - PipelineViewWidget::addFilter(...) */
+  emit filterParameterChanged();
 }
 
 // -----------------------------------------------------------------------------

@@ -530,6 +530,9 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   // Create a FilterWidget object
   PipelineFilterWidget* w = new PipelineFilterWidget(filter, NULL, this);
 
+  connect(w, SIGNAL(filterParameterChanged()),
+    this, SLOT(handleFilterParameterChanged()));
+
   // Add the filter widget to this view widget
   addFilterWidget(w, index);
 
@@ -1117,6 +1120,14 @@ void PipelineViewWidget::showContextMenu(const QPoint& globalPos)
 QStatusBar* PipelineViewWidget::getStatusBar()
 {
   return m_StatusBar;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::handleFilterParameterChanged()
+{
+  emit filterParameterChanged();
 }
 
 

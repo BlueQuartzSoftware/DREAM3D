@@ -298,6 +298,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void filterInputWidgetChanged(FilterInputWidget* widget);
     void noFilterWidgetsInPipeline();
 
+    void filterParameterChanged();
+
   protected:
     void setupGui();
     void dragEnterEvent(QDragEnterEvent* event);
@@ -306,6 +308,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void dropEvent(QDropEvent* event);
 
     void showContextMenu(const QPoint& globalPos);
+
+  protected slots:
+    void handleFilterParameterChanged();
 
   private:
     PipelineFilterWidget*     m_SelectedFilterWidget;
