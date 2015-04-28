@@ -70,14 +70,6 @@ QString IntVec3WidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString IntVec3WidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString IntVec3WidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,28 +86,4 @@ QString IntVec3WidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(IntVec3_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString IntVec3WidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString IntVec3WidgetCodeGenerator::generateHIncludes()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString IntVec3WidgetCodeGenerator::generateCPPIncludes()
-{
-  return "";
 }

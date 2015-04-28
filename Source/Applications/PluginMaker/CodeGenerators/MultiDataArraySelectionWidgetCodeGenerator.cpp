@@ -70,14 +70,6 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateReadFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString MultiDataArraySelectionWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,22 +86,6 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(QVector<DataArrayPath> " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
 }
 
 // -----------------------------------------------------------------------------

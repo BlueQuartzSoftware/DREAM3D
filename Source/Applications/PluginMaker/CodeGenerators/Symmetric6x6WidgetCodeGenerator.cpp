@@ -70,14 +70,6 @@ QString Symmetric6x6WidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString Symmetric6x6WidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString Symmetric6x6WidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,28 +86,4 @@ QString Symmetric6x6WidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(FloatVec21_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString Symmetric6x6WidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString Symmetric6x6WidgetCodeGenerator::generateHIncludes()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString Symmetric6x6WidgetCodeGenerator::generateCPPIncludes()
-{
-  return "";
 }

@@ -70,14 +70,6 @@ QString FloatVec3WidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FloatVec3WidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString FloatVec3WidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,28 +86,4 @@ QString FloatVec3WidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(FloatVec3_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FloatVec3WidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FloatVec3WidgetCodeGenerator::generateHIncludes()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FloatVec3WidgetCodeGenerator::generateCPPIncludes()
-{
-  return "";
 }

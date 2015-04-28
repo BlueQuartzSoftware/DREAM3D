@@ -70,14 +70,6 @@ QString DataArraySelectionWidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DataArraySelectionWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString DataArraySelectionWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,28 +86,4 @@ QString DataArraySelectionWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(DataArrayPath " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataArraySelectionWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataArraySelectionWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataArraySelectionWidgetCodeGenerator::generateCPPIncludes()
-{
-  return "";
 }

@@ -70,14 +70,6 @@ QString DataBundleSelectionWidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DataBundleSelectionWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString DataBundleSelectionWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,28 +86,4 @@ QString DataBundleSelectionWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataBundleSelectionWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataBundleSelectionWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataBundleSelectionWidgetCodeGenerator::generateCPPIncludes()
-{
-  return "";
 }

@@ -80,14 +80,6 @@ QString DynamicTableWidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicTableWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -104,14 +96,6 @@ QString DynamicTableWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(DynamicTableData " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DynamicTableWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
 }
 
 // -----------------------------------------------------------------------------

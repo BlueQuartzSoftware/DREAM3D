@@ -70,14 +70,6 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateReadFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DataContainerArrayProxyWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString DataContainerArrayProxyWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,22 +86,6 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(DataContainerArrayProxy " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataContainerArrayProxyWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DataContainerArrayProxyWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
 }
 
 // -----------------------------------------------------------------------------

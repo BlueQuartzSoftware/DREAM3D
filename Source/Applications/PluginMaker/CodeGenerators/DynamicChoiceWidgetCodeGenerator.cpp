@@ -76,14 +76,6 @@ QString DynamicChoiceWidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DynamicChoiceWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString DynamicChoiceWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -100,22 +92,6 @@ QString DynamicChoiceWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DynamicChoiceWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DynamicChoiceWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
 }
 
 // -----------------------------------------------------------------------------

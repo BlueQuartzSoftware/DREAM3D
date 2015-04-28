@@ -57,19 +57,9 @@ public:
 
   virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
-
-  virtual QString generateWriteFilterParameters();
-
   virtual QString generateDataCheck();
 
   virtual QString generateFilterParameters();
-
-  virtual QString generateInitializationList();
-
-  virtual QString generateHIncludes();
-
-  virtual QString generateCPPIncludes();
 
 protected:
   IntWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);

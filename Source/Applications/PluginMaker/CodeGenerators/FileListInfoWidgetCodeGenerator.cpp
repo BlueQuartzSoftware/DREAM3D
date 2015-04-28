@@ -70,14 +70,6 @@ QString FileListInfoWidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FileListInfoWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString FileListInfoWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,22 +86,6 @@ QString FileListInfoWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(FileListInfo_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FileListInfoWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FileListInfoWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
 }
 
 // -----------------------------------------------------------------------------

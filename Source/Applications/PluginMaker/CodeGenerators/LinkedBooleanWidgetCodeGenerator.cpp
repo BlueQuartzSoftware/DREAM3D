@@ -68,22 +68,6 @@ QString LinkedBooleanWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString LinkedBooleanWidgetCodeGenerator::generateReadFilterParameters()
-{
-  return FPCodeGenerator::generateReadFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString LinkedBooleanWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString LinkedBooleanWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -100,22 +84,6 @@ QString LinkedBooleanWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString LinkedBooleanWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString LinkedBooleanWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
 }
 
 // -----------------------------------------------------------------------------

@@ -62,22 +62,6 @@ QString PreflightUpdatedValueWidgetCodeGenerator::generateSetupFilterParameters(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PreflightUpdatedValueWidgetCodeGenerator::generateReadFilterParameters()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString PreflightUpdatedValueWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString PreflightUpdatedValueWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,28 +78,4 @@ QString PreflightUpdatedValueWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(QVariant " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString PreflightUpdatedValueWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString PreflightUpdatedValueWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString PreflightUpdatedValueWidgetCodeGenerator::generateCPPIncludes()
-{
-  return "";
 }

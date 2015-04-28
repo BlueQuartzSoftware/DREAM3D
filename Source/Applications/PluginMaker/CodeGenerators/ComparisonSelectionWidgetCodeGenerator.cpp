@@ -78,14 +78,6 @@ QString ComparisonSelectionWidgetCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ComparisonSelectionWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -102,14 +94,6 @@ QString ComparisonSelectionWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(ComparisonInputs " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString ComparisonSelectionWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
 }
 
 // -----------------------------------------------------------------------------

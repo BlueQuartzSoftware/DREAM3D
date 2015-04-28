@@ -78,6 +78,14 @@ QString FPCodeGenerator::getInitValue()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString FPCodeGenerator::generateSetupFilterParameters()
+{
+  return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString FPCodeGenerator::generateReadFilterParameters()
 {
   return "  set" + m_PropertyName + "(reader->readValue(\"" + m_PropertyName + "\", get" + m_PropertyName + "()));";
@@ -94,20 +102,8 @@ QString FPCodeGenerator::generateWriteFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FPCodeGenerator::generateSetupFilterParameters()
-{
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString FPCodeGenerator::generateDataCheck()
 {
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
   return "";
 }
 
@@ -116,8 +112,6 @@ QString FPCodeGenerator::generateDataCheck()
 // -----------------------------------------------------------------------------
 QString FPCodeGenerator::generateFilterParameters()
 {
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
   return "";
 }
 
@@ -138,8 +132,6 @@ QString FPCodeGenerator::generateInitializationList()
 // -----------------------------------------------------------------------------
 QString FPCodeGenerator::generateHIncludes()
 {
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
   return "";
 }
 
@@ -148,7 +140,5 @@ QString FPCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString FPCodeGenerator::generateCPPIncludes()
 {
-  // We should never enter this function
-  Q_ASSERT(0 == 1);
   return "";
 }

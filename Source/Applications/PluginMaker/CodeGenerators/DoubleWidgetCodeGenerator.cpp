@@ -62,22 +62,6 @@ QString DoubleWidgetCodeGenerator::generateSetupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateReadFilterParameters()
-{
-  return FPCodeGenerator::generateReadFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateWriteFilterParameters()
-{
-  return FPCodeGenerator::generateWriteFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString DoubleWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -94,28 +78,4 @@ QString DoubleWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(double " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateInitializationList()
-{
-  return FPCodeGenerator::generateInitializationList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateHIncludes()
-{
-  return "";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DoubleWidgetCodeGenerator::generateCPPIncludes()
-{
-  return "";
 }
