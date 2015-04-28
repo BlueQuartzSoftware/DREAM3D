@@ -53,7 +53,9 @@
 //
 // -----------------------------------------------------------------------------
 FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
-  QDockWidget(parent)
+  QDockWidget(parent),
+  m_SearchWordForWord(false),
+  m_SearchExactPhrase(true)
 {
   setupUi(this);
 
@@ -75,6 +77,7 @@ void FilterListDockWidget::setupGui()
   updateFilterList(true);
 
   setupSearchField();
+  //updateSearchIcons();
 
   QString css(" QToolTip {\
               border: 2px solid #434343;\
@@ -92,9 +95,41 @@ void FilterListDockWidget::setupGui()
 void FilterListDockWidget::setupSearchField()
 {
   filterSearch->setAttribute(Qt::WA_MacShowFocusRect, false);
-  filterSearch->setPlaceholderText("Search for filter");
 
-  connect(filterSearch, SIGNAL(textChanged(QString)), this, SLOT(searchFilters()));
+  QMenu* lineEditMenu = new QMenu(filterSearch);
+  filterSearch->setButtonMenu(SearchLineEdit::Left, lineEditMenu);
+  filterSearch->setButtonVisible(SearchLineEdit::Left, true);
+  filterSearch->setPlaceholderText("Search for filter");
+  QPixmap pixmap(24, 24);
+  pixmap.fill(Qt::transparent);
+  QPainter painter(&pixmap);
+  const QPixmap mag = QPixmap(QLatin1String(":/cube_molecule_view.png"));
+  painter.drawPixmap(0, (pixmap.height() - mag.height()) / 2, mag);
+  filterSearch->setButtonPixmap(SearchLineEdit::Left, pixmap);
+  connect(filterSearch, SIGNAL(textChanged(QString)), this, SLOT(searchFieldsChanged()));
+
+  {
+    m_ActionExactPhrase = new QAction(filterSearch);
+    m_ActionExactPhrase->setObjectName(QString::fromUtf8("actionExactPhrase"));
+    m_ActionExactPhrase->setText(QApplication::translate("DREAM3D_UI", "Exact Phrase", 0));
+    m_ActionExactPhrase->setCheckable(true);
+    m_ActionExactPhrase->setChecked(m_SearchExactPhrase);
+    filterSearch->addAction(m_ActionExactPhrase);
+    connect(m_ActionExactPhrase, SIGNAL(triggered()),
+      this, SLOT(searchFieldsChanged()));
+    lineEditMenu->addAction(m_ActionExactPhrase);
+  }
+  {
+    m_ActionWordForWord = new QAction(filterSearch);
+    m_ActionWordForWord->setObjectName(QString::fromUtf8("actionWordForWord"));
+    m_ActionWordForWord->setText(QApplication::translate("DREAM3D_UI", "Contains At Least One Word", 0));
+    m_ActionWordForWord->setCheckable(true);
+    m_ActionWordForWord->setChecked(m_SearchWordForWord);
+    filterSearch->addAction(m_ActionWordForWord);
+    connect(m_ActionWordForWord, SIGNAL(triggered()),
+      this, SLOT(searchFieldsChanged()));
+    lineEditMenu->addAction(m_ActionWordForWord);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -250,9 +285,12 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
   }
 
   // Add the remaining items to the list that do not match the full text, but match one or more words
-  for (QList<AbstractFilter::Pointer>::iterator iter = filterCache.begin(); iter != filterCache.end(); iter++)
+  if (m_ActionWordForWord->isChecked())
   {
-    addItemToList(*iter);
+    for (QList<AbstractFilter::Pointer>::iterator iter = filterCache.begin(); iter != filterCache.end(); iter++)
+    {
+      addItemToList(*iter);
+    }
   }
 }
 
@@ -298,3 +336,58 @@ void FilterListDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* ite
 {
   emit filterItemDoubleClicked(item->data(Qt::UserRole).toString());
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::searchFieldsChanged()
+{
+  //updateSearchIcons();
+  if (sender() == m_ActionWordForWord)
+  {
+    m_ActionExactPhrase->blockSignals(true);
+    m_ActionExactPhrase->setChecked(false);
+    m_ActionExactPhrase->blockSignals(false);
+  }
+  else if (sender() == m_ActionExactPhrase)
+  {
+    m_ActionWordForWord->blockSignals(true);
+    m_ActionWordForWord->setChecked(false);
+    m_ActionWordForWord->blockSignals(false);
+  }
+
+  searchFilters();
+}
+
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+//void FilterListDockWidget::updateSearchIcons()
+//{
+//  m_SearchFilterHumanName = m_ActionSearchFilterHumanName->isChecked();
+//  m_SearchFilterClassName = m_ActionSearchFilterClassName->isChecked();
+//  m_SearchParameterHumanName = m_ActionSearchParameterName->isChecked();
+//  m_SearchParameterPropertyName = m_ActionSearchParameterPropertyName->isChecked();
+//  if (!m_SearchFilterHumanName && !m_SearchFilterClassName && !m_SearchParameterHumanName && !m_SearchParameterPropertyName)
+//  {
+//    QPixmap pixmap(17, 17);
+//    pixmap.fill(Qt::transparent);
+//    QPainter painter(&pixmap);
+//    const QPixmap mag = QPixmap(QLatin1String(":/cube_molecule_view.png"));
+//    painter.drawPixmap(0, (pixmap.height() - mag.height()) / 2, mag);
+//    filterSearch->setButtonPixmap(SearchLineEdit::Left, pixmap);
+//  }
+//  else
+//  {
+//    QPixmap pixmap(17, 17);
+//    pixmap.fill(Qt::transparent);
+//    QPainter painter(&pixmap);
+//    const QPixmap mag = QPixmap(QLatin1String(":/view_add.png"));
+//    painter.drawPixmap(0, (pixmap.height() - mag.height()) / 2, mag);
+//    filterSearch->setButtonPixmap(SearchLineEdit::Left, pixmap);
+//  }
+//}
+
+
+
+

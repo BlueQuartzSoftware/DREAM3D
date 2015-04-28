@@ -85,6 +85,11 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     void updateFilterList(bool sortItems = true);
 
+    /**
+    * @brief searchFieldsChanged
+    */
+    void searchFieldsChanged();
+
   signals:
 
     /**
@@ -112,7 +117,18 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     void addItemToList(AbstractFilter::Pointer filter);
 
+    /**
+    * @brief updateSearchIcons Updates the icon being shown in the search field.
+    */
+    //void updateSearchIcons();
+
   private:
+    bool m_SearchWordForWord;
+    bool m_SearchExactPhrase;
+
+    QAction* m_ActionWordForWord;
+    QAction* m_ActionExactPhrase;
+
     FilterManager::Collection  m_LoadedFilters;
 
     FilterListDockWidget(const FilterListDockWidget&); // Copy Constructor Not Implemented
