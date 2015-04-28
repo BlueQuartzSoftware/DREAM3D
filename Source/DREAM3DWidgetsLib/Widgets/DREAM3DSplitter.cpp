@@ -47,11 +47,11 @@
 
 
 
-class MacSplitterHandle : public QSplitterHandle
+class DREAM3DSplitterHandle : public QSplitterHandle
 {
   Q_OBJECT
 public:
-    MacSplitterHandle(Qt::Orientation orientation, QSplitter *parent)
+    DREAM3DSplitterHandle(Qt::Orientation orientation, QSplitter *parent)
     : QSplitterHandle(orientation, parent) {   }
 
     // Paint the horizontal handle as a gradient, paint
@@ -125,7 +125,7 @@ DREAM3DSplitter::~DREAM3DSplitter()
 
 QSplitterHandle* DREAM3DSplitter::createHandle()
 {
-    return new MacSplitterHandle(orientation(), this);
+    return new DREAM3DSplitterHandle(orientation(), this);
 }
 
 
