@@ -227,6 +227,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void clearFilterInputWidget();
 
+    /**
+     * @brief pipelineStarted
+     */
+    void disableMenuItems();
+
 
     // Our Signals that we can emit custom for this class
   signals:

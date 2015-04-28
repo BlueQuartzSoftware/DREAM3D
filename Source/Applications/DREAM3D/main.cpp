@@ -83,8 +83,13 @@ int main(int argc, char* argv[])
 
   QApplication qtapp(argc, argv);
 
+#if defined (Q_OS_MAC)
+  qApp->setQuitOnLastWindowClosed(false);
+#endif
+
   setlocale(LC_NUMERIC, "C");
   BrandedInitializer d3dInitializer;
+
   if (!d3dInitializer.initialize(argc, argv))
   {
     return 1;

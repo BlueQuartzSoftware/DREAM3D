@@ -137,6 +137,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
 
   // Set window modified to false
   setWindowModified(false);
+
+  // If all DREAM3D windows are closed, disable menus
+  connect(qApp, SIGNAL(lastWindowClosed()), this, SLOT(disableMenuItems()));
 }
 
 // -----------------------------------------------------------------------------
@@ -308,6 +311,7 @@ void DREAM3D_UI::on_actionExit_triggered()
   this->close();
 #else
   qApp->closeAllWindows();
+  qApp->quit();
 #endif
 }
 
@@ -332,6 +336,7 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
   {
     // Restart DREAM3D
     QProcess::startDetached(QApplication::applicationFilePath());
+    qApp->quit();
   }
 }
 
@@ -1481,6 +1486,18 @@ void DREAM3D_UI::clearFilterInputWidget()
       w->setParent(NULL);
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::disableMenuItems()
+{
+  menuPipeline->setDisabled(true);
+  menuView->setDisabled(true);
+  actionSave->setDisabled(true);
+  actionSaveAs->setDisabled(true);
+  actionPlugin_Information->setDisabled(true);
 }
 
 
