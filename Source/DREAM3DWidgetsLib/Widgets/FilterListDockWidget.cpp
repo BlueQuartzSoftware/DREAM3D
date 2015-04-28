@@ -95,6 +95,22 @@ void FilterListDockWidget::setupGui()
 void FilterListDockWidget::setupSearchField()
 {
   filterSearch->setAttribute(Qt::WA_MacShowFocusRect, false);
+/*
+
+  3 Menu Items
+  * Exact Phrase
+  * Any Words
+  * All Words
+
+  Exact Phrase: Words in the search box must appear in order but anywhere in the human label
+
+  Any Words: Any of the words in any order appear in the human label
+
+  All Words: ALL of the Words appear in the human label, but in any order.
+
+  */
+
+
 
   QMenu* lineEditMenu = new QMenu(filterSearch);
   filterSearch->setButtonMenu(SearchLineEdit::Left, lineEditMenu);
@@ -103,7 +119,7 @@ void FilterListDockWidget::setupSearchField()
   QPixmap pixmap(24, 24);
   pixmap.fill(Qt::transparent);
   QPainter painter(&pixmap);
-  const QPixmap mag = QPixmap(QLatin1String(":/cube_molecule_view.png"));
+  const QPixmap mag = QPixmap(QLatin1String(":/search_menu.png"));
   painter.drawPixmap(0, (pixmap.height() - mag.height()) / 2, mag);
   filterSearch->setButtonPixmap(SearchLineEdit::Left, pixmap);
   connect(filterSearch, SIGNAL(textChanged(QString)), this, SLOT(searchFieldsChanged()));

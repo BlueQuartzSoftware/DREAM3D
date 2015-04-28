@@ -25,6 +25,8 @@
   <file>zoom_in@2x.png</file>
   <file>zoom_out.png</file>
   <file>zoom_out@2x.png</file>
+  <file>search_menu.png</file>
+  <file>search_menu@2x.png</file>
 
 <!-- These are low res icons -->
   <file>Groups/cubes.png</file>
