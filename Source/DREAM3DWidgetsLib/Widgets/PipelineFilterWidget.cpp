@@ -259,7 +259,7 @@ void PipelineFilterWidget::layoutWidgets()
 // -----------------------------------------------------------------------------
 void PipelineFilterWidget::handleFilterParameterChanged()
 {
-  /* SLOT - PipelineViewWidget::handleFilterParameterChanged() 
+  /* SLOT - PipelineViewWidget::handleFilterParameterChanged()
      CONNECT - PipelineViewWidget::addFilter(...) */
   emit filterParameterChanged();
 }
@@ -599,7 +599,7 @@ void PipelineFilterWidget::changeStyle()
   }
   else if(m_IsSelected == true )
   {
-    ss << "border: 3px solid purple;";
+    ss << "border: 2px solid purple;";
   }
   else
   {
@@ -623,7 +623,8 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   if (m_HasPreflightErrors == true)
   {
-    ss << "background-color: rgb(180, 60, 60);\ncolor: rgb(255, 255, 255);";
+    //ss << "background-color: rgb(200, 75, 75);\ncolor: rgb(255, 255, 255);";
+    ss << "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(180, 55, 55, 255), stop:0.5 rgba(235, 110, 110, 255), stop:1 rgba(180, 55, 55, 255));\n";
   }
   else
   {
@@ -634,7 +635,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   ss << getBorderColorStyle();
 
-  ss << "border-radius: 10px;";
+  ss << "border-radius: 8px;";
   ss << "padding: 0 0 0 0px;";
   ss << "}\n";
 
@@ -650,7 +651,7 @@ void PipelineFilterWidget::updateWidgetStyle()
   ss << "font-weight: bold; ";
   if (m_HasPreflightErrors == true)
   {
-    ss << "color: rgb(255, 255, 255);";
+    ss << "color: rgb(0, 0, 0);";
   }
   ss << "}\n";
 

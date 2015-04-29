@@ -94,7 +94,7 @@ color: rgb(255, 255, 255);
      </property>
      <property name="icon">
       <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-       <normaloff>:/delete-corner.png</normaloff>:/delete-corner.png</iconset>
+       <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
      </property>
      <property name="iconSize">
       <size>
