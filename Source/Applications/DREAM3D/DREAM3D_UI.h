@@ -240,11 +240,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void writeWindowSettings(QSettings& prefs);
     void writeVersionCheckSettings(QSettings& prefs);
+    void writeSearchListSettings(QSettings& prefs, FilterListDockWidget* dw);
 
 
     void readWindowSettings();
     void readVersionSettings();
     void readLastPipeline();
+    void readSearchListSettings(QSettings& prefs, FilterListDockWidget* dw);
 
     void checkForUpdatesAtStartup();
 

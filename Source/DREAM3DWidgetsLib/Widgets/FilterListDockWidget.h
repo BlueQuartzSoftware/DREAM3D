@@ -39,6 +39,8 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMenu>
 
+#include <QtCore/QList>
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
@@ -67,17 +69,10 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
 
-    /**
-     * @brief updateFilterList
-     * @param list
-     * @param sortItems
-     */
-    // void updateFilterList(const QStringList& list, bool sortItems);
-
 	/**
 	* @brief searchFilters triggered when the user types something in the Search Field
 	*/
-	void searchFilters();
+	void searchFilters(QString text);
 
     /**
      * @brief updateFilterList This method extracts all the names of the filters that have been
@@ -88,7 +83,22 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     /**
     * @brief searchFieldsChanged
     */
-    void searchFieldsChanged();
+    void searchFieldsChanged(bool isChecked);
+
+    /**
+    * @brief getActiveSearchAction
+    */
+    QAction* getActiveSearchAction();
+
+    /**
+    * @brief setActiveSearchAction
+    */
+    void setActiveSearchAction(QAction* action);
+
+    /**
+    * @brief getActiveSearchAction
+    */
+    QList<QAction*> getSearchActionList();
 
   signals:
 
@@ -117,17 +127,14 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     void addItemToList(AbstractFilter::Pointer filter);
 
-    /**
-    * @brief updateSearchIcons Updates the icon being shown in the search field.
-    */
-    //void updateSearchIcons();
-
   private:
-    bool m_SearchWordForWord;
+    bool m_SearchAnyWords;
     bool m_SearchExactPhrase;
+    bool m_SearchAllWords;
 
-    QAction* m_ActionWordForWord;
+    QAction* m_ActionAnyWords;
     QAction* m_ActionExactPhrase;
+    QAction* m_ActionAllWords;
 
     FilterManager::Collection  m_LoadedFilters;
 

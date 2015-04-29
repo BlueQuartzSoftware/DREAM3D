@@ -261,6 +261,8 @@ void DREAM3D_UI::readWindowSettings()
     readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
     readDockWidgetSettings(prefs, issuesDockWidget);
 
+    readSearchListSettings(prefs, filterListDockWidget);
+
     QByteArray splitterGeometry = prefs.value(QString("Splitter_Geometry")).toByteArray();
     splitter->restoreGeometry(splitterGeometry);
     QByteArray splitterSizes = prefs.value(QString("Splitter_Sizes")).toByteArray();
@@ -282,8 +284,34 @@ void DREAM3D_UI::readDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
   QString name = dw->objectName();
   bool b = prefs.value(dw->objectName(), false).toBool();
   dw->setHidden(b);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::readSearchListSettings(QSettings& prefs, FilterListDockWidget* dw)
+{
+  QString objectName = prefs.value("ActiveSearchAction").toString();
+  QList<QAction*> list = dw->getSearchActionList();
 
+  bool didCheck = false;
+  for (int i = 0; i < list.size(); i++)
+  {
+    if (list[i]->objectName() == objectName)
+    {
+      list[i]->setChecked(true);
+      didCheck = true;
+    }
+    else
+    {
+      list[i]->setChecked(false);
+    }
+  }
+
+  if (didCheck == false && list.size() > 0)
+  {
+    list[0]->setChecked(true);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -396,6 +424,8 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
   writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   writeDockWidgetSettings(prefs, issuesDockWidget);
 
+  writeSearchListSettings(prefs, filterListDockWidget);
+
   QByteArray splitterGeometry = splitter->saveGeometry();
   QByteArray splitterSizes = splitter->saveState();
   prefs.setValue(QString("Splitter_Geometry"), splitterGeometry);
@@ -410,6 +440,14 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
 void DREAM3D_UI::writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
 {
   prefs.setValue(dw->objectName(), dw->isHidden() );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::writeSearchListSettings(QSettings& prefs, FilterListDockWidget* dw)
+{
+  prefs.setValue("ActiveSearchAction", dw->getActiveSearchAction()->objectName());
 }
 
 // -----------------------------------------------------------------------------
