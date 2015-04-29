@@ -699,7 +699,7 @@ bool FilterMaker::validityCheck()
 
   QFileInfo filtersDirInfo(filtersDir);
 
-  if (filterName.isEmpty() == false && filterName.contains(QRegExp("[^a-zA-Z_-/\s]")) == false
+  if (filterName.isEmpty() == false && filterName.contains(QRegExp("[^a-zA-Z_-/\\s]")) == false
     && filterName.contains(QRegExp("(Filter|Plugin)$")) == false && pluginDir.isEmpty() == false
     && filtersDirInfo.exists() == true)
   {
@@ -718,7 +718,7 @@ bool FilterMaker::validityCheck()
     errorString->setTextFormat(Qt::PlainText);
     errorString->setTextInteractionFlags(Qt::NoTextInteraction);
 
-    if (filterName.contains(QRegExp("[^a-zA-Z_-/\s]")) == true)
+    if (filterName.contains(QRegExp("[^a-zA-Z_-/\\s]")) == true)
     {
       // Filter name has illegal characters
       QString linkText = "<a href=#openWindow>Learn More.</a>";

@@ -41,9 +41,9 @@
 
 enum FileType
 {
-	CMAKELISTS,
-	TESTFILELOCATIONS,
-	DEFAULT
+  CMAKELISTS,
+  TESTFILELOCATIONS,
+  DEFAULT
 };
 
 /*
@@ -75,7 +75,7 @@ class PMFileGenerator : public PMDirGenerator
 
     virtual QString generateFileContents(QString replaceStr = "");
 
-	QString createReplacementString(FileType type, QSet<QString> names);
+  QString createReplacementString(FileType type, QSet<QString> names);
 
   public slots:
     virtual void generateOutput();
@@ -83,7 +83,7 @@ class PMFileGenerator : public PMDirGenerator
   protected slots:
     virtual void pluginNameChanged (const QString& plugname);
     virtual void outputDirChanged (const QString& outputDir);
-	virtual void generateOutputWithFilterNames(QSet<QString> names);
+  virtual void generateOutputWithFilterNames(QSet<QString> names);
 
 protected:
   QString setupFPContents;
@@ -98,7 +98,7 @@ protected:
   private:
     QString m_FileName;
 
-    QString getFileContents(QString replaceStr = false);
+    QString getFileContents(QString replaceStr);
 };
 
 #endif /* PMFILEGENERATOR_H_ */
