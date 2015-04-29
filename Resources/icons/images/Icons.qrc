@@ -26,6 +26,12 @@
   <file>zoom_out.png</file>
   <file>zoom_out@2x.png</file>
 
+  <file>cubes_blue_add.png</file>
+  <file>cubes_blue_add@2x.png</file>
+
+  <file>cube_blue_add.png</file>
+  <file>cube_blue_add@2x.png</file>
+
 <!-- These are low res icons -->
   <file>Groups/cubes.png</file>
   <file>Groups/cubes@2x.png</file>

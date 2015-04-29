@@ -149,7 +149,7 @@ void PMFileGenerator::generateOutput()
     return;
   }
 
-  QString contents = getFileContents();
+  QString contents = getFileContents(QString());
 
   if (contents.isEmpty() == false)
   {
@@ -312,56 +312,56 @@ void PMFileGenerator::generateOutputWithFilterNames(QSet<QString> names)
 // -----------------------------------------------------------------------------
 QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> names)
 {
-	QString pluginName = getPluginName();
-	QString replaceStr = "";
-	if (type == CMAKELISTS)
-	{
-		// Build up the huge string full of namespaces using names
-		QSet<QString>::iterator iter = names.begin();
-		while (iter != names.end())
-		{
-			QString name = *iter;
+  QString pluginName = getPluginName();
+  QString replaceStr = "";
+  if (type == CMAKELISTS)
+  {
+    // Build up the huge string full of namespaces using names
+    QSet<QString>::iterator iter = names.begin();
+    while (iter != names.end())
+    {
+      QString name = *iter;
 
-			if (name == "@PluginName@Filter")
-			{
-				name.replace("@PluginName@", pluginName);
-			}
+      if (name == "@PluginName@Filter")
+      {
+        name.replace("@PluginName@", pluginName);
+      }
 
-			replaceStr.append("AddDREAM3DUnitTest(TESTNAME " + name + "Test SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/" + name + "Test.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})");
+      replaceStr.append("AddDREAM3DUnitTest(TESTNAME " + name + "Test SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/" + name + "Test.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})");
 
-			if (++iter != names.end())
-			{
-				replaceStr.append("\n");
-			}
-		}
-	}
-	else if (type == TESTFILELOCATIONS)
-	{
-		// Build up the huge string full of namespaces using names
-		QSet<QString>::iterator iter = names.begin();
-		while (iter != names.end())
-		{
-			QString name = *iter;
+      if (++iter != names.end())
+      {
+        replaceStr.append("\n");
+      }
+    }
+  }
+  else if (type == TESTFILELOCATIONS)
+  {
+    // Build up the huge string full of namespaces using names
+    QSet<QString>::iterator iter = names.begin();
+    while (iter != names.end())
+    {
+      QString name = *iter;
 
-			if (name == "@PluginName@Filter")
-			{
-				name.replace("@PluginName@", pluginName);
-			}
+      if (name == "@PluginName@Filter")
+      {
+        name.replace("@PluginName@", pluginName);
+      }
 
-			replaceStr.append("namespace " + name + "Test\n");
-			replaceStr.append("  {\n");
-			replaceStr.append("    const QString TestFile1(\"@TEST_TEMP_DIR@/TestFile1.txt\");\n");
-			replaceStr.append("    const QString TestFile2(\"@TEST_TEMP_DIR@/TestFile2.txt\");\n");
-			replaceStr.append("  }");
+      replaceStr.append("namespace " + name + "Test\n");
+      replaceStr.append("  {\n");
+      replaceStr.append("    const QString TestFile1(\"@TEST_TEMP_DIR@/TestFile1.txt\");\n");
+      replaceStr.append("    const QString TestFile2(\"@TEST_TEMP_DIR@/TestFile2.txt\");\n");
+      replaceStr.append("  }");
 
-			if (++iter != names.end())
-			{
-				replaceStr.append("\n\n");
-			}
-		}
-	}
+      if (++iter != names.end())
+      {
+        replaceStr.append("\n\n");
+      }
+    }
+  }
 
-	return replaceStr;
+  return replaceStr;
 }
 
 // -----------------------------------------------------------------------------
