@@ -787,13 +787,13 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void eu2qu(const T& e, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
-      size_t a = 0, b=1, c=2, d=3;
-      if(layout == QuaternionMath<K>::QuaternionScalarVector)
+      size_t w = 0, x=1, y=2, z=3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
       {
-        a = 3;
-        b = 2;
-        c = 1;
-        d = 0;
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
       }
 
       K ee[3] = { 0.0f, 0.0f, 0.0f};
@@ -814,15 +814,15 @@ class OrientationLib_EXPORT RotationTransforms
       sm = sin(ee[0]-ee[2]);
       cp = cos(ee[0]+ee[2]);
       sp = sin(ee[0]+ee[2]);
-      res[a] = cPhi*cp;
-      res[b] = -RConst::epsijk*sPhi*cm;
-      res[c] = -RConst::epsijk*sPhi*sm;
-      res[d] = -RConst::epsijk*cPhi*sp;
-      if (res[a] < 0.0) {
-        res[a] = -res[a];
-        res[b] = -res[b];
-        res[c] = -res[c];
-        res[d] = -res[d];
+      res[w] = cPhi*cp;
+      res[x] = -RConst::epsijk*sPhi*cm;
+      res[y] = -RConst::epsijk*sPhi*sm;
+      res[z] = -RConst::epsijk*cPhi*sp;
+      if (res[w] < 0.0) {
+        res[w] = -res[w];
+        res[x] = -res[x];
+        res[y] = -res[y];
+        res[z] = -res[z];
       }
     }
 
@@ -888,11 +888,6 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T, typename K>
     void ax2om(const T& a, T& res)
     {
-      //*** use local
-      //*** use constants
-      //*** IMPLICIT NONE
-      //real(kind=sgl),INTENT(IN)       :: a[3]         // axis angle pair
-
       K q = 0.0f;
       K c = 0.0f;
       K s = 0.0f;
@@ -933,8 +928,17 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/04/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void qu2eu(const T& q, T& res)
+    void qu2eu(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
+      size_t w=0, x=1, y=2, z=3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
+
       T qq(4);
       K q12 = 0.0f;
       K q03 = 0.0f;
@@ -944,36 +948,37 @@ class OrientationLib_EXPORT RotationTransforms
       K phi2 = 0.0f;
 
       qq = q;
-      q03 = qq[0]*qq[0]+qq[3]*qq[3];
-      q12 = qq[1]*qq[1]+qq[2]*qq[1];
+
+      q03 = qq[w]*qq[w]+qq[z]*qq[z];
+      q12 = qq[x]*qq[x]+qq[y]*qq[x];
       chi = sqrt(q03*q12);
       if (chi == 0.0) {
         if (q12 == 0.0) {
           if (RConst::epsijk == 1.0) {
             Phi = 0.0;
             phi2 = 0.0;                //arbitrarily due to degeneracy
-            phi1 = atan2(-2.0*qq[0]*qq[3],qq[0]*qq[0]-qq[3]*qq[3]);
+            phi1 = atan2(-2.0*qq[w]*qq[z],qq[w]*qq[w]-qq[z]*qq[z]);
           } else {
             Phi = 0.0;
             phi2 = 0.0;                //arbitrarily due to degeneracy
-            phi1 = atan2( 2.0*qq[0]*qq[3],qq[0]*qq[0]-qq[3]*qq[3]);
+            phi1 = atan2( 2.0*qq[w]*qq[z],qq[w]*qq[w]-qq[z]*qq[z]);
           }
         } else {
           Phi = DREAM3D::Constants::k_Pi;
           phi2 = 0.0;                //arbitrarily due to degeneracy
-          phi1 = atan2(2.0*qq[1]*qq[2],qq[1]*qq[1]-qq[2]*qq[2]);
+          phi1 = atan2(2.0*qq[x]*qq[y],qq[x]*qq[x]-qq[y]*qq[y]);
         }
       } else {
         if (RConst::epsijk == 1.0) {
           Phi = atan2( 2.0*chi, q03-q12 );
           chi = 1.0/chi;
-          phi1 = atan2( (-qq[0]*qq[2]+qq[1]*qq[3])*chi, (-qq[0]*qq[1]-qq[2]*qq[3])*chi );
-          phi2 = atan2( (qq[0]*qq[2]+qq[1]*qq[3])*chi, (-qq[0]*qq[1]+qq[2]*qq[3])*chi );
+          phi1 = atan2( (-qq[w]*qq[y]+qq[x]*qq[z])*chi, (-qq[w]*qq[x]-qq[y]*qq[z])*chi );
+          phi2 = atan2( (qq[w]*qq[y]+qq[x]*qq[z])*chi, (-qq[w]*qq[x]+qq[y]*qq[z])*chi );
         } else {
           Phi = atan2( 2.0*chi, q03-q12 );
           chi = 1.0/chi;
-          phi1 = atan2( (qq[0]*qq[2]+qq[1]*qq[3])*chi, (qq[0]*qq[1]-qq[2]*qq[3])*chi );
-          phi2 = atan2( (-qq[0]*qq[2]+qq[1]*qq[3])*chi, (qq[0]*qq[1]+qq[2]*qq[3])*chi );
+          phi1 = atan2( (qq[w]*qq[y]+qq[x]*qq[z])*chi, (qq[w]*qq[x]-qq[y]*qq[z])*chi );
+          phi2 = atan2( (-qq[w]*qq[y]+qq[x]*qq[z])*chi, (qq[w]*qq[x]+qq[y]*qq[z])*chi );
         }
       }
       res[0] = phi1;
@@ -1316,18 +1321,26 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 6/03/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void qu2om(const T& r, T& res)
+    void qu2om(const T& r, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
-      K qq = r[0]*r[0] - (r[1]*r[1] + r[2]*r[2] + r[3]*r[3]);
-      res[0] = qq+2.0*r[1]*r[1];
-      res[4] = qq+2.0*r[2]*r[2];
-      res[8] = qq+2.0*r[3]*r[3];
-      res[1] = 2.0*(r[1]*r[2]-r[0]*r[3]);
-      res[5] = 2.0*(r[2]*r[3]-r[0]*r[1]);
-      res[6] = 2.0*(r[3]*r[1]-r[0]*r[2]);
-      res[3] = 2.0*(r[2]*r[1]+r[0]*r[3]);
-      res[7] = 2.0*(r[3]*r[2]+r[0]*r[1]);
-      res[2] = 2.0*(r[1]*r[3]+r[0]*r[2]);
+      size_t w=0, x=1, y=2, z=3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
+      K qq = r[w]*r[w] - (r[x]*r[x] + r[y]*r[y] + r[z]*r[z]);
+      res[0] = qq+2.0*r[x]*r[x];
+      res[4] = qq+2.0*r[y]*r[y];
+      res[8] = qq+2.0*r[z]*r[z];
+      res[1] = 2.0*(r[x]*r[y]-r[w]*r[z]);
+      res[5] = 2.0*(r[y]*r[z]-r[w]*r[x]);
+      res[6] = 2.0*(r[z]*r[x]-r[w]*r[y]);
+      res[3] = 2.0*(r[y]*r[x]+r[w]*r[z]);
+      res[7] = 2.0*(r[z]*r[y]+r[w]*r[x]);
+      res[2] = 2.0*(r[x]*r[z]+r[w]*r[y]);
       if (Rotations::Constants::epsijk != 1.0) { res = transpose(res); }
     }
 
@@ -1415,27 +1428,35 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 7/23/14   MDG 2.0 explicit transformation
     */
     template<typename T, typename K>
-    void qu2ax(const T& q, T& res)
+    void qu2ax(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
-      double omega = 2.0 * acos(q[0]);
+      size_t w=0, x=1, y=2, z=3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
+      double omega = 2.0 * acos(q[w]);
       if (omega == 0.0) {
         res[0] = 0.0;
         res[1] = 0.0;
         res[2] = 1.0;
         res[3] = 0.0;
       } else {
-        if (q[0] != 0.0) {
-          K t = q[0] / std::fabs(q[0]);
-          K b = sqrt(q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
+        if (q[w] != 0.0) {
+          K t = q[w] / std::fabs(q[w]);
+          K b = sqrt(q[x]*q[x] + q[y]*q[y] + q[z]*q[z]);
           double s = t / b;
-          res[0] = q[1]*s;
-          res[1] = q[2]*s;
-          res[2] = q[3]*s;
+          res[0] = q[x]*s;
+          res[1] = q[y]*s;
+          res[2] = q[z]*s;
           res[3] = omega;
         } else {
-          res[0] = q[1];
-          res[1] = q[2];
-          res[2] = q[3];
+          res[0] = q[x];
+          res[1] = q[y];
+          res[2] = q[z];
           res[3] = DREAM3D::Constants::k_Pi;
         }
       }
@@ -1454,15 +1475,23 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/11/14   MDG 2.1 added infty handling
     */
     template<typename T, typename K>
-    void qu2ro(const T& q, T& res)
+    void qu2ro(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
+      size_t w=0, x=1, y=2, z=3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
       float thr = 1.0E-8f;
-      res[0] = q[1];
-      res[1] = q[2];
-      res[2] = q[3];
+      res[0] = q[x];
+      res[1] = q[y];
+      res[2] = q[z];
       res[3] = 0.0;
 
-      if (q[0] < thr) {
+      if (q[w] < thr) {
         res[3] = std::numeric_limits<K>::infinity();
         return;
       }
@@ -1477,7 +1506,7 @@ class OrientationLib_EXPORT RotationTransforms
         res[0] = res[0]/s;
         res[1] = res[1]/s;
         res[2] = res[2]/s;
-        res[3] = tan(acos(q[0]));
+        res[3] = tan(acos(q[w]));
       }
     }
 
@@ -1496,18 +1525,26 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 7/23/14   MDG 2.0 explicit transformation
     */
     template<typename T, typename K>
-    void qu2ho(const T& q, T& res)
+    void qu2ho(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
+      size_t w=0, x=1, y=2, z=3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
       float s;
       float f;
 
-      K omega = 2.0 * acos(q[0]);
+      K omega = 2.0 * acos(q[w]);
       if (omega == 0.0) {
         splat(res, 0.0);
       } else {
-        res[0] = q[1];
-        res[1] = q[2];
-        res[2] = q[3];
+        res[0] = q[x];
+        res[1] = q[y];
+        res[2] = q[z];
         s = 1.0/sqrt(sumofSquares<T, K>(res));
         scalarMultiply(res, s);
         f = 0.75 * ( omega - sin(omega) );
@@ -1876,10 +1913,10 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/12/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void qu2cu(const T& r, T& res)
+    void qu2cu(const T& r, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
     {
       T tmp(3);
-      qu2ho<T, K>(r, tmp);
+      qu2ho<T, K>(r, tmp, layout);
       ho2cu<T, K>(tmp, res);
     }
 

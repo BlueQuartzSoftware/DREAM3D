@@ -588,9 +588,17 @@ void Print_RO(const T& om)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void Print_QU(const T& om)
+void Print_QU(const T& om, typename QuaternionMath<float>::Order layout = QuaternionMath<float>::QuaternionVectorScalar)
 {
-  printf("Quaternion (Scalar<vector>)      :   % 3.6f   <% 3.6f    % 3.6f    % 3.6f>\n", om[0], om[1], om[2], om[3] );
+  if(layout == QuaternionMath<float>::QuaternionVectorScalar)
+   {
+    printf("Quaternion (<vector>scalar)      :   <% 3.6f   % 3.6f    % 3.6f>    % 3.6f\n", om[0], om[1], om[2], om[3] );
+   }
+
+  else if(layout == QuaternionMath<float>::QuaternionScalarVector)
+  {
+    printf("Quaternion (scalar<vector>)      :   % 3.6f   <% 3.6f    % 3.6f    % 3.6f>\n", om[0], om[1], om[2], om[3] );
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -639,6 +647,8 @@ void EU_2_XXX(float* in)
   // Convert to Quaternion
   rt.eu2qu<T, float>(eu, res);
   Print_QU<T>(res);
+  rt.eu2qu<T, float>(eu, res, QuaternionMath<float>::QuaternionVectorScalar);
+  Print_QU<T>(res, QuaternionMath<float>::QuaternionVectorScalar);
 
   // Convert to HomoChoric
   rt.eu2ho<T, float>(eu, res);
@@ -685,7 +695,7 @@ void OM_2_XXX(float* in)
   // Convert to Quaternion
   res.resize(4);
   rt.om2qu<T, float>(om, res);
-  Print_QU<T>(res);
+  Print_QU<T>(res, QuaternionMath<float>::QuaternionScalarVector);
 
   //Convert to Axis Angle
   res.resize(4);
@@ -845,7 +855,7 @@ void Test_ax2_XXX()
 //
 // -----------------------------------------------------------------------------
 template<typename T, typename K>
-void QU_2_XXX(K* in)
+void QU_2_XXX(K* in, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
 {
   T qu(4);
   qu[0] = in[0];
@@ -857,31 +867,31 @@ void QU_2_XXX(K* in)
   RotationTransforms rt;
   // Convert to Orientation Matrix
   res.resize(9);
-  rt.qu2om<T, K>(qu, res);
+  rt.qu2om<T, K>(qu, res, layout);
   Print_OM<T>(res);
 
   //Convert to Axis Angle
   res.resize(4);
-  rt.qu2eu<T, K>(qu, res);
+  rt.qu2eu<T, K>(qu, res, layout);
   Print_EU<T>(res);
 
   // Convert to Rodriques
   res.resize(4);
-  rt.qu2ro<T, K>(qu, res);
+  rt.qu2ro<T, K>(qu, res, layout);
   Print_RO<T, K>(res);
 
   // Convert to Quaternion
   res.resize(4);
-  rt.qu2ax<T, K>(qu, res);
+  rt.qu2ax<T, K>(qu, res, layout);
   Print_AX<T>(res);
 
   //Convert to Homochoric
   res.resize(3);
-  rt.qu2ho<T, float>(qu, res);
+  rt.qu2ho<T, float>(qu, res, layout);
   Print_HO<T>(res);
 
   // Convert to HomoChoric
-  rt.qu2cu<T, float>(qu, res);
+  rt.qu2cu<T, float>(qu, res, layout);
   Print_CU<T>(res);
 }
 
@@ -891,12 +901,23 @@ void QU_2_XXX(K* in)
 // -----------------------------------------------------------------------------
 void Test_qu2_XXX()
 {
-  std::cout << "Test_qu2_XXX  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << std::endl;
-  float qu[4] = {DREAM3D::Constants::k_1OverRoot2, 0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2};
-  Print_QU<float*>(qu);
-  QU_2_XXX<RotArrayType>(qu);
-  QU_2_XXX<std::vector<float> >(qu);
-  QU_2_XXX<FloatQVectorType>(qu);
+  {
+    std::cout << "Test_qu2_XXX  (SCALAR, <X, Y, Z>) ***************************************" << std::endl;
+    float qu[4] = {DREAM3D::Constants::k_1OverRoot2, 0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2};
+    Print_QU<float*>(qu, QuaternionMathF::QuaternionScalarVector);
+    QU_2_XXX<RotArrayType>(qu, QuaternionMathF::QuaternionScalarVector);
+    //  QU_2_XXX<std::vector<float> >(qu);
+    //  QU_2_XXX<FloatQVectorType>(qu);
+  }
+
+  {
+    std::cout << "Test_qu2_XXX  (<X, Y, Z>, SCALAR) ***************************************" << std::endl;
+    float qu[4] = {0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2};
+    Print_QU<float*>(qu);
+    QU_2_XXX<RotArrayType>(qu);
+    //  QU_2_XXX<std::vector<float> >(qu);
+    //  QU_2_XXX<FloatQVectorType>(qu);
+  }
 }
 
 
@@ -976,12 +997,12 @@ int main(int argc, char* argv[])
   DREAM3D_REGISTER_TEST( Test_GenRot() )
 
 
-  DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
   DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
 
   return err;
 }
