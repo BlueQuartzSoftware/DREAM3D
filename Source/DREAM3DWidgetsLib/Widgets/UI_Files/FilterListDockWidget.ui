@@ -52,10 +52,16 @@ padding-left: 5px;
     </property>
     <item>
      <widget class="SearchLineEdit" name="filterSearch">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>26</height>
+        <height>30</height>
        </size>
       </property>
       <property name="styleSheet">
