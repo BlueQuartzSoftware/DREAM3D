@@ -183,19 +183,28 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   advInputsGrid->addWidget(w->getAdvancedInputsWidget());
   currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
-  bool showAdv = false;
-  // Cases
+  // Set the current index to the basic tab by default
+  tabWidget->setCurrentIndex(BASIC_TAB);
 
   // First check to see if we even have advanced parameters and show/hide the buttons accordingly
-  showAdv = static_cast<bool>(w->getAdvParameterCount());
-  // If we do NOT have any advanced Parameters then disable the Advanced tab
-  if(showAdv == false)
+  bool showAdv = static_cast<bool>(w->getAdvParameterCount());
+  bool showBasic = static_cast<bool>(w->getBasicParameterCount());
+  // If we do NOT have any basic Parameters then disable the basic tab
+  if (showBasic == false)
+  {
+    tabWidget->setTabEnabled(BASIC_TAB, false);
+    tabWidget->setCurrentIndex(ADVANCED_TAB);
+  }
+
+  // If we do NOT have any advanced Parameters then disable the advanced tab
+  if (showAdv == false)
   {
     tabWidget->setTabEnabled(ADVANCED_TAB, false);
-  }
-  else
-  {
-    tabWidget->setTabEnabled(ADVANCED_TAB, true);
+
+    if (tabWidget->isTabEnabled(BASIC_TAB) == false)
+    {
+      tabWidget->setCurrentIndex(CURRENT_STRUCTURE_TAB);
+    }
   }
 
   w->getBasicInputsWidget()->setVisible(true);
@@ -209,9 +218,6 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   m_BrandingLabel = filter->getBrandingString()  + "  [" + w->getCompiledLibraryName() + "/" + w->getFilterGroup() + "/" + w->getFilterClassName() + "]";
 
   brandingLabel->setText(m_BrandingLabel);
-
-  // Set the current index to the basic tab by default
-  tabWidget->setCurrentIndex(BASIC_TAB);
 
   int basicHeight = basicScrollArea->height();
   int advancedHeight = advancedScrollArea->height();
