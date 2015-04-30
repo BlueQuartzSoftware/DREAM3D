@@ -37,74 +37,10 @@
 
 #include <iostream>
 
-#include <QtCore/QObject>
-#include <QtWidgets/QSplitterHandle>
-#include <QtGui/QPainter>
+#include "QtSupport/DREAM3DSplitterHandle.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-
-
-
-class DREAM3DSplitterHandle : public QSplitterHandle
-{
-  Q_OBJECT
-public:
-    DREAM3DSplitterHandle(Qt::Orientation orientation, QSplitter *parent)
-    : QSplitterHandle(orientation, parent) {   }
-
-    // Paint the horizontal handle as a gradient, paint
-    // the vertical handle as a line.
-    void paintEvent(QPaintEvent *)
-    {
-        QPainter painter(this);
-
-        QColor topColor(145, 145, 145);
-        QColor bottomColor(142, 142, 142);
-        QColor gradientStart(252, 252, 252);
-        QColor gradientStop(223, 223, 223);
-
-        if (orientation() == Qt::Vertical) {
-            painter.setPen(topColor);
-            painter.drawLine(0, 0, width(), 0);
-            painter.setPen(bottomColor);
-            painter.drawLine(0, height() - 1, width(), height() - 1);
-
-            QLinearGradient linearGrad(QPointF(0, 0), QPointF(0, height() -3));
-            linearGrad.setColorAt(0, gradientStart);
-            linearGrad.setColorAt(1, gradientStop);
-            painter.fillRect(QRect(QPoint(0,1), size() - QSize(0, 2)), QBrush(linearGrad));
-        } else {
-//            painter.setPen(topColor);
-//            painter.drawLine(0, 0, 0, height());
-          painter.setPen(topColor);
-          painter.drawLine(0, 0, 0, height()-1);
-          painter.setPen(bottomColor);
-          painter.drawLine(width()-1, 0, width()-1, height() - 1);
-
-          QLinearGradient linearGrad(QPointF(0, 0), QPointF(width() - 3, 0));
-          linearGrad.setColorAt(0, gradientStart);
-          linearGrad.setColorAt(1, gradientStop);
-          painter.fillRect(QRect(QPoint(1,0), size() - QSize(2, 0)), QBrush(linearGrad));
-        }
-    }
-
-    QSize sizeHint() const
-    {
-        QSize parent = QSplitterHandle::sizeHint();
-        //if (orientation() == Qt::Vertical) {
-            return parent + QSize(3, 3);
-//        } else {
-//            return QSize(1, parent.height());
-//        }
-    }
-
-
-};
-
-#include "DREAM3DSplitter.moc"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -123,6 +59,9 @@ DREAM3DSplitter::~DREAM3DSplitter()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QSplitterHandle* DREAM3DSplitter::createHandle()
 {
     return new DREAM3DSplitterHandle(orientation(), this);

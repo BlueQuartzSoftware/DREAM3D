@@ -54,12 +54,21 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QSplitter" name="splitter">
+    <widget class="DREAM3DSplitter" name="splitter">
+     <property name="styleSheet">
+      <string notr="true">QSplitter::handle {
+    
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.166 rgba(255, 255, 0, 255), stop:0.333 rgba(0, 255, 0, 255), stop:0.5 rgba(0, 255, 255, 255), stop:0.666 rgba(0, 0, 255, 255), stop:0.833 rgba(255, 0, 255, 255), stop:1 rgba(255, 0, 0, 255));
+}</string>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>6</number>
+       </property>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
@@ -319,6 +328,12 @@
        </item>
        <item row="1" column="0" colspan="2">
         <widget class="QTextEdit" name="codeViewer">
+         <property name="styleSheet">
+          <string notr="true">QTextEdit
+  {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(233, 236, 241, 255), stop:1.0 rgba(211, 216, 224, 255));
+  }</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -335,6 +350,12 @@
    <class>QFSDropLabel</class>
    <extends>QLabel</extends>
    <header>QtSupport/QFSDropLabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DREAM3DSplitter</class>
+   <extends>QSplitter</extends>
+   <header location="global">QtSupport/DREAM3DSplitter.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

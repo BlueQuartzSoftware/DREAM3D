@@ -36,6 +36,8 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/FileDragMessageBox.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DStyles.cpp
     ${QtSupport_SOURCE_DIR}/ApplicationFileInfo.cpp
+    ${QtSupport_SOURCE_DIR}/DREAM3DSplitter.cpp
+    ${QtSupport_SOURCE_DIR}/DREAM3DSplitterHandle.cpp
 )
 
 set(QtSupport_HDRS
@@ -58,6 +60,8 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/FileDragMessageBox.h
     ${QtSupport_SOURCE_DIR}/DREAM3DStyles.h
     ${QtSupport_SOURCE_DIR}/ApplicationFileInfo.h
+    ${QtSupport_SOURCE_DIR}/DREAM3DSplitter.h
+    ${QtSupport_SOURCE_DIR}/DREAM3DSplitterHandle.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 

@@ -33,38 +33,59 @@
 *                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "DREAM3DSplitterHandle.h"
 
-#ifndef _DREAM3DSplitter_H
-#define _DREAM3DSplitter_H
+#include <QtGui/QPainter>
 
-#include <QtWidgets/QSplitter>
+#include <QtCore/QObject>
 
-#include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-
-#include "DREAM3DWidgetsLib/Widgets/FilterInputWidget.h"
-
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
-class QSplitterHandle;
-
-/**
-* @brief The DREAM3DSplitter class is a sub-class of the QSplitter class.
-*/
-class DREAM3DWidgetsLib_EXPORT DREAM3DSplitter : public QSplitter
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DSplitterHandle::paintEvent(QPaintEvent *)
 {
-  Q_OBJECT
+  QPainter painter(this);
 
-public:
-  DREAM3DSplitter(QWidget* parent = 0);
-  virtual ~DREAM3DSplitter();
+  QColor topColor(145, 145, 145);
+  QColor bottomColor(142, 142, 142);
+  QColor gradientStart(252, 252, 252);
+  QColor gradientStop(223, 223, 223);
 
-  QSplitterHandle* createHandle();
+  if (orientation() == Qt::Vertical) {
+    painter.setPen(topColor);
+    painter.drawLine(0, 0, width(), 0);
+    painter.setPen(bottomColor);
+    painter.drawLine(0, height() - 1, width(), height() - 1);
 
-private:
+    QLinearGradient linearGrad(QPointF(0, 0), QPointF(0, height() - 3));
+    linearGrad.setColorAt(0, gradientStart);
+    linearGrad.setColorAt(1, gradientStop);
+    painter.fillRect(QRect(QPoint(0, 1), size() - QSize(0, 2)), QBrush(linearGrad));
+  }
+  else {
+    //            painter.setPen(topColor);
+    //            painter.drawLine(0, 0, 0, height());
+    painter.setPen(topColor);
+    painter.drawLine(0, 0, 0, height() - 1);
+    painter.setPen(bottomColor);
+    painter.drawLine(width() - 1, 0, width() - 1, height() - 1);
 
-  DREAM3DSplitter(const DREAM3DSplitter&); // Copy Constructor Not Implemented
-  void operator=(const DREAM3DSplitter&); // Operator '=' Not Implemented
-};
+    QLinearGradient linearGrad(QPointF(0, 0), QPointF(width() - 3, 0));
+    linearGrad.setColorAt(0, gradientStart);
+    linearGrad.setColorAt(1, gradientStop);
+    painter.fillRect(QRect(QPoint(1, 0), size() - QSize(2, 0)), QBrush(linearGrad));
+  }
+}
 
-#endif /* _DREAM3DSplitter_H */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QSize DREAM3DSplitterHandle::sizeHint() const
+{
+  QSize parent = QSplitterHandle::sizeHint();
+  //if (orientation() == Qt::Vertical) {
+  return parent + QSize(3, 3);
+  //        } else {
+  //            return QSize(1, parent.height());
+  //        }
+}

@@ -81,6 +81,10 @@ PluginMaker::PluginMaker(QWidget* parent) :
 // -----------------------------------------------------------------------------
 void PluginMaker::setupGui()
 {
+  // Stretch Factors
+  splitter->setStretchFactor(0, 0);
+  splitter->setStretchFactor(1, 1);
+
   QFileCompleter* com = new QFileCompleter(this, true);
   m_OutputDir->setCompleter(com);
   QObject::connect(com, SIGNAL(activated(const QString&)), this, SLOT(on_m_OutputDir_textChanged(const QString&)));

@@ -40,7 +40,6 @@ set(DREAM3DWidgetsLib_Widgets_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterTreeWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.h
-  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/DREAM3DSplitter.h
   )
 set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_Widgets_SRCS}
@@ -48,7 +47,6 @@ set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterTreeWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.cpp
-  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/DREAM3DSplitter.cpp
   )
 
 
