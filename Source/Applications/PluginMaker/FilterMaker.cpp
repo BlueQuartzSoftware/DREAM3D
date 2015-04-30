@@ -64,7 +64,7 @@ enum CodeChooserIndex
 //
 // -----------------------------------------------------------------------------
 FilterMaker::FilterMaker(QWidget* parent) :
-QMainWindow(parent),
+QWidget(parent),
 cppGenerator(NULL),
 hGenerator(NULL),
 htmlGenerator(NULL),
@@ -73,8 +73,6 @@ testGenerator(NULL)
   setupUi(this);
 
   setupGui();
-
-  readSettings();
 }
 
 // -----------------------------------------------------------------------------
@@ -96,19 +94,11 @@ void FilterMaker::setupGui()
   errorString->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
   errorString->setText("");
 
+  // Stretch Factors
+  splitter->setStretchFactor(0, 0);
+  splitter->setStretchFactor(1, 1);
+
   generateBtn->setEnabled(false);
-}
-
-// -----------------------------------------------------------------------------
-//  Called when the main window is closed.
-// -----------------------------------------------------------------------------
-void FilterMaker::closeEvent(QCloseEvent* event)
-{
-  writeSettings();
-
-  /* SLOT - DevHelper::showDevHelper()
-  CONNECT - DevHelper::on_newFilterBtn_clicked() */
-  emit filterMakerClosing();
 }
 
 // -----------------------------------------------------------------------------
@@ -219,7 +209,7 @@ void FilterMaker::on_generateBtn_clicked()
   // Add to the CMakeLists.txt file in the Test folder
   updateTestList();
 
-  statusbar->showMessage("'" + filterName + "' Generation Completed");
+  emit updateStatusBar("'" + filterName + "' Generation Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -897,108 +887,6 @@ QString FilterMaker::getDefaultFilterCPPIncludesContents()
   }
 
   return contents;
-}
-
-// -----------------------------------------------------------------------------
-//  Write our Prefs to file
-// -----------------------------------------------------------------------------
-void FilterMaker::writeSettings()
-{
-  // qDebug() << "writeSettings" << "\n";
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-
-  prefs.beginGroup("FilterMaker");
-  //Save the Plugin Name and Output Directory features to the QSettings object
-  prefs.setValue("Plugin Directory", pluginDir->text());
-  prefs.setValue("Filter Name", filterName->text());
-  prefs.beginWriteArray("FilterParameters");
-  for (int i = 0; i < filterParametersTable->rowCount(); i++)
-  {
-    prefs.setArrayIndex(i);
-    prefs.setValue("Variable Name", filterParametersTable->item(i, VAR_NAME)->text());
-    prefs.setValue("Human Label", filterParametersTable->item(i, HUMAN_NAME)->text());
-    prefs.setValue("Type", filterParametersTable->item(i, TYPE)->text());
-    prefs.setValue("Initial Value", filterParametersTable->item(i, INIT_VALUE)->text());
-  }
-  prefs.endArray();
-  writeWindowSettings(prefs);
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterMaker::writeWindowSettings(QSettings& prefs)
-{
-  prefs.beginGroup("WindowSettings");
-  QByteArray geo_data = saveGeometry();
-  QByteArray layout_data = saveState();
-  prefs.setValue(QString("Geometry"), geo_data);
-  prefs.setValue(QString("Layout"), layout_data);
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterMaker::readSettings()
-{
-  // qDebug() << "Read Settings" << "\n";
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-
-  prefs.beginGroup("FilterMaker");
-  // Have the PipelineBuilder Widget read its settings
-  pluginDir->setText(prefs.value("Plugin Directory").toString());
-  filterName->setText(prefs.value("Filter Name").toString());
-  int fpSize = prefs.beginReadArray("FilterParameters");
-  for (int i = 0; i < fpSize; i++)
-  {
-    prefs.setArrayIndex(i);
-
-    AddFilterParameter addFilterParameter;
-    addFilterParameter.setVariableName(prefs.value("Variable Name").toString());
-    addFilterParameter.setHumanName(prefs.value("Human Label").toString());
-    addFilterParameter.setType(prefs.value("Type").toString());
-    addFilterParameter.setInitValue(prefs.value("Initial Value").toString());
-
-    addFilterParameterToTable(&addFilterParameter);
-  }
-  prefs.endArray();
-  readWindowSettings(prefs);
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterMaker::readWindowSettings(QSettings& prefs)
-{
-  bool ok = false;
-  prefs.beginGroup("WindowSettings");
-  if (prefs.contains(QString("Geometry")))
-  {
-    QByteArray geo_data = prefs.value(QString("Geometry")).toByteArray();
-    ok = restoreGeometry(geo_data);
-    if (!ok)
-    {
-      qDebug() << "Error Restoring the Window Geometry" << "\n";
-    }
-  }
-
-  if (prefs.contains(QString("Layout")))
-  {
-    QByteArray layout_data = prefs.value(QString("Layout")).toByteArray();
-    restoreState(layout_data);
-  }
-  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------

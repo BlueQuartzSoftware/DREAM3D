@@ -43,7 +43,7 @@
 
 #include "ui_DevHelper.h"
 
-class DevHelper : public QWidget, public Ui::DevHelper
+class DevHelper : public QMainWindow, public Ui::DevHelper
 {
   Q_OBJECT
 
@@ -54,12 +54,20 @@ public:
 protected:
   void setupGui();
 
-  protected slots:
-  void on_newPluginBtn_clicked();
-  void on_newFilterBtn_clicked();
-  void showDevHelper();
+protected slots:
+  void updateStatusMessage(QString message);
+
+  void on_actionShowUserManual_triggered();
+  void on_actionAbout_triggered();
 
 private:
+
+
+  void closeEvent(QCloseEvent* event);
+  void writeSettings();
+  void readSettings();
+  void readWindowSettings(QSettings& prefs);
+  void writeWindowSettings(QSettings& prefs);
 
   DevHelper(const DevHelper&);    // Copy Constructor Not Implemented
   void operator=(const DevHelper&);  // Operator '=' Not Implemented

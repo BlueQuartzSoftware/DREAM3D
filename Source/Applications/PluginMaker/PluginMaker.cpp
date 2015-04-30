@@ -50,17 +50,13 @@
 #include <QtWidgets/QTreeWidgetItem>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QApplication>
 #include <QtCore/QSize>
 
-#include "DREAM3D/License/PluginMakerLicenseFiles.h"
-#include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QFileCompleter.h"
 #include "QtSupport/ApplicationFileInfo.h"
 
 
-#include "HelpWidget.h"
 #include "AddFilterWidget.h"
 #include "FilterBundler.h"
 #include "PMDirGenerator.h"
@@ -72,36 +68,12 @@
 //
 // -----------------------------------------------------------------------------
 PluginMaker::PluginMaker(QWidget* parent) :
-  QMainWindow(parent)
+  QWidget(parent)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
 
   setupGui();
-
-  //Set window to open at the center of the screen
-  QDesktopWidget* desktop = QApplication::desktop();
-
-  int screenWidth, width;
-  int screenHeight, height;
-  int x, y;
-  QSize windowSize;
-
-  screenWidth = desktop->width(); // get width of screen
-  screenHeight = desktop->height(); // get height of screen
-
-  windowSize = size(); // size of application window
-  width = windowSize.width();
-  height = windowSize.height();
-
-  x = (screenWidth - width) / 2;
-  y = (screenHeight - height) / 2;
-  y -= 50;
-
-  // move window to desired coordinates
-  move (x, y);
-
-  readSettings();
 }
 
 // -----------------------------------------------------------------------------
@@ -693,7 +665,7 @@ void PluginMaker::setupGui()
   m_PluginName->setText("Unknown Plugin Name");
   m_PluginName->selectAll();
   treeWidget->expandAll();
-  statusbar->showMessage("Ready");
+  emit updateStatusBar("Ready");
 
 }
 
@@ -723,14 +695,14 @@ void PluginMaker::on_generateButton_clicked()
 
   if (pluginName == "")
   {
-    statusbar->showMessage("Generation Failed --- Please provide a plugin name");
+    emit updateStatusBar("Generation Failed --- Please provide a plugin name");
     QMessageBox::critical(this, tr("PluginMaker"), tr("The file generation was unsuccessful.\n"
                                                       "Please enter a Plugin Name."));
     return;
   }
   else if (pluginDir == "")
   {
-    statusbar->showMessage("Generation Failed --- Please provide a plugin directory");
+    emit updateStatusBar("Generation Failed --- Please provide a plugin directory");
     QMessageBox::critical(this, tr("PluginMaker"), tr("The file generation was unsuccessful.\n"
                                                       "Please enter a Plugin Directory."));
     return;
@@ -764,7 +736,7 @@ void PluginMaker::on_generateButton_clicked()
   QDir dir2(parentPath);
   dir2.mkpath(parentPath);
 
-  statusbar->showMessage("Generation Completed");
+  emit updateStatusBar("Generation Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -801,7 +773,7 @@ void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 {
   //  QString pluginName = cleanName(m_PluginName->text());
 
-  statusbar->showMessage("Ready");
+  emit updateStatusBar("Ready");
 
 }
 
@@ -810,29 +782,7 @@ void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_OutputDir_textChanged(const QString& text)
 {
-  statusbar->showMessage("Ready");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PluginMaker::on_actionPlugin_Maker_Help_triggered()
-{
-  HelpWidget* helpDialog = new HelpWidget(this);
-  helpDialog->show();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PluginMaker::on_actionAbout_triggered()
-{
-  ApplicationAboutBoxDialog about(PluginMakerProj::LicenseList, this);
-  QString an = QCoreApplication::applicationName();
-  QString version("");
-  version.append("1.0.0");
-  about.setApplicationInfo(an, version);
-  about.exec();
+  emit updateStatusBar("Ready");
 }
 
 // -----------------------------------------------------------------------------
@@ -1088,28 +1038,7 @@ void PluginMaker::on_treeWidget_itemSelectionChanged()
 
   m_fileEditor->setPlainText(text);
 
-  statusbar->showMessage("Currently viewing " + currentFile->text(0));
-}
-
-// -----------------------------------------------------------------------------
-//  Called when the main window is closed.
-// -----------------------------------------------------------------------------
-void PluginMaker::closeEvent(QCloseEvent* event)
-{
-  qint32 err = checkDirtyDocument();
-  if (err < 0)
-  {
-    event->ignore();
-  }
-  else
-  {
-    writeSettings();
-    event->accept();
-  }
-
-  /* SLOT - DevHelper::showDevHelper()
-     CONNECT - DevHelper::on_newPluginBtn_clicked() */
-  emit pluginMakerClosing();
+  emit updateStatusBar("Currently viewing " + currentFile->text(0));
 }
 
 // -----------------------------------------------------------------------------
@@ -1145,84 +1074,6 @@ qint32 PluginMaker::checkDirtyDocument()
   }
 
   return err;
-}
-
-// -----------------------------------------------------------------------------
-//  Write our Prefs to file
-// -----------------------------------------------------------------------------
-void PluginMaker::writeSettings()
-{
-  // qDebug() << "writeSettings" << "\n";
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-
-  prefs.beginGroup("PluginMaker");
-  //Save the Plugin Name and Output Directory features to the QSettings object
-  prefs.setValue("Plugin Name", m_PluginName->text());
-  prefs.setValue("Output Directory", m_OutputDir->text());
-  writeWindowSettings(prefs);
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PluginMaker::writeWindowSettings(QSettings& prefs)
-{
-  prefs.beginGroup("WindowSettings");
-  QByteArray geo_data = saveGeometry();
-  QByteArray layout_data = saveState();
-  prefs.setValue(QString("Geometry"), geo_data);
-  prefs.setValue(QString("Layout"), layout_data);
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PluginMaker::readSettings()
-{
-  // qDebug() << "Read Settings" << "\n";
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-
-  prefs.beginGroup("PluginMaker");
-  // Have the PipelineBuilder Widget read its settings
-  m_PluginName->setText( prefs.value("Plugin Name").toString() );
-  m_OutputDir->setText( prefs.value("Output Directory").toString() );
-  readWindowSettings(prefs);
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PluginMaker::readWindowSettings(QSettings& prefs)
-{
-  bool ok = false;
-  prefs.beginGroup("WindowSettings");
-  if (prefs.contains(QString("Geometry")) )
-  {
-    QByteArray geo_data = prefs.value(QString("Geometry")).toByteArray();
-    ok = restoreGeometry(geo_data);
-    if (!ok)
-    {
-      qDebug() << "Error Restoring the Window Geometry" << "\n";
-    }
-  }
-
-  if (prefs.contains(QString("Layout")))
-  {
-    QByteArray layout_data = prefs.value(QString("Layout")).toByteArray();
-    restoreState(layout_data);
-  }
-  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
