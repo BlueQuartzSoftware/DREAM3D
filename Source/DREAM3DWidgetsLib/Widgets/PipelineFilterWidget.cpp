@@ -264,7 +264,7 @@ void PipelineFilterWidget::handleFilterParameterChanged()
 {
   /* SLOT - PipelineViewWidget::handleFilterParameterChanged()
      CONNECT - PipelineViewWidget::addFilter(...) */
-  emit filterParameterChanged();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -802,6 +802,12 @@ void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
     actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
     connect(actionLaunchHelp, SIGNAL(triggered()),
       this, SLOT(launchHelpForItem()));
+
+    //QAction* actionLaunchHelp = new QAction(m_ContextMenu);
+    //actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
+    //actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
+    //connect(actionLaunchHelp, SIGNAL(triggered()),
+    //  this, SLOT(launchHelpForItem()));
 
     m_ContextMenu->addAction(actionLaunchHelp);
     m_ContextMenu->exec(QCursor::pos());

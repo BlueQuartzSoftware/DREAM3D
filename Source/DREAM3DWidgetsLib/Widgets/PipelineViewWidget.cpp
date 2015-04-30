@@ -530,9 +530,6 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   // Create a FilterWidget object
   PipelineFilterWidget* w = new PipelineFilterWidget(filter, NULL, this);
 
-  connect(w, SIGNAL(filterParameterChanged()),
-    this, SLOT(handleFilterParameterChanged()));
-
   // Add the filter widget to this view widget
   addFilterWidget(w, index);
 
@@ -602,6 +599,9 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 
   connect(w, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
+
+  connect(w, SIGNAL(parametersChanged()),
+    this, SLOT(handleFilterParameterChanged()));
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)

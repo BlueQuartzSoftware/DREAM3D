@@ -129,6 +129,7 @@ class ComparisonSelectionWidget : public FilterParameterWidget, private Ui::Comp
     void on_attributeMatrixList_currentIndexChanged(int index);
 
     void tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
+    void widgetChanged(const QString &text);
 
   private:
 
