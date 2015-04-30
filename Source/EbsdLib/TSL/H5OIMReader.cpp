@@ -84,7 +84,7 @@ H5OIMReader::H5OIMReader() :
   m_HeaderMap[Ebsd::Ang::nRows] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::nRows);
   m_HeaderMap[Ebsd::Ang::Operator] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::Operator);
   m_HeaderMap[Ebsd::Ang::SampleID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SampleID);
-  m_HeaderMap[Ebsd::Ang::SCANID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::SCANID);
+  m_HeaderMap[Ebsd::Ang::ScanID] = AngStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ang::ScanID);
 
   m_HeaderMap[Ebsd::Ang::PatternWidth] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::PatternWidth);
   m_HeaderMap[Ebsd::Ang::PatternHeight] = AngHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ang::PatternHeight);
@@ -468,7 +468,7 @@ int H5OIMReader::readHeader(hid_t parId)
 
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::Operator, gid, m_HeaderMap);
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::SampleID, gid, m_HeaderMap);
-  ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::SCANID, gid, m_HeaderMap);
+  ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::ScanID, gid, m_HeaderMap);
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::GridType, gid, m_HeaderMap);
 
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phase.toLatin1().data(), H5P_DEFAULT);
