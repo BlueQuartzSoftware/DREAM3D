@@ -47,7 +47,7 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 
-#include "ui_FilterInputWidget.h"
+#include "DREAM3DWidgetsLib/ui_FilterInputWidget.h"
 
 class PipelineFilterWidget;
 
@@ -68,14 +68,12 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
 
   protected:
 
-  public slots:
+  public slots :
+    void on_filterHelpBtn_pressed();
+
     void clearInputWidgets();
     void displayFilterParameters(PipelineFilterWidget* w);
     void removeWidgetInputs(PipelineFilterWidget* w);
-
-    void on_advInputsBtn_clicked();
-    void on_currentStructureBtn_clicked();
-    void hideButton();
 
   private slots:
     void fadeInWidget(QWidget* widget);

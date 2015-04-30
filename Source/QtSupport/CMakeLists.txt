@@ -25,6 +25,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QDroppableScrollArea.cpp
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.cpp
     ${QtSupport_SOURCE_DIR}/HelpDialog.cpp
+    ${QtSupport_SOURCE_DIR}/HoverButton.cpp
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DHelpUrlGenerator.cpp
     ${QtSupport_SOURCE_DIR}/PoleFigureImageUtilities.cpp
@@ -32,7 +33,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/FaderWidget.cpp
     ${QtSupport_SOURCE_DIR}/SearchLineEdit.cpp
     ${QtSupport_SOURCE_DIR}/QFSDropLabel.cpp
-    ${QtSupport_SOURCE_DIR}/DREAM3DFileDragMessageBox.cpp
+    ${QtSupport_SOURCE_DIR}/FileDragMessageBox.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DStyles.cpp
     ${QtSupport_SOURCE_DIR}/ApplicationFileInfo.cpp
 )
@@ -48,12 +49,13 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/QDroppableScrollArea.h
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.h
     ${QtSupport_SOURCE_DIR}/HelpDialog.h
+    ${QtSupport_SOURCE_DIR}/HoverButton.h
     ${QtSupport_SOURCE_DIR}/PoleFigureImageUtilities.h
     ${QtSupport_SOURCE_DIR}/DREAM3DGraphicsView.h
     ${QtSupport_SOURCE_DIR}/FaderWidget.h
     ${QtSupport_SOURCE_DIR}/SearchLineEdit.h
     ${QtSupport_SOURCE_DIR}/QFSDropLabel.h
-    ${QtSupport_SOURCE_DIR}/DREAM3DFileDragMessageBox.h
+    ${QtSupport_SOURCE_DIR}/FileDragMessageBox.h
     ${QtSupport_SOURCE_DIR}/DREAM3DStyles.h
     ${QtSupport_SOURCE_DIR}/ApplicationFileInfo.h
 )
@@ -74,7 +76,7 @@ SET(DREAM3D_QT_UI_FILES
   ${QtSupport_SOURCE_DIR}/UI_Files/ApplicationAboutBoxDialog.ui
   ${QtSupport_SOURCE_DIR}/UI_Files/HelpDialog.ui
   ${QtSupport_SOURCE_DIR}/UI_Files/DistributionTypeWidget.ui
-  ${QtSupport_SOURCE_DIR}/UI_Files/DREAM3DFileDragMessageBox.ui
+  ${QtSupport_SOURCE_DIR}/UI_Files/FileDragMessageBox.ui
 )
 cmp_IDE_SOURCE_PROPERTIES( "QtSupport/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 

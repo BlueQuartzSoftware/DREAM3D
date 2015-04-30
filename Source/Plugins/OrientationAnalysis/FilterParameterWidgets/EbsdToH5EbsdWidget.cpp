@@ -58,6 +58,7 @@
 #include "QtSupport/QFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupport/DREAM3DStyles.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
@@ -291,11 +292,11 @@ bool EbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEd
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
-    lineEdit->setStyleSheet("border: 1px solid red;");
+    DREAM3DStyles::LineEditErrorStyle(lineEdit);
   }
   else
   {
-    lineEdit->setStyleSheet("");
+    DREAM3DStyles::LineEditClearStyle(lineEdit);
   }
   return fileinfo.exists();
 }
@@ -496,8 +497,8 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
                               m_FileExt->text(),
                               m_TotalDigits->value());
   m_FileListView->clear();
-  QIcon greenDot = QIcon(QString(":/green-dot.png"));
-  QIcon redDot = QIcon(QString(":/red-dot.png"));
+  QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
+  QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i));

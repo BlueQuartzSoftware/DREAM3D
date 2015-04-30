@@ -95,11 +95,79 @@ class DataContainerProxy
       attributeMatricies = amp.attributeMatricies;
     }
 
+    /**
+    * @brief Writes the contents of the proxy to the json object 'json'
+    * @param json
+    * @return
+    */
+    void writeJson(QJsonObject &json)
+    {
+      json["Flag"] = static_cast<double>(flag);
+      json["Name"] = name;
+      json["Type"] = static_cast<double>(dcType);
+      json["Attribute Matricies"] = writeMap(attributeMatricies);
+    }
+
+    /**
+    * @brief Reads the contents of the the json object 'json' into the proxy
+    * @param json
+    * @return
+    */
+    bool readJson(QJsonObject &json)
+    {
+      if (json["Flag"].isDouble() && json["Name"].isString() && json["Type"].isDouble() && json["Attribute Matricies"].isArray())
+      {
+        if (json["Flag"].toDouble() >= std::numeric_limits<uint8_t>().min() && json["Flag"].toDouble() <= std::numeric_limits<uint8_t>().max())
+        {
+          flag = static_cast<uint8_t>(json["Flag"].toDouble());
+        }
+        name = json["Name"].toString();
+        if (json["Type"].toDouble() >= std::numeric_limits<unsigned int>().min() && json["Type"].toDouble() <= std::numeric_limits<unsigned int>().max())
+        {
+          dcType = static_cast<unsigned int>(json["Type"].toDouble());
+        }
+        attributeMatricies = readMap(json["Attribute Matricies"].toArray());
+        return true;
+      }
+      return false;
+    }
+
     //----- Our variables, publicly available
     uint8_t flag;
     QString name;
     unsigned int dcType;
     QMap<QString, AttributeMatrixProxy> attributeMatricies;
+
+private:
+
+
+  QJsonArray writeMap(QMap<QString, AttributeMatrixProxy> map)
+  {
+    QJsonArray amArray;
+    for (QMap<QString, AttributeMatrixProxy>::iterator iter = map.begin(); iter != map.end(); ++iter)
+    {
+      QJsonObject obj;
+      (*iter).writeJson(obj);
+      amArray.push_back(obj);
+    }
+    return amArray;
+  }
+
+  QMap<QString, AttributeMatrixProxy> readMap(QJsonArray jsonArray)
+  {
+    QMap<QString, AttributeMatrixProxy> map;
+    foreach(QJsonValue val, jsonArray)
+    {
+      if (val.isObject())
+      {
+        AttributeMatrixProxy am;
+        QJsonObject obj = val.toObject();
+        am.readJson(obj);
+        map.insert(am.name, am);
+      }
+    }
+    return map;
+  }
 
 };
 

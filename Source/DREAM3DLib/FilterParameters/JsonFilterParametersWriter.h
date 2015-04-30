@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _TEXTFilterParametersWRITER_H_
-#define _TEXTFilterParametersWRITER_H_
+#ifndef _JsonFilterParametersWriter_H_
+#define _JsonFilterParametersWriter_H_
 
 #include <QtCore/QString>
 
@@ -42,6 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -53,18 +54,35 @@
  * @date Jan 17, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParametersWriter
+class DREAM3DLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParametersWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(TextFilterParametersWriter)
-    DREAM3D_STATIC_NEW_MACRO(TextFilterParametersWriter)
-    DREAM3D_TYPE_MACRO_SUPER(TextFilterParametersWriter, AbstractFilterParametersWriter)
+    DREAM3D_SHARED_POINTERS(JsonFilterParametersWriter)
+    DREAM3D_STATIC_NEW_MACRO(JsonFilterParametersWriter)
+    DREAM3D_TYPE_MACRO_SUPER(JsonFilterParametersWriter, AbstractFilterParametersWriter)
 
+    DREAM3D_INSTANCE_PROPERTY(QString, FileName)
+    DREAM3D_INSTANCE_PROPERTY(QString, PipelineName)
 
-    virtual ~TextFilterParametersWriter();
+    JsonFilterParametersWriter(QString &fileName, QString &pipelineName, int &numFilters);
+
+    virtual ~JsonFilterParametersWriter();
+
+    /**
+    * @brief WritePipelineToFile This function will write a pipeline to a
+    * JSON file. The file path passed in <b>WILL BE OVER WRITTEN</b> by this
+    * function <b>WITHOUT WARNING</b>
+    * @param pipeline The pipeline to be written
+    * @param filePath The file path to write
+    * @param name The name of the pipeline (Typically the name of the file)
+    * @param obs Any observer that we can pass error/warning messages back to in case something goes wrong.
+    * @return
+    */
+    static int WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs = NULL);
 
     virtual int openFilterGroup(AbstractFilter* filter, int index);
     virtual int closeFilterGroup();
+
     virtual int writeValue(const QString name, const QString value);
     virtual int writeValue(const QString name, const QVector<QString> value);
 
@@ -115,12 +133,16 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
   virtual int writeValue(const QString name, const DynamicTableData& v);
 
   protected:
-    TextFilterParametersWriter();
+    JsonFilterParametersWriter();
 
   private:
-    TextFilterParametersWriter(const TextFilterParametersWriter&); // Copy Constructor Not Implemented
-    void operator=(const TextFilterParametersWriter&); // Operator '=' Not Implemented
+    QJsonObject m_Root;
+    QJsonObject m_CurrentFilterIndex;
+    int currentIndex;
+
+    JsonFilterParametersWriter(const JsonFilterParametersWriter&); // Copy Constructor Not Implemented
+    void operator=(const JsonFilterParametersWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* TEXTFilterParametersWRITER_H_ */
+#endif /* JsonFilterParametersWriter_H_ */
 

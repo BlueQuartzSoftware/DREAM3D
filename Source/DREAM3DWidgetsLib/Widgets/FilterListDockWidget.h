@@ -39,6 +39,8 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMenu>
 
+#include <QtCore/QSignalMapper>
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
@@ -85,6 +87,18 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     void updateFilterList(bool sortItems = true);
 
+    /**
+    * @brief showContextMenuForWidget
+    * @param pos
+    */
+    void showContextMenuForWidget(const QPoint &pos);
+
+    /**
+    * @brief launchHelpForItem
+    * @param name
+    */
+    void launchHelpForItem(QString name);
+
   signals:
 
     /**
@@ -113,6 +127,9 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     void addItemToList(AbstractFilter::Pointer filter);
 
   private:
+    QMenu* m_ContextMenu;
+    QSignalMapper* m_Mapper;
+
     FilterManager::Collection  m_LoadedFilters;
 
     FilterListDockWidget(const FilterListDockWidget&); // Copy Constructor Not Implemented

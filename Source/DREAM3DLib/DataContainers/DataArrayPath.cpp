@@ -376,3 +376,31 @@ bool DataArrayPath::ValidateVector(const QVector<DataArrayPath>& other)
 
   return true;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayPath::writeJson(QJsonObject &json) const
+{
+  json["Data Container Name"] = getDataContainerName();
+  json["Attribute Matrix Name"] = getAttributeMatrixName();
+  json["Data Array Name"] = getDataArrayName();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::readJson(QJsonObject &json) const
+{
+  if (json["Data Container Name"].isString() && json["Attribute Matrix Name"].isString() && json["Data Array Name"].isString())
+  {
+    d_ptr->m_DataContainerName = json["Data Container Name"].toString();
+    d_ptr->m_AttributeMatrixName = json["Attribute Matrix Name"].toString();
+    d_ptr->m_DataArrayName = json["Data Array Name"].toString();
+    return true;
+  }
+  return false;
+}
+
+
+

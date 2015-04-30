@@ -36,8 +36,10 @@
 #include "SeparatorWidget.h"
 
 #include <QtCore/QMetaProperty>
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
+#include "QtSupport/DREAM3DStyles.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -68,11 +70,11 @@ QString SeparatorWidget::getLabelStyleSheet()
 
   ss << "QLabel#label {";
 #if defined(Q_OS_WIN)
-  ss << "font: 10 pt \"Times New Roman\";";
+  ss << "font: 9pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #elif defined(Q_OS_MAC)
-  ss << "font: 13 pt \"Times New Roman\";";
+  ss << "font: 100 12pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #else
-  ss << "font: 10 pt \"Times New Roman\"";
+  ss << "font: 100 10pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #endif
   ss << "  font-weight: bold;  }";
   return styleSheet;

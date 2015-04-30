@@ -18,7 +18,8 @@ set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersReader.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersWriter.h
-  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/TextFilterParametersWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/JsonFilterParametersWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/JsonFilterParametersReader.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicTableData.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FileListInfoFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedBooleanFilterParameter.h
@@ -46,7 +47,8 @@ set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersWriter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/TextFilterParametersWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/JsonFilterParametersWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/JsonFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicTableData.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FileListInfoFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ChoiceFilterParameter.cpp

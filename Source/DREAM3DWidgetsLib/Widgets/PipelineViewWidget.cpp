@@ -66,6 +66,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
 
 #include "QtSupport/QDroppableScrollArea.h"
 
@@ -89,7 +91,6 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   m_AutoScroll(false),
   m_AutoScrollMargin(10),
   m_autoScrollCount(0),
-  m_InputParametersWidget(NULL),
   m_PipelineMessageObserver(NULL)
 {
   setupGui();
@@ -188,15 +189,6 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
   emit pipelineChanged();
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::setInputParametersWidget(QWidget* w)
-{
-  m_InputParametersWidget = w;
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -229,10 +221,12 @@ PipelineFilterWidget* PipelineViewWidget::filterWidgetAt(int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::resetLayout()
 {
-
   // Check to see if we have removed all the filters
   if (filterCount() <= 0)
   {
+    // Emit a signal to tell DREAM3D_UI to erase the Filter Input Widget.
+    emit noFilterWidgetsInPipeline();
+
     // Remove the current Layout
     QLayout* l = layout();
     if (NULL != l && l == m_FilterWidgetLayout)
@@ -245,7 +239,6 @@ void PipelineViewWidget::resetLayout()
     // and add the empty pipeline layout instead
     newEmptyPipelineViewLayout();
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -351,9 +344,8 @@ FilterPipeline::Pointer PipelineViewWidget::getCopyOfFilterPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::savePipeline(const QString& filePath, const QString& name, QSettings::Format format)
+void PipelineViewWidget::updateFavorite(const QString& filePath, const QString& name, QSettings::Format format)
 {
-  qDebug() << "Saving Pipeline to file: " << filePath;
   //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
   if (fi.exists() == true)
@@ -361,8 +353,8 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString& na
     QFile f(filePath);
     if (f.remove() == false)
     {
-      QMessageBox::warning ( this, QString::fromLatin1("Pipeline Save Error"),
-                             QString::fromLatin1("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
+      QMessageBox::warning ( this, QString::fromLatin1("Favorite Update Error"),
+                             QString::fromLatin1("There was an error removing the existing favorite. The favorite was NOT updated.") );
       return;
     }
   }
@@ -383,19 +375,134 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString& na
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Format format, bool append)
+void PipelineViewWidget::writePipeline(QString filePath)
 {
-  qDebug() << "Loading Pipeline from file: " << filePath;
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  QFileInfo fi(filePath);
+  if (fi.exists() == true)
+  {
+    QFile f(filePath);
+    if (f.remove() == false)
+    {
+      QMessageBox::warning(this, QString::fromLatin1("Pipeline Write Error"),
+        QString::fromLatin1("There was an error removing the existing pipeline file. The pipeline was NOT saved."));
+      return;
+    }
+  }
+
+  QString ext = fi.completeSuffix();
+  QString name = fi.fileName();
+
+  // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = getFilterPipeline();
+
+  int err = 0;
+  if (ext == "ini" || ext == "txt")
+  {
+    err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, QSettings::IniFormat, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
+  }
+  else if (ext == "dream3d")
+  {
+    err = H5FilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
+  }
+  else if (ext == "json")
+  {
+    err = JsonFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
+  }
+  else
+  {
+    m_StatusBar->showMessage(tr("The pipeline was not written to file '%1'. '%2' is an unsupported file extension.").arg(name).arg(ext));
+    return;
+  }
+
+  if (err < 0)
+  {
+    m_StatusBar->showMessage(tr("There was an error while saving the pipeline to file '%1'.").arg(name));
+  }
+  else
+  {
+    m_StatusBar->showMessage(tr("The pipeline has been saved successfully to '%1'.").arg(name));
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineViewWidget::openPipeline(const QString &filePath, ExtractionType type)
+{
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  QFileInfo fi(filePath);
+  if (fi.exists() == false)
+  {
+      QMessageBox::warning(this, QString::fromLatin1("Pipeline Read Error"),
+        QString::fromLatin1("There was an error opening the specified pipeline file. The pipeline file does not exist."));
+      return -1;
+  }
 
   // Clear the pipeline Issues table first so we can collect all the error messages
   emit pipelineIssuesCleared();
-  // Load the pipeline from the file resulting in a FilterPipeline Object
-  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, format, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
 
-  if (append)
-  { populatePipelineView(pipeline, Append); }
+  QString ext = fi.suffix();
+  QString name = fi.fileName();
+
+  // Read the pipeline from the file
+  FilterPipeline::Pointer pipeline = readPipelineFromFile(filePath);
+
+  // Check that a valid extension was read...
+  if (pipeline == FilterPipeline::NullPointer())
+  {
+    m_StatusBar->showMessage(tr("The pipeline was not read correctly from file '%1'. '%2' is an unsupported file extension.").arg(name).arg(ext));
+    return -1;
+  }
+
+  // Choose whether to append, replace, or prepend existing pipeline
+  if (type == Append)
+  {
+    populatePipelineView(pipeline, Append);
+  }
+  else if (type == Replace)
+  {
+    populatePipelineView(pipeline, Replace);
+  }
   else
-  { populatePipelineView(pipeline, Replace); }
+  {
+    populatePipelineView(pipeline, Prepend);
+  }
+
+  // Notify user of successful read
+  m_StatusBar->showMessage(tr("The pipeline has been read successfully from '%1'.").arg(name));
+
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterPipeline::Pointer PipelineViewWidget::readPipelineFromFile(const QString &filePath)
+{
+  QFileInfo fi(filePath);
+  QString ext = fi.suffix();
+  QString name = fi.fileName();
+
+  FilterPipeline::Pointer pipeline;
+  if (ext == "ini" || ext == "txt")
+  {
+    pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver));
+  }
+  else if (ext == "dream3d")
+  {
+    pipeline = H5FilterParametersReader::ReadPipelineFromFile(filePath);
+  }
+  else if (ext == "json")
+  {
+    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(filePath);
+  }
+  else
+  {
+    pipeline = FilterPipeline::NullPointer();
+  }
+
+  return pipeline;
 }
 
 // -----------------------------------------------------------------------------
@@ -422,6 +529,9 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 
   // Create a FilterWidget object
   PipelineFilterWidget* w = new PipelineFilterWidget(filter, NULL, this);
+
+  connect(w, SIGNAL(filterParameterChanged()),
+    this, SLOT(handleFilterParameterChanged()));
 
   // Add the filter widget to this view widget
   addFilterWidget(w, index);
@@ -456,8 +566,8 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 
     m_FilterWidgetLayout = new QVBoxLayout(this);
     m_FilterWidgetLayout->setObjectName(QString::fromUtf8("m_FilterWidgetLayout"));
-    m_FilterWidgetLayout->setContentsMargins(5, 6, 5, 6);
-    m_FilterWidgetLayout->setSpacing(5);
+    m_FilterWidgetLayout->setContentsMargins(2, 2, 2, 2);
+    m_FilterWidgetLayout->setSpacing(3);
     addSpacer = true;
 
     if(index < 0)
@@ -490,15 +600,6 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
   connect(w, SIGNAL(dragStarted(PipelineFilterWidget*)),
           this, SLOT(setFilterBeingDragged(PipelineFilterWidget*)) );
 
-  // Conditionally when the filter widget is selected, show the inputs on another widget
-  if (NULL != m_InputParametersWidget)
-  {
-    connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
-            m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
-    connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
-            m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
-  }
-
   connect(w, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
 
@@ -519,8 +620,6 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 
   // Emit that the pipeline changed
   emit pipelineChanged();
-
-
 }
 
 
@@ -632,12 +731,13 @@ void PipelineViewWidget::setFilterBeingDragged(PipelineFilterWidget* w)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setSelectedFilterWidget(PipelineFilterWidget* w)
 {
-
   if(NULL != m_SelectedFilterWidget && w != m_SelectedFilterWidget)
   {
     m_SelectedFilterWidget->setIsSelected(false);
   }
   m_SelectedFilterWidget = w;
+
+  emit filterInputWidgetChanged(w->getFilterInputWidget());
 }
 
 // -----------------------------------------------------------------------------
@@ -672,33 +772,6 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
     qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName() << "\n";
   }
 #endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::extractPipelineFromFile(const QString& filePath, ExtractionType type)
-{
-  FilterPipeline::Pointer pipeline = H5FilterParametersReader::ReadPipelineFromFile(filePath);
-
-  switch (type)
-  {
-    case Replace:
-    {
-      populatePipelineView(pipeline, Replace);
-      break;
-    }
-    case Append:
-    {
-      populatePipelineView(pipeline, Append);
-      break;
-    }
-    case Prepend:
-    {
-      populatePipelineView(pipeline, Prepend);
-      break;
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -775,16 +848,6 @@ void PipelineViewWidget::populatePipelineView(FilterPipeline::Pointer pipeline, 
   // Now preflight the pipeline for this filter.
   preflightPipeline();
   if (type == Append || type == Prepend) { emit pipelineChanged(); }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int PipelineViewWidget::readPipelineFromFile(hid_t fileId)
-{
-  int err = -1;
-
-  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -880,20 +943,21 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       fName = urlList[0].toLocalFile(); // convert first QUrl to local path
       fName = QDir::toNativeSeparators(fName);
       QFileInfo fi(fName);
-      if(fi.suffix().endsWith("txt") == true || fi.suffix().endsWith("ini") == true)
+
+      FileDragMessageBox* msgBox = new FileDragMessageBox(this, filterCount());
+      msgBox->setFilePath(fName);
+      connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString&, ExtractionType)), this, SLOT(openPipeline(const QString&, ExtractionType)));
+      connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString&, ExtractionType)), this, SLOT(addDREAM3DReaderFilter(const QString&, ExtractionType)));
+
+      if(fi.suffix().endsWith("dream3d") == false)
       {
-        loadPipelineFile(fName, QSettings::IniFormat, false);
-      }
-      else if (fi.suffix().endsWith("dream3d") == true )
-      {
-        DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this, filterCount());
-        msgBox->setFilePath(fName);
-        connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString&, ExtractionType)), this, SLOT(extractPipelineFromFile(const QString&, ExtractionType)));
-        connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString&, ExtractionType)), this, SLOT(addDREAM3DReaderFilter(const QString&, ExtractionType)));
-        msgBox->exec();
-        msgBox->deleteLater();
+        msgBox->getAddFilterBtn()->hide();
+        msgBox->getExtractPipelineBtn()->hide();
+        msgBox->getDescriptionLabel()->hide();
       }
 
+      msgBox->exec();
+      msgBox->deleteLater();
     }
   }
   else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
@@ -1049,3 +1113,22 @@ void PipelineViewWidget::showContextMenu(const QPoint& globalPos)
   }
   m_Menu.exec(globalPos);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStatusBar* PipelineViewWidget::getStatusBar()
+{
+  return m_StatusBar;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::handleFilterParameterChanged()
+{
+  emit filterParameterChanged();
+}
+
+
+

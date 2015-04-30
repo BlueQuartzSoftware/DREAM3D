@@ -121,10 +121,17 @@ void QRecentFileList::removeFile(const QString& file)
 // -----------------------------------------------------------------------------
 void QRecentFileList::writeList(QSettings& prefs)
 {
-  //qDebug() << "QRecentFileList::writeList()" << "\n";
-  prefs.beginGroup("RecentFiles");
-  prefs.setValue("recentFileList", this->recentFiles );
-  prefs.endGroup();
+  QStringList fileList = this->fileList();
+
+  prefs.beginWriteArray("RecentFiles");
+
+  for (int i = 0; i < fileList.size(); i++)
+  {
+    prefs.setArrayIndex(i);
+    prefs.setValue("FilePath", fileList[i]);
+  }
+
+  prefs.endArray();
 }
 
 // -----------------------------------------------------------------------------
@@ -132,10 +139,21 @@ void QRecentFileList::writeList(QSettings& prefs)
 // -----------------------------------------------------------------------------
 void QRecentFileList::readList(QSettings& prefs)
 {
-  //qDebug() << "QRecentFileList::readList()" << "\n";
-  prefs.beginGroup("RecentFiles");
-  this->recentFiles = prefs.value("recentFileList").toStringList();
-  prefs.endGroup();
+  int size = prefs.beginReadArray("RecentFiles");
+
+  for (int i = 0; i < size; i++)
+  {
+    prefs.setArrayIndex(i);
+    QString filePath = prefs.value("FilePath").toString();
+
+    QFile file(filePath);
+    if (file.exists())
+    {
+      this->addFile(filePath);
+    }
+  }
+
+  prefs.endArray();
 }
 
 // -----------------------------------------------------------------------------

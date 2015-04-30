@@ -42,6 +42,8 @@
 #include <QtWidgets/QDockWidget>
 #include <QtWidgets/QTreeWidgetItem>
 
+#include "QtSupport/FileDragMessageBox.h"
+
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -181,9 +183,9 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     /**
      * @brief The signal is emitted when the user double clicks on a pipeline file
      * @param filePath The absolute path to the pipeline file
-     * @param append Should the pipeline be appended to the current pipeline
+     * @param append Should the pipeline be appended, replaced, or prepended
      */
-    void pipelineFileActivated(const QString& filePath, QSettings::Format, bool append);
+    void pipelineFileActivated(const QString& filePath, ExtractionType type);
 
     /**
      * @brief filterListGenerated

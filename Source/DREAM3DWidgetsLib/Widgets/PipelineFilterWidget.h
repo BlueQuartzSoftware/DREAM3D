@@ -48,6 +48,7 @@
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/Widgets/FilterInputWidget.h"
 
 #include "DREAM3DWidgetsLib/ui_PipelineFilterWidget.h"
 
@@ -95,6 +96,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
+
+    FilterInputWidget* getFilterInputWidget();
 
     QVector<QWidget*>& getFilterParameterWidgets();
 
@@ -155,10 +158,15 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     void adjustLayout(QWidget* w, int state);
 
     /**
-     * @brief onCustomContextMenuRequested
-     * @param pos
-     */
-    void showCustomContextMenu(const QPoint& pos);
+    * @brief showContextMenuForWidget
+    * @param pos
+    */
+    void showContextMenuForWidget(const QPoint &pos);
+
+    /**
+    * @brief launchHelpForItem
+    */
+    void launchHelpForItem();
 
   protected slots:
     /**
@@ -167,9 +175,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     void on_deleteBtn_clicked();
 
     /**
-     * @brief on_helpBtn_clicked
-     */
-    void on_helpBtn_clicked();
+    * @brief handleFilterParameterChanged
+    */
+    void handleFilterParameterChanged();
 
   signals:
 
@@ -196,6 +204,11 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      */
     void parametersChanged();
 
+    /**
+    * @brief filterParameterChanged
+    */
+    void filterParameterChanged();
+
   protected:
     /**
      * @brief mousePressEvent
@@ -214,12 +227,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      * @param event
      */
     virtual void mouseMoveEvent( QMouseEvent* event );
-
-    /**
-     * @brief showContextMenu
-     * @param globalPos
-     */
-    void showContextMenu(const QPoint& globalPos);
 
     /**
      * @brief layoutWidgets
@@ -254,9 +261,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     QWidget*                  m_AdvancedInputWidget;
     QWidget*                  m_CurrentStructureWidget;
     IObserver*                m_Observer;
-    QMenu                     m_Menu;
-    QList<QAction*>           m_MenuActions;
     QMap<QString, QWidget*>   m_PropertyToWidget;
+    QMenu*                    m_ContextMenu;
+    FilterInputWidget*        m_FilterInputWidget;
 
 
     /**
@@ -264,6 +271,11 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      * @param filter
      */
     void initialize(AbstractFilter::Pointer filter);
+
+    /**
+    * @brief setupFilterInputWidget Creates and initializes the filter input widget.
+    */
+    void setupFilterInputWidget();
 
     PipelineFilterWidget(const PipelineFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineFilterWidget&); // Operator '=' Not Implemented
