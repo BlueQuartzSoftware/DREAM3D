@@ -56,7 +56,7 @@ enum FPColumnIndex
   INIT_VALUE
 };
 
-class FilterMaker : public QMainWindow, public Ui::FilterMaker
+class FilterMaker : public QWidget, public Ui::FilterMaker
 {
   Q_OBJECT
 
@@ -67,6 +67,9 @@ public:
   QString getFilterName();
   QString getPluginDir();
   bool isPublic();
+
+public slots:
+  void addFilterParameterToTable(AddFilterParameter* widget);
 
 protected:
   void setupGui();
@@ -93,12 +96,10 @@ protected slots:
   void on_errorString_linkActivated(const QString &link);
   void generationError(const QString& test);
 
-  void addFilterParameterToTable(AddFilterParameter* widget);
-
 signals:
   void generateBtnPressed();
   void cancelBtnPressed();
-  void filterMakerClosing();
+  void updateStatusBar(QString message);
 
 private:
   QString                     m_OpenDialogLastDirectory;
@@ -106,13 +107,6 @@ private:
   PMFileGenerator*            hGenerator;
   PMFileGenerator*            htmlGenerator;
   PMFileGenerator*            testGenerator;
-  
-  void closeEvent(QCloseEvent* event);
-
-  void writeSettings();
-  void readSettings();
-  void readWindowSettings(QSettings& prefs);
-  void writeWindowSettings(QSettings& prefs);
 
   void updateFilterFileGenerators();
   void generateFilterFiles();
