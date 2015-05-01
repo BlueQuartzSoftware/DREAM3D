@@ -44,6 +44,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "IO/IOConstants.h"
@@ -398,7 +399,7 @@ AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToStl::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

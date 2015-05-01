@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------
@@ -268,7 +269,7 @@ AbstractFilter::Pointer FindLargestCrossSections::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString FindLargestCrossSections::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

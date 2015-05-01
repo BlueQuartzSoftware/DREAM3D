@@ -12,6 +12,7 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
+#include "EMMPMConstants.h"
 
 #include "EMMPM/moc_EMMPMPlugin.cpp"
 

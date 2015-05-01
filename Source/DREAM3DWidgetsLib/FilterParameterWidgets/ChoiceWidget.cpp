@@ -38,7 +38,8 @@
 #include <QtCore/QMetaProperty>
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
+
 
 #include "FilterParameterWidgetsDialogs.h"
 

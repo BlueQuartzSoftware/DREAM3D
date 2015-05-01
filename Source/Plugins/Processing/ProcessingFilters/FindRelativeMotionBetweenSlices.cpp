@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
 #include "Processing/ProcessingConstants.h"
@@ -661,7 +662,7 @@ AbstractFilter::Pointer FindRelativeMotionBetweenSlices::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 
 // -----------------------------------------------------------------------------

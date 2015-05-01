@@ -243,7 +243,7 @@ AbstractFilter::Pointer ExtractFlaggedFeatures::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 
 // -----------------------------------------------------------------------------

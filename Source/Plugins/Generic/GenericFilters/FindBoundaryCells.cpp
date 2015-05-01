@@ -217,7 +217,7 @@ AbstractFilter::Pointer FindBoundaryCells::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryCells::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return GenericConstants::GenericBaseName; }
 
 // -----------------------------------------------------------------------------
 //

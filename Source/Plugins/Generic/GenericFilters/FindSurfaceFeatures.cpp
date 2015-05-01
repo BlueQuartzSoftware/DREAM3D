@@ -266,7 +266,7 @@ AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceFeatures::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return GenericConstants::GenericBaseName; }
 
 // -----------------------------------------------------------------------------
 //

@@ -45,6 +45,8 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
 #include "OrientationLib/Math/OrientationMath.h"
@@ -533,7 +535,7 @@ AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

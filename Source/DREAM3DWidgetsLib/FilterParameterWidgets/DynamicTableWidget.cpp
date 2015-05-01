@@ -41,6 +41,7 @@
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DynamicTableData.h"
+#include "DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 

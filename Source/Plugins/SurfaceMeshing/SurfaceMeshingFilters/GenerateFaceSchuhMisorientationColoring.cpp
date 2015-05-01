@@ -332,7 +332,7 @@ AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstan
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

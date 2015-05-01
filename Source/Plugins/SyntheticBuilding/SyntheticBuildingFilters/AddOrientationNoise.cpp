@@ -210,7 +210,7 @@ AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString AddOrientationNoise::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

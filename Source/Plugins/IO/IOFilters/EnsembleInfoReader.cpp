@@ -47,6 +47,7 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -410,7 +411,7 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
     // -----------------------------------------------------------------------------
     const QString EnsembleInfoReader::getCompiledLibraryName()
     {
-      return IO::IOBaseName;
+      return IOConstants::IOBaseName;
     }
 
 

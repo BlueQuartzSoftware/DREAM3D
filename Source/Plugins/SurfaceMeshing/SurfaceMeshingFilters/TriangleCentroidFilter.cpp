@@ -250,7 +250,7 @@ AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString TriangleCentroidFilter::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

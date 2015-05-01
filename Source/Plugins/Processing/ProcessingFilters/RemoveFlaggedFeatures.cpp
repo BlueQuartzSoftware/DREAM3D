@@ -333,7 +333,7 @@ AbstractFilter::Pointer RemoveFlaggedFeatures::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString RemoveFlaggedFeatures::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

@@ -47,6 +47,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -282,7 +283,7 @@ AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

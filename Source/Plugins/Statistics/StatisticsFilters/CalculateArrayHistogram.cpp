@@ -37,6 +37,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 #include "CalculateArrayHistogram.h"
 
@@ -403,7 +404,7 @@ AbstractFilter::Pointer CalculateArrayHistogram::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

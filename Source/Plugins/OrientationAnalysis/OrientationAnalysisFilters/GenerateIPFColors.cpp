@@ -47,6 +47,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/Math/OrientationMath.h"
@@ -343,7 +344,7 @@ AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

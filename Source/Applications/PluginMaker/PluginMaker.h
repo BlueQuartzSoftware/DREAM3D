@@ -50,7 +50,7 @@
 #include "ui_PluginMaker.h"
 #include "FilterBundler.h"
 
-class PluginMaker : public QMainWindow, public Ui::PluginMaker
+class PluginMaker : public QWidget, public Ui::PluginMaker
 {
     Q_OBJECT
 
@@ -59,8 +59,6 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
 
   protected:
     void setupGui();
-
-    QString generateFileSystemPath(QString);
 
   protected slots:
     void on_selectButton_clicked();
@@ -72,9 +70,6 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
     void on_treeWidget_itemSelectionChanged();
     void generationError(const QString& test);
 
-    void on_actionPlugin_Maker_Help_triggered();
-    void on_actionAbout_triggered();
-
     void on_addFilterBtn_clicked();
     void on_removeFilterBtn_clicked();
 
@@ -82,17 +77,13 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
 
   signals:
 	void clicked(QSet<QString> names);
+  void updateStatusBar(QString message);
 
   private:
     QString m_OpenDialogLastDirectory;
     QString cleanName(QString name);
     QString cleanName_filters(QString name);
-    void closeEvent(QCloseEvent* event);
     qint32 checkDirtyDocument();
-    void writeSettings();
-    void readSettings();
-    void readWindowSettings(QSettings& prefs);
-    void writeWindowSettings(QSettings& prefs);
     QString generateCmakeContents();
 // QString generateQrcContents();
 

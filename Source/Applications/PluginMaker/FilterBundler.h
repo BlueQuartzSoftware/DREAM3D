@@ -39,7 +39,7 @@
 #define _FILTERBUNDLER_H_
 
 #include <QtWidgets/QTreeWidgetItem>
-#include "PMFilterGenerator.h"
+#include "PMFileGenerator.h"
 
 class FilterBundler
 {

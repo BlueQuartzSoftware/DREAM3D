@@ -3080,7 +3080,7 @@ AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString M3CSliceBySlice::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

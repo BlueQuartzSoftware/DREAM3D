@@ -256,7 +256,7 @@ AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString TriangleAreaFilter::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

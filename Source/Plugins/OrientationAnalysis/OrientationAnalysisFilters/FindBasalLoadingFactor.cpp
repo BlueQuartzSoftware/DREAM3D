@@ -213,7 +213,7 @@ AbstractFilter::Pointer FindBasalLoadingFactor::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString FindBasalLoadingFactor::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

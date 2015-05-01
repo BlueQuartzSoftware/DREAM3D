@@ -302,7 +302,7 @@ AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgScalarValueForFeatures::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

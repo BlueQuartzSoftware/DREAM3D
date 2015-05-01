@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -556,7 +557,7 @@ AbstractFilter::Pointer FindProjectedImageStatistics::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString FindProjectedImageStatistics::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 
 // -----------------------------------------------------------------------------

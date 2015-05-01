@@ -683,7 +683,7 @@ AbstractFilter::Pointer IdentifyMicroTextureRegions::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString IdentifyMicroTextureRegions::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -44,6 +44,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -332,7 +333,7 @@ AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool
 //
 // -----------------------------------------------------------------------------
 const QString AvizoRectilinearCoordinateWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

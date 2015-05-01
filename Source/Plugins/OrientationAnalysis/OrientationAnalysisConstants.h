@@ -6,7 +6,7 @@
  * @namespace OrientationAnalysis
  * @brief These are strings that the plugin uses for display in error and other information messages.
  */
-namespace OrientationAnalysis
+namespace OrientationAnalysisConstants
 {
   const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
   const QString OrientationAnalysisPluginDisplayName("OrientationAnalysisPlugin");

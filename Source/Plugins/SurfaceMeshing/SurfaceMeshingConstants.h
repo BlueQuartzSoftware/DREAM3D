@@ -3,7 +3,7 @@
 
 #include <QtCore/QString>
 
-namespace SurfaceMeshing
+namespace SurfaceMeshingConstants
 {
   const QString SurfaceMeshingPluginFile("SurfaceMeshingPlugin");
   const QString SurfaceMeshingPluginDisplayName("SurfaceMeshingPlugin");

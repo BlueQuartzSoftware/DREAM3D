@@ -37,7 +37,9 @@
 #include "GenericExample.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
+#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -203,7 +205,6 @@ void GenericExample::setupFilterParameters()
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "CrystalStructures"));
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
   parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", FilterParameterWidgetType::MultiDataArraySelectionWidget, paths, false, 0));
-
 
   setFilterParameters(parameters);
 }

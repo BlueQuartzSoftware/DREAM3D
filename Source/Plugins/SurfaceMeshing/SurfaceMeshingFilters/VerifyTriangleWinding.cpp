@@ -777,7 +777,7 @@ AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString VerifyTriangleWinding::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

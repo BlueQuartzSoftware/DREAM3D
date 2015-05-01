@@ -329,7 +329,7 @@ AbstractFilter::Pointer FindFeatureReferenceCAxisMisorientations::newFilterInsta
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

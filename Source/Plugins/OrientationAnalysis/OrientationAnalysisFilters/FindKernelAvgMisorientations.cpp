@@ -291,7 +291,7 @@ AbstractFilter::Pointer FindKernelAvgMisorientations::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString FindKernelAvgMisorientations::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

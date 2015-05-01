@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "Sampling/SamplingConstants.h"
 
@@ -275,7 +276,7 @@ AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

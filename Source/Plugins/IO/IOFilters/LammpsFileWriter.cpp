@@ -43,6 +43,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 #include "IO/IOConstants.h"
@@ -249,7 +250,7 @@ AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

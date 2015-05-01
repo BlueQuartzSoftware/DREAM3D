@@ -3,7 +3,7 @@
 
 #include <QtCore/QString>
 
-namespace Sampling
+namespace SamplingConstants
 {
   const QString SamplingPluginFile("SamplingPlugin");
   const QString SamplingPluginDisplayName("SamplingPlugin");
