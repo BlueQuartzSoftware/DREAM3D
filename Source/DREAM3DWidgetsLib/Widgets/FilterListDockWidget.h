@@ -154,6 +154,8 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
 
     FilterManager::Collection  m_LoadedFilters;
 
+    QMap<QString, AbstractFilter::Pointer> getHumanNameMap(QList<AbstractFilter::Pointer> list);
+
     FilterListDockWidget(const FilterListDockWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterListDockWidget&); // Operator '=' Not Implemented
 };

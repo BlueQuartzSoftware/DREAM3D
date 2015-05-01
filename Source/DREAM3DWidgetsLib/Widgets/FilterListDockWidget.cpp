@@ -59,9 +59,9 @@ FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
   QDockWidget(parent),
   m_ContextMenu(new QMenu(this)),
   m_Mapper(NULL),
-  m_SearchExactPhrase(true),
+  m_SearchExactPhrase(false),
   m_SearchAnyWords(false),
-  m_SearchAllWords(false)
+  m_SearchAllWords(true)
 {
   setupUi(this);
 
@@ -83,7 +83,6 @@ void FilterListDockWidget::setupGui()
   updateFilterList(true);
 
   setupSearchField();
-  //updateSearchIcons();
 
   QString css(" QToolTip {\
               border: 2px solid #434343;\
@@ -118,16 +117,17 @@ void FilterListDockWidget::setupSearchField()
   connect(filterSearch, SIGNAL(textChanged(QString)), this, SLOT(searchFilters(QString)));
 
   {
-    m_ActionExactPhrase = new QAction(filterSearch);
-    m_ActionExactPhrase->setObjectName(QString::fromUtf8("actionExactPhrase"));
-    m_ActionExactPhrase->setText(QApplication::translate("DREAM3D_UI", "Exact Phrase", 0));
-    m_ActionExactPhrase->setCheckable(true);
-    m_ActionExactPhrase->setChecked(m_SearchExactPhrase);
-    filterSearch->addAction(m_ActionExactPhrase);
-    connect(m_ActionExactPhrase, SIGNAL(toggled(bool)),
+    m_ActionAllWords = new QAction(filterSearch);
+    m_ActionAllWords->setObjectName(QString::fromUtf8("actionAllWords"));
+    m_ActionAllWords->setText(QApplication::translate("DREAM3D_UI", "All Words", 0));
+    m_ActionAllWords->setCheckable(true);
+    m_ActionAllWords->setChecked(m_SearchAllWords);
+    filterSearch->addAction(m_ActionAllWords);
+    connect(m_ActionAllWords, SIGNAL(toggled(bool)),
       this, SLOT(searchFieldsChanged(bool)));
-    lineEditMenu->addAction(m_ActionExactPhrase);
+    lineEditMenu->addAction(m_ActionAllWords);
   }
+
   {
     m_ActionAnyWords = new QAction(filterSearch);
     m_ActionAnyWords->setObjectName(QString::fromUtf8("actionWordForWord"));
@@ -139,16 +139,17 @@ void FilterListDockWidget::setupSearchField()
       this, SLOT(searchFieldsChanged(bool)));
     lineEditMenu->addAction(m_ActionAnyWords);
   }
+
   {
-    m_ActionAllWords = new QAction(filterSearch);
-    m_ActionAllWords->setObjectName(QString::fromUtf8("actionAllWords"));
-    m_ActionAllWords->setText(QApplication::translate("DREAM3D_UI", "All Words", 0));
-    m_ActionAllWords->setCheckable(true);
-    m_ActionAllWords->setChecked(m_SearchAllWords);
-    filterSearch->addAction(m_ActionAllWords);
-    connect(m_ActionAllWords, SIGNAL(toggled(bool)),
+    m_ActionExactPhrase = new QAction(filterSearch);
+    m_ActionExactPhrase->setObjectName(QString::fromUtf8("actionExactPhrase"));
+    m_ActionExactPhrase->setText(QApplication::translate("DREAM3D_UI", "Exact Phrase", 0));
+    m_ActionExactPhrase->setCheckable(true);
+    m_ActionExactPhrase->setChecked(m_SearchExactPhrase);
+    filterSearch->addAction(m_ActionExactPhrase);
+    connect(m_ActionExactPhrase, SIGNAL(toggled(bool)),
       this, SLOT(searchFieldsChanged(bool)));
-    lineEditMenu->addAction(m_ActionAllWords);
+    lineEditMenu->addAction(m_ActionExactPhrase);
   }
 }
 
@@ -345,9 +346,10 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
   if (m_ActionExactPhrase->isChecked())
   {
     QList<AbstractFilter::Pointer> filterList = bitArrayMap.keys(wordList.size());
-    for (int i = 0; i < filterList.size(); i++)
+    QMap<QString, AbstractFilter::Pointer> humanNameMap = getHumanNameMap(filterList);
+    for (QMap<QString, AbstractFilter::Pointer>::iterator iter = humanNameMap.begin(); iter != humanNameMap.end(); ++iter)
     {
-      AbstractFilter::Pointer filter = filterList[i];
+      AbstractFilter::Pointer filter = iter.value();
       if (filter->getHumanLabel().contains(fullWord, Qt::CaseInsensitive))
       {
         addItemToList(filter);
@@ -358,9 +360,10 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
   else if (m_ActionAllWords->isChecked())
   {
     QList<AbstractFilter::Pointer> filterList = bitArrayMap.keys(wordList.size());
-    for (int i = 0; i < filterList.size(); i++)
+    QMap<QString, AbstractFilter::Pointer> humanNameMap = getHumanNameMap(filterList);
+    for (QMap<QString, AbstractFilter::Pointer>::iterator iter = humanNameMap.begin(); iter != humanNameMap.end(); ++iter)
     {
-      AbstractFilter::Pointer filter = filterList[i];
+      AbstractFilter::Pointer filter = iter.value();
       addItemToList(filter);
     }
   }
@@ -368,9 +371,10 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
   else if (m_ActionAnyWords->isChecked())
   {
     QList<AbstractFilter::Pointer> filterList = bitArrayMap.keys();
-    for (int i = 0; i < filterList.size(); i++)
+    QMap<QString, AbstractFilter::Pointer> humanNameMap = getHumanNameMap(filterList);
+    for (QMap<QString, AbstractFilter::Pointer>::iterator iter = humanNameMap.begin(); iter != humanNameMap.end(); ++iter)
     {
-      AbstractFilter::Pointer filter = filterList[i];
+      AbstractFilter::Pointer filter = iter.value();
       addItemToList(filter);
     }
   }
@@ -505,6 +509,20 @@ QList<QAction*> FilterListDockWidget::getSearchActionList()
   list.append(m_ActionAnyWords);
   list.append(m_ActionAllWords);
   return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, AbstractFilter::Pointer> FilterListDockWidget::getHumanNameMap(QList<AbstractFilter::Pointer> list)
+{
+  QMap<QString, AbstractFilter::Pointer> map;
+  for (int i = 0; i < list.size(); i++)
+  {
+    map.insert(list[i]->getHumanLabel(), list[i]);
+  }
+
+  return map;
 }
 
 
