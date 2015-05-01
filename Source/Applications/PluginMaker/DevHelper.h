@@ -59,6 +59,7 @@ protected slots:
 
   void on_actionShowUserManual_triggered();
   void on_actionAbout_triggered();
+  void on_actionExit_triggered();
 
 private:
 

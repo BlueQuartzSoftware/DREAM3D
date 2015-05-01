@@ -270,4 +270,13 @@ void DevHelper::on_actionAbout_triggered()
   about.exec();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DevHelper::on_actionExit_triggered()
+{
+  // Quit the app
+  qApp->quit();
+}
+
 
