@@ -32,7 +32,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "RotationTransforms.h"
+#include "OrientationTransforms.h"
 
 
 #include <iostream>
@@ -67,21 +67,21 @@ T maxval(T* val, size_t c)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotationTransforms::RotationTransforms()
+OrientationTransforms::OrientationTransforms()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotationTransforms::~RotationTransforms()
+OrientationTransforms::~OrientationTransforms()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::FatalError(const std::string &func, const std::string &msg)
+void OrientationTransforms::FatalError(const std::string &func, const std::string &msg)
 {
   std::cout << func << "::" << msg << std::endl;
 }
@@ -91,7 +91,7 @@ void RotationTransforms::FatalError(const std::string &func, const std::string &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu_check(const RotArrayF& eu, int* res)
+void OrientationTransforms::eu_check(const RotArrayF& eu, int* res)
 {
   //*** use local
   //*** use constants
@@ -115,7 +115,7 @@ void RotationTransforms::eu_check(const RotArrayF& eu, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu_check(const RotArrayD &eu, int* res)
+void OrientationTransforms::eu_check(const RotArrayD &eu, int* res)
 {
   //*** use local
   //*** use constants
@@ -139,7 +139,7 @@ void RotationTransforms::eu_check(const RotArrayD &eu, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro_check(const RotArrayF &ro, int* res)
+void OrientationTransforms::ro_check(const RotArrayF &ro, int* res)
 {
   //*** use local
   //*** use constants
@@ -165,7 +165,7 @@ void RotationTransforms::ro_check(const RotArrayF &ro, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro_check(const RotArrayD &ro, int* res)
+void OrientationTransforms::ro_check(const RotArrayD &ro, int* res)
 {
   //*** use local
   //*** use constants
@@ -191,7 +191,7 @@ void RotationTransforms::ro_check(const RotArrayD &ro, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho_check(const RotArrayF& ho, int* res)
+void OrientationTransforms::ho_check(const RotArrayF& ho, int* res)
 {
   //*** use local
   //*** use constants
@@ -214,7 +214,7 @@ void RotationTransforms::ho_check(const RotArrayF& ho, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho_check(const RotArrayD& ho, int* res)
+void OrientationTransforms::ho_check(const RotArrayD& ho, int* res)
 {
   //*** use local
   //*** use constants
@@ -238,7 +238,7 @@ void RotationTransforms::ho_check(const RotArrayD& ho, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu_check(const RotArrayF& cu, int* res)
+void OrientationTransforms::cu_check(const RotArrayF& cu, int* res)
 {
   //*** use local
   //*** use constants
@@ -259,7 +259,7 @@ void RotationTransforms::cu_check(const RotArrayF& cu, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu_check(const RotArrayD& cu, int* res)
+void OrientationTransforms::cu_check(const RotArrayD& cu, int* res)
 {
   //*** use local
   //*** use constants
@@ -280,7 +280,7 @@ void RotationTransforms::cu_check(const RotArrayD& cu, int* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu_check(float* qu, float* res)
+void OrientationTransforms::qu_check(float* qu, float* res)
 {
   //*** use local
   //*** use constants
@@ -306,7 +306,7 @@ void RotationTransforms::qu_check(float* qu, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu_check(double* qu, double* res)
+void OrientationTransforms::qu_check(double* qu, double* res)
 {
   //*** use local
   //*** use constants
@@ -332,7 +332,7 @@ void RotationTransforms::qu_check(double* qu, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax_check(float* ax, float* res)
+void OrientationTransforms::ax_check(float* ax, float* res)
 {
   //*** use local
   //*** use constants
@@ -358,7 +358,7 @@ void RotationTransforms::ax_check(float* ax, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax_check_D(float* ax, float* res)
+void OrientationTransforms::ax_check_D(float* ax, float* res)
 {
   //*** use local
   //*** use constants
@@ -384,7 +384,7 @@ void RotationTransforms::ax_check_D(float* ax, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om_check(float* om, float* res)
+void OrientationTransforms::om_check(float* om, float* res)
 {
   //*** use local
   //*** use constants
@@ -417,7 +417,7 @@ void RotationTransforms::om_check(float* om, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om_check(double* om, double* res)
+void OrientationTransforms::om_check(double* om, double* res)
 {
   //*** use local
   //*** use constants
@@ -450,7 +450,7 @@ void RotationTransforms::om_check(double* om, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::genrot(float* av, float omega, float* res)
+void OrientationTransforms::genrot(float* av, float omega, float* res)
 {
   //*** use local
   //*** use constants
@@ -481,7 +481,7 @@ void RotationTransforms::genrot(float* av, float omega, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::genrot(double* av, double omega, double* res)
+void OrientationTransforms::genrot(double* av, double omega, double* res)
 {
   //*** use local
   //*** use constants
@@ -512,7 +512,7 @@ void RotationTransforms::genrot(double* av, double omega, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::init_orientation(float* orient, char intype[2], bool rotcheck, float* res)
+void OrientationTransforms::init_orientation(float* orient, char intype[2], bool rotcheck, float* res)
 {
   //*** use local
   //*** IMPLICIT NONE
@@ -600,7 +600,7 @@ void RotationTransforms::init_orientation(float* orient, char intype[2], bool ro
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::init_orientation(double* orient, char intype[2], bool rotcheck, double* res)
+void OrientationTransforms::init_orientation(double* orient, char intype[2], bool rotcheck, double* res)
 {
   //*** use local
   //*** use error
@@ -690,7 +690,7 @@ void RotationTransforms::init_orientation(double* orient, char intype[2], bool r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::init_orientation_om(float* orient, char intype[2], bool rotcheck, float* res)
+void OrientationTransforms::init_orientation_om(float* orient, char intype[2], bool rotcheck, float* res)
 {
   //*** use local
   //*** IMPLICIT NONE
@@ -718,7 +718,7 @@ void RotationTransforms::init_orientation_om(float* orient, char intype[2], bool
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void RotationTransforms::init_orientation_om(double* orient, char intype[2], bool rotcheck, double* res)
+  void OrientationTransforms::init_orientation_om(double* orient, char intype[2], bool rotcheck, double* res)
   {
   //*** use local
   //*** IMPLICIT NONE
@@ -746,7 +746,7 @@ void RotationTransforms::init_orientation_om(float* orient, char intype[2], bool
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void RotationTransforms::eu2om(float* e, float* res)
+  void OrientationTransforms::eu2om(float* e, float* res)
   {
   //*** use local
   //*** IMPLICIT NONE
@@ -787,7 +787,7 @@ void RotationTransforms::init_orientation_om(float* orient, char intype[2], bool
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void RotationTransforms::eu2om(double* e, double* res)
+  void OrientationTransforms::eu2om(double* e, double* res)
   {
   //*** use local
   //*** IMPLICIT NONE
@@ -828,7 +828,7 @@ void RotationTransforms::init_orientation_om(float* orient, char intype[2], bool
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void RotationTransforms::eu2ax(float* e, float* res)
+  void OrientationTransforms::eu2ax(float* e, float* res)
   {
   //*** use local
   //*** use constants
@@ -862,7 +862,7 @@ if (alpha < 0.0) res = -res
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2ax(double* e, double* res)
+void OrientationTransforms::eu2ax(double* e, double* res)
 {
   //*** use local
   //*** use constants
@@ -896,7 +896,7 @@ void RotationTransforms::eu2ax(double* e, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2ro(float* e, float* res)
+void OrientationTransforms::eu2ro(float* e, float* res)
 {
   //*** use local
   //*** use constants
@@ -923,7 +923,7 @@ void RotationTransforms::eu2ro(float* e, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2ro(double* e, double* res)
+void OrientationTransforms::eu2ro(double* e, double* res)
 {
   //*** use local
   //*** use constants
@@ -950,7 +950,7 @@ void RotationTransforms::eu2ro(double* e, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2qu(float* e, float* res)
+void OrientationTransforms::eu2qu(float* e, float* res)
 {
   //*** use local
   //*** use constants
@@ -979,7 +979,7 @@ void RotationTransforms::eu2qu(float* e, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2qu(double* e, double* res)
+void OrientationTransforms::eu2qu(double* e, double* res)
 {
   //*** use local
   //*** use constants
@@ -1008,7 +1008,7 @@ void RotationTransforms::eu2qu(double* e, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2eu(float* o, float* res)
+void OrientationTransforms::om2eu(float* o, float* res)
 {
   //*** use local
   //*** use constants
@@ -1040,7 +1040,7 @@ void RotationTransforms::om2eu(float* o, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2eu(double* o, double* res)
+void OrientationTransforms::om2eu(double* o, double* res)
 {
   //*** use local
   //*** use constants
@@ -1074,7 +1074,7 @@ void RotationTransforms::om2eu(double* o, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2om(float* a, float* res)
+void OrientationTransforms::ax2om(float* a, float* res)
 {
   //*** use local
   //*** use constants
@@ -1108,7 +1108,7 @@ void RotationTransforms::ax2om(float* a, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2om(double* a, double* res)
+void OrientationTransforms::ax2om(double* a, double* res)
 {
   //*** use local
   //*** use constants
@@ -1142,7 +1142,7 @@ void RotationTransforms::ax2om(double* a, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2eu(float* q, float* res)
+void OrientationTransforms::qu2eu(float* q, float* res)
 {
   //*** use local
   //*** use constants
@@ -1202,7 +1202,7 @@ void RotationTransforms::qu2eu(float* q, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2eu(double* q, double* res)
+void OrientationTransforms::qu2eu(double* q, double* res)
 {
   //*** use local
   //*** use constants
@@ -1262,7 +1262,7 @@ res = (/ phi1, Phi, phi2 /);
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2ho(float* a, float* res)
+void OrientationTransforms::ax2ho(float* a, float* res)
 {
   //*** use local
   //*** use constants
@@ -1279,7 +1279,7 @@ void RotationTransforms::ax2ho(float* a, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2ho(double* a, double* res)
+void OrientationTransforms::ax2ho(double* a, double* res)
 {
   //*** use local
   //*** IMPLICIT NONE
@@ -1295,7 +1295,7 @@ void RotationTransforms::ax2ho(double* a, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2ax(float* h, float* res)
+void OrientationTransforms::ho2ax(float* h, float* res)
 {
   //*** use local
   //*** use constants
@@ -1333,7 +1333,7 @@ void RotationTransforms::ho2ax(float* h, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2ax(double* h, double* res)
+void OrientationTransforms::ho2ax(double* h, double* res)
 {
   //*** use local
   //*** use constants
@@ -1371,7 +1371,7 @@ void RotationTransforms::ho2ax(double* h, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2ax(float* om, float* res)
+void OrientationTransforms::om2ax(float* om, float* res)
 {
   //*** use local
   //*** use constants
@@ -1431,7 +1431,7 @@ void RotationTransforms::om2ax(float* om, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2ax(double* om, double* res)
+void OrientationTransforms::om2ax(double* om, double* res)
 {
   //*** use local
   //*** use constants
@@ -1490,7 +1490,7 @@ void RotationTransforms::om2ax(double* om, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2ax(float* r, float* res)
+void OrientationTransforms::ro2ax(float* r, float* res)
 {
   //*** use local
   //*** use constants
@@ -1517,7 +1517,7 @@ res = (/ r[0]/ta, r[1]/ta, r[2]/ta, angle /)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2ax(double* r, double* res)
+void OrientationTransforms::ro2ax(double* r, double* res)
 {
   //*** use local
   //*** use constants
@@ -1544,7 +1544,7 @@ angle = 2.0*atan(ta)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2ro(float* a, float* res)
+void OrientationTransforms::ax2ro(float* a, float* res)
 {
   //*** use local
   //*** use constants
@@ -1569,7 +1569,7 @@ void RotationTransforms::ax2ro(float* a, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2ro(double* a, double* res)
+void OrientationTransforms::ax2ro(double* a, double* res)
 {
   //*** use local
   //*** use constants
@@ -1594,7 +1594,7 @@ void RotationTransforms::ax2ro(double* a, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2qu(float* a, float* res)
+void OrientationTransforms::ax2qu(float* a, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: a[3]
@@ -1613,7 +1613,7 @@ void RotationTransforms::ax2qu(float* a, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2qu(double* a, double* res)
+void OrientationTransforms::ax2qu(double* a, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: a[3]
@@ -1632,7 +1632,7 @@ void RotationTransforms::ax2qu(double* a, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2ho(float* r, float* res)
+void OrientationTransforms::ro2ho(float* r, float* res)
 {
   //*** use local
   //*** use constants
@@ -1658,7 +1658,7 @@ void RotationTransforms::ro2ho(float* r, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2ho(double* r, double* res)
+void OrientationTransforms::ro2ho(double* r, double* res)
 {
   //*** use local
   //*** use constants
@@ -1684,7 +1684,7 @@ void RotationTransforms::ro2ho(double* r, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2om(float* q, float* res)
+void OrientationTransforms::qu2om(float* q, float* res)
 {
   //*** use local
   //*** use constants
@@ -1710,7 +1710,7 @@ void RotationTransforms::qu2om(float* q, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2om(double* q, double* res)
+void OrientationTransforms::qu2om(double* q, double* res)
 {
   //*** use local
   //*** use constants
@@ -1736,7 +1736,7 @@ void RotationTransforms::qu2om(double* q, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2qu(float* x, float* res)
+void OrientationTransforms::om2qu(float* x, float* res)
 {
   //*** use local
   //*** use constants
@@ -1775,7 +1775,7 @@ void RotationTransforms::om2qu(float* x, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2qu(double* x, double* res)
+void OrientationTransforms::om2qu(double* x, double* res)
 {
   //*** use local
   //*** use constants
@@ -1818,7 +1818,7 @@ void RotationTransforms::om2qu(double* x, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2ax(float* q, float* res)
+void OrientationTransforms::qu2ax(float* q, float* res)
 {
   //*** use local
   //*** use constants
@@ -1842,7 +1842,7 @@ void RotationTransforms::qu2ax(float* q, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2ax(double* q, double* res)
+void OrientationTransforms::qu2ax(double* q, double* res)
 {
   //*** use local
   //*** use constants
@@ -1866,7 +1866,7 @@ void RotationTransforms::qu2ax(double* q, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2ro(float* q, float* res)
+void OrientationTransforms::qu2ro(float* q, float* res)
 {
   //*** use local
   //*** use constants
@@ -1896,7 +1896,7 @@ void RotationTransforms::qu2ro(float* q, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2ro(double* q, double* res)
+void OrientationTransforms::qu2ro(double* q, double* res)
 {
   //*** use local
   //*** use constants
@@ -1926,7 +1926,7 @@ void RotationTransforms::qu2ro(double* q, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2ho(float* q, float* res)
+void OrientationTransforms::qu2ho(float* q, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: q[3]
@@ -1949,7 +1949,7 @@ void RotationTransforms::qu2ho(float* q, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2ho(double* q, double* res)
+void OrientationTransforms::qu2ho(double* q, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: q[3]
@@ -1972,7 +1972,7 @@ void RotationTransforms::qu2ho(double* q, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2cu(float* h, float* res)
+void OrientationTransforms::ho2cu(float* h, float* res)
 {
   //*** use local
   //*** use Lambert, only: LambertBallToCube
@@ -1985,7 +1985,7 @@ void RotationTransforms::ho2cu(float* h, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2cu(double* h, double* res)
+void OrientationTransforms::ho2cu(double* h, double* res)
 {
   //*** use local
   //*** use Lambert, only: LambertBallToCube
@@ -1998,7 +1998,7 @@ void RotationTransforms::ho2cu(double* h, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2ho(float* c, float* res)
+void OrientationTransforms::cu2ho(float* c, float* res)
 {
   //*** use local
   //*** use Lambert, only: LambertCubeToBall
@@ -2011,7 +2011,7 @@ void RotationTransforms::cu2ho(float* c, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2ho(double* c, double* res)
+void OrientationTransforms::cu2ho(double* c, double* res)
 {
   //*** use local
   //*** use Lambert, only: LambertCubeToBall
@@ -2024,7 +2024,7 @@ void RotationTransforms::cu2ho(double* c, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2eu(float* r, float* res)
+void OrientationTransforms::ro2eu(float* r, float* res)
 {
   //*** use local
   //*** use constants
@@ -2041,7 +2041,7 @@ void RotationTransforms::ro2eu(float* r, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2eu(double* r, double* res)
+void OrientationTransforms::ro2eu(double* r, double* res)
 {
   //*** use local
   //*** use constants
@@ -2058,7 +2058,7 @@ void RotationTransforms::ro2eu(double* r, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2ho(float* e, float* res)
+void OrientationTransforms::eu2ho(float* e, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: e[2]
@@ -2069,7 +2069,7 @@ void RotationTransforms::eu2ho(float* e, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2ho(double* e, double* res)
+void OrientationTransforms::eu2ho(double* e, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: e[2]
@@ -2080,7 +2080,7 @@ void RotationTransforms::eu2ho(double* e, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2ro(float* om, float* res)
+void OrientationTransforms::om2ro(float* om, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: om(3,3)
@@ -2091,7 +2091,7 @@ void RotationTransforms::om2ro(float* om, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2ro(double* om, double* res)
+void OrientationTransforms::om2ro(double* om, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: om(3,3)
@@ -2102,7 +2102,7 @@ void RotationTransforms::om2ro(double* om, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2ho(float* om, float* res)
+void OrientationTransforms::om2ho(float* om, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: om(3,3)
@@ -2113,7 +2113,7 @@ void RotationTransforms::om2ho(float* om, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2ho(double* om, double* res)
+void OrientationTransforms::om2ho(double* om, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: om(3,3)
@@ -2124,7 +2124,7 @@ void RotationTransforms::om2ho(double* om, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2eu(float* a, float* res)
+void OrientationTransforms::ax2eu(float* a, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: a[3]
@@ -2135,7 +2135,7 @@ void RotationTransforms::ax2eu(float* a, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2eu(double* a, double* res)
+void OrientationTransforms::ax2eu(double* a, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: a[3]
@@ -2146,7 +2146,7 @@ void RotationTransforms::ax2eu(double* a, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2om(float* r, float* res)
+void OrientationTransforms::ro2om(float* r, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: r[3]
@@ -2157,7 +2157,7 @@ void RotationTransforms::ro2om(float* r, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2om(double* r, double* res)
+void OrientationTransforms::ro2om(double* r, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: r[3]
@@ -2168,7 +2168,7 @@ void RotationTransforms::ro2om(double* r, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2qu(float* r, float* res)
+void OrientationTransforms::ro2qu(float* r, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: r[3]
@@ -2179,7 +2179,7 @@ void RotationTransforms::ro2qu(float* r, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2qu(double* r, double* res)
+void OrientationTransforms::ro2qu(double* r, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: r[3]
@@ -2190,7 +2190,7 @@ void RotationTransforms::ro2qu(double* r, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2eu(float* h, float* res)
+void OrientationTransforms::ho2eu(float* h, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: h[2]
@@ -2201,7 +2201,7 @@ void RotationTransforms::ho2eu(float* h, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2eu(double* h, double* res)
+void OrientationTransforms::ho2eu(double* h, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: h[2]
@@ -2212,7 +2212,7 @@ void RotationTransforms::ho2eu(double* h, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2om(float* h, float* res)
+void OrientationTransforms::ho2om(float* h, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: h[2]
@@ -2223,7 +2223,7 @@ void RotationTransforms::ho2om(float* h, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2om(double* h, double* res)
+void OrientationTransforms::ho2om(double* h, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: h[2]
@@ -2234,7 +2234,7 @@ void RotationTransforms::ho2om(double* h, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2ro(float* h, float* res)
+void OrientationTransforms::ho2ro(float* h, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: h[2]
@@ -2245,7 +2245,7 @@ void RotationTransforms::ho2ro(float* h, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2ro(double* h, double* res)
+void OrientationTransforms::ho2ro(double* h, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: h[2]
@@ -2256,7 +2256,7 @@ void RotationTransforms::ho2ro(double* h, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2qu(float* h, float* res)
+void OrientationTransforms::ho2qu(float* h, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: h[2]
@@ -2267,7 +2267,7 @@ void RotationTransforms::ho2qu(float* h, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ho2qu(double* h, double* res)
+void OrientationTransforms::ho2qu(double* h, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: h[2]
@@ -2278,7 +2278,7 @@ void RotationTransforms::ho2qu(double* h, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2cu(float* e, float* res)
+void OrientationTransforms::eu2cu(float* e, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: e[2]         // input coordinates
@@ -2289,7 +2289,7 @@ void RotationTransforms::eu2cu(float* e, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::eu2cu(double* e, double* res)
+void OrientationTransforms::eu2cu(double* e, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: e[2]         // input coordinates
@@ -2300,7 +2300,7 @@ void RotationTransforms::eu2cu(double* e, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2cu(float* o, float* res)
+void OrientationTransforms::om2cu(float* o, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: o(3,3)               // input coordinates
@@ -2311,7 +2311,7 @@ void RotationTransforms::om2cu(float* o, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::om2cu(double* o, double* res)
+void OrientationTransforms::om2cu(double* o, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: o(3,3)               // input coordinates
@@ -2322,7 +2322,7 @@ void RotationTransforms::om2cu(double* o, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2cu(float* a, float* res)
+void OrientationTransforms::ax2cu(float* a, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: a[3]         // input coordinates
@@ -2333,7 +2333,7 @@ void RotationTransforms::ax2cu(float* a, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ax2cu(double* a, double* res)
+void OrientationTransforms::ax2cu(double* a, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: a[3]         // input coordinates
@@ -2344,7 +2344,7 @@ void RotationTransforms::ax2cu(double* a, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2cu(float* r, float* res)
+void OrientationTransforms::ro2cu(float* r, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: r[3]         // input coordinates
@@ -2355,7 +2355,7 @@ void RotationTransforms::ro2cu(float* r, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::ro2cu(double* r, double* res)
+void OrientationTransforms::ro2cu(double* r, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: r[3]         // input coordinates
@@ -2366,7 +2366,7 @@ void RotationTransforms::ro2cu(double* r, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2cu(float* q, float* res)
+void OrientationTransforms::qu2cu(float* q, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: q[3]         // input coordinates
@@ -2377,7 +2377,7 @@ void RotationTransforms::qu2cu(float* q, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::qu2cu(double* q, double* res)
+void OrientationTransforms::qu2cu(double* q, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: q[3]         // input coordinates
@@ -2388,7 +2388,7 @@ void RotationTransforms::qu2cu(double* q, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2eu(float* c, float* res)
+void OrientationTransforms::cu2eu(float* c, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2399,7 +2399,7 @@ void RotationTransforms::cu2eu(float* c, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2eu(double* c, double* res)
+void OrientationTransforms::cu2eu(double* c, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2410,7 +2410,7 @@ void RotationTransforms::cu2eu(double* c, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2om(float* c, float* res)
+void OrientationTransforms::cu2om(float* c, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2421,7 +2421,7 @@ void RotationTransforms::cu2om(float* c, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2om(double* c, double* res)
+void OrientationTransforms::cu2om(double* c, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2432,7 +2432,7 @@ void RotationTransforms::cu2om(double* c, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2ax(float* c, float* res)
+void OrientationTransforms::cu2ax(float* c, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2443,7 +2443,7 @@ void RotationTransforms::cu2ax(float* c, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2ax(double* c, double* res)
+void OrientationTransforms::cu2ax(double* c, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2454,7 +2454,7 @@ void RotationTransforms::cu2ax(double* c, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2ro(float* c, float* res)
+void OrientationTransforms::cu2ro(float* c, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2465,7 +2465,7 @@ void RotationTransforms::cu2ro(float* c, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2ro(double* c, double* res)
+void OrientationTransforms::cu2ro(double* c, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2476,7 +2476,7 @@ void RotationTransforms::cu2ro(double* c, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2qu(float* c, float* res)
+void OrientationTransforms::cu2qu(float* c, float* res)
 {
   //*** use local
   //real(kind=sgl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2487,7 +2487,7 @@ void RotationTransforms::cu2qu(float* c, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::cu2qu(double* c, double* res)
+void OrientationTransforms::cu2qu(double* c, double* res)
 {
   //*** use local
   //real(kind=dbl), INTENT(IN)              :: c[2]         // input coordinates
@@ -2498,7 +2498,7 @@ void RotationTransforms::cu2qu(double* c, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::RotVec_om(float* vec, float* om, char ap, float* res)
+void OrientationTransforms::RotVec_om(float* vec, float* om, char ap, float* res)
 {
   //*** use local
   //real(kind=sgl),INTENT(IN)       :: vec[2]
@@ -2515,7 +2515,7 @@ void RotationTransforms::RotVec_om(float* vec, float* om, char ap, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::RotVec_om(double* vec, double* om, char ap, double* res)
+void OrientationTransforms::RotVec_om(double* vec, double* om, char ap, double* res)
 {
   //*** use local
   //real(kind=dbl),INTENT(IN)       :: vec[2]
@@ -2532,7 +2532,7 @@ void RotationTransforms::RotVec_om(double* vec, double* om, char ap, double* res
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::RotVec_qu(float* vec, float* qu, char ap, float* res)
+void OrientationTransforms::RotVec_qu(float* vec, float* qu, char ap, float* res)
 {
   //*** use local
   //*** use quaternions
@@ -2564,7 +2564,7 @@ void RotationTransforms::RotVec_qu(float* vec, float* qu, char ap, float* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::RotVec_qu(double* vec, float* qu, char ap, double* res)
+void OrientationTransforms::RotVec_qu(double* vec, float* qu, char ap, double* res)
 {
   //*** use local
   //*** use quaternions
@@ -2596,7 +2596,7 @@ void RotationTransforms::RotVec_qu(double* vec, float* qu, char ap, double* res)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::RotTensor2_om(float* tensor, float* om, char ap, float* res)
+void OrientationTransforms::RotTensor2_om(float* tensor, float* om, char ap, float* res)
 {
   //*** use local
   //real(kind=sgl),INTENT(IN)       :: tensor(3,3)
@@ -2613,7 +2613,7 @@ void RotationTransforms::RotTensor2_om(float* tensor, float* om, char ap, float*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotationTransforms::RotTensor2_om(double* tensor, double* om, char ap, double* res)
+void OrientationTransforms::RotTensor2_om(double* tensor, double* om, char ap, double* res)
 {
   //*** use local
   //real(kind=dbl),INTENT(IN)       :: tensor(3,3)

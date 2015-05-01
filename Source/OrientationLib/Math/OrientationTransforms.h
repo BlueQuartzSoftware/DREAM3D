@@ -31,8 +31,8 @@
  *                 FA8650-07-D-5800 & FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _RotationTransforms_H_
-#define _RotationTransforms_H_
+#ifndef _OrientationTransforms_H_
+#define _OrientationTransforms_H_
 
 #include <assert.h>     /* assert */
 
@@ -99,44 +99,47 @@
 
 
 
-namespace LambertParametersType {
-  double Pi=M_PI;     // pi
-  double iPi=0.3183098861837910 ;   // 1/pi
-  double sPi=1.7724538509055160 ;   // sqrt(pi)
-  double sPio2=1.2533141373155000;  // sqrt(pi/2)
-  double sPi2=0.8862269254527580;   // sqrt(pi)/2
-  double srt=0.8660254037844390;    // sqrt(3)/2
-  double isrt=0.5773502691896260;  // 1/sqrt(3)
-  double alpha=1.3467736870885980; // sqrt(pi)/3^(1/4)
-  double rtt=1.7320508075688770;    // sqrt(3)
-  double prea=0.5250375679043320;  // 3^(1/4)/sqrt(2pi)
-  double preb=1.0500751358086640;   // 3^(1/4)sqrt(2/pi)
-  double prec=0.9068996821171090;  // pi/2sqrt(3)
-  double pred=2.0943951023931950;   // 2pi/3
-  double pree=0.7598356856515930;   // 3^(-1/4)
-  double pref=1.3819765978853420;   // sqrt(6/pi)
+namespace LambertParametersType
+{
+  static const double Pi = M_PI;   // pi
+  static const double iPi = 0.3183098861837910 ; // 1/pi
+  static const double sPi = 1.7724538509055160 ; // sqrt(pi)
+  static const double sPio2 = 1.2533141373155000; // sqrt(pi/2)
+  static const double sPi2 = 0.8862269254527580; // sqrt(pi)/2
+  static const double srt = 0.8660254037844390;  // sqrt(3)/2
+  static const double isrt = 0.5773502691896260; // 1/sqrt(3)
+  static const double alpha = 1.3467736870885980; // sqrt(pi)/3^(1/4)
+  static const double rtt = 1.7320508075688770;  // sqrt(3)
+  static const double prea = 0.5250375679043320; // 3^(1/4)/sqrt(2pi)
+  static const double preb = 1.0500751358086640; // 3^(1/4)sqrt(2/pi)
+  static const double prec = 0.9068996821171090; // pi/2sqrt(3)
+  static const double pred = 2.0943951023931950; // 2pi/3
+  static const double pree = 0.7598356856515930; // 3^(-1/4)
+  static const double pref = 1.3819765978853420; // sqrt(6/pi)
   // ! the following constants are used for the cube to quaternion hemisphere mapping
-  double a=1.9257490199582530;      //pi^(5/6)/6^(1/6)
-  double ap=2.1450293971110250 ;    //pi^(2/3)
-  double sc=0.8977727869612860 ;    //a/ap
-  double beta=0.9628745099791260;   //pi^(5/6)/6^(1/6)/2
-  double R1=1.3306700394914690 ;    //(3pi/4)^(1/3)
-  double r2=1.4142135623730950 ;    //sqrt(2)
-  double r22=0.7071067811865470;    //1/sqrt(2)
-  double pi12=0.2617993877991490;   //pi/12
-  double pi8=0.3926990816987240;    //pi/8
-  double prek=1.6434564029725040;   //R1 2^(1/4)/beta
-  double r24=4.8989794855663560;    //sqrt(24)
-  double tfit[16] = {1.00000000000188520, -0.50000000021948470,
+  static const double a = 1.9257490199582530;    //pi^(5/6)/6^(1/6)
+  static const double ap = 2.1450293971110250 ;  //pi^(2/3)
+  static const double sc = 0.8977727869612860 ;  //a/ap
+  static const double beta = 0.9628745099791260; //pi^(5/6)/6^(1/6)/2
+  static const double R1 = 1.3306700394914690 ;  //(3pi/4)^(1/3)
+  static const double r2 = 1.4142135623730950 ;  //sqrt(2)
+  static const double r22 = 0.7071067811865470;  //1/sqrt(2)
+  static const double pi12 = 0.2617993877991490; //pi/12
+  static const double pi8 = 0.3926990816987240;  //pi/8
+  static const double prek = 1.6434564029725040; //R1 2^(1/4)/beta
+  static const double r24 = 4.8989794855663560;  //sqrt(24)
+  static const double tfit[16] = {1.00000000000188520, -0.50000000021948470,
                      -0.0249999921275931260, - 0.0039287015447813740,
                      -0.00081527015354504380, - 0.00020095004261197120,
                      -0.000023979867760717560, - 0.000082028689266058410,
                      +0.000124487150420900920, - 0.00017491142148225770,
                      +0.00017034819341400540, - 0.000120620650041168280,
                      +0.0000597197058686608260, - 0.000019807567239656470,
-                     +0.0000039537146842128740, - 0.000000365550014397195440 };
-  double BP[6]= { 0.0, 1.0, 0.5773502691896260, 0.4142135623730950, 0.0,
-                  0.2679491924311230 };     //used for Fundamental Zone determination in so3 module
+                     +0.0000039537146842128740, - 0.000000365550014397195440
+                    };
+  static const double BP[6] = { 0.0, 1.0, 0.5773502691896260, 0.4142135623730950, 0.0,
+                   0.2679491924311230
+                 };     //used for Fundamental Zone determination in so3 module
 }
 
 
@@ -147,8 +150,10 @@ namespace LPs = LambertParametersType;
 
 
 
-namespace Rotations {
-  namespace Constants {
+namespace Rotations
+{
+  namespace Constants
+  {
     //! uncomment these for an alternative way of doing things
     //  static float epsijk = -1.0f;
     //  static double epsijkd = -1.0;
@@ -166,22 +171,23 @@ namespace DConst = DREAM3D::Constants;
 
 
 /**
- * @brief The RotationTransforms class
+ * @brief The OrientationTransforms class
  */
-class OrientationLib_EXPORT RotationTransforms
+class OrientationLib_EXPORT OrientationTransforms
 {
   public:
-    RotationTransforms();
-    virtual ~RotationTransforms();
+    OrientationTransforms();
+    virtual ~OrientationTransforms();
 
 
-    typedef struct {
-        int result;
-        std::string msg;
+    typedef struct
+    {
+      int result;
+      std::string msg;
     } ResultType;
 
 
-    void FatalError(const std::string &func, const std::string &msg);
+    void FatalError(const std::string& func, const std::string& msg);
     /* ###################################################################
     * Copyright (c) 2013-2014, Marc De Graef/Carnegie Mellon University
     * All rights reserved.
@@ -209,7 +215,7 @@ class OrientationLib_EXPORT RotationTransforms
     * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
     * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     * ###################################################################
- CTEMsoft2013:rotations.f90
+    CTEMsoft2013:rotations.f90
 
     * MODULE: rotations
     *
@@ -342,7 +348,7 @@ class OrientationLib_EXPORT RotationTransforms
     * apply a rotation to a second rank tensor
     //--------------------------------
     * print quaternion and equivalent 3x3 rotation matrix
-*/
+    */
 
 
     /**: eu_check
@@ -362,15 +368,18 @@ class OrientationLib_EXPORT RotationTransforms
       ResultType res;
       res.result = 1;
 
-      if ((eu[0] < 0.0) || (eu[0] > (DREAM3D::Constants::k_2Pi))) {
+      if ((eu[0] < 0.0) || (eu[0] > (DREAM3D::Constants::k_2Pi)))
+      {
         res.msg = "rotations:eu_check:: phi1 Euler angle outside of valid range [0,2pi]";
         res.result = 0;
       }
-      if ((eu[1] < 0.0) || (eu[1] > DREAM3D::Constants::k_Pi)) {
+      if ((eu[1] < 0.0) || (eu[1] > DREAM3D::Constants::k_Pi))
+      {
         res.msg = "rotations:eu_check:: phi Euler angle outside of valid range [0,pi]";
         res.result = 0;
       }
-      if ((eu[2] < 0.0) || (eu[2] > (DREAM3D::Constants::k_2Pi))) {
+      if ((eu[2] < 0.0) || (eu[2] > (DREAM3D::Constants::k_2Pi)))
+      {
         res.msg = "rotations:eu_check:: phi2 Euler angle outside of valid range [0,2pi]";
         res.result = 0;
       }
@@ -397,7 +406,8 @@ class OrientationLib_EXPORT RotationTransforms
       K eps = std::numeric_limits<K>::epsilon();
       ResultType res;
       res.result = 1;
-      if (ro[3] < 0.0) {
+      if (ro[3] < 0.0)
+      {
         res.msg = "rotations:ro_check:: Rodrigues-Frank vector has negative length: ";
         res.result = 0;
         return res;
@@ -405,7 +415,8 @@ class OrientationLib_EXPORT RotationTransforms
       T out = multiply(ro, ro, 3);
       K ttl = sum<T, K>(out);
       ttl = sqrt(ttl);
-      if (std::abs(ttl-1.0) > eps) {
+      if (std::abs(ttl - 1.0) > eps)
+      {
         res.msg = "rotations:ro_check:: Rodrigues-Frank axis vector not normalized";
         res.result = 0;
       }
@@ -432,7 +443,8 @@ class OrientationLib_EXPORT RotationTransforms
       T out = multiply(ro, ro);
       K ttl = sum<T, K>(out);
       K r = sqrt(ttl);
-      if (r > static_cast<float>(LPs::R1)) {
+      if (r > static_cast<float>(LPs::R1))
+      {
         res.msg = "rotations:ho_check: homochoric vector outside homochoric ball";
         res.result = 0;
       }
@@ -457,7 +469,8 @@ class OrientationLib_EXPORT RotationTransforms
       res.result = 1;
 
       K r = maxval<T, K>(absValue(cu));
-      if (r > static_cast<float>(LPs::ap/2.0)) {
+      if (r > static_cast<float>(LPs::ap / 2.0))
+      {
         res.msg = "rotations:cu_check: cubochoric vector outside cube";
         res.result = 0;
       }
@@ -483,13 +496,15 @@ class OrientationLib_EXPORT RotationTransforms
       K eps = std::numeric_limits<K>::epsilon();
 
       T out = multiply<T>(qu, qu);
-      K r = sqrt(sum<T,K>(out));
-      if (qu[0] < 0.0) {
+      K r = sqrt(sum<T, K>(out));
+      if (qu[0] < 0.0)
+      {
         res.msg = "rotations:qu_check: quaternion must have positive scalar part";
         res.result = 0;
         return res;
       }
-      if (std::abs(r-1.0) > eps) {
+      if (std::abs(r - 1.0) > eps)
+      {
         res.msg = "rotations:qu_check: quaternion must have unit norm";
         res.result = 0;
       }
@@ -513,16 +528,18 @@ class OrientationLib_EXPORT RotationTransforms
     {
       ResultType res;
       res.result = 1;
-      if ((ax[3] < 0.0) || (ax[3] > DREAM3D::Constants::k_Pi)) {
+      if ((ax[3] < 0.0) || (ax[3] > DREAM3D::Constants::k_Pi))
+      {
         res.msg = "rotations:ax_check: angle must be in range [0,pi]";
         res.result = 0;
         return res;
       }
       K eps = std::numeric_limits<K>::epsilon();
       T out = multiply<T>(ax, ax, 3);
-      K r = sqrt(sum<T,K>(out));
-      K absv = std::abs(r-1.0);
-      if (absv > eps) {
+      K r = sqrt(sum<T, K>(out));
+      K absv = std::abs(r - 1.0);
+      if (absv > eps)
+      {
         res.msg = "rotations:ax_check: axis-angle axis vector must have unit norm";
         res.result = 0;
       }
@@ -547,15 +564,17 @@ class OrientationLib_EXPORT RotationTransforms
       ResultType res;
       res.result = 1;
       K eps = std::numeric_limits<K>::epsilon();
-      K det = om[4]*(om[0]*om[8] - om[6]*om[2]) + om[5]*(om[1]*om[6] - om[7]*om[0]) + om[3]*(om[2]*om[0] - om[8]*om[1]);
+      K det = om[4] * (om[0] * om[8] - om[6] * om[2]) + om[5] * (om[1] * om[6] - om[7] * om[0]) + om[3] * (om[2] * om[0] - om[8] * om[1]);
 
-      if (det < 0.0) {
+      if (det < 0.0)
+      {
         res.msg = "rotations:om_check: Determinant of rotation matrix must be positive";
         res.result = 0;
         return res;
       }
 
-      if (std::abs(det-1.0) > eps) {
+      if (std::abs(det - 1.0) > eps)
+      {
         res.msg = "rotations:om_check: Determinant of rotation matrix must be unity";
         res.result = 0;
         return res;
@@ -567,7 +586,8 @@ class OrientationLib_EXPORT RotationTransforms
 
       K r = sum<T, K>(abv);
       r = std::abs(r - 3.0);
-      if (r > eps) {
+      if (r > eps)
+      {
         res.msg = "rotations:om_check: rotation matrix times transpose must be identity matrix";
         res.result = 0;
       }
@@ -600,7 +620,8 @@ class OrientationLib_EXPORT RotationTransforms
       K axang[4];
       K s;
 
-      if ((omega < 0.0) || (omega > M_PI)) {
+      if ((omega < 0.0) || (omega > M_PI))
+      {
         assert(false);
       }
 
@@ -610,11 +631,14 @@ class OrientationLib_EXPORT RotationTransforms
       axang[3] = omega;
       s = sqrt(sumofSquares(av));
 
-      if (s != 0.0) {
-        axang[0] = axang[0]/s;
-        axang[1] = axang[1]/s;
-        axang[2] = axang[2]/s;
-      } else {
+      if (s != 0.0)
+      {
+        axang[0] = axang[0] / s;
+        axang[1] = axang[1] / s;
+        axang[2] = axang[2] / s;
+      }
+      else
+      {
         assert(false);
       }
       init_orientation(axang, 'ax', res);
@@ -682,16 +706,17 @@ class OrientationLib_EXPORT RotationTransforms
       K s1 = sin(e[0]);
       K s2 = sin(e[1]);
       K s3 = sin(e[2]);
-      res[0] = c1*c3-s1*s3*c2;
-      res[1] = s1*c3+c1*s3*c2;
-      res[2] = s3*s2;
-      res[3] = -c1*s3-s1*c3*c2;
-      res[4] = -s1*s3+c1*c3*c2;
-      res[5] = c3*s2;
-      res[6] = s1*s2;
-      res[7] = -c1*s2;
+      res[0] = c1 * c3 - s1 * s3 * c2;
+      res[1] = s1 * c3 + c1 * s3 * c2;
+      res[2] = s3 * s2;
+      res[3] = -c1 * s3 - s1 * c3 * c2;
+      res[4] = -s1 * s3 + c1 * c3 * c2;
+      res[5] = c3 * s2;
+      res[6] = s1 * s2;
+      res[7] = -c1 * s2;
       res[8] = c2;
-      for(size_t i = 0; i < 9; i++) {
+      for(size_t i = 0; i < 9; i++)
+      {
         if(std::abs(res[i]) < eps) { res[i] = 0.0; }
       }
     }
@@ -714,19 +739,28 @@ class OrientationLib_EXPORT RotationTransforms
     {
       K thr = 1.0E-6f;
       K alpha = 0.0f;
-      K t = tan(e[1]*0.5);
-      K sig = 0.5*(e[0]+e[2]);
-      K del = 0.5*(e[0]-e[2]);
-      K tau = sqrt(t*t+sin(sig)*sin(sig));
-      if (sig == DREAM3D::Constants::k_PiOver2) {  //Infinity
+      K t = tan(e[1] * 0.5);
+      K sig = 0.5 * (e[0] + e[2]);
+      K del = 0.5 * (e[0] - e[2]);
+      K tau = sqrt(t * t + sin(sig) * sin(sig));
+      if (sig == DREAM3D::Constants::k_PiOver2)    //Infinity
+      {
         alpha = DREAM3D::Constants::k_Pi;
-      } else {
-        alpha = 2.0 * atan(tau/cos(sig)); //! return a default identity axis-angle pair
+      }
+      else
+      {
+        alpha = 2.0 * atan(tau / cos(sig)); //! return a default identity axis-angle pair
       }
 
-      if (std::abs(alpha) < thr) {
-        res[0] = 0.0; res[1] = 0.0; res[2] = 1.0; res[3] = 0.0;
-      } else {
+      if (std::abs(alpha) < thr)
+      {
+        res[0] = 0.0;
+        res[1] = 0.0;
+        res[2] = 1.0;
+        res[3] = 0.0;
+      }
+      else
+      {
         //! passive axis-angle pair so a minus sign in front
         res[0] = -RConst::epsijk * t * cos(del) / tau;
         res[1] = -RConst::epsijk * t * sin(del) / tau;
@@ -734,8 +768,12 @@ class OrientationLib_EXPORT RotationTransforms
         res[3] = alpha;
       }
 
-      if (alpha < 0.0) {
-        res[0] = -res[0]; res[1] = -res[1]; res[2] = -res[2]; res[3] = -res[3];
+      if (alpha < 0.0)
+      {
+        res[0] = -res[0];
+        res[1] = -res[1];
+        res[2] = -res[2];
+        res[3] = -res[3];
       }
     }
 
@@ -757,14 +795,21 @@ class OrientationLib_EXPORT RotationTransforms
 
       eu2ax<T, K>(e, res);
       K t = res[3];
-      if (std::abs(t - DREAM3D::Constants::k_Pi) < thr) {
+      if (std::abs(t - DREAM3D::Constants::k_Pi) < thr)
+      {
         res[3] = std::numeric_limits<K>::infinity();
         return;
       }
-      if (t == 0.0) {
-        res[0] = 0.0; res[1] = 0.0; res[2] = 0.0; res[3] = 0.0;
-      } else {
-        res[3] = tan(t*0.5);
+      if (t == 0.0)
+      {
+        res[0] = 0.0;
+        res[1] = 0.0;
+        res[2] = 0.0;
+        res[3] = 0.0;
+      }
+      else
+      {
+        res[3] = tan(t * 0.5);
       }
     }
 
@@ -785,9 +830,9 @@ class OrientationLib_EXPORT RotationTransforms
     */
 
     template<typename T, typename K>
-    void eu2qu(const T& e, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+    void eu2qu(const T& e, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-      size_t w = 0, x=1, y=2, z=3;
+      size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
       {
         w = 3;
@@ -804,21 +849,22 @@ class OrientationLib_EXPORT RotationTransforms
       K sp = 0.0f;
       K sm = 0.0f;
 
-      ee[0] = 0.5*e[0];
-      ee[1] = 0.5*e[1];
-      ee[2] = 0.5*e[2];
+      ee[0] = 0.5 * e[0];
+      ee[1] = 0.5 * e[1];
+      ee[2] = 0.5 * e[2];
 
       cPhi = cos(ee[1]);
       sPhi = sin(ee[1]);
-      cm = cos(ee[0]-ee[2]);
-      sm = sin(ee[0]-ee[2]);
-      cp = cos(ee[0]+ee[2]);
-      sp = sin(ee[0]+ee[2]);
-      res[w] = cPhi*cp;
-      res[x] = -RConst::epsijk*sPhi*cm;
-      res[y] = -RConst::epsijk*sPhi*sm;
-      res[z] = -RConst::epsijk*cPhi*sp;
-      if (res[w] < 0.0) {
+      cm = cos(ee[0] - ee[2]);
+      sm = sin(ee[0] - ee[2]);
+      cp = cos(ee[0] + ee[2]);
+      sp = sin(ee[0] + ee[2]);
+      res[w] = cPhi * cp;
+      res[x] = -RConst::epsijk * sPhi * cm;
+      res[y] = -RConst::epsijk * sPhi * sm;
+      res[z] = -RConst::epsijk * cPhi * sp;
+      if (res[w] < 0.0)
+      {
         res[w] = -res[w];
         res[x] = -res[x];
         res[y] = -res[y];
@@ -850,26 +896,29 @@ class OrientationLib_EXPORT RotationTransforms
       if(!close)
       {
         res[1] = acos(o[8]);
-        zeta = 1.0/sqrt(1.0-o[8]*o[8]);
-        res[0] = atan2(o[6]*zeta,-o[7]*zeta);
-        res[2] = atan2(o[2]*zeta, o[5]*zeta);
+        zeta = 1.0 / sqrt(1.0 - o[8] * o[8]);
+        res[0] = atan2(o[6] * zeta, -o[7] * zeta);
+        res[2] = atan2(o[2] * zeta, o[5] * zeta);
       }
       else
       {
-        if (close) {
-          res[0] = atan2( o[1],o[0]);
+        if (close)
+        {
+          res[0] = atan2( o[1], o[0]);
           res[1] = 0.0;
           res[2] = 0.0;
-        } else {
-          res[0] =-atan2(-o[1],o[0]);
+        }
+        else
+        {
+          res[0] = -atan2(-o[1], o[0]);
           res[1] = DREAM3D::Constants::k_Pi;
           res[2] = 0.0;
         }
       }
 
-      if (res[0] < 0.0) res[0] = fmod(res[0]+100.0*DConst::k_Pi, DConst::k_2Pi);
-      if (res[1] < 0.0) res[1] = fmod(res[1]+100.0*DConst::k_Pi, DConst::k_Pi);
-      if (res[2] < 0.0) res[2] = fmod(res[2]+100.0*DConst::k_Pi, DConst::k_2Pi);
+      if (res[0] < 0.0) { res[0] = fmod(res[0] + 100.0 * DConst::k_Pi, DConst::k_2Pi); }
+      if (res[1] < 0.0) { res[1] = fmod(res[1] + 100.0 * DConst::k_Pi, DConst::k_Pi); }
+      if (res[2] < 0.0) { res[2] = fmod(res[2] + 100.0 * DConst::k_Pi, DConst::k_2Pi); }
     }
 
     /**: ax2om
@@ -895,22 +944,22 @@ class OrientationLib_EXPORT RotationTransforms
 
       c = cosf(a[3]);
       s = sinf(a[3]);
-      omc = 1.0-c;
+      omc = 1.0 - c;
 
-      res[0] = a[0]*a[0] * omc + c;
-      res[4] = a[1]*a[1] * omc + c;
-      res[8] = a[2]*a[2] * omc + c;
+      res[0] = a[0] * a[0] * omc + c;
+      res[4] = a[1] * a[1] * omc + c;
+      res[8] = a[2] * a[2] * omc + c;
 
 
-      q = omc*a[0]*a[1];
-      res[1] = q + s*a[2];
-      res[3] = q - s*a[2];
-      q = omc*a[1]*a[2];
-      res[5] = q + s*a[0];
-      res[7] = q - s*a[0];
-      q = omc*a[2]*a[0];
-      res[6] = q + s*a[1];
-      res[2] = q - s*a[1];
+      q = omc * a[0] * a[1];
+      res[1] = q + s * a[2];
+      res[3] = q - s * a[2];
+      q = omc * a[1] * a[2];
+      res[5] = q + s * a[0];
+      res[7] = q - s * a[0];
+      q = omc * a[2] * a[0];
+      res[6] = q + s * a[1];
+      res[2] = q - s * a[1];
       if (Rotations::Constants::epsijk == 1.0) { res = transpose(res); }
     }
 
@@ -928,9 +977,9 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/04/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void qu2eu(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+    void qu2eu(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-      size_t w=0, x=1, y=2, z=3;
+      size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
       {
         w = 3;
@@ -949,36 +998,48 @@ class OrientationLib_EXPORT RotationTransforms
 
       qq = q;
 
-      q03 = qq[w]*qq[w]+qq[z]*qq[z];
-      q12 = qq[x]*qq[x]+qq[y]*qq[x];
-      chi = sqrt(q03*q12);
-      if (chi == 0.0) {
-        if (q12 == 0.0) {
-          if (RConst::epsijk == 1.0) {
+      q03 = qq[w] * qq[w] + qq[z] * qq[z];
+      q12 = qq[x] * qq[x] + qq[y] * qq[x];
+      chi = sqrt(q03 * q12);
+      if (chi == 0.0)
+      {
+        if (q12 == 0.0)
+        {
+          if (RConst::epsijk == 1.0)
+          {
             Phi = 0.0;
             phi2 = 0.0;                //arbitrarily due to degeneracy
-            phi1 = atan2(-2.0*qq[w]*qq[z],qq[w]*qq[w]-qq[z]*qq[z]);
-          } else {
-            Phi = 0.0;
-            phi2 = 0.0;                //arbitrarily due to degeneracy
-            phi1 = atan2( 2.0*qq[w]*qq[z],qq[w]*qq[w]-qq[z]*qq[z]);
+            phi1 = atan2(-2.0 * qq[w] * qq[z], qq[w] * qq[w] - qq[z] * qq[z]);
           }
-        } else {
+          else
+          {
+            Phi = 0.0;
+            phi2 = 0.0;                //arbitrarily due to degeneracy
+            phi1 = atan2( 2.0 * qq[w] * qq[z], qq[w] * qq[w] - qq[z] * qq[z]);
+          }
+        }
+        else
+        {
           Phi = DREAM3D::Constants::k_Pi;
           phi2 = 0.0;                //arbitrarily due to degeneracy
-          phi1 = atan2(2.0*qq[x]*qq[y],qq[x]*qq[x]-qq[y]*qq[y]);
+          phi1 = atan2(2.0 * qq[x] * qq[y], qq[x] * qq[x] - qq[y] * qq[y]);
         }
-      } else {
-        if (RConst::epsijk == 1.0) {
-          Phi = atan2( 2.0*chi, q03-q12 );
-          chi = 1.0/chi;
-          phi1 = atan2( (-qq[w]*qq[y]+qq[x]*qq[z])*chi, (-qq[w]*qq[x]-qq[y]*qq[z])*chi );
-          phi2 = atan2( (qq[w]*qq[y]+qq[x]*qq[z])*chi, (-qq[w]*qq[x]+qq[y]*qq[z])*chi );
-        } else {
-          Phi = atan2( 2.0*chi, q03-q12 );
-          chi = 1.0/chi;
-          phi1 = atan2( (qq[w]*qq[y]+qq[x]*qq[z])*chi, (qq[w]*qq[x]-qq[y]*qq[z])*chi );
-          phi2 = atan2( (-qq[w]*qq[y]+qq[x]*qq[z])*chi, (qq[w]*qq[x]+qq[y]*qq[z])*chi );
+      }
+      else
+      {
+        if (RConst::epsijk == 1.0)
+        {
+          Phi = atan2( 2.0 * chi, q03 - q12 );
+          chi = 1.0 / chi;
+          phi1 = atan2( (-qq[w] * qq[y] + qq[x] * qq[z]) * chi, (-qq[w] * qq[x] - qq[y] * qq[z]) * chi );
+          phi2 = atan2( (qq[w] * qq[y] + qq[x] * qq[z]) * chi, (-qq[w] * qq[x] + qq[y] * qq[z]) * chi );
+        }
+        else
+        {
+          Phi = atan2( 2.0 * chi, q03 - q12 );
+          chi = 1.0 / chi;
+          phi1 = atan2( (qq[w] * qq[y] + qq[x] * qq[z]) * chi, (qq[w] * qq[x] - qq[y] * qq[z]) * chi );
+          phi2 = atan2( (-qq[w] * qq[y] + qq[x] * qq[z]) * chi, (qq[w] * qq[x] + qq[y] * qq[z]) * chi );
         }
       }
       res[0] = phi1;
@@ -998,10 +1059,10 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/04/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void ax2ho(const T& a, T &res)
+    void ax2ho(const T& a, T& res)
     {
       K f = 0.75 * ( a[3] - sin(a[3]) );
-      f = pow(f,(1.0/3.0));
+      f = pow(f, (1.0 / 3.0));
       res[0] = a[0] * f;
       res[1] = a[1] * f;
       res[2] = a[2] * f;
@@ -1021,34 +1082,41 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 07/21/14 MDG 1.1 double precision fit coefficients
     */
     template<typename T, typename K>
-    void ho2ax(const T& h, T &res)
+    void ho2ax(const T& h, T& res)
     {
       K thr = 1.0E-8f;
 
-      K hmag = sumofSquares<T,K>(h);
-      if (hmag == 0.0) {
+      K hmag = sumofSquares<T, K>(h);
+      if (hmag == 0.0)
+      {
         res[0] = 0.0;
         res[1] = 0.0;
         res[2] = 1.0;
         res[3] = 0.0;
-      } else {
+      }
+      else
+      {
         K hm = hmag;
         T hn = h;
-        K sqrRtHMag = 1.0/sqrt(hmag);
+        K sqrRtHMag = 1.0 / sqrt(hmag);
         scalarMultiply(hn, sqrRtHMag); // In place scalar multiply
         K s = LPs::tfit[0] + LPs::tfit[1] * hmag;
-        for(int i = 2; i < 16; i++) {
-          hm = hm*hmag;
+        for(int i = 2; i < 16; i++)
+        {
+          hm = hm * hmag;
           s = s + LPs::tfit[i] * hm;
         }
-        s = 2.0*acos(s);
+        s = 2.0 * acos(s);
         res[0] = hn[0];
         res[1] = hn[1];
         res[2] = hn[2];
         K delta = std::fabs(s - DREAM3D::Constants::k_Pi);
-        if ( delta < thr) {
+        if ( delta < thr)
+        {
           res[3] = DREAM3D::Constants::k_Pi;
-        } else {
+        }
+        else
+        {
           res[3] = s;
         }
       }
@@ -1080,7 +1148,7 @@ class OrientationLib_EXPORT RotationTransforms
       K thr = 1.0E-7f;
       // Transpose array to be Column Major Format for the BLAS/LAPACK routine
       T om = transpose(in);
-      K t = 0.50*(om[0]+om[4]+om[8] - 1.0);
+      K t = 0.50 * (om[0] + om[4] + om[8] - 1.0);
       if (t > 1.0) { t = 1.0; }
       if (t < -1.0) {t = -1.0; }
       res[3] = acos(t);
@@ -1090,7 +1158,9 @@ class OrientationLib_EXPORT RotationTransforms
         res[1] = 0.0;
         res[2] = 1.0;
         return;
-      } else {
+      }
+      else
+      {
         if(useEigen)
         {
           typedef Eigen::Matrix<float, 3, 3, Eigen::ColMajor> Matrix_t;
@@ -1105,17 +1175,17 @@ class OrientationLib_EXPORT RotationTransforms
 
           for(int i = 0; i < 3; i++)
           {
-            std::complex<float> cone(1.0,0.0);
+            std::complex<float> cone(1.0, 0.0);
             std::complex<float> ev = std::complex<float>( w(i).real(), w(i).imag() );
-            if (std::abs(ev-cone) < thr)
+            if (std::abs(ev - cone) < thr)
             {
               res[0] = VR(i, 0).real();
               res[1] = VR(i, 1).real();
               res[2] = VR(i, 2).real();
 
-              if ((om[5]-om[7]) != 0.0) { res[0] = transfer_sign(res[0],-RConst::epsijk*(om[7]-om[5])); }
-              if ((om[6]-om[2]) != 0.0) { res[1] = transfer_sign(res[1],-RConst::epsijk*(om[2]-om[6 ])); }
-              if ((om[1]-om[3]) != 0.0) { res[2] = transfer_sign(res[2],-RConst::epsijk*(om[3]-om[1])); }
+              if ((om[5] - om[7]) != 0.0) { res[0] = transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
+              if ((om[6] - om[2]) != 0.0) { res[1] = transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
+              if ((om[1] - om[3]) != 0.0) { res[2] = transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
               //  std::cout << "EIGEN =========================================" << std::endl;
               //  std::cout << res[0] << "\t" << res[1] << "\t" << res[2] << "\t" << res[3] << std::endl;
               return;
@@ -1141,7 +1211,8 @@ class OrientationLib_EXPORT RotationTransforms
           JOBVR = 'V';   //do compute the right eigenvectors
           int LWORK = 20;
           sgeev_(&JOBVL, &JOBVR, &nn, &(om[0]), &LDA, Wr, Wi, VL, &LDVL, VR, &LDVR, WORK, &LWORK, &INFO);
-          if (INFO != 0) {
+          if (INFO != 0)
+          {
             res[0] = std::numeric_limits<float>::signaling_NaN();
             res[1] = std::numeric_limits<float>::signaling_NaN();
             res[2] = std::numeric_limits<float>::signaling_NaN();
@@ -1149,17 +1220,17 @@ class OrientationLib_EXPORT RotationTransforms
           }
           for(int i = 0; i < 3; i++)
           {
-            std::complex<K> cone(1.0,0.0);
+            std::complex<K> cone(1.0, 0.0);
             std::complex<K> ev = std::complex<K>( Wr[i], Wi[i] );
-            if (std::abs(ev-cone) < thr)
+            if (std::abs(ev - cone) < thr)
             {
-              res[0] = VR[3*i+0];
-              res[1] = VR[3*i+1];
-              res[2] = VR[3*i+2];
+              res[0] = VR[3 * i + 0];
+              res[1] = VR[3 * i + 1];
+              res[2] = VR[3 * i + 2];
 
-              if ((om[5]-om[7]) != 0.0) { res[0] = transfer_sign(res[0],-RConst::epsijk*(om[7]-om[5])); }
-              if ((om[6]-om[2]) != 0.0) { res[1] = transfer_sign(res[1],-RConst::epsijk*(om[2]-om[6 ])); }
-              if ((om[1]-om[3]) != 0.0) { res[2] = transfer_sign(res[2],-RConst::epsijk*(om[3]-om[1])); }
+              if ((om[5] - om[7]) != 0.0) { res[0] = transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
+              if ((om[6] - om[2]) != 0.0) { res[1] = transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
+              if ((om[1] - om[3]) != 0.0) { res[2] = transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
               return;
             }
           }
@@ -1189,16 +1260,29 @@ class OrientationLib_EXPORT RotationTransforms
       float angle = 0.0f;
 
       ta = r[3];
-      if (ta == 0.0) {
-        res[0] = 0.0; res[1] = 0.0; res[2] = 1.0; res[3] = 0.0;
+      if (ta == 0.0)
+      {
+        res[0] = 0.0;
+        res[1] = 0.0;
+        res[2] = 1.0;
+        res[3] = 0.0;
         return;
       }
-      if (ta == std::numeric_limits<K>::infinity() ) {
-        res[0] = r[0]; res[1] = r[1]; res[2] = r[2]; res[3] = DConst::k_Pi;
-      } else {
-        angle = 2.0*atan(ta);
-        ta = 1.0/sqrt(r[0]*r[0] + r[1]*r[1] + r[2]*r[2]);
-        res[0] = r[0]/ta; res[1] = r[1]/ta; res[2] = r[2]/ta; res[3] = angle;
+      if (ta == std::numeric_limits<K>::infinity() )
+      {
+        res[0] = r[0];
+        res[1] = r[1];
+        res[2] = r[2];
+        res[3] = DConst::k_Pi;
+      }
+      else
+      {
+        angle = 2.0 * atan(ta);
+        ta = 1.0 / sqrt(r[0] * r[0] + r[1] * r[1] + r[2] * r[2]);
+        res[0] = r[0] / ta;
+        res[1] = r[1] / ta;
+        res[2] = r[2] / ta;
+        res[3] = angle;
       }
 
     }
@@ -1222,7 +1306,8 @@ class OrientationLib_EXPORT RotationTransforms
     {
       K  thr = 1.0E-7f;
 
-      if (r[3] == 0.0) {
+      if (r[3] == 0.0)
+      {
         res[0] = 0.0;
         res[1] = 0.0;
         res[2] = 0.0;
@@ -1232,9 +1317,12 @@ class OrientationLib_EXPORT RotationTransforms
       res[0] = r[0];
       res[1] = r[1];
       res[2] = r[2];
-      if (abs(r[3] - DREAM3D::Constants::k_Pi) < thr) {
+      if (abs(r[3] - DREAM3D::Constants::k_Pi) < thr)
+      {
         res[3] = std::numeric_limits<K>::infinity();
-      } else {
+      }
+      else
+      {
         res[3] = tan( r[3] * 0.5 );
       }
     }
@@ -1254,21 +1342,31 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 7/23/14   MDG 1.1 explicit transformation
     */
     template<typename T, typename K>
-    void ax2qu(const T& r, T& res)
+    void ax2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-
-      if (r[3] == 0.0) {
-        res[0] = 1.0;
-        res[1] = 0.0;
-        res[2] = 0.0;
-        res[3] = 0.0;
-      } else {
-        K c = cos(r[3]*0.5);
-        K s = sin(r[3]*0.5);
-        res[0] = c;
-        res[1] = r[0]*s;
-        res[2] = r[1]*s;
-        res[3] = r[2]*s;
+      size_t w = 0, x = 1, y = 2, z = 3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
+      if (r[3] == 0.0)
+      {
+        res[w] = 1.0;
+        res[x] = 0.0;
+        res[y] = 0.0;
+        res[z] = 0.0;
+      }
+      else
+      {
+        K c = cos(r[3] * 0.5);
+        K s = sin(r[3] * 0.5);
+        res[w] = c;
+        res[x] = r[0] * s;
+        res[y] = r[1] * s;
+        res[z] = r[2] * s;
       }
     }
 
@@ -1291,17 +1389,21 @@ class OrientationLib_EXPORT RotationTransforms
     {
       K f = 0.0;
       K rv = sumofSquares<T, K>(r);
-      if (rv == 0.0) {
+      if (rv == 0.0)
+      {
         splat(res, 0.0);
         return;
       }
-      if (r[3] == std::numeric_limits<K>::infinity()) {
+      if (r[3] == std::numeric_limits<K>::infinity())
+      {
         f = 0.75 * DREAM3D::Constants::k_Pi;
-      } else {
-        K t = 2.0*atan(r[3]);
+      }
+      else
+      {
+        K t = 2.0 * atan(r[3]);
         f = 0.75 * (t - sin(t));
       }
-      f = pow(f, 1.0/3.0);
+      f = pow(f, 1.0 / 3.0);
       res[0] = r[0] * f;
       res[1] = r[1] * f;
       res[2] = r[2] * f;
@@ -1321,9 +1423,9 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 6/03/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void qu2om(const T& r, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+    void qu2om(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-      size_t w=0, x=1, y=2, z=3;
+      size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
       {
         w = 3;
@@ -1331,16 +1433,16 @@ class OrientationLib_EXPORT RotationTransforms
         y = 1;
         z = 2;
       }
-      K qq = r[w]*r[w] - (r[x]*r[x] + r[y]*r[y] + r[z]*r[z]);
-      res[0] = qq+2.0*r[x]*r[x];
-      res[4] = qq+2.0*r[y]*r[y];
-      res[8] = qq+2.0*r[z]*r[z];
-      res[1] = 2.0*(r[x]*r[y]-r[w]*r[z]);
-      res[5] = 2.0*(r[y]*r[z]-r[w]*r[x]);
-      res[6] = 2.0*(r[z]*r[x]-r[w]*r[y]);
-      res[3] = 2.0*(r[y]*r[x]+r[w]*r[z]);
-      res[7] = 2.0*(r[z]*r[y]+r[w]*r[x]);
-      res[2] = 2.0*(r[x]*r[z]+r[w]*r[y]);
+      K qq = r[w] * r[w] - (r[x] * r[x] + r[y] * r[y] + r[z] * r[z]);
+      res[0] = qq + 2.0 * r[x] * r[x];
+      res[4] = qq + 2.0 * r[y] * r[y];
+      res[8] = qq + 2.0 * r[z] * r[z];
+      res[1] = 2.0 * (r[x] * r[y] - r[w] * r[z]);
+      res[5] = 2.0 * (r[y] * r[z] - r[w] * r[x]);
+      res[6] = 2.0 * (r[z] * r[x] - r[w] * r[y]);
+      res[3] = 2.0 * (r[y] * r[x] + r[w] * r[z]);
+      res[7] = 2.0 * (r[z] * r[y] + r[w] * r[x]);
+      res[2] = 2.0 * (r[x] * r[z] + r[w] * r[y]);
       if (Rotations::Constants::epsijk != 1.0) { res = transpose(res); }
     }
 
@@ -1359,11 +1461,16 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/18/14   MDG 2.0 new version
     */
     template<typename T, typename K>
-    void om2qu(const T& x, T& res)
+    void om2qu(const T& om, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-      //*** use local
-      //*** use constants
-      //real(kind=sgl), INTENT(IN)              :: x(3,3)               // input matrix
+      size_t w = 0, x = 1, y = 2, z = 3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
       double thr = 1.0E-10;
       if(sizeof(K) == 4) { thr = 1.0E-7; }
       K  s = 0.0;
@@ -1376,25 +1483,25 @@ class OrientationLib_EXPORT RotationTransforms
       oax[2] = 0.0f;
       oax[3] = 0.0f;
 
-      s = x[0] + x[4] + x[8] + 1.0;
-      if (abs(s) < thr) s = 0.0;
+      s = om[0] + om[4] + om[8] + 1.0;
+      if (abs(s) < thr) { s = 0.0; }
       s = sqrt(s);
-      s1 = x[0] - x[4] - x[8] + 1.0;
-      if (abs(s1) < thr) s1 = 0.0;
+      s1 = om[0] - om[4] - om[8] + 1.0;
+      if (abs(s1) < thr) { s1 = 0.0; }
       s1 = sqrt(s1);
-      s2 = -x[0] + x[4] - x[8] + 1.0;
-      if (abs(s2) < thr) s2 = 0.0;
+      s2 = -om[0] + om[4] - om[8] + 1.0;
+      if (abs(s2) < thr) { s2 = 0.0; }
       s2 = sqrt(s2);
-      s3 = -x[0] - x[4] + x[8] + 1.0;
-      if (abs(s3) < thr) s3 = 0.0;
+      s3 = -om[0] - om[4] + om[8] + 1.0;
+      if (abs(s3) < thr) { s3 = 0.0; }
       s3 = sqrt(s3);
-      res[0] = s * 0.5;
-      res[1] = s1 * 0.5;
-      res[2] = s2 * 0.5;
-      res[3] = s3 * 0.5;
-      if (x[7] < x[5]) res[1] = -Rotations::Constants::epsijk * res[1];
-      if (x[2] < x[6]) res[2] = -Rotations::Constants::epsijk * res[2];
-      if (x[3] < x[1]) res[3] = -Rotations::Constants::epsijk * res[3];
+      res[w] = s * 0.5;
+      res[x] = s1 * 0.5;
+      res[y] = s2 * 0.5;
+      res[z] = s3 * 0.5;
+      if (om[7] < om[5]) { res[1] = -Rotations::Constants::epsijk * res[x]; }
+      if (om[2] < om[6]) { res[2] = -Rotations::Constants::epsijk * res[y]; }
+      if (om[3] < om[1]) { res[3] = -Rotations::Constants::epsijk * res[z]; }
 
       s = MatrixMath::Magnitude4x1(&(res[0]));
 
@@ -1408,11 +1515,11 @@ class OrientationLib_EXPORT RotationTransforms
       ! This adds a little bit of computation overhead but for now it
       ! is the easiest way to make sure the signs are correct.
       */
-      om2ax<T, K>(x, oax);
+      om2ax<T, K>(om, oax);
 
-      if (oax[0]*res[1] < 0.0) res[1] = -res[1];
-      if (oax[1]*res[2] < 0.0) res[2] = -res[2];
-      if (oax[2]*res[3] < 0.0) res[3] = -res[3];
+      if (oax[0]*res[x] < 0.0) { res[x] = -res[x]; }
+      if (oax[1]*res[y] < 0.0) { res[y] = -res[y]; }
+      if (oax[2]*res[z] < 0.0) { res[z] = -res[z]; }
     }
 
     /**: qu2ax
@@ -1428,9 +1535,9 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 7/23/14   MDG 2.0 explicit transformation
     */
     template<typename T, typename K>
-    void qu2ax(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+    void qu2ax(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-      size_t w=0, x=1, y=2, z=3;
+      size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
       {
         w = 3;
@@ -1439,21 +1546,27 @@ class OrientationLib_EXPORT RotationTransforms
         z = 2;
       }
       double omega = 2.0 * acos(q[w]);
-      if (omega == 0.0) {
+      if (omega == 0.0)
+      {
         res[0] = 0.0;
         res[1] = 0.0;
         res[2] = 1.0;
         res[3] = 0.0;
-      } else {
-        if (q[w] != 0.0) {
+      }
+      else
+      {
+        if (q[w] != 0.0)
+        {
           K t = q[w] / std::fabs(q[w]);
-          K b = sqrt(q[x]*q[x] + q[y]*q[y] + q[z]*q[z]);
+          K b = sqrt(q[x] * q[x] + q[y] * q[y] + q[z] * q[z]);
           double s = t / b;
-          res[0] = q[x]*s;
-          res[1] = q[y]*s;
-          res[2] = q[z]*s;
+          res[0] = q[x] * s;
+          res[1] = q[y] * s;
+          res[2] = q[z] * s;
           res[3] = omega;
-        } else {
+        }
+        else
+        {
           res[0] = q[x];
           res[1] = q[y];
           res[2] = q[z];
@@ -1475,9 +1588,9 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/11/14   MDG 2.1 added infty handling
     */
     template<typename T, typename K>
-    void qu2ro(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+    void qu2ro(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-      size_t w=0, x=1, y=2, z=3;
+      size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
       {
         w = 3;
@@ -1491,21 +1604,25 @@ class OrientationLib_EXPORT RotationTransforms
       res[2] = q[z];
       res[3] = 0.0;
 
-      if (q[w] < thr) {
+      if (q[w] < thr)
+      {
         res[3] = std::numeric_limits<K>::infinity();
         return;
       }
       float s = MatrixMath::Magnitude3x1( &(res[0]) );
-      if (s < thr) {
+      if (s < thr)
+      {
         res[0] = 0.0;
         res[1] = 0.0;
         res[2] = 0.0;
         res[3] = 0.0;
         return;
-      } else {
-        res[0] = res[0]/s;
-        res[1] = res[1]/s;
-        res[2] = res[2]/s;
+      }
+      else
+      {
+        res[0] = res[0] / s;
+        res[1] = res[1] / s;
+        res[2] = res[2] / s;
         res[3] = tan(acos(q[w]));
       }
     }
@@ -1525,9 +1642,9 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 7/23/14   MDG 2.0 explicit transformation
     */
     template<typename T, typename K>
-    void qu2ho(const T& q, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+    void qu2ho(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
-      size_t w=0, x=1, y=2, z=3;
+      size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
       {
         w = 3;
@@ -1539,16 +1656,19 @@ class OrientationLib_EXPORT RotationTransforms
       float f;
 
       K omega = 2.0 * acos(q[w]);
-      if (omega == 0.0) {
+      if (omega == 0.0)
+      {
         splat(res, 0.0);
-      } else {
+      }
+      else
+      {
         res[0] = q[x];
         res[1] = q[y];
         res[2] = q[z];
-        s = 1.0/sqrt(sumofSquares<T, K>(res));
+        s = 1.0 / sqrt(sumofSquares<T, K>(res));
         scalarMultiply(res, s);
         f = 0.75 * ( omega - sin(omega) );
-        f = pow(f, 1.0/3.0);
+        f = pow(f, 1.0 / 3.0);
         scalarMultiply(res, f);
       }
     }
@@ -1590,8 +1710,11 @@ class OrientationLib_EXPORT RotationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-
-    void cu2ho(float* c, float* res);
+    template<typename T, typename K>
+    void cu2ho(const T& r, T& res)
+    {
+      assert(false);
+    }
 
 
     /**: ro2eu
@@ -1727,11 +1850,11 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/12/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void ro2qu(const T& r, T& res)
+    void ro2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       T tmp(4);
       ro2ax<T, K>(r, tmp);
-      ax2qu<T, K>(tmp, res);
+      ax2qu<T, K>(tmp, res, layout);
     }
 
     /**: ho2eu
@@ -1801,17 +1924,17 @@ class OrientationLib_EXPORT RotationTransforms
     *
     * @brief convert homochoric to quaternion
     *
-    * @param h homochoric coordinates
+    * @param r homochoric coordinates
     *
     *
     * @date 8/12/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void ho2qu(const T& r, T& res)
+    void ho2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       T tmp(4);
       ho2ax<T, K>(r, tmp);
-      ax2qu<T, K>(tmp, res);
+      ax2qu<T, K>(tmp, res, layout);
     }
 
 
@@ -1913,7 +2036,7 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/12/13   MDG 1.0 original
     */
     template<typename T, typename K>
-    void qu2cu(const T& r, T& res, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+    void qu2cu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       T tmp(3);
       qu2ho<T, K>(r, tmp, layout);
@@ -1996,7 +2119,13 @@ class OrientationLib_EXPORT RotationTransforms
     * @date 8/12/13   MDG 1.0 original
     */
 
-    void cu2qu(float* c, float* res);
+    template<typename T, typename K>
+    void cu2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    {
+      T ho(3); // Create a temp array to store the Euler Angles
+      cu2ho<T, K>(r, ho);// Convert the Cuborchoric to Homochoric
+      ho2qu<T, K>(ho, res);// Convert Homochoric to Quaternion
+    }
 
 
     /**: RotVec_om
@@ -2235,28 +2364,34 @@ class OrientationLib_EXPORT RotationTransforms
     template<typename T>
     T transfer_sign(T a, T b)
     {
-      if( a > 0.0 && b > 0.0) return a;
-      if( a < 0.0 && b > 0.0) return -1*a;
+      if( a > 0.0 && b > 0.0) { return a; }
+      if( a < 0.0 && b > 0.0) { return -1 * a; }
 
-      if( a < 0.0 && b < 0.0) return a;
+      if( a < 0.0 && b < 0.0) { return a; }
 
-      return -1*a;
+      return -1 * a;
 
     }
 
     /* Auxiliary routine: printing eigenvectors */
-    void print_eigenvectors( const char* desc, int n, float* wi, float* v, int ldv ) {
+    void print_eigenvectors( const char* desc, int n, float* wi, float* v, int ldv )
+    {
       int i, j;
       printf( "\n %s\n", desc );
-      for( i = 0; i < n; i++ ) {
+      for( i = 0; i < n; i++ )
+      {
         j = 0;
-        while( j < n ) {
-          if( wi[j] == (float)0.0 ) {
-            printf( " %6.2f", v[i+j*ldv] );
+        while( j < n )
+        {
+          if( wi[j] == (float)0.0 )
+          {
+            printf( " %6.2f", v[i + j * ldv] );
             j++;
-          } else {
-            printf( " (%6.2f,%6.2f)", v[i+j*ldv], v[i+(j+1)*ldv] );
-            printf( " (%6.2f,%6.2f)", v[i+j*ldv], -v[i+(j+1)*ldv] );
+          }
+          else
+          {
+            printf( " (%6.2f,%6.2f)", v[i + j * ldv], v[i + (j + 1)*ldv] );
+            printf( " (%6.2f,%6.2f)", v[i + j * ldv], -v[i + (j + 1)*ldv] );
             j += 2;
           }
         }
@@ -2265,7 +2400,7 @@ class OrientationLib_EXPORT RotationTransforms
     }
 
   private:
-    RotationTransforms(const RotationTransforms&); // Copy Constructor Not Implemented
-    void operator=(const RotationTransforms&); // Operator '=' Not Implemented
+    OrientationTransforms(const OrientationTransforms&); // Copy Constructor Not Implemented
+    void operator=(const OrientationTransforms&); // Operator '=' Not Implemented
 };
-#endif /* _RotationTransforms_H_ */
+#endif /* _OrientationTransforms_H_ */

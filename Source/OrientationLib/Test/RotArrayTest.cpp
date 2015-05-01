@@ -23,14 +23,14 @@
 using namespace DREAM3D::Constants;
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Math/RotArray.hpp"
-#include "OrientationLib/Math/RotationTransforms.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.h"
 
 
 #include "OrientationLib/Test/OrientationLibTestFileLocations.h"
 
 
-typedef RotationRepresentation<float> RotArrayType;
+typedef OrientationArray<float> FloatOrientationArray_t;
 typedef std::vector<float> FloatVectorType;
 typedef QVector<float> FloatQVectorType;
 
@@ -41,12 +41,12 @@ typedef QVector<float> FloatQVectorType;
 template<typename T>
 T transfer_sign(T a, T b)
 {
-  if( a > 0.0 && b > 0.0) return a;
-  if( a < 0.0 && b > 0.0) return -1*a;
+  if( a > 0.0 && b > 0.0) { return a; }
+  if( a < 0.0 && b > 0.0) { return -1 * a; }
 
-  if( a < 0.0 && b < 0.0) return a;
+  if( a < 0.0 && b < 0.0) { return a; }
 
-  return -1*a;
+  return -1 * a;
 
 }
 
@@ -55,7 +55,7 @@ T transfer_sign(T a, T b)
 // -----------------------------------------------------------------------------
 void TestRotArray()
 {
-  FloatRotationRepresentation_t ro(3);
+  FloatOrientationArray_t ro(3);
   ro[0] = 2;
   ro[1] = 4;
   ro[2] = 6;
@@ -80,8 +80,8 @@ void TestRotArray()
 void Test_eu_check()
 {
   int res = 0;
-  RotationTransforms rt;
-  RotationTransforms::ResultType result;
+  OrientationTransforms rt;
+  OrientationTransforms::ResultType result;
 
   typedef std::vector<float> FloatVectorType;
 
@@ -92,14 +92,14 @@ void Test_eu_check()
   result = rt.eu_check<float*>(eu);
   DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-  FloatRotationRepresentation_t eu_r(3);
+  FloatOrientationArray_t eu_r(3);
   eu_r[0] = 1.0f;
   eu_r[1] = 0.4f;
   eu_r[2] = 0.9f;
-  result = rt.eu_check<FloatRotationRepresentation_t>(eu_r);
+  result = rt.eu_check<FloatOrientationArray_t>(eu_r);
   DREAM3D_REQUIRE_EQUAL(result.result, 1);
   eu_r[0] = -1.0;
-  result = rt.eu_check<FloatRotationRepresentation_t>(eu_r);
+  result = rt.eu_check<FloatOrientationArray_t>(eu_r);
   DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
   FloatVectorType eu_v(3);
@@ -131,23 +131,23 @@ void Test_eu_check()
 void Test_ro_check()
 {
 
-  RotationTransforms rt;
-  RotationTransforms::ResultType result;
+  OrientationTransforms rt;
+  OrientationTransforms::ResultType result;
 
   typedef std::vector<float> FloatVectorType;
   typedef QVector<float> FloatQVectorType;
 
   {
-    FloatRotationRepresentation_t ro(4);
+    FloatOrientationArray_t ro(4);
     ro[0] = 1.0f;
     ro[1] = 1.0f;
     ro[2] = 1.0f;
     ro[3] = 1.0f;
     MatrixMath::Normalize3x1(&(ro[0]));
-    result = rt.ro_check<FloatRotationRepresentation_t, float>(ro);
+    result = rt.ro_check<FloatOrientationArray_t, float>(ro);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
     ro[3] = -1.0;
-    result = rt.ro_check<FloatRotationRepresentation_t, float>(ro);
+    result = rt.ro_check<FloatOrientationArray_t, float>(ro);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -187,21 +187,21 @@ void Test_ro_check()
 void Test_ho_check()
 {
 
-  RotationTransforms rt;
-  RotationTransforms::ResultType result;
+  OrientationTransforms rt;
+  OrientationTransforms::ResultType result;
 
   typedef std::vector<float> FloatVectorType;
   typedef QVector<float> FloatQVectorType;
 
   {
-    FloatRotationRepresentation_t ho(3);
+    FloatOrientationArray_t ho(3);
     ho[0] = 0.5f;
     ho[1] = 0.5f;
     ho[2] = 0.5f;
-    result = rt.ho_check<FloatRotationRepresentation_t, float>(ho);
+    result = rt.ho_check<FloatOrientationArray_t, float>(ho);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
     ho[2] = 8.0;
-    result = rt.ho_check<FloatRotationRepresentation_t, float>(ho);
+    result = rt.ho_check<FloatOrientationArray_t, float>(ho);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -237,21 +237,21 @@ void Test_ho_check()
 void Test_cu_check()
 {
 
-  RotationTransforms rt;
-  RotationTransforms::ResultType result;
+  OrientationTransforms rt;
+  OrientationTransforms::ResultType result;
 
   typedef std::vector<float> FloatVectorType;
   typedef QVector<float> FloatQVectorType;
 
   {
-    FloatRotationRepresentation_t v(3);
+    FloatOrientationArray_t v(3);
     v[0] = 0.5f;
     v[1] = 0.5f;
     v[2] = 0.5f;
-    result = rt.cu_check<FloatRotationRepresentation_t, float>(v);
+    result = rt.cu_check<FloatOrientationArray_t, float>(v);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
     v[2] = 8.0;
-    result = rt.cu_check<FloatRotationRepresentation_t, float>(v);
+    result = rt.cu_check<FloatOrientationArray_t, float>(v);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -287,8 +287,8 @@ void Test_cu_check()
 void Test_qu_check()
 {
 
-  RotationTransforms rt;
-  RotationTransforms::ResultType result;
+  OrientationTransforms rt;
+  OrientationTransforms::ResultType result;
 
   typedef std::vector<float> FloatVectorType;
   typedef QVector<float> FloatQVectorType;
@@ -296,23 +296,23 @@ void Test_qu_check()
   QuaternionMathF::UnitQuaternion(quat);
 
   {
-    FloatRotationRepresentation_t qu(4);
+    FloatOrientationArray_t qu(4);
     qu[0] = quat.x;
     qu[1] = quat.y;
     qu[2] = quat.z;
     qu[3] = quat.w;
     MatrixMath::Normalize3x1(&(qu[0]));
-    result = rt.qu_check<FloatRotationRepresentation_t, float>(qu);
+    result = rt.qu_check<FloatOrientationArray_t, float>(qu);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
     qu[0] = 1.5f;
     qu[1] = 3.0f;
     qu[2] = 2.0f;
-    result = rt.qu_check<FloatRotationRepresentation_t, float>(qu);
+    result = rt.qu_check<FloatOrientationArray_t, float>(qu);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
     qu[0] = -1.0;
-    result = rt.qu_check<FloatRotationRepresentation_t, float>(qu);
+    result = rt.qu_check<FloatOrientationArray_t, float>(qu);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -367,27 +367,27 @@ void Test_qu_check()
 void Test_ax_check()
 {
 
-  RotationTransforms rt;
-  RotationTransforms::ResultType result;
+  OrientationTransforms rt;
+  OrientationTransforms::ResultType result;
 
   typedef std::vector<float> FloatVectorType;
   typedef QVector<float> FloatQVectorType;
 
   {
-    FloatRotationRepresentation_t ax(4);
+    FloatOrientationArray_t ax(4);
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = DREAM3D::Constants::k_Pi-0.00001f;
-    result = rt.ax_check<FloatRotationRepresentation_t, float>(ax);
+    ax[3] = DREAM3D::Constants::k_Pi - 0.00001f;
+    result = rt.ax_check<FloatOrientationArray_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
     ax[0] = 1.0;
-    result = rt.ax_check<FloatRotationRepresentation_t, float>(ax);
+    result = rt.ax_check<FloatOrientationArray_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
     ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
-    result = rt.ax_check<FloatRotationRepresentation_t, float>(ax);
+    result = rt.ax_check<FloatOrientationArray_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -396,7 +396,7 @@ void Test_ax_check()
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = DREAM3D::Constants::k_Pi-0.00001f;
+    ax[3] = DREAM3D::Constants::k_Pi - 0.00001f;
     result = rt.ax_check<FloatVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
@@ -414,7 +414,7 @@ void Test_ax_check()
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = DREAM3D::Constants::k_Pi-0.00001f;
+    ax[3] = DREAM3D::Constants::k_Pi - 0.00001f;
     result = rt.ax_check<FloatQVectorType, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
@@ -435,14 +435,14 @@ void Test_ax_check()
 // -----------------------------------------------------------------------------
 void Test_om_check()
 {
-  RotationTransforms rt;
-  RotationTransforms::ResultType result;
+  OrientationTransforms rt;
+  OrientationTransforms::ResultType result;
 
   typedef std::vector<float> FloatVectorType;
   typedef QVector<float> FloatQVectorType;
 
   {
-    FloatRotationRepresentation_t ax(9);
+    FloatOrientationArray_t ax(9);
     ax[0] = 1.0f;
     ax[1] = 0.0f;
     ax[2] = 0.0f;
@@ -452,16 +452,16 @@ void Test_om_check()
     ax[6] = 0.0f;
     ax[7] = 0.0f;
     ax[8] = 1.0f;
-    result = rt.om_check<FloatRotationRepresentation_t, float>(ax);
+    result = rt.om_check<FloatOrientationArray_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
     ax[1] = -16.0f;
     ax[6] = -12.0f;
-    result = rt.om_check<FloatRotationRepresentation_t, float>(ax);
+    result = rt.om_check<FloatOrientationArray_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
     ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
-    result = rt.om_check<FloatRotationRepresentation_t, float>(ax);
+    result = rt.om_check<FloatOrientationArray_t, float>(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
 
@@ -526,7 +526,7 @@ void GenRotTest(K* in, K omega)
   eu[2] = in[2];
 
   T res(4);
-  RotationTransforms rt;
+  OrientationTransforms rt;
 }
 
 // -----------------------------------------------------------------------------
@@ -537,7 +537,7 @@ void Test_GenRot()
 
   float eu[3] = { 1.0f, 0.0f, 0.0f};
   float omega = DREAM3D::Constants::k_PiOver2;
-  GenRotTest<RotArrayType, float>(eu, omega);
+  GenRotTest<FloatOrientationArray_t, float>(eu, omega);
   GenRotTest<FloatVectorType, float>(eu, omega);
   GenRotTest<FloatQVectorType, float>(eu, omega);
 
@@ -591,9 +591,9 @@ template<typename T>
 void Print_QU(const T& om, typename QuaternionMath<float>::Order layout = QuaternionMath<float>::QuaternionVectorScalar)
 {
   if(layout == QuaternionMath<float>::QuaternionVectorScalar)
-   {
+  {
     printf("Quaternion (<vector>scalar)      :   <% 3.6f   % 3.6f    % 3.6f>    % 3.6f\n", om[0], om[1], om[2], om[3] );
-   }
+  }
 
   else if(layout == QuaternionMath<float>::QuaternionScalarVector)
   {
@@ -631,7 +631,7 @@ void EU_2_XXX(float* in)
   eu[2] = in[2];
 
   T res(9);
-  RotationTransforms rt;
+  OrientationTransforms rt;
   // Convert to Orientation Matrix
   rt.eu2om<T, float>(eu, res);
   Print_OM<T>(res);
@@ -667,7 +667,7 @@ void Test_eu2_XXX()
   std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
   float eu[3] = {k_PiOver2, 0.0f, 0.0f};
   Print_EU<float*>(eu);
-  EU_2_XXX<RotArrayType>(eu);
+  EU_2_XXX<FloatOrientationArray_t>(eu);
   EU_2_XXX<FloatVectorType>(eu);
   EU_2_XXX<FloatQVectorType>(eu);
 }
@@ -682,7 +682,7 @@ void OM_2_XXX(float* in)
   T om(9);
   for(size_t i = 0; i < 9; i++) { om[i] = in[i]; }
   T res(3); // Just size to 9 as we are going to reuse the variable
-  RotationTransforms rt;
+  OrientationTransforms rt;
   // Convert to Euler
   rt.om2eu<T, float>(om, res);
   Print_EU<T>(res);
@@ -718,23 +718,24 @@ void OM_2_XXX(float* in)
 void Test_om2_XXX()
 {
   /*
- ----------------------------------------------------
-Euler angles                     :  90.0000000    0.0000000    0.0000000
-Axis angle pair [n; angle]       :  -0.0000000   -0.0000000   -1.0000000 ;   90.0000000
-Rodrigues vector                 :      -0.0000000       -0.0000000       -1.0000000
-Homochoric representation        :  -0.0000000   -0.0000000   -0.7536693
-Cubochoric representation        :   0.0000000    0.0000000   -0.6074544
-Quaternion                       :   0.7071068   -0.0000000   -0.0000000   -0.7071068
+  ----------------------------------------------------
+  Euler angles                     :  90.0000000    0.0000000    0.0000000
+  Axis angle pair [n; angle]       :  -0.0000000   -0.0000000   -1.0000000 ;   90.0000000
+  Rodrigues vector                 :      -0.0000000       -0.0000000       -1.0000000
+  Homochoric representation        :  -0.0000000   -0.0000000   -0.7536693
+  Cubochoric representation        :   0.0000000    0.0000000   -0.6074544
+  Quaternion                       :   0.7071068   -0.0000000   -0.0000000   -0.7071068
                                    /  0.0000   1.0000   0.0000 \
-Orientation Matrix               : | -1.0000   0.0000   0.0000 |
+  Orientation Matrix               : | -1.0000   0.0000   0.0000 |
                                    \  0.0000   0.0000   1.0000 /
-*/
+  */
   std::cout << "Test_om2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
   float om[9] = { 0.0000, 1.0000, 0.0000,
                   -1.0000, 0.0000, 0.0000,
-                  0.0000, 0.0000, 1.0000};
+                  0.0000, 0.0000, 1.0000
+                };
   Print_OM<float*>(om);
-  OM_2_XXX<RotArrayType>(om);
+  OM_2_XXX<FloatOrientationArray_t>(om);
   OM_2_XXX<FloatVectorType>(om);
   OM_2_XXX<FloatQVectorType>(om);
 
@@ -751,7 +752,7 @@ void RO_2_XXX(float* in)
 
   T res(9); // Just size to 9 as we are going to reuse the variable
 
-  RotationTransforms rt;
+  OrientationTransforms rt;
 
   // Convert to Euler
   res.resize(3);
@@ -792,7 +793,7 @@ void Test_ro2_XXX()
   std::cout << "Test_ro2_XXX  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
   float ro[4] = {0.0f, 0.0f, -1.0f, 1.0f};
   Print_RO<float*, float>(ro);
-  RO_2_XXX<RotArrayType>(ro);
+  RO_2_XXX<FloatOrientationArray_t>(ro);
   RO_2_XXX<FloatVectorType>(ro);
   RO_2_XXX<FloatQVectorType>(ro);
 }
@@ -810,7 +811,7 @@ void AX_2_XXX(K* in)
   ax[3] = in[3];
 
   T res(9);
-  RotationTransforms rt;
+  OrientationTransforms rt;
   // Convert to Orientation Matrix
   rt.ax2om<T, K>(ax, res);
   Print_OM<T>(res);
@@ -846,7 +847,7 @@ void Test_ax2_XXX()
   std::cout << "Test_ax2_XXX  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
   float ax[4] = {0.0f, 0.0f, -1.0f, k_PiOver2};
   Print_AX<float*>(ax);
-  AX_2_XXX<RotArrayType>(ax);
+  AX_2_XXX<FloatOrientationArray_t>(ax);
   AX_2_XXX<std::vector<float> >(ax);
   AX_2_XXX<FloatQVectorType>(ax);
 }
@@ -855,7 +856,7 @@ void Test_ax2_XXX()
 //
 // -----------------------------------------------------------------------------
 template<typename T, typename K>
-void QU_2_XXX(K* in, typename QuaternionMath<K>::Order layout=QuaternionMath<K>::QuaternionVectorScalar)
+void QU_2_XXX(K* in, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
 {
   T qu(4);
   qu[0] = in[0];
@@ -864,7 +865,7 @@ void QU_2_XXX(K* in, typename QuaternionMath<K>::Order layout=QuaternionMath<K>:
   qu[3] = in[3];
 
   T res(9);
-  RotationTransforms rt;
+  OrientationTransforms rt;
   // Convert to Orientation Matrix
   res.resize(9);
   rt.qu2om<T, K>(qu, res, layout);
@@ -905,7 +906,7 @@ void Test_qu2_XXX()
     std::cout << "Test_qu2_XXX  (SCALAR, <X, Y, Z>) ***************************************" << std::endl;
     float qu[4] = {DREAM3D::Constants::k_1OverRoot2, 0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2};
     Print_QU<float*>(qu, QuaternionMathF::QuaternionScalarVector);
-    QU_2_XXX<RotArrayType>(qu, QuaternionMathF::QuaternionScalarVector);
+    QU_2_XXX<FloatOrientationArray_t>(qu, QuaternionMathF::QuaternionScalarVector);
     //  QU_2_XXX<std::vector<float> >(qu);
     //  QU_2_XXX<FloatQVectorType>(qu);
   }
@@ -914,7 +915,7 @@ void Test_qu2_XXX()
     std::cout << "Test_qu2_XXX  (<X, Y, Z>, SCALAR) ***************************************" << std::endl;
     float qu[4] = {0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2};
     Print_QU<float*>(qu);
-    QU_2_XXX<RotArrayType>(qu);
+    QU_2_XXX<FloatOrientationArray_t>(qu);
     //  QU_2_XXX<std::vector<float> >(qu);
     //  QU_2_XXX<FloatQVectorType>(qu);
   }
@@ -933,7 +934,7 @@ void HO_2_XXX(K* in)
   ho[2] = in[2];
 
   T res(9);
-  RotationTransforms rt;
+  OrientationTransforms rt;
 
   //Convert to Euler
   res.resize(3);
@@ -974,7 +975,7 @@ void Test_ho2_XXX()
   std::cout << "Test_ho2_XXX  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;
   float ho[3] = {0.000000f, 0.000000f, -0.7536693215f};
   Print_HO<float*>(ho);
-  HO_2_XXX<RotArrayType>(ho);
+  HO_2_XXX<FloatOrientationArray_t>(ho);
   HO_2_XXX<std::vector<float> >(ho);
   HO_2_XXX<FloatQVectorType>(ho);
 }
@@ -997,12 +998,12 @@ int main(int argc, char* argv[])
   DREAM3D_REGISTER_TEST( Test_GenRot() )
 
 
-//  DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
   DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
 
   return err;
 }

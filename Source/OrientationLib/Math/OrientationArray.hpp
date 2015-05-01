@@ -31,8 +31,8 @@
  *                 FA8650-07-D-5800 & FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _RotationRepresentation_H_
-#define _RotationRepresentation_H_
+#ifndef _OrientationArray_H_
+#define _OrientationArray_H_
 
 #include <assert.h>
 #include <string.h>
@@ -46,7 +46,7 @@
 
 template<typename T>
 /**
- * @brief The RotationRepresentation class encapsulates one of many types of rotation representations
+ * @brief The OrientationArray class encapsulates one of many types of rotation representations
  * Bunge Euler Angles (3x1), Orientation Matrix (3x3), Rodrigues-Frank Vector (1x3),
  * Axis-Angle (<Axis>, Scalar>) (4x1), Quaternion (4x1) and Homochoric (3x1). The
  * Class is meant to allow easier use of the Rotation Transformation functions
@@ -55,16 +55,16 @@ template<typename T>
  * in space. Alternate constructors can allow the class to simply wrap an existing
  * array of values which makes looping through an array of orientations easier.
  */
-class RotationRepresentation
+class OrientationArray
 {
 
   public:
     /**
-     * @brief RotationRepresentation Constructor
+     * @brief OrientationArray Constructor
      * @param size The number of elements
      * @param init Initialization value to be assigned to each element
      */
-    RotationRepresentation(size_t size, T init = (T)(0) ) :
+    OrientationArray(size_t size, T init = (T)(0) ) :
       m_Ptr(NULL),
       m_Size(size),
       m_Owns(true)
@@ -77,11 +77,11 @@ class RotationRepresentation
     }
 
     /**
-     * @brief RotationRepresentation Constructor
+     * @brief OrientationArray Constructor
      * @param ptr Pointer to an existing array of values
      * @param size How many elements are in the array
      */
-    RotationRepresentation(T* ptr, size_t size) :
+    OrientationArray(T* ptr, size_t size) :
       m_Ptr(ptr),
       m_Size(size),
       m_Owns(false)
@@ -90,11 +90,11 @@ class RotationRepresentation
     }
 
     /**
-     * @brief RotationRepresentation Copy Constructor that will do a deep copy of the elements
-     * from the incoming array into the newly constructed RotationRepresentation class
-     * @param rhs Incoming RotationRepresentation class to copy
+     * @brief OrientationArray Copy Constructor that will do a deep copy of the elements
+     * from the incoming array into the newly constructed OrientationArray class
+     * @param rhs Incoming OrientationArray class to copy
      */
-    RotationRepresentation(const RotationRepresentation<T>& rhs) :
+    OrientationArray(const OrientationArray<T>& rhs) :
     m_Ptr(NULL),
     m_Size(rhs.m_Size),
     m_Owns(true)
@@ -104,9 +104,9 @@ class RotationRepresentation
     }
 
     /**
-     * @brief ~RotationRepresentation
+     * @brief ~OrientationArray
      */
-    virtual ~RotationRepresentation() {
+    virtual ~OrientationArray() {
       if(m_Ptr != NULL && m_Owns == true)
       {
         free(m_Ptr);
@@ -116,10 +116,10 @@ class RotationRepresentation
 
     /**
      * @brief operator = This function will reallocate a new array that matches
-     * the incoming RotationRepresentation instance and copy all the data from the incoming
+     * the incoming OrientationArray instance and copy all the data from the incoming
      * representation into the current instance.
      */
-    void operator=(const RotationRepresentation& rhs)
+    void operator=(const OrientationArray& rhs)
     {
       if(m_Ptr != NULL && m_Owns == true)
       {
@@ -276,14 +276,14 @@ class RotationRepresentation
 };
 
 /**
- * @brief RotationRepresentationF A convenience Typedef for a RotationRepresentation<float>
+ * @brief OrientationArrayF A convenience Typedef for a OrientationArray<float>
  */
-typedef RotationRepresentation<float> FloatRotationRepresentation_t;
+typedef OrientationArray<float> FloatOrientationArray_t;
 
 /**
- * @brief RotationRepresentationD A convenience Typedef for a RotationRepresentation<double>
+ * @brief OrientationArrayD A convenience Typedef for a OrientationArray<double>
  */
-typedef RotationRepresentation<double> DoubleRotationRepresentation_t;
+typedef OrientationArray<double> DoubleOrientationArray_t;
 
 
-#endif /* _RotationRepresentation_H_ */
+#endif /* _OrientationArray_H_ */
