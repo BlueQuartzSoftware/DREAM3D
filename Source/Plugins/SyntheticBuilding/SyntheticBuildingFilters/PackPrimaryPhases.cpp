@@ -580,7 +580,6 @@ void PackPrimaryPhases::preflight()
 void PackPrimaryPhases::execute()
 {
   setErrorCondition(0);
-  DREAM3D_RANDOMNG_NEW()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -940,7 +939,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       generate_feature(phase, m_Seed, &feature, m_ShapeTypes[phase]);
       currentsizedisterror = check_sizedisterror(&feature);
       change = (currentsizedisterror) - (oldsizedisterror);
-      if (change > 0 || currentsizedisterror > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
+      if (change > 0.0f || currentsizedisterror > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
       {
         QString ss = QObject::tr("Packing Features (1/2) - Generating Feature #%1").arg(gid);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);

@@ -189,7 +189,7 @@ void InitializeSyntheticVolume::dataCheck()
   if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
 
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
-  UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), cDims);
+  UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if(getErrorCondition() < 0 && phaseType.get() == NULL) { return; }
 
   QVector<size_t> statsDims(1, 1);

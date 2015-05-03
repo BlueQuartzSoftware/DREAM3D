@@ -179,19 +179,19 @@ class PackPrimaryPhases : public AbstractFilter
     /**
      * @brief generate_feature Creates a Feature by sampling the size and morphological statistical distributions
      * @param phase Index of the Ensemble type for the Feature to be generated
-     * @param Seed Value to intialized random number generator
+     * @param Seed Value to intialize random number generator
      * @param feature Feature_t struct pointer to be intialized
      * @param shapeclass Type of Feature shape to be generated
      */
     void generate_feature(int32_t phase, uint64_t Seed, Feature_t* feature, uint32_t shapeclass);
 
     /**
-     * @brief load_features Reads a list of Features from to be used as the packed volume
+     * @brief load_features Reads a list of Features from a file to be used as the packed volume
      */
     void load_features();
 
     /**
-     * @brief transfer_attributes Moves variables held in the Feature struct into other arrays
+     * @brief transfer_attributes Moves variables held in the Feature_t struct into other arrays
      * @param gnum Id for the Feature to be copied
      * @param feature Feature_t struct pointer to be copied
      */
@@ -388,7 +388,6 @@ class PackPrimaryPhases : public AbstractFilter
     std::vector<float> featuresizediststep;
     std::vector<float> neighbordiststep;
 
-    std::vector<int64_t> newnames;
     std::vector<int64_t> packqualities;
     std::vector<int64_t> gsizes;
 
