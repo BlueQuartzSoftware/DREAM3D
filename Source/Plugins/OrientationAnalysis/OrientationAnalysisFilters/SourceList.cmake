@@ -49,7 +49,6 @@ set(_PublicFilters
   NeighborOrientationCorrelation
   ReadH5Ebsd
   ReadAngData
-  ReadMicData
   ReadEdaxH5Data
   RotateEulerRefFrame
 )

@@ -42,6 +42,8 @@
 
 #include "QtSupport/QFileCompleter.h"
 
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

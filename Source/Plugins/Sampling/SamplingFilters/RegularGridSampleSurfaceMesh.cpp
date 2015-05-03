@@ -234,7 +234,7 @@ AbstractFilter::Pointer RegularGridSampleSurfaceMesh::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 
 // -----------------------------------------------------------------------------

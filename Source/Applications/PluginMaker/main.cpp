@@ -37,14 +37,14 @@
 
 #include <QApplication>
 
-#include "PluginMaker.h"
+#include "DevHelper.h"
 
 int main(int argc, char* argv[])
 {
   QApplication app(argc, argv);
 
-  PluginMaker* plugin = new PluginMaker;
-  plugin->show();
+  DevHelper* helper = new DevHelper;
+  helper->show();
 
   return app.exec();
 }

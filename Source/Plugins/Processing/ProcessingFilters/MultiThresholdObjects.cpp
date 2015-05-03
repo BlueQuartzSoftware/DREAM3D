@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/ThresholdFilterHelper.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ComparisonFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -283,7 +284,7 @@ AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

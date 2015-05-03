@@ -188,7 +188,7 @@ AbstractFilter::Pointer GenerateGeometryConnectivity::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -268,7 +268,7 @@ AbstractFilter::Pointer TriangleNormalFilter::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString TriangleNormalFilter::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

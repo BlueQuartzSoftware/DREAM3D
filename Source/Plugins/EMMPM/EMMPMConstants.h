@@ -9,7 +9,7 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace EMMPMPlugin {
+namespace EMMPMConstants {
   const QString EMMPMPluginFile("EMMPMPlugin");
   const QString EMMPMPluginDisplayName("EMMPMPlugin");
   const QString EMMPMBaseName("EMMPMPlugin");

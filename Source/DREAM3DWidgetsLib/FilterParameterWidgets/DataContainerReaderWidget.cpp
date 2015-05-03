@@ -51,8 +51,6 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
-#include "DataArrayInformationDisplayWidget.h"
-
 
 // Initialize private static member variable
 QString DataContainerReaderWidget::m_OpenDialogLastDirectory = "";

@@ -431,7 +431,7 @@ AbstractFilter::Pointer FindDirectionalModuli::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString FindDirectionalModuli::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 // -----------------------------------------------------------------------------
 //

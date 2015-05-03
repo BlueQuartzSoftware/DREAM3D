@@ -1028,7 +1028,7 @@ AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -20,6 +20,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -347,7 +348,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getCompiledLibraryName()
 {
-  return EMMPMPlugin::EMMPMBaseName;
+  return EMMPMConstants::EMMPMBaseName;
 }
 
 // -----------------------------------------------------------------------------
