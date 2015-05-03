@@ -57,7 +57,7 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
-#include "QtSupport/FileDragMessageBox.h"
+#include "QtSupportLib/FileDragMessageBox.h"
 
 class QScrollArea;
 class QContextMenuEvent;

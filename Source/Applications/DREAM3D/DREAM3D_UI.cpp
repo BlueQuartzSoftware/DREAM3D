@@ -60,12 +60,12 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
-#include "QtSupport/ApplicationAboutBoxDialog.h"
-#include "QtSupport/QRecentFileList.h"
-#include "QtSupport/DREAM3DQtMacros.h"
-#include "QtSupport/DREAM3DPluginFrame.h"
-#include "QtSupport/HelpDialog.h"
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/ApplicationAboutBoxDialog.h"
+#include "QtSupportLib/QRecentFileList.h"
+#include "QtSupportLib/DREAM3DQtMacros.h"
+#include "QtSupportLib/DREAM3DPluginFrame.h"
+#include "QtSupportLib/HelpDialog.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/UpdateCheck.h"
@@ -304,7 +304,7 @@ void DREAM3D_UI::on_actionSaveAs_triggered()
 
 // -----------------------------------------------------------------------------
 //
-// -----------------------------------------------------------------------------b
+// -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionExit_triggered()
 {
 #if defined (Q_OS_WIN)
@@ -321,12 +321,13 @@ void DREAM3D_UI::on_actionExit_triggered()
 void DREAM3D_UI::closeEvent(QCloseEvent* event)
 {
   QMessageBox::StandardButton choice = checkDirtyDocument();
-
   if (choice == QMessageBox::Cancel)
   {
     event->ignore();
     return;
   }
+
+  disconnectSignalsSlots();
 
   writeSettings();
   on_actionClearPipeline_triggered();
@@ -339,6 +340,7 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
     qApp->quit();
   }
 }
+
 
 // -----------------------------------------------------------------------------
 //  Read our settings from a file
@@ -587,14 +589,80 @@ void DREAM3D_UI::setupGui()
   pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
 
   // Make the connections between the gui elements
-  //  filterLibraryDockWidget->connectFilterList(filterListDockWidget);
-  //  favoritesDockWidget->connectFilterList(filterListDockWidget);
-  //  prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
-
   QRecentFileList* recentsList = QRecentFileList::instance();
 
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
   // or load an entire pipeline into the view
+  connectSignalsSlots();
+
+  pipelineViewWidget->setStatusBar(statusbar);
+
+  // This will set the initial list of filters in the filterListDockWidget
+  // Tell the Filter Library that we have more Filters (potentially)
+  filterLibraryDockWidget->refreshFilterGroups();
+
+  // Set the IssuesDockWidget as a PipelineMessageObserver Object.
+  pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
+
+  setupViewMenu();
+  setupPipelineContextMenu();
+
+  if(favoritesDockWidget)
+  {
+    favoritesDockWidget->configureFilterLibraryTree();
+  }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::disconnectSignalsSlots()
+{
+  QRecentFileList* recentsList = QRecentFileList::instance();
+  disconnect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
+          pipelineViewWidget, SLOT(addFilter(const QString&)) );
+
+  disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
+          pipelineViewWidget, SLOT(addFilter(const QString&)) );
+
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
+          pipelineViewWidget, SLOT(openPipeline(QString, ExtractionType)));
+
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
+    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+
+  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
+    pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
+
+  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
+    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+
+  disconnect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
+    pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
+
+  disconnect(recentsList, SIGNAL(fileListChanged(const QString &)),
+    this, SLOT(updateRecentFileList(const QString &)));
+
+  disconnect(pipelineViewWidget, SIGNAL(filterInputWidgetChanged(FilterInputWidget*)),
+    this, SLOT(setFilterInputWidget(FilterInputWidget*)));
+
+  disconnect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
+    this, SLOT(clearFilterInputWidget()));
+
+  disconnect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
+    this, SLOT(markDocumentAsDirty()));
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::connectSignalsSlots()
+{
+  QRecentFileList* recentsList = QRecentFileList::instance();
   connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
@@ -627,25 +695,9 @@ void DREAM3D_UI::setupGui()
 
   connect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
     this, SLOT(markDocumentAsDirty()));
-
-  pipelineViewWidget->setStatusBar(statusbar);
-
-  // This will set the initial list of filters in the filterListDockWidget
-  // Tell the Filter Library that we have more Filters (potentially)
-  filterLibraryDockWidget->refreshFilterGroups();
-
-  // Set the IssuesDockWidget as a PipelineMessageObserver Object.
-  pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
-
-  setupViewMenu();
-  setupPipelineContextMenu();
-
-  if(favoritesDockWidget)
-  {
-    favoritesDockWidget->configureFilterLibraryTree();
-  }
-
 }
+
+
 
 // -----------------------------------------------------------------------------
 //

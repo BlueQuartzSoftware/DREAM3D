@@ -45,8 +45,8 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLineEdit>
 
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
-#include "QtSupport/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"

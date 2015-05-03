@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
-#include "QtSupport/QFileCompleter.h"
+#include "QtSupportLib/QFileCompleter.h"
 
 #include "ImageImport/ImageImportFilters/ImportVectorImageStack.h"
 

@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 
-#include "QtSupport/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 

@@ -51,8 +51,8 @@
 #include <QtWidgets/QFileDialog>
 
 
-#include "QtSupport/DREAM3DStyles.h"
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"

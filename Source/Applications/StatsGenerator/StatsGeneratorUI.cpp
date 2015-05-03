@@ -60,9 +60,9 @@
 #include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
-#include "QtSupport/ApplicationAboutBoxDialog.h"
-#include "QtSupport/QRecentFileList.h"
-#include "QtSupport/HelpDialog.h"
+#include "QtSupportLib/ApplicationAboutBoxDialog.h"
+#include "QtSupportLib/QRecentFileList.h"
+#include "QtSupportLib/HelpDialog.h"
 
 #include "DREAM3D/License/StatsGeneratorLicenseFiles.h"
 

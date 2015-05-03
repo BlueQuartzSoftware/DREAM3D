@@ -40,7 +40,7 @@
 #include <QtWidgets/QTreeWidgetItem>
 #include <QtGui/QPainter>
 
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 
 #include "DREAM3DLib/Common/FilterManager.h"

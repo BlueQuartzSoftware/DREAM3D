@@ -41,8 +41,8 @@ include_directories(${HDF5_INCLUDE_DIR}
                     ${DREAM3D_BINARY_DIR}
                     ${PROJECT_CODE_DIR}
                     ${PROJECT_CODE_DIR}/Plugins
-                    ${PROJECT_CODE_DIR}/QtSupport
-                    ${DREAM3DProj_BINARY_DIR}/QtSupport
+                    ${PROJECT_CODE_DIR}/QtSupportLib
+                    ${DREAM3DProj_BINARY_DIR}/QtSupportLib
                     ${PROJECT_CODE_DIR}/DREAM3DWidgetsLib
                     ${PROJECT_CODE_DIR}/DREAM3DWidgetsLib/Widgets
                     ${DREAM3DProj_BINARY_DIR}/DREAM3DWidgetsLib/
@@ -160,7 +160,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES H5Support EbsdLib DREAM3DLib QtSupport DREAM3DWidgetsLib
+    LINK_LIBRARIES H5Support EbsdLib DREAM3DLib QtSupportLib DREAM3DWidgetsLib
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     QT_PLUGINS    ${QT_PLUGINS}
     QT5_MODULES   ${Qt5_COMPONENTS}

@@ -72,8 +72,8 @@ set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/
 #--------------------------
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
-include_directories( ${QtSupport_BINARY_DIR} )
-include_directories( ${QtSupport_SOURCE_DIR} )
+include_directories( ${QtSupportLib_BINARY_DIR} )
+include_directories( ${QtSupportLib_SOURCE_DIR} )
 
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
@@ -183,7 +183,7 @@ target_link_libraries(${PLUGIN_NAME}
                     DREAM3DLib
                     OrientationLib
                     Qt5::Gui Qt5::Widgets
-                    QtSupport
+                    QtSupportLib
                     DREAM3DWidgetsLib
 )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)

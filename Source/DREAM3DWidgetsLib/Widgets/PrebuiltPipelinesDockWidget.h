@@ -41,7 +41,7 @@
 
 #include <QtWidgets/QDockWidget>
 
-#include "QtSupport/FileDragMessageBox.h"
+#include "QtSupportLib/FileDragMessageBox.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 

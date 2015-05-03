@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Geometry/ImageGeom.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
-#include "QtSupport/QFileCompleter.h"
+#include "QtSupportLib/QFileCompleter.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"

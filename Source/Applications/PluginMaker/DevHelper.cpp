@@ -39,7 +39,7 @@
 
 #include <QtCore/QtDebug>
 
-#include "QtSupport/ApplicationAboutBoxDialog.h"
+#include "QtSupportLib/ApplicationAboutBoxDialog.h"
 
 #include <QtWidgets/QDesktopWidget>
 

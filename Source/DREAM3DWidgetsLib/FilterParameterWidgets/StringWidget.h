@@ -43,7 +43,7 @@
 #include <QtCore/QPointer>
 #include <QtWidgets/QWidget>
 
-#include "QtSupport/FaderWidget.h"
+#include "QtSupportLib/FaderWidget.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 

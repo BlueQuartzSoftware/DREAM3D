@@ -168,8 +168,8 @@ set(Project_SRCS
 # --------------------------------------------------------------------
 # Set some Include directories
 include_directories(${PROJECT_CODE_DIR})
-include_directories(${PROJECT_CODE_DIR}/QtSupport)
-include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
+include_directories(${PROJECT_CODE_DIR}/QtSupportLib)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/..)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets)
@@ -186,7 +186,7 @@ target_link_libraries(DREAM3DWidgetsLib
                     Qt5::Gui Qt5::Widgets
                     Qt5::WebKit
                     Qt5::WebKitWidgets
-                    QtSupport
+                    QtSupportLib
                     DREAM3DLib
 )
 

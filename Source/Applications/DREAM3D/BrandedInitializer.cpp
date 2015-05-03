@@ -56,7 +56,7 @@
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
-#include "QtSupport/QRecentFileList.h"
+#include "QtSupportLib/QRecentFileList.h"
 
 #include "AboutPlugins.h"
 #include "DREAM3D_UI.h"
@@ -83,6 +83,7 @@ BrandedInitializer::~BrandedInitializer()
   delete this->MainWindow;
   this->MainWindow = NULL;
 
+  /*
   for(int i = 0; i < m_PluginLoaders.size(); i++)
   {
     qDebug() << "Unloading Plugin " << m_PluginLoaders.at(i)->fileName();
@@ -90,6 +91,7 @@ BrandedInitializer::~BrandedInitializer()
     delete m_PluginLoaders[i]; // Delete the QPluginLoader object
     m_PluginLoaders[i] = NULL;
   }
+  */
 }
 
 // -----------------------------------------------------------------------------

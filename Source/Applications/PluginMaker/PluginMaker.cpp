@@ -53,8 +53,8 @@
 #include <QtWidgets/QApplication>
 #include <QtCore/QSize>
 
-#include "QtSupport/QFileCompleter.h"
-#include "QtSupport/ApplicationFileInfo.h"
+#include "QtSupportLib/QFileCompleter.h"
+#include "QtSupportLib/ApplicationFileInfo.h"
 
 
 #include "AddFilterWidget.h"

@@ -39,7 +39,7 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
-#include "QtSupport/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 

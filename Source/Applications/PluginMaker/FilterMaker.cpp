@@ -48,7 +48,7 @@
 #include "PluginMaker/CodeGenerators/CodeGenFactory.h"
 #include "PluginMaker/CodeGenerators/FPCodeGenerator.h"
 
-#include "QtSupport/ApplicationFileInfo.h"
+#include "QtSupportLib/ApplicationFileInfo.h"
 
 #include <iostream>
 
@@ -91,7 +91,7 @@ void FilterMaker::setupGui()
   // Setup error string
   errorString->setTextFormat(Qt::PlainText);
   errorString->setTextInteractionFlags(Qt::NoTextInteraction);
-  errorString->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
+  errorString->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
   errorString->setText("");
 
   // Stretch Factors

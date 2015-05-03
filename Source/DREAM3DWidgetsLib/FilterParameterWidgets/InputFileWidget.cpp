@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
-#include "QtSupport/QFileCompleter.h"
+#include "QtSupportLib/QFileCompleter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -158,11 +158,11 @@ bool InputFileWidget::verifyPathExists(QString filePath, QFSDropLabel* lineEdit)
   if (false == fileinfo.exists())
   {
     //lineEdit->setStyleSheet("border: 1px solid red;");
-    lineEdit->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
+    lineEdit->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
   }
   else
   {
-    lineEdit->changeStyleSheet(FS_STANDARD_STYLE);
+    lineEdit->changeStyleSheet(QFSDropLabel::FS_STANDARD_STYLE);
   }
   return fileinfo.exists();
 }

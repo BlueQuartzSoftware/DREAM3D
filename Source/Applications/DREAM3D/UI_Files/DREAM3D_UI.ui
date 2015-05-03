@@ -577,7 +577,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
   <customwidget>
    <class>DREAM3DSplitter</class>
    <extends>QSplitter</extends>
-   <header location="global">QtSupport/DREAM3DSplitter.h</header>
+   <header location="global">QtSupportLib/DREAM3DSplitter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

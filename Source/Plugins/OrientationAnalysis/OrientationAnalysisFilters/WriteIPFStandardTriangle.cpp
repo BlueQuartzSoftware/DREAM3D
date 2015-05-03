@@ -65,7 +65,7 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
-#include "QtSupport/PoleFigureImageUtilities.h"
+#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 
 

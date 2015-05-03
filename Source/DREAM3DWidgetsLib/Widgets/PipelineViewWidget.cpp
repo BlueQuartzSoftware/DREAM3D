@@ -69,7 +69,7 @@
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
 
-#include "QtSupport/QDroppableScrollArea.h"
+#include "QtSupportLib/QDroppableScrollArea.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 

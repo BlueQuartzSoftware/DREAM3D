@@ -266,7 +266,20 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void setupPipelineContextMenu();
 
+    /**
+    * @brief 
+    */
     void setupViewMenu();
+
+    /**
+    * @brief 
+    */
+    void connectSignalsSlots();
+
+    /**
+    * @brief 
+    */
+    void disconnectSignalsSlots();
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings

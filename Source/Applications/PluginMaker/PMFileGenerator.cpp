@@ -44,7 +44,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
 
-#include "QtSupport/ApplicationFileInfo.h"
+#include "QtSupportLib/ApplicationFileInfo.h"
 
 // -----------------------------------------------------------------------------
 //

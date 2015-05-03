@@ -42,7 +42,7 @@
 #include <QtWidgets/QDockWidget>
 #include <QtWidgets/QTreeWidgetItem>
 
-#include "QtSupport/FileDragMessageBox.h"
+#include "QtSupportLib/FileDragMessageBox.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"

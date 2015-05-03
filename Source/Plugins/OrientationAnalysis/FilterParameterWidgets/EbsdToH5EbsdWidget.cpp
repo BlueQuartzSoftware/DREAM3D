@@ -54,11 +54,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
-#include "QtSupport/QCheckboxDialog.h"
-#include "QtSupport/QFileCompleter.h"
-#include "QtSupport/DREAM3DQtMacros.h"
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
-#include "QtSupport/DREAM3DStyles.h"
+#include "QtSupportLib/QCheckboxDialog.h"
+#include "QtSupportLib/QFileCompleter.h"
+#include "QtSupportLib/DREAM3DQtMacros.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
