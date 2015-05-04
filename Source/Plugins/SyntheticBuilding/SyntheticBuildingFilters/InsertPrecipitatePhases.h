@@ -354,6 +354,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     int64_t m_ZPoints;
     int64_t m_TotalPoints;
 
+	int64_t* m_Neighbors;
+
     QMap<uint32_t, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
