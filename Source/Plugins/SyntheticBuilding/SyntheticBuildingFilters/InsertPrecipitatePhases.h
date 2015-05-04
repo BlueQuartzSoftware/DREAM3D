@@ -43,13 +43,11 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-
-#include "Plugins/SyntheticBuilding/ShapeOps/ShapeOps.h"
+#include "SyntheticBuilding/ShapeOps/ShapeOps.h"
 
 typedef struct
 {
