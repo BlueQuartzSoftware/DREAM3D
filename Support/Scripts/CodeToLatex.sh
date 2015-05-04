@@ -72,7 +72,7 @@ do
 done
 
 
-folders="DREAM3DLib EbsdLib FilterWidgets H5Support MXA PipelineBuilder Plugins QtSupport Applications"
+folders="DREAM3DLib EbsdLib FilterWidgets H5Support MXA PipelineBuilder Plugins QtSupportLib Applications"
 for folder in $folders;
 do
 files=`find ./Source/$folder -type f \( -name "*.c*" -or -name "*.h*" -or -name "*.txx" \)`

@@ -45,14 +45,22 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLineEdit>
 
-
-#include "QtSupport/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
+enum TabIndices
+{
+  BASIC_TAB,
+  ADVANCED_TAB,
+  CURRENT_STRUCTURE_TAB,
+  HELP_TAB
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -72,28 +80,6 @@ FilterInputWidget::FilterInputWidget(QWidget* parent) :
 FilterInputWidget::~FilterInputWidget()
 {
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString FilterInputWidget::getLabelStyleSheet()
-{
-  QString styleSheet;
-  QTextStream ss(&styleSheet);
-
-  ss << "QLabel#label {";
-#if defined(Q_OS_WIN)
-  ss << "font: 10 pt \"Times New Roman\";";
-#elif defined(Q_OS_MAC)
-  ss << "font: 13 pt \"Times New Roman\";";
-#else
-  ss << "font: 10 pt \"Times New Roman\"";
-#endif
-  ss << "  font-weight: bold;  }";
-  return styleSheet;
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -122,10 +108,15 @@ void FilterInputWidget::setupGui()
 
   filterHumanLabel->setFont(humanLabelFont);
   brandingLabel->setFont(brandingFont);
-  basicInputsLabel->setFont(categoryFont);
-  advInputsLabel->setFont(categoryFont);
-  currentStructureLabel->setFont(categoryFont);
   brandingLabel->installEventFilter(this);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::on_filterHelpBtn_pressed()
+{
+  DREAM3DUserManualDialog::LaunchHelpDialog(filterHumanLabel->text());
 }
 
 // -----------------------------------------------------------------------------
@@ -176,7 +167,6 @@ void FilterInputWidget::clearInputWidgets()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 {
-
   w->getBasicInputsWidget()->setParent(w);
   w->getAdvancedInputsWidget()->setParent(w);
   clearInputWidgets();
@@ -193,23 +183,28 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   advInputsGrid->addWidget(w->getAdvancedInputsWidget());
   currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
-  basicInputsFrame->setVisible((bool)(w->getBasicParameterCount()));
-
-  bool showAdv = false;
-  // Cases
+  // Set the current index to the basic tab by default
+  tabWidget->setCurrentIndex(BASIC_TAB);
 
   // First check to see if we even have advanced parameters and show/hide the buttons accordingly
-  showAdv = static_cast<bool>(w->getAdvParameterCount());
-  advInputsBtn->setVisible(showAdv);
-  advInputsLabel->setVisible(showAdv);
-  // If we do NOT have any advanced Parameters then hide the AdvFrame
-  if(showAdv == false)
+  bool showAdv = static_cast<bool>(w->getAdvParameterCount());
+  bool showBasic = static_cast<bool>(w->getBasicParameterCount());
+  // If we do NOT have any basic Parameters then disable the basic tab
+  if (showBasic == false)
   {
-    advInputsFrame->setVisible(showAdv);
+    tabWidget->setTabEnabled(BASIC_TAB, false);
+    tabWidget->setCurrentIndex(ADVANCED_TAB);
   }
-  else // Show or Hide the AdvFrame based on the last interaction the user did
+
+  // If we do NOT have any advanced Parameters then disable the advanced tab
+  if (showAdv == false)
   {
-    advInputsFrame->setVisible(!m_AdvFadedOut);
+    tabWidget->setTabEnabled(ADVANCED_TAB, false);
+
+    if (tabWidget->isTabEnabled(BASIC_TAB) == false)
+    {
+      tabWidget->setCurrentIndex(CURRENT_STRUCTURE_TAB);
+    }
   }
 
   w->getBasicInputsWidget()->setVisible(true);
@@ -224,6 +219,8 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   brandingLabel->setText(m_BrandingLabel);
 
+  int basicHeight = basicScrollArea->height();
+  int advancedHeight = advancedScrollArea->height();
 }
 
 
@@ -261,44 +258,5 @@ void FilterInputWidget::fadeOutWidget(QWidget* widget)
   m_AdvFadedOut = true;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterInputWidget::hideButton()
-{
-  advInputsFrame->setVisible(false);
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterInputWidget::on_advInputsBtn_clicked()
-{
-  if(advInputsFrame->isVisible() == false)
-  {
-    advInputsFrame->setVisible(true);
-    fadeInWidget(advInputsFrame);
-  }
-  else
-  {
-    fadeOutWidget(advInputsFrame);
-  }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterInputWidget::on_currentStructureBtn_clicked()
-{
-  if(currentStructureFrame->isVisible() == false)
-  {
-    currentStructureFrame->setVisible(true);
-    fadeInWidget(currentStructureFrame);
-  }
-  else
-  {
-    fadeOutWidget(currentStructureFrame);
-  }
-
-}

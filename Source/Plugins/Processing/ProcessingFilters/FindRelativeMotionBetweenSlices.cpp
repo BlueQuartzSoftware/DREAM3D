@@ -74,23 +74,23 @@ class CalcRelativeMotion
 
     void convert(size_t start, size_t end) const
     {
-      int32_t patchPoint, comparePoint;
-      float val, minVal;
+      int32_t patchPoint = 0, comparePoint = 0;
+      float val = 0.0f, minVal = 0.0f;
       for (size_t i = start; i < end; i++)
       {
         if(m_ValidPoints[i] == true)
         {
-          minVal = 10000000000.0;
-          for(size_t j = 0; j < m_NumSearchPoints; j++)
+          minVal = std::numeric_limits<float>::max();
+          for (size_t j = 0; j < m_NumSearchPoints; j++)
           {
             val = 0;
-            for(size_t k = 0; k < m_NumPatchPoints; k++)
+            for (size_t k = 0; k < m_NumPatchPoints; k++)
             {
               patchPoint = i + m_PatchPoints[k];
               comparePoint = patchPoint + m_SearchPoints[4 * j];
               val += float((m_Data[patchPoint] - m_Data[comparePoint])) * float((m_Data[patchPoint] - m_Data[comparePoint]));
             }
-            if(val < minVal)
+            if (val < minVal)
             {
               minVal = val;
               m_MotionDirection[3 * i + 0] = m_SearchPoints[4 * j + 1];

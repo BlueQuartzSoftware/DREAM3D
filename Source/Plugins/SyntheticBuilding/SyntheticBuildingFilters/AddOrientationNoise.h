@@ -37,25 +37,12 @@
 #ifndef _AddOrientationNoise_H_
 #define _AddOrientationNoise_H_
 
-#include <QtCore/QString>
-#include <vector>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 /**
- * @class AddOrientationNoises AddOrientationNoises.h DREAM3DLib/SyntheticBuilderFilters/AddOrientationNoises.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The AddOrientationNoise class. See [Filter documentation](@ref addorientationnoise) for details.
  */
 class AddOrientationNoise : public AbstractFilter
 {
@@ -78,7 +65,6 @@ class AddOrientationNoise : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     /**
@@ -109,6 +95,10 @@ class AddOrientationNoise : public AbstractFilter
   protected:
     AddOrientationNoise();
 
+    /**
+     * @brief add_orientation_noise Applies a random axis-angle rotation to an
+     * array of Euler angles
+     */
     void add_orientation_noise();
 
   private:
@@ -121,8 +111,3 @@ class AddOrientationNoise : public AbstractFilter
 };
 
 #endif /* AddOrientationNoise_H_ */
-
-
-
-
-

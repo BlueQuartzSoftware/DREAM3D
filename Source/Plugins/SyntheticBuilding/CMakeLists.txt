@@ -55,9 +55,6 @@ include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
 # -- Include all the resources
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
-# Include the ShapeOps Classes
-include(${${PLUGIN_NAME}_SOURCE_DIR}/ShapeOps/SourceList.cmake)
-
 
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 
@@ -85,8 +82,8 @@ set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/
 #--------------------------
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
-include_directories( ${QtSupport_BINARY_DIR} )
-include_directories( ${QtSupport_SOURCE_DIR} )
+include_directories( ${QtSupportLib_BINARY_DIR} )
+include_directories( ${QtSupportLib_SOURCE_DIR} )
 
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
@@ -185,10 +182,6 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_GEN_HDRS}
   # -- Add in the miscellaneous resources (license, plugin info, ...)
   ${${PLUGIN_NAME}_Generated_RC_SRCS}
-
-  #-- Add the ShapeOps Classes
-  ${ShapeOps_HDRS}
-  ${ShapeOps_SRCS}
 )
 
 # --------------------------------------------------------------------
@@ -205,7 +198,7 @@ target_link_libraries(${PLUGIN_NAME}
                     DREAM3DLib
                     OrientationLib
                     Qt5::Gui Qt5::Widgets
-                    QtSupport
+                    QtSupportLib
                     DREAM3DWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)

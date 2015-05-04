@@ -58,7 +58,7 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/GenerateIPFColors.h"

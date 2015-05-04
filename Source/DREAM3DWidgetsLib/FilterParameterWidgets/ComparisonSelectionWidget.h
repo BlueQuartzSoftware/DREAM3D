@@ -42,7 +42,7 @@
 #include <QtWidgets/QWidget>
 
 
-#include "QtSupport/FaderWidget.h"
+#include "QtSupportLib/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -129,6 +129,7 @@ class ComparisonSelectionWidget : public FilterParameterWidget, private Ui::Comp
     void on_attributeMatrixList_currentIndexChanged(int index);
 
     void tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
+    void widgetChanged(const QString &text);
 
   private:
 

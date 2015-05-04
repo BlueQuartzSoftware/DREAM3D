@@ -257,7 +257,7 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeW
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath, QSettings::IniFormat, false);
+    emit pipelineFileActivated(pipelinePath, Replace);
   }
 
 }
@@ -406,7 +406,7 @@ void PrebuiltPipelinesDockWidget::actionAppendPipeline_triggered()
   {
     QFileInfo fi(pipelinePath);
     if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath(), QSettings::IniFormat, true);
+    emit pipelineFileActivated(fi.absoluteFilePath(), Append);
   }
 }
 

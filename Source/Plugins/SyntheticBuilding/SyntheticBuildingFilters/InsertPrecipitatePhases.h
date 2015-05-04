@@ -38,26 +38,16 @@
 #ifndef _InsertPrecipitatePhases_H_
 #define _InsertPrecipitatePhases_H_
 
-#include <QtCore/QString>
-#include <vector>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-
+#include "DREAM3DLib/Geometry/ShapeOps/ShapeOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-
-#include "SyntheticBuilding/ShapeOps/ShapeOps.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
-
 
 typedef struct
 {
@@ -68,14 +58,10 @@ typedef struct
   float m_Omega3s;
   int m_FeaturePhases;
   int m_Neighborhoods;
-} Precip;
+} Precip_t;
 
 /**
- * @class InsertPrecipitatePhases InsertPrecipitatePhases.h Plugins/SyntheticBuilding/SyntheticBuilderFilters/InsertPrecipitatePhases.h
- * @brief
- * @author
- * @date Jan 29, 2014
- * @version 5.0
+ * @brief The InsertPrecipitatePhases class. See [Filter documentation](@ref insertprecipitatephases) for details.
  */
 class InsertPrecipitatePhases : public AbstractFilter
 {
@@ -90,16 +76,22 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+
     DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
+
     DREAM3D_FILTER_PARAMETER(bool, HavePrecips)
     Q_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
+
     DREAM3D_FILTER_PARAMETER(QString, PrecipInputFile)
     Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
+
     DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
+
     DREAM3D_FILTER_PARAMETER(bool, MatchRDF)
     Q_PROPERTY(bool MatchRDF READ getMatchRDF WRITE setMatchRDF)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
@@ -153,7 +145,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     /**
@@ -184,34 +175,164 @@ class InsertPrecipitatePhases : public AbstractFilter
   protected:
     InsertPrecipitatePhases();
 
+    /**
+     * @brief place_precipitates Organizes the placement of precipitates into the packing volume while ensuring
+     * proper size and morphological statistics are maintained
+     * @param exlusionZonesPtr Array of exclusion zone precipitate Ids for each packing point
+     */
     void place_precipitates(Int32ArrayType::Pointer exlusionZonesPtr);
-    void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
+
+    /**
+     * @brief generate_precipitate Creates a precipitate by sampling the size and morphological statistical distributions
+     * @param phase Index of the Ensemble type for the Feature to be generated
+     * @param Seed Value to intialize random number generator
+     * @param precip Precip_t struct pointer to be intialized
+     * @param shapeclass Type of precipitate shape to be generated
+     * @param OrthoOps Pointer to OrientationOps object
+     */
+    void generate_precipitate(int32_t phase, uint64_t Seed, Precip_t* precip, uint32_t shapeclass, OrientationOps::Pointer OrthoOps);
+
+    /**
+     * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume
+     */
     void load_precipitates();
 
-    void transfer_attributes(int gnum, Precip* precip);
+    /**
+     * @brief transfer_attributes Moves variables held in the Precip_t struct into other arrays
+     * @param gnum Id for the Feature to be copied
+     * @param precip Precip_t struct pointer to be copied
+     */
+    void transfer_attributes(int32_t gnum, Precip_t* precip);
+
+    /**
+     * @brief insert_precipitate Performs the insertion of a precipitate into the packing volume
+     * @param featureNum Id for the precipitate to be inserted
+     */
     void insert_precipitate(size_t featureNum);
 
-    void move_precipitate(size_t featureNum, float xc, float yc, float zc);
+    /**
+     * @brief move_precipitate Moves a precipitate to the supplied (x,y,z) centroid coordinate
+     * @param featureNum Id for the precipitate to be moved
+     * @param xc x centroid coordinate
+     * @param yc y centroid coordinate
+     * @param zc z centroid coordinate
+     */
+    void move_precipitate(int32_t featureNum, float xc, float yc, float zc);
 
-    float check_sizedisterror(Precip* precip);
-    void update_exclusionZones(int gadd, int gremove, Int32ArrayType::Pointer exlusionZonesPtr);
+    /**
+     * @brief check_sizedisterror Computes the error between the current precipitate size distribution
+     * and the goal precipitate size distribution
+     * @param precip Precip_t struct pointer used to determine the Ensemble type
+     * @return Float error value between two distributions
+     */
+    float check_sizedisterror(Precip_t* precip);
+
+    /**
+     * @brief update_exclusionZones Updates the exclusion owners pointer based on the associated incoming Ids
+     * @param gadd Index used to determine which precipitate to add
+     * @param gremove Index used to determine which precipitate to remove
+     * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
+     */
+    void update_exclusionZones(size_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
+
+    /**
+     * @brief update_availablepoints Updates the maps used to associate packing points with an "available" state
+     * @param availablePoints Map between precipitate owners and number of available points
+     * @param availablePointsInv Inverse associations for the availablePoints map
+     */
     void update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv);
-    void determine_currentRDF(size_t featureNum, int add, bool double_count);
-    void determine_randomRDF(size_t gnum, int add, bool double_count, int largeNumber);
-    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume);
-    float check_RDFerror(int gadd, int gremove, bool double_count);
 
+    /**
+     * @brief determine_currentRDF Determines the radial distribution function about a given precipitate
+     * @param featureNum Index for the precipitate to determine RDF
+     * @param add Determines amount to iterate RDF bins
+     * @param double_count Determines whether to double count items in bins
+     */
+    void determine_currentRDF(int32_t featureNum, int32_t add, bool double_count);
+
+    /**
+     * @brief determine_randomRDF Determines a random radial distribution function
+     * @param gnum Index for the precipitate to determine RDF
+     * @param add Determines amount to iterate RDF bins
+     * @param double_count Determines whether to double count items in bins
+     * @param largeNumber Placeholder value for large address space
+     */
+    void determine_randomRDF(size_t gnum, int32_t add, bool double_count, int32_t largeNumber);
+
+    /**
+     * @brief normalizeRDF Normalizes a radial distribution function
+     * @param rdf RDF to normalize
+     * @param num_bins Number of bins in the discretized RDF
+     * @param stepsize Bin sted size for discretized RDF
+     * @param rdfmin Minimum value for RDF
+     * @param numPPTfeatures Number of precipiate Features
+     * @param volume Volume for a given precipitate
+     * @return Normalized RDF
+     */
+    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, int32_t numPPTfeatures, float volume);
+
+    /**
+     * @brief check_RDFerror Computes the error between the current radial distribution function
+     * and the goal radial distribution function
+     * @param gadd Index used to determine which precipitate to add
+     * @param gremove Index used to determine which precipitate to remove
+     * @param double_count Determines whether to double count items in bins
+     * @return Float error value between two distributions
+     */
+    float check_RDFerror(int32_t gadd, int32_t gremove, bool double_count);
+
+    /**
+     * @brief assign_voxels Assigns precipitate Id values to voxels within the packing grid
+     */
     void assign_voxels();
+
+    /**
+     * @brief assign_gaps Assigns precipitate Id values to unassigned gaps within the packing grid
+     */
     void assign_gaps();
+
+    /**
+     * @brief write_goal_attributes Outputs important algorithm data
+     */
     void write_goal_attributes();
 
-    float find_xcoord(long long int index);
-    float find_ycoord(long long int index);
-    float find_zcoord(long long int index);
+    /**
+     * @brief find_xcoord Returns the x coordinate at a given index
+     * @param index Index to determine coordinate
+     * @return Float value of x coordinate
+     */
+    float find_xcoord(int64_t index);
 
+    /**
+     * @brief find_ycoord Returns the y coordinate at a given index
+     * @param index Index to determine coordinate
+     * @return Float value of y coordinate
+     */
+    float find_ycoord(int64_t index);
+
+    /**
+     * @brief find_zcoord Returns the z coordinate at a given index
+     * @param index Index to determine coordinate
+     * @return Float value of z coordinate
+     */
+    float find_zcoord(int64_t index);
+
+    /**
+     * @brief compare_1Ddistributions Computes the 1D Bhattacharyya distance
+     * @param sqrerror Float 1D Bhattacharyya distance
+     */
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float& sqrerror);
+
+    /**
+     * @brief compare_2Ddistributions Computes the 2D Bhattacharyya distance
+     * @param sqrerror Float 1D Bhattacharyya distance
+     */
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float& sqrerror);
 
+    /**
+     * @brief compare_3Ddistributions Computes the 3D Bhattacharyya distance
+     * @param sqrerror Float 1D Bhattacharyya distance
+     */
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
     std::vector<int> precipitatephases;
@@ -219,8 +340,8 @@ class InsertPrecipitatePhases : public AbstractFilter
 
   private:
 
-    int m_FirstPrecipitateFeature;
-    unsigned long long int Seed;
+    int32_t m_FirstPrecipitateFeature;
+    uint64_t Seed;
     float m_SizeX;
     float m_SizeY;
     float m_SizeZ;
@@ -231,9 +352,9 @@ class InsertPrecipitatePhases : public AbstractFilter
     int64_t m_XPoints;
     int64_t m_YPoints;
     int64_t m_ZPoints;
-    size_t m_TotalPoints;
+    int64_t m_TotalPoints;
 
-    QMap<unsigned int, ShapeOps*> m_ShapeOps;
+    QMap<uint32_t, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
@@ -261,9 +382,9 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    std::vector<std::vector<int> > columnlist;
-    std::vector<std::vector<int> > rowlist;
-    std::vector<std::vector<int> > planelist;
+    std::vector<std::vector<int64_t> > columnlist;
+    std::vector<std::vector<int64_t> > rowlist;
+    std::vector<std::vector<int64_t> > planelist;
 
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
@@ -279,8 +400,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<float> featuresizediststep;
 
-    std::vector<int> newnames;
-    std::vector<int> gsizes;
+    std::vector<int64_t> gsizes;
 
     size_t availablePointsCount;
     float m_currentRDFerror, m_oldRDFerror;
@@ -288,9 +408,14 @@ class InsertPrecipitatePhases : public AbstractFilter
     float m_rdfMax;
     float m_rdfMin;
     float m_StepSize;
-    int m_numRDFbins;
+    int32_t m_numRDFbins;
 
     void dataCheck();
+
+    /**
+     * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a
+     * Feature Attribute Matrix
+     */
     void updateFeatureInstancePointers();
 
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
@@ -298,6 +423,3 @@ class InsertPrecipitatePhases : public AbstractFilter
 };
 
 #endif /* InsertPrecipitatePhases_H_ */
-
-
-

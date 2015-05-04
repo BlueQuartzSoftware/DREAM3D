@@ -459,3 +459,62 @@ DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString
   dataContainers.insert(proxy.name, proxy);
   return dataContainers[name];
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxy::writeJson(QJsonObject &json)
+{
+  json["Data Containers"] = writeMap(dataContainers);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataContainerArrayProxy::readJson(QJsonObject &json)
+{
+  if (json["Data Containers"].isArray())
+  {
+    dataContainers = readMap(json["Data Containers"].toArray());
+    return true;
+  }
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonArray DataContainerArrayProxy::writeMap(QMap<QString, DataContainerProxy> map)
+{
+  QJsonArray dcArray;
+  for (QMap<QString, DataContainerProxy>::iterator iter = map.begin(); iter != map.end(); ++iter)
+  {
+    QJsonObject obj;
+    (*iter).writeJson(obj);
+    dcArray.push_back(obj);
+  }
+  return dcArray;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, DataContainerProxy> DataContainerArrayProxy::readMap(QJsonArray jsonArray)
+{
+  QMap<QString, DataContainerProxy> map;
+  foreach(QJsonValue val, jsonArray)
+  {
+    if (val.isObject())
+    {
+      DataContainerProxy dc;
+      QJsonObject obj = val.toObject();
+      dc.readJson(obj);
+      map.insert(dc.name, dc);
+    }
+  }
+  return map;
+}
+
+
+
+

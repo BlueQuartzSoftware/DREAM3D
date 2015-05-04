@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 
-#include "QtSupport/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -114,35 +114,42 @@ void DoubleWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-
   bool ok = true;
-  double i = getFilterParameter()->getDefaultValue().toDouble();
+  double defValue = getFilterParameter()->getDefaultValue().toDouble();
+  double i = defValue;
+
+  // Next make sure there is something in the
   if (!value->text().isEmpty())
   {
     i = value->text().toDouble(&ok);
-    errorLabel->hide();
+    //  make sure we can convert the entered value to a 32 bit signed int
+    if (!ok)
+    {
+//      errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+//      errorLabel->setText("Value entered is beyond the representable range for a double. The filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
+//      errorLabel->show();
+//      DREAM3DStyles::LineEditErrorStyle(value);
+      i = defValue;
+    }
+    else
+    {
+      errorLabel->hide();
+      DREAM3DStyles::LineEditClearStyle(value);
+    }
   }
   else
   {
+    DREAM3DStyles::LineEditErrorStyle(value);
     errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
-    errorLabel->setText("Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->setText("No value entered. Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
     errorLabel->show();
   }
 
-  DREAM3DStyles::LineEditErrorStyle(value);
-
-  if (ok)
+  QVariant v(i);
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  if (false == ok)
   {
-    QVariant v(i);
-    ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-    if (false == ok)
-    {
-      FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
-    }
-  }
-  else 	// Check for Empty String. If empty, show error dialog
-  {
-    // Some error message "Could not convert string to a double"
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
 }

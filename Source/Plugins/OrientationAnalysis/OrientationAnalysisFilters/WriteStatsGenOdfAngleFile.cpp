@@ -79,7 +79,7 @@
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
-#include "QtSupport/PoleFigureImageUtilities.h"
+#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 

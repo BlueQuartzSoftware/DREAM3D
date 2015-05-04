@@ -183,13 +183,13 @@ set(StatsGenerator_PROJECT_SRCS
 include_directories(${HDF5_INCLUDE_DIR})
 include_directories(${PROJECT_CODE_DIR})
 include_directories(${PROJECT_CODE_DIR}/Applications)
-include_directories(${PROJECT_CODE_DIR}/QtSupport)
+include_directories(${PROJECT_CODE_DIR}/QtSupportLib)
 include_directories(${StatsGenerator_SOURCE_DIR})
 include_directories(${StatsGenerator_BINARY_DIR})
 include_directories(${DREAM3DProj_BINARY_DIR})
 include_directories(${DREAM3DProj_BINARY_DIR}/Applications)
 include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${PROJECT_NAME})
-include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
 
 
 if(APPLE)
@@ -214,7 +214,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES  H5Support EbsdLib DREAM3DLib OrientationLib QtSupport ${QWT_LIBRARY}
+    LINK_LIBRARIES  H5Support EbsdLib DREAM3DLib OrientationLib QtSupportLib ${QWT_LIBRARY}
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     QT5_MODULES   ${Qt5_COMPONENTS}
     COMPONENT     Applications

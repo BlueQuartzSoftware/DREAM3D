@@ -40,14 +40,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
+
 /**
- * @class InitializeSyntheticVolume InitializeSyntheticVolume.h DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The InitializeSyntheticVolume class. See [Filter documentation](@ref initializesyntheticvolume) for details.
  */
 class InitializeSyntheticVolume : public AbstractFilter
 {
@@ -56,7 +51,6 @@ class InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_SHARED_POINTERS(InitializeSyntheticVolume)
     DREAM3D_STATIC_NEW_MACRO(InitializeSyntheticVolume)
     DREAM3D_TYPE_MACRO_SUPER(InitializeSyntheticVolume, AbstractFilter)
-
 
     virtual ~InitializeSyntheticVolume();
 
@@ -75,7 +69,7 @@ class InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-//// These are for estimating the number of features that will be generated farther down the line.
+    // These are for estimating the number of features that will be generated farther down the line.
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
@@ -98,8 +92,6 @@ class InitializeSyntheticVolume : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
-
 
     /**
      * @brief setupFilterParameters
@@ -135,16 +127,15 @@ class InitializeSyntheticVolume : public AbstractFilter
     InitializeSyntheticVolume();
 
     /**
-     * @brief estimateNumFeatures
-     * @param dimensions
-     * @param res
-     * @return
+     * @brief estimateNumFeatures Estimates the number of Features that will be generated based on the supplied statistics
+     * @param dimensions Vector containing extents of the volume dimensions
+     * @param res Vector containing resolution of the volume
+     * @return Integer number of estimated features
      */
     int estimateNumFeatures(IntVec3_t dimensions, FloatVec3_t res);
 
   private:
-    // Cell Data - make sure these are all initialized to NULL in the constructor
-    int m_EstimatedPrimaryFeatures;
+    int32_t m_EstimatedPrimaryFeatures;
 
     void dataCheck();
 

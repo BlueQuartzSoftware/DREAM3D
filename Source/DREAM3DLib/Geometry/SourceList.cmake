@@ -21,6 +21,11 @@ set(DREAM3DLib_Geometry_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Geometry/MeshStructs.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/DerivativeHelpers.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/GeometryHelpers.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/ShapeOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/CubeOctohedronOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/CylinderOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/EllipsoidOps.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/SuperEllipsoidOps.h
 )
 
 set(DREAM3DLib_Geometry_SRCS
@@ -33,6 +38,11 @@ set(DREAM3DLib_Geometry_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Geometry/TriangleGeom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/QuadGeom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/DerivativeHelpers.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/ShapeOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/CubeOctohedronOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/CylinderOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/EllipsoidOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/ShapeOps/SuperEllipsoidOps.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Geometry" "${DREAM3DLib_Geometry_HDRS}" "${DREAM3DLib_Geometry_SRCS}" "0")

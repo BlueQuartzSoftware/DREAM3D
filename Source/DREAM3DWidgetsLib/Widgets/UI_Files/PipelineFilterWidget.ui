@@ -94,7 +94,7 @@ color: rgb(255, 255, 255);
      </property>
      <property name="icon">
       <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-       <normaloff>:/delete-corner.png</normaloff>:/delete-corner.png</iconset>
+       <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -132,43 +132,6 @@ color: rgb(255, 255, 255);
      </property>
      <property name="text">
       <string>Filter Name</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="helpBtn">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"> QPushButton:flat {
-     border: none; /* no border for a flat push button */
- }</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-       <normaloff>:/help2.png</normaloff>:/help2.png</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
      </property>
     </widget>
    </item>

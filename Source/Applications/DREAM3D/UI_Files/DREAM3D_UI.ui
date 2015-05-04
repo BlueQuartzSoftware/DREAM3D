@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1060</width>
-    <height>674</height>
+    <width>1104</width>
+    <height>659</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -48,7 +48,7 @@ sss</string>
      <height>16777215</height>
     </size>
    </property>
-   <layout class="QGridLayout" name="widgetLayout">
+   <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -61,51 +61,52 @@ sss</string>
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item row="0" column="0">
-     <widget class="QSplitter" name="splitter">
+     <widget class="DREAM3DSplitter" name="splitter">
+      <property name="styleSheet">
+       <string notr="true">QSplitter::handle {
+    
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.166 rgba(255, 255, 0, 255), stop:0.333 rgba(0, 255, 0, 255), stop:0.5 rgba(0, 255, 255, 255), stop:0.666 rgba(0, 0, 255, 255), stop:0.833 rgba(255, 0, 255, 255), stop:1 rgba(255, 0, 0, 255));
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="lineWidth">
+       <number>4</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
       <property name="opaqueResize">
        <bool>false</bool>
       </property>
+      <property name="handleWidth">
+       <number>5</number>
+      </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
          <number>1</number>
         </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <widget class="QLabel" name="pipelineTitle">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>26</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLabel
-{
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 93, 255), stop:0.00985222 rgba(166, 166, 166, 255), stop:0.433498 rgba(117, 117, 117, 255), stop:0.448276 rgba(103, 103, 103, 255), stop:0.985222 rgba(102, 102, 102, 255), stop:1 rgba(69, 69, 69, 255));
-color: white;
-}</string>
-          </property>
-          <property name="text">
-           <string>Pipeline</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item>
          <widget class="QScrollArea" name="pipelineViewScrollArea">
           <property name="sizePolicy">
@@ -129,6 +130,15 @@ color: white;
           <property name="acceptDrops">
            <bool>true</bool>
           </property>
+          <property name="frameShape">
+           <enum>QFrame::Panel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="lineWidth">
+           <number>1</number>
+          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -137,8 +147,8 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>607</width>
-             <height>544</height>
+             <width>1011</width>
+             <height>562</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -159,19 +169,25 @@ color: white;
            <property name="acceptDrops">
             <bool>true</bool>
            </property>
+           <property name="styleSheet">
+            <string notr="true">PipelineViewWidget
+  {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(233, 236, 241, 255), stop:1.0 rgba(211, 216, 224, 255));
+  }</string>
+           </property>
           </widget>
          </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
-           <number>6</number>
+           <number>5</number>
           </property>
           <property name="leftMargin">
            <number>4</number>
           </property>
           <property name="rightMargin">
-           <number>4</number>
+           <number>0</number>
           </property>
           <property name="bottomMargin">
            <number>0</number>
@@ -197,20 +213,36 @@ color: white;
         </item>
        </layout>
       </widget>
-      <widget class="FilterInputWidget" name="filterInputWidget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QFrame" name="fiwFrame">
        <property name="styleSheet">
-        <string notr="true">QDockWidget
+        <string notr="true">PipelineViewWidget
 {
-  border-color: rgb(0, 0, 0);
-border: 2px solid;
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(233, 236, 241, 255), stop:1.0 rgba(211, 216, 224, 255));
 }</string>
        </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="fiwFrameVLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -221,8 +253,8 @@ border: 2px solid;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1060</width>
-     <height>22</height>
+     <width>1104</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -233,10 +265,14 @@ border: 2px solid;
      <property name="title">
       <string>Recent Files</string>
      </property>
-     <addaction name="actionREMOVE_ME"/>
+     <addaction name="separator"/>
+     <addaction name="actionClearRecentFiles"/>
     </widget>
-    <addaction name="actionImportPipeline"/>
-    <addaction name="actionExportPipeline"/>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
     <addaction name="menu_RecentFiles"/>
     <addaction name="separator"/>
@@ -263,7 +299,7 @@ border: 2px solid;
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionShow_User_Manual"/>
+    <addaction name="actionShowIndex"/>
     <addaction name="actionLicense_Information"/>
     <addaction name="separator"/>
     <addaction name="actionCheck_For_Updates"/>
@@ -333,20 +369,20 @@ border: 2px solid;
     <bool>false</bool>
    </property>
   </action>
-  <action name="actionImportPipeline">
+  <action name="actionOpen">
    <property name="text">
-    <string>Import Pipeline</string>
+    <string>Open...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+I</string>
+    <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionExportPipeline">
+  <action name="actionNew">
    <property name="text">
-    <string>Export Pipeline</string>
+    <string>New...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+E</string>
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionSavePipelineAs">
@@ -373,9 +409,9 @@ border: 2px solid;
     <string>Ctrl+Shift+Backspace</string>
    </property>
   </action>
-  <action name="actionREMOVE_ME">
+  <action name="actionClearRecentFiles">
    <property name="text">
-    <string>REMOVE ME</string>
+    <string>Clear Recent Files</string>
    </property>
   </action>
   <action name="actionShow_Issues">
@@ -394,17 +430,20 @@ border: 2px solid;
     <bool>false</bool>
    </property>
   </action>
-  <action name="actionShow_User_Manual">
+  <action name="actionShowIndex">
    <property name="text">
-    <string>Show User Manual</string>
+    <string>DREAM3D Help</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+M</string>
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionLicense_Information">
    <property name="text">
     <string>Show License</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actionAbout_DREAM3D">
@@ -419,7 +458,7 @@ border: 2px solid;
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>Exit DREAM3D</string>
    </property>
   </action>
   <action name="actionSaveAsNewFavorite">
@@ -481,6 +520,22 @@ border: 2px solid;
     <string>Plugin Information</string>
    </property>
   </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -514,15 +569,15 @@ border: 2px solid;
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>FilterInputWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">FilterInputWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>IssuesDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">IssuesDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DREAM3DSplitter</class>
+   <extends>QSplitter</extends>
+   <header location="global">QtSupportLib/DREAM3DSplitter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

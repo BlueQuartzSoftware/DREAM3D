@@ -36,19 +36,13 @@
 
 #include "AddOrientationNoise.h"
 
-#include <map>
-
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
 
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -56,8 +50,7 @@
 AddOrientationNoise::AddOrientationNoise() :
   AbstractFilter(),
   m_Magnitude(1.0f),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
@@ -77,7 +70,7 @@ void AddOrientationNoise::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Magnitude of Orientation Noise", "Magnitude", FilterParameterWidgetType::DoubleWidget, getMagnitude(), false, "Degrees"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Element Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -111,15 +104,11 @@ void AddOrientationNoise::dataCheck()
 {
   setErrorCondition(0);
 
-  // Cell Data
-  QVector<size_t> dims(1, 3);
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 3);
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 // -----------------------------------------------------------------------------
@@ -140,14 +129,11 @@ void AddOrientationNoise::preflight()
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
-  DREAM3D_RANDOMNG_NEW()
-
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  m_Magnitude = m_Magnitude * DREAM3D::Constants::k_Pi / 180.0;
+  m_Magnitude = m_Magnitude * DREAM3D::Constants::k_Pi / 180.0f;
 
   add_orientation_noise();
 
@@ -165,13 +151,12 @@ void  AddOrientationNoise::add_orientation_noise()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName());
 
-  //float ea1, ea2, ea3;
-  float g[3][3];
-  float newg[3][3];
-  float rot[3][3];
-  float w, n1, n2, n3;
+  float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float newg[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float rot[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-  for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
+  for (size_t i = 0; i < totalPoints; ++i)
   {
     float ea1 = m_CellEulerAngles[3 * i + 0];
     float ea2 = m_CellEulerAngles[3 * i + 1];
@@ -192,7 +177,6 @@ void  AddOrientationNoise::add_orientation_noise()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -212,13 +196,11 @@ AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterPa
 const QString AddOrientationNoise::getCompiledLibraryName()
 { return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddOrientationNoise::getGroupName()
 { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -226,10 +208,8 @@ const QString AddOrientationNoise::getGroupName()
 const QString AddOrientationNoise::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddOrientationNoise::getHumanLabel()
 { return "Add Orientation Noise"; }
-
