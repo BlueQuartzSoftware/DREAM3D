@@ -41,7 +41,7 @@
 #include <QtCore/QPointer>
 #include <QtWidgets/QWidget>
 
-#include "QtSupport/FaderWidget.h"
+#include "QtSupportLib/FaderWidget.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
@@ -75,8 +75,6 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public FilterParameterWidget, private
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
-
-    QString generateStyleSheet(int style);
 
   public slots:
     void widgetChanged(const QString& msg);

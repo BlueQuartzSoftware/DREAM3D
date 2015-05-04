@@ -75,7 +75,7 @@
 #include "StatsGenerator/TextureDialog.h"
 
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
-#include "QtSupport/PoleFigureImageUtilities.h"
+#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1

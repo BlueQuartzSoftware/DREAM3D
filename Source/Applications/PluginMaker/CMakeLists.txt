@@ -137,7 +137,7 @@ SET(PluginMaker_UIS
   ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterParameter.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/HelpWidget.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterWidget.ui
-#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/UI_Files/ApplicationAboutBoxDialog.ui
+#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib/UI_Files/ApplicationAboutBoxDialog.ui
   )
 
 cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
@@ -165,20 +165,20 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${PluginMak
 # -- Finally set the Project Sources to include all the sources
 set(${PROJECT_NAME}_PROJECT_SRCS
   ${PluginMaker_SRCS}
-    ${PluginMaker_HDRS}
+  ${PluginMaker_HDRS}
   ${PluginMaker_MOC_HDRS}
-    ${PluginMaker_Generated_RC_SRCS}
-    ${PluginMaker_Generated_UI_HDRS}
-    ${PluginMaker_CodeGenerator_SRCS}
-    ${PluginMaker_CodeGenerator_HDRS}
-#    ${PluginMaker_Generated_MOC_SRCS}
+  ${PluginMaker_Generated_RC_SRCS}
+  ${PluginMaker_Generated_UI_HDRS}
+  ${PluginMaker_CodeGenerator_SRCS}
+  ${PluginMaker_CodeGenerator_HDRS}
+  #    ${PluginMaker_Generated_MOC_SRCS}
   )
 #message(STATUS "${PROJECT_NAME}_PROJECT_SRCS: ${${PROJECT_NAME}_PROJECT_SRCS}")
 include_directories(${PluginMaker_SOURCE_DIR} )
 include_directories(${PluginMaker_SOURCE_DIR}/.. )
 include_directories(${PluginMaker_BINARY_DIR} )
-include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib)
 
 
 if(APPLE)
@@ -203,7 +203,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES QtSupport
+    LINK_LIBRARIES QtSupportLib
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     QT5_MODULES   ${Qt5_COMPONENTS}
     COMPONENT     Applications

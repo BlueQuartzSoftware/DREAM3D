@@ -91,12 +91,78 @@ class AttributeMatrixProxy
       dataArrays = amp.dataArrays;
     }
 
+    /**
+    * @brief Writes the contents of the proxy to the json object 'json'
+    * @param json
+    * @return
+    */
+    void writeJson(QJsonObject &json)
+    {
+      json["Flag"] = static_cast<double>(flag);
+      json["Name"] = name;
+      json["Type"] = static_cast<double>(amType);
+      json["Data Arrays"] = writeMap(dataArrays);
+    }
+
+    /**
+    * @brief Reads the contents of the the json object 'json' into the proxy
+    * @param json
+    * @return
+    */
+    bool readJson(QJsonObject &json)
+    {
+      if (json["Flag"].isDouble() && json["Name"].isString() && json["Type"].isDouble() && json["Data Arrays"].isArray())
+      {
+        if (json["Flag"].toDouble() >= std::numeric_limits<uint8_t>().min() && json["Flag"].toDouble() <= std::numeric_limits<uint8_t>().max())
+        {
+          flag = static_cast<uint8_t>(json["Flag"].toDouble());
+        }
+        name = json["Name"].toString();
+        if (json["Type"].toDouble() >= std::numeric_limits<unsigned int>().min() && json["Type"].toDouble() <= std::numeric_limits<unsigned int>().max())
+        {
+          amType = static_cast<unsigned int>(json["Type"].toDouble());
+        }
+        dataArrays = readMap(json["Data Arrays"].toArray());
+        return true;
+      }
+      return false;
+    }
+
     //----- Our variables, publicly available
     uint8_t flag;
     QString name;
     unsigned int amType;
     QMap<QString, DataArrayProxy> dataArrays;
+
   private:
+
+
+    QJsonArray writeMap(QMap<QString, DataArrayProxy> map)
+    {
+      QJsonArray daArray;
+      for (QMap<QString, DataArrayProxy>::iterator iter = map.begin(); iter != map.end(); ++iter)
+      {
+        QJsonObject obj;
+        (*iter).writeJson(obj);
+        daArray.push_back(obj);
+      }
+      return daArray;
+    }
+
+    QMap<QString, DataArrayProxy> readMap(QJsonArray jsonArray)
+    {
+      QMap<QString, DataArrayProxy> map;
+      foreach(QJsonValue val, jsonArray)
+      {
+        if (val.isObject())
+        {
+          DataArrayProxy da;
+          da.readJson(val.toObject());
+          map.insert(da.name, da);
+        }
+      }
+      return map;
+    }
 
 };
 Q_DECLARE_METATYPE(AttributeMatrixProxy)

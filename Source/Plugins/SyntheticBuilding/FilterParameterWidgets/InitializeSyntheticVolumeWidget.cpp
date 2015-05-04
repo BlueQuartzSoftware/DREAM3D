@@ -62,9 +62,9 @@
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 
-#include "QtSupport/QFileCompleter.h"
-//#include "QtSupport/DREAM3DQtMacros.h"
-//#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/QFileCompleter.h"
+//#include "QtSupportLib/DREAM3DQtMacros.h"
+//#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 

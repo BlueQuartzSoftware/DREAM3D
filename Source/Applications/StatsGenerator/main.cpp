@@ -36,7 +36,7 @@
 
 #include "StatsGeneratorUI.h"
 
-#include <QtSupport/QRecentFileList.h>
+#include <QtSupportLib/QRecentFileList.h>
 #include "SGApplication.h"
 
 //-- Qt Headers

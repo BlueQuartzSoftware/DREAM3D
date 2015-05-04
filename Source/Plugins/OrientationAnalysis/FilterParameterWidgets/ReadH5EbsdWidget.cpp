@@ -45,9 +45,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
-#include "QtSupport/QFileCompleter.h"
-#include "QtSupport/DREAM3DQtMacros.h"
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/QFileCompleter.h"
+#include "QtSupportLib/DREAM3DQtMacros.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"

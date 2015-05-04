@@ -380,7 +380,7 @@ void FavoritesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath, QSettings::IniFormat, false);
+    emit pipelineFileActivated(pipelinePath, Replace);
   }
 
 }
@@ -853,7 +853,7 @@ void FavoritesDockWidget::actionAppendFavorite_triggered()
   {
     QFileInfo fi(pipelinePath);
     if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath(), QSettings::IniFormat, true);
+    emit pipelineFileActivated(fi.absoluteFilePath(), Append);
   }
 }
 

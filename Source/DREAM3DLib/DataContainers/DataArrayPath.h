@@ -42,6 +42,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
+#include <QtCore/QJsonObject>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -204,6 +205,20 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
   * of DataArrayPaths.
   */
   static DataArrayPath GetAttributeMatrixPath(const QVector<DataArrayPath> &paths);
+
+  /**
+  * @brief Writes the contents of the proxy to the json object 'json'
+  * @param json
+  * @return
+  */
+  void writeJson(QJsonObject &json) const;
+
+  /**
+  * @brief Reads the contents of the the json object 'json' into the proxy
+  * @param json
+  * @return
+  */
+  bool readJson(QJsonObject &json) const;
 
 
   protected:

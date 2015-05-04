@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "QtSupport/DREAM3DPluginFrame.h"
+#include "QtSupportLib/DREAM3DPluginFrame.h"
 
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"

@@ -293,9 +293,9 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_
 # -- Add in the DREAM3D Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib/ ${PROJECT_BINARY_DIR}/OrientationLib)
 
-# Build the static QtSupport library - which MUST be a static library or the linking
+# Build the static QtSupportLib library - which MUST be a static library or the linking
 # will not work due to signals/slots mechanism.
-add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
+add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib ${PROJECT_BINARY_DIR}/QtSupportLib)
 
 # --------------------------------------------------------------------
 # Build the DREAM3DWidgetsLib Library which holds all the DREAM3D Specific Widgets such

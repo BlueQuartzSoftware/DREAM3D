@@ -120,6 +120,12 @@ void ComparisonSelectionWidget::setupGui()
   connect(m_ComparisonSelectionTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex)),
           this, SLOT(tableDataWasChanged(const QModelIndex&, const QModelIndex&)));
 
+  connect(dataContainerList, SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(widgetChanged(const QString&)));
+
+  connect(attributeMatrixList, SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(widgetChanged(const QString&)));
+
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
@@ -409,6 +415,17 @@ void ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, 
   emit parametersChanged();
   m_DidCausePreflight = false;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::widgetChanged(const QString &text)
+{
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

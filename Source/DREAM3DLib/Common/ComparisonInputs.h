@@ -39,6 +39,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
 #include <QtCore/QVector>
+#include <QtCore/QJsonObject>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -49,6 +50,31 @@ typedef struct
   QString attributeArrayName;
   int compOperator;
   double compValue;
+
+  void writeJson(QJsonObject &json)
+  {
+    json["Data Container Name"] = dataContainerName;
+    json["Attribute Matrix Name"] = attributeMatrixName;
+    json["Attribute Array Name"] = attributeArrayName;
+    json["Comparison Operator"] = compOperator;
+    json["Comparison Value"] = compValue;
+  }
+
+  bool readJson(QJsonObject &json)
+  {
+    if (json["Data Container Name"].isString() && json["Attribute Matrix Name"].isString() && json["Attribute Array Name"].isString()
+      && json["Comparison Operator"].isDouble() && json["Comparison Value"].isDouble())
+    {
+      dataContainerName = json["Data Container Name"].toString();
+      attributeMatrixName = json["Attribute Matrix Name"].toString();
+      attributeArrayName = json["Attribute Array Name"].toString();
+      compOperator = json["Comparison Operator"].toInt();
+      compValue = json["Comparison Value"].toDouble();
+      return true;
+    }
+    return false;
+  }
+
 } ComparisonInput_t;
 
 /**

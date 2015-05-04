@@ -80,15 +80,17 @@ int main(int argc, char* argv[])
   QCoreApplication::setApplicationName("DREAM3D_V5");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
   QApplication qtapp(argc, argv);
-#if defined( Q_OS_MAC )
-  //Needed for typical Mac program behavior.
-  qtapp.setQuitOnLastWindowClosed( true );
-#endif //APPLE
+
+#if defined (Q_OS_MAC)
+  qApp->setQuitOnLastWindowClosed(false);
+#endif
 
   setlocale(LC_NUMERIC, "C");
   BrandedInitializer d3dInitializer;
+
   if (!d3dInitializer.initialize(argc, argv))
   {
     return 1;

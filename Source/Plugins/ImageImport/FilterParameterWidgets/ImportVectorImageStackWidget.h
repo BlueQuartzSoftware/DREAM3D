@@ -46,7 +46,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "QtSupport/DREAM3DPluginFrame.h"
+#include "QtSupportLib/DREAM3DPluginFrame.h"
 
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"

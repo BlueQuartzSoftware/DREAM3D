@@ -37,17 +37,13 @@
 
 #include <QtCore/QMetaProperty>
 
-#include "QtSupport/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
 
-#define FS_STANDARD_STYLE 0
-#define FS_DRAGGING_STYLE 1
-#define FS_DOESNOTEXIST_STYLE 2
-#define FS_WARNING_STYLE 3
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -173,45 +169,4 @@ void IntWidget::beforePreflight()
 void IntWidget::afterPreflight()
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString IntWidget::generateStyleSheet(int style)
-{
-  QString styleSheet;
-  QTextStream ss(&styleSheet);
-
-  ss << "QLineEdit {";
-#if defined(Q_OS_WIN)
-  ss << "font: italic 9 pt \"Arial\";";
-#elif defined(Q_OS_MAC)
-  ss << "font: italic 12 pt \"Arial\";";
-#else
-  ss << "font: italic 10 pt \"Arial\";";
-#endif
-
-  if (style == FS_STANDARD_STYLE)
-  {
-
-  }
-  else if (style == FS_DRAGGING_STYLE)
-  {
-    ss << "border: 2px solid rgb(34, 170, 46);";
-    ss << "border-radius: 5px;";
-  }
-  else if (style == FS_DOESNOTEXIST_STYLE)
-  {
-    ss << "color: rgb(200, 50, 50); font: bold;";
-  }
-  else if (style == FS_WARNING_STYLE)
-  {
-    ss << "color: rgb(255, 140, 0); font: bold;";
-  }
-
-
-  ss << "}";
-
-  return styleSheet;
 }

@@ -38,6 +38,9 @@
 
 
 #include <QtWidgets/QDockWidget>
+#include <QtWidgets/QMenu>
+
+#include <QtCore/QSignalMapper>
 
 #include "DREAM3DLib/Common/FilterManager.h"
 
@@ -85,7 +88,17 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
+    /**
+    * @brief showContextMenuForWidget
+    * @param pos
+    */
+    void showContextMenuForWidget(const QPoint &pos);
 
+    /**
+    * @brief launchHelpForItem
+    * @param name
+    */
+    void launchHelpForItem(QString name);
 
   signals:
 
@@ -95,7 +108,8 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     void filterListGenerated(const QStringList& filterList, bool sort);
 
   private:
-
+    QMenu* m_ContextMenu;
+    QSignalMapper* m_Mapper;
 
     FilterLibraryDockWidget(const FilterLibraryDockWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterLibraryDockWidget&); // Operator '=' Not Implemented

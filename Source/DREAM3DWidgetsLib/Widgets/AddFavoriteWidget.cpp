@@ -160,7 +160,7 @@ void AddFavoriteWidget::revertToDefault()
   addFavoriteOverwriteBtn->setHidden(true);
   errorMessageDisplay->setTextFormat(Qt::PlainText);
   errorMessageDisplay->setTextInteractionFlags(Qt::NoTextInteraction);
-  errorMessageDisplay->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
+  errorMessageDisplay->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
 }
 
 // -----------------------------------------------------------------------------
