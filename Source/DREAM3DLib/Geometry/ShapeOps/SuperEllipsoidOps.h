@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,41 +33,38 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef _CUBOCTOHEDRONOPS_H_
-#define _CUBOCTOHEDRONOPS_H_
+#ifndef _SUPERELLIPSOIDOPS_H_
+#define _SUPERELLIPSOIDOPS_H_
 
 #include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
-
 /*
  *
  */
-class CubeOctohedronOps : public ShapeOps
+class DREAM3DLib_EXPORT SuperEllipsoidOps : public ShapeOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(CubeOctohedronOps)
-    DREAM3D_TYPE_MACRO(CubeOctohedronOps)
-    DREAM3D_STATIC_NEW_MACRO(CubeOctohedronOps)
+    DREAM3D_SHARED_POINTERS(SuperEllipsoidOps)
+    DREAM3D_TYPE_MACRO(SuperEllipsoidOps)
+    DREAM3D_STATIC_NEW_MACRO(SuperEllipsoidOps)
 
-    virtual ~CubeOctohedronOps();
+    virtual ~SuperEllipsoidOps();
 
     virtual float radcur1(QMap<ArgName, float> args);
 
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-    virtual void init() { Gvalue = 0.0f; }
+    virtual void init() { Nvalue = 0.0f; }
 
   protected:
-    CubeOctohedronOps();
+    SuperEllipsoidOps();
   private:
-    float Gvalue;
+    float Nvalue;
 
-    CubeOctohedronOps(const CubeOctohedronOps&); // Copy Constructor Not Implemented
-    void operator=(const CubeOctohedronOps&); // Operator '=' Not Implemented
+    SuperEllipsoidOps(const SuperEllipsoidOps&); // Copy Constructor Not Implemented
+    void operator=(const SuperEllipsoidOps&); // Operator '=' Not Implemented
 };
 
-
-#endif /* CUBOCTOHEDRONOPS_H_ */
+#endif /* SUPERELLIPSOIDOPS_H_ */
 

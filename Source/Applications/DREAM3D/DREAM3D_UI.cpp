@@ -441,6 +441,7 @@ void DREAM3D_UI::readSearchListSettings(QSettings& prefs, FilterListDockWidget* 
 
   if (didCheck == false && list.size() > 0)
   {
+    // Set "All Words" as checked by default
     list[0]->setChecked(true);
   }
 }

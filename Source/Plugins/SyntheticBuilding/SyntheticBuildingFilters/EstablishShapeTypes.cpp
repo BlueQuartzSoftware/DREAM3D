@@ -33,33 +33,25 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "EstablishShapeTypes.h"
 
-#include <QtCore/QFileInfo>
-
-#include "H5Support/HDF5ScopedFileSentinel.h"
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
-
-#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ShapeTypesFilterParameter.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
-#define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 EstablishShapeTypes::EstablishShapeTypes() :
   AbstractFilter(),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
-  m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes)
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
+  m_PhaseTypes(NULL),
+  m_ShapeTypes(NULL)
 {
   setupFilterParameters();
 }
@@ -78,7 +70,7 @@ void EstablishShapeTypes::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Phase Types Array Name", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget, getShapeTypesArrayName(), true, ""));
   ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New(
@@ -120,13 +112,13 @@ int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  QVector<size_t> dims(1, 1);
-  m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
+  QVector<size_t> cDims(1, 1);
+  m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -134,12 +126,12 @@ void EstablishShapeTypes::dataCheck()
   DataContainer::Pointer m = dca->getPrereqDataContainer<AbstractFilter>(this, getInputPhaseTypesArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - sme as phase types
+  // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - same as phase types
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getInputPhaseTypesArrayPath().getAttributeMatrixName(), -990);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
   // Now create the output Shape Types Array
   tempPath.update(getInputPhaseTypesArrayPath().getDataContainerName(), getInputPhaseTypesArrayPath().getAttributeMatrixName(), getShapeTypesArrayName() );
-  m_ShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath, true, dims); /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath, true, cDims); /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -163,12 +155,11 @@ void EstablishShapeTypes::preflight()
 void EstablishShapeTypes::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   // Copy the data from the internal QVector into the actual ShapeTypes array from the data container
-  for(qint32 i = 0; i < m_ShapeTypeData.d.size(); i++)
+  for(int32_t i = 0; i < m_ShapeTypeData.d.size(); i++)
   {
     m_ShapeTypesPtr.lock()->setValue(i, m_ShapeTypeData.d[i]);
   }
@@ -188,13 +179,13 @@ int EstablishShapeTypes::getPhaseCount()
 
   if (NULL == inputAttrMat.get() ) { return 0; }
 
-  if(__SHOW_DEBUG_MSG__)
+  if (__SHOW_DEBUG_MSG__)
   {
     qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
     qDebug() << "Name" << inputAttrMat->getName();
   }
 
-  if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
+  if (inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
       || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
   {
     return 0;
@@ -202,7 +193,7 @@ int EstablishShapeTypes::getPhaseCount()
 
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
   size_t phaseCount = 1;
-  for(qint32 i = 0; i < tupleDims.size(); i++)
+  for (int32_t i = 0; i < tupleDims.size(); i++)
   {
     phaseCount = phaseCount * tupleDims[i];
   }
@@ -229,13 +220,11 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
 const QString EstablishShapeTypes::getCompiledLibraryName()
 { return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getGroupName()
 {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -243,10 +232,8 @@ const QString EstablishShapeTypes::getGroupName()
 const QString EstablishShapeTypes::getSubGroupName()
 { return DREAM3D::FilterSubGroups::GenerationFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getHumanLabel()
 {return "Establish Shape Types";}
-

@@ -37,6 +37,7 @@
 
 #include <QtCore/QBitArray>
 #include <QtCore/QFileInfo>
+#include <QtCore/QMapIterator>
 #include <QtWidgets/QTreeWidgetItem>
 #include <QtGui/QPainter>
 
@@ -289,8 +290,11 @@ QList<QString> FilterListDockWidget::serializeString(QString string, char token)
   {
     spaceIndex = string.indexOf(token);
     strPart = string.left(spaceIndex);
-    std::string strPartString = strPart.toStdString();
-    list.push_back(strPart);
+    strPart = strPart.simplified();
+    if (strPart != "")
+    {
+      list.push_back(strPart);
+    }
     string = string.remove(currentIndex, spaceIndex + 1);
     stringString = string.toStdString();
   }
@@ -301,10 +305,28 @@ QList<QString> FilterListDockWidget::serializeString(QString string, char token)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString FilterListDockWidget::deserializeString(QList<QString> list, char token)
+{
+  QString str = "";
+  for (int i = 0; i < list.size(); i++)
+  {
+    str.append(list[i]);
+    str.append(" ");
+  }
+  str.chop(1);
+
+  return str;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int &filterCount)
 {
   QList<QString> wordList = serializeString(fullWord, ' ');
-  QMap<AbstractFilter::Pointer, int> bitArrayMap;
+  fullWord = deserializeString(wordList, ' ');
+  QMap<AbstractFilter::Pointer, int> wordCountMap;
+  QMultiMap<int, AbstractFilter::Pointer> relevanceMap;
 
   while (iter.hasNext())
   {
@@ -325,6 +347,7 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
     QString filterHumanLabel = filter->getHumanLabel();
     QBitArray bitArray(wordList.size(), false);
 
+    int consecutiveWordsCount = 0, maxConsecutiveWordsCount = 0, consecutiveWordsStartingIndex = 0;
     for (int i = 0; i < wordList.size(); i++)
     {
       QString keyword = wordList[i];
@@ -333,48 +356,83 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
       {
         filterCount++;
         bitArray.setBit(i, true);
+
+        QList<QString> phraseList;
+        for (int j = consecutiveWordsStartingIndex; j <= i; j++)
+        {
+          phraseList.append(wordList[j]);
+        }
+        QString phrase = deserializeString(phraseList, ' ');
+
+        if (filterHumanLabel.contains(phrase, Qt::CaseInsensitive) && consecutiveWordsCount < phraseList.size())
+        {
+          consecutiveWordsCount++;
+        }
+        else
+        {
+          if (consecutiveWordsCount > maxConsecutiveWordsCount)
+          {
+            maxConsecutiveWordsCount = consecutiveWordsCount;
+          }
+          consecutiveWordsCount = 1;
+          consecutiveWordsStartingIndex = i;
+        }
       }
     }
 
-    if (bitArrayMap.contains(filter) == false && bitArray.count(true) > 0)
+    if (consecutiveWordsCount > maxConsecutiveWordsCount)
     {
-      bitArrayMap.insert(filter, bitArray.count(true));
+      maxConsecutiveWordsCount = consecutiveWordsCount;
+    }
+
+    if (wordCountMap.contains(filter) == false && bitArray.count(true) > 0)
+    {
+      wordCountMap.insert(filter, bitArray.count(true));
+      relevanceMap.insert(maxConsecutiveWordsCount, filter);
     }
   }
 
   // Match according to "Exact Phrase"
   if (m_ActionExactPhrase->isChecked())
   {
-    QList<AbstractFilter::Pointer> filterList = bitArrayMap.keys(wordList.size());
-    QMap<QString, AbstractFilter::Pointer> humanNameMap = getHumanNameMap(filterList);
-    for (QMap<QString, AbstractFilter::Pointer>::iterator iter = humanNameMap.begin(); iter != humanNameMap.end(); ++iter)
+    QList<AbstractFilter::Pointer> filterList = relevanceMap.values(wordList.size());
+    for (QList<AbstractFilter::Pointer>::iterator iter = filterList.begin(); iter != filterList.end(); ++iter)
     {
-      AbstractFilter::Pointer filter = iter.value();
-      if (filter->getHumanLabel().contains(fullWord, Qt::CaseInsensitive))
+      // Do not display results that have the exact phrase in the middle or end of the search phrase
+      if ((*iter)->getHumanLabel().startsWith(fullWord))
       {
-        addItemToList(filter);
+        addItemToList(*iter);
       }
     }
   }
   // Match according to "All Words"
   else if (m_ActionAllWords->isChecked())
   {
-    QList<AbstractFilter::Pointer> filterList = bitArrayMap.keys(wordList.size());
-    QMap<QString, AbstractFilter::Pointer> humanNameMap = getHumanNameMap(filterList);
-    for (QMap<QString, AbstractFilter::Pointer>::iterator iter = humanNameMap.begin(); iter != humanNameMap.end(); ++iter)
+    QList<AbstractFilter::Pointer> filterList = wordCountMap.keys(wordList.size());
+    QMapIterator<int, AbstractFilter::Pointer> iter(relevanceMap);
+    iter.toBack();
+    while (iter.hasPrevious())
     {
+      iter.previous();
       AbstractFilter::Pointer filter = iter.value();
-      addItemToList(filter);
+
+      if (filterList.contains(filter))
+      {
+        addItemToList(filter);
+      }
     }
   }
   // Match according to "Any Words"
   else if (m_ActionAnyWords->isChecked())
   {
-    QList<AbstractFilter::Pointer> filterList = bitArrayMap.keys();
-    QMap<QString, AbstractFilter::Pointer> humanNameMap = getHumanNameMap(filterList);
-    for (QMap<QString, AbstractFilter::Pointer>::iterator iter = humanNameMap.begin(); iter != humanNameMap.end(); ++iter)
+    //QList<AbstractFilter::Pointer> filterList = wordCountMap.keys();
+    QMapIterator<int, AbstractFilter::Pointer> iter(relevanceMap);
+    iter.toBack();
+    while (iter.hasPrevious())
     {
+      iter.previous();
       AbstractFilter::Pointer filter = iter.value();
+
       addItemToList(filter);
     }
   }
@@ -505,9 +563,9 @@ void FilterListDockWidget::setActiveSearchAction(QAction* action)
 QList<QAction*> FilterListDockWidget::getSearchActionList()
 {
   QList<QAction*> list;
-  list.append(m_ActionExactPhrase);
-  list.append(m_ActionAnyWords);
   list.append(m_ActionAllWords);
+  list.append(m_ActionAnyWords);
+  list.append(m_ActionExactPhrase);
   return list;
 }
 

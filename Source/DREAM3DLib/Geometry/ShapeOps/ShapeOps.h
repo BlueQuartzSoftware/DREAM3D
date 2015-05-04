@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,38 +33,50 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SUPERELLIPSOIDOPS_H_
-#define _SUPERELLIPSOIDOPS_H_
 
-#include "ShapeOps.h"
+#ifndef _SHAPEOPS_H_
+#define _SHAPEOPS_H_
+
+#include <map>
+
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-
-/*
- *
+/**
+ * @brief The ShapeOps class
  */
-class SuperEllipsoidOps : public ShapeOps
+class DREAM3DLib_EXPORT ShapeOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(SuperEllipsoidOps)
-    DREAM3D_TYPE_MACRO(SuperEllipsoidOps)
-    DREAM3D_STATIC_NEW_MACRO(SuperEllipsoidOps)
+    DREAM3D_SHARED_POINTERS(ShapeOps)
+    DREAM3D_TYPE_MACRO(ShapeOps)
+    DREAM3D_STATIC_NEW_MACRO(ShapeOps)
 
-    virtual ~SuperEllipsoidOps();
+    virtual ~ShapeOps();
+
+    enum ArgName
+    {
+      Omega3 = 0,
+      B_OverA = 1,
+      C_OverA = 2,
+      VolCur = 3
+    };
+
+    float ShapeClass2Omega[41][2];
 
     virtual float radcur1(QMap<ArgName, float> args);
 
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-    virtual void init() { Nvalue = 0.0f; }
+
+    virtual void init() {}
 
   protected:
-    SuperEllipsoidOps();
-  private:
-    float Nvalue;
+    ShapeOps();
 
-    SuperEllipsoidOps(const SuperEllipsoidOps&); // Copy Constructor Not Implemented
-    void operator=(const SuperEllipsoidOps&); // Operator '=' Not Implemented
+  private:
+    ShapeOps(const ShapeOps&); // Copy Constructor Not Implemented
+    void operator=(const ShapeOps&); // Operator '=' Not Implemented
 };
 
-#endif /* SUPERELLIPSOIDOPS_H_ */
+#endif /* SHAPEOPS_H_ */
 

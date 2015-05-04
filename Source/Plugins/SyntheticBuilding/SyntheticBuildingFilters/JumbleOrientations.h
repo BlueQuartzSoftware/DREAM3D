@@ -37,27 +37,12 @@
 #ifndef _JumbleOrientations_H_
 #define _JumbleOrientations_H_
 
-#include <QtCore/QString>
-#include <numeric>
-#include <limits>
-
-#include <boost/shared_array.hpp>
-
-#include "EbsdLib/EbsdConstants.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 /**
- * @class JumbleOrientations JumbleOrientations.h DREAM3DLib/SyntheticBuilderFilters/JumbleOrientations.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The JumbleOrientations class. See [Filter documentation](@ref jumbleorientations) for details.
  */
 class JumbleOrientations : public AbstractFilter
 {
@@ -66,7 +51,6 @@ class JumbleOrientations : public AbstractFilter
     DREAM3D_SHARED_POINTERS(JumbleOrientations)
     DREAM3D_STATIC_NEW_MACRO(JumbleOrientations)
     DREAM3D_TYPE_MACRO_SUPER(JumbleOrientations, AbstractFilter)
-
 
     virtual ~JumbleOrientations();
 
@@ -90,7 +74,6 @@ class JumbleOrientations : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -134,6 +117,3 @@ class JumbleOrientations : public AbstractFilter
 };
 
 #endif /* JumbleOrientations_H_ */
-
-
-
