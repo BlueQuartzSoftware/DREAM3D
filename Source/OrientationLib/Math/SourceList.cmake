@@ -20,8 +20,8 @@ set(OrientationLib_Math_HDRS
 
 set(OrientationLib_Math_SRCS
   ${OrientationLib_SOURCE_DIR}/Math/OrientationMath.cpp
-  ${OrientationLib_SOURCE_DIR}/Math/OrientationTransforms.cpp
-  ${OrientationLib_SOURCE_DIR}/Math/OrientationConvertor.cpp
+#  ${OrientationLib_SOURCE_DIR}/Math/OrientationTransforms.cpp
+#  ${OrientationLib_SOURCE_DIR}/Math/OrientationConvertor.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/Math" "${OrientationLib_Math_HDRS}" "${OrientationLib_Math_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

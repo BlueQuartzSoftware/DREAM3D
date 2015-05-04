@@ -165,19 +165,24 @@ namespace Rotations
 }
 
 
-// Add some shorten namespace alias
+// Add some shortened namespace alias
 namespace RConst = Rotations::Constants;
 namespace DConst = DREAM3D::Constants;
 
 
 /**
  * @brief The OrientationTransforms class
+ * template parameter T can be one of std::vector<T>, QVector<T> or OrientationArray<T>
+ * and template parameter K is the type specified in T. For example if T is std::vector<float>
+ * then K is float.
  */
-class OrientationLib_EXPORT OrientationTransforms
+template<typename T, typename K>
+class OrientationTransforms
 {
   public:
-    OrientationTransforms();
-    virtual ~OrientationTransforms();
+    
+    typedef typename OrientationTransforms<T, K> SelfType;
+    virtual ~OrientationTransforms(){}
 
 
     typedef struct
@@ -362,8 +367,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    template<typename T>
-    ResultType eu_check(const T& eu)
+    static ResultType eu_check(const T& eu)
     {
       ResultType res;
       res.result = 1;
@@ -399,9 +403,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-
-    template<typename T, typename K>
-    ResultType ro_check(const T& ro)
+    static ResultType ro_check(const T& ro)
     {
       K eps = std::numeric_limits<K>::epsilon();
       ResultType res;
@@ -412,8 +414,8 @@ class OrientationLib_EXPORT OrientationTransforms
         res.result = 0;
         return res;
       }
-      T out = multiply(ro, ro, 3);
-      K ttl = sum<T, K>(out);
+      T out = SelfType::multiply(ro, ro, 3);
+      K ttl =  SelfType::sum(out);
       ttl = sqrt(ttl);
       if (std::abs(ttl - 1.0) > eps)
       {
@@ -435,13 +437,12 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    template<typename T, typename K>
-    ResultType ho_check(const T& ro)
+    static ResultType ho_check(const T& ro)
     {
       ResultType res;
       res.result = 1;
-      T out = multiply(ro, ro);
-      K ttl = sum<T, K>(out);
+      T out = SelfType::multiply(ro, ro);
+      K ttl = SelfType::sum(out);
       K r = sqrt(ttl);
       if (r > static_cast<float>(LPs::R1))
       {
@@ -462,13 +463,12 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    template<typename T, typename K>
-    ResultType cu_check(const T& cu)
+    static ResultType cu_check(const T& cu)
     {
       ResultType res;
       res.result = 1;
 
-      K r = maxval<T, K>(absValue(cu));
+      K r = SelfType::maxval(SelfType::absValue(cu));
       if (r > static_cast<float>(LPs::ap / 2.0))
       {
         res.msg = "rotations:cu_check: cubochoric vector outside cube";
@@ -488,15 +488,14 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    template<typename T, typename K>
-    ResultType qu_check(const T& qu)
+    static ResultType qu_check(const T& qu)
     {
       ResultType res;
       res.result = 1;
       K eps = std::numeric_limits<K>::epsilon();
 
-      T out = multiply<T>(qu, qu);
-      K r = sqrt(sum<T, K>(out));
+      T out = SelfType::multiply(qu, qu);
+      K r = sqrt(SelfType::sum(out));
       if (qu[0] < 0.0)
       {
         res.msg = "rotations:qu_check: quaternion must have positive scalar part";
@@ -523,8 +522,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    template<typename T, typename K>
-    ResultType ax_check(const T& ax)
+    static ResultType ax_check(const T& ax)
     {
       ResultType res;
       res.result = 1;
@@ -535,8 +533,8 @@ class OrientationLib_EXPORT OrientationTransforms
         return res;
       }
       K eps = std::numeric_limits<K>::epsilon();
-      T out = multiply<T>(ax, ax, 3);
-      K r = sqrt(sum<T, K>(out));
+      T out = SelfType::multiply(ax, ax, 3);
+      K r = sqrt(SelfType::sum(out));
       K absv = std::abs(r - 1.0);
       if (absv > eps)
       {
@@ -558,8 +556,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    template<typename T, typename K>
-    ResultType om_check(const T& om)
+    static ResultType om_check(const T& om)
     {
       ResultType res;
       res.result = 1;
@@ -580,11 +577,11 @@ class OrientationLib_EXPORT OrientationTransforms
         return res;
       }
 
-      T tr = transpose<T>(om);
-      T mm = matmul3x3<T>(om, tr);
-      T abv = absValue<T>(mm);
+      T tr = SelfType::transpose(om);
+      T mm = SelfType::matmul3x3(om, tr);
+      T abv = SelfType::absValue(mm);
 
-      K r = sum<T, K>(abv);
+      K r = SelfType::sum(abv);
       r = std::abs(r - 3.0);
       if (r > eps)
       {
@@ -607,8 +604,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void genrot(const T& av, K omega, T& res)
+    static void genrot(const T& av, K omega, T& res)
     {
       //*** use local
       //*** use constants
@@ -660,8 +656,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 9/30/14   MDG 1.1 added testing of valid ranges
     */
 
-    template<typename T, typename K>
-    void init_orientation(const T& orient, char intype[2], bool rotcheck, T& res)
+    static void init_orientation(const T& orient, char intype[2], bool rotcheck, T& res)
     {
 
     }
@@ -695,8 +690,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/04/13   MDG 1.0 original
     * @data 7/23/14   MDG 1.1 verified
     */
-    template<typename T, typename K>
-    void eu2om(const T& e, T& res)
+    static void eu2om(const T& e, T& res)
     {
       K eps = std::numeric_limits<K>::epsilon();
 
@@ -734,8 +728,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 7/23/14   MDG 2.0 explicit implementation
     * @date 7/23/14   MDG 2.1 exception for zero rotation angle
     */
-    template<typename T, typename K>
-    void eu2ax(const T& e, T& res)
+    static void eu2ax(const T& e, T& res)
     {
       K thr = 1.0E-6f;
       K alpha = 0.0f;
@@ -788,12 +781,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/04/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void eu2ro(const T& e, T& res)
+    static void eu2ro(const T& e, T& res)
     {
       K thr = 1.0E-6f;
 
-      eu2ax<T, K>(e, res);
+      SelfType::eu2ax(e, res);
       K t = res[3];
       if (std::abs(t - DREAM3D::Constants::k_Pi) < thr)
       {
@@ -829,8 +821,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/07/14   MDG 1.1 verified
     */
 
-    template<typename T, typename K>
-    void eu2qu(const T& e, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void eu2qu(const T& e, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -888,8 +879,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/04/13   MDG 1.0 original
     * @date 8/19/14   MDG 1.1 verification using Mathematica
     */
-    template<typename T, typename K>
-    void om2eu(const T& o, T& res)
+    static void om2eu(const T& o, T& res)
     {
       K zeta = 0.0;
       bool close = closeEnough(o[8], 1.0);
@@ -934,8 +924,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/04/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ax2om(const T& a, T& res)
+    static void ax2om(const T& a, T& res)
     {
       K q = 0.0f;
       K c = 0.0f;
@@ -976,8 +965,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/04/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void qu2eu(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void qu2eu(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -1058,8 +1046,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * !
     * @date 8/04/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ax2ho(const T& a, T& res)
+    static void ax2ho(const T& a, T& res)
     {
       K f = 0.75 * ( a[3] - sin(a[3]) );
       f = pow(f, (1.0 / 3.0));
@@ -1081,12 +1068,11 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/04/13  MDG 1.0 original
     * @date 07/21/14 MDG 1.1 double precision fit coefficients
     */
-    template<typename T, typename K>
-    void ho2ax(const T& h, T& res)
+    static void ho2ax(const T& h, T& res)
     {
       K thr = 1.0E-8f;
 
-      K hmag = sumofSquares<T, K>(h);
+      K hmag = SelfType::sumofSquares(h);
       if (hmag == 0.0)
       {
         res[0] = 0.0;
@@ -1099,7 +1085,7 @@ class OrientationLib_EXPORT OrientationTransforms
         K hm = hmag;
         T hn = h;
         K sqrRtHMag = 1.0 / sqrt(hmag);
-        scalarMultiply(hn, sqrRtHMag); // In place scalar multiply
+        SelfType::scalarMultiply(hn, sqrRtHMag); // In place scalar multiply
         K s = LPs::tfit[0] + LPs::tfit[1] * hmag;
         for(int i = 2; i < 16; i++)
         {
@@ -1137,8 +1123,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13  MDG 1.0 original
     * @date 07/08/14 MDG 2.0 replaced by direct solution
     */
-    template<typename T, typename K>
-    void om2ax(const T& in, T& res)
+    static void om2ax(const T& in, T& res)
     {
 #ifdef __APPLE__
       bool useEigen = false;
@@ -1183,9 +1168,9 @@ class OrientationLib_EXPORT OrientationTransforms
               res[1] = VR(i, 1).real();
               res[2] = VR(i, 2).real();
 
-              if ((om[5] - om[7]) != 0.0) { res[0] = transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
-              if ((om[6] - om[2]) != 0.0) { res[1] = transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
-              if ((om[1] - om[3]) != 0.0) { res[2] = transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
+              if ((om[5] - om[7]) != 0.0) { res[0] = SelfType::transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
+              if ((om[6] - om[2]) != 0.0) { res[1] = SelfType::transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
+              if ((om[1] - om[3]) != 0.0) { res[2] = SelfType::transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
               //  std::cout << "EIGEN =========================================" << std::endl;
               //  std::cout << res[0] << "\t" << res[1] << "\t" << res[2] << "\t" << res[3] << std::endl;
               return;
@@ -1253,8 +1238,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/04/13   MDG 1.0 original
     * @date 8/11/14   MDG 1.1 added infty handling
     */
-    template<typename T, typename K>
-    void ro2ax(const T& r, T& res)
+    static void ro2ax(const T& r, T& res)
     {
       float  ta = 0.0f;
       float angle = 0.0f;
@@ -1301,8 +1285,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 7/6/14  MDG 2.0 simplified
     * @date 8/11/14 MDG 2.1 added infty handling
     */
-    template<typename T, typename K>
-    void ax2ro(const T& r, T& res)
+    static void ax2ro(const T& r, T& res)
     {
       K  thr = 1.0E-7f;
 
@@ -1341,8 +1324,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     * @date 7/23/14   MDG 1.1 explicit transformation
     */
-    template<typename T, typename K>
-    void ax2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void ax2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -1384,11 +1366,10 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 7/24/14   MDG 2.0 explicit transformation
     * @date 8/11/14   MDG 3.0 added infty handling
     */
-    template<typename T, typename K>
-    void ro2ho(const T& r, T& res)
+    static void ro2ho(const T& r, T& res)
     {
       K f = 0.0;
-      K rv = sumofSquares<T, K>(r);
+      K rv = SelfType::sumofSquares(r);
       if (rv == 0.0)
       {
         splat(res, 0.0);
@@ -1422,8 +1403,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 6/03/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void qu2om(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void qu2om(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -1443,7 +1423,7 @@ class OrientationLib_EXPORT OrientationTransforms
       res[3] = 2.0 * (r[y] * r[x] + r[w] * r[z]);
       res[7] = 2.0 * (r[z] * r[y] + r[w] * r[x]);
       res[2] = 2.0 * (r[x] * r[z] + r[w] * r[y]);
-      if (Rotations::Constants::epsijk != 1.0) { res = transpose(res); }
+      if (Rotations::Constants::epsijk != 1.0) { res = SelfType::transpose(res); }
     }
 
 
@@ -1460,8 +1440,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     * @date 8/18/14   MDG 2.0 new version
     */
-    template<typename T, typename K>
-    void om2qu(const T& om, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void om2qu(const T& om, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -1515,7 +1494,7 @@ class OrientationLib_EXPORT OrientationTransforms
       ! This adds a little bit of computation overhead but for now it
       ! is the easiest way to make sure the signs are correct.
       */
-      om2ax<T, K>(om, oax);
+      SelfType::om2ax(om, oax);
 
       if (oax[0]*res[x] < 0.0) { res[x] = -res[x]; }
       if (oax[1]*res[y] < 0.0) { res[y] = -res[y]; }
@@ -1534,8 +1513,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     * @date 7/23/14   MDG 2.0 explicit transformation
     */
-    template<typename T, typename K>
-    void qu2ax(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void qu2ax(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -1587,8 +1565,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 7/23/14   MDG 2.0 direct transformation
     * @date 8/11/14   MDG 2.1 added infty handling
     */
-    template<typename T, typename K>
-    void qu2ro(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void qu2ro(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -1641,8 +1618,7 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     * @date 7/23/14   MDG 2.0 explicit transformation
     */
-    template<typename T, typename K>
-    void qu2ho(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void qu2ho(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       size_t w = 0, x = 1, y = 2, z = 3;
       if(layout == QuaternionMath<K>::QuaternionVectorScalar)
@@ -1665,11 +1641,11 @@ class OrientationLib_EXPORT OrientationTransforms
         res[0] = q[x];
         res[1] = q[y];
         res[2] = q[z];
-        s = 1.0 / sqrt(sumofSquares<T, K>(res));
-        scalarMultiply(res, s);
+        s = 1.0 / sqrt(SelfType::sumofSquares(res));
+        SelfType::scalarMultiply(res, s);
         f = 0.75 * ( omega - sin(omega) );
         f = pow(f, 1.0 / 3.0);
-        scalarMultiply(res, f);
+        SelfType::scalarMultiply(res, f);
       }
     }
 
@@ -1685,8 +1661,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ho2cu(const T& q, T& res)
+    static void ho2cu(const T& q, T& res)
     {
       //float ierr;
       //res = LambertBallToCube(q,ierr);
@@ -1710,8 +1685,7 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void cu2ho(const T& r, T& res)
+    static void cu2ho(const T& r, T& res)
     {
       assert(false);
     }
@@ -1729,12 +1703,11 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/04/13   MDG 1.0 original
     * @date 8/11/14   MDG 1.1 added infty handling
     */
-    template<typename T, typename K>
-    void ro2eu(const T& r, T& res)
+    static void ro2eu(const T& r, T& res)
     {
       T tmp(9);
-      ro2om<T, K>(r, tmp);
-      om2eu<T, K>(tmp, res);
+      SelfType::ro2om(r, tmp);
+      SelfType::om2eu(tmp, res);
     }
 
 
@@ -1750,12 +1723,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void eu2ho(const T& r, T& res)
+    static void eu2ho(const T& r, T& res)
     {
       T tmp(4);
-      eu2ax<T, K>(r, tmp);
-      ax2ho<T, K>(tmp, res);
+      SelfType::eu2ax(r, tmp);
+      SelfType::ax2ho(tmp, res);
     }
 
     /**: om2ro
@@ -1769,12 +1741,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void om2ro(const T& r, T& res)
+    static void om2ro(const T& r, T& res)
     {
       T eu(3); // Create a temp array to store the Euler Angles
-      om2eu<T, K>(r, eu);// Convert the OM to Euler
-      eu2ro<T, K>(eu, res);// Convert Euler to Rodrigues
+      SelfType::om2eu(r, eu);// Convert the OM to Euler
+      SelfType::eu2ro(eu, res);// Convert Euler to Rodrigues
     }
 
 
@@ -1790,12 +1761,11 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     * @date 07/08/14 MDG 2.0 simplification via ax (shorter path)
     */
-    template<typename T, typename K>
-    void om2ho(const T& r, T& res)
+    static void om2ho(const T& r, T& res)
     {
       T ax(4); // Create a temp array to store the Euler Angles
-      om2ax<T, K>(r, ax);// Convert the OM to Axis-Angles
-      ax2ho<T, K>(ax, res);// Convert Axis-Angles to Homochoric
+      SelfType::om2ax(r, ax);// Convert the OM to Axis-Angles
+      SelfType::ax2ho(ax, res);// Convert Axis-Angles to Homochoric
     }
 
 
@@ -1811,12 +1781,11 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     * @date 07/08/14 MDG 2.0 simplification via ro (shorter path)
     */
-    template<typename T, typename K>
-    void ax2eu(const T& r, T& res)
+    static void ax2eu(const T& r, T& res)
     {
       T tmp(9); // No initialize since the next line will put its answer into tmp
-      ax2om<T, K>(r, tmp);
-      om2eu<T, K>(tmp, res);
+      SelfType::ax2om(r, tmp);
+      SelfType::om2eu(tmp, res);
     }
 
     /**: ro2om
@@ -1830,12 +1799,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ro2om(const T& r, T& res)
+    static void ro2om(const T& r, T& res)
     {
       T tmp(4);
-      ro2ax<T, K>(r, tmp);
-      ax2om<T, K>(tmp, res);
+      SelfType::ro2ax(r, tmp);
+      SelfType::ax2om(tmp, res);
     }
 
     /**: ro2qu
@@ -1849,12 +1817,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ro2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void ro2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       T tmp(4);
-      ro2ax<T, K>(r, tmp);
-      ax2qu<T, K>(tmp, res, layout);
+      SelfType::ro2ax(r, tmp);
+      SelfType::ax2qu(tmp, res, layout);
     }
 
     /**: ho2eu
@@ -1868,12 +1835,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ho2eu(const T& r, T& res)
+    static void ho2eu(const T& r, T& res)
     {
       T tmp(4);
-      ho2ax<T, K>(r, tmp);
-      ax2eu<T, K>(tmp, res);
+      SelfType::ho2ax(r, tmp);
+      SelfType::ax2eu(tmp, res);
     }
 
 
@@ -1889,12 +1855,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ho2om(const T& r, T& res)
+    static void ho2om(const T& r, T& res)
     {
       T tmp(4);
-      ho2ax<T, K>(r, tmp);
-      ax2om<T, K>(tmp, res);
+      SelfType::ho2ax(r, tmp);
+      SelfType::ax2om(tmp, res);
     }
 
 
@@ -1909,12 +1874,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ho2ro(const T& r, T& res)
+    static void ho2ro(const T& r, T& res)
     {
       T tmp(4);
-      ho2ax<T, K>(r, tmp);
-      ax2ro<T, K>(tmp, res);
+      SelfType::ho2ax(r, tmp);
+      SelfType::ax2ro(tmp, res);
     }
 
 
@@ -1929,12 +1893,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ho2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void ho2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       T tmp(4);
-      ho2ax<T, K>(r, tmp);
-      ax2qu<T, K>(tmp, res, layout);
+      SelfType::ho2ax(r, tmp);
+      SelfType::ax2qu(tmp, res, layout);
     }
 
 
@@ -1951,12 +1914,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void eu2cu(const T& r, T& res)
+    static void eu2cu(const T& r, T& res)
     {
       T tmp(3);
-      eu2ho<T, K>(r, tmp);
-      ho2cu<T, K>(tmp, res);
+      SelfType::eu2ho(r, tmp);
+      SelfType::ho2cu(tmp, res);
     }
 
 
@@ -1972,12 +1934,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void om2cu(const T& r, T& res)
+    static void om2cu(const T& r, T& res)
     {
       T tmp(3);
-      om2ho<T, K>(r, tmp);
-      ho2cu<T, K>(tmp, res);
+      SelfType::om2ho(r, tmp);
+      SelfType::ho2cu(tmp, res);
     }
 
     /**: ax2cu
@@ -1993,12 +1954,11 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     */
 
-    template<typename T, typename K>
-    void ax2cu(const T& r, T& res)
+    static void ax2cu(const T& r, T& res)
     {
       T tmp(3);
-      ax2ho<T, K>(r, tmp);
-      ho2cu<T, K>(tmp, res);
+      SelfType::ax2ho(r, tmp);
+      SelfType::ho2cu(tmp, res);
     }
 
 
@@ -2014,12 +1974,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void ro2cu(const T& r, T& res)
+    static void ro2cu(const T& r, T& res)
     {
       T tmp(3);
-      ro2ho<T, K>(r, tmp);
-      ho2cu<T, K>(tmp, res);
+      SelfType::ro2ho(r, tmp);
+      SelfType::ho2cu(tmp, res);
     }
 
 
@@ -2035,12 +1994,11 @@ class OrientationLib_EXPORT OrientationTransforms
     *
     * @date 8/12/13   MDG 1.0 original
     */
-    template<typename T, typename K>
-    void qu2cu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void qu2cu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       T tmp(3);
-      qu2ho<T, K>(r, tmp, layout);
-      ho2cu<T, K>(tmp, res);
+      SelfType::qu2ho(r, tmp, layout);
+      SelfType::ho2cu(tmp, res);
     }
 
     /**: cu2eu
@@ -2119,12 +2077,11 @@ class OrientationLib_EXPORT OrientationTransforms
     * @date 8/12/13   MDG 1.0 original
     */
 
-    template<typename T, typename K>
-    void cu2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
+    static void cu2qu(const T& r, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
       T ho(3); // Create a temp array to store the Euler Angles
-      cu2ho<T, K>(r, ho);// Convert the Cuborchoric to Homochoric
-      ho2qu<T, K>(ho, res);// Convert Homochoric to Quaternion
+      SelfType::cu2ho(r, ho);// Convert the Cuborchoric to Homochoric
+      SelfType::ho2qu(ho, res);// Convert Homochoric to Quaternion
     }
 
 
@@ -2219,9 +2176,12 @@ class OrientationLib_EXPORT OrientationTransforms
     */
 
   protected:
+    /**
+    * @brief
+    */
+    OrientationTransforms(){}
 
-    template<typename T, typename K>
-    void splat(T& a, const K val)
+    static void splat(T& a, const K val)
     {
       size_t size = a.size();
       for(size_t i = 0; i < size; i++)
@@ -2230,8 +2190,7 @@ class OrientationLib_EXPORT OrientationTransforms
       }
     }
 
-    template<typename T>
-    T multiply(const T& a, const T& b)
+    static T multiply(const T& a, const T& b)
     {
       T c(a.size());
       for(size_t i = 0; i < c.size(); i++)
@@ -2241,8 +2200,7 @@ class OrientationLib_EXPORT OrientationTransforms
       return c;
     }
 
-    template<typename T>
-    T multiply(const T& a, const T& b, size_t max)
+    static T multiply(const T& a, const T& b, size_t max)
     {
       T c(max);
       for(size_t i = 0; i < max; i++)
@@ -2252,8 +2210,7 @@ class OrientationLib_EXPORT OrientationTransforms
       return c;
     }
 
-    template<typename T, typename K>
-    void scalarMultiply(T& a, K b)
+    static void scalarMultiply(T& a, K b)
     {
       size_t size = a.size();
       for(size_t i = 0; i < size; i++)
@@ -2262,8 +2219,7 @@ class OrientationLib_EXPORT OrientationTransforms
       }
     }
 
-    template<typename T, typename K>
-    K sum(const T& a)
+    static K sum(const T& a)
     {
       K s = static_cast<K>(0);
       for(size_t i = 0; i < a.size(); i++)
@@ -2273,8 +2229,8 @@ class OrientationLib_EXPORT OrientationTransforms
       return s;
     }
 
-    template<typename T, typename K>
-    K sum(const T& a, size_t max)
+
+    static K sum(const T& a, size_t max)
     {
       K s = static_cast<K>(0);
       for(size_t i = 0; i < max; i++)
@@ -2284,8 +2240,7 @@ class OrientationLib_EXPORT OrientationTransforms
       return s;
     }
 
-    template<typename T, typename K>
-    K sumofSquares(const T& a)
+    static K sumofSquares(const T& a)
     {
       K s = static_cast<K>(0);
       for(size_t i = 0; i < a.size(); i++)
@@ -2295,8 +2250,7 @@ class OrientationLib_EXPORT OrientationTransforms
       return s;
     }
 
-    template<typename T, typename K>
-    K maxval(const T& a)
+    static K maxval(const T& a)
     {
       K s = a[0];
       for(size_t i = 1; i < a.size(); i++)
@@ -2306,8 +2260,7 @@ class OrientationLib_EXPORT OrientationTransforms
       return s;
     }
 
-    template<typename T>
-    T absValue(const T& a)
+    static T absValue(const T& a)
     {
       T c(a.size());
       for(size_t i = 0; i < c.size(); i++)
@@ -2317,8 +2270,7 @@ class OrientationLib_EXPORT OrientationTransforms
       return c;
     }
 
-    template<typename T>
-    T transpose(const T& a)
+    static T transpose(const T& a)
     {
       T c(a.size());
       c[0] = a[0];
@@ -2333,8 +2285,7 @@ class OrientationLib_EXPORT OrientationTransforms
       return c;
     }
 
-    template<typename T>
-    T matmul3x3(const T& a, const T& b)
+    static T matmul3x3(const T& a, const T& b)
     {
       T c(a.size());
       c[0] = a[0] * b[0] + a[1] * b[3] + a[2] * b[6];
@@ -2352,8 +2303,8 @@ class OrientationLib_EXPORT OrientationTransforms
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    bool closeEnough(const float& a, const float& b,
-                     const float& epsilon = std::numeric_limits<float>::epsilon())
+    static bool closeEnough(const float& a, const float& b,
+                            const float& epsilon = std::numeric_limits<float>::epsilon())
     {
       return (epsilon > std::abs(a - b));
     }
@@ -2361,8 +2312,7 @@ class OrientationLib_EXPORT OrientationTransforms
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    template<typename T>
-    T transfer_sign(T a, T b)
+    static K transfer_sign(K a, K b)
     {
       if( a > 0.0 && b > 0.0) { return a; }
       if( a < 0.0 && b > 0.0) { return -1 * a; }
@@ -2374,7 +2324,7 @@ class OrientationLib_EXPORT OrientationTransforms
     }
 
     /* Auxiliary routine: printing eigenvectors */
-    void print_eigenvectors( const char* desc, int n, float* wi, float* v, int ldv )
+    static void print_eigenvectors( const char* desc, int n, float* wi, float* v, int ldv )
     {
       int i, j;
       printf( "\n %s\n", desc );
