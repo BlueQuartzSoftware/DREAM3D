@@ -38,26 +38,18 @@
 #ifndef _InsertPrecipitatePhases_H_
 #define _InsertPrecipitatePhases_H_
 
-#include <QtCore/QString>
-#include <vector>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
 
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
-#include "SyntheticBuilding/ShapeOps/ShapeOps.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
-
+#include "Plugins/SyntheticBuilding/ShapeOps/ShapeOps.h"
 
 typedef struct
 {
@@ -68,14 +60,10 @@ typedef struct
   float m_Omega3s;
   int m_FeaturePhases;
   int m_Neighborhoods;
-} Precip;
+} Precip_t;
 
 /**
- * @class InsertPrecipitatePhases InsertPrecipitatePhases.h Plugins/SyntheticBuilding/SyntheticBuilderFilters/InsertPrecipitatePhases.h
- * @brief
- * @author
- * @date Jan 29, 2014
- * @version 5.0
+ * @brief The InsertPrecipitatePhases class. See [Filter documentation](@ref insertprecipitatephases) for details.
  */
 class InsertPrecipitatePhases : public AbstractFilter
 {
@@ -90,16 +78,22 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+
     DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
+
     DREAM3D_FILTER_PARAMETER(bool, HavePrecips)
     Q_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
+
     DREAM3D_FILTER_PARAMETER(QString, PrecipInputFile)
     Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
+
     DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
+
     DREAM3D_FILTER_PARAMETER(bool, MatchRDF)
     Q_PROPERTY(bool MatchRDF READ getMatchRDF WRITE setMatchRDF)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
@@ -153,7 +147,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     /**
@@ -185,33 +178,26 @@ class InsertPrecipitatePhases : public AbstractFilter
     InsertPrecipitatePhases();
 
     void place_precipitates(Int32ArrayType::Pointer exlusionZonesPtr);
-    void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
+    void generate_precipitate(int32_t phase, uint64_t Seed, Precip_t* precip, uint32_t shapeclass, OrientationOps::Pointer OrthoOps);
     void load_precipitates();
-
-    void transfer_attributes(int gnum, Precip* precip);
+    void transfer_attributes(int gnum, Precip_t* precip);
     void insert_precipitate(size_t featureNum);
-
     void move_precipitate(size_t featureNum, float xc, float yc, float zc);
-
-    float check_sizedisterror(Precip* precip);
+    float check_sizedisterror(Precip_t* precip);
     void update_exclusionZones(int gadd, int gremove, Int32ArrayType::Pointer exlusionZonesPtr);
     void update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv);
     void determine_currentRDF(size_t featureNum, int add, bool double_count);
     void determine_randomRDF(size_t gnum, int add, bool double_count, int largeNumber);
     std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume);
     float check_RDFerror(int gadd, int gremove, bool double_count);
-
     void assign_voxels();
     void assign_gaps();
     void write_goal_attributes();
-
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
-
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float& sqrerror);
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float& sqrerror);
-
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
     std::vector<int> precipitatephases;
@@ -219,8 +205,8 @@ class InsertPrecipitatePhases : public AbstractFilter
 
   private:
 
-    int m_FirstPrecipitateFeature;
-    unsigned long long int Seed;
+    int32_t m_FirstPrecipitateFeature;
+    uint64_t Seed;
     float m_SizeX;
     float m_SizeY;
     float m_SizeZ;
@@ -231,9 +217,9 @@ class InsertPrecipitatePhases : public AbstractFilter
     int64_t m_XPoints;
     int64_t m_YPoints;
     int64_t m_ZPoints;
-    size_t m_TotalPoints;
+    int64_t m_TotalPoints;
 
-    QMap<unsigned int, ShapeOps*> m_ShapeOps;
+    QMap<uint32_t, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
@@ -279,8 +265,8 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<float> featuresizediststep;
 
-    std::vector<int> newnames;
-    std::vector<int> gsizes;
+    std::vector<int32_t> newnames;
+    std::vector<int32_t> gsizes;
 
     size_t availablePointsCount;
     float m_currentRDFerror, m_oldRDFerror;
@@ -288,9 +274,14 @@ class InsertPrecipitatePhases : public AbstractFilter
     float m_rdfMax;
     float m_rdfMin;
     float m_StepSize;
-    int m_numRDFbins;
+    int32_t m_numRDFbins;
 
     void dataCheck();
+
+    /**
+     * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a
+     * Feature Attribute Matrix
+     */
     void updateFeatureInstancePointers();
 
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
@@ -298,6 +289,3 @@ class InsertPrecipitatePhases : public AbstractFilter
 };
 
 #endif /* InsertPrecipitatePhases_H_ */
-
-
-

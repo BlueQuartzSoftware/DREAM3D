@@ -101,7 +101,8 @@ class AddBadData : public AbstractFilter
     AddBadData();
 
     /**
-     * @brief add_noise Adds "noise" to the
+     * @brief add_noise Adds "noise" to all arrays that belong to a particular Attribute Matrix.
+     * "Noise" in this sense means a tuple value of 0.
      */
     void add_noise();
 
@@ -115,12 +116,3 @@ class AddBadData : public AbstractFilter
 };
 
 #endif /* AddBadData_H_ */
-
-
-
-
-
-
-
-
-

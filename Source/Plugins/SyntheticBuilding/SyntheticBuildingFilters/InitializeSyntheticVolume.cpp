@@ -33,29 +33,23 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "InitializeSyntheticVolume.h"
 
 #include <QtCore/QFileInfo>
 
-#include "H5Support/HDF5ScopedFileSentinel.h"
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
-
-#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
-
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
-
-
+  if (m_##var <= 0) { QString ss = QObject::tr("%1 must be positive").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
 
 // -----------------------------------------------------------------------------
 //
@@ -67,7 +61,8 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_EstimateNumberOfFeatures(false),
-  m_EstimatedPrimaryFeatures(0)
+  m_EstimatedPrimaryFeatures(0),
+  m_InputStatsFile("")
 {
   m_Dimensions.x = 128;
   m_Dimensions.y = 128;
@@ -80,6 +75,8 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
   m_Origin.z = 0.0f;
+
+  m_EstimatedPrimaryFeatures = 0;
 
   setupFilterParameters();
 }
@@ -97,13 +94,12 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("New DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
-  parameters.push_back(FilterParameter::New("New Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Synthetic Volume Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "Voxels"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "Microns"));
@@ -113,7 +109,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
 
   parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, false));
-  parameters.push_back(FileSystemFilterParameter::New("Input Stats File", "InputStatsFile", FilterParameterWidgetType::InputFileWidget, getInputStatsFile(), false, "", "*.dream3d"));
+  parameters.push_back(FileSystemFilterParameter::New("Input Statistics File", "InputStatsFile", FilterParameterWidgetType::InputFileWidget, getInputStatsFile(), false, "", "*.dream3d"));
   parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), false, ""));
   parameters.back()->setReadOnly(true);
   setFilterParameters(parameters);
@@ -134,7 +130,6 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   setInputStatsFile(reader->readString("InputStatsFile", getInputStatsFile() ) );
   setEstimateNumberOfFeatures(reader->readValue("EstimateNumberOfFeatures", getEstimateNumberOfFeatures() ) );
-
   reader->closeFilterGroup();
 }
 
@@ -179,7 +174,8 @@ void InitializeSyntheticVolume::dataCheck()
   INIT_SYNTH_VOLUME_CHECK(Resolution.x, -5003);
   INIT_SYNTH_VOLUME_CHECK(Resolution.y, -5004);
   INIT_SYNTH_VOLUME_CHECK(Resolution.z, -5005);
-  // Set teh Dimensions, Resolution and Origin of the output data container
+
+  // Set the Dimensions, Resolution and Origin of the output data container
   m->getGeometryAs<ImageGeom>()->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
   m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
@@ -192,8 +188,8 @@ void InitializeSyntheticVolume::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
 
-  QVector<size_t> compDims(1, 1); // This states that we are looking for an array with a single component
-  UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), compDims);
+  QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
+  UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), cDims);
   if(getErrorCondition() < 0 && phaseType.get() == NULL) { return; }
 
   QVector<size_t> statsDims(1, 1);
@@ -225,7 +221,6 @@ void InitializeSyntheticVolume::preflight()
 void InitializeSyntheticVolume::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -248,8 +243,8 @@ void InitializeSyntheticVolume::execute()
 // -----------------------------------------------------------------------------
 int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t res)
 {
-  float totalvol;
-  int phase;
+  float totalvol = 0.0f;
+  int32_t phase = 0;
 
   totalvol = (dims.x * res.x) * (dims.y * res.y) * (dims.z * res.z);
   if (totalvol == 0.0)
@@ -260,11 +255,11 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   DataContainerArray::Pointer dca = getDataContainerArray();
 
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
-  QVector<size_t> compDims(1, 1); // This states that we are looking for an array with a single component
-  UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), compDims);
-  if(phaseType.get() == NULL)
+  QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
+  UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), cDims);
+  if (phaseType.get() == NULL)
   {
-    QString ss = QObject::tr("PhaseTypes Array Not Found when estimating the number of grains");
+    QString ss = QObject::tr("Phase types array could not be downcast using boost::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputPhaseTypesArrayPath().serialize());
     setErrorCondition(-80000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return 0;
@@ -273,27 +268,27 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
 
   QVector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
-  if(statsPtr.get() == NULL)
+  if (statsPtr.get() == NULL)
   {
-    QString ss = QObject::tr("Stats Array Not Found when estimating the number of grains");
+    QString ss = QObject::tr("Statistics array could not be downcast using boost::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputStatsArrayPath().serialize());
     notifyErrorMessage(getHumanLabel(), ss, -80001);
     return 0;
   }
 
 
-  if( !phaseType->isAllocated())
+  if (!phaseType->isAllocated())
   {
-    if(getInputStatsFile().isEmpty())
+    if (getInputStatsFile().isEmpty())
     {
-      QString ss = QObject::tr("PhaseTypes Array has not been allocated and the Input Stats file is Empty.");
+      QString ss = QObject::tr("Phase types array has not been allocated and the input statistics file is empty.");
       setErrorCondition(-1000);
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
     QFileInfo fi(getInputStatsFile());
-    if(fi.exists() == false)
+    if (fi.exists() == false)
     {
-      QString ss = QObject::tr("PhaseTypes Array has not been allocated and the Input Stats file does not exist at '%1'").arg(fi.absoluteFilePath());
+      QString ss = QObject::tr("Phase types array has not been allocated and the input statistics file does not exist at '%1'").arg(fi.absoluteFilePath());
       setErrorCondition(-1001);
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
@@ -314,16 +309,16 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
     hid_t amGid = H5Gopen(fileId, hPath.toLatin1().data(), H5P_DEFAULT );
     scopedFileSentinel.addGroupId(&amGid);
     err = phaseType->readH5Data(amGid);
-    if(err < 0)
+    if (err < 0)
     {
       QString ss = QObject::tr("Error reading phase type data.");
       setErrorCondition(-1003);
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
-    if( !phaseType->isAllocated())
+    if (!phaseType->isAllocated())
     {
-      QString ss = QObject::tr("PhaseTypes Array was not allocated due to an error reading the data from the stats file %1").arg(fi.absoluteFilePath());
+      QString ss = QObject::tr("Phase types Array was not allocated due to an error reading the data from the statistics file %1").arg(fi.absoluteFilePath());
       setErrorCondition(-1002);
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
@@ -333,15 +328,14 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   // Create a Reference Variable so we can use the [] syntax
   StatsDataArray& statsDataArray = *(statsPtr.get());
 
-  QVector<int> primaryphases;
-  QVector<double> primaryphasefractions;
+  std::vector<int32_t> primaryphases;
+  std::vector<double> primaryphasefractions;
   double totalprimaryfractions = 0.0;
-  //StatsData::Pointer statsData = StatsData::NullPointer();
   // find which phases are primary phases
 
   for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if(phaseType->getValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+    if (phaseType->getValue(i) == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);
@@ -351,39 +345,47 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   }
 
   // scale the primary phase fractions to total to 1
-  for (qint32 i = 0; i < primaryphasefractions.size(); i++)
+  for (int32_t i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
   }
 
   DREAM3D_RANDOMNG_NEW()
   // generate the Features
-  int gid = 1;
+  int32_t gid = 1;
 
   float currentvol = 0.0f;
   float vol = 0.0f;
   float diam = 0.0f;
-  int volgood = 0;
-  for (qint32 j = 0; j < primaryphases.size(); ++j)
+  bool volgood = false;
+  for (int32_t j = 0; j < primaryphases.size(); ++j)
   {
     float curphasetotalvol = totalvol * primaryphasefractions[j];
-    while (currentvol < (curphasetotalvol))
+    while (currentvol < curphasetotalvol)
     {
-      volgood = 0;
+      volgood = false;
       phase = primaryphases[j];
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
-      while (volgood == 0)
+      if (NULL == pp)
       {
-        volgood = 1;
-        // u = rg.genrand_res53();
-        if(pp->getFeatureSize_DistType() == DREAM3D::DistributionType::LogNormal)
+        QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
+                                 "pointer but this resulted in a NULL pointer.\n")
+                     .arg(phase).arg(phase);
+        notifyErrorMessage(getHumanLabel(), ss, -666);
+        setErrorCondition(-666);
+        return -1;
+      }
+      while (volgood == false)
+      {
+        volgood = true;
+        if (pp->getFeatureSize_DistType() == DREAM3D::DistributionType::LogNormal)
         {
           float avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
           float sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
           diam = rg.genrand_norm(avgdiam, sddiam);
-          diam = exp(diam);
-          if(diam >= pp->getMaxFeatureDiameter()) { volgood = 0; }
-          if(diam < pp->getMinFeatureDiameter()) { volgood = 0; }
+          diam = expf(diam);
+          if (diam >= pp->getMaxFeatureDiameter()) { volgood = false; }
+          if (diam < pp->getMinFeatureDiameter()) { volgood = false; }
           vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
         }
       }
@@ -421,13 +423,11 @@ AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFi
 const QString InitializeSyntheticVolume::getCompiledLibraryName()
 { return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeSyntheticVolume::getGroupName()
 {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -435,10 +435,8 @@ const QString InitializeSyntheticVolume::getGroupName()
 const QString InitializeSyntheticVolume::getSubGroupName()
 { return DREAM3D::FilterSubGroups::PackingFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeSyntheticVolume::getHumanLabel()
 {return "Initialize Synthetic Volume";}
-

@@ -90,9 +90,6 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
     Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 

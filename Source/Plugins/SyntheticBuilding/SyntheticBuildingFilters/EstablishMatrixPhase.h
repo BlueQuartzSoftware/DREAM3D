@@ -37,25 +37,13 @@
 #ifndef _EstablishMatrixPhase_H_
 #define _EstablishMatrixPhase_H_
 
-#include <QtCore/QString>
-#include <vector>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
-
 /**
- * @class EstablishMatrixPhases EstablishMatrixPhases.h DREAM3DLib/SyntheticBuilderFilters/EstablishMatrixPhases.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The EstablishMatrixPhase class. See [Filter documentation](@ref establishmatrixphase) for details.
  */
 class EstablishMatrixPhase : public AbstractFilter
 {
@@ -66,8 +54,9 @@ class EstablishMatrixPhase : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(EstablishMatrixPhase, AbstractFilter)
 
     virtual ~EstablishMatrixPhase();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixName READ getOutputCellAttributeMatrixName WRITE setOutputCellAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
@@ -98,7 +87,6 @@ class EstablishMatrixPhase : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
@@ -111,7 +99,6 @@ class EstablishMatrixPhase : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void execute();
     virtual void preflight();
 
@@ -124,17 +111,20 @@ class EstablishMatrixPhase : public AbstractFilter
   protected:
     EstablishMatrixPhase();
 
+    /**
+     * @brief establish_matrix Fills a synthetic volume with the correct volume fraction
+     * of matrix phase(s) based on the input statistics
+     */
     void establish_matrix();
 
-    QVector<int> matrixphases;
-    QVector<float> matrixphasefractions;
+    std::vector<int32_t> matrixphases;
+    std::vector<float> matrixphasefractions;
 
     virtual void setupFilterParameters();
 
   private:
 
     size_t firstMatrixFeature;
-    unsigned long long int Seed;
     float sizex;
     float sizey;
     float sizez;
@@ -148,6 +138,11 @@ class EstablishMatrixPhase : public AbstractFilter
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     void dataCheck();
+
+    /**
+     * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a
+     * Feature Attribute Matrix
+     */
     void updateFeatureInstancePointers();
 
     EstablishMatrixPhase(const EstablishMatrixPhase&); // Copy Constructor Not Implemented

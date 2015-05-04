@@ -36,30 +36,24 @@
 
 #include "AddBadData.h"
 
-#include <map>
-
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
   AbstractFilter(),
-  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
+  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
   m_PoissonNoise(false),
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),
   m_BoundaryVolFraction(0.0f),
-  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_GBEuclideanDistances(NULL)
 {
   setupFilterParameters();
@@ -71,6 +65,7 @@ AddBadData::AddBadData() :
 AddBadData::~AddBadData()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -86,9 +81,12 @@ void AddBadData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", FilterParameterWidgetType::DoubleWidget, getBoundaryVolFraction(), false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBEuclideanDistancesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Boundary Euclidean Distances", "GBEuclideanDistancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBEuclideanDistancesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -124,15 +122,10 @@ void AddBadData::dataCheck()
 {
   setErrorCondition(0);
 
-  // Cell Data
-  QVector<size_t> dims(1, 1);
-  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 }
 
 // -----------------------------------------------------------------------------
@@ -153,17 +146,14 @@ void AddBadData::preflight()
 // -----------------------------------------------------------------------------
 void AddBadData::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
-  DREAM3D_RANDOMNG_NEW()
-
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   add_noise();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "AddBadDatas Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -179,31 +169,29 @@ void  AddBadData::add_noise()
   QString attMatName = getGBEuclideanDistancesArrayPath().getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attMatName)->getAttributeArrayNames();
 
-  float random = 0.0;
+  float random = 0.0f;
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-  for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
+  for (size_t i = 0; i < totalPoints; ++i)
   {
-    if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
+    if (m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
     {
       random = static_cast<float>( rg.genrand_res53() );
-      if(random < m_BoundaryVolFraction)
+      if (random < m_BoundaryVolFraction)
       {
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
           p->initializeTuple(i, 0);
         }
       }
     }
-    if(m_PoissonNoise == true && m_GBEuclideanDistances[i] >= 1)
+    if (m_PoissonNoise == true && m_GBEuclideanDistances[i] >= 1)
     {
       random = static_cast<float>( rg.genrand_res53() );
-      if(random < m_PoissonVolFraction)
+      if (random < m_PoissonVolFraction)
       {
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
           p->initializeTuple(i, 0);
         }
@@ -231,13 +219,11 @@ AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters)
 const QString AddBadData::getCompiledLibraryName()
 { return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddBadData::getGroupName()
 { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -245,10 +231,8 @@ const QString AddBadData::getGroupName()
 const QString AddBadData::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MiscFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddBadData::getHumanLabel()
 { return "Add Bad Data"; }
-

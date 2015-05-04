@@ -459,7 +459,7 @@ void PackPrimaryPhases::dataCheck()
   m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
   if(m_StatsDataArray.lock() == NULL)
   {
-    QString ss = QObject::tr("Statistics are not initialized correctly");
+    QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
     setErrorCondition(-308);
     notifyErrorMessage(getHumanLabel(), ss, -308);
   }
@@ -593,6 +593,7 @@ void PackPrimaryPhases::execute()
     notifyStatusMessage(getHumanLabel(), "Packing Features - Placing Features");
     place_features(featureOwnersPtr);
     if(getErrorCondition() < 0) { return; }
+    if (getCancel() == true) { return; }
   }
 
   if (m_HaveFeatures == true)
@@ -856,13 +857,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   QVector<size_t> cDim(1, 1);
   Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(featureOwnersPtr->getNumberOfTuples(), cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
-  if (NULL == exclusionOwnersPtr.get())
-  {
-    QString ss = QObject::tr("Unable to allocate exclusionOwnersPtr");
-    notifyErrorMessage(getHumanLabel(), ss, -666);
-    setErrorCondition(-666);
-    return;
-  }
   exclusionOwnersPtr->initializeWithValue(0);
 
   // This is the set that we are going to keep updated with the points that are not in an exclusion zone
@@ -1407,13 +1401,6 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
 
   Int32ArrayType::Pointer featureOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::feature_owners");
-  if (NULL == featureOwnersPtr.get())
-  {
-    QString ss = QObject::tr("Unable to allocate featureOwnersPtr");
-    notifyErrorMessage(getHumanLabel(), ss, -666);
-    setErrorCondition(-666);
-    return featureOwnersPtr;
-  }
   featureOwnersPtr->initializeWithZeros();
 
   return featureOwnersPtr;
@@ -2501,9 +2488,9 @@ void PackPrimaryPhases::cleanup_features()
   neighpoints[3] = 1;
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
-  QVector<QVector<DimType> > vlists;
+  std::vector<std::vector<DimType> > vlists;
   vlists.resize(totalFeatures);
-  QVector<DimType> currentvlist;
+  std::vector<DimType> currentvlist;
   std::vector<bool> checked(totalPoints, false);
   QVector<bool> activeObjects(totalFeatures, true);
   size_t count;
