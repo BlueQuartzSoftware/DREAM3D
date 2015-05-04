@@ -276,7 +276,7 @@ void DREAM3D_UI::on_actionSaveAs_triggered()
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.json";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
     proposedFile,
-    tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
+    tr("Json File (*.json);;DREAM3D File (*.dream3d);;All Files (*.*)"));
   if (true == filePath.isEmpty()) { return; }
 
   filePath = QDir::toNativeSeparators(filePath);
@@ -290,16 +290,20 @@ void DREAM3D_UI::on_actionSaveAs_triggered()
   }
 
   // Write the pipeline
-  pipelineViewWidget->writePipeline(filePath);
+  int err = pipelineViewWidget->writePipeline(filePath);
 
-  // Set window title and save flag
-  QFileInfo prefFileInfo = QFileInfo(filePath);
-  setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
-  setWindowModified(false);
+  if (err >= 0)
+  {
+    // Set window title and save flag
+    QFileInfo prefFileInfo = QFileInfo(filePath);
+    setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
+    setWindowModified(false);
 
-  // Cache the last directory and opened file path
+    m_OpenedFilePath = filePath;
+  }
+
+  // Cache the last directory
   m_OpenDialogLastDirectory = fi.path();
-  m_OpenedFilePath = filePath;
 }
 
 // -----------------------------------------------------------------------------

@@ -251,7 +251,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     /**
     * @brief Write pipeline to a file
     */
-    void writePipeline(QString filePath);
+    int writePipeline(QString filePath);
 
     /**
     * @brief Open pipeline to a file
