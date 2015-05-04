@@ -59,6 +59,7 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     virtual ~FilterListDockWidget();
 
 	QList<QString> serializeString(QString string, char token);
+  QString deserializeString(QList<QString> list, char token);
 
 	void matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int &filterCount);
 
