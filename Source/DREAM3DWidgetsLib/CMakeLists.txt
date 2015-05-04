@@ -118,7 +118,7 @@ set_source_files_properties( ${DREAM3DWidgetsLib_Generated_MOC_SRCS} PROPERTIES 
 
 
 # -- Run MOC and UIC on the necessary files
-QT5_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Resources/icons/images/icons.qrc"  )
+QT5_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Resources/icons/images/Icons.qrc"  )
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
