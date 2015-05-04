@@ -180,8 +180,8 @@ template<typename T, typename K>
 class OrientationTransforms
 {
   public:
-    
-    typedef typename OrientationTransforms<T, K> SelfType;
+
+    typedef OrientationTransforms SelfType;
     virtual ~OrientationTransforms(){}
 
 
