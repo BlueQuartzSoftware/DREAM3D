@@ -51,6 +51,10 @@
 #include "DREAM3DLib/Math/RadialDistributionFunction.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 #include "OrientationLib/Math/OrientationMath.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"

@@ -33,38 +33,41 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _CYLINDEROPS_H_
-#define _CYLINDEROPS_H_
 
+#ifndef _CUBOCTOHEDRONOPS_H_
+#define _CUBOCTOHEDRONOPS_H_
 
 #include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
+
 /*
  *
  */
-class CylinderOps : public ShapeOps
+class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(CylinderOps)
-    DREAM3D_TYPE_MACRO(CylinderOps)
-    DREAM3D_STATIC_NEW_MACRO(CylinderOps)
+    DREAM3D_SHARED_POINTERS(CubeOctohedronOps)
+    DREAM3D_TYPE_MACRO(CubeOctohedronOps)
+    DREAM3D_STATIC_NEW_MACRO(CubeOctohedronOps)
 
-
-    virtual ~CylinderOps();
+    virtual ~CubeOctohedronOps();
 
     virtual float radcur1(QMap<ArgName, float> args);
+
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-    virtual void init() {  }
+    virtual void init() { Gvalue = 0.0f; }
 
   protected:
-    CylinderOps();
+    CubeOctohedronOps();
   private:
-    CylinderOps(const CylinderOps&); // Copy Constructor Not Implemented
-    void operator=(const CylinderOps&); // Operator '=' Not Implemented
+    float Gvalue;
 
+    CubeOctohedronOps(const CubeOctohedronOps&); // Copy Constructor Not Implemented
+    void operator=(const CubeOctohedronOps&); // Operator '=' Not Implemented
 };
 
-#endif /* CYLINDEROPS_H_ */
+
+#endif /* CUBOCTOHEDRONOPS_H_ */
 

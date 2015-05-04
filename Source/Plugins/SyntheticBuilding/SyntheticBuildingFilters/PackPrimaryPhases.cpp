@@ -57,11 +57,11 @@
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 #include "OrientationLib/Math/OrientationMath.h"
-#include "SyntheticBuilding/ShapeOps/CubeOctohedronOps.h"
-#include "SyntheticBuilding/ShapeOps/CylinderOps.h"
-#include "SyntheticBuilding/ShapeOps/EllipsoidOps.h"
-#include "SyntheticBuilding/ShapeOps/SuperEllipsoidOps.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 

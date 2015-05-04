@@ -33,36 +33,38 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _CYLINDEROPS_H_
+#define _CYLINDEROPS_H_
 
-#ifndef _ELLIPSOIDOPS_H_
-#define _ELLIPSOIDOPS_H_
 
 #include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
+
 /*
  *
  */
-class EllipsoidOps : public ShapeOps
+class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(EllipsoidOps)
-    DREAM3D_TYPE_MACRO(EllipsoidOps)
-    DREAM3D_STATIC_NEW_MACRO(EllipsoidOps)
+    DREAM3D_SHARED_POINTERS(CylinderOps)
+    DREAM3D_TYPE_MACRO(CylinderOps)
+    DREAM3D_STATIC_NEW_MACRO(CylinderOps)
 
-    virtual ~EllipsoidOps();
+
+    virtual ~CylinderOps();
 
     virtual float radcur1(QMap<ArgName, float> args);
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
     virtual void init() {  }
 
   protected:
-    EllipsoidOps();
+    CylinderOps();
   private:
-    EllipsoidOps(const EllipsoidOps&); // Copy Constructor Not Implemented
-    void operator=(const EllipsoidOps&); // Operator '=' Not Implemented
+    CylinderOps(const CylinderOps&); // Copy Constructor Not Implemented
+    void operator=(const CylinderOps&); // Operator '=' Not Implemented
 
 };
 
-#endif /* ELLIPSOIDOPS_H_ */
+#endif /* CYLINDEROPS_H_ */
 
