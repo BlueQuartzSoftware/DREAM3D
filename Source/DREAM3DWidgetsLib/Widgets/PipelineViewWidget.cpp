@@ -185,7 +185,6 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
 
     gridLayout->addItem(verticalSpacer_2, 2, 1, 1, 1);
   }
-  emit pipelineTitleUpdated(QString("Untitled Pipeline"));
   emit pipelineChanged();
 }
 
@@ -469,6 +468,9 @@ int PipelineViewWidget::openPipeline(const QString &filePath, ExtractionType typ
 
   // Notify user of successful read
   m_StatusBar->showMessage(tr("The pipeline has been read successfully from '%1'.").arg(name));
+
+  QString file = filePath;
+  emit pipelineFileDropped(file);
 
   return 0;
 }
@@ -966,6 +968,8 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     // Make sure the widget titles are all correct
     reindexWidgetTitles();
     preflightPipeline();
+
+    emit pipelineChanged();
   }
   else
   {
@@ -992,13 +996,13 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       // Now that we have an index, insert the filter.
       addFilter(name, count);
     }
+
+    emit pipelineChanged();
   }
   event->acceptProposedAction();
 
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();
-
-  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------
