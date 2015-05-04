@@ -563,9 +563,9 @@ void FilterListDockWidget::setActiveSearchAction(QAction* action)
 QList<QAction*> FilterListDockWidget::getSearchActionList()
 {
   QList<QAction*> list;
-  list.append(m_ActionExactPhrase);
-  list.append(m_ActionAnyWords);
   list.append(m_ActionAllWords);
+  list.append(m_ActionAnyWords);
+  list.append(m_ActionExactPhrase);
   return list;
 }
 
