@@ -37,22 +37,14 @@
 #ifndef _PackPrimaryPhases_H_
 #define _PackPrimaryPhases_H_
 
-#include <vector>
-#include <map>
-#include <QtCore/QString>
-
-#include <boost/shared_array.hpp>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
-#include "SyntheticBuilding/ShapeOps/ShapeOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
+#include "SyntheticBuilding/ShapeOps/ShapeOps.h"
+
 typedef struct
 {
   float m_Volumes;
@@ -60,16 +52,12 @@ typedef struct
   float m_AxisLengths[3];
   float m_AxisEulerAngles[3];
   float m_Omega3s;
-  int m_FeaturePhases;
-  int m_Neighborhoods;
+  int32_t m_FeaturePhases;
+  int32_t m_Neighborhoods;
 } Feature;
 
 /**
- * @class PackPrimaryPhases PackPrimaryPhases.h DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The PackPrimaryPhases class. See [Filter documentation](@ref packprimaryphases) for details.
  */
 class PackPrimaryPhases : public AbstractFilter
 {
@@ -80,6 +68,7 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(PackPrimaryPhases, AbstractFilter)
 
     virtual ~PackPrimaryPhases();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixName)
     Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixName READ getOutputCellAttributeMatrixName WRITE setOutputCellAttributeMatrixName)
 
@@ -101,28 +90,6 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
     Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
-    Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, CentroidsArrayName)
-    Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
-    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, AxisLengthsArrayName)
-    Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
-    Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, Omega3sArrayName)
-    Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
-    Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
-
-
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
@@ -143,6 +110,7 @@ class PackPrimaryPhases : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, HaveFeatures)
     Q_PROPERTY(bool HaveFeatures READ getHaveFeatures WRITE setHaveFeatures)
+
     DREAM3D_FILTER_PARAMETER(QString, FeatureInputFile)
     Q_PROPERTY(QString FeatureInputFile READ getFeatureInputFile WRITE setFeatureInputFile)
 
@@ -158,6 +126,7 @@ class PackPrimaryPhases : public AbstractFilter
     // THESE SHOULD GO AWAY THEY ARE FOR DEBUGGING ONLY
     DREAM3D_FILTER_PARAMETER(QString, ErrorOutputFile)
     Q_PROPERTY(QString ErrorOutputFile READ getErrorOutputFile WRITE setErrorOutputFile)
+
     DREAM3D_FILTER_PARAMETER(QString, VtkOutputFile)
     Q_PROPERTY(QString VtkOutputFile READ getVtkOutputFile WRITE setVtkOutputFile)
 
@@ -166,7 +135,6 @@ class PackPrimaryPhases : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     /**
@@ -188,8 +156,6 @@ class PackPrimaryPhases : public AbstractFilter
      */
     virtual void execute();
 
-
-
   signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
@@ -202,35 +168,34 @@ class PackPrimaryPhases : public AbstractFilter
     Int32ArrayType::Pointer initialize_packinggrid();
 
     void place_features(Int32ArrayType::Pointer featureOwnersPtr);
-    void generate_feature(int phase, int Seed, Feature* feature, unsigned int shapeclass);
+    void generate_feature(int32_t phase, int64_t Seed, Feature* feature, uint32_t shapeclass);
     void load_features();
-
-
-    void transfer_attributes(int gnum, Feature* feature);
+    void transfer_attributes(int32_t gnum, Feature* feature);
     void insert_feature(size_t featureNum);
-
     void move_feature(size_t featureNum, float xc, float yc, float zc);
-
     float check_sizedisterror(Feature* feature);
-    void determine_neighbors(size_t featureNum, int add);
-    float check_neighborhooderror(int gadd, int gremove);
-
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr);
+    void determine_neighbors(size_t featureNum, int32_t add);
+    float check_neighborhooderror(int32_t gadd, int32_t gremove);
+    float check_fillingerror(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr);
     void update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv);
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_features();
     void write_goal_attributes();
-
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float& sqrerror);
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float& sqrerror);
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
-
-    int writeVtkFile(int32_t* featureOwners, int32_t* exclusionZonesPtr);
-    int estimate_numfeatures(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
-
+    int32_t writeVtkFile(int32_t* featureOwners, int32_t* exclusionZonesPtr);
+    int32_t estimate_numfeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres);
 
   private:
+    QString m_NeighborhoodsArrayName;
+    QString m_CentroidsArrayName;
+    QString m_VolumesArrayName;
+    QString m_AxisLengthsArrayName;
+    QString m_AxisEulerAnglesArrayName;
+    QString m_Omega3sArrayName;
+    QString m_EquivalentDiametersArrayName;
     int32_t* m_Neighbors;
 
     // Cell Data - make sure these are all initialized to NULL in the constructor
@@ -256,7 +221,7 @@ class PackPrimaryPhases : public AbstractFilter
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private variables
-    QMap<unsigned int, ShapeOps*> m_ShapeOps;
+    QMap<uint32_t, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
@@ -265,17 +230,17 @@ class PackPrimaryPhases : public AbstractFilter
 
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    std::vector<std::vector<int> > columnlist;
-    std::vector<std::vector<int> > rowlist;
-    std::vector<std::vector<int> > planelist;
+    std::vector<std::vector<int64_t> > columnlist;
+    std::vector<std::vector<int64_t> > rowlist;
+    std::vector<std::vector<int64_t> > planelist;
     std::vector<std::vector<float> > ellipfunclist;
 
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
 
-    unsigned long long int m_Seed;
+    int64_t m_Seed;
 
-    int firstPrimaryFeature;
+    int32_t firstPrimaryFeature;
 
     float sizex;
     float sizey;
@@ -287,8 +252,8 @@ class PackPrimaryPhases : public AbstractFilter
     float m_OneOverHalfPackingRes[3];
 
     float m_PackingRes[3];
-    int m_PackingPoints[3];
-    int m_TotalPackingPoints;
+    int64_t m_PackingPoints[3];
+    int64_t m_TotalPackingPoints;
 
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;
@@ -298,11 +263,11 @@ class PackPrimaryPhases : public AbstractFilter
     std::vector<float> featuresizediststep;
     std::vector<float> neighbordiststep;
 
-    std::vector<int> newnames;
-    std::vector<int> packqualities;
-    std::vector<int> gsizes;
+    std::vector<int64_t> newnames;
+    std::vector<int64_t> packqualities;
+    std::vector<int64_t> gsizes;
 
-    std::vector<int> primaryphases;
+    std::vector<int32_t> primaryphases;
     std::vector<float> primaryphasefractions;
 
     size_t availablePointsCount;
@@ -318,6 +283,3 @@ class PackPrimaryPhases : public AbstractFilter
 };
 
 #endif /* PackPrimaryPhases_H_ */
-
-
-
