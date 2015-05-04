@@ -37,26 +37,12 @@
 #ifndef _AddBadData_H_
 #define _AddBadData_H_
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <vector>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 /**
- * @class AddBadDatas AddBadDatas.h DREAM3DLib/SyntheticBuilderFilters/AddBadDatas.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The AddBadData class. See [Filter documentation](@ref addbaddata) for details.
  */
 class AddBadData : public AbstractFilter
 {
@@ -76,14 +62,16 @@ class AddBadData : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     DREAM3D_FILTER_PARAMETER(bool, PoissonNoise)
     Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
+
     DREAM3D_FILTER_PARAMETER(float, PoissonVolFraction)
     Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
+
     DREAM3D_FILTER_PARAMETER(bool, BoundaryNoise)
     Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
+
     DREAM3D_FILTER_PARAMETER(float, BoundaryVolFraction)
     Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 
@@ -112,6 +100,9 @@ class AddBadData : public AbstractFilter
   protected:
     AddBadData();
 
+    /**
+     * @brief add_noise Adds "noise" to the
+     */
     void add_noise();
 
   private:

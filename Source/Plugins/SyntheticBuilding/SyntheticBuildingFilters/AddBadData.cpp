@@ -46,6 +46,8 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
+
 
 // -----------------------------------------------------------------------------
 //

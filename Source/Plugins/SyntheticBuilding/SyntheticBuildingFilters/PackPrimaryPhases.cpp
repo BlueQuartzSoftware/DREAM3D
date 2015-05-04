@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PackPrimaryPhases.h"
-#include <algorithm>
+//#include <algorithm>
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -89,7 +89,7 @@ class AssignVoxelsGapsImpl
     float zc;
     ShapeOps* m_ShapeOps;
     float ga[3][3];
-    int curFeature;
+    int32_t curFeature;
     Int32ArrayType::Pointer newownersPtr;
     FloatArrayType::Pointer ellipfuncsPtr;
 
@@ -145,8 +145,6 @@ class AssignVoxelsGapsImpl
       float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       float coords[3] = { 0.0f, 0.0f, 0.0f };
       float inside = 0.0f;
-      //   float dist = 0.0f;
-      //   float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
       float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
       int32_t* newowners = newownersPtr->getPointer(0);
       float* ellipfuncs = ellipfuncsPtr->getPointer(0);
@@ -231,7 +229,7 @@ class AssignVoxelsGapsImpl
 // -----------------------------------------------------------------------------
 PackPrimaryPhases::PackPrimaryPhases() :
   AbstractFilter(),
-  m_OutputCellAttributeMatrixName(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_OutputCellAttributeMatrixPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_OutputCellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_OutputCellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -289,10 +287,23 @@ PackPrimaryPhases::PackPrimaryPhases() :
 
   m_OrthoOps = OrthoRhombicOps::New();
 
+  m_PackingRes[0] = m_PackingRes[1] = m_PackingRes[2] = 1.0f;
   m_HalfPackingRes[0] = m_HalfPackingRes[1] = m_HalfPackingRes[2] = 1.0f;
+  m_OneOverPackingRes[0] = m_OneOverPackingRes[1] = m_OneOverPackingRes[2] = 1.0f;
   m_OneOverHalfPackingRes[0] = m_OneOverHalfPackingRes[1] = m_OneOverHalfPackingRes[2] = 1.0f;
+  m_PackingPoints[0] = m_PackingPoints[1] = m_PackingPoints[2] = 1;
+
+  m_TotalPackingPoints = 1;
+  availablePointsCount = 1;
+  fillingerror = oldfillingerror = 0.0f;
+  currentneighborhooderror = oldneighborhooderror = 0.0f;
+  currentsizedisterror = oldsizedisterror = 0.0f;
 
   m_Seed = QDateTime::currentMSecsSinceEpoch();
+
+  firstPrimaryFeature = 1;
+  sizex = sizey = sizez = totalvol = 0.0f;
+
   setupFilterParameters();
 }
 
@@ -318,7 +329,7 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true));
   parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputShapeTypesArrayPath(), true));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getOutputCellAttributeMatrixName(), true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getOutputCellAttributeMatrixPath(), true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellFeatureAttributeMatrixName(), true));
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "OutputCellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellEnsembleAttributeMatrixName(), true));
   parameters.push_back(FilterParameter::New("Cell Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true));
@@ -348,7 +359,7 @@ void PackPrimaryPhases::setupFilterParameters()
 void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setOutputCellAttributeMatrixName( reader->readDataArrayPath("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
+  setOutputCellAttributeMatrixPath( reader->readDataArrayPath("OutputCellAttributeMatrixPath", getOutputCellAttributeMatrixPath() ) );
   setOutputCellFeatureAttributeMatrixName( reader->readString("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
   setOutputCellEnsembleAttributeMatrixName( reader->readString("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() ) );
   setFeatureIdsArrayName( reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
@@ -377,7 +388,7 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
@@ -406,7 +417,6 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 void PackPrimaryPhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
-
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -434,19 +444,19 @@ void PackPrimaryPhases::dataCheck()
   DataArrayPath tempPath;
 
   // Make sure we have our input DataContainer with the proper Ensemble data
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  // Input Ensemble Data That we require
-  QVector<size_t> dims(1, 1);
-  m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
+  // Input Ensemble Data that we require
+  QVector<size_t> cDims(1, 1);
+  m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputShapeTypesArrayPath(), dims);
+  m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputShapeTypesArrayPath(), cDims);
   if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), dims);
+  m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
   if(m_StatsDataArray.lock() == NULL)
   {
     QString ss = QObject::tr("Statistics are not initialized correctly");
@@ -456,26 +466,26 @@ void PackPrimaryPhases::dataCheck()
 
   if(m_UseMask == true)
   {
-    m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), dims);
+    m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
     if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  dims[0] = 1;
+  cDims[0] = 1;
   // Cell Data
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellAttributeMatrixName().getAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, dims); /* Assigns the shared_ptr<>(this, tempPath, -1, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellAttributeMatrixPath().getAttributeMatrixName(), getFeatureIdsArrayName() );
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<>(this, tempPath, -1, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellAttributeMatrixName().getAttributeMatrixName(), getCellPhasesArrayName() );
-  m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellAttributeMatrixPath().getAttributeMatrixName(), getCellPhasesArrayName() );
+  m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
@@ -483,43 +493,43 @@ void PackPrimaryPhases::dataCheck()
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
 
   // Feature Data
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
-  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_NeighborhoodsArrayName );
-  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims);
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_NeighborhoodsArrayName );
+  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims);
   if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); }
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_EquivalentDiametersArrayName );
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_EquivalentDiametersArrayName );
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_VolumesArrayName );
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_VolumesArrayName );
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_Omega3sArrayName );
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_Omega3sArrayName );
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 3;
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_CentroidsArrayName );
-  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 3;
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_CentroidsArrayName );
+  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisEulerAnglesArrayName );
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisEulerAnglesArrayName );
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisLengthsArrayName );
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisLengthsArrayName );
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   // Ensemble Data
-  dims[0] = 1;
-  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName() );
-  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 1;
+  tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName() );
+  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -530,7 +540,7 @@ void PackPrimaryPhases::dataCheck()
     setErrorCondition(-387);
   }
 
-  if(m_HaveFeatures == true && getFeatureInputFile().isEmpty() == true)
+  if (m_HaveFeatures == true && getFeatureInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr(": The Feature file must be set before executing this filter.");
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -549,10 +559,10 @@ void PackPrimaryPhases::preflight()
   dataCheck();
   emit preflightExecuted();
 
-  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName());
-  if(dc == NULL) { setInPreflight(false); return; }
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath());
+  if (dc == NULL) { setInPreflight(false); return; }
   AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-  if(attrMat == NULL) { setInPreflight(false); return; }
+  if (attrMat == NULL) { setInPreflight(false); return; }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -611,7 +621,7 @@ void PackPrimaryPhases::execute()
   }
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
   cellFeatureAttrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   cellFeatureAttrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -693,7 +703,7 @@ int32_t PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusi
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::load_features()
 {
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
 
   std::ifstream inFile;
@@ -764,7 +774,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
@@ -876,8 +886,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     featuresizedist[i].resize(40);
     simfeaturesizedist[i].resize(40);
     featuresizediststep[i] = static_cast<float>(((2 * pp->getMaxFeatureDiameter()) - (pp->getMinFeatureDiameter() / 2.0f)) / featuresizedist[i].size());
-    float input = 0;
-    float previoustotal = 0;
+    float input = 0.0f;
+    float previoustotal = 0.0f;
     VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
     float avg = GSdist[0]->getValue(0);
     float stdev = GSdist[1]->getValue(0);
@@ -909,7 +919,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   }
 
   // generate the features and monitor the size distribution error while doing so. After features are generated, no new features can enter or leave the structure.
-  Feature feature;
+  Feature_t feature;
 
   // Estimate the total Number of features here
   int32_t estNumFeatures = estimate_numfeatures(udims[0], udims[1], udims[2], xRes, yRes, zRes);
@@ -1047,7 +1057,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       float previoustotal = 0.0f;
       float avg = Neighdist[0]->getValue(j);
       float stdev = Neighdist[1]->getValue(j);
-      neighbordiststep[i] = 2;
+      neighbordiststep[i] = 2.0f;
       float denominatorConst = 1.0 / sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
       for (size_t k = 0; k < 40; k++)
       {
@@ -1372,7 +1382,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 // -----------------------------------------------------------------------------
 Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 {
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   m_PackingRes[0] = m->getGeometryAs<ImageGeom>()->getXRes() * 2.0f;
   m_PackingRes[1] = m->getGeometryAs<ImageGeom>()->getYRes() * 2.0f;
@@ -1412,7 +1422,7 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature* feature, uint32_t shapeclass)
+void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t* feature, uint32_t shapeclass)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
@@ -1513,7 +1523,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::transfer_attributes(int32_t gnum, Feature* feature)
+void PackPrimaryPhases::transfer_attributes(int32_t gnum, Feature_t* feature)
 {
   m_Volumes[gnum] = feature->m_Volumes;
   m_EquivalentDiameters[gnum] = feature->m_EquivalentDiameters;
@@ -1569,7 +1579,7 @@ void PackPrimaryPhases::move_feature(size_t gnum, float xc, float yc, float zc)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::determine_neighbors(size_t gnum, bool add)
 {
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   float x = 0.0f, y = 0.0f, z = 0.0f;
   float xn = 0.0f, yn = 0.0f, zn = 0.0f;
@@ -1609,7 +1619,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, bool add)
 float PackPrimaryPhases::check_neighborhooderror(int32_t gadd, int32_t gremove)
 {
   // Optimized Code
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1786,9 +1796,9 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_sizedisterror(Feature* feature)
+float PackPrimaryPhases::check_sizedisterror(Feature_t* feature)
 {
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1871,7 +1881,6 @@ float PackPrimaryPhases::check_fillingerror(int32_t gadd, int32_t gremove, Int32
   int32_t k1 = 0, k2 = 0, k3 = 0;
   if (gadd > 0)
   {
-    //size_t key, val;
     k1 = 2;
     k2 = -1;
     k3 = 1;
@@ -2053,7 +2062,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   // Bail if the shapeclass is not one of our enumerated types
   if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
   {
-    QString ss = QObject::tr("Undefined shape class for array m_ShapeTypes");
+    QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     notifyErrorMessage(getHumanLabel(), ss, -666);
     setErrorCondition(-666);
     return;
@@ -2144,9 +2153,9 @@ void PackPrimaryPhases::assign_voxels()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -2214,7 +2223,7 @@ void PackPrimaryPhases::assign_voxels()
 
     if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
     {
-      QString ss = QObject::tr("Undefined shape class for array m_ShapeTypes");
+      QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
       notifyErrorMessage(getHumanLabel(), ss, -666);
       setErrorCondition(-666);
       return;
@@ -2341,7 +2350,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   int32_t featurename = 0, feature = 0;
   int32_t current = 0;
@@ -2355,7 +2364,7 @@ void PackPrimaryPhases::assign_gaps_only()
   int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
-  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
   int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
@@ -2370,9 +2379,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 
-  QVector<int32_t> n(totalFeatures + 1, 0);
-  //uint64_t millis = QDateTime::currentMSecsSinceEpoch();
-  //uint64_t currentMillis = millis;
+  std::vector<int32_t> n(totalFeatures + 1, 0);
 
   while (gapVoxelCount != 0)
   {
@@ -2450,7 +2457,7 @@ void PackPrimaryPhases::assign_gaps_only()
     }
     if (iterationCounter >= 1)
     {
-      QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
+      QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
   }
@@ -2463,11 +2470,11 @@ void PackPrimaryPhases::cleanup_features()
 {
   notifyStatusMessage(getHumanLabel(), "Cleaning Up Features");
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
-  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -2494,18 +2501,18 @@ void PackPrimaryPhases::cleanup_features()
   neighpoints[3] = 1;
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
-  QVector<QVector<int> > vlists;
+  QVector<QVector<DimType> > vlists;
   vlists.resize(totalFeatures);
-  QVector<int> currentvlist;
-  QVector<bool> checked(totalPoints, false);
+  QVector<DimType> currentvlist;
+  std::vector<bool> checked(totalPoints, false);
   QVector<bool> activeObjects(totalFeatures, true);
   size_t count;
-  int touchessurface = 0;
-  int good;
-  int neighbor;
-  DimType column, row, plane;
-  int index;
-  float minsize = 0;
+  bool touchessurface = false;
+  bool good = false;
+  DimType neighbor = 0;
+  DimType column = 0, row = 0, plane = 0;
+  DimType index = 0;
+  float minsize = 0.0f;
   gsizes.resize(totalFeatures);
   for (size_t i = 1; i < totalFeatures; i++)
   {
@@ -2516,12 +2523,12 @@ void PackPrimaryPhases::cleanup_features()
   const double k_PiOver6 = M_PI / 6.0;
   for (size_t i = 0; i < totalPoints; i++)
   {
-    touchessurface = 0;
-    if(checked[i] == false && m_FeatureIds[i] > firstPrimaryFeature)
+    touchessurface = false;
+    if (checked[i] == false && m_FeatureIds[i] > firstPrimaryFeature)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
       minsize = static_cast<float>( pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * k_PiOver6 );
-      minsize = static_cast<float>( int(minsize / (resConst)) );
+      minsize = static_cast<float>( int32_t(minsize / (resConst)) );
       currentvlist.push_back(i);
       count = 0;
       while (count < currentvlist.size())
@@ -2530,34 +2537,34 @@ void PackPrimaryPhases::cleanup_features()
         column = index % xp;
         row = (index / xp) % yp;
         plane = index / (xp * yp);
-        if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) { touchessurface = 1; }
-        for (int j = 0; j < 6; j++)
+        if (column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) { touchessurface = true; }
+        for (int32_t j = 0; j < 6; j++)
         {
-          good = 1;
-          neighbor = static_cast<int>( index + neighpoints[j] );
-          if(m_PeriodicBoundaries == false)
+          good = true;
+          neighbor = index + neighpoints[j];
+          if (m_PeriodicBoundaries == false)
           {
-            if(j == 0 && plane == 0) { good = 0; }
-            if(j == 5 && plane == (zp - 1)) { good = 0; }
-            if(j == 1 && row == 0) { good = 0; }
-            if(j == 4 && row == (yp - 1)) { good = 0; }
-            if(j == 2 && column == 0) { good = 0; }
-            if(j == 3 && column == (xp - 1)) { good = 0; }
-            if(good == 1 && m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
+            if (j == 0 && plane == 0) { good = false; }
+            if (j == 5 && plane == (zp - 1)) { good = false; }
+            if (j == 1 && row == 0) { good = false; }
+            if (j == 4 && row == (yp - 1)) { good = false; }
+            if (j == 2 && column == 0) { good = false; }
+            if (j == 3 && column == (xp - 1)) { good = false; }
+            if (good == true && m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
             {
               currentvlist.push_back(neighbor);
               checked[neighbor] = true;
             }
           }
-          else if(m_PeriodicBoundaries == true)
+          else if (m_PeriodicBoundaries == true)
           {
-            if(j == 0 && plane == 0) { neighbor = static_cast<int>( neighbor + (xp * yp * zp) ); }
-            if(j == 5 && plane == (zp - 1)) { neighbor = static_cast<int>( neighbor - (xp * yp * zp) ); }
-            if(j == 1 && row == 0) { neighbor = static_cast<int>( neighbor + (xp * yp) ); }
-            if(j == 4 && row == (yp - 1)) { neighbor = static_cast<int>( neighbor - (xp * yp) ); }
-            if(j == 2 && column == 0) { neighbor = static_cast<int>( neighbor + (xp) ); }
-            if(j == 3 && column == (xp - 1)) { neighbor = static_cast<int>( neighbor - (xp) ); }
-            if(m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
+            if (j == 0 && plane == 0) { neighbor = neighbor + (xp * yp * zp); }
+            if (j == 5 && plane == (zp - 1)) { neighbor = neighbor - (xp * yp * zp); }
+            if (j == 1 && row == 0) { neighbor = neighbor + (xp * yp); }
+            if (j == 4 && row == (yp - 1)) { neighbor = neighbor - (xp * yp); }
+            if (j == 2 && column == 0) { neighbor = neighbor + (xp); }
+            if (j == 3 && column == (xp - 1)) { neighbor = neighbor - (xp); }
+            if (m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
             {
               currentvlist.push_back(neighbor);
               checked[neighbor] = true;
@@ -2566,10 +2573,10 @@ void PackPrimaryPhases::cleanup_features()
         }
         count++;
       }
-      size_t size = vlists[m_FeatureIds[i]].size();
-      if(size > 0)
+      int32_t size = vlists[m_FeatureIds[i]].size();
+      if (size > 0)
       {
-        if(size < currentvlist.size())
+        if (size < currentvlist.size())
         {
           for (size_t k = 0; k < vlists[m_FeatureIds[i]].size(); k++)
           {
@@ -2578,7 +2585,7 @@ void PackPrimaryPhases::cleanup_features()
           vlists[m_FeatureIds[i]].resize(currentvlist.size());
           vlists[m_FeatureIds[i]].swap(currentvlist);
         }
-        else if(size >= currentvlist.size())
+        else if (size >= currentvlist.size())
         {
           for (size_t k = 0; k < currentvlist.size(); k++)
           {
@@ -2586,14 +2593,14 @@ void PackPrimaryPhases::cleanup_features()
           }
         }
       }
-      else if(size == 0)
+      else if (size == 0)
       {
-        if(currentvlist.size() >= minsize || touchessurface == 1)
+        if (currentvlist.size() >= minsize || touchessurface == true)
         {
           vlists[m_FeatureIds[i]].resize(currentvlist.size());
           vlists[m_FeatureIds[i]].swap(currentvlist);
         }
-        if(currentvlist.size() < minsize && touchessurface == 0)
+        if (currentvlist.size() < minsize && touchessurface == false)
         {
           for (size_t k = 0; k < currentvlist.size(); k++)
           {
@@ -2605,22 +2612,22 @@ void PackPrimaryPhases::cleanup_features()
     }
   }
   assign_gaps_only();
-  for (int i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
-    if(m_FeatureIds[i] > 0) { gsizes[m_FeatureIds[i]]++; }
+    if (m_FeatureIds[i] > 0) { gsizes[m_FeatureIds[i]]++; }
   }
   for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
-    if(gsizes[i] == 0) { activeObjects[i] = false; }
+    if (gsizes[i] == 0) { activeObjects[i] = false; }
   }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   updateFeatureInstancePointers();
 
-  for (int i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
-    if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
+    if (m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
   }
 }
 
@@ -2641,12 +2648,12 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
   // This is for convenience
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
-  QVector<size_t> dims(1, 1);
-  m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
+  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
+  QVector<size_t> cDims(1, 1);
+  m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   DataArray<uint32_t>* phaseType = m_PhaseTypesPtr.lock().get();
 
-  StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), dims);
+  StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
   m_StatsDataArray = boost::dynamic_pointer_cast<StatsDataArray>(statsPtr);
   if(m_StatsDataArray.lock().get() == NULL)
   {
@@ -2740,7 +2747,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
 void PackPrimaryPhases::write_goal_attributes()
 {
   setErrorCondition(0);
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
@@ -2776,7 +2783,7 @@ void PackPrimaryPhases::write_goal_attributes()
   QVector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
-  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+  NeighborList<int32_t>::Pointer neighborlistPtr = NeighborList<int32_t>::New();
 
   // Print the FeatureIds Header before the rest of the headers
   dStream << DREAM3D::FeatureData::FeatureID;
@@ -2793,7 +2800,7 @@ void PackPrimaryPhases::write_goal_attributes()
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for (int k = 0; k < p->getNumberOfComponents(); ++k)
+        for (int32_t k = 0; k < p->getNumberOfComponents(); ++k)
         {
           dStream << space << (*iter) << "_" << k;
         }

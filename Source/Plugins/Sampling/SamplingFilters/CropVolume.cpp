@@ -512,7 +512,7 @@ IntVec3_t CropVolume::getCurrentVolumeDataContainerDimensions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   IntVec3_t data;
-  if (NULL != m)
+  if (NULL != m.get())
   {
     data.x = m->getGeometryAs<ImageGeom>()->getXPoints();
     data.y = m->getGeometryAs<ImageGeom>()->getYPoints();

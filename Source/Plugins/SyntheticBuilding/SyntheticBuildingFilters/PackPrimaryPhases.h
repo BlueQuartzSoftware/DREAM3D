@@ -54,7 +54,7 @@ typedef struct
   float m_Omega3s;
   int32_t m_FeaturePhases;
   int32_t m_Neighborhoods;
-} Feature;
+} Feature_t;
 
 /**
  * @brief The PackPrimaryPhases class. See [Filter documentation](@ref packprimaryphases) for details.
@@ -69,8 +69,8 @@ class PackPrimaryPhases : public AbstractFilter
 
     virtual ~PackPrimaryPhases();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixName READ getOutputCellAttributeMatrixName WRITE setOutputCellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
@@ -183,10 +183,10 @@ class PackPrimaryPhases : public AbstractFilter
      * @brief generate_feature Creates a Feature by sampling the size and morphological statistical distributions
      * @param phase Index of the Ensemble type for the Feature to be generated
      * @param Seed Value to intialized random number generator
-     * @param feature Feature struct pointer to be intialized
+     * @param feature Feature_t struct pointer to be intialized
      * @param shapeclass Type of Feature shape to be generated
      */
-    void generate_feature(int32_t phase, uint64_t Seed, Feature* feature, uint32_t shapeclass);
+    void generate_feature(int32_t phase, uint64_t Seed, Feature_t* feature, uint32_t shapeclass);
 
     /**
      * @brief load_features Reads a list of Features from to be used as the packed volume
@@ -196,9 +196,9 @@ class PackPrimaryPhases : public AbstractFilter
     /**
      * @brief transfer_attributes Moves variables held in the Feature struct into other arrays
      * @param gnum Id for the Feature to be copied
-     * @param feature Feature struct pointer to be copied
+     * @param feature Feature_t struct pointer to be copied
      */
-    void transfer_attributes(int32_t gnum, Feature* feature);
+    void transfer_attributes(int32_t gnum, Feature_t* feature);
 
     /**
      * @brief insert_feature Performs the insertion of a Feature into the packing volume
@@ -218,10 +218,10 @@ class PackPrimaryPhases : public AbstractFilter
     /**
      * @brief check_sizedisterror Computes the error between the current Feature size distribution
      * and the goal Feature size distribution
-     * @param feature Feature struct pointer used to determine the Ensemble type
+     * @param feature Feature_t struct pointer used to determine the Ensemble type
      * @return Float error value between two distributions
      */
-    float check_sizedisterror(Feature* feature);
+    float check_sizedisterror(Feature_t* feature);
 
     /**
      * @brief determine_neighbors Determines the neighbors for a given Feature
@@ -241,7 +241,7 @@ class PackPrimaryPhases : public AbstractFilter
     float check_neighborhooderror(int32_t gadd, int32_t gremove);
 
     /**
-     * @brief check_fillingerror Computes the percentage of unassigned or "garbage" packing points
+     * @brief check_fillingerror Computes the percentage of unassigned or multiple assigned packing points
      * @param gadd Value that determines whether to add point Ids to be filled
      * @param gremove Value that determines whether to add point Ids to be removed
      * @param featureOwnersPtr Array of Feature Ids for each packing point
@@ -316,6 +316,9 @@ class PackPrimaryPhases : public AbstractFilter
     int32_t estimate_numfeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres);
 
   private:
+
+    // Names for the arrays used by the packing algorithm
+    // These arrays are temporary and are removed from the Feature Attribute Matrix after completion
     QString m_NeighborhoodsArrayName;
     QString m_CentroidsArrayName;
     QString m_VolumesArrayName;
@@ -333,7 +336,6 @@ class PackPrimaryPhases : public AbstractFilter
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
@@ -345,6 +347,7 @@ class PackPrimaryPhases : public AbstractFilter
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private variables
@@ -354,7 +357,6 @@ class PackPrimaryPhases : public AbstractFilter
     ShapeOps::Pointer m_CylinderOps;
     ShapeOps::Pointer m_EllipsoidOps;
     ShapeOps::Pointer m_SuperEllipsoidOps;
-
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     std::vector<std::vector<int64_t> > columnlist;
@@ -373,12 +375,11 @@ class PackPrimaryPhases : public AbstractFilter
     float sizey;
     float sizez;
     float totalvol;
-
     float m_HalfPackingRes[3];
     float m_OneOverPackingRes[3];
     float m_OneOverHalfPackingRes[3];
-
     float m_PackingRes[3];
+
     int64_t m_PackingPoints[3];
     int64_t m_TotalPackingPoints;
 
@@ -403,6 +404,11 @@ class PackPrimaryPhases : public AbstractFilter
     float currentsizedisterror, oldsizedisterror;
 
     void dataCheck();
+
+    /**
+     * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a
+     * Feature Attribute Matrix
+     */
     void updateFeatureInstancePointers();
 
     PackPrimaryPhases(const PackPrimaryPhases&); // Copy Constructor Not Implemented
