@@ -51,8 +51,6 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
-#include "DataArrayInformationDisplayWidget.h"
-
 
 // Initialize private static member variable
 QString DataContainerReaderWidget::m_OpenDialogLastDirectory = "";
@@ -599,11 +597,11 @@ bool DataContainerReaderWidget::verifyPathExists(QString filePath, QFSDropLabel*
   if (false == fileinfo.exists())
   {
     //lineEdit->setStyleSheet("border: 1px solid red;");
-    lineEdit->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
+    lineEdit->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
   }
   else
   {
-    lineEdit->changeStyleSheet(FS_STANDARD_STYLE);
+    lineEdit->changeStyleSheet(QFSDropLabel::FS_STANDARD_STYLE);
   }
   return fileinfo.exists();
 }

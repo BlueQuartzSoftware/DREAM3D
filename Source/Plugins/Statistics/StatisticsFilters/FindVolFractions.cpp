@@ -174,7 +174,7 @@ AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString FindVolFractions::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

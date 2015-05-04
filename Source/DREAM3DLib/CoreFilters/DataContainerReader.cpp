@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -98,11 +99,9 @@ void DataContainerReader::setupFilterParameters()
 void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
-
-  syncProxies();	// Sync the file proxy and currently cached proxy together into one proxy
-
   setInputFile(reader->readString("InputFile", getInputFile() ) );
+  setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
+  syncProxies();	// Sync the file proxy and currently cached proxy together into one proxy
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
   reader->closeFilterGroup();
 }
@@ -119,7 +118,6 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
   DREAM3D_FILTER_WRITE_PARAMETER(OverwriteExistingDataContainers)
   DataContainerArrayProxy dcaProxy = getInputFileDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
   writer->writeValue("InputFileDataContainerArrayProxy", dcaProxy );
-
 
   writer->closeFilterGroup();
   return ++index; // we want to return the index after the one we just wrote to

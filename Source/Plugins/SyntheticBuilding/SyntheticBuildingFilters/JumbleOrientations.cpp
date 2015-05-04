@@ -256,7 +256,7 @@ AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString JumbleOrientations::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

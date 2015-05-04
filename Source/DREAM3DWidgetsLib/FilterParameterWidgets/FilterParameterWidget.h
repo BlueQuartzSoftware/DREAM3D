@@ -42,7 +42,7 @@
 
 #include <QtWidgets/QWidget>
 
-#include "QtSupport/FaderWidget.h"
+#include "QtSupportLib/FaderWidget.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

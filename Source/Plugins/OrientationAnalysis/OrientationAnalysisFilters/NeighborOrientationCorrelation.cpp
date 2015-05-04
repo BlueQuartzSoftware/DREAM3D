@@ -382,7 +382,7 @@ AbstractFilter::Pointer NeighborOrientationCorrelation::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString NeighborOrientationCorrelation::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -41,6 +41,7 @@
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DynamicTableData.h"
+#include "DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -337,10 +338,8 @@ void DynamicTableWidget::on_deleteRowBtn_pressed()
 	// Renumber dynamic headers
 	renumberDynamicHeaders();
 
-	// Cause a preflight
-	m_DidCausePreflight = true;
-	emit parametersChanged();
-	m_DidCausePreflight = false;
+  // Cause a preflight
+  on_dynamicTable_cellChanged(0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -364,10 +363,8 @@ void DynamicTableWidget::on_deleteColBtn_pressed()
 	// Renumber dynamic headers
 	renumberDynamicHeaders();
 
-	// Cause a preflight
-	m_DidCausePreflight = true;
-	emit parametersChanged();
-	m_DidCausePreflight = false;
+  // Cause a preflight
+  on_dynamicTable_cellChanged(0, 0);
 }
 
 // -----------------------------------------------------------------------------

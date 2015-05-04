@@ -45,6 +45,7 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
@@ -585,7 +586,7 @@ AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getCompiledLibraryName()
-{ return Reconstruction::ReconstructionBaseName; }
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 
 // -----------------------------------------------------------------------------

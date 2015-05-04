@@ -47,6 +47,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -333,7 +334,7 @@ void ReadCtfData::execute()
 // -----------------------------------------------------------------------------
 const QString ReadCtfData::getCompiledLibraryName()
 {
-  return OrientationAnalysis::OrientationAnalysisBaseName;
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
 // -----------------------------------------------------------------------------

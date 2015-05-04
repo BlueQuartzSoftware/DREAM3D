@@ -46,6 +46,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
+
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -236,7 +238,7 @@ AbstractFilter::Pointer ConvertEulerAngles::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString ConvertEulerAngles::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 // -----------------------------------------------------------------------------
 //

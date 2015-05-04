@@ -44,6 +44,7 @@
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ShapeTypesFilterParameter.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -226,7 +227,7 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

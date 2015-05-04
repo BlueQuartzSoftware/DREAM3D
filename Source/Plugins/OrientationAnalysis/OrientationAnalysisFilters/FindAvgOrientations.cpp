@@ -251,7 +251,7 @@ AbstractFilter::Pointer FindAvgOrientations::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgOrientations::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

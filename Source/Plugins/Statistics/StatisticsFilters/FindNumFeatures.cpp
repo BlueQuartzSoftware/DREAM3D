@@ -176,7 +176,7 @@ AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString FindNumFeatures::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

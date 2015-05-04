@@ -51,12 +51,10 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/TSL/AngReader.h"
-
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
@@ -76,7 +74,7 @@
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
-#include "QtSupport/PoleFigureImageUtilities.h"
+#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -527,7 +525,7 @@ AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

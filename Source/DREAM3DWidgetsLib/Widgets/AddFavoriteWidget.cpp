@@ -109,38 +109,6 @@ void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
   QFileInfo fileInfo(prefPath);
   bool pathExists = fileInfo.exists();
 
-#if 0
-  if ( favoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d\\s]")) )
-  {
-    QString displayText = "The name of the Favorite that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
-    displayText = displayText + "\n\nNo special characters allowed due to file system restrictions";
-    // Display error message
-    int reply = QMessageBox::critical(this, tr("Add New Favorite"), tr(displayText.toLatin1().data()),
-                                      QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-    if(reply == QMessageBox::Cancel)
-    {
-      done = true;
-      favoriteTitle = "";
-    }
-  }
-  else if (prefFileInfo.exists() == true)
-  {
-    QString displayText = "A favorite with that name already exists.  Please choose a different favorite name.";
-    // Display error message
-    int reply = QMessageBox::critical(this, tr("Add New Favorite"), tr(displayText.toLatin1().data()),
-                                      QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-    if(reply == QMessageBox::Cancel)
-    {
-      done = true;
-      favoriteTitle = "";
-    }
-  }
-  else
-  {
-    done = true;
-  }
-#endif
-
   if (text.isEmpty())
   {
     addFavoriteOKBtn->setEnabled(false);
@@ -192,7 +160,7 @@ void AddFavoriteWidget::revertToDefault()
   addFavoriteOverwriteBtn->setHidden(true);
   errorMessageDisplay->setTextFormat(Qt::PlainText);
   errorMessageDisplay->setTextInteractionFlags(Qt::NoTextInteraction);
-  errorMessageDisplay->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
+  errorMessageDisplay->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
 }
 
 // -----------------------------------------------------------------------------

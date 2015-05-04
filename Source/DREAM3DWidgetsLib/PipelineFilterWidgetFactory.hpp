@@ -53,7 +53,6 @@ class PipelineFilterWidgetFactory : public IFilterWidgetFactory
 
     virtual ~PipelineFilterWidgetFactory()
     {
-      qDebug() << "~PipelineFilterWidgetFactory()" << this;
     }
 
     /**

@@ -58,6 +58,8 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
@@ -77,7 +79,7 @@
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
-#include "QtSupport/PoleFigureImageUtilities.h"
+#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -378,7 +380,7 @@ AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

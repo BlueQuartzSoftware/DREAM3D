@@ -47,6 +47,7 @@
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -580,7 +581,7 @@ AbstractFilter::Pointer EddyCurrentDataReader::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString EddyCurrentDataReader::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

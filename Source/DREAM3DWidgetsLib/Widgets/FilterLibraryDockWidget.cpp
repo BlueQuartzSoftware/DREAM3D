@@ -44,6 +44,8 @@
 
 #include "FilterListDockWidget.h"
 
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+
 #include "DREAM3DWidgetsLib/moc_FilterLibraryDockWidget.cpp"
 
 #define LIBRARY_NODE_TYPE 0
@@ -55,7 +57,9 @@
 //
 // -----------------------------------------------------------------------------
 FilterLibraryDockWidget::FilterLibraryDockWidget(QWidget* parent) :
-  QDockWidget(parent)
+  QDockWidget(parent),
+  m_ContextMenu(new QMenu(this)),
+  m_Mapper(NULL)
 {
   setupUi(this);
   setupGui();
@@ -166,6 +170,9 @@ void FilterLibraryDockWidget::setupGui()
               }");
   filterLibraryTree->setStyleSheet(css);
 
+  filterLibraryTree->setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(filterLibraryTree, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenuForWidget(const QPoint&)));
 }
 
 
@@ -183,6 +190,45 @@ void FilterLibraryDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem*
 void FilterLibraryDockWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryDockWidget::showContextMenuForWidget(const QPoint &pos)
+{
+  QTreeWidgetItem* item = filterLibraryTree->itemAt(pos);
+
+  if (NULL != item && item->childCount() == 0)
+  {
+    // Clear the existing context menu
+    m_ContextMenu->clear();
+
+    QString itemName = item->text(0);
+
+    m_Mapper = new QSignalMapper(this);
+
+    QAction* actionLaunchHelp = new QAction(m_ContextMenu);
+    actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
+    actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
+    connect(actionLaunchHelp, SIGNAL(triggered()),
+      m_Mapper, SLOT(map()));
+    m_Mapper->setMapping(actionLaunchHelp, itemName);
+    connect(m_Mapper, SIGNAL(mapped(QString)),
+      this, SLOT(launchHelpForItem(QString)));
+
+    m_ContextMenu->addAction(actionLaunchHelp);
+    m_ContextMenu->exec(QCursor::pos());
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryDockWidget::launchHelpForItem(QString name)
+{
+  // Launch the dialog
+  DREAM3DUserManualDialog::LaunchHelpDialog(name);
 }
 
 // -----------------------------------------------------------------------------

@@ -153,7 +153,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuilding::SyntheticBuildingPluginDisplayName + " Filter"; }
+    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     /**

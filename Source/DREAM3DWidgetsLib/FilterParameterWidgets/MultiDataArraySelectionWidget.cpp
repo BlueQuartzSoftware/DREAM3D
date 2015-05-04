@@ -41,7 +41,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 

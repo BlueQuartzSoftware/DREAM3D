@@ -49,6 +49,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -339,7 +340,7 @@ void ReadAngData::execute()
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getCompiledLibraryName()
 {
-  return OrientationAnalysis::OrientationAnalysisBaseName;
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
 

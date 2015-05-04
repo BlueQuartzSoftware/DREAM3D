@@ -4,6 +4,8 @@
  <!--  These have HiDPI resources  -->
   <file>delete2.png</file>
   <file>delete2@2x.png</file>
+  <file>delete.png</file>
+  <file>delete@2x.png</file>
   <file>add2.png</file>
   <file>add2@2x.png</file>
   <file>folder_blue.png</file>
@@ -25,10 +27,19 @@
   <file>zoom_in@2x.png</file>
   <file>zoom_out.png</file>
   <file>zoom_out@2x.png</file>
+  <file>search_menu.png</file>
+  <file>search_menu@2x.png</file>
+
+  <file>cubes_blue_add.png</file>
+  <file>cubes_blue_add@2x.png</file>
+
+  <file>cube_blue_add.png</file>
+  <file>cube_blue_add@2x.png</file>
 
 <!-- These are low res icons -->
   <file>Groups/cubes.png</file>
   <file>Groups/cubes@2x.png</file>
+
   <file>Groups/Generic_Icon.png</file>
   <file>Groups/Processing_Icon.png</file>
   <file>Groups/Reconstruction_Icon.png</file>
@@ -39,6 +50,19 @@
   <file>Groups/SyntheticBuilding_Icon.png</file>
   <file>Groups/Plugin_Icon.png</file>
   <file>Groups/IO_Icon.png</file>
+  <file>Groups/OrientationAnalysis_Icon.png</file>
+
+  <file>Groups/Generic_Icon@2x.png</file>
+  <file>Groups/Processing_Icon@2x.png</file>
+  <file>Groups/Reconstruction_Icon@2x.png</file>
+  <file>Groups/Sampling_Icon@2x.png</file>
+  <file>Groups/SolidMeshing_Icon@2x.png</file>
+  <file>Groups/Statistics_Icon@2x.png</file>
+  <file>Groups/SurfaceMeshing_Icon@2x.png</file>
+  <file>Groups/SyntheticBuilding_Icon@2x.png</file>
+  <file>Groups/Plugin_Icon@2x.png</file>
+  <file>Groups/IO_Icon@2x.png</file>
+  <file>Groups/OrientationAnalysis_Icon@2x.png</file>
 
   <file>QFilterWidgetHeaders/Generic_Header.png</file>
   <file>QFilterWidgetHeaders/IO_Header.png</file>
@@ -69,7 +93,16 @@
 
 
   <file>bullet_ball_blue.png</file>
+  <file>bullet_ball_blue@2x.png</file>
   <file>bullet_ball_yellow.png</file>
+  <file>bullet_ball_yellow@2x.png</file>
+  <file>bullet_ball_green.png</file>
+  <file>bullet_ball_green@2x.png</file>
+  <file>bullet_ball_red.png</file>
+  <file>bullet_ball_red@2x.png</file>
+
+
+
   <file>delete-corner-pressed.png</file>
   <file>delete-corner.png</file>
  
@@ -77,9 +110,21 @@
   <file>fitToWindow.png</file>
   <file>minus.png</file>
   <file>plus.png</file>
-  <file>red-dot.png</file>
-  <file>green-dot.png</file>
+
  
   <file>cube_gray.png</file>
+  <file>cube_gray@2x.png</file>
+
+  <file>nav_right_blue.png</file>
+  <file>nav_right_blue@2x.png</file>
+  <file>nav_left_blue.png</file>
+  <file>nav_left_blue@2x.png</file>
+  <file>nav_refresh_blue.png</file>
+  <file>nav_refresh_blue@2x.png</file>
+
+    <file>navigate_cross.png</file>
+  <file>navigate_cross@2x.png</file>
+  
+
  </qresource>
  </RCC>

@@ -933,7 +933,7 @@ AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString MatchCrystallography::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

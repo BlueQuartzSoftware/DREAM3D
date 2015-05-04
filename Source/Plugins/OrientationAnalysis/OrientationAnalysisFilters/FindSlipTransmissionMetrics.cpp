@@ -285,7 +285,7 @@ AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString FindSlipTransmissionMetrics::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

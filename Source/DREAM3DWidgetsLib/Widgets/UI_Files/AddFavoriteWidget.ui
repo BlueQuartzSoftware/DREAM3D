@@ -156,7 +156,7 @@
   <customwidget>
    <class>QFSDropLabel</class>
    <extends>QLabel</extends>
-   <header>QtSupport/QFSDropLabel.h</header>
+   <header>QtSupportLib/QFSDropLabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

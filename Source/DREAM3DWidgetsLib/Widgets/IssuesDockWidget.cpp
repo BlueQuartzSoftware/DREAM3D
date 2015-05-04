@@ -41,7 +41,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QTableWidgetItem>
 
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 
 #include "DREAM3DWidgetsLib/moc_IssuesDockWidget.cpp"

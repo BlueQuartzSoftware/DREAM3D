@@ -244,7 +244,7 @@ AbstractFilter::Pointer UncertainRegularGridSampleSurfaceMesh::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName()
-{ return Sampling::SamplingBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -56,7 +56,7 @@
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
-#include "QtSupport/QRecentFileList.h"
+#include "QtSupportLib/QRecentFileList.h"
 
 #include "AboutPlugins.h"
 #include "DREAM3D_UI.h"
@@ -83,6 +83,7 @@ BrandedInitializer::~BrandedInitializer()
   delete this->MainWindow;
   this->MainWindow = NULL;
 
+  /*
   for(int i = 0; i < m_PluginLoaders.size(); i++)
   {
     qDebug() << "Unloading Plugin " << m_PluginLoaders.at(i)->fileName();
@@ -90,6 +91,7 @@ BrandedInitializer::~BrandedInitializer()
     delete m_PluginLoaders[i]; // Delete the QPluginLoader object
     m_PluginLoaders[i] = NULL;
   }
+  */
 }
 
 // -----------------------------------------------------------------------------
@@ -109,7 +111,6 @@ void delay(int seconds)
 // -----------------------------------------------------------------------------
 bool BrandedInitializer::initialize(int argc, char* argv[])
 {
-
   QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
 
   // Create and show the splash screen as the main window is being created.
@@ -142,10 +143,25 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   QVector<IDREAM3DPlugin*> plugins = loadPlugins();
 
   // Create main window.
-  this->MainWindow = new DREAM3D_UI();
-
-  this->MainWindow->setWindowTitle("[*] DREAM3D Version " + DREAM3DLib::Version::Package());
+  this->MainWindow = new DREAM3D_UI(NULL);
+  this->MainWindow->setWindowTitle("[*]UntitledPipeline - DREAM3D");
   this->MainWindow->setLoadedPlugins(plugins);
+
+  // Open pipeline if DREAM3D was opened from a compatible file
+  if (argc == 2)
+  {
+    char* two = argv[1];
+    QString filePath = QString::fromLatin1(two);
+    QFileInfo fi(filePath);
+    int err = this->MainWindow->getPipelineViewWidget()->openPipeline(filePath);
+
+    // If the pipeline was read correctly, change the title
+    if (err >= 0)
+    {
+      this->MainWindow->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
+      this->MainWindow->setWindowModified(false);
+    }
+  }
 
   // give GUI components time to update before the mainwindow is shown
   QApplication::instance()->processEvents();

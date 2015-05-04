@@ -567,7 +567,7 @@ AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString InsertAtoms::getCompiledLibraryName()
-{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
 
 // -----------------------------------------------------------------------------

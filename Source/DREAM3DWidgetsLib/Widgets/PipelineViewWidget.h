@@ -51,13 +51,13 @@
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
-#include "QtSupport/DREAM3DFileDragMessageBox.h"
-
+#include "QtSupportLib/FileDragMessageBox.h"
 
 class QScrollArea;
 class QContextMenuEvent;
@@ -98,6 +98,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @return
      */
     FilterPipeline::Pointer getFilterPipeline();
+
+    /**
+    * @brief getStatusBar
+    * @return
+    */
+    QStatusBar* getStatusBar();
 
     /**
      * @brief Returns a FilterPipeline Object with a new filter instance that has the input parameters copied
@@ -152,12 +158,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @return
      */
     bool shouldAutoScroll(const QPoint& pos);
-
-    /**
-     * @brief setInputParametersWidget
-     * @param w
-     */
-    void setInputParametersWidget(QWidget* w);
 
     /**
      * @brief newEmptyPipelineViewLayout
@@ -241,20 +241,22 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void doAutoScroll();
 
     /**
-     * @brief loadPipelineFile
-     * @param filePath
-     * @param format
-     * @param append
-     */
-    void loadPipelineFile(const QString& filePath, QSettings::Format format = QSettings::IniFormat, bool append = false);
-
-    /**
-     * @brief savePipeline Saves the pipeline to the file. If the file exists this function will <b>DELETE</b> the pipeline
+     * @brief savePipelineToFavorite Saves the pipeline to the file. If the file exists this function will <b>DELETE</b> the pipeline
      * before saving this pipeline. MAKE SURE YOU UNDERSTAND THIS before using this function
      * @param filePath The absolute path to the pipeline file
      * @param name The name that will be used for display purposes
      */
-    void savePipeline(const QString& filePath, const QString& name, QSettings::Format = QSettings::IniFormat);
+    void updateFavorite(const QString& filePath, const QString& name, QSettings::Format = QSettings::IniFormat);
+
+    /**
+    * @brief Write pipeline to a file
+    */
+    void writePipeline(QString filePath);
+
+    /**
+    * @brief Open pipeline to a file
+    */
+    int openPipeline(const QString &filePath, ExtractionType type = Replace);
 
     /**
      * @brief onCustomContextMenuRequested
@@ -268,12 +270,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void reindexWidgetTitles();
 
     /**
-     * @brief extractPipelineFromFile
-     * @param filePath
-     */
-    void extractPipelineFromFile(const QString& filePath, ExtractionType type);
-
-    /**
      * @brief addDREAM3DReaderFilter
      * @param filePath
      */
@@ -281,10 +277,10 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
 
     /**
      * @brief readPipelineFromFile
-     * @param fileId
-     * @return
+     * @param filePath
+     * @return FilterPipeline::Pointer
      */
-    int readPipelineFromFile(hid_t fileId);
+    FilterPipeline::Pointer readPipelineFromFile(const QString& filePath);
 
 
   signals:
@@ -299,6 +295,11 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void pipelineTitleUpdated(QString name);
     void pipelineChanged();
 
+    void filterInputWidgetChanged(FilterInputWidget* widget);
+    void noFilterWidgetsInPipeline();
+
+    void filterParameterChanged();
+
   protected:
     void setupGui();
     void dragEnterEvent(QDragEnterEvent* event);
@@ -307,6 +308,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void dropEvent(QDropEvent* event);
 
     void showContextMenu(const QPoint& globalPos);
+
+  protected slots:
+    void handleFilterParameterChanged();
 
   private:
     PipelineFilterWidget*     m_SelectedFilterWidget;

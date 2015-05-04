@@ -257,7 +257,7 @@ AbstractFilter::Pointer InitializeData::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString InitializeData::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

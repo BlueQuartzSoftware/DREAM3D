@@ -25,15 +25,16 @@ set(PROJECT_PREFIX "PluginMakerProj")
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
 set(PluginMaker_SRCS
-    ${PluginMaker_SOURCE_DIR}/main.cpp
+  ${PluginMaker_SOURCE_DIR}/main.cpp
   ${PluginMaker_SOURCE_DIR}/PluginMaker.cpp
+  ${PluginMaker_SOURCE_DIR}/FilterMaker.cpp
+  ${PluginMaker_SOURCE_DIR}/DevHelper.cpp
+  ${PluginMaker_SOURCE_DIR}/AddFilterParameter.cpp
   ${PluginMaker_SOURCE_DIR}/HelpWidget.cpp
   ${PluginMaker_SOURCE_DIR}/PMDirGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/PMFileGenerator.cpp
-  ${PluginMaker_SOURCE_DIR}/PMFilterGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/AddFilterWidget.cpp
   ${PluginMaker_SOURCE_DIR}/FilterBundler.cpp
-#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.cpp
   )
 
 SET(PluginMaker_HDRS
@@ -43,28 +44,109 @@ SET(PluginMaker_HDRS
 
 SET(PluginMaker_MOC_HDRS
     ${PluginMaker_SOURCE_DIR}/PluginMaker.h
-  ${PluginMaker_SOURCE_DIR}/HelpWidget.h
+    ${PluginMaker_SOURCE_DIR}/FilterMaker.h
+    ${PluginMaker_SOURCE_DIR}/DevHelper.h
+    ${PluginMaker_SOURCE_DIR}/AddFilterParameter.h
+    ${PluginMaker_SOURCE_DIR}/HelpWidget.h
     ${PluginMaker_SOURCE_DIR}/PMDirGenerator.h
     ${PluginMaker_SOURCE_DIR}/PMFileGenerator.h
-    ${PluginMaker_SOURCE_DIR}/PMFilterGenerator.h
-#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
   ${PluginMaker_SOURCE_DIR}/AddFilterWidget.h
   )
-cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS}" "${PluginMaker_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+
+set(PluginMaker_CodeGenerator_HDRS
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/CodeGenFactory.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AttributeMatrixSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AxisAngleWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/BooleanWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ChoiceWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ComparisonSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArrayCreationWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArraySelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataBundleSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerArrayProxyWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerReaderWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerSelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DoubleWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicChoiceWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicTableWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FileListInfoWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec3WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec4WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FourthOrderPolynomialWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FPCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputFileWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputPathWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntVec3WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/LinkedBooleanWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/MultiDataArraySelectionWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputFileWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputPathWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PreflightUpdatedValueWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SecondOrderPolynomialWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SeparatorWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/StringWidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/Symmetric6x6WidgetCodeGenerator.h
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ThirdOrderPolynomialWidgetCodeGenerator.h
+  )
+
+set(PluginMaker_CodeGenerator_SRCS
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/CodeGenFactory.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AttributeMatrixSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/AxisAngleWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/BooleanWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ChoiceWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ComparisonSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArrayCreationWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataArraySelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataBundleSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerArrayProxyWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerReaderWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DataContainerSelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DoubleWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicChoiceWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/DynamicTableWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FileListInfoWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec3WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FloatVec4WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FourthOrderPolynomialWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/FPCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputFileWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/InputPathWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntVec3WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/IntWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/LinkedBooleanWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/MultiDataArraySelectionWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputFileWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/OutputPathWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/PreflightUpdatedValueWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SecondOrderPolynomialWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/SeparatorWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/StringWidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/Symmetric6x6WidgetCodeGenerator.cpp
+  ${PluginMaker_SOURCE_DIR}/CodeGenerators/ThirdOrderPolynomialWidgetCodeGenerator.cpp
+  )
+
+cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS};${PluginMaker_CodeGenerator_HDRS}" "${PluginMaker_SRCS};${PluginMaker_CodeGenerator_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
 # The UI files As generated by Qt Designer
 SET(PluginMaker_UIS
   ${PluginMaker_SOURCE_DIR}/UI_Files/PluginMaker.ui
+  ${PluginMaker_SOURCE_DIR}/UI_Files/FilterMaker.ui
+  ${PluginMaker_SOURCE_DIR}/UI_Files/DevHelper.ui
+  ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterParameter.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/HelpWidget.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterWidget.ui
-#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/UI_Files/ApplicationAboutBoxDialog.ui
+#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib/UI_Files/ApplicationAboutBoxDialog.ui
   )
 
 cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
 
 # and finally any resource files
 # SET(PluginMaker_RCS ${PluginMaker_SOURCE_DIR}/Templates.qrc)
-SET(PluginMaker_RCS "")
+SET(PluginMaker_RCS
+    ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
+)
 
 # -- Run MOC and UIC on the necessary files
 QT5_ADD_RESOURCES( PluginMaker_Generated_RC_SRCS ${PluginMaker_RCS} ${QRC_LICENSE_FILES})
@@ -83,18 +165,20 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${PluginMak
 # -- Finally set the Project Sources to include all the sources
 set(${PROJECT_NAME}_PROJECT_SRCS
   ${PluginMaker_SRCS}
-    ${PluginMaker_HDRS}
+  ${PluginMaker_HDRS}
   ${PluginMaker_MOC_HDRS}
-    ${PluginMaker_Generated_RC_SRCS}
-    ${PluginMaker_Generated_UI_HDRS}
-#    ${PluginMaker_Generated_MOC_SRCS}
+  ${PluginMaker_Generated_RC_SRCS}
+  ${PluginMaker_Generated_UI_HDRS}
+  ${PluginMaker_CodeGenerator_SRCS}
+  ${PluginMaker_CodeGenerator_HDRS}
+  #    ${PluginMaker_Generated_MOC_SRCS}
   )
 #message(STATUS "${PROJECT_NAME}_PROJECT_SRCS: ${${PROJECT_NAME}_PROJECT_SRCS}")
 include_directories(${PluginMaker_SOURCE_DIR} )
 include_directories(${PluginMaker_SOURCE_DIR}/.. )
 include_directories(${PluginMaker_BINARY_DIR} )
-include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
+include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib)
 
 
 if(APPLE)
@@ -119,7 +203,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES QtSupport
+    LINK_LIBRARIES QtSupportLib
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     QT5_MODULES   ${Qt5_COMPONENTS}
     COMPONENT     Applications

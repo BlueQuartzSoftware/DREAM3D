@@ -394,7 +394,7 @@ AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceIPFColoring::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -168,7 +168,7 @@ AbstractFilter::Pointer FindBoundaryAreas::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryAreas::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------

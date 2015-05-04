@@ -56,7 +56,7 @@
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 #include "DREAM3DLib/StatsData/TransformationStatsData.h"
 
-#include "QtSupport/PoleFigureImageUtilities.h"
+#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;

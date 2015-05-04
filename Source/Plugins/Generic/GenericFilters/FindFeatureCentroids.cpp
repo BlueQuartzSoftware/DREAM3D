@@ -227,7 +227,7 @@ AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureCentroids::getCompiledLibraryName()
-{ return Generic::GenericBaseName; }
+{ return GenericConstants::GenericBaseName; }
 
 
 // -----------------------------------------------------------------------------

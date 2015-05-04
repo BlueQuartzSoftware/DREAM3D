@@ -41,9 +41,9 @@
 
 enum FileType
 {
-	CMAKELISTS,
-	TESTFILELOCATIONS,
-	DEFAULT
+  CMAKELISTS,
+  TESTFILELOCATIONS,
+  DEFAULT
 };
 
 /*
@@ -64,19 +64,41 @@ class PMFileGenerator : public PMDirGenerator
 
     QString getFileName();
 
+    void setSetupFPContents(QString contents);
+    void setReadFPContents(QString contents);
+    void setWriteFPContents(QString contents);
+    void setDataCheckContents(QString contents);
+    void setFPContents(QString contents);
+    void setInitListContents(QString contents);
+    void setFilterHIncludesContents(QString contents);
+    void setFilterCPPIncludesContents(QString contents);
+
     virtual QString generateFileContents(QString replaceStr = "");
 
-	QString createReplacementString(FileType type, QSet<QString> names);
+  QString createReplacementString(FileType type, QSet<QString> names);
+
+  public slots:
+    virtual void generateOutput();
 
   protected slots:
     virtual void pluginNameChanged (const QString& plugname);
     virtual void outputDirChanged (const QString& outputDir);
-    virtual void generateOutput();
-	virtual void generateOutputWithFilterNames(QSet<QString> names);
+  virtual void generateOutputWithFilterNames(QSet<QString> names);
+
+protected:
+  QString setupFPContents;
+  QString fpContents;
+  QString readFPContents;
+  QString writeFPContents;
+  QString dataCheckContents;
+  QString initListContents;
+  QString filterHIncludesContents;
+  QString filterCPPIncludesContents;
 
   private:
     QString m_FileName;
 
+    QString getFileContents(QString replaceStr);
 };
 
 #endif /* PMFILEGENERATOR_H_ */

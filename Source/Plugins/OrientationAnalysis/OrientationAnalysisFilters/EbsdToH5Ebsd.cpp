@@ -60,8 +60,8 @@
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -594,7 +594,7 @@ AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

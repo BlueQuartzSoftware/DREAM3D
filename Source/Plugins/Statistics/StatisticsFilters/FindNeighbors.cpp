@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 #include "StatisticsConstants.h"
 
@@ -413,7 +414,7 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getCompiledLibraryName()
-{ return Statistics::StatisticsBaseName; }
+{ return StatisticsConstants::StatisticsBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -56,6 +56,8 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "OrientationLib/OrientationOps/CubicOps.h"
@@ -63,7 +65,7 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
-#include "QtSupport/PoleFigureImageUtilities.h"
+#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 
 
@@ -364,7 +366,7 @@ AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getCompiledLibraryName()
-{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -48,6 +48,7 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "IO/IOConstants.h"
@@ -263,7 +264,7 @@ AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString LosAlamosFFTWriter::getCompiledLibraryName()
-{ return IO::IOBaseName; }
+{ return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------

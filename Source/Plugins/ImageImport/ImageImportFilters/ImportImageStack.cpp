@@ -49,6 +49,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 
@@ -387,7 +388,7 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString ImportImageStack::getCompiledLibraryName()
-{ return ImageImport::ImageImportBaseName; }
+{ return ImageImportConstants::ImageImportBaseName; }
 
 
 // -----------------------------------------------------------------------------

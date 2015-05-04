@@ -40,7 +40,9 @@
 
 #include <QtWidgets/QFileDialog>
 
-#include "QtSupport/QFileCompleter.h"
+#include "QtSupportLib/QFileCompleter.h"
+
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 

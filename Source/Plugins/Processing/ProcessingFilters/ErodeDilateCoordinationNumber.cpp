@@ -312,7 +312,7 @@ AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateCoordinationNumber::getCompiledLibraryName()
-{ return Processing::ProcessingBaseName; }
+{ return ProcessingConstants::ProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

@@ -473,7 +473,7 @@ AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString LaplacianSmoothing::getCompiledLibraryName()
-{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

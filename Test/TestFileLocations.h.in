@@ -162,6 +162,11 @@ namespace UnitTest
       const QString SyntheticOutputFile3("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut3.dream3d");
       const QString SyntheticOutputFile4("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut4.dream3d");
   }
+
+  namespace FilterParametersRWTest
+  {
+      const QString OutputFile("@TEST_TEMP_DIR@/FilterParametersRWTest/OutputFile.json");
+  }
 }
 
 #endif

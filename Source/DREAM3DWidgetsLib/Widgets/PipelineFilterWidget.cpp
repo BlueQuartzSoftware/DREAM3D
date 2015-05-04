@@ -51,18 +51,23 @@
 #include <QtWidgets/QFileDialog>
 
 
-#include "QtSupport/DREAM3DStyles.h"
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/DREAM3DStyles.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/LinkedBooleanWidget.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+
 
 
 #define PADDING 5
@@ -93,7 +98,9 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_BasicInputsWidget(NULL),
   m_AdvancedInputWidget(NULL),
   m_CurrentStructureWidget(NULL),
-  m_Observer(NULL)
+  m_Observer(NULL),
+  m_ContextMenu(NULL),
+  m_FilterInputWidget(NULL)
 {
   initialize(AbstractFilter::NullPointer());
 }
@@ -108,9 +115,13 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
   m_HasPreflightWarnings(false),
   m_BasicInputsWidget(NULL),
   m_AdvancedInputWidget(NULL),
-  m_Observer(observer)
+  m_Observer(observer),
+  m_ContextMenu(new QMenu(this)),
+  m_FilterInputWidget(NULL)
 {
   initialize(filter);
+
+  setupFilterInputWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -121,8 +132,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
   setContextMenuPolicy(Qt::CustomContextMenu);
 
-  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-          this, SLOT(showCustomContextMenu(const QPoint&)));
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenuForWidget(const QPoint&)));
 
   setupUi(this);
 
@@ -146,6 +156,18 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineFilterWidget::setupFilterInputWidget()
+{
+  // Instantiate the filter input widget object
+  m_FilterInputWidget = new FilterInputWidget(this);
+
+  // Initialize the filter input widget with values
+  m_FilterInputWidget->displayFilterParameters(this);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineFilterWidget::layoutWidgets()
 {
   // Make sure the m_Filter is Non NULL
@@ -157,6 +179,7 @@ void PipelineFilterWidget::layoutWidgets()
   // If the filter is valid then instantiate all the FilterParameterWidgets
   // Create the Widget that will be placed into the Basic Inputs Scroll Area
   m_BasicInputsWidget = new QWidget(this);
+
   QString basicname = QString::fromUtf8("basicInputsScrollWidget1_") + m_Filter->getNameOfClass();
   m_BasicInputsWidget->setObjectName(basicname);
   m_BasicInputsWidget->setGeometry(QRect(0, 0, 250, 267));
@@ -212,6 +235,8 @@ void PipelineFilterWidget::layoutWidgets()
     // Connect up some signals and slots
     connect(w, SIGNAL(parametersChanged() ),
             parent(), SLOT(preflightPipeline() ) );
+    connect(w, SIGNAL(parametersChanged()),
+      this, SLOT(handleFilterParameterChanged()));
     connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
             this, SLOT(displayFilterParameterWidgetError(const QString&)));
 
@@ -230,6 +255,16 @@ void PipelineFilterWidget::layoutWidgets()
   //  curStructName = QString::fromUtf8("verticalLayout3");
   //  m_CurrStrucVerticalLayout->setObjectName(curStructName);
 
+}
+
+// -----------------------------------------------------------------------------
+//  CONNECT - PipelineFilterWidget::layoutWidgets()
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::handleFilterParameterChanged()
+{
+  /* SLOT - PipelineViewWidget::handleFilterParameterChanged()
+     CONNECT - PipelineViewWidget::addFilter(...) */
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -424,14 +459,6 @@ PipelineFilterWidget::~PipelineFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::on_helpBtn_clicked()
-{
-  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( m_Filter->getNameOfClass().toLower(), this );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString PipelineFilterWidget::getHumanLabel()
 {
   if (NULL != m_Filter.get())
@@ -575,7 +602,7 @@ void PipelineFilterWidget::changeStyle()
   }
   else if(m_IsSelected == true )
   {
-    ss << "border: 3px solid purple;";
+    ss << "border: 2px solid purple;";
   }
   else
   {
@@ -599,7 +626,8 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   if (m_HasPreflightErrors == true)
   {
-    ss << "background-color: rgb(180, 60, 60);\ncolor: rgb(255, 255, 255);";
+    //ss << "background-color: rgb(200, 75, 75);\ncolor: rgb(255, 255, 255);";
+    ss << "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(180, 55, 55, 255), stop:0.5 rgba(235, 110, 110, 255), stop:1 rgba(180, 55, 55, 255));\n";
   }
   else
   {
@@ -610,7 +638,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   ss << getBorderColorStyle();
 
-  ss << "border-radius: 10px;";
+  ss << "border-radius: 8px;";
   ss << "padding: 0 0 0 0px;";
   ss << "}\n";
 
@@ -626,7 +654,7 @@ void PipelineFilterWidget::updateWidgetStyle()
   ss << "font-weight: bold; ";
   if (m_HasPreflightErrors == true)
   {
-    ss << "color: rgb(255, 255, 255);";
+    ss << "color: rgb(0, 0, 0);";
   }
   ss << "}\n";
 
@@ -759,34 +787,50 @@ void PipelineFilterWidget::on_deleteBtn_clicked()
   emit filterWidgetRemoved(this);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::setContextMenuActions(QList<QAction*> list)
+void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
 {
-  m_MenuActions = list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineFilterWidget::showCustomContextMenu(const QPoint& pos)
-{
-  // Note: We must map the point to global from the viewport to
-  // account for the header.
-  showContextMenu(mapToGlobal(pos) );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineFilterWidget::showContextMenu(const QPoint& globalPos)
-{
-  m_Menu.clear();
-  for (int i = 0; i < m_MenuActions.size(); i++)
+  if (NULL != getFilter())
   {
-    m_Menu.addAction(m_MenuActions[i]);
+    // Clear the existing context menu
+    m_ContextMenu->clear();
+
+    QAction* actionLaunchHelp = new QAction(m_ContextMenu);
+    actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
+    actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
+    connect(actionLaunchHelp, SIGNAL(triggered()),
+      this, SLOT(launchHelpForItem()));
+
+    //QAction* actionLaunchHelp = new QAction(m_ContextMenu);
+    //actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
+    //actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
+    //connect(actionLaunchHelp, SIGNAL(triggered()),
+    //  this, SLOT(launchHelpForItem()));
+
+    m_ContextMenu->addAction(actionLaunchHelp);
+    m_ContextMenu->exec(QCursor::pos());
   }
-  m_Menu.exec(globalPos);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::launchHelpForItem()
+{
+  QString name = getFilter()->getHumanLabel();
+
+  // Launch the dialog
+  DREAM3DUserManualDialog::LaunchHelpDialog(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterInputWidget* PipelineFilterWidget::getFilterInputWidget()
+{
+  return m_FilterInputWidget;
+}
+
+

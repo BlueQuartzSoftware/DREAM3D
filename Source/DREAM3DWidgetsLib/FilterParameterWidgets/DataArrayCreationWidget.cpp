@@ -128,6 +128,10 @@ void DataArrayCreationWidget::setupGui()
 
   connect(dataArrayName, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&)));
+  connect(attributeMatrixList, SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(widgetChanged(const QString&)));
+  connect(dataContainerList, SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(widgetChanged(const QString&)));
 
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);

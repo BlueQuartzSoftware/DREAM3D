@@ -665,7 +665,7 @@ int CorrelateValuesWithVectorDirection::writeCoords(FILE* f, const char* axis, c
 // -----------------------------------------------------------------------------
 const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName()
 {
-  return Statistics::StatisticsBaseName;
+  return StatisticsConstants::StatisticsBaseName;
 }
 
 

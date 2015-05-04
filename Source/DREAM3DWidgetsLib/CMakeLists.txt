@@ -118,7 +118,7 @@ set_source_files_properties( ${DREAM3DWidgetsLib_Generated_MOC_SRCS} PROPERTIES 
 
 
 # -- Run MOC and UIC on the necessary files
-# QT5_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
+QT5_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Resources/icons/images/icons.qrc"  )
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
@@ -168,8 +168,8 @@ set(Project_SRCS
 # --------------------------------------------------------------------
 # Set some Include directories
 include_directories(${PROJECT_CODE_DIR})
-include_directories(${PROJECT_CODE_DIR}/QtSupport)
-include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
+include_directories(${PROJECT_CODE_DIR}/QtSupportLib)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/..)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets)
@@ -184,7 +184,9 @@ add_library(DREAM3DWidgetsLib ${LIB_TYPE} ${Project_SRCS})
 target_link_libraries(DREAM3DWidgetsLib
                     Qt5::Core
                     Qt5::Gui Qt5::Widgets
-                    QtSupport
+                    Qt5::WebKit
+                    Qt5::WebKitWidgets
+                    QtSupportLib
                     DREAM3DLib
 )
 

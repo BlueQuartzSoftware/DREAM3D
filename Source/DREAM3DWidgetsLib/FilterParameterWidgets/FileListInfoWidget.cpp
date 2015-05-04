@@ -42,8 +42,9 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
 
-#include "QtSupport/QFileCompleter.h"
+#include "QtSupportLib/QFileCompleter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 

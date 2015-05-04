@@ -20,6 +20,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -320,7 +321,7 @@ void MultiEmmpmFilter::execute()
 // -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getCompiledLibraryName()
 {
-  return EMMPMPlugin::EMMPMBaseName;
+  return EMMPMConstants::EMMPMBaseName;
 }
 
 // -----------------------------------------------------------------------------
