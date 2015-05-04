@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParame
   private:
     QJsonObject m_Root;
     QJsonObject m_CurrentFilterIndex;
-    int currentIndex;
+    int         m_CurrentIndex;
 
     JsonFilterParametersWriter(const JsonFilterParametersWriter&); // Copy Constructor Not Implemented
     void operator=(const JsonFilterParametersWriter&); // Operator '=' Not Implemented
