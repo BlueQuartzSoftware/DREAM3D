@@ -152,14 +152,17 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   {
     char* two = argv[1];
     QString filePath = QString::fromLatin1(two);
-    QFileInfo fi(filePath);
-    int err = this->MainWindow->getPipelineViewWidget()->openPipeline(filePath);
-
-    // If the pipeline was read correctly, change the title
-    if (err >= 0)
+    if (!filePath.isEmpty())
     {
-      this->MainWindow->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
-      this->MainWindow->setWindowModified(false);
+      QFileInfo fi(filePath);
+      int err = this->MainWindow->getPipelineViewWidget()->openPipeline(filePath);
+
+      // If the pipeline was read correctly, change the title
+      if (err >= 0)
+      {
+        this->MainWindow->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
+        this->MainWindow->setWindowModified(false);
+      }
     }
   }
 
