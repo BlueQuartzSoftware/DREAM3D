@@ -41,7 +41,6 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/Geometry/ShapeOps/ShapeOps.h"
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
