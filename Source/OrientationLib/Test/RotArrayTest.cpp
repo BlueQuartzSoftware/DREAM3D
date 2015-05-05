@@ -24,7 +24,7 @@ using namespace DREAM3D::Constants;
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Math/OrientationArray.hpp"
-#include "OrientationLib/Math/OrientationTransforms.h"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 
 
 #include "OrientationLib/Test/OrientationLibTestFileLocations.h"
@@ -84,14 +84,14 @@ void Test_eu_check()
     typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
     FloatOrientationArray_t eu_r(3);
-    eu_r[0] = 1.0f;
-    eu_r[1] = 0.4f;
-    eu_r[2] = 0.9f;
-    result = OrientationTransformType::eu_check(eu_r);
-    DREAM3D_REQUIRE_EQUAL(result.result, 1);
-    eu_r[0] = -1.0;
+    eu_r[0] = 0.81585413f;
+    eu_r[1] = 5.285555f;
+    eu_r[2] = 0.8661895f;
     result = OrientationTransformType::eu_check(eu_r);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
+    eu_r[1] = eu_r[1] - DREAM3D::Constants::k_Pi;
+    result = OrientationTransformType::eu_check(eu_r);
+    DREAM3D_REQUIRE_EQUAL(result.result, 1);
   }
   {
     typedef std::vector<float> FloatVectorType;

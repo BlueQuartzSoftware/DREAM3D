@@ -47,7 +47,7 @@ AddDREAM3DUnitTest(TESTNAME RotArrayTest
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
-AddDREAM3DUnitTest(TESTNAME OrientationConvertorTest 
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationConvertorTest.cpp
+AddDREAM3DUnitTest(TESTNAME OrientationConverterTest 
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationConverterTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})

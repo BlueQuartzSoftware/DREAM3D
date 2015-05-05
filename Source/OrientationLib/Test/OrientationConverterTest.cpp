@@ -1,4 +1,34 @@
-
+/* ============================================================================
+ * Copyright (c) 2015 BlueQuartz Softwae, LLC
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the BlueQuartz Software contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <stdio.h>
 
@@ -8,7 +38,7 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Math/OrientationConvertor.h"
+#include "OrientationLib/Math/OrientationConverter.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -45,8 +75,9 @@ void TestEulerConversion()
   eulers->setComponent(1, 1, 0.0f);
   eulers->setComponent(1, 2, 0.0f);
 
-  OrientationConvertor<float>* ocEulers = new EulerConvertor<float>(eulers);
-  ocEulers->convertRepresentationTo(OrientationConvertor<float>::Quaternion);
+  OrientationConverter<float>::Pointer ocEulers =  EulerConvertor<float>::New();
+  ocEulers->setInputData(eulers);
+  ocEulers->convertRepresentationTo(OrientationConverter<float>::Quaternion);
 
   FloatArrayType::Pointer output = ocEulers->getOutputData();
 
@@ -56,7 +87,7 @@ void TestEulerConversion()
     Print_QU(ptr);
   }
 
-  ocEulers->convertRepresentationTo(OrientationConvertor<float>::AxisAngle);
+  ocEulers->convertRepresentationTo(OrientationConverter<float>::AxisAngle);
   output = ocEulers->getOutputData();
 
   for(size_t i = 0; i < nTuples; i++)
@@ -88,16 +119,16 @@ void TestFilterDesign()
 
 
 
-  typedef OrientationConvertor<float> OCType;
-  QVector<OCType*> converters(7);
+  typedef OrientationConverter<float> OCType;
+  QVector<OCType::Pointer> converters(7);
 
-  converters[0] = new EulerConvertor<float>();
-  converters[1] = new OrientationMatrixConvertor<float>();
-  converters[2] = new QuaternionConvertor<float>();
-  converters[3] = new AxisAngleConvertor<float>();
-  converters[4] = new RodriguesConvertor<float>();
-  converters[5] = new HomochoricConvertor<float>();
-  converters[6] = new CubochoricConvertor<float>();
+  converters[0] = EulerConvertor<float>::New();
+  converters[1] = OrientationMatrixConvertor<float>::New();
+  converters[2] = QuaternionConvertor<float>::New();
+  converters[3] = AxisAngleConvertor<float>::New();
+  converters[4] = RodriguesConvertor<float>::New();
+  converters[5] = HomochoricConvertor<float>::New();
+  converters[6] = CubochoricConvertor<float>::New();
 
   QVector<OCType::OrientationType> ocTypes(7);
   ocTypes[0] = OCType::Euler;

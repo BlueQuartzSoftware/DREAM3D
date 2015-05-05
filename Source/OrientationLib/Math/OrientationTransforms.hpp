@@ -192,7 +192,10 @@ class OrientationTransforms
     } ResultType;
 
 
-    void FatalError(const std::string& func, const std::string& msg);
+    void FatalError(const std::string& func, const std::string& msg)
+    {
+      std::cout << func << "::" << msg << std::endl;
+    }
     /* ###################################################################
     * Copyright (c) 2013-2014, Marc De Graef/Carnegie Mellon University
     * All rights reserved.
@@ -488,20 +491,30 @@ class OrientationTransforms
     *
     * @date 9/30/14   MDG 1.0 original
     */
-    static ResultType qu_check(const T& qu)
+    static ResultType qu_check(const T& qu, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
     {
+      size_t w = 0, x = 1, y = 2, z = 3;
+      if(layout == QuaternionMath<K>::QuaternionVectorScalar)
+      {
+        w = 3;
+        x = 0;
+        y = 1;
+        z = 2;
+      }
+
       ResultType res;
       res.result = 1;
-      K eps = std::numeric_limits<K>::epsilon();
 
-      T out = SelfType::multiply(qu, qu);
-      K r = sqrt(SelfType::sum(out));
-      if (qu[0] < 0.0)
+      if (qu[w] < 0.0)
       {
         res.msg = "rotations:qu_check: quaternion must have positive scalar part";
         res.result = 0;
         return res;
       }
+
+      K eps = std::numeric_limits<K>::epsilon();
+      T out = SelfType::multiply(qu, qu);
+      K r = sqrt(SelfType::sum(out));
       if (std::abs(r - 1.0) > eps)
       {
         res.msg = "rotations:qu_check: quaternion must have unit norm";
