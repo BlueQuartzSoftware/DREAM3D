@@ -104,6 +104,25 @@ void FilterLibraryTreeWidget::onCustomContextMenuRequested(const QPoint& pos)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::mousePressEvent(QMouseEvent* event)
+{
+  if (event->button() == Qt::LeftButton)
+  {
+    QTreeWidgetItem* item = itemAt(event->pos());
+
+    if (NULL == item)
+    {
+      // Deselect the current item
+      clearSelection();
+      clearFocus();
+      setCurrentItem(NULL);
+    }
+  }
+  QTreeWidget::mousePressEvent(event);
+}
 
 // -----------------------------------------------------------------------------
 //

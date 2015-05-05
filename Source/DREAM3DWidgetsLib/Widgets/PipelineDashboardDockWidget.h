@@ -73,6 +73,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget,
     PipelineDashboardDockWidget(QWidget* parent = NULL);
     virtual ~PipelineDashboardDockWidget();
 
+    DREAM3D_INSTANCE_PROPERTY(QAction*, RenameAction)
     DREAM3D_INSTANCE_PROPERTY(QAction*, DeleteAction)
 
     /**
@@ -115,20 +116,19 @@ class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget,
 
   public slots:
     //// Slots to catch signals from main menu or context menu
-    void actionAddFavoriteFolder_triggered();
-    void actionAddFavorite_triggered();
-    void actionUpdateFavorite_triggered();
+    void m_ActionNewFolder_triggered();
+    void m_ActionAddPipeline_triggered();
+    void m_ActionUpdatePipeline_triggered();
     void removeFavorite(QTreeWidgetItem* item);
-    void actionRemoveFavorite_triggered();
-    void actionRenameFavorite_triggered();
-    void actionAppendFavorite_triggered();
-    void actionShowInFileSystem_triggered();
+    void m_ActionRemovePipeline_triggered();
+    void m_ActionRenamePipeline_triggered();
+    void m_ActionAddToPipelineView_triggered();
+    void m_ActionShowInFileSystem_triggered();
     void removeFavorite(QString favoritePath);
 
 
   protected:
 
-//   void addFavorite(QString path, QString favoriteTitle);
     virtual QDir findPipelinesDirectory();
     virtual void readPipelines();
     QStringList generateFilterListFromPipelineFile(QString path);
@@ -151,18 +151,20 @@ class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget,
      * @param favoritePath
      * @param allowEditing
      */
-    void addFavoriteTreeItem(QTreeWidgetItem* selection,
+    int addTreeItem(QTreeWidgetItem* selection,
                              QString& favoriteTitle,
                              QIcon icon,
                              FilterLibraryTreeWidget::ItemType itemType,
                              QString favoritePath,
-                             bool allowEditing);
+                             bool allowEditing,
+                             bool editState,
+                             bool isExpanded);
 
     /**
      * @brief addFavorite
      * @param folder Is the new favorite to be a folder or an actual pipeline file
      */
-    void addFavorite(bool folder);
+    void addPipeline(bool folder);
 
   protected slots:
     //// Slots to catch signals from the QTreeWidget
@@ -196,8 +198,28 @@ class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget,
      */
     void filterListGenerated(const QStringList& filterList, bool sort);
 
+    void updateStatusBar(const QString &msg);
+
   private:
     QString                 m_OpenDialogLastDirectory;
+
+    /**
+    * @brief getTreePathFromItem
+    * @param item
+    */
+    QString getTreePathFromItem(QTreeWidgetItem* item);
+
+    /**
+    * @brief getItemFromTreePath
+    * @param treePath
+    */
+    QTreeWidgetItem* getItemFromTreePath(QString treePath);
+
+    /**
+    * @brief serializeTreePath
+    * @param treePath
+    */
+    QList<QString> deserializeTreePath(QString treePath);
 
     PipelineDashboardDockWidget(const PipelineDashboardDockWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineDashboardDockWidget&); // Operator '=' Not Implemented

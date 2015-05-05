@@ -140,6 +140,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void setOpenedFilePath(const QString &filePath);
 
+    /**
+    * @brief setFilterBeingDragged
+    * @param w
+    */
+    void setStatusBarMessage(const QString &msg);
+
   protected slots:
 
     /* Menu Slots */
@@ -152,10 +158,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionExit_triggered();
 
     //Pipeline Menu
-//    void on_actionUpdatePipeline_triggered();
+//    void on_m_ActionUpdatePipeline_triggered();
 //    void on_actionSaveAsNewPipeline_triggered();
 //    void on_actionAppendToExistingPipeline_triggered();
-    void on_actionClearPipeline_triggered();
+    void clearPipeline();
 
     // Filter Menu
 //    void on_actionCopyCurrentFilter_triggered();
@@ -268,6 +274,36 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setupPipelineContextMenu();
 
     /**
+    * @brief
+    */
+    void initializeMenuActions();
+
+    /**
+    * @brief
+    */
+    void setupPipelineItemMenu();
+
+    /**
+    * @brief
+    */
+    void setupFolderMenu();
+
+    /**
+    * @brief
+    */
+    void setupDefaultMenu();
+
+    /**
+    * @brief
+    */
+    void setupPrebuiltsMenu();
+
+    /**
+    * @brief
+    */
+    void setupPipelineViewMenu();
+
+    /**
     * @brief 
     */
     void setupViewMenu();
@@ -372,6 +408,16 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     QString             m_OpenedFilePath;
     static QString    m_OpenDialogLastDirectory;
+
+    QAction* m_ActionAddPipeline;
+    QAction* m_ActionUpdatePipeline;
+    QAction* m_ActionRenamePipeline;
+    QAction* m_ActionAddToPipelineView;
+    QAction* m_ActionNewFolder;
+    QAction* m_ActionRemovePipeline;
+    QAction* m_ActionShowInFileSystem;
+    QAction* m_ActionClearPipeline;
+    QAction* m_ActionAppendPrebuilt;
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented

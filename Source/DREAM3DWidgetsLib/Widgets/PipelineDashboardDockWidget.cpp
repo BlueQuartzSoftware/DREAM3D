@@ -57,6 +57,10 @@
 
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 
+enum ErrorCodes {
+  UNRECOGNIZED_EXT = -1,
+  DUPLICATE_PIPELINE = -2
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -64,6 +68,7 @@
 PipelineDashboardDockWidget::PipelineDashboardDockWidget(QWidget* parent) :
   QDockWidget(parent),
   m_DeleteAction(NULL),
+  m_RenameAction(NULL),
   m_OpenDialogLastDirectory("")
 {
   setupUi(this);
@@ -432,13 +437,19 @@ void PipelineDashboardDockWidget::on_filterLibraryTree_currentItemChanged(QTreeW
     }
     else if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
     {
-      m_DeleteAction->setText("Delete Favorite Folder");
+      m_DeleteAction->setText("Remove Folder");
       m_DeleteAction->setVisible(true);
+
+      m_RenameAction->setText("Rename Folder");
+      m_RenameAction->setVisible(true);
     }
     else
     {
-      m_DeleteAction->setText("Delete Favorite");
+      m_DeleteAction->setText("Remove Pipeline");
       m_DeleteAction->setVisible(true);
+
+      m_RenameAction->setText("Rename Pipeline");
+      m_RenameAction->setVisible(true);
     }
   }
 }
@@ -569,17 +580,17 @@ QString PipelineDashboardDockWidget::writeNewFavoriteFilePath(QString newFavorit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::actionAddFavoriteFolder_triggered()
+void PipelineDashboardDockWidget::m_ActionNewFolder_triggered()
 {
-  addFavorite(true);
+  addPipeline(true);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::actionAddFavorite_triggered()
+void PipelineDashboardDockWidget::m_ActionAddPipeline_triggered()
 {
-  addFavorite(false);
+  addPipeline(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -609,7 +620,7 @@ QTreeWidgetItem* PipelineDashboardDockWidget::getSelectedParentTreeItem()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::addFavorite(bool folder)
+void PipelineDashboardDockWidget::addPipeline(bool folder)
 {
   QString proposedDir = m_OpenDialogLastDirectory;
   QList<QString> newPrefPaths;
@@ -631,7 +642,7 @@ void PipelineDashboardDockWidget::addFavorite(bool folder)
     itemType = FilterLibraryTreeWidget::Node_Item_Type;
     icon = QIcon(":/folder_blue.png");
 
-    addFavoriteTreeItem(selection, QString("New Folder"), icon, itemType, "", true);
+    addTreeItem(selection, QString("New Folder"), icon, itemType, "", true, true, false);
   }
   else
   {
@@ -644,7 +655,24 @@ void PipelineDashboardDockWidget::addFavorite(bool folder)
       newPrefPath = QDir::toNativeSeparators(newPrefPath);
       QFileInfo fi(newPrefPath);
       QString fileTitle = fi.baseName();
-      addFavoriteTreeItem(selection, fileTitle, icon, itemType, newPrefPath, true);
+      int err = addTreeItem(selection, fileTitle, icon, itemType, newPrefPath, false, false, false);
+      if (err >= 0)
+      {
+        emit updateStatusBar("The pipeline '" + fileTitle + "' has been added successfully.");
+        selection->setExpanded(true);
+      }
+      else if (err == DUPLICATE_PIPELINE)
+      {
+        emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added, because a pipeline with the same name already exists in the specified folder.");
+      }
+      else if (err == UNRECOGNIZED_EXT)
+      {
+        emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added, because the pipeline file extension was not recognized.");
+      }
+      else
+      {
+        emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added.  An unknown error has occurred.  Please contact the DREAM3D developers.");
+      }
     }
   }
 
@@ -658,19 +686,29 @@ void PipelineDashboardDockWidget::addFavorite(bool folder)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::addFavoriteTreeItem(QTreeWidgetItem* selection,
+int PipelineDashboardDockWidget::addTreeItem(QTreeWidgetItem* selection,
   QString& favoriteTitle,
   QIcon icon,
   FilterLibraryTreeWidget::ItemType itemType,
   QString favoritePath,
-  bool allowEditing)
+  bool allowEditing,
+  bool editState,
+  bool isExpanded)
 {
 
   QFileInfo fileInfo(favoritePath);
   QString ext = fileInfo.completeSuffix();
   if (fileInfo.isFile() && ext != "dream3d" && ext != "json" && ext != "ini" && ext != "txt")
   {
-    return;
+    return UNRECOGNIZED_EXT;
+  }
+
+  for (int i = 0; i < selection->childCount(); i++)
+  {
+    if (selection->child(i)->text(0) == favoriteTitle)
+    {
+      return DUPLICATE_PIPELINE;
+    }
   }
 
   filterLibraryTree->blockSignals(true);
@@ -686,16 +724,22 @@ void PipelineDashboardDockWidget::addFavoriteTreeItem(QTreeWidgetItem* selection
   filterLibraryTree->sortItems(0, Qt::AscendingOrder);
   if (itemType == FilterLibraryTreeWidget::Node_Item_Type)
   {
-    selection->setExpanded(true);
-    filterLibraryTree->editItem(itemWidget);
+    itemWidget->setExpanded(isExpanded);
+    if (editState == true)
+    {
+      filterLibraryTree->editItem(itemWidget);
+    }
   }
+
   filterLibraryTree->blockSignals(false);
+
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::actionUpdateFavorite_triggered()
+void PipelineDashboardDockWidget::m_ActionUpdatePipeline_triggered()
 {
   // Lets get the name of the favorite
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
@@ -766,7 +810,7 @@ bool PipelineDashboardDockWidget::removeDir(const QString& dirName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::actionRemoveFavorite_triggered()
+void PipelineDashboardDockWidget::m_ActionRemovePipeline_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   //QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
@@ -787,7 +831,7 @@ void PipelineDashboardDockWidget::actionRemoveFavorite_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::actionRenameFavorite_triggered()
+void PipelineDashboardDockWidget::m_ActionRenamePipeline_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   filterLibraryTree->editItem(item, 0);
@@ -796,7 +840,7 @@ void PipelineDashboardDockWidget::actionRenameFavorite_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::actionAppendFavorite_triggered()
+void PipelineDashboardDockWidget::m_ActionAddToPipelineView_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
 
@@ -812,7 +856,7 @@ void PipelineDashboardDockWidget::actionAppendFavorite_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::actionShowInFileSystem_triggered()
+void PipelineDashboardDockWidget::m_ActionShowInFileSystem_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   if(item)
@@ -845,6 +889,35 @@ void PipelineDashboardDockWidget::readSettings(QMainWindow* main, QSettings& pre
 
   bool b = prefs.value(objectName(), false).toBool();
   setHidden(b);
+
+  int size = prefs.beginReadArray("PipelineDashboard");
+  for (int i = 0; i < size; i++)
+  {
+    prefs.setArrayIndex(i);
+    
+    QString title = prefs.value("Title").toString();
+    QString path = prefs.value("Path").toString();
+    QString parentTreePath = prefs.value("Parent_Tree_Path").toString();
+    bool isExpanded = prefs.value("IsExpanded", false).toBool();
+
+    path = QDir::toNativeSeparators(path);
+
+    QTreeWidgetItem* parentItem = getItemFromTreePath(parentTreePath);
+
+    QIcon icon;
+    FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Unknown_Item_Type;
+    if (path.isEmpty())
+    {
+      // This is a folder
+      addTreeItem(parentItem, title, QIcon(":/folder_blue.png"), FilterLibraryTreeWidget::Node_Item_Type, path, true, false, isExpanded);
+    }
+    else
+    {
+      // This is a pipeline
+      addTreeItem(parentItem, title, QIcon(":/text.png"), FilterLibraryTreeWidget::Leaf_Item_Type, path, true, false, isExpanded);
+    }
+  }
+  prefs.endArray();
 }
 
 // -----------------------------------------------------------------------------
@@ -854,7 +927,110 @@ void PipelineDashboardDockWidget::writeSettings(QSettings& prefs)
 {
   prefs.setValue(objectName(), isHidden());
 
+  QTreeWidgetItemIterator iter(filterLibraryTree);
 
+  prefs.beginWriteArray("PipelineDashboard");
+  int i = 0;
+  while (*iter)
+  {
+    QTreeWidgetItem* currentItem = *iter;
+    prefs.setArrayIndex(i);
+    prefs.setValue("Title", currentItem->text(0));
+    prefs.setValue("Path", currentItem->data(0, Qt::UserRole).toString());
+    prefs.setValue("IsExpanded", currentItem->isExpanded());
+
+    if (NULL != currentItem->parent())
+    {
+      QString treePath = getTreePathFromItem(currentItem->parent());
+      prefs.setValue("Parent_Tree_Path", treePath);
+    }
+    else
+    {
+      prefs.setValue("Parent_Tree_Path", "");
+    }
+
+    ++iter;
+    i++;
+  }
+  prefs.endArray();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PipelineDashboardDockWidget::getTreePathFromItem(QTreeWidgetItem* item)
+{
+  QTreeWidgetItem* parentItem = item->parent();
+  QString treePath = "/" + item->text(0);
+
+  while (NULL != parentItem)
+  {
+    treePath.prepend(parentItem->text(0));
+    treePath.prepend("/");
+    parentItem = parentItem->parent();
+  }
+
+  return treePath;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QTreeWidgetItem* PipelineDashboardDockWidget::getItemFromTreePath(QString treePath)
+{
+  QList<QString> stringList = deserializeTreePath(treePath);
+  
+  if (stringList.size() <= 0)
+  {
+    return filterLibraryTree->invisibleRootItem();
+  }
+
+  QList<QTreeWidgetItem*> possibleItems = filterLibraryTree->findItems(stringList.back(), Qt::MatchExactly);
+  stringList.pop_back();
+
+  QTreeWidgetItem* possibleItem = NULL;
+  for (int i = 0; i < possibleItems.size(); i++)
+  {
+    possibleItem = possibleItems[i];
+    QTreeWidgetItem* parentItem = possibleItem->parent();
+    for (int j = stringList.size() - 1; j >= 0; j--)
+    {
+      QString parentString = stringList[j];
+      if (NULL == parentItem || parentItem->text(0) != parentString)
+      {
+        possibleItem = NULL;
+        break;
+      }
+      parentItem = parentItem->parent();
+    }
+  }
+
+  return possibleItem;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> PipelineDashboardDockWidget::deserializeTreePath(QString treePath)
+{
+  QList<QString> list;
+  int currentIndex = 0;
+  int spaceIndex = 0;
+  QString strPart = "";
+
+  while (spaceIndex >= 0 && treePath.isEmpty() == false)
+  {
+    spaceIndex = treePath.indexOf('/');
+    strPart = treePath.left(spaceIndex);
+    strPart = strPart.simplified();
+    if (strPart != "")
+    {
+      list.push_back(strPart);
+    }
+    treePath = treePath.remove(currentIndex, spaceIndex + 1);
+  }
+
+  return list;
 }
 
 

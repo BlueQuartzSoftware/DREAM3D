@@ -225,8 +225,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void setFilterBeingDragged(PipelineFilterWidget* w);
 
     /**
-     * @brief setFilterBeingDragged
-     * @param w
+     * @brief setStatusBar
+     * @param statusBar
      */
     void setStatusBar(QStatusBar* statusBar);
 

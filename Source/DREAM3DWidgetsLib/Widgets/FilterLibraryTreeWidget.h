@@ -113,6 +113,12 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
      */
     void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
 
+    /**
+    * @brief mousePressEvent
+    * @param event
+    */
+    void mousePressEvent(QMouseEvent* event);
+
   private:
     QMenu                     m_Menu;
     QList<QAction*>           m_NodeActions;
