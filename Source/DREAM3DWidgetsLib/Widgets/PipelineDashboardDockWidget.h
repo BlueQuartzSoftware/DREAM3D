@@ -48,9 +48,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/Widgets/AddFavoriteWidget.h"
 
-#include "ui_FavoritesDockWidget.h"
+#include "ui_PipelineDashboardDockWidget.h"
 
 class QListWidget;
 class QTreeWidgetItem;
@@ -60,19 +59,19 @@ class QSettings;
 class QAction;
 
 /**
- * @brief The FavoritesDockWidget class
+ * @brief The PipelineDashboardDockWidget class
  */
-class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private Ui::FavoritesDockWidget
+class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget, private Ui::PipelineDashboardDockWidget
 {
 
     Q_OBJECT
   public:
     /**
-     * @brief FavoritesDockWidget
+     * @brief PipelineDashboardDockWidget
      * @param parent
      */
-    FavoritesDockWidget(QWidget* parent = NULL);
-    virtual ~FavoritesDockWidget();
+    PipelineDashboardDockWidget(QWidget* parent = NULL);
+    virtual ~PipelineDashboardDockWidget();
 
     DREAM3D_INSTANCE_PROPERTY(QAction*, DeleteAction)
 
@@ -104,6 +103,16 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
 
     void configureFilterLibraryTree();
 
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings(QMainWindow* main, QSettings& prefs);
+
+    /**
+    * @brief Writes the preferences to the users pref file
+    */
+    void writeSettings(QSettings& prefs);
+
   public slots:
     //// Slots to catch signals from main menu or context menu
     void actionAddFavoriteFolder_triggered();
@@ -134,7 +143,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
                                  bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
     /**
-     * @brief FavoritesDockWidget::addFavoriteTreeItem
+     * @brief PipelineDashboardDockWidget::addFavoriteTreeItem
      * @param selection
      * @param favoriteTitle
      * @param icon
@@ -154,12 +163,6 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @param folder Is the new favorite to be a folder or an actual pipeline file
      */
     void addFavorite(bool folder);
-
-    /**
-     * @brief displayNewFavoriteDialog
-     * @return
-     */
-    QString displayNewFavoriteDialog();
 
   protected slots:
     //// Slots to catch signals from the QTreeWidget
@@ -194,9 +197,10 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     void filterListGenerated(const QStringList& filterList, bool sort);
 
   private:
+    QString                 m_OpenDialogLastDirectory;
 
-    FavoritesDockWidget(const FavoritesDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const FavoritesDockWidget&); // Operator '=' Not Implemented
+    PipelineDashboardDockWidget(const PipelineDashboardDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const PipelineDashboardDockWidget&); // Operator '=' Not Implemented
 
 
 };

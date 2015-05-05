@@ -395,7 +395,7 @@ void DREAM3D_UI::readWindowSettings(QSettings& prefs)
 
   readDockWidgetSettings(prefs, filterListDockWidget);
   readDockWidgetSettings(prefs, filterLibraryDockWidget);
-  readDockWidgetSettings(prefs, favoritesDockWidget);
+  favoritesDockWidget->readSettings(this, prefs);
   readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   readDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -503,7 +503,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
 
   writeDockWidgetSettings(prefs, filterListDockWidget);
   writeDockWidgetSettings(prefs, filterLibraryDockWidget);
-  writeDockWidgetSettings(prefs, favoritesDockWidget);
+  favoritesDockWidget->writeSettings(prefs);
   writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   writeDockWidgetSettings(prefs, issuesDockWidget);
 

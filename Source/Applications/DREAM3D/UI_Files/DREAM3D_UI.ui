@@ -313,7 +313,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="FavoritesDockWidget" name="favoritesDockWidget">
+  <widget class="PipelineDashboardDockWidget" name="favoritesDockWidget">
    <property name="windowTitle">
     <string>[*]Favorite Pipelines</string>
    </property>
@@ -557,9 +557,9 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>FavoritesDockWidget</class>
+   <class>PipelineDashboardDockWidget</class>
    <extends>QDockWidget</extends>
-   <header location="global">FavoritesDockWidget.h</header>
+   <header location="global">PipelineDashboardDockWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
