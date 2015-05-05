@@ -129,17 +129,17 @@ namespace LambertParametersType
   static const double prek = 1.6434564029725040; //R1 2^(1/4)/beta
   static const double r24 = 4.8989794855663560;  //sqrt(24)
   static const double tfit[16] = {1.00000000000188520, -0.50000000021948470,
-                     -0.0249999921275931260, - 0.0039287015447813740,
-                     -0.00081527015354504380, - 0.00020095004261197120,
-                     -0.000023979867760717560, - 0.000082028689266058410,
-                     +0.000124487150420900920, - 0.00017491142148225770,
-                     +0.00017034819341400540, - 0.000120620650041168280,
-                     +0.0000597197058686608260, - 0.000019807567239656470,
-                     +0.0000039537146842128740, - 0.000000365550014397195440
-                    };
+                                  -0.0249999921275931260, - 0.0039287015447813740,
+                                  -0.00081527015354504380, - 0.00020095004261197120,
+                                  -0.000023979867760717560, - 0.000082028689266058410,
+                                  +0.000124487150420900920, - 0.00017491142148225770,
+                                  +0.00017034819341400540, - 0.000120620650041168280,
+                                  +0.0000597197058686608260, - 0.000019807567239656470,
+                                  +0.0000039537146842128740, - 0.000000365550014397195440
+                                 };
   static const double BP[6] = { 0.0, 1.0, 0.5773502691896260, 0.4142135623730950, 0.0,
-                   0.2679491924311230
-                 };     //used for Fundamental Zone determination in so3 module
+                                0.2679491924311230
+                              };     //used for Fundamental Zone determination in so3 module
 }
 
 
@@ -182,7 +182,7 @@ class OrientationTransforms
   public:
 
     typedef OrientationTransforms SelfType;
-    virtual ~OrientationTransforms(){}
+    virtual ~OrientationTransforms() {}
 
 
     typedef struct
@@ -705,23 +705,24 @@ class OrientationTransforms
     */
     static void eu2om(const T& e, T& res)
     {
-      K eps = std::numeric_limits<K>::epsilon();
+      // K eps = std::numeric_limits<K>::epsilon();
+      K eps = 1.0E-7;
 
       K c1 = cos(e[0]);
-      K c2 = cos(e[1]);
-      K c3 = cos(e[2]);
+      K c = cos(e[1]);
+      K c2 = cos(e[2]);
       K s1 = sin(e[0]);
-      K s2 = sin(e[1]);
-      K s3 = sin(e[2]);
-      res[0] = c1 * c3 - s1 * s3 * c2;
-      res[1] = s1 * c3 + c1 * s3 * c2;
-      res[2] = s3 * s2;
-      res[3] = -c1 * s3 - s1 * c3 * c2;
-      res[4] = -s1 * s3 + c1 * c3 * c2;
-      res[5] = c3 * s2;
-      res[6] = s1 * s2;
-      res[7] = -c1 * s2;
-      res[8] = c2;
+      K s = sin(e[1]);
+      K s2 = sin(e[2]);
+      res[0] = c1 * c2 - s1 * s2 * c;
+      res[1] = s1 * c2 + c1 * s2 * c;
+      res[2] = s2 * s;
+      res[3] = -c1 * s2 - s1 * c2 * c;
+      res[4] = -s1 * s2 + c1 * c2 * c;
+      res[5] = c2 * s;
+      res[6] = s1 * s;
+      res[7] = -c1 * s;
+      res[8] = c;
       for(size_t i = 0; i < 9; i++)
       {
         if(std::abs(res[i]) < eps) { res[i] = 0.0; }
@@ -919,9 +920,18 @@ class OrientationTransforms
         }
       }
 
-      if (res[0] < 0.0) { res[0] = fmod(res[0] + 100.0 * DConst::k_Pi, DConst::k_2Pi); }
-      if (res[1] < 0.0) { res[1] = fmod(res[1] + 100.0 * DConst::k_Pi, DConst::k_Pi); }
-      if (res[2] < 0.0) { res[2] = fmod(res[2] + 100.0 * DConst::k_Pi, DConst::k_2Pi); }
+      if (res[0] < 0.0)
+      {
+        res[0] = fmod(res[0] + 100.0 * DConst::k_Pi, DConst::k_2Pi);
+      }
+      if (res[1] < 0.0)
+      {
+        res[1] = fmod(res[1] + 100.0 * DConst::k_Pi, DConst::k_Pi);
+      }
+      if (res[2] < 0.0)
+      {
+        res[2] = fmod(res[2] + 100.0 * DConst::k_Pi, DConst::k_2Pi);
+      }
     }
 
     /**: ax2om
@@ -1000,7 +1010,7 @@ class OrientationTransforms
       qq = q;
 
       q03 = qq[w] * qq[w] + qq[z] * qq[z];
-      q12 = qq[x] * qq[x] + qq[y] * qq[x];
+      q12 = qq[x] * qq[x] + qq[y] * qq[y];
       chi = sqrt(q03 * q12);
       if (chi == 0.0)
       {
@@ -2192,7 +2202,7 @@ class OrientationTransforms
     /**
     * @brief
     */
-    OrientationTransforms(){}
+    OrientationTransforms() {}
 
     static void splat(T& a, const K val)
     {

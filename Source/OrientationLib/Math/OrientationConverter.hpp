@@ -38,6 +38,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
@@ -58,29 +59,29 @@ class OrientationConverter
     enum OrientationType
     {
       Euler,
-          OrientationMatrix,
-          Quaternion,
-          AxisAngle,
-          Rodrigues,
-          Homochoric,
-          Cubochoric,
-          UnknownOrientationType
+      OrientationMatrix,
+      Quaternion,
+      AxisAngle,
+      Rodrigues,
+      Homochoric,
+      Cubochoric,
+      UnknownOrientationType
     };
 
 
     virtual ~OrientationConverter() {}
 
     /**
-   * @brief getOrientationRepresentation
-   * @return
-   */
+    * @brief getOrientationRepresentation
+    * @return
+    */
     virtual OrientationType getOrientationRepresentation() { return UnknownOrientationType; }
 
     /**
-   * @brief convert
-   * @param src
-   * @return
-   */
+    * @brief convert
+    * @param src
+    * @return
+    */
     void convertRepresentationTo(OrientationType repType)
     {
       if(repType == Euler) { toEulers(); }
@@ -99,6 +100,12 @@ class OrientationConverter
     virtual void toRodrigues() = 0;
     virtual void toHomochoric() = 0;
     virtual void toCubochoric() = 0;
+
+    virtual bool compareRepresentations(T* a, T* b,
+                                        const float& epsilon = std::numeric_limits<float>::epsilon()) = 0;
+    virtual void sanityCheckInputData() = 0;
+
+    virtual void printRepresentation(T* a) = 0;
 
     DREAM3D_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, InputData)
     DREAM3D_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, OutputData)
@@ -161,16 +168,16 @@ class OrientationConverter
   size_t nTuples = input->getNumberOfTuples();\
   int inStride = input->getNumberOfComponents();\
   int outStride = OUTSTRIDE;\
-  QVector<size_t> cDims(1, outStride); /* Create the 4 component (4x1) based array.*/ \
+  QVector<size_t> cDims(1, outStride); /* Create the n component (nx1) based array.*/ \
   typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
   output->initializeWithZeros(); /* Intialize the array with Zeros */ \
   T* quatPtr = output->getPointer(0);\
   for (size_t i = 0; i < nTuples; ++i) { \
-  OrientationArray_t rot(inPtr, inStride); \
-  OrientationArray_t res(quatPtr, outStride); \
-  OrientationTransforms<OrientationArray_t, T>::CONVERSION_METHOD(rot, res); \
-  inPtr = inPtr + inStride; /* Increment euler pointer */ \
-  quatPtr = quatPtr + outStride; /* Increment quaternion pointer*/ \
+    OrientationArray_t rot(inPtr, inStride); \
+    OrientationArray_t res(quatPtr, outStride); \
+    OrientationTransforms<OrientationArray_t, T>::CONVERSION_METHOD(rot, res); \
+    inPtr = inPtr + inStride; /* Increment input pointer */ \
+    quatPtr = quatPtr + outStride; /* Increment output pointer*/ \
   }\
   this->setOutputData(output);
 
@@ -193,37 +200,82 @@ class EulerConvertor : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      ////FIXME: Copy the array
+      typedef typename DataArray<T>::Pointer PointerType;
+      PointerType input = this->getInputData();
+      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      this->setOutputData(output);
     }
 
     virtual void toOrientationMatrix()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(9, OrientationMatrix, eu2om)
     }
 
     virtual void toQuaternion()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(4, Quaternions, eu2qu)
     }
 
     virtual void toAxisAngle()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(4, AxisAngle, eu2ax)
     }
 
     virtual void toRodrigues()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(4, Rodrigues, eu2ro)
     }
 
     virtual void toHomochoric()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(3, Homochoric, eu2ho)
     }
 
     virtual void toCubochoric()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(4, Cubochoric, eu2cu)
+    }
+
+    virtual void sanityCheckInputData()
+    {
+      typename DataArray<T>::Pointer input = this->getInputData();
+      T* inPtr = input->getPointer(0);
+      size_t nTuples = input->getNumberOfTuples();
+      int inStride = input->getNumberOfComponents();
+      for (size_t i = 0; i < nTuples; ++i)
+      {
+        if(inPtr[0] < 0.0) { inPtr[0] = inPtr[0] + DREAM3D::Constants::k_2Pi; }
+        else {inPtr[0] = fmod(inPtr[0], DREAM3D::Constants::k_2Pi); }
+        if(inPtr[1] < 0.0) { inPtr[1] = inPtr[1] + DREAM3D::Constants::k_Pi; }
+        else { inPtr[1] = fmod(inPtr[1], DREAM3D::Constants::k_Pi); }
+        if(inPtr[2] < 0.0) { inPtr[2] = inPtr[2] + DREAM3D::Constants::k_2Pi; }
+        else { inPtr[2] = fmod(inPtr[2], DREAM3D::Constants::k_2Pi); }
+
+        inPtr = inPtr + inStride;
+      }
+    }
+
+    virtual bool compareRepresentations(T* a, T* b, const float& epsilon = std::numeric_limits<float>::epsilon())
+    {
+      bool close = false;
+      for(int i = 0; i < 3; i++)
+      {
+        close = (epsilon > std::abs(a[i] - b[i]));
+        if(!close) { return close; }
+      }
+      return close;
+    }
+
+
+    virtual void printRepresentation(T* a)
+    {
+      printf("%0.8f, %0.8f, %0.8f", a[0], a[1], a[2]);
     }
 
   protected:
@@ -242,6 +294,7 @@ class EulerConvertor : public OrientationConverter<T>
     EulerConvertor(const EulerConvertor&); // Copy Constructor Not Implemented
     void operator=(const EulerConvertor&); // Operator '=' Not Implemented
 };
+
 
 template<typename T>
 class QuaternionConvertor : public OrientationConverter<T>
@@ -269,7 +322,10 @@ class QuaternionConvertor : public OrientationConverter<T>
 
     virtual void toQuaternion()
     {
-      ////FIXME: Copy the array
+      typedef typename DataArray<T>::Pointer PointerType;
+      PointerType input = this->getInputData();
+      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      this->setOutputData(output);
     }
 
     virtual void toAxisAngle()
@@ -290,6 +346,29 @@ class QuaternionConvertor : public OrientationConverter<T>
     virtual void toCubochoric()
     {
       OC_CONVERT_BODY(4, Cubochoric, qu2cu)
+    }
+
+    virtual void sanityCheckInputData()
+    {
+    }
+
+    virtual void printRepresentation(T* om)
+    {
+      // if(layout == QuaternionMath<float>::QuaternionVectorScalar)
+      {
+        printf("<%3.6f\t%3.6f\t%3.6f> %3.6f\n", om[0], om[1], om[2], om[3] );
+      }
+
+//      else if(layout == QuaternionMath<float>::QuaternionScalarVector)
+//      {
+//        printf("%3.6f <%3.6f\t%3.6f\t%3.6f>\n", om[0], om[1], om[2], om[3] );
+//      }
+    }
+
+    virtual bool compareRepresentations(T* a, T* b, const float& epsilon = std::numeric_limits<float>::epsilon())
+    {
+      bool close = false;
+      return close;
     }
 
   protected:
@@ -329,7 +408,10 @@ class OrientationMatrixConvertor : public OrientationConverter<T>
 
     virtual void toOrientationMatrix()
     {
-      ////FIXME: Copy the array
+      typedef typename DataArray<T>::Pointer PointerType;
+      PointerType input = this->getInputData();
+      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      this->setOutputData(output);
     }
 
     virtual void toQuaternion()
@@ -357,6 +439,24 @@ class OrientationMatrixConvertor : public OrientationConverter<T>
       OC_CONVERT_BODY(4, Cubochoric, qu2cu)
     }
 
+    virtual void sanityCheckInputData()
+    {
+    }
+
+    virtual bool compareRepresentations(T* a, T* b, const float& epsilon = std::numeric_limits<float>::epsilon())
+    {
+      bool close = false;
+      return close;
+    }
+
+    virtual void printRepresentation(T* om)
+    {
+      printf("|    % 3.6f    % 3.6f    % 3.6f    |\n", om[0], om[1], om[2]);
+      printf("|    % 3.6f    % 3.6f    % 3.6f    |\n", om[3], om[4], om[5]);
+      printf("|    % 3.6f    % 3.6f    % 3.6f    |\n", om[6], om[7], om[8]);
+
+    }
+
   protected:
 
     OrientationMatrixConvertor() :
@@ -371,6 +471,7 @@ class OrientationMatrixConvertor : public OrientationConverter<T>
     OrientationMatrixConvertor(const OrientationMatrixConvertor&); // Copy Constructor Not Implemented
     void operator=( const OrientationMatrixConvertor& ); // Operator '=' Not Implemented
 };
+
 
 template<typename T>
 class AxisAngleConvertor : public OrientationConverter<T>
@@ -403,7 +504,10 @@ class AxisAngleConvertor : public OrientationConverter<T>
 
     virtual void toAxisAngle()
     {
-      ////FIXME: Copy the array
+      typedef typename DataArray<T>::Pointer PointerType;
+      PointerType input = this->getInputData();
+      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      this->setOutputData(output);
     }
 
     virtual void toRodrigues()
@@ -419,6 +523,21 @@ class AxisAngleConvertor : public OrientationConverter<T>
     virtual void toCubochoric()
     {
       OC_CONVERT_BODY(4, Cubochoric, ax2cu)
+    }
+
+    virtual void sanityCheckInputData()
+    {
+    }
+
+    virtual bool compareRepresentations(T* a, T* b, const float& epsilon = std::numeric_limits<float>::epsilon())
+    {
+      bool close = false;
+      return close;
+    }
+
+    virtual void printRepresentation(T* om)
+    {
+
     }
 
   protected:
@@ -476,7 +595,10 @@ class RodriguesConvertor : public OrientationConverter<T>
 
     virtual void toRodrigues()
     {
-      ////FIXME:
+      typedef typename DataArray<T>::Pointer PointerType;
+      PointerType input = this->getInputData();
+      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      this->setOutputData(output);
     }
 
     virtual void toHomochoric()
@@ -489,6 +611,20 @@ class RodriguesConvertor : public OrientationConverter<T>
       OC_CONVERT_BODY(4, Cubochoric, ro2cu)
     }
 
+    virtual void sanityCheckInputData()
+    {
+    }
+
+    virtual bool compareRepresentations(T* a, T* b, const float& epsilon = std::numeric_limits<float>::epsilon())
+    {
+      bool close = false;
+      return close;
+    }
+
+    virtual void printRepresentation(T* om)
+    {
+
+    }
   protected:
 
     RodriguesConvertor() :
@@ -550,12 +686,30 @@ class HomochoricConvertor : public OrientationConverter<T>
 
     virtual void toHomochoric()
     {
-      ////FIXME:
+      typedef typename DataArray<T>::Pointer PointerType;
+      PointerType input = this->getInputData();
+      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      this->setOutputData(output);
     }
 
     virtual void toCubochoric()
     {
       OC_CONVERT_BODY(4, Cubochoric, ho2cu)
+    }
+
+    virtual void sanityCheckInputData()
+    {
+    }
+
+    virtual bool compareRepresentations(T* a, T* b, const float& epsilon = std::numeric_limits<float>::epsilon())
+    {
+      bool close = false;
+      return close;
+    }
+
+    virtual void printRepresentation(T* om)
+    {
+
     }
 
   protected:
@@ -623,7 +777,25 @@ class CubochoricConvertor : public OrientationConverter<T>
 
     virtual void toCubochoric()
     {
-      //OC_CONVERT_BODY(4, Cubochoric, cu2cu)
+      typedef typename DataArray<T>::Pointer PointerType;
+      PointerType input = this->getInputData();
+      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      this->setOutputData(output);
+    }
+
+    virtual void sanityCheckInputData()
+    {
+    }
+
+    virtual bool compareRepresentations(T* a, T* b, const float& epsilon = std::numeric_limits<float>::epsilon())
+    {
+      bool close = false;
+      return close;
+    }
+
+    virtual void printRepresentation(T* om)
+    {
+
     }
 
   protected:
