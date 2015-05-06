@@ -706,7 +706,7 @@ class OrientationTransforms
     static void eu2om(const T& e, T& res)
     {
       // K eps = std::numeric_limits<K>::epsilon();
-      K eps = 1.0E-7;
+      K eps = 1.0E-7f;
 
       K c1 = cos(e[0]);
       K c = cos(e[1]);
