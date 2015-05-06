@@ -193,8 +193,8 @@ QString JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath,
     return QString("");
   }
 
-  reader->openGroup(DREAM3D::Settings::PipelineBuilderGroup);
-  QString name = reader->readValue(DREAM3D::Settings::PipelineName, "");
+  err = reader->openGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  QString name = reader->readString(DREAM3D::Settings::PipelineName, "");
   reader->closeGroup();
 
   return name;
