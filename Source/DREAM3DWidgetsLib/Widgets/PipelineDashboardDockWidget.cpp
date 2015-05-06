@@ -642,7 +642,8 @@ void PipelineDashboardDockWidget::addPipeline(bool folder)
     itemType = FilterLibraryTreeWidget::Node_Item_Type;
     icon = QIcon(":/folder_blue.png");
 
-    addTreeItem(selection, QString("New Folder"), icon, itemType, "", true, true, false);
+    QString folderTitle = "New Folder";
+    addTreeItem(selection, folderTitle, icon, itemType, "", true, true, false);
   }
   else
   {
