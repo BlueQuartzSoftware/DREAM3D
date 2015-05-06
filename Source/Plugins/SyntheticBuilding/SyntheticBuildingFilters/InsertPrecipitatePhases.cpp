@@ -718,7 +718,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   int64_t boundaryVoxels = 0;
 
-  for (size_t i = 1; i < m_TotalPoints; i++)
+  for (int64_t i = 1; i < m_TotalPoints; i++)
   {
     if (m_BoundaryCells[i] != 0)
     {

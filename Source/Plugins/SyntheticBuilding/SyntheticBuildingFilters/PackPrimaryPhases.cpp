@@ -2318,7 +2318,7 @@ void PackPrimaryPhases::assign_voxels()
     return;
   }
 
-  for (int64_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
     if (gnum >= 0)
