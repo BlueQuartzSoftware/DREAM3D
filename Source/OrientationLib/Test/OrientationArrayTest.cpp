@@ -15,6 +15,7 @@
 #include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -23,6 +24,7 @@
 using namespace DREAM3D::Constants;
 
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/Math/OrientationMath.h"
 #include "OrientationLib/Math/OrientationArray.hpp"
 #include "OrientationLib/Math/OrientationTransforms.hpp"
 
@@ -995,6 +997,75 @@ void Test_ho2_XXX()
   HO_2_XXX<FloatQVectorType>(ho);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool closeEnough(const float& a, const float& b,
+                 const float& epsilon = std::numeric_limits<float>::epsilon())
+{
+  return (epsilon > std::abs(a - b));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestInputs()
+{
+  QVector<size_t> cDims(1,3);
+  FloatArrayType::Pointer data = FloatArrayType::CreateArray(2, cDims, "Eulers");
+  data->initializeWithZeros();
+  float* fPtr = data->getPointer(0);
+  fPtr[0] = 90.0 * DREAM3D::Constants::k_PiOver180;
+  fPtr[1] = 0.0;
+  fPtr[2] = 0.0;
+
+  //& Notation
+  {
+    FOrientArrayType eu( &(fPtr[0]), 3); // Wrap the pointer with the &notation
+    eu[0] = 45.0f * DREAM3D::Constants::k_PiOver180;
+    eu[1] = 90.0f * DREAM3D::Constants::k_PiOver180;
+    eu[2] = 135.0f * DREAM3D::Constants::k_PiOver180;
+
+    DREAM3D_REQUIRE_EQUAL(eu[0], fPtr[0]);
+    DREAM3D_REQUIRE_EQUAL(eu[1], fPtr[1]);
+    DREAM3D_REQUIRE_EQUAL(eu[2], fPtr[2]);
+  }
+
+  // Pointer Arithmetic (inputs)
+  {
+    FOrientArrayType eu( fPtr + 3, 3);
+    eu[0] = 135.0f * DREAM3D::Constants::k_PiOver180;
+    eu[1] = 45.0f * DREAM3D::Constants::k_PiOver180;
+    eu[2] = 90.0f * DREAM3D::Constants::k_PiOver180;
+
+    DREAM3D_REQUIRE_EQUAL(eu[0], fPtr[3]);
+    DREAM3D_REQUIRE_EQUAL(eu[1], fPtr[4]);
+    DREAM3D_REQUIRE_EQUAL(eu[2], fPtr[5]);
+  }
+
+  // Pointer Arithmetic, results
+  {
+    FOrientArrayType ax(0.0f, 0.0f, -1.0f, DREAM3D::Constants::k_PiOver2);
+    FOrientArrayType eu( fPtr + 3, 3);
+    FOrientTransformsType::ax2eu(ax, eu);
+
+    DREAM3D_REQUIRE_EQUAL(eu[0], fPtr[3]);
+    DREAM3D_REQUIRE_EQUAL(eu[1], fPtr[4]);
+    DREAM3D_REQUIRE_EQUAL(eu[2], fPtr[5]);
+
+    bool b = closeEnough(fPtr[3], DREAM3D::Constants::k_PiOver2, 1.0E-6f);
+    DREAM3D_REQUIRE_EQUAL(b, true)
+    b = closeEnough(fPtr[4], 0.0f, 1.0E-6f);
+    DREAM3D_REQUIRE_EQUAL(b, true)
+    b = closeEnough(fPtr[5], 0.0f, 1.0E-6f);
+    DREAM3D_REQUIRE_EQUAL(b, true)
+  }
+
+
+
+}
+
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
@@ -1002,6 +1073,7 @@ int main(int argc, char* argv[])
 {
 
   int err = EXIT_SUCCESS;
+
   DREAM3D_REGISTER_TEST( TestRotArray() );
   DREAM3D_REGISTER_TEST( Test_eu_check() );
   DREAM3D_REGISTER_TEST( Test_ro_check() );
@@ -1019,6 +1091,9 @@ int main(int argc, char* argv[])
   DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
   DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
   DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
+
+
+  DREAM3D_REGISTER_TEST( TestInputs() );
 
   return err;
 }

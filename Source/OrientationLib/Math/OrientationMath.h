@@ -43,21 +43,11 @@
 #include "OrientationLib/Math/OrientationTransforms.hpp"
 
 
-#define OM_ORIENTATION_FUNCS 1
+#define OM_ORIENTATION_FUNCS 0
 
 typedef OrientationTransforms<FOrientArrayType, float> FOrientTransformsType;
 
-// Here the order of multiplication is q1*q2 not q2*q1
-#if 0
-#define MULT_QUAT(q1, q2, out)\
-  out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
-  out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
-  out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
-  out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
-
-#endif
-
-/*
+/**
  * @class OrientationMath OrientationMath.h DREAM3DLib/Common/OrientationMath.h
  * @brief This class performs Crystallographic Misorientation Calculations
  * @author Michael A. Jackson (BlueQuartz Software)

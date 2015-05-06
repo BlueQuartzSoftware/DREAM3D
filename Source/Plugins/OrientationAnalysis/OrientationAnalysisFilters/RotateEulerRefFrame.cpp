@@ -82,13 +82,17 @@ class RotateEulerRefFrameImpl
         ea1 = m_CellEulerAngles[3 * i + 0];
         ea2 = m_CellEulerAngles[3 * i + 1];
         ea3 = m_CellEulerAngles[3 * i + 2];
-        OrientationMath::EulertoMat(ea1, ea2, ea3, g);
+        FOrientArrayType om(9);
+        FOrientTransformsType::eu2om(FOrientArrayType(ea1, ea2, ea3), om);
+        om.toGMatrix(g);
+
         MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
         MatrixMath::Normalize3x3(gNew);
-        OrientationMath::MattoEuler(gNew, ea1new, ea2new, ea3new);
-        m_CellEulerAngles[3 * i + 0] = ea1new;
-        m_CellEulerAngles[3 * i + 1] = ea2new;
-        m_CellEulerAngles[3 * i + 2] = ea3new;
+
+        // Because we are going to simply wrap the m_CellEulerAngles array, the new
+        // Euler angles will be directly written to the m_CellEulerAngles array
+        // at the proper spot
+        FOrientTransformsType::om2eu(om, FOrientArrayType( &(m_CellEulerAngles[3 * i + 0]), 3));
       }
     }
 
