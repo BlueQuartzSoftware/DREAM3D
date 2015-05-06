@@ -148,7 +148,7 @@ void TestEulerAngle(float phi1, float phi, float phi2)
   converters[5] = HomochoricConverter<float>::New();
   //converters[6] = CubochoricConverter<float>::New();
 
-  typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+  typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
   OrientationTransformType::ResultType result;
   QVector<int> strides = OCType::GetComponentCounts();
 

@@ -30,7 +30,7 @@ using namespace DREAM3D::Constants;
 #include "OrientationLib/Test/OrientationLibTestFileLocations.h"
 
 
-typedef OrientationArray<float> FloatOrientationArray_t;
+typedef OrientationArray<float> FOrientArrayType;
 typedef std::vector<float> FloatVectorType;
 typedef QVector<float> FloatQVectorType;
 
@@ -55,7 +55,7 @@ T transfer_sign(T a, T b)
 // -----------------------------------------------------------------------------
 void TestRotArray()
 {
-  FloatOrientationArray_t ro(3);
+  FOrientArrayType ro(3);
   ro[0] = 2;
   ro[1] = 4;
   ro[2] = 6;
@@ -81,9 +81,9 @@ void Test_eu_check()
 {
   int res = 0;
   {
-    typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
-    FloatOrientationArray_t eu_r(3);
+    FOrientArrayType eu_r(3);
     eu_r[0] = 0.81585413f;
     eu_r[1] = 5.285555f;
     eu_r[2] = 0.8661895f;
@@ -134,9 +134,9 @@ void Test_ro_check()
 
 
   {
-    typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
-    FloatOrientationArray_t ro(4);
+    FOrientArrayType ro(4);
     ro[0] = 1.0f;
     ro[1] = 1.0f;
     ro[2] = 1.0f;
@@ -192,9 +192,9 @@ void Test_ro_check()
 void Test_ho_check()
 {
   {
-    typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
-    FloatOrientationArray_t ho(3);
+    FOrientArrayType ho(3);
     ho[0] = 0.5f;
     ho[1] = 0.5f;
     ho[2] = 0.5f;
@@ -244,9 +244,9 @@ void Test_ho_check()
 void Test_cu_check()
 {
   {
-    typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
-    FloatOrientationArray_t v(3);
+    FOrientArrayType v(3);
     v[0] = 0.5f;
     v[1] = 0.5f;
     v[2] = 0.5f;
@@ -298,9 +298,9 @@ void Test_qu_check()
   QuaternionMathF::UnitQuaternion(quat);
 
   {
-    typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
-    FloatOrientationArray_t qu(4);
+    FOrientArrayType qu(4);
     qu[0] = quat.x;
     qu[1] = quat.y;
     qu[2] = quat.z;
@@ -377,9 +377,9 @@ void Test_qu_check()
 void Test_ax_check()
 {
   {
-    typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
-    FloatOrientationArray_t ax(4);
+    FOrientArrayType ax(4);
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
@@ -447,9 +447,9 @@ void Test_ax_check()
 void Test_om_check()
 {
   {
-    typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
-    FloatOrientationArray_t ax(9);
+    FOrientArrayType ax(9);
     ax[0] = 1.0f;
     ax[1] = 0.0f;
     ax[2] = 0.0f;
@@ -551,7 +551,7 @@ void Test_GenRot()
 
   float eu[3] = { 1.0f, 0.0f, 0.0f};
   float omega = DREAM3D::Constants::k_PiOver2;
-  GenRotTest<FloatOrientationArray_t, float>(eu, omega);
+  GenRotTest<FOrientArrayType, float>(eu, omega);
   GenRotTest<FloatVectorType, float>(eu, omega);
   GenRotTest<FloatQVectorType, float>(eu, omega);
 
@@ -682,7 +682,7 @@ void Test_eu2_XXX()
   std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
   float eu[3] = {k_PiOver2, 0.0f, 0.0f};
   Print_EU<float*>(eu);
-  EU_2_XXX<FloatOrientationArray_t>(eu);
+  EU_2_XXX<FOrientArrayType>(eu);
   EU_2_XXX<FloatVectorType>(eu);
   EU_2_XXX<FloatQVectorType>(eu);
 }
@@ -750,7 +750,7 @@ void Test_om2_XXX()
                   0.0000, 0.0000, 1.0000
                 };
   Print_OM<float*>(om);
-  OM_2_XXX<FloatOrientationArray_t>(om);
+  OM_2_XXX<FOrientArrayType>(om);
   OM_2_XXX<FloatVectorType>(om);
   OM_2_XXX<FloatQVectorType>(om);
 
@@ -808,7 +808,7 @@ void Test_ro2_XXX()
   std::cout << "Test_ro2_XXX  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
   float ro[4] = {0.0f, 0.0f, -1.0f, 1.0f};
   Print_RO<float*, float>(ro);
-  RO_2_XXX<FloatOrientationArray_t>(ro);
+  RO_2_XXX<FOrientArrayType>(ro);
   RO_2_XXX<FloatVectorType>(ro);
   RO_2_XXX<FloatQVectorType>(ro);
 }
@@ -862,7 +862,7 @@ void Test_ax2_XXX()
   std::cout << "Test_ax2_XXX  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
   float ax[4] = {0.0f, 0.0f, -1.0f, k_PiOver2};
   Print_AX<float*>(ax);
-  AX_2_XXX<FloatOrientationArray_t>(ax);
+  AX_2_XXX<FOrientArrayType>(ax);
   AX_2_XXX<std::vector<float> >(ax);
   AX_2_XXX<FloatQVectorType>(ax);
 }
@@ -921,7 +921,7 @@ void Test_qu2_XXX()
     std::cout << "Test_qu2_XXX  (SCALAR, <X, Y, Z>) ***************************************" << std::endl;
     float qu[4] = {DREAM3D::Constants::k_1OverRoot2, 0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2};
     Print_QU<float*>(qu, QuaternionMathF::QuaternionScalarVector);
-    QU_2_XXX<FloatOrientationArray_t>(qu, QuaternionMathF::QuaternionScalarVector);
+    QU_2_XXX<FOrientArrayType>(qu, QuaternionMathF::QuaternionScalarVector);
     //  QU_2_XXX<std::vector<float> >(qu);
     //  QU_2_XXX<FloatQVectorType>(qu);
   }
@@ -930,7 +930,7 @@ void Test_qu2_XXX()
     std::cout << "Test_qu2_XXX  (<X, Y, Z>, SCALAR) ***************************************" << std::endl;
     float qu[4] = {0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2};
     Print_QU<float*>(qu);
-    QU_2_XXX<FloatOrientationArray_t>(qu);
+    QU_2_XXX<FOrientArrayType>(qu);
     //  QU_2_XXX<std::vector<float> >(qu);
     //  QU_2_XXX<FloatQVectorType>(qu);
   }
@@ -990,7 +990,7 @@ void Test_ho2_XXX()
   std::cout << "Test_ho2_XXX  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;
   float ho[3] = {0.000000f, 0.000000f, -0.7536693215f};
   Print_HO<float*>(ho);
-  HO_2_XXX<FloatOrientationArray_t>(ho);
+  HO_2_XXX<FOrientArrayType>(ho);
   HO_2_XXX<std::vector<float> >(ho);
   HO_2_XXX<FloatQVectorType>(ho);
 }

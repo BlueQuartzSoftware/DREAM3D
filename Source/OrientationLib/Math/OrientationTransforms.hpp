@@ -2376,4 +2376,5 @@ class OrientationTransforms
     OrientationTransforms(const OrientationTransforms&); // Copy Constructor Not Implemented
     void operator=(const OrientationTransforms&); // Operator '=' Not Implemented
 };
+
 #endif /* _OrientationTransforms_H_ */

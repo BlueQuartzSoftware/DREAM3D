@@ -51,6 +51,8 @@
 #include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
+
+
 #include "OrientationLib/Math/OrientationMath.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -1133,7 +1135,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed,
     totaldensity = totaldensity + axisodf->getValue(bin);
     bin++;
   }
-  OrthoOps->determineEulerAngles(bin, phi1, PHI, phi2);
+  FOrientArrayType eulers = OrthoOps->determineEulerAngles(bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
@@ -1145,9 +1147,9 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed,
   precip->m_AxisLengths[0] = r1;
   precip->m_AxisLengths[1] = r2;
   precip->m_AxisLengths[2] = r3;
-  precip->m_AxisEulerAngles[0] = phi1;
-  precip->m_AxisEulerAngles[1] = PHI;
-  precip->m_AxisEulerAngles[2] = phi2;
+  precip->m_AxisEulerAngles[0] = eulers[0];
+  precip->m_AxisEulerAngles[1] = eulers[1];
+  precip->m_AxisEulerAngles[2] = eulers[2];
   precip->m_Omega3s = omega3f;
   precip->m_FeaturePhases = phase;
 }
@@ -1709,12 +1711,12 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
-  float phi1 = m_AxisEulerAngles[3 * gnum];
-  float PHI = m_AxisEulerAngles[3 * gnum + 1];
-  float phi2 = m_AxisEulerAngles[3 * gnum + 2];
   float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+  FOrientArrayType om(9, 0.0);
+  FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * gnum]), 3), om);
+  om.toGMatrix(ga);
+
   xc = m_Centroids[3 * gnum];
   yc = m_Centroids[3 * gnum + 1];
   zc = m_Centroids[3 * gnum + 2];
@@ -1838,12 +1840,15 @@ void InsertPrecipitatePhases::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-    float phi1 = m_AxisEulerAngles[3 * i];
-    float PHI = m_AxisEulerAngles[3 * i + 1];
-    float phi2 = m_AxisEulerAngles[3 * i + 2];
+//    float phi1 = m_AxisEulerAngles[3 * i];
+//    float PHI = m_AxisEulerAngles[3 * i + 1];
+//    float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-    OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+    FOrientArrayType om(9, 0.0);
+    FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3*i]), 3), om);
+    om.toGMatrix(ga);
+
     column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
     plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
@@ -2026,11 +2031,10 @@ void InsertPrecipitatePhases::assign_gaps()
       radcur1 = (float(timestep) / 100.0f) * radcur1;
       radcur2 = (float(timestep) / 100.0f) * radcur2;
       radcur3 = (float(timestep) / 100.0f) * radcur3;
-      float phi1 = m_AxisEulerAngles[3 * i];
-      float PHI = m_AxisEulerAngles[3 * i + 1];
-      float phi2 = m_AxisEulerAngles[3 * i + 2];
       float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+      FOrientArrayType om(9, 0.0);
+      FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
+      om.toGMatrix(ga);
       column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
       row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
       plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );

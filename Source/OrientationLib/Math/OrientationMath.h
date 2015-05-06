@@ -38,9 +38,14 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
-
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 
+
+#define OM_ORIENTATION_FUNCS 1
+
+typedef OrientationTransforms<FOrientArrayType, float> FOrientTransformsType;
 
 // Here the order of multiplication is q1*q2 not q2*q1
 #if 0
@@ -127,6 +132,7 @@ class OrientationLib_EXPORT OrientationMath
     static void QuattoRod(QuatF& q, float& r1, float& r2, float& r3);
     static void QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3);
 
+#if OM_ORIENTATION_FUNCS
     /**
      * @brief EulertoQuat Passive Quaternion
      * @param ea1
@@ -151,7 +157,7 @@ class OrientationLib_EXPORT OrientationMath
     static void EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3);
 
     static void EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3);
-
+#endif
     /**
      * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge) into a <b>ACTIVE</b> Orientation Matrix. This
      * is taking a Crystal Coordinate system and transforming it to the Sample Coordinate System (C->S). Note that to convert

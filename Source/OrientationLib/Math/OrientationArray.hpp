@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 
@@ -87,6 +87,58 @@ class OrientationArray
       m_Owns(false)
     {
 
+    }
+
+    /**
+     * @brief OrientationArray
+     * @param val0
+     * @param val1
+     * @param val2
+     */
+    OrientationArray(T val0, T val1, T val2 ) :
+      m_Ptr(NULL),
+      m_Size(3),
+      m_Owns(true)
+    {
+      allocate();
+      m_Ptr[0] = val0;
+      m_Ptr[1] = val1;
+      m_Ptr[2] = val2;
+    }
+
+    /**
+     * @brief OrientationArray
+     * @param val0
+     * @param val1
+     * @param val2
+     * @param val3
+     */
+    OrientationArray(T val0, T val1, T val2, T val3 ) :
+      m_Ptr(NULL),
+      m_Size(4),
+      m_Owns(true)
+    {
+      allocate();
+      m_Ptr[0] = val0;
+      m_Ptr[1] = val1;
+      m_Ptr[2] = val2;
+      m_Ptr[3] = val3;
+    }
+
+    /**
+    * @brief OrientationArray Copy constructor
+    * @param quat
+    */
+   explicit OrientationArray(QuaternionMath<T> quat) :
+      m_Ptr(NULL),
+      m_Size(4),
+      m_Owns(true)
+    {
+      allocate();
+      m_Ptr[0] = quat.x;
+      m_Ptr[1] = quat.y;
+      m_Ptr[2] = quat.z;
+      m_Ptr[3] = quat.w;
     }
 
     /**
@@ -153,6 +205,72 @@ class OrientationArray
      * @return
      */
     T* data() const { return m_Ptr; }
+
+    /**
+     * @brief toQuat
+     * @param layout
+     * @return
+     */
+    typename QuaternionMath<T>::Quaternion toQuaternion(typename QuaternionMath<T>::Order layout = QuaternionMath<T>::QuaternionVectorScalar) const
+    {
+      assert(m_Size == 4);
+      QuaternionMath<T>::Quaternion quat;
+      if(layout = QuaternionMath<T>::QuaternionVectorScalar) {
+         quat.x = m_Ptr[0], quat.y = m_Ptr[1], quat.z = m_Ptr[2], quat.w = m_Ptr[3];
+      }
+      else
+      {
+        quat.x = m_Ptr[1], quat.y = m_Ptr[2], quat.z = m_Ptr[3], quat.w = m_Ptr[0];
+      }
+      return quat;
+    }
+
+    /**
+     * @brief fromQuaternion Copies the values from quat into the internal memory
+     * @param quat The quaternion to copyb
+     */
+    void fromQuaternion(typename QuaternionMath<T>::Quaternion quat)
+    {
+      resize(4);
+      m_Ptr[0] = quat.x;
+      m_Ptr[1] = quat.y;
+      m_Ptr[2] = quat.z;
+      m_Ptr[3] = quat.w;
+    }
+
+    /**
+     * @brief fromAxisAngle Copies the Axis-Angle values into this object.
+     * @param x X Component of the Axis
+     * @param y Y Component of the Axis
+     * @param z Z Component of the Axis
+     * @param w The "Angle" part
+     */
+    void fromAxisAngle(T x, T y, T z, T w)
+    {
+      resize(4);
+      m_Ptr[0] = x;
+      m_Ptr[1] = y;
+      m_Ptr[2] = z;
+      m_Ptr[3] = w;
+    }
+
+    /**
+     * @brief toGMatrix Copies the internal values into the 3x3 "G" Matrix
+     * @param g
+     */
+    void toGMatrix(T g[3][3])
+    {
+      assert(m_Size == 9);
+      g[0][0] = m_Ptr[0];
+      g[1][0] = m_Ptr[1];
+      g[2][0] = m_Ptr[2];
+      g[0][1] = m_Ptr[3];
+      g[1][1] = m_Ptr[4];
+      g[2][1] = m_Ptr[5];
+      g[0][2] = m_Ptr[6];
+      g[1][2] = m_Ptr[7];
+      g[2][2] = m_Ptr[8];
+    }
 
     /**
      * @brief resize Resizes the array to the new length
@@ -278,12 +396,11 @@ class OrientationArray
 /**
  * @brief OrientationArrayF A convenience Typedef for a OrientationArray<float>
  */
-typedef OrientationArray<float> FloatOrientationArray_t;
+typedef OrientationArray<float> FOrientArrayType;
 
 /**
  * @brief OrientationArrayD A convenience Typedef for a OrientationArray<double>
  */
-typedef OrientationArray<double> DoubleOrientationArray_t;
-
+typedef OrientationArray<double> DOrientArrayType;
 
 #endif /* _OrientationArray_H_ */

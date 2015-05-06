@@ -45,7 +45,10 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -230,8 +233,9 @@ void JumbleOrientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   for (int32_t i = 1; i < totalFeatures; i++)
   {
-    OrientationMath::EulertoQuat(m_FeatureEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2], q);
-    QuaternionMathF::Copy(q, avgQuats[i]);
+    FOrientArrayType quat(4, 0.0);
+    FOrientTransformsType::eu2qu(FOrientArrayType(&(m_FeatureEulerAngles[3 * i]), 3), quat);
+    QuaternionMathF::Copy(quat.toQuaternion(), avgQuats[i]);
   }
 
   // If there is an error set this to something negative and also set a message

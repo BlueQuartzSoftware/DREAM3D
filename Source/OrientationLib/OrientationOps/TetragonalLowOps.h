@@ -73,21 +73,22 @@ class OrientationLib_EXPORT TetragonalLowOps : public OrientationOps
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
+
     QString getSymmetryName() { return "Tetragonal-Low 4/m"; }
 
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
     virtual void getQuatSymOp(int i, QuatF& q);
     virtual void getRodSymOp(int i, float* r);
     virtual void getMatSymOp(int i, float g[3][3]);
-    virtual void getODFFZRod(float& r1, float& r2, float& r3);
-    virtual void getMDFFZRod(float& r1, float& r2, float& r3);
+    virtual FOrientArrayType getODFFZRod(FOrientArrayType rod);
+    virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod);
     virtual void getNearestQuat(QuatF& q1, QuatF& q2);
-    virtual int getMisoBin(float r1, float r2, float r3);
+    virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
-    virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3);
-    virtual void randomizeEulerAngles(float& synea1, float& synea2, float& synea3);
-    virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3);
-    virtual int getOdfBin(float r1, float r2, float r3);
+    virtual FOrientArrayType determineEulerAngles(int choose);
+    virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler);
+    virtual FOrientArrayType determineRodriguesVector(int choose);
+    virtual int getOdfBin(FOrientArrayType rod);
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys);
     virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys);
     virtual void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime);

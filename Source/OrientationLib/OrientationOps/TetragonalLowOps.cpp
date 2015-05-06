@@ -51,7 +51,10 @@
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 namespace Detail
 {
@@ -218,28 +221,40 @@ void TetragonalLowOps::getMatSymOp(int i, float g[3][3])
   g[2][2] = TetraMatSym[i][2][2];
 }
 
-void TetragonalLowOps::getODFFZRod(float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType TetragonalLowOps::getODFFZRod(FOrientArrayType rod)
 {
   int  numsym = 4;
-
-  _calcRodNearestOrigin(TetraRodSym, numsym, r1, r2, r3);
+  return _calcRodNearestOrigin(TetraRodSym, numsym, rod);
 }
-
-void TetragonalLowOps::getMDFFZRod(float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType TetragonalLowOps::getMDFFZRod(FOrientArrayType rod)
 {
   float w, n1, n2, n3;
-  float FZn1, FZn2, FZn3;
+  float FZn1, FZn2, FZn3, FZw = 0;
 
-  _calcRodNearestOrigin(TetraRodSym, 4, r1, r2, r3);
-  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  rod = _calcRodNearestOrigin(TetraRodSym, 4, rod);
+  FOrientArrayType ax(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
+  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZn1 = fabs(n1);
   FZn2 = fabs(n2);
   FZn3 = fabs(n3);
+  FZw = w;
 
-  OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
+  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
+  OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
+  return rod;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TetragonalLowOps::getNearestQuat(QuatF& q1, QuatF& q2)
 {
   int numsym = 4;
@@ -247,13 +262,17 @@ void TetragonalLowOps::getNearestQuat(QuatF& q1, QuatF& q2)
   _calcNearestQuat(TetraQuatSym, numsym, q1, q2);
 }
 
-int TetragonalLowOps::getMisoBin(float r1, float r2, float r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TetragonalLowOps::getMisoBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::TetraDim1InitValue;
   dim[1] = Detail::TetraDim2InitValue;
@@ -265,15 +284,18 @@ int TetragonalLowOps::getMisoBin(float r1, float r2, float r3)
   bins[1] = 72.0;
   bins[2] = 18.0;
 
-  return _calcMisoBin(dim, bins, step, r1, r2, r3);
+  return _calcMisoBin(dim, bins, step, ho);
 }
 
-void TetragonalLowOps::determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType TetragonalLowOps::determineEulerAngles(int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
-  float r1, r2, r3;
+  float h1, h2, h3;
 
   init[0] = Detail::TetraDim1InitValue;
   init[1] = Detail::TetraDim2InitValue;
@@ -285,27 +307,47 @@ void TetragonalLowOps::determineEulerAngles(int choose, float& synea1, float& sy
   phi[1] = static_cast<float>((choose / 72) % 72);
   phi[2] = static_cast<float>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getODFFZRod(r1, r2, r3);
-  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+
+  ro = getODFFZRod(ro);
+  FOrientArrayType eu(4);
+  OrientationTransforms<FOrientArrayType, float>::ro2eu(ro, eu);
+  return eu;
 }
 
-void TetragonalLowOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType TetragonalLowOps::randomizeEulerAngles(FOrientArrayType synea)
 {
   QuatF q;
   QuatF qc;
-  OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+
+  FOrientArrayType quat(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
+  q = quat.toQuaternion();
   QuaternionMathF::Multiply(q, TetraQuatSym[symOp], qc);
-  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
+
+  quat.fromQuaternion(qc);
+  OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
+  return synea;
 }
 
-void TetragonalLowOps::determineRodriguesVector( int choose, float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType TetragonalLowOps::determineRodriguesVector(int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
+  float h1, h2, h3;
 
   init[0] = Detail::TetraDim1InitValue;
   init[1] = Detail::TetraDim2InitValue;
@@ -317,18 +359,25 @@ void TetragonalLowOps::determineRodriguesVector( int choose, float& r1, float& r
   phi[1] = static_cast<float>((choose / 72) % 72);
   phi[2] = static_cast<float>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getMDFFZRod(r1, r2, r3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+  ro = getMDFFZRod(ro);
+  return ro;
 }
 
-int TetragonalLowOps::getOdfBin(float r1, float r2, float r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TetragonalLowOps::getOdfBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::TetraDim1InitValue;
   dim[1] = Detail::TetraDim2InitValue;
@@ -340,7 +389,7 @@ int TetragonalLowOps::getOdfBin(float r1, float r2, float r3)
   bins[1] = 72.0f;
   bins[2] = 18.0f;
 
-  return _calcODFBin(dim, bins, step, r1, r2, r3);
+  return _calcODFBin(dim, bins, step, ho);
 }
 
 void TetragonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
@@ -425,14 +474,14 @@ namespace Detail
   {
     class GenerateSphereCoordsImpl
     {
-        FloatArrayType* eulers;
+        FloatArrayType* m_Eulers;
         FloatArrayType* m_xyz001;
         FloatArrayType* m_xyz011;
         FloatArrayType* m_xyz111;
 
       public:
         GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
-          eulers(eulerAngles),
+          m_Eulers(eulerAngles),
           m_xyz001(xyz001Coords),
           m_xyz011(xyz011Coords),
           m_xyz111(xyz111Coords)
@@ -443,15 +492,15 @@ namespace Detail
         {
           float g[3][3];
           float gTranpose[3][3];
-          float* currentEuler = NULL;
           float direction[3] = {0.0, 0.0, 0.0};
 
 
           for(size_t i = start; i < end; ++i)
           {
-            currentEuler = eulers->getPointer(i * 3);
-
-            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            FOrientArrayType eu(m_Eulers->getPointer(i * 3), 3);
+            FOrientArrayType om(9, 0.0);
+            OrientationTransforms<FOrientArrayType, float>::eu2om(eu, om);
+            om.toGMatrix(g);
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -570,6 +619,7 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double 
   }
 
   QuatF qc;
+  QuatF q2;
   QuatF q1;
   float g[3][3];
   float p[3];
@@ -577,13 +627,21 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double 
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
+
+  FOrientArrayType eu(phi1, phi, phi2);
+  FOrientArrayType qu(4);
+  FOrientArrayType om(9); // Reusable for the loop
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
+  q1 = qu.toQuaternion();
 
   for (int j = 0; j < 4; j++)
   {
-    QuaternionMathF::Multiply(q1, TetraQuatSym[j], qc);
+    getQuatSymOp(j, q2);
+    QuaternionMathF::Multiply(q1, q2, qc);
 
-    OrientationMath::QuattoMat(qc, g);
+    qu.fromQuaternion(qc);
+    OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
+    om.toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;

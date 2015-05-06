@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 
@@ -129,17 +130,17 @@ class OrientationLib_EXPORT OrientationOps
     virtual void getQuatSymOp(int i, QuatF& q) = 0;
     virtual void getRodSymOp(int i, float* r) = 0;
     virtual void getMatSymOp(int i, float g[3][3]) = 0;
-    virtual void getODFFZRod(float& r1, float& r2, float& r3) = 0;
-    virtual void getMDFFZRod(float& r1, float& r2, float& r3) = 0;
+    virtual FOrientArrayType getODFFZRod(FOrientArrayType rod) = 0;
+    virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod) = 0;
     virtual void getNearestQuat(QuatF& q1, QuatF& q2) = 0;
     virtual void getFZQuat(QuatF& qr);
-    virtual int getMisoBin(float r1, float r2, float r3) = 0;
+    virtual int getMisoBin(FOrientArrayType rod) = 0;
     virtual bool inUnitTriangle(float eta, float chi) = 0;
-    virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3) = 0;
-    virtual void randomizeEulerAngles(float& synea1, float& synea2, float& synea3) = 0;
+    virtual FOrientArrayType determineEulerAngles(int choose) = 0;
+    virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler) = 0;
     virtual size_t getRandomSymmetryOperatorIndex(int numSymOps);
-    virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3) = 0;
-    virtual int getOdfBin(float r1, float r2, float r3) = 0;
+    virtual FOrientArrayType determineRodriguesVector(int choose) = 0;
+    virtual int getOdfBin(FOrientArrayType rod) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
     virtual void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime) = 0;
@@ -208,13 +209,13 @@ class OrientationLib_EXPORT OrientationOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
 
-    void _calcRodNearestOrigin(const float rodsym[24][3], int numsym, float& r1, float& r2, float& r3);
+    FOrientArrayType _calcRodNearestOrigin(const float rodsym[24][3], int numsym, FOrientArrayType rod);
     void _calcNearestQuat(const QuatF quatsym[24], int numsym, QuatF& q1, QuatF& q2);
     void _calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF& qr);
 
-    int _calcMisoBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
+    int _calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType &homochoric);
     void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3);
-    int _calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
+    int _calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType homochoric);
 
   private:
     OrientationOps(const OrientationOps&); // Copy Constructor Not Implemented

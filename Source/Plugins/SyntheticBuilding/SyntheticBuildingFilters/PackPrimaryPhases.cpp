@@ -60,6 +60,8 @@
 #include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
+
+
 #include "OrientationLib/Math/OrientationMath.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -1485,7 +1487,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t
     totaldensity = totaldensity + axisodf->getValue(bin);
     bin++;
   }
-  m_OrthoOps->determineEulerAngles(bin, phi1, PHI, phi2);
+  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles(bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
@@ -1497,9 +1499,9 @@ void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t
   feature->m_AxisLengths[0] = r1;
   feature->m_AxisLengths[1] = r2;
   feature->m_AxisLengths[2] = r3;
-  feature->m_AxisEulerAngles[0] = phi1;
-  feature->m_AxisEulerAngles[1] = PHI;
-  feature->m_AxisEulerAngles[2] = phi2;
+  feature->m_AxisEulerAngles[0] = eulers[0];
+  feature->m_AxisEulerAngles[1] = eulers[1];
+  feature->m_AxisEulerAngles[2] = eulers[2];
   feature->m_Omega3s = omega3f;
   feature->m_FeaturePhases = phase;
   feature->m_Neighborhoods = 0;
@@ -2074,7 +2076,10 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   float phi2 = m_AxisEulerAngles[3 * gnum + 2];
   float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+  FOrientArrayType om(9, 0.0);
+  FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
+  om.toGMatrix(ga);
+
   xc = m_Centroids[3 * gnum];
   yc = m_Centroids[3 * gnum + 1];
   zc = m_Centroids[3 * gnum + 2];
@@ -2234,7 +2239,9 @@ void PackPrimaryPhases::assign_voxels()
     float PHI = m_AxisEulerAngles[3 * i + 1];
     float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-    OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+    FOrientArrayType om(9, 0.0);
+    FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
+    om.toGMatrix(ga);
     column = static_cast<DimType>( xc / xRes );
     row = static_cast<DimType>( yc / yRes );
     plane = static_cast<DimType>( zc / zRes );
