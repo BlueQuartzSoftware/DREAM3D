@@ -119,7 +119,9 @@ class CalculateTwinBoundarySchmidFactorsImpl
 //            q1[m]=m_Quats[5*feature+m];
 //          }
           //calculate crystal direction parallel to normal
-          OrientationMath::QuattoMat(q1, g1);
+          FOrientArrayType om(9);
+          FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+          om.toGMatrix(g1);
           MatrixMath::Multiply3x3with3x1(g1, normal, n);
           //calculate crystal direction parallel to loading direction
           MatrixMath::Multiply3x3with3x1(g1, m_LoadDir, crystalLoading);

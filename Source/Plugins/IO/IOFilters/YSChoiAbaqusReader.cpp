@@ -477,7 +477,6 @@ void YSChoiAbaqusReader::execute()
     avgQuats[i].z = tokens[4].toFloat(&ok);
     avgQuats[i].w = tokens[5].toFloat(&ok);
   }
-  float ea1, ea2, ea3;
   QuatF q;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g[3][3];
@@ -496,10 +495,9 @@ void YSChoiAbaqusReader::execute()
     q.y = static_cast<float>( (g[2][0] - g[0][2]) / (4.0 * q.w) );
     q.z = static_cast<float>( (g[0][1] - g[1][0]) / (4.0 * q.w) );
     QuaternionMathF::Copy(q, quats[i]);
-    OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-    m_CellEulerAngles[3 * i] = ea1;
-    m_CellEulerAngles[3 * i + 1] = ea2;
-    m_CellEulerAngles[3 * i + 2] = ea3;
+
+    FOrientTransformsType::qu2eu(FOrientArrayType(q), FOrientArrayType(m_CellEulerAngles + (3*i), 3) );
+
     delete[] mat[i];
   }
   delete[] mat;

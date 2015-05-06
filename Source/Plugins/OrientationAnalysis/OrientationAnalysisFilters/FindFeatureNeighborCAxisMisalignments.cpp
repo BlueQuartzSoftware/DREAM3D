@@ -230,7 +230,9 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
-    OrientationMath::QuattoMat(q1, g1);
+    FOrientArrayType om(9);
+    FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+    om.toGMatrix(g1);
     //transpose the g matrix so when caxis is multiplied by it
     //it will give the sample direction that the caxis is along
     MatrixMath::Transpose3x3(g1, g1t);
@@ -248,7 +250,8 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
       {
         QuaternionMathF::Copy(avgQuats[nname], q2);
-        OrientationMath::QuattoMat(q2, g2);
+        FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+        om.toGMatrix(g2);
         //transpose the g matrix so when caxis is multiplied by it
         //it will give the sample direction that the caxis is along
         MatrixMath::Transpose3x3(g2, g2t);

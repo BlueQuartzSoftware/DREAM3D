@@ -952,8 +952,11 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
   float planeMisalignment = 0, directionMisalignment = 0;
   int ss1 = 0, ss2 = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
   for(int i = 0; i < 12; i++)
@@ -1038,8 +1041,11 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
   //float directionComponent2 = 0, planeComponent2 = 0;
   float maxF1 = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1119,8 +1125,11 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
   //s float directionComponent2 = 0, planeComponent2 = 0;
   float maxF1spt = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1202,8 +1211,11 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
   // float directionComponent2 = 0, planeComponent2 = 0;
   float maxF7 = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 

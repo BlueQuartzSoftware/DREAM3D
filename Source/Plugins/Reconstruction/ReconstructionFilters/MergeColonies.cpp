@@ -564,14 +564,17 @@ bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 
   float gBeta[3][3];
   float gBetaT[3][3];
-  OrientationMath::QuattoMat(betaQuat, gBeta);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(betaQuat), om);
+  om.toGMatrix(gBeta);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gBeta, gBetaT);
 
   float gAlpha[3][3];
   float gAlphaT[3][3];
-  OrientationMath::QuattoMat(alphaQuat, gAlpha);
+  FOrientTransformsType::qu2om(FOrientArrayType(alphaQuat), om);
+  om.toGMatrix(gAlpha);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gAlpha, gAlphaT);

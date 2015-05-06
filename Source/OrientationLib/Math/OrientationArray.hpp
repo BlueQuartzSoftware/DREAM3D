@@ -129,7 +129,7 @@ class OrientationArray
     * @brief OrientationArray Copy constructor
     * @param quat
     */
-   explicit OrientationArray(QuaternionMath<T> quat) :
+   explicit OrientationArray(typename QuaternionMath<T>::Quaternion quat) :
       m_Ptr(NULL),
       m_Size(4),
       m_Owns(true)
@@ -270,6 +270,22 @@ class OrientationArray
       g[0][2] = m_Ptr[6];
       g[1][2] = m_Ptr[7];
       g[2][2] = m_Ptr[8];
+    }
+
+    /**
+     * @brief toAxisAngle Copies the values out to an Axis-Angle representation. Note that
+     * arguments will have values copied into them as they are pass-by-referemce.
+     * @param x
+     * @param y
+     * @param z
+     * @param w
+     */
+    void toAxisAngle(T &x, T &y, T &z, T &w)
+    {
+      x = m_Ptr[0];
+      y = m_Ptr[1];
+      z = m_Ptr[2];
+      w = m_Ptr[3];
     }
 
     /**

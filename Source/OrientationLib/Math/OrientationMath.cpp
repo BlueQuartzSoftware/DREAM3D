@@ -350,7 +350,32 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float& w, flo
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::RodtoQuat(QuatF& q, float r1, float r2, float r3)
+{
+  float rmag, w;
 
+  rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
+  rmag = sqrt(rmag);
+  if(rmag == 0.0)
+  {
+    q.x = 0.0, q.y = 0.0, q.z = 0.0, q.w = 1.0;
+    return;
+  }
+  r1 = r1 / rmag;
+  r2 = r2 / rmag;
+  r3 = r3 / rmag;
+  w = 2.0f * atan(rmag);
+  float const1 = sinf(w / 2.0f);
+  q.x = r1 * const1;
+  q.y = r2 * const1;
+  q.z = r3 * const1;
+  q.w = static_cast<float>( cosf(w / 2.0f) );
+}
+
+#if OM_ORIENTATION_FUNCS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -388,31 +413,6 @@ void OrientationMath::QuattoMat(QuatF& q, float g[3][3])
   g[2][0] = ((2 * q.x * q.z) + (2 * q.y * q.w));
   g[2][1] = ((2 * q.y * q.z) - (2 * q.x * q.w));
   g[2][2] = (1 - (2 * q.x * q.x) - (2 * q.y * q.y));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::RodtoQuat(QuatF& q, float r1, float r2, float r3)
-{
-  float rmag, w;
-
-  rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
-  rmag = sqrt(rmag);
-  if(rmag == 0.0)
-  {
-    q.x = 0.0, q.y = 0.0, q.z = 0.0, q.w = 1.0;
-    return;
-  }
-  r1 = r1 / rmag;
-  r2 = r2 / rmag;
-  r3 = r3 / rmag;
-  w = 2.0f * atan(rmag);
-  float const1 = sinf(w / 2.0f);
-  q.x = r1 * const1;
-  q.y = r2 * const1;
-  q.z = r3 * const1;
-  q.w = static_cast<float>( cosf(w / 2.0f) );
 }
 
 // -----------------------------------------------------------------------------
@@ -463,7 +463,7 @@ void OrientationMath::QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3)
   ea3 = fmodf(ea3, DREAM3D::Constants::k_2Pi);
 }
 
-#if OM_ORIENTATION_FUNCS
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -678,7 +678,11 @@ void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float
 void OrientationMath::MultiplyQuaternionVector(QuatF& inQuat, float* inVec, float* outVec)
 {
   float g[3][3];
-  OrientationMath::QuattoMat(inQuat, g);
+
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::qu2om(FOrientArrayType(inQuat), om);
+  om.toGMatrix(g);
+
   MatrixMath::Multiply3x3with3x1(g, inVec, outVec);
 }
 
@@ -718,7 +722,10 @@ void OrientationMath::ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, f
   n[1] = n2;
   n[2] = n3;
 
-  QuattoMat(q, g);
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::qu2om(FOrientArrayType(q), om);
+  om.toGMatrix(g);
+
   MatrixMath::Multiply3x3with3x1(g, n, nNew);
   MatrixMath::Normalize3x1(nNew);
   n1 = nNew[0];

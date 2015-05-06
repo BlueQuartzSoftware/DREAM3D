@@ -154,7 +154,9 @@ float MonoclinicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
       qc.w = 1;
     }
 
-    OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
+    FOrientArrayType ax(4, 0.0f);
+    FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
+    ax.toAxisAngle(n1, n2, n3, w);
 
     if (w > DREAM3D::Constants::k_Pi)
     {

@@ -43,7 +43,7 @@
 #include "OrientationLib/Math/OrientationTransforms.hpp"
 
 
-#define OM_ORIENTATION_FUNCS 0
+#define OM_ORIENTATION_FUNCS 1
 
 typedef OrientationTransforms<FOrientArrayType, float> FOrientTransformsType;
 
@@ -116,13 +116,13 @@ class OrientationLib_EXPORT OrientationMath
     static void RodtoHomochoric(float& r1, float& r2, float& r3);
     static void RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3);
 
-
+#if OM_ORIENTATION_FUNCS
     static void QuattoAxisAngle(QuatF& q, float& w, float& n1, float& n2, float& n3);
     static void QuattoMat(QuatF& q, float g[3][3]);
     static void QuattoRod(QuatF& q, float& r1, float& r2, float& r3);
     static void QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3);
 
-#if OM_ORIENTATION_FUNCS
+
     /**
      * @brief EulertoQuat Passive Quaternion
      * @param ea1
