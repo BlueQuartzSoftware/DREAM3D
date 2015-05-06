@@ -76,9 +76,10 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
     parentDir.mkpath(parentPath);
   }
 
+  // Write our File Version and DREAM3D Version strings
   QJsonObject meta;
-  meta["Name"] = m_PipelineName;
-  meta["Version"] = DREAM3DLib::Version::Complete();
+  meta[DREAM3D::Settings::PipelineName] = m_PipelineName;
+  meta[DREAM3D::Settings::Version] = DREAM3DLib::Version::Complete();
 
   if (m_Root.size() > 0)
   {
@@ -98,7 +99,6 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
   }
   if (outputFile.open(QIODevice::WriteOnly))
   {
-    QByteArray byteArray = doc.toJson();
     int err = outputFile.write(doc.toJson());
     int errorCode = outputFile.error();
     outputFile.close();
@@ -125,10 +125,7 @@ int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipe
   // WRITE THE PIPELINE TO THE JSON FILE
   JsonFilterParametersWriter::Pointer writer = JsonFilterParametersWriter::New();
   writer->setFileName(filePath);
-
-  // Write our File Version and DREAM3D Version strings
-  writer->writeValue(DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
-  writer->writeValue(DREAM3D::HDF5::DREAM3DVersion, DREAM3DLib::Version::Complete());
+  writer->setPipelineName(fileInfo.completeBaseName());
 
   FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
 
