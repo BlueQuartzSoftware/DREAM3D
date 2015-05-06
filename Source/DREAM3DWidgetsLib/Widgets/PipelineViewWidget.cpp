@@ -132,6 +132,27 @@ void PipelineViewWidget::setupGui()
 {
   newEmptyPipelineViewLayout();
   connect(&m_autoScrollTimer, SIGNAL(timeout()), this, SLOT(doAutoScroll()));
+
+  m_DropBox = new QFrame();
+  m_DropBox->setObjectName(QStringLiteral("m_DropBox"));
+  m_DropBox->setFrameShadow(QFrame::Plain);
+  m_DropBox->setFrameShape(QFrame::Box);
+  m_DropBox->setMinimumSize(30, 30);
+  m_DropBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+  QString str;
+  QTextStream ss(&str);
+
+  ss << "QFrame {"
+    << "color: rgb(127, 0, 63);"
+    << "border: 2px solid purple;"
+    << "border-top-left-radius: 5px;"
+    << "border-top-right-radius: 5px;"
+    << "border-bottom-left-radius: 5px;"
+    << "border-bottom-right-radius: 5px;"
+    << "}";
+
+  m_DropBox->setStyleSheet(str);
 }
 
 // -----------------------------------------------------------------------------
@@ -869,38 +890,36 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 	}
 
 	QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
+  if (event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter, and the drag hasn't left the filter's bounds yet.
+  {
+    if (m_FilterBeingDragged != NULL && m_FilterWidgetLayout->indexOf(m_DropBox) == -1)
+    {
+      int index = m_FilterWidgetLayout->indexOf(m_FilterBeingDragged);
+      m_FilterWidgetLayout->removeWidget(m_FilterBeingDragged);
+      m_FilterWidgetLayout->insertWidget(index, m_DropBox);
+      m_FilterBeingDragged->setParent(NULL);
+    }
+  }
 	if (o == NULL && event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
 	{
-		int count = filterCount();
-		for (int i = 0; i < count; ++i)
-		{
-			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
-			{
-				if (event->pos().y() < w->geometry().y())
-				{
-					m_FilterWidgetLayout->removeWidget(m_FilterBeingDragged);
-					break;
-				}
-			}
-		}
+    // Remove the drop box
+    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+    {
+      m_FilterWidgetLayout->removeWidget(m_DropBox);
+      m_DropBox->setParent(NULL);
+    }
+
 		bool didInsert = false;
-		count = filterCount();
+    int count = filterCount();
+    std::cout << "Count: " << count << std::endl;
 		for (int i = 0; i < count; ++i)
 		{
 			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
 			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
 			{
-				/*if (event->pos().y() <= 0)
+        if (event->pos().y() < w->geometry().y() + w->geometry().height()/2)
 				{
-				m_FilterWidgetLayout->insertWidget(draggedWidgetIndex, m_FilterBeingDragged);
-				setSelectedFilterWidget(m_FilterBeingDragged);
-				didInsert = true;
-				break;
-				}*/
-				if (event->pos().y() < w->geometry().y())
-				{
-					m_FilterWidgetLayout->insertWidget(i, m_FilterBeingDragged);
+          m_FilterWidgetLayout->insertWidget(i, m_DropBox);
 					setSelectedFilterWidget(m_FilterBeingDragged);
 					reindexWidgetTitles();
 					didInsert = true;
@@ -914,15 +933,63 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
 			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
 			{
-				if (event->pos().y() > w->geometry().y() + w->geometry().height())
+				if (event->pos().y() > w->geometry().y() + w->geometry().height()/2)
 				{
-					m_FilterWidgetLayout->insertWidget(count - 2, m_FilterBeingDragged);
+          m_FilterWidgetLayout->insertWidget(count - 1, m_DropBox);
 					setSelectedFilterWidget(m_FilterBeingDragged);
 					reindexWidgetTitles();
 				}
 			}
 		}
 	}
+  else
+  {
+    bool didInsert = false;
+    const QMimeData* mimedata = event->mimeData();
+    // This path is taken if a filter is dragged from the list of filters
+    if (mimedata->hasText())
+    {
+      if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+      {
+        m_FilterWidgetLayout->removeWidget(m_DropBox);
+        m_DropBox->setParent(NULL);
+      }
+
+      int count = filterCount();
+      for (int i = 0; i < count; ++i)
+      {
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+        if (NULL != w && event->pos().y() < w->geometry().y() + w->geometry().height()/2)
+        {
+          m_FilterWidgetLayout->insertWidget(i, m_DropBox);
+          didInsert = true;
+          break;
+        }
+      }
+      // Check to see if we are trying to move it to the end
+      if (false == didInsert && count > 0)
+      {
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
+        if (NULL != w && event->pos().y() > w->geometry().y() + w->geometry().height()/2)
+        {
+          m_FilterWidgetLayout->insertWidget(count - 1, m_DropBox);
+        }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::dragLeaveEvent(QDragLeaveEvent* event)
+{
+  // Remove the drop line
+  if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+  {
+    m_FilterWidgetLayout->removeWidget(m_DropBox);
+    m_DropBox->setParent(NULL);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -930,7 +997,6 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
-
   if (event->mimeData()->hasUrls())
   {
     QList<QUrl> urlList;
@@ -963,8 +1029,47 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
     // This path is take if a filter is being dragged around in the pipeline and dropped.
+    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+    {
+      m_FilterWidgetLayout->removeWidget(m_DropBox);
+      m_DropBox->setParent(NULL);
+    }
+
+    int count = filterCount();
+    bool didInsert = false;
+    for (int i = 0; i < count; ++i)
+    {
+      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+      if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
+      {
+        if (event->pos().y() < w->geometry().y() + w->geometry().height() / 3)
+        {
+          m_FilterWidgetLayout->insertWidget(i, m_FilterBeingDragged);
+          setSelectedFilterWidget(m_FilterBeingDragged);
+          reindexWidgetTitles();
+          didInsert = true;
+          break;
+        }
+      }
+    }
+    // Check to see if we are trying to move it to the end
+    if (false == didInsert && count > 0)
+    {
+      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
+      if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
+      {
+        if (event->pos().y() > w->geometry().y() + w->geometry().height())
+        {
+          m_FilterWidgetLayout->insertWidget(count - 2, m_FilterBeingDragged);
+          setSelectedFilterWidget(m_FilterBeingDragged);
+          reindexWidgetTitles();
+        }
+      }
+    }
+
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
+
     // Make sure the widget titles are all correct
     reindexWidgetTitles();
     preflightPipeline();
@@ -973,6 +1078,13 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   }
   else
   {
+    // Remove the drop line
+    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+    {
+      m_FilterWidgetLayout->removeWidget(m_DropBox);
+      m_DropBox->setParent(NULL);
+    }
+
     const QMimeData* mimedata = event->mimeData();
     QByteArray dropData = mimedata->data("text/plain");
     // This path is taken if a filter is dropped from the list of filters
@@ -993,6 +1105,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
           }
         }
       }
+
       // Now that we have an index, insert the filter.
       addFilter(name, count);
     }

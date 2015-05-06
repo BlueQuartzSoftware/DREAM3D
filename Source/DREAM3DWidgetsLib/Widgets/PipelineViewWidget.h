@@ -46,6 +46,7 @@
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QStatusBar>
+#include <QtGui/QPainter>
 
 
 #include "DREAM3DLib/Common/PipelineMessage.h"
@@ -303,10 +304,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
   protected:
     void setupGui();
     void dragEnterEvent(QDragEnterEvent* event);
-    //  void dragLeaveEvent(QDragLeaveEvent* event);
+    void dragLeaveEvent(QDragLeaveEvent* event);
     void dragMoveEvent(QDragMoveEvent* event);
     void dropEvent(QDropEvent* event);
-
     void showContextMenu(const QPoint& globalPos);
 
   protected slots:
@@ -316,6 +316,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     PipelineFilterWidget*     m_SelectedFilterWidget;
     QVBoxLayout*              m_FilterWidgetLayout;
     PipelineFilterWidget*     m_FilterBeingDragged;
+    QFrame*                   m_DropBox;
     int                       m_DropIndex;
     QLabel*                   m_EmptyPipelineLabel;
     QPoint                    m_LastDragPoint;
