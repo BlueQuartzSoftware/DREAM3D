@@ -53,7 +53,6 @@ FindSizes::FindSizes() :
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_Volumes(NULL),
   m_EquivalentDiameters(NULL),
@@ -68,6 +67,7 @@ FindSizes::FindSizes() :
 FindSizes::~FindSizes()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -75,16 +75,17 @@ void FindSizes::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getEquivalentDiametersArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("NumCells", "NumCellsArrayName", FilterParameterWidgetType::StringWidget, getNumCellsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getEquivalentDiametersArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayName", FilterParameterWidgetType::StringWidget, getNumCellsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
-
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -118,28 +119,28 @@ int FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 // -----------------------------------------------------------------------------
 void FindSizes::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
 
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName() );
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getEquivalentDiametersArrayName() );
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getNumCellsArrayName() );
-  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -155,6 +156,74 @@ void FindSizes::preflight()
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindSizes::find_sizes()
+{
+  float radcubed = 0.0f;
+  float diameter = 0.0f;
+
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
+
+  DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
+  m_FeatureCounts->initializeWithZeros();
+  float* featurecounts = m_FeatureCounts->getPointer(0);
+
+  for (size_t j = 0; j < totalPoints; j++)
+  {
+    int32_t gnum = m_FeatureIds[j];
+    featurecounts[gnum]++;
+  }
+  float res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
+  float vol_term = (4.0f / 3.0f) * DREAM3D::Constants::k_Pi;
+  for (size_t i = 1; i < numfeatures; i++)
+  {
+    m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
+    m_Volumes[i] = (featurecounts[i] * res_scalar);
+    radcubed = m_Volumes[i] / vol_term;
+    diameter = 2.0f * powf(radcubed, 0.3333333333f);
+    m_EquivalentDiameters[i] = diameter;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindSizes::find_sizes2D()
+{
+  float radsquared = 0.0f;
+  float diameter = 0.0f;
+
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
+
+  DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
+  m_FeatureCounts->initializeWithZeros();
+  float* featurecounts = m_FeatureCounts->getPointer(0);
+
+  for (size_t j = 0; j < totalPoints; j++)
+  {
+    int32_t gnum = m_FeatureIds[j];
+    featurecounts[gnum]++;
+  }
+  float res_scalar = 0.0f;
+  if (m->getGeometryAs<ImageGeom>()->getXPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes(); }
+  else if (m->getGeometryAs<ImageGeom>()->getYPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getZRes(); }
+  else if (m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes(); }
+  for (size_t i = 1; i < numfeatures; i++)
+  {
+    m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
+    m_Volumes[i] = (featurecounts[i] * res_scalar);
+    radsquared = m_Volumes[i] / DREAM3D::Constants::k_Pi;
+    diameter = (2 * sqrtf(radsquared));
+    m_EquivalentDiameters[i] = diameter;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -176,80 +245,6 @@ void FindSizes::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSizes::find_sizes()
-{
-  float radcubed;
-  float diameter;
-
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
-
-  DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "FeatureCounts");
-  double* featurecounts = m_FeatureCounts->getPointer(0);
-
-  // Initialize every element to 0.0
-  for (size_t i = 0; i < numfeatures * 1; i++)
-  {
-    featurecounts[i] = 0.0f;
-  }
-
-  for (int64_t j = 0; j < totalPoints; j++)
-  {
-    int gnum = m_FeatureIds[j];
-    featurecounts[gnum]++;
-  }
-  float res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
-  float vol_term = static_cast<double>( (4.0 / 3.0) * DREAM3D::Constants::k_Pi );
-  for (size_t i = 1; i < numfeatures; i++)
-  {
-    m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
-    m_Volumes[i] = (featurecounts[i] * res_scalar);
-    radcubed = m_Volumes[i] / vol_term;
-    diameter = 2.0f * powf(radcubed, 0.3333333333f);
-    m_EquivalentDiameters[i] = diameter;
-  }
-}
-
-void FindSizes::find_sizes2D()
-{
-  float radsquared;
-  float diameter;
-
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
-
-  DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, "FeatureCounts");
-  float* featurecounts = m_FeatureCounts->getPointer(0);
-
-  for (size_t i = 0; i < numfeatures; i++)
-  {
-    featurecounts[i] = 0.0f;
-  }
-  for (int64_t j = 0; j < totalPoints; j++)
-  {
-    int gnum = m_FeatureIds[j];
-    featurecounts[gnum]++;
-  }
-  float res_scalar = 0;
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes(); }
-  else if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getZRes(); }
-  else if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes(); }
-  for (size_t i = 1; i < numfeatures; i++)
-  {
-    m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
-    m_Volumes[i] = (featurecounts[i] * res_scalar);
-    radsquared = m_Volumes[i] / DREAM3D::Constants::k_Pi;
-    diameter = (2 * sqrt(radsquared));
-    m_EquivalentDiameters[i] = diameter;
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindSizes::newFilterInstance(bool copyFilterParameters)
 {
   FindSizes::Pointer filter = FindSizes::New();
@@ -266,13 +261,11 @@ AbstractFilter::Pointer FindSizes::newFilterInstance(bool copyFilterParameters)
 const QString FindSizes::getCompiledLibraryName()
 { return StatisticsConstants::StatisticsBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSizes::getGroupName()
 { return DREAM3D::FilterGroups::StatisticsFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -280,10 +273,8 @@ const QString FindSizes::getGroupName()
 const QString FindSizes::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSizes::getHumanLabel()
 { return "Find Feature Sizes"; }
-

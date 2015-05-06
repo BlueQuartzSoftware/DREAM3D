@@ -135,47 +135,6 @@ void ExtractFlaggedFeatures::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExtractFlaggedFeatures::execute()
-{
-  setErrorCondition(0);
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  size_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
-
-  find_feature_bounds();
-
-  QString newDCName = "";
-  CropVolume::Pointer cropVol = CropVolume::New();
-  for(size_t i = 1; i < totalFeatures; i++)
-  {
-    if(m_FlaggedFeatures[i] == true)
-    {
-      newDCName.clear();
-      newDCName = "Feature_" + QString::number(i);
-      cropVol->setDataContainerArray(getDataContainerArray());
-      cropVol->setNewDataContainerName(newDCName);
-      cropVol->setCellAttributeMatrixPath(m_FeatureIdsArrayPath);
-      cropVol->setXMin(m_FeatureBounds[6 * i]);
-      cropVol->setXMax(m_FeatureBounds[6 * i + 1]);
-      cropVol->setYMin(m_FeatureBounds[6 * i + 2]);
-      cropVol->setYMax(m_FeatureBounds[6 * i + 3]);
-      cropVol->setZMin(m_FeatureBounds[6 * i + 4]);
-      cropVol->setZMax(m_FeatureBounds[6 * i + 5]);
-      cropVol->setRenumberFeatures(false);
-      cropVol->setSaveAsNewDataContainer(true);
-      cropVol->setUpdateOrigin(true);
-      cropVol->execute();
-    }
-  }
-
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::find_feature_bounds()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -224,6 +183,47 @@ void ExtractFlaggedFeatures::find_feature_bounds()
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ExtractFlaggedFeatures::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  size_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
+
+  find_feature_bounds();
+
+  QString newDCName = "";
+  CropVolume::Pointer cropVol = CropVolume::New();
+  for(size_t i = 1; i < totalFeatures; i++)
+  {
+    if(m_FlaggedFeatures[i] == true)
+    {
+      newDCName.clear();
+      newDCName = "Feature_" + QString::number(i);
+      cropVol->setDataContainerArray(getDataContainerArray());
+      cropVol->setNewDataContainerName(newDCName);
+      cropVol->setCellAttributeMatrixPath(m_FeatureIdsArrayPath);
+      cropVol->setXMin(m_FeatureBounds[6 * i]);
+      cropVol->setXMax(m_FeatureBounds[6 * i + 1]);
+      cropVol->setYMin(m_FeatureBounds[6 * i + 2]);
+      cropVol->setYMax(m_FeatureBounds[6 * i + 3]);
+      cropVol->setZMin(m_FeatureBounds[6 * i + 4]);
+      cropVol->setZMax(m_FeatureBounds[6 * i + 5]);
+      cropVol->setRenumberFeatures(false);
+      cropVol->setSaveAsNewDataContainer(true);
+      cropVol->setUpdateOrigin(true);
+      cropVol->execute();
+    }
+  }
+
+  // If there is an error set this to something negative and also set a message
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

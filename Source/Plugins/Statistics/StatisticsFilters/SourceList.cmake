@@ -11,27 +11,27 @@ START_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics")
 # List your public filters here
 
 set(_PublicFilters
-  CorrelateValuesWithVectorDirection
+  #CorrelateValuesWithVectorDirection
   CalculateArrayHistogram
   FindAvgScalarValueForFeatures
-  FindEllipsoidError
+  #FindEllipsoidError
   FindEuclideanDistMap
-  FindFeatureClustering
-  FindFeatureHistogram
+  #FindFeatureClustering
+  #FindFeatureHistogram
   FindLargestCrossSections
   FindNeighborhoods
   FindNeighbors
   FindNumFeatures
   FindShapes
   FindSizes
-  FindSaltykovSizes
+  #FindSaltykovSizes
   FindSurfaceAreaToVolume
-  FindBoundaryCellFractions
+  FindBoundaryElementFractions
   FindVolFractions
   FitFeatureData
-  FitCorrelatedFeatureData
+  #FitCorrelatedFeatureData
   GenerateEnsembleStatistics
-  QuiltCellData
+  #QuiltCellData
 )
 
 #--------------

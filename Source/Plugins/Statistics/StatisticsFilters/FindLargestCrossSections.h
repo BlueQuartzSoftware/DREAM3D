@@ -37,23 +37,12 @@
 #ifndef _FindLargestCrossSections_H_
 #define _FindLargestCrossSections_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FindLargestCrossSections FindLargestCrossSections.h DREAM3DLib/GenericFilters/FindLargestCrossSections.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindLargestCrossSections class. See [Filter documentation](@ref findlargestcrosssections) for details.
  */
 class FindLargestCrossSections : public AbstractFilter
 {
@@ -64,6 +53,7 @@ class FindLargestCrossSections : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindLargestCrossSections, AbstractFilter)
 
     virtual ~FindLargestCrossSections();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -119,10 +109,15 @@ class FindLargestCrossSections : public AbstractFilter
 
   protected:
     FindLargestCrossSections();
+
+    /**
+     * @brief find_crosssections Determines the largest area for a Feature in the defined plane of an Image Geometry
+     */
     void find_crosssections();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, LargestCrossSections)
 
     void dataCheck();
@@ -132,8 +127,3 @@ class FindLargestCrossSections : public AbstractFilter
 };
 
 #endif /* FindLargestCrossSections_H_ */
-
-
-
-
-

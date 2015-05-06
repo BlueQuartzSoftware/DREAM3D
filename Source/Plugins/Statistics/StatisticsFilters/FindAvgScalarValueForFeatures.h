@@ -38,25 +38,12 @@
 #ifndef _FindAvgScalarValueForFeatures_H_
 #define _FindAvgScalarValueForFeatures_H_
 
-#include <QtCore/QString>
-#include <set>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FindAvgScalarValueForFeatures FindAvgScalarValueForFeatures.h /FilterCategoryFilters/FindAvgScalarValueForFeatures.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The FindAvgScalarValueForFeatures class. See [Filter documentation](@ref findavgscalarvalueforfeatures) for details.
  */
 class FindAvgScalarValueForFeatures : public AbstractFilter
 {
@@ -67,6 +54,7 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindAvgScalarValueForFeatures, AbstractFilter)
 
     virtual ~FindAvgScalarValueForFeatures();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -144,7 +132,9 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
     void dataCheck();
 
   private:
+    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InDataArray)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewFeatureArray)
 
     FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&); // Copy Constructor Not Implemented
@@ -152,5 +142,3 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
 };
 
 #endif /* FindAvgScalarValueForFeatures_H_ */
-
-

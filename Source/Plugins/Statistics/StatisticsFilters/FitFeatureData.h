@@ -38,26 +38,12 @@
 #ifndef _FitFeatureData_H_
 #define _FitFeatureData_H_
 
-#include <QtCore/QString>
-#include <set>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
-
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FitFeatureData FitFeatureData.h /FilterCategoryFilters/FitFeatureData.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The FitFeatureData class. See [Filter documentation](@ref minneighbors) for details.
  */
 class FitFeatureData : public AbstractFilter
 {
@@ -68,6 +54,7 @@ class FitFeatureData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FitFeatureData, AbstractFilter)
 
     virtual ~FitFeatureData();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
@@ -76,6 +63,7 @@ class FitFeatureData : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(unsigned int, DistributionType)
     Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
+
     DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
@@ -153,15 +141,14 @@ class FitFeatureData : public AbstractFilter
     void dataCheck();
 
   private:
+    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InDataArray)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewEnsembleArray)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewEnsembleArray)
 
     FitFeatureData(const FitFeatureData&); // Copy Constructor Not Implemented
     void operator=(const FitFeatureData&); // Operator '=' Not Implemented
 };
 
 #endif /* FITFIELDDATA_H_ */
-
-
-

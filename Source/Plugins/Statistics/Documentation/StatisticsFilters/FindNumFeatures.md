@@ -1,11 +1,11 @@
 Find Number of Features {#findnumfeatures}
-======
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This filter determines the number of **Features** in each **Ensemble**.
+This Filter determines the number of **Features** in each **Ensemble**.
 
 ## Parameters ##
 None 
@@ -16,7 +16,7 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | FeaturePhases | Int | (1) | Specifies the **Ensemble** of the **Feature** - Values will begin at 1 as there is no **Ensemble** 0, which is used temporarily in some filters for bad data|
+| Feature | Phases | Int | (1) | Specifies the **Ensemble** of the **Feature** - Values will begin at 1 as there is no **Ensemble** 0, which is used temporarily in some filters for bad data|
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
@@ -24,7 +24,6 @@ Not Applicable
 | Ensemble | NumFeatures | Int | (1) | Number of **Features** that belong each **Ensemble**. |
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

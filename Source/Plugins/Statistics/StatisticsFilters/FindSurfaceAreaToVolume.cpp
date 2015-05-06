@@ -39,7 +39,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+
+#include "Statistics/StatisticsConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -53,11 +54,7 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()  :
   m_FeatureIds(NULL),
   m_SurfaceAreaVolumeRatio(NULL),
   m_NumCells(NULL)
-
 {
-
-
-
   setupFilterParameters();
 }
 
@@ -74,11 +71,10 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("NumCells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), false, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("SurfaceAreaVolumeRatio", "SurfaceAreaVolumeRatioArrayName", FilterParameterWidgetType::StringWidget, getSurfaceAreaVolumeRatioArrayName(), false, ""));
-
+  parameters.push_back(FilterParameter::New("Surface Area To Volume Ratio", "SurfaceAreaVolumeRatioArrayName", FilterParameterWidgetType::StringWidget, getSurfaceAreaVolumeRatioArrayName(), false, ""));
   setFilterParameters(parameters);
 }
 
@@ -103,7 +99,6 @@ int FindSurfaceAreaToVolume::writeFilterParameters(AbstractFilterParametersWrite
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NumCellsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceAreaVolumeRatioArrayName)
-
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -113,29 +108,26 @@ int FindSurfaceAreaToVolume::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  QVector<size_t> dims(1, 1);
-
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
 
-  dims[0] = 1;
-  m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), dims);
+  cDims[0] = 1;
+  m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), cDims);
   if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0] = 1;
+  cDims[0] = 1;
   tempPath.update(getNumCellsArrayPath().getDataContainerName(), getNumCellsArrayPath().getAttributeMatrixName(), getSurfaceAreaVolumeRatioArrayName() );
-  m_SurfaceAreaVolumeRatioPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceAreaVolumeRatioPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceAreaVolumeRatioPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceAreaVolumeRatio = m_SurfaceAreaVolumeRatioPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -160,6 +152,30 @@ void FindSurfaceAreaToVolume::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
+  // Validate that the selected NumCells array has tuples equal to the largest
+  // Feature Id; the filter would not crash otherwise, but the user should
+  // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
+  // we don't have acces to the data yet
+  int32_t numFeatures = static_cast<int32_t>(m_NumCellsPtr.lock()->getNumberOfTuples());
+  bool mismatchedFeatures = true;
+  size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  for (size_t i = 0; i < numTuples; i ++)
+  {
+    if (m_FeatureIds[i] == numFeatures)
+    {
+      mismatchedFeatures = false;
+      break;
+    }
+  }
+
+  if (mismatchedFeatures == true)
+  {
+    QString ss = QObject::tr("The number of Features in the NumCells array (%1) does not match the largest Feature Id in the FeatureIds array").arg(numFeatures);
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_NumCellsArrayPath.getDataContainerName());
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
@@ -169,14 +185,9 @@ void FindSurfaceAreaToVolume::execute()
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-
-  size_t numFeatures = m_NumCellsPtr.lock()->getNumberOfTuples();
-
   std::vector<float> featureSurfaceArea(numFeatures);
 
-
-
-  int neighpoints[6];
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
@@ -184,35 +195,35 @@ void FindSurfaceAreaToVolume::execute()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  int feature;
-  float onsurf = 0;
-  int good = 0;
-  int neighbor = 0;
+  int32_t feature = 0;
+  float onsurf = 0.0f;
+  bool good = false;
+  int64_t neighbor = 0;
 
-  int zStride, yStride;
-  for(int i = 0; i < zPoints; i++)
+  int64_t zStride = 0, yStride = 0;
+  for (int64_t i = 0; i < zPoints; i++)
   {
     zStride = i * xPoints * yPoints;
-    for (int j = 0; j < yPoints; j++)
+    for (int64_t j = 0; j < yPoints; j++)
     {
       yStride = j * xPoints;
-      for(int k = 0; k < xPoints; k++)
+      for (int64_t k = 0; k < xPoints; k++)
       {
-        onsurf = 0;
+        onsurf = 0.0f;
         feature = m_FeatureIds[zStride + yStride + k];
-        if(feature > 0)
+        if (feature > 0)
         {
-          for (int l = 0; l < 6; l++)
+          for (int32_t l = 0; l < 6; l++)
           {
-            good = 1;
-            neighbor = static_cast<int>( zStride + yStride + k + neighpoints[l] );
-            if(l == 0 && i == 0) { good = 0; }
-            if(l == 5 && i == (zPoints - 1)) { good = 0; }
-            if(l == 1 && j == 0) { good = 0; }
-            if(l == 4 && j == (yPoints - 1)) { good = 0; }
-            if(l == 2 && k == 0) { good = 0; }
-            if(l == 3 && k == (xPoints - 1)) { good = 0; }
-            if(good == 1 && m_FeatureIds[neighbor] != feature)
+            good = true;
+            neighbor = zStride + yStride + k + neighpoints[l];
+            if (l == 0 && i == 0) { good = false; }
+            if (l == 5 && i == (zPoints - 1)) { good = false; }
+            if (l == 1 && j == 0) { good = false; }
+            if (l == 4 && j == (yPoints - 1)) { good = false; }
+            if (l == 2 && k == 0) { good = false; }
+            if (l == 3 && k == (xPoints - 1)) { good = false; }
+            if (good == true && m_FeatureIds[neighbor] != feature)
             {
               if (l == 0 || l == 5)  // XY face shared
               {
@@ -235,34 +246,13 @@ void FindSurfaceAreaToVolume::execute()
     }
   }
 
-  for (size_t i=1; i<numFeatures; i++)
+  for (int32_t i = 1; i < numFeatures; i++)
   {
     m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i]/(m_NumCells[i]*xRes*yRes*zRes);
   }
 
-
-
-  notifyStatusMessage(getHumanLabel(), "FindSurfaceAreaToVolume Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-
-
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -283,13 +273,11 @@ AbstractFilter::Pointer FindSurfaceAreaToVolume::newFilterInstance(bool copyFilt
 const QString FindSurfaceAreaToVolume::getCompiledLibraryName()
 { return StatisticsConstants::StatisticsBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getGroupName()
 { return DREAM3D::FilterGroups::StatisticsFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -297,10 +285,8 @@ const QString FindSurfaceAreaToVolume::getGroupName()
 const QString FindSurfaceAreaToVolume::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getHumanLabel()
 { return "Find Surface Area to Volume"; }
-

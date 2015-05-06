@@ -37,23 +37,12 @@
 #ifndef _FindEuclideanDistMap_H_
 #define _FindEuclideanDistMap_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FindEuclideanDistMap FindEuclideanDistMap.h DREAM3DLib/GenericFilters/FindEuclideanDistMap.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindEuclideanDistMap class. See [Filter documentation](@ref findeuclideandistmap) for details.
  */
 class FindEuclideanDistMap : public AbstractFilter
 {
@@ -80,22 +69,26 @@ class FindEuclideanDistMap : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NearestNeighborsArrayName)
     Q_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(bool, DoBoundaries)
+    Q_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
+
+    DREAM3D_FILTER_PARAMETER(bool, DoTripleLines)
+    Q_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
+
+    DREAM3D_FILTER_PARAMETER(bool, DoQuadPoints)
+    Q_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
+
+    DREAM3D_FILTER_PARAMETER(bool, SaveNearestNeighbors)
+    Q_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
+
+    DREAM3D_FILTER_PARAMETER(bool, CalcOnlyManhattanDist)
+    Q_PROPERTY(bool CalcOnlyManhattanDist READ getCalcOnlyManhattanDist WRITE setCalcOnlyManhattanDist)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-
-    DREAM3D_FILTER_PARAMETER(bool, DoBoundaries)
-    Q_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
-    DREAM3D_FILTER_PARAMETER(bool, DoTripleLines)
-    Q_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
-    DREAM3D_FILTER_PARAMETER(bool, DoQuadPoints)
-    Q_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
-    DREAM3D_FILTER_PARAMETER(bool, SaveNearestNeighbors)
-    Q_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
-    DREAM3D_FILTER_PARAMETER(bool, CalcOnlyManhattanDist)
-    Q_PROPERTY(bool CalcOnlyManhattanDist READ getCalcOnlyManhattanDist WRITE setCalcOnlyManhattanDist)
 
     virtual void setupFilterParameters();
     /**
@@ -125,10 +118,15 @@ class FindEuclideanDistMap : public AbstractFilter
   protected:
     FindEuclideanDistMap();
 
+    /**
+     * @brief find_euclideandistmap Provides setup for Euclidean distance map caluclation; note that the
+     * actual algorithm is performed in a threaded implementation
+     */
     void find_euclideandistmap();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NearestNeighbors)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, TJEuclideanDistances)
@@ -141,6 +139,3 @@ class FindEuclideanDistMap : public AbstractFilter
 };
 
 #endif /* FINDEUCLIDEANDISTMAP_H_ */
-
-
-
