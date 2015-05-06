@@ -520,13 +520,8 @@ bool JsonFilterParametersReader::readValue(const QString name, bool value)
   {
     return value;
   }
-
-  if (m_CurrentFilterIndex.value(name).isBool())
-  {
-    return m_CurrentFilterIndex.value(name).toBool();
-  }
-
-  return value;
+  int v = m_CurrentFilterIndex.value(name).toInt();
+  return ( v == 0 ) ? false : true;
 }
 
 // -----------------------------------------------------------------------------
