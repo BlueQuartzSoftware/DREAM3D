@@ -51,6 +51,8 @@
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 
@@ -280,13 +282,6 @@ float CubicLowOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 
 }
 
-void CubicLowOps::getODFFZRod(float& r1, float& r2, float& r3)
-{
-  int numsym = 12;
-
-  _calcRodNearestOrigin(CubicLowRodSym, numsym, r1, r2, r3);
-}
-
 void CubicLowOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(CubicLowQuatSym[i], q);
@@ -312,13 +307,28 @@ void CubicLowOps::getMatSymOp(int i, float g[3][3])
   g[2][2] = CubicLowMatSym[i][2][2];
 }
 
-void CubicLowOps::getMDFFZRod(float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicLowOps::getODFFZRod(FOrientArrayType rod)
+{
+  int numsym = 12;
+ return  _calcRodNearestOrigin(CubicLowRodSym, numsym, rod);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicLowOps::getMDFFZRod(FOrientArrayType rod)
 {
   float w, n1, n2, n3;
   float FZw, FZn1, FZn2, FZn3;
 
-  OrientationOps::_calcRodNearestOrigin(CubicLowRodSym, 24, r1, r2, r3);
-  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  rod = _calcRodNearestOrigin(CubicLowRodSym, 12, rod);
+  FOrientArrayType ax(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
+
+  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZw = w;
   n1 = fabs(n1);
@@ -363,7 +373,9 @@ void CubicLowOps::getMDFFZRod(float& r1, float& r2, float& r3)
     }
   }
 
-  OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
+  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
+  OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
+  return rod;
 }
 
 void CubicLowOps::getNearestQuat(QuatF& q1, QuatF& q2)
@@ -373,13 +385,17 @@ void CubicLowOps::getNearestQuat(QuatF& q1, QuatF& q2)
   _calcNearestQuat(CubicLowQuatSym, numsym, q1, q2);
 }
 
-int CubicLowOps::getMisoBin(float r1, float r2, float r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicLowOps::getMisoBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::CubicLowDim1InitValue;
   dim[1] = Detail::CubicLowDim2InitValue;
@@ -391,15 +407,18 @@ int CubicLowOps::getMisoBin(float r1, float r2, float r3)
   bins[1] = 36.0f;
   bins[2] = 36.0f;
 
-  return _calcMisoBin(dim, bins, step, r1, r2, r3);
+  return _calcMisoBin(dim, bins, step, ho);
 }
 
-void CubicLowOps::determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicLowOps::determineEulerAngles(int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
-  float r1, r2, r3;
+  float h1, h2, h3;;
 
   init[0] = Detail::CubicLowDim1InitValue;
   init[1] = Detail::CubicLowDim2InitValue;
@@ -411,27 +430,46 @@ void CubicLowOps::determineEulerAngles(int choose, float& synea1, float& synea2,
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getODFFZRod(r1, r2, r3);
-  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+
+  ro = getODFFZRod(ro);
+  FOrientArrayType eu(4);
+  OrientationTransforms<FOrientArrayType, float>::ro2eu(ro, eu);
+  return eu;
 }
 
-void CubicLowOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicLowOps::randomizeEulerAngles(FOrientArrayType synea)
 {
   QuatF q;
   QuatF qc;
-  OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+
+  FOrientArrayType quat(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
+  q = quat.toQuaternion();
   QuaternionMathF::Multiply(q, CubicLowQuatSym[symOp], qc);
-  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
+
+  quat.fromQuaternion(qc);
+  OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
+  return synea;
 }
 
-void CubicLowOps::determineRodriguesVector(int choose, float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicLowOps::determineRodriguesVector( int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
+  float h1, h2, h3;
 
   init[0] = Detail::CubicLowDim1InitValue;
   init[1] = Detail::CubicLowDim2InitValue;
@@ -443,17 +481,25 @@ void CubicLowOps::determineRodriguesVector(int choose, float& r1, float& r2, flo
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getMDFFZRod(r1, r2, r3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+  ro = getMDFFZRod(ro);
+  return ro;
 }
-int CubicLowOps::getOdfBin(float r1, float r2, float r3)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicLowOps::getOdfBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::CubicLowDim1InitValue;
   dim[1] = Detail::CubicLowDim2InitValue;
@@ -465,7 +511,7 @@ int CubicLowOps::getOdfBin(float r1, float r2, float r3)
   bins[1] = 36.0f;
   bins[2] = 36.0f;
 
-  return _calcODFBin(dim, bins, step, r1, r2, r3);
+  return _calcODFBin(dim, bins, step, ho);
 }
 
 void CubicLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
@@ -551,17 +597,17 @@ namespace Detail
   {
     class GenerateSphereCoordsImpl
     {
-        FloatArrayType* eulers;
-        FloatArrayType* xyz001;
-        FloatArrayType* xyz011;
-        FloatArrayType* xyz111;
+        FloatArrayType* m_Eulers;
+        FloatArrayType* m_xyz001;
+        FloatArrayType* m_xyz011;
+        FloatArrayType* m_xyz111;
 
       public:
         GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
-          eulers(eulerAngles),
-          xyz001(xyz001Coords),
-          xyz011(xyz011Coords),
-          xyz111(xyz111Coords)
+          m_Eulers(eulerAngles),
+          m_xyz001(xyz001Coords),
+          m_xyz011(xyz011Coords),
+          m_xyz111(xyz111Coords)
         {}
         virtual ~GenerateSphereCoordsImpl() {}
 
@@ -569,14 +615,14 @@ namespace Detail
         {
           float g[3][3];
           float gTranpose[3][3];
-          float* currentEuler = NULL;
           float direction[3] = {0.0, 0.0, 0.0};
 
           for(size_t i = start; i < end; ++i)
           {
-            currentEuler = eulers->getPointer(i * 3);
-
-            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            FOrientArrayType eu(m_Eulers->getPointer(i * 3), 3);
+            FOrientArrayType om(9, 0.0);
+            OrientationTransforms<FOrientArrayType, float>::eu2om(eu, om);
+            om.toGMatrix(g);
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -584,87 +630,87 @@ namespace Detail
             direction[0] = 1.0;
             direction[1] = 0.0;
             direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz001->getPointer(i * 18));
-            MatrixMath::Copy3x1(xyz001->getPointer(i * 18), xyz001->getPointer(i * 18 + 3));
-            MatrixMath::Multiply3x1withConstant(xyz001->getPointer(i * 18 + 3), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18));
+            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18), m_xyz001->getPointer(i * 18 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 3), -1);
             direction[0] = 0.0;
             direction[1] = 1.0;
             direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz001->getPointer(i * 18 + 6));
-            MatrixMath::Copy3x1(xyz001->getPointer(i * 18 + 6), xyz001->getPointer(i * 18 + 9));
-            MatrixMath::Multiply3x1withConstant(xyz001->getPointer(i * 18 + 9), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 6));
+            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 6), m_xyz001->getPointer(i * 18 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 9), -1);
             direction[0] = 0.0;
             direction[1] = 0.0;
             direction[2] = 1.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz001->getPointer(i * 18 + 12));
-            MatrixMath::Copy3x1(xyz001->getPointer(i * 18 + 12), xyz001->getPointer(i * 18 + 15));
-            MatrixMath::Multiply3x1withConstant(xyz001->getPointer(i * 18 + 15), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 12));
+            MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 12), m_xyz001->getPointer(i * 18 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 15), -1);
 
             // -----------------------------------------------------------------------------
             // 011 Family
             direction[0] = DREAM3D::Constants::k_1OverRoot2;
             direction[1] = DREAM3D::Constants::k_1OverRoot2;
             direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->getPointer(i * 36));
-            MatrixMath::Copy3x1(xyz011->getPointer(i * 36), xyz011->getPointer(i * 36 + 3));
-            MatrixMath::Multiply3x1withConstant(xyz011->getPointer(i * 36 + 3), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36), m_xyz011->getPointer(i * 36 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 3), -1);
             direction[0] = DREAM3D::Constants::k_1OverRoot2;
             direction[1] = 0.0;
             direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->getPointer(i * 36 + 6));
-            MatrixMath::Copy3x1(xyz011->getPointer(i * 36 + 6), xyz011->getPointer(i * 36 + 9));
-            MatrixMath::Multiply3x1withConstant(xyz011->getPointer(i * 36 + 9), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 6));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 6), m_xyz011->getPointer(i * 36 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 9), -1);
             direction[0] = 0.0;
             direction[1] = DREAM3D::Constants::k_1OverRoot2;
             direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->getPointer(i * 36 + 12));
-            MatrixMath::Copy3x1(xyz011->getPointer(i * 36 + 12), xyz011->getPointer(i * 36 + 15));
-            MatrixMath::Multiply3x1withConstant(xyz011->getPointer(i * 36 + 15), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 12));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 12), m_xyz011->getPointer(i * 36 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1);
             direction[0] = -DREAM3D::Constants::k_1OverRoot2;
             direction[1] = -DREAM3D::Constants::k_1OverRoot2;
             direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->getPointer(i * 36 + 18));
-            MatrixMath::Copy3x1(xyz011->getPointer(i * 36 + 18), xyz011->getPointer(i * 36 + 21));
-            MatrixMath::Multiply3x1withConstant(xyz011->getPointer(i * 36 + 21), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 18));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 18), m_xyz011->getPointer(i * 36 + 21));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 21), -1);
             direction[0] = -DREAM3D::Constants::k_1OverRoot2;
             direction[1] = 0.0;
             direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->getPointer(i * 36 + 24));
-            MatrixMath::Copy3x1(xyz011->getPointer(i * 36 + 24), xyz011->getPointer(i * 36 + 27));
-            MatrixMath::Multiply3x1withConstant(xyz011->getPointer(i * 36 + 27), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 24));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 24), m_xyz011->getPointer(i * 36 + 27));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 27), -1);
             direction[0] = 0.0;
             direction[1] = -DREAM3D::Constants::k_1OverRoot2;
             direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->getPointer(i * 36 + 30));
-            MatrixMath::Copy3x1(xyz011->getPointer(i * 36 + 30), xyz011->getPointer(i * 36 + 33));
-            MatrixMath::Multiply3x1withConstant(xyz011->getPointer(i * 36 + 33), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 30));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 30), m_xyz011->getPointer(i * 36 + 33));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 33), -1);
 
             // -----------------------------------------------------------------------------
             // 111 Family
             direction[0] = DREAM3D::Constants::k_1OverRoot3;
             direction[1] = DREAM3D::Constants::k_1OverRoot3;
             direction[2] = DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->getPointer(i * 24));
-            MatrixMath::Copy3x1(xyz111->getPointer(i * 24), xyz111->getPointer(i * 24 + 3));
-            MatrixMath::Multiply3x1withConstant(xyz111->getPointer(i * 24 + 3), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24));
+            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24), m_xyz111->getPointer(i * 24 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 3), -1);
             direction[0] = -DREAM3D::Constants::k_1OverRoot3;
             direction[1] = DREAM3D::Constants::k_1OverRoot3;
             direction[2] = DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->getPointer(i * 24 + 6));
-            MatrixMath::Copy3x1(xyz111->getPointer(i * 24 + 6), xyz111->getPointer(i * 24 + 9));
-            MatrixMath::Multiply3x1withConstant(xyz111->getPointer(i * 24 + 9), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 6));
+            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 6), m_xyz111->getPointer(i * 24 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 9), -1);
             direction[0] = DREAM3D::Constants::k_1OverRoot3;
             direction[1] = -DREAM3D::Constants::k_1OverRoot3;
             direction[2] = DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->getPointer(i * 24 + 12));
-            MatrixMath::Copy3x1(xyz111->getPointer(i * 24 + 12), xyz111->getPointer(i * 24 + 15));
-            MatrixMath::Multiply3x1withConstant(xyz111->getPointer(i * 24 + 15), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 12));
+            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 12), m_xyz111->getPointer(i * 24 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 15), -1);
             direction[0] = DREAM3D::Constants::k_1OverRoot3;
             direction[1] = DREAM3D::Constants::k_1OverRoot3;
             direction[2] = -DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->getPointer(i * 24 + 18));
-            MatrixMath::Copy3x1(xyz111->getPointer(i * 24 + 18), xyz111->getPointer(i * 24 + 21));
-            MatrixMath::Multiply3x1withConstant(xyz111->getPointer(i * 24 + 21), -1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 18));
+            MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 18), m_xyz111->getPointer(i * 24 + 21));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 21), -1);
           }
 
         }
@@ -772,7 +818,12 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
   // 1) find rotation matrix from Euler angles
-  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
+  FOrientArrayType eu(phi1, phi, phi2);
+  FOrientArrayType qu(4);
+  FOrientArrayType om(9); // Reusable for the loop
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
+  q1 = qu.toQuaternion();
+
   QuatF q2;
   CubicLowOps co;
   for (int j = 0; j < 12; j++)
@@ -780,7 +831,9 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
     co.getQuatSymOp(j, q2);
     QuaternionMathF::Multiply(q1, q2, qc);
 
-    OrientationMath::QuattoMat(qc, g);
+    qu.fromQuaternion(qc);
+    OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
+    om.toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;
@@ -1025,8 +1078,9 @@ DREAM3D::Rgb CubicLowOps::generateMisorientationColor(const QuatF& q, const Quat
   x = n1 * k;
   y = n2 * k;
   z = n3 * k;
-
-  getMDFFZRod(x, y, z);
+  FOrientArrayType rod(x, y, z);
+  rod = getMDFFZRod(rod);
+  x = rod[0]; y = rod[1]; z = rod[2];
 
   //eq c7.2
   k = atan2(y, x);

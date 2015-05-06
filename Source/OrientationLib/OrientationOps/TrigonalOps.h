@@ -79,21 +79,22 @@ class OrientationLib_EXPORT TrigonalOps : public OrientationOps
     virtual void getQuatSymOp(int i, QuatF& q);
     virtual void getRodSymOp(int i, float* r);
     virtual void getMatSymOp(int i, float g[3][3]);
-    virtual void getODFFZRod(float& r1, float& r2, float& r3);
-    virtual void getMDFFZRod(float& r1, float& r2, float& r3);
+    virtual FOrientArrayType getODFFZRod(FOrientArrayType rod);
+    virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod);
     virtual void getNearestQuat(QuatF& q1, QuatF& q2);
-    virtual int getMisoBin(float r1, float r2, float r3);
+    virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
-    virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3);
-    virtual void randomizeEulerAngles(float& synea1, float& synea2, float& synea3);
-    virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3);
-    virtual int getOdfBin(float r1, float r2, float r3);
+    virtual FOrientArrayType determineEulerAngles(int choose);
+    virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler);
+    virtual FOrientArrayType determineRodriguesVector(int choose);
+    virtual int getOdfBin(FOrientArrayType rod);
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys);
     virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys);
     virtual void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime);
     virtual void getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1);
     virtual void getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt);
     virtual void getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7);
+
     virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3);
 
 

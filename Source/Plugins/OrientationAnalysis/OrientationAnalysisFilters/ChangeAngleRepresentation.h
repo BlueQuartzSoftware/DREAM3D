@@ -34,24 +34,24 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ConvertEulerAngles_H_
-#define _ConvertEulerAngles_H_
+#ifndef _ChangeAngleRepresentation_H_
+#define _ChangeAngleRepresentation_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ConvertEulerAngles class. See [Filter documentation](@ref converteulerangles) for details.
+ * @brief The ChangeAngleRepresentation class. See [Filter documentation](@ref ChangeAngleRepresentation) for details.
  */
-class ConvertEulerAngles : public AbstractFilter
+class ChangeAngleRepresentation : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ConvertEulerAngles)
-    DREAM3D_STATIC_NEW_MACRO(ConvertEulerAngles)
-    DREAM3D_TYPE_MACRO_SUPER(ConvertEulerAngles, AbstractFilter)
-    virtual ~ConvertEulerAngles();
+    DREAM3D_SHARED_POINTERS(ChangeAngleRepresentation)
+    DREAM3D_STATIC_NEW_MACRO(ChangeAngleRepresentation)
+    DREAM3D_TYPE_MACRO_SUPER(ChangeAngleRepresentation, AbstractFilter)
+    virtual ~ChangeAngleRepresentation();
 
     DREAM3D_FILTER_PARAMETER(int, ConversionType)
     Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
@@ -91,15 +91,15 @@ class ConvertEulerAngles : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ConvertEulerAngles();
+    ChangeAngleRepresentation();
 
     void dataCheck();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
-    ConvertEulerAngles(const ConvertEulerAngles&); // Copy Constructor Not Implemented
-    void operator=(const ConvertEulerAngles&); // Operator '=' Not Implemented
+    ChangeAngleRepresentation(const ChangeAngleRepresentation&); // Copy Constructor Not Implemented
+    void operator=(const ChangeAngleRepresentation&); // Operator '=' Not Implemented
 };
 
-#endif /* CONVERTEULERANGLES_H_ */
+#endif /* ChangeAngleRepresentation_H_ */

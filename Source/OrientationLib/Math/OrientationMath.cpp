@@ -463,6 +463,7 @@ void OrientationMath::QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3)
   ea3 = fmodf(ea3, DREAM3D::Constants::k_2Pi);
 }
 
+#if OM_ORIENTATION_FUNCS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -565,7 +566,7 @@ void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
   g[2][1] = -cp1 * sp;
   g[2][2] = cp;
 }
-
+#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -628,7 +629,7 @@ void OrientationMath::MattoEuler(float g[3][3], float& phi1, float& Phi, float& 
   }
 }
 
-
+#if OM_ORIENTATION_FUNCS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -657,7 +658,7 @@ void OrientationMath::EulerToAxisAngle(float ea1, float ea2, float ea3, float& w
   // Convert the Rodrigues to Axis Angle
   RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 }
-
+#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

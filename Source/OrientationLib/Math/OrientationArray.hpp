@@ -31,22 +31,22 @@
  *                 FA8650-07-D-5800 & FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _RotationRepresentation_H_
-#define _RotationRepresentation_H_
+#ifndef _OrientationArray_H_
+#define _OrientationArray_H_
 
 #include <assert.h>
 #include <string.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 
 
 template<typename T>
 /**
- * @brief The RotationRepresentation class encapsulates one of many types of rotation representations
+ * @brief The OrientationArray class encapsulates one of many types of rotation representations
  * Bunge Euler Angles (3x1), Orientation Matrix (3x3), Rodrigues-Frank Vector (1x3),
  * Axis-Angle (<Axis>, Scalar>) (4x1), Quaternion (4x1) and Homochoric (3x1). The
  * Class is meant to allow easier use of the Rotation Transformation functions
@@ -55,16 +55,16 @@ template<typename T>
  * in space. Alternate constructors can allow the class to simply wrap an existing
  * array of values which makes looping through an array of orientations easier.
  */
-class RotationRepresentation
+class OrientationArray
 {
 
   public:
     /**
-     * @brief RotationRepresentation Constructor
+     * @brief OrientationArray Constructor
      * @param size The number of elements
      * @param init Initialization value to be assigned to each element
      */
-    RotationRepresentation(size_t size, T init = (T)(0) ) :
+    OrientationArray(size_t size, T init = (T)(0) ) :
       m_Ptr(NULL),
       m_Size(size),
       m_Owns(true)
@@ -77,11 +77,11 @@ class RotationRepresentation
     }
 
     /**
-     * @brief RotationRepresentation Constructor
+     * @brief OrientationArray Constructor
      * @param ptr Pointer to an existing array of values
      * @param size How many elements are in the array
      */
-    RotationRepresentation(T* ptr, size_t size) :
+    OrientationArray(T* ptr, size_t size) :
       m_Ptr(ptr),
       m_Size(size),
       m_Owns(false)
@@ -90,11 +90,63 @@ class RotationRepresentation
     }
 
     /**
-     * @brief RotationRepresentation Copy Constructor that will do a deep copy of the elements
-     * from the incoming array into the newly constructed RotationRepresentation class
-     * @param rhs Incoming RotationRepresentation class to copy
+     * @brief OrientationArray
+     * @param val0
+     * @param val1
+     * @param val2
      */
-    RotationRepresentation(const RotationRepresentation<T>& rhs) :
+    OrientationArray(T val0, T val1, T val2 ) :
+      m_Ptr(NULL),
+      m_Size(3),
+      m_Owns(true)
+    {
+      allocate();
+      m_Ptr[0] = val0;
+      m_Ptr[1] = val1;
+      m_Ptr[2] = val2;
+    }
+
+    /**
+     * @brief OrientationArray
+     * @param val0
+     * @param val1
+     * @param val2
+     * @param val3
+     */
+    OrientationArray(T val0, T val1, T val2, T val3 ) :
+      m_Ptr(NULL),
+      m_Size(4),
+      m_Owns(true)
+    {
+      allocate();
+      m_Ptr[0] = val0;
+      m_Ptr[1] = val1;
+      m_Ptr[2] = val2;
+      m_Ptr[3] = val3;
+    }
+
+    /**
+    * @brief OrientationArray Copy constructor
+    * @param quat
+    */
+   explicit OrientationArray(QuaternionMath<T> quat) :
+      m_Ptr(NULL),
+      m_Size(4),
+      m_Owns(true)
+    {
+      allocate();
+      m_Ptr[0] = quat.x;
+      m_Ptr[1] = quat.y;
+      m_Ptr[2] = quat.z;
+      m_Ptr[3] = quat.w;
+    }
+
+    /**
+     * @brief OrientationArray Copy Constructor that will do a deep copy of the elements
+     * from the incoming array into the newly constructed OrientationArray class
+     * @param rhs Incoming OrientationArray class to copy
+     */
+    OrientationArray(const OrientationArray<T>& rhs) :
     m_Ptr(NULL),
     m_Size(rhs.m_Size),
     m_Owns(true)
@@ -104,9 +156,9 @@ class RotationRepresentation
     }
 
     /**
-     * @brief ~RotationRepresentation
+     * @brief ~OrientationArray
      */
-    virtual ~RotationRepresentation() {
+    virtual ~OrientationArray() {
       if(m_Ptr != NULL && m_Owns == true)
       {
         free(m_Ptr);
@@ -116,10 +168,10 @@ class RotationRepresentation
 
     /**
      * @brief operator = This function will reallocate a new array that matches
-     * the incoming RotationRepresentation instance and copy all the data from the incoming
+     * the incoming OrientationArray instance and copy all the data from the incoming
      * representation into the current instance.
      */
-    void operator=(const RotationRepresentation& rhs)
+    void operator=(const OrientationArray& rhs)
     {
       if(m_Ptr != NULL && m_Owns == true)
       {
@@ -153,6 +205,72 @@ class RotationRepresentation
      * @return
      */
     T* data() const { return m_Ptr; }
+
+    /**
+     * @brief toQuat
+     * @param layout
+     * @return
+     */
+    typename QuaternionMath<T>::Quaternion toQuaternion(typename QuaternionMath<T>::Order layout = QuaternionMath<T>::QuaternionVectorScalar) const
+    {
+      assert(m_Size == 4);
+      QuaternionMath<T>::Quaternion quat;
+      if(layout = QuaternionMath<T>::QuaternionVectorScalar) {
+         quat.x = m_Ptr[0], quat.y = m_Ptr[1], quat.z = m_Ptr[2], quat.w = m_Ptr[3];
+      }
+      else
+      {
+        quat.x = m_Ptr[1], quat.y = m_Ptr[2], quat.z = m_Ptr[3], quat.w = m_Ptr[0];
+      }
+      return quat;
+    }
+
+    /**
+     * @brief fromQuaternion Copies the values from quat into the internal memory
+     * @param quat The quaternion to copyb
+     */
+    void fromQuaternion(typename QuaternionMath<T>::Quaternion quat)
+    {
+      resize(4);
+      m_Ptr[0] = quat.x;
+      m_Ptr[1] = quat.y;
+      m_Ptr[2] = quat.z;
+      m_Ptr[3] = quat.w;
+    }
+
+    /**
+     * @brief fromAxisAngle Copies the Axis-Angle values into this object.
+     * @param x X Component of the Axis
+     * @param y Y Component of the Axis
+     * @param z Z Component of the Axis
+     * @param w The "Angle" part
+     */
+    void fromAxisAngle(T x, T y, T z, T w)
+    {
+      resize(4);
+      m_Ptr[0] = x;
+      m_Ptr[1] = y;
+      m_Ptr[2] = z;
+      m_Ptr[3] = w;
+    }
+
+    /**
+     * @brief toGMatrix Copies the internal values into the 3x3 "G" Matrix
+     * @param g
+     */
+    void toGMatrix(T g[3][3])
+    {
+      assert(m_Size == 9);
+      g[0][0] = m_Ptr[0];
+      g[1][0] = m_Ptr[1];
+      g[2][0] = m_Ptr[2];
+      g[0][1] = m_Ptr[3];
+      g[1][1] = m_Ptr[4];
+      g[2][1] = m_Ptr[5];
+      g[0][2] = m_Ptr[6];
+      g[1][2] = m_Ptr[7];
+      g[2][2] = m_Ptr[8];
+    }
 
     /**
      * @brief resize Resizes the array to the new length
@@ -276,14 +394,13 @@ class RotationRepresentation
 };
 
 /**
- * @brief RotationRepresentationF A convenience Typedef for a RotationRepresentation<float>
+ * @brief OrientationArrayF A convenience Typedef for a OrientationArray<float>
  */
-typedef RotationRepresentation<float> FloatRotationRepresentation_t;
+typedef OrientationArray<float> FOrientArrayType;
 
 /**
- * @brief RotationRepresentationD A convenience Typedef for a RotationRepresentation<double>
+ * @brief OrientationArrayD A convenience Typedef for a OrientationArray<double>
  */
-typedef RotationRepresentation<double> DoubleRotationRepresentation_t;
+typedef OrientationArray<double> DOrientArrayType;
 
-
-#endif /* _RotationRepresentation_H_ */
+#endif /* _OrientationArray_H_ */
