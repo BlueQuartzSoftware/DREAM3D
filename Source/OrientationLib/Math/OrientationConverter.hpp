@@ -184,16 +184,16 @@ class OrientationConverter
 
 
 template<typename T>
-class EulerConvertor : public OrientationConverter<T>
+class EulerConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(EulerConvertor<T> )
-    DREAM3D_TYPE_MACRO_SUPER(EulerConvertor<T>, OrientationConverter<T>)
+    DREAM3D_SHARED_POINTERS(EulerConverter<T> )
+    DREAM3D_TYPE_MACRO_SUPER(EulerConverter<T>, OrientationConverter<T>)
     DREAM3D_CLASS_VERSION(1)
 
-    DREAM3D_STATIC_NEW_MACRO(EulerConvertor<T> )
+    DREAM3D_STATIC_NEW_MACRO(EulerConverter<T> )
 
-    virtual ~EulerConvertor() {}
+    virtual ~EulerConverter() {}
 
     virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
     { return OrientationConverter<T>::Euler; }
@@ -279,11 +279,11 @@ class EulerConvertor : public OrientationConverter<T>
     }
 
   protected:
-    EulerConvertor() :
+    EulerConverter() :
       OrientationConverter<T>()
     {}
 
-    explicit EulerConvertor(typename DataArray<T>::Pointer data) :
+    explicit EulerConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
     {
       this->setInputData(data);
@@ -291,22 +291,22 @@ class EulerConvertor : public OrientationConverter<T>
 
   private:
 
-    EulerConvertor(const EulerConvertor&); // Copy Constructor Not Implemented
-    void operator=(const EulerConvertor&); // Operator '=' Not Implemented
+    EulerConverter(const EulerConverter&); // Copy Constructor Not Implemented
+    void operator=(const EulerConverter&); // Operator '=' Not Implemented
 };
 
 
 
 template<typename T>
-class OrientationMatrixConvertor : public OrientationConverter<T>
+class OrientationMatrixConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(OrientationMatrixConvertor<T> )
-    DREAM3D_TYPE_MACRO_SUPER(OrientationMatrixConvertor<T>, OrientationConverter<T>)
+    DREAM3D_SHARED_POINTERS(OrientationMatrixConverter<T> )
+    DREAM3D_TYPE_MACRO_SUPER(OrientationMatrixConverter<T>, OrientationConverter<T>)
     DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(OrientationMatrixConvertor<T> )
+    DREAM3D_STATIC_NEW_MACRO(OrientationMatrixConverter<T> )
 
-    virtual ~OrientationMatrixConvertor() {}
+    virtual ~OrientationMatrixConverter() {}
 
     virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
     { return OrientationConverter<T>::OrientationMatrix; }
@@ -369,29 +369,29 @@ class OrientationMatrixConvertor : public OrientationConverter<T>
 
   protected:
 
-    OrientationMatrixConvertor() :
+    OrientationMatrixConverter() :
       OrientationConverter<T>()
     {}
-    explicit OrientationMatrixConvertor(typename DataArray<T>::Pointer data) :
+    explicit OrientationMatrixConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
     {}
 
   private:
 
-    OrientationMatrixConvertor(const OrientationMatrixConvertor&); // Copy Constructor Not Implemented
-    void operator=( const OrientationMatrixConvertor& ); // Operator '=' Not Implemented
+    OrientationMatrixConverter(const OrientationMatrixConverter&); // Copy Constructor Not Implemented
+    void operator=( const OrientationMatrixConverter& ); // Operator '=' Not Implemented
 };
 
 template<typename T>
-class QuaternionConvertor : public OrientationConverter<T>
+class QuaternionConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(QuaternionConvertor<T> )
-    DREAM3D_TYPE_MACRO_SUPER(QuaternionConvertor<T>, OrientationConverter<T>)
+    DREAM3D_SHARED_POINTERS(QuaternionConverter<T> )
+    DREAM3D_TYPE_MACRO_SUPER(QuaternionConverter<T>, OrientationConverter<T>)
     DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(QuaternionConvertor<T> )
+    DREAM3D_STATIC_NEW_MACRO(QuaternionConverter<T> )
 
-    virtual ~QuaternionConvertor() {}
+    virtual ~QuaternionConverter() {}
 
     virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
     { return OrientationConverter<T>::Quaternion; }
@@ -458,31 +458,31 @@ class QuaternionConvertor : public OrientationConverter<T>
     }
 
   protected:
-    QuaternionConvertor() :
+    QuaternionConverter() :
       OrientationConverter<T>()
     {}
-    explicit QuaternionConvertor(typename DataArray<T>::Pointer data) :
+    explicit QuaternionConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
     {}
 
 
   private:
 
-    QuaternionConvertor(const QuaternionConvertor&); // Copy Constructor Not Implemented
-    void operator=( const QuaternionConvertor& ); // Operator '=' Not Implemented
+    QuaternionConverter(const QuaternionConverter&); // Copy Constructor Not Implemented
+    void operator=( const QuaternionConverter& ); // Operator '=' Not Implemented
 };
 
 
 template<typename T>
-class AxisAngleConvertor : public OrientationConverter<T>
+class AxisAngleConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(AxisAngleConvertor<T> )
-    DREAM3D_TYPE_MACRO_SUPER(AxisAngleConvertor<T>, OrientationConverter<T>)
+    DREAM3D_SHARED_POINTERS(AxisAngleConverter<T> )
+    DREAM3D_TYPE_MACRO_SUPER(AxisAngleConverter<T>, OrientationConverter<T>)
     DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(AxisAngleConvertor<T> )
+    DREAM3D_STATIC_NEW_MACRO(AxisAngleConverter<T> )
 
-    virtual ~AxisAngleConvertor() {}
+    virtual ~AxisAngleConverter() {}
 
     virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
     { return OrientationConverter<T>::AxisAngle; }
@@ -541,11 +541,11 @@ class AxisAngleConvertor : public OrientationConverter<T>
     }
 
   protected:
-    AxisAngleConvertor() :
+    AxisAngleConverter() :
       OrientationConverter<T>()
     {}
 
-    explicit AxisAngleConvertor(typename DataArray<T>::Pointer data) :
+    explicit AxisAngleConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
     {
       this->setInputData(data);
@@ -553,22 +553,22 @@ class AxisAngleConvertor : public OrientationConverter<T>
 
   private:
 
-    AxisAngleConvertor(const AxisAngleConvertor&); // Copy Constructor Not Implemented
-    void operator=(const AxisAngleConvertor&); // Operator '=' Not Implemented
+    AxisAngleConverter(const AxisAngleConverter&); // Copy Constructor Not Implemented
+    void operator=(const AxisAngleConverter&); // Operator '=' Not Implemented
 };
 
 
 template<typename T>
-class RodriguesConvertor : public OrientationConverter<T>
+class RodriguesConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(RodriguesConvertor<T> )
-    DREAM3D_TYPE_MACRO_SUPER(RodriguesConvertor<T>, OrientationConverter<T>)
+    DREAM3D_SHARED_POINTERS(RodriguesConverter<T> )
+    DREAM3D_TYPE_MACRO_SUPER(RodriguesConverter<T>, OrientationConverter<T>)
     DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(RodriguesConvertor<T> )
+    DREAM3D_STATIC_NEW_MACRO(RodriguesConverter<T> )
 
 
-    virtual ~RodriguesConvertor() {}
+    virtual ~RodriguesConverter() {}
 
     virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
     { return OrientationConverter<T>::Rodrigues; }
@@ -627,11 +627,11 @@ class RodriguesConvertor : public OrientationConverter<T>
     }
   protected:
 
-    RodriguesConvertor() :
+    RodriguesConverter() :
       OrientationConverter<T>()
     {}
 
-    explicit RodriguesConvertor(typename DataArray<T>::Pointer data) :
+    explicit RodriguesConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
     {
       this->setInputData(data);
@@ -639,22 +639,22 @@ class RodriguesConvertor : public OrientationConverter<T>
 
   private:
 
-    RodriguesConvertor(const RodriguesConvertor&); // Copy Constructor Not Implemented
-    void operator=(const RodriguesConvertor&); // Operator '=' Not Implemented
+    RodriguesConverter(const RodriguesConverter&); // Copy Constructor Not Implemented
+    void operator=(const RodriguesConverter&); // Operator '=' Not Implemented
 };
 
 
 template<typename T>
-class HomochoricConvertor : public OrientationConverter<T>
+class HomochoricConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(HomochoricConvertor<T> )
-    DREAM3D_TYPE_MACRO_SUPER(HomochoricConvertor<T>, OrientationConverter<T>)
+    DREAM3D_SHARED_POINTERS(HomochoricConverter<T> )
+    DREAM3D_TYPE_MACRO_SUPER(HomochoricConverter<T>, OrientationConverter<T>)
     DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(HomochoricConvertor<T> )
+    DREAM3D_STATIC_NEW_MACRO(HomochoricConverter<T> )
 
 
-    virtual ~HomochoricConvertor() {}
+    virtual ~HomochoricConverter() {}
 
     virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
     { return OrientationConverter<T>::Homochoric; }
@@ -714,11 +714,11 @@ class HomochoricConvertor : public OrientationConverter<T>
 
   protected:
 
-    HomochoricConvertor() :
+    HomochoricConverter() :
       OrientationConverter<T>()
     {}
 
-    explicit HomochoricConvertor(typename DataArray<T>::Pointer data) :
+    explicit HomochoricConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
     {
       this->setInputData(data);
@@ -726,21 +726,21 @@ class HomochoricConvertor : public OrientationConverter<T>
 
   private:
 
-    HomochoricConvertor(const HomochoricConvertor&); // Copy Constructor Not Implemented
-    void operator=(const HomochoricConvertor&); // Operator '=' Not Implemented
+    HomochoricConverter(const HomochoricConverter&); // Copy Constructor Not Implemented
+    void operator=(const HomochoricConverter&); // Operator '=' Not Implemented
 };
 
 template<typename T>
-class CubochoricConvertor : public OrientationConverter<T>
+class CubochoricConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(CubochoricConvertor<T> )
-    DREAM3D_TYPE_MACRO_SUPER(CubochoricConvertor<T>, OrientationConverter<T>)
+    DREAM3D_SHARED_POINTERS(CubochoricConverter<T> )
+    DREAM3D_TYPE_MACRO_SUPER(CubochoricConverter<T>, OrientationConverter<T>)
     DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(CubochoricConvertor<T> )
+    DREAM3D_STATIC_NEW_MACRO(CubochoricConverter<T> )
 
 
-    virtual ~CubochoricConvertor() {}
+    virtual ~CubochoricConverter() {}
 
     virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
     { return OrientationConverter<T>::Cubochoric; }
@@ -799,11 +799,11 @@ class CubochoricConvertor : public OrientationConverter<T>
     }
 
   protected:
-    CubochoricConvertor() :
+    CubochoricConverter() :
       OrientationConverter<T>()
     {}
 
-    explicit CubochoricConvertor(typename DataArray<T>::Pointer data) :
+    explicit CubochoricConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
     {
       this->setInputData(data);
@@ -811,8 +811,8 @@ class CubochoricConvertor : public OrientationConverter<T>
 
   private:
 
-    CubochoricConvertor(const CubochoricConvertor&); // Copy Constructor Not Implemented
-    void operator=(const CubochoricConvertor&); // Operator '=' Not Implemented
+    CubochoricConverter(const CubochoricConverter&); // Copy Constructor Not Implemented
+    void operator=(const CubochoricConverter&); // Operator '=' Not Implemented
 };
 
 #endif /* _OrientationConverter_H_ */

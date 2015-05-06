@@ -97,7 +97,7 @@ void TestEulerConversion()
   std::cout << "fmod (5.28556 / 2Pi): " << fmod(rad, DREAM3D::Constants::k_2Pi) << std::endl;
 
 
-  OrientationConverter<float>::Pointer ocEulers =  EulerConvertor<float>::New();
+  OrientationConverter<float>::Pointer ocEulers =  EulerConverter<float>::New();
   ocEulers->setInputData(eulers);
   ocEulers->convertRepresentationTo(OrientationConverter<float>::Quaternion);
 
@@ -140,13 +140,13 @@ void TestEulerAngle(float phi1, float phi, float phi2)
   QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
   QVector<QString> tStrings = OCType::GetOrientationTypeStrings();
   QVector<OCType::Pointer> converters(6);
-  converters[0] = EulerConvertor<float>::New();
-  converters[1] = OrientationMatrixConvertor<float>::New();
-  converters[2] = QuaternionConvertor<float>::New();
-  converters[3] = AxisAngleConvertor<float>::New();
-  converters[4] = RodriguesConvertor<float>::New();
-  converters[5] = HomochoricConvertor<float>::New();
-  //converters[6] = CubochoricConvertor<float>::New();
+  converters[0] = EulerConverter<float>::New();
+  converters[1] = OrientationMatrixConverter<float>::New();
+  converters[2] = QuaternionConverter<float>::New();
+  converters[3] = AxisAngleConverter<float>::New();
+  converters[4] = RodriguesConverter<float>::New();
+  converters[5] = HomochoricConverter<float>::New();
+  //converters[6] = CubochoricConverter<float>::New();
 
   typedef  OrientationTransforms<FloatOrientationArray_t, float> OrientationTransformType;
   OrientationTransformType::ResultType result;
@@ -170,11 +170,11 @@ void TestEulerAngle(float phi1, float phi, float phi2)
       bool test = false;
       std::vector<float> delta(qStride, 0);
       for(size_t i = 0; i < nTuples; i++)
-      {       
-        float* orig = eulers->getPointer(i * qStride); 
+      {
+        float* orig = eulers->getPointer(i * qStride);
         float* converted = t0_output->getPointer(i * qStride);
         //float* o = t1_output->getPointer(i * strides[t1]);
-        printf("%s -> %s -> %s\n",tStrings[t0].toLatin1().constData(), tStrings[t1].toLatin1().constData(), tStrings[t0].toLatin1().constData()); 
+        printf("%s -> %s -> %s\n",tStrings[t0].toLatin1().constData(), tStrings[t1].toLatin1().constData(), tStrings[t0].toLatin1().constData());
         for(size_t j = 0; j < qStride; j++) {
           delta[j] = std::abs(orig[j] - converted[j]);
           DREAM3D_REQUIRE(delta[j] < 1.0E6);
