@@ -53,6 +53,8 @@ public:
   DropBoxWidget(QWidget* parent = 0);
   virtual ~DropBoxWidget();
 
+  void setupGui();
+
   QFrame* getFrame();
 
   void setLabel(QString text);

@@ -62,14 +62,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QFrame#frame {
-color: rgb(127, 0, 63);
-border: 2px solid purple;
-border-top-left-radius: 5px;
-border-top-right-radius: 5px;
-border-bottom-left-radius: 5px;
-border-bottom-right-radius: 5px;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -94,16 +87,16 @@ border-bottom-right-radius: 5px;
        <widget class="QLabel" name="label">
         <property name="font">
          <font>
-          <pointsize>11</pointsize>
+          <family>Arial</family>
+          <pointsize>8</pointsize>
           <weight>75</weight>
           <italic>false</italic>
           <bold>true</bold>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLabel#label {
-color: purple;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>TextLabel</string>

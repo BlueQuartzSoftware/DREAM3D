@@ -39,8 +39,11 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
+#include <QtCore/QTextStream>
 
 #include <QtWidgets/QMessageBox>
+
+#include "QtSupportLib/DREAM3DStyles.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -49,6 +52,8 @@ DropBoxWidget::DropBoxWidget(QWidget* parent)
 {
   setParent(parent);
   setupUi(this);
+
+  setupGui();
 }
 
 // -----------------------------------------------------------------------------
@@ -57,6 +62,48 @@ DropBoxWidget::DropBoxWidget(QWidget* parent)
 DropBoxWidget::~DropBoxWidget()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DropBoxWidget::setupGui()
+{
+  {
+    QString frameStyle;
+    QTextStream ss(&frameStyle);
+
+    ss << "QFrame#frame{"
+      << "color: rgb(127, 0, 63);"
+      << "border: 2px solid purple;"
+      << "border-top-left-radius: 5px;"
+      << "border-top-right-radius: 5px;"
+      << "border-bottom-left-radius: 5px;"
+      << "border-bottom-right-radius: 5px; "
+      << "}";
+
+    frame->setStyleSheet(frameStyle);
+  }
+
+  {
+    QString labelStyle;
+    QTextStream ss(&labelStyle);
+
+    ss << "QLabel#label{"
+      << "color: purple;"
+
+#if defined(Q_OS_WIN)
+      << "font: 9pt \"" << DREAM3DStyles::GetUIFont() << "\";"
+#elif defined(Q_OS_MAC)
+      << "font: 100 italic 12pt \"" << DREAM3DStyles::GetUIFont() << "\";"
+#else
+      << "font: 100 italic 10pt \"" << DREAM3DStyles::GetUIFont() << "\";"
+#endif
+      << "font-weight: bold; "
+      << "}";
+
+    label->setStyleSheet(labelStyle);
+  }
 }
 
 // -----------------------------------------------------------------------------
