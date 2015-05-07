@@ -580,17 +580,13 @@ void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
 }
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3)
+bool closeEnough(const float& a, const float& b,
+                 const float& epsilon = std::numeric_limits<float>::epsilon())
 {
-  float sum = atan(r3);
-  float diff = atan(r2 / r1);
-  ea1 = sum + diff;
-  ea2 = static_cast<float>( 2. * atan(r1 * cosf(sum) / cosf(diff)) );
-  ea3 = sum - diff;
+  return (epsilon > std::abs(a - b));
 }
 
 // -----------------------------------------------------------------------------
@@ -676,14 +672,6 @@ void OrientationMath::EulertoMatActive(float ea1, float ea2, float ea3, float g[
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool closeEnough(const float& a, const float& b,
-                 const float& epsilon = std::numeric_limits<float>::epsilon())
-{
-  return (epsilon > std::abs(a - b));
-}
 
 // -----------------------------------------------------------------------------
 //
