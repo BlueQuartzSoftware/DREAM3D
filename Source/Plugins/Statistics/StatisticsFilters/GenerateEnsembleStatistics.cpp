@@ -44,10 +44,16 @@
 #include "DREAM3DLib/FilterParameters/PhaseTypesFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
+#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
+
+
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
 #include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
-#include "OrientationLib/Math/OrientationMath.h"
+
+
 
 //FIXME: #1 Need to update this to link the phase selectionwidget to the rest of the GUI, so that it preflights after it's updated.
 //FIXME: #2 Need to fix phase selectionWidget to not show phase 0
@@ -976,8 +982,6 @@ void GenerateEnsembleStatistics::gatherODFStats()
       }
     }
   }
-  float ea1, ea2, ea3;
-  float r1, r2, r3;
   for (size_t i = 1; i < numfeatures; i++)
   {
     if (m_SurfaceFeatures[i] == false)
@@ -989,12 +993,11 @@ void GenerateEnsembleStatistics::gatherODFStats()
   {
     if (m_SurfaceFeatures[i] == false)
     {
-      ea1 = m_FeatureEulerAngles[3 * i];
-      ea2 = m_FeatureEulerAngles[3 * i + 1];
-      ea3 = m_FeatureEulerAngles[3 * i + 2];
       phase = m_CrystalStructures[m_FeaturePhases[i]];
-      OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
-      bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
+      FOrientArrayType eu( &(m_FeatureEulerAngles[3 * i]), 3); // Wrap the pointer
+      FOrientArrayType rod(4);
+      OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+      bin = m_OrientationOps[phase]->getOdfBin(rod);
       eulerodf[m_FeaturePhases[i]]->setValue(bin, (eulerodf[m_FeaturePhases[i]]->getValue(bin) + (m_Volumes[i] / totalvol[m_FeaturePhases[i]])));
     }
   }
@@ -1081,10 +1084,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
       if (phase1 == phase2) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       if (phase1 == phase2)
       {
-        OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+        FOrientArrayType rod(4);
+        FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
+
         if ((nname > i || m_SurfaceFeatures[nname] == true))
         {
-          mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
+          mbin = m_OrientationOps[phase1]->getMisoBin(rod);
           nsa = neighborsurfacearealist[i][j];
           misobin[m_FeaturePhases[i]]->setValue(mbin, (misobin[m_FeaturePhases[i]]->getValue(mbin) + nsa));
           totalSurfaceArea[m_FeaturePhases[i]] = totalSurfaceArea[m_FeaturePhases[i]] + nsa;
@@ -1128,7 +1133,6 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
-  float r1, r2, r3;
   int bin;
   QVector<FloatArrayType::Pointer> axisodf;
   QVector<float> totalaxes;
@@ -1154,14 +1158,12 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
-    float ea1 = m_AxisEulerAngles[3 * i];
-    float ea2 = m_AxisEulerAngles[3 * i + 1];
-    float ea3 = m_AxisEulerAngles[3 * i + 2];
     if(m_BiasedFeatures[i] == false)
     {
-      OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
-      m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
-      bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
+      FOrientArrayType rod(4);
+      FOrientTransformsType::eu2ro( FOrientArrayType( &(m_AxisEulerAngles[3 * i]), 3), rod);
+      m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(rod);
+      bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(rod);
       axisodf[m_FeaturePhases[i]]->setValue(bin, (axisodf[m_FeaturePhases[i]]->getValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));
     }
   }

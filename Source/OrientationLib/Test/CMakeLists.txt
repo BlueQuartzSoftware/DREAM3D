@@ -26,24 +26,28 @@ configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
 
 set(OrientationLib_Link_Libs Qt5::Core H5Support DREAM3DLib OrientationLib)
 
-AddDREAM3DUnitTest(TESTNAME QuaternionMathTest 
+AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/QuaternionMathTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
-AddDREAM3DUnitTest(TESTNAME OrientationMathTest 
+AddDREAM3DUnitTest(TESTNAME OrientationMathTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationMathTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
-AddDREAM3DUnitTest(TESTNAME TextureTest 
+AddDREAM3DUnitTest(TESTNAME TextureTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/TextureTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
-AddDREAM3DUnitTest(TESTNAME ODFTest 
+AddDREAM3DUnitTest(TESTNAME ODFTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ODFTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
-AddDREAM3DUnitTest(TESTNAME RotArrayTest 
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/RotArrayTest.cpp
+AddDREAM3DUnitTest(TESTNAME OrientationArrayTest
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationArrayTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
+AddDREAM3DUnitTest(TESTNAME OrientationConverterTest
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationConverterTest.cpp
+                    FOLDER "Test/OrientationLib"
+                    LINK_LIBRARIES ${OrientationLib_Link_Libs})

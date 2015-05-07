@@ -93,6 +93,9 @@ void OrientationOps::getFZQuat(QuatF& qr)
   BOOST_ASSERT(false);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
                                     QuatF& q1, QuatF& q2,
                                     float& n1, float& n2, float& n3)
@@ -123,7 +126,9 @@ float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
       qc.w = 1;
     }
 
-    OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
+    FOrientArrayType ax(4, 0.0f);
+    FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
+    ax.toAxisAngle(n1, n2, n3, w);
 
     if (w > DREAM3D::Constants::k_Pi)
     {
@@ -155,31 +160,28 @@ float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationOps::_calcRodNearestOrigin(const float rodsym[24][3], int numsym, float& r1, float& r2, float& r3)
+FOrientArrayType OrientationOps::_calcRodNearestOrigin(const float rodsym[24][3], int numsym, FOrientArrayType rod)
 {
-  float denom, dist;
-  //  int index;
+  float denom = 0.0f, dist = 0.0f;
   float smallestdist = 100000000.0f;
   float rc1 = 0.0f, rc2 = 0.0f, rc3 = 0.0f;
-  float r1min = 0.0f, r2min = 0.0f, r3min = 0.0f;
+  FOrientArrayType outRod(3, 0.0f);
   for(int i = 0; i < numsym; i++)
   {
-    denom = 1 - (r1 * rodsym[i][0] + r2 * rodsym[i][1] + r3 * rodsym[i][2]);
-    rc1 = (r1 + rodsym[i][0] - (r3 * rodsym[i][1] - r2 * rodsym[i][2])) / denom;
-    rc2 = (r2 + rodsym[i][1] - (r1 * rodsym[i][2] - r3 * rodsym[i][0])) / denom;
-    rc3 = (r3 + rodsym[i][2] - (r2 * rodsym[i][0] - r1 * rodsym[i][1])) / denom;
+    denom = 1 - (rod[0] * rodsym[i][0] + rod[1] * rodsym[i][1] + rod[2] * rodsym[i][2]);
+    rc1 = (rod[0] + rodsym[i][0] - (rod[2] * rodsym[i][1] - rod[1] * rodsym[i][2])) / denom;
+    rc2 = (rod[1] + rodsym[i][1] - (rod[0] * rodsym[i][2] - rod[2] * rodsym[i][0])) / denom;
+    rc3 = (rod[2] + rodsym[i][2] - (rod[1] * rodsym[i][0] - rod[0] * rodsym[i][1])) / denom;
     dist = rc1 * rc1 + rc2 * rc2 + rc3 * rc3;
     if(dist < smallestdist)
     {
       smallestdist = dist;
-      r1min = rc1;
-      r2min = rc2;
-      r3min = rc3;
+      outRod[0] = rc1;
+      outRod[1] = rc2;
+      outRod[2] = rc3;
     }
   }
-  r1 = r1min;
-  r2 = r2min;
-  r3 = r3min;
+  return outRod;
 }
 
 // -----------------------------------------------------------------------------
@@ -248,11 +250,11 @@ void OrientationOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym,
 }
 
 
-int OrientationOps::_calcMisoBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3)
+int OrientationOps::_calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType& ho)
 {
-  int miso1bin = int((r1 + dim[0]) / step[0]);
-  int miso2bin = int((r2 + dim[1]) / step[1]);
-  int miso3bin = int((r3 + dim[2]) / step[2]);
+  int miso1bin = int((ho[0] + dim[0]) / step[0]);
+  int miso2bin = int((ho[1] + dim[1]) / step[1]);
+  int miso3bin = int((ho[2] + dim[2]) / step[2]);
   if(miso1bin >= bins[0])
   {
     miso1bin = static_cast<int>( bins[0] - 1 );
@@ -293,15 +295,18 @@ void OrientationOps::_calcDetermineHomochoricValues(float init[3], float step[3]
   r3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
 }
 
-int OrientationOps::_calcODFBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int OrientationOps::_calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType ho)
 {
   int g1euler1bin;
   int g1euler2bin;
   int g1euler3bin;
   int g1odfbin;
-  g1euler1bin = int((r1 + dim[0]) / step[0]);
-  g1euler2bin = int((r2 + dim[1]) / step[1]);
-  g1euler3bin = int((r3 + dim[2]) / step[2]);
+  g1euler1bin = int((ho[0] + dim[0]) / step[0]);
+  g1euler2bin = int((ho[1] + dim[1]) / step[1]);
+  g1euler3bin = int((ho[2] + dim[2]) / step[2]);
   if(g1euler1bin >= bins[0])
   {
     g1euler1bin = static_cast<int>( bins[0] - 1 );

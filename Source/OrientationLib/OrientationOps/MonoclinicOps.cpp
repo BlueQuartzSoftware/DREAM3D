@@ -50,6 +50,8 @@
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 
@@ -152,7 +154,9 @@ float MonoclinicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
       qc.w = 1;
     }
 
-    OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
+    FOrientArrayType ax(4, 0.0f);
+    FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
+    ax.toAxisAngle(n1, n2, n3, w);
 
     if (w > DREAM3D::Constants::k_Pi)
     {
@@ -182,12 +186,6 @@ float MonoclinicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 
 }
 
-void MonoclinicOps::getODFFZRod(float& r1, float& r2, float& r3)
-{
-  int numsym = 2;
-
-  _calcRodNearestOrigin(MonoclinicRodSym, numsym, r1, r2, r3);
-}
 
 void MonoclinicOps::getQuatSymOp(int i, QuatF& q)
 {
@@ -214,18 +212,38 @@ void MonoclinicOps::getMatSymOp(int i, float g[3][3])
   g[2][2] = MonoclinicMatSym[i][2][2];
 }
 
-void MonoclinicOps::getMDFFZRod(float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType MonoclinicOps::getODFFZRod(FOrientArrayType rod)
+{
+  int numsym = 2;
+  return _calcRodNearestOrigin(MonoclinicRodSym, numsym, rod);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType MonoclinicOps::getMDFFZRod(FOrientArrayType rod)
 {
   float w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0;
   float FZw = 0.0, FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0;
 
-  OrientationOps::_calcRodNearestOrigin(MonoclinicRodSym, 24, r1, r2, r3);
-  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  OrientationOps::_calcRodNearestOrigin(MonoclinicRodSym, 24, rod);
+  FOrientArrayType ax(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
+  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
 
 
-  OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
+
+  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
+  OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
+  return rod;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MonoclinicOps::getNearestQuat(QuatF& q1, QuatF& q2)
 {
   int numsym = 2;
@@ -233,13 +251,17 @@ void MonoclinicOps::getNearestQuat(QuatF& q1, QuatF& q2)
   _calcNearestQuat(MonoclinicQuatSym, numsym, q1, q2);
 }
 
-int MonoclinicOps::getMisoBin(float r1, float r2, float r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int MonoclinicOps::getMisoBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::MonoclinicDim1InitValue;
   dim[1] = Detail::MonoclinicDim2InitValue;
@@ -251,15 +273,18 @@ int MonoclinicOps::getMisoBin(float r1, float r2, float r3)
   bins[1] = 36.0f;
   bins[2] = 72.0f;
 
-  return _calcMisoBin(dim, bins, step, r1, r2, r3);
+  return _calcMisoBin(dim, bins, step, ho);
 }
 
-void MonoclinicOps::determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType MonoclinicOps::determineEulerAngles(int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
-  float r1, r2, r3;
+  float h1, h2, h3;
 
   init[0] = Detail::MonoclinicDim1InitValue;
   init[1] = Detail::MonoclinicDim2InitValue;
@@ -271,27 +296,47 @@ void MonoclinicOps::determineEulerAngles(int choose, float& synea1, float& synea
   phi[1] = static_cast<float>((choose / 72) % 36);
   phi[2] = static_cast<float>(choose / (72 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getODFFZRod(r1, r2, r3);
-  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+
+  ro = getODFFZRod(ro);
+  FOrientArrayType eu(4);
+  OrientationTransforms<FOrientArrayType, float>::ro2eu(ro, eu);
+  return eu;
 }
 
-void MonoclinicOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType MonoclinicOps::randomizeEulerAngles(FOrientArrayType synea)
 {
   QuatF q;
   QuatF qc;
-  OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+
+  FOrientArrayType quat(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
+  q = quat.toQuaternion();
   QuaternionMathF::Multiply(q, MonoclinicQuatSym[symOp], qc);
-  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
+
+  quat.fromQuaternion(qc);
+  OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
+  return synea;
 }
 
-void MonoclinicOps::determineRodriguesVector(int choose, float& r1, float& r2, float& r3)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType MonoclinicOps::determineRodriguesVector( int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
+  float h1, h2, h3;
 
   init[0] = Detail::MonoclinicDim1InitValue;
   init[1] = Detail::MonoclinicDim2InitValue;
@@ -303,17 +348,25 @@ void MonoclinicOps::determineRodriguesVector(int choose, float& r1, float& r2, f
   phi[1] = static_cast<float>((choose / 72) % 36);
   phi[2] = static_cast<float>(choose / (72 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getMDFFZRod(r1, r2, r3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+  ro = getMDFFZRod(ro);
+  return ro;
 }
-int MonoclinicOps::getOdfBin(float r1, float r2, float r3)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int MonoclinicOps::getOdfBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::MonoclinicDim1InitValue;
   dim[1] = Detail::MonoclinicDim2InitValue;
@@ -325,7 +378,7 @@ int MonoclinicOps::getOdfBin(float r1, float r2, float r3)
   bins[1] = 36.0f;
   bins[2] = 72.0f;
 
-  return _calcODFBin(dim, bins, step, r1, r2, r3);
+  return _calcODFBin(dim, bins, step, ho);
 }
 
 void MonoclinicOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
@@ -410,14 +463,14 @@ namespace Detail
   {
     class GenerateSphereCoordsImpl
     {
-        FloatArrayType* eulers;
+        FloatArrayType* m_Eulers;
         FloatArrayType* m_xyz001;
         FloatArrayType* m_xyz011;
         FloatArrayType* m_xyz111;
 
       public:
         GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
-          eulers(eulerAngles),
+          m_Eulers(eulerAngles),
           m_xyz001(xyz001Coords),
           m_xyz011(xyz011Coords),
           m_xyz111(xyz111Coords)
@@ -428,15 +481,15 @@ namespace Detail
         {
           float g[3][3];
           float gTranpose[3][3];
-          float* currentEuler = NULL;
           float direction[3] = {0.0, 0.0, 0.0};
 
 
           for(size_t i = start; i < end; ++i)
           {
-            currentEuler = eulers->getPointer(i * 3);
-
-            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            FOrientArrayType eu(m_Eulers->getPointer(i * 3), 3);
+            FOrientArrayType om(9, 0.0);
+            OrientationTransforms<FOrientArrayType, float>::eu2om(eu, om);
+            om.toGMatrix(g);
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -563,13 +616,19 @@ DREAM3D::Rgb MonoclinicOps::generateIPFColor(double phi1, double phi, double phi
   float eta = 0.0f, chi = 0.0f;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
-  MonoclinicOps ops;
+  FOrientArrayType eu(phi1, phi, phi2);
+  FOrientArrayType qu(4);
+  FOrientArrayType om(9); // Reusable for the loop
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
+  q1 = qu.toQuaternion();
+
   for (int j = 0; j < 2; j++)
   {
     QuaternionMathF::Multiply(q1, MonoclinicQuatSym[j], qc);
 
-    OrientationMath::QuattoMat(qc, g);
+    qu.fromQuaternion(qc);
+    OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
+    om.toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;

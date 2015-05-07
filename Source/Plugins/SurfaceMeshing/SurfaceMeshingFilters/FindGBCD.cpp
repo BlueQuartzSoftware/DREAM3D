@@ -49,6 +49,8 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 
@@ -174,8 +176,12 @@ class CalculateGBCDImpl
               g2ea[m] = m_Eulers[3 * feature2 + m];
             }
 
-            OrientationMath::EulertoMat(g1ea[0], g1ea[1], g1ea[2], g1);
-            OrientationMath::EulertoMat(g2ea[0], g2ea[1], g2ea[2], g2);
+            FOrientArrayType om(9, 0.0);
+            FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
+            om.toGMatrix(g1);
+
+            FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
+            om.toGMatrix(g2);
 
             int nsym = m_OrientationOps[cryst]->getNumSymOps();
             for (j = 0; j < nsym; j++)
@@ -206,7 +212,10 @@ class CalculateGBCDImpl
                 //calculate delta g
                 MatrixMath::Multiply3x3with3x3(g1s, g2t, dg);
                 //translate matrix to euler angles
-                OrientationMath::MattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
+                FOrientArrayType om(dg);
+
+                FOrientArrayType eu(euler_mis, 3);
+                FOrientTransformsType::om2eu(om, eu);
 
                 if(euler_mis[0] < DREAM3D::Constants::k_PiOver2 && euler_mis[1] < DREAM3D::Constants::k_PiOver2 && euler_mis[2] < DREAM3D::Constants::k_PiOver2)
                 {

@@ -233,7 +233,6 @@ void GenerateRodriguesColors::execute()
 
   int phase;
   size_t index = 0;
-  float r1, r2, r3;
   DREAM3D::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
@@ -249,8 +248,10 @@ void GenerateRodriguesColors::execute()
     if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
         && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
-      OrientationMath::EulertoRod(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2], r1, r2, r3);
-      argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(r1, r2, r3);
+      FOrientArrayType rod(4);
+      FOrientTransformsType::eu2ro( FOrientArrayType( m_CellEulerAngles + index, 3), rod);
+
+      argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(rod[0], rod[1], rod[2]);
       m_CellRodriguesColors[index] = RgbColor::dRed(argb);
       m_CellRodriguesColors[index + 1] = RgbColor::dGreen(argb);
       m_CellRodriguesColors[index + 2] = RgbColor::dBlue(argb);

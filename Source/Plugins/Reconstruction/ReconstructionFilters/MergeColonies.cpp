@@ -49,7 +49,10 @@
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 
 #define ERROR_TXT_OUT 1
@@ -489,9 +492,14 @@ bool MergeColonies::determineGrouping(int referenceFeature, int neighborFeature,
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
       w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-      OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-      m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
-      OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+
+      FOrientArrayType ax(n1, n2, n3, w);
+      FOrientArrayType rod(4);
+      OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
+      rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
+      OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
+      ax.toAxisAngle(n1, n2, n3, w);
+
       w = w * (180.0f / DREAM3D::Constants::k_Pi);
       float angdiff1 = fabs(w - 10.53f);
       float axisdiff1 = acosf(fabs(n1) * 0.0000f + fabs(n2) * 0.0000f + fabs(n3) * 1.0000f);
@@ -555,14 +563,17 @@ bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 
   float gBeta[3][3];
   float gBetaT[3][3];
-  OrientationMath::QuattoMat(betaQuat, gBeta);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(betaQuat), om);
+  om.toGMatrix(gBeta);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gBeta, gBetaT);
 
   float gAlpha[3][3];
   float gAlphaT[3][3];
-  OrientationMath::QuattoMat(alphaQuat, gAlpha);
+  FOrientTransformsType::qu2om(FOrientArrayType(alphaQuat), om);
+  om.toGMatrix(gAlpha);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gAlpha, gAlphaT);

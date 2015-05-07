@@ -140,7 +140,7 @@ void CopyAttributeArray::dataCheck()
       return;
     }
 
-    // We the AttributeMatrix, now lets try to get the AttributeArray object and copy it if it exists
+    // We have the AttributeMatrix, now lets try to get the AttributeArray object and copy it if it exists
     IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
     if(NULL == dataArray.get() )
     {
@@ -151,6 +151,7 @@ void CopyAttributeArray::dataCheck()
     }
     IDataArray::Pointer p = attrMat->getAttributeArray(daName);
     IDataArray::Pointer pNew = p->deepCopy();
+    pNew->setName(m_NewArrayName); // Set the name of the array
     int err = attrMat->addAttributeArray(m_NewArrayName, pNew);
 
     if(0 != err)

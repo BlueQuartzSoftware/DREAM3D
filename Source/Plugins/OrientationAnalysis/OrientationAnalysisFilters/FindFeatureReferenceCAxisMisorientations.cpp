@@ -251,7 +251,9 @@ void FindFeatureReferenceCAxisMisorientations::execute()
         if (m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
           QuaternionMathF::Copy(quats[point], q1);
-          OrientationMath::QuattoMat(q1, g1);
+          FOrientArrayType om(9);
+          FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+          om.toGMatrix(g1);
           //transpose the g matricies so when caxis is multiplied by it
           //it will give the sample direction that the caxis is along
           MatrixMath::Transpose3x3(g1, g1t);
