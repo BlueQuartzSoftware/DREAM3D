@@ -43,7 +43,7 @@
 #include "OrientationLib/Math/OrientationTransforms.hpp"
 
 
-#define OM_ORIENTATION_FUNCS 0
+#define OM_ORIENTATION_FUNCS 1
 
 typedef OrientationTransforms<FOrientArrayType, float> FOrientTransformsType;
 
