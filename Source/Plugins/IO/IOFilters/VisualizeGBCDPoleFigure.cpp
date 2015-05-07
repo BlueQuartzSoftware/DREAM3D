@@ -339,7 +339,10 @@ void VisualizeGBCDPoleFigure::execute()
 
   float misAngle = m_MisorientationRotation.angle * DREAM3D::Constants::k_PiOver180;
   //convert axis angle to matrix representation of misorientation
-  OrientationMath::AxisAngletoMat(misAngle, m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, dg);
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::ax2om(FOrientArrayType( m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, misAngle), om);
+  om.toGMatrix(dg);
+
   //take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
 
@@ -404,7 +407,7 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(dg, sym2t, dg1);
             MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
             //convert to euler angle
-            OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+            FOrientTransformsType::om2eu(FOrientArrayType(dg), FOrientArrayType(mis_euler1, 3));
             if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);
@@ -435,7 +438,7 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(dgt, sym2, dg1);
             MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
             //convert to euler angle
-            OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+            FOrientTransformsType::om2eu(FOrientArrayType(dg2), FOrientArrayType(mis_euler1, 3));
             if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);

@@ -497,10 +497,9 @@ bool MergeColonies::determineGrouping(int referenceFeature, int neighborFeature,
       FOrientArrayType rod(4);
       OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
       rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
-      OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
       OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
+      ax.toAxisAngle(n1, n2, n3, w);
 
-      n1 = ax[0]; n2 = ax[1]; n3 = ax[2]; w = ax[3];
       w = w * (180.0f / DREAM3D::Constants::k_Pi);
       float angdiff1 = fabs(w - 10.53f);
       float axisdiff1 = acosf(fabs(n1) * 0.0000f + fabs(n2) * 0.0000f + fabs(n3) * 1.0000f);

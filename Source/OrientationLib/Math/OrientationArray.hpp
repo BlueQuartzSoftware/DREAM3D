@@ -142,6 +142,28 @@ class OrientationArray
     }
 
     /**
+    * @brief OrientationArray Copy constructor
+    * @param quat
+    */
+   explicit OrientationArray(T g[3][3]) :
+      m_Ptr(NULL),
+      m_Size(9),
+      m_Owns(true)
+    {
+      allocate();
+      m_Ptr[0] = g[0][0];
+      m_Ptr[1] = g[0][1];
+      m_Ptr[2] = g[0][2];
+      m_Ptr[3] = g[1][0];
+      m_Ptr[4] = g[1][1];
+      m_Ptr[5] = g[1][2];
+      m_Ptr[6] = g[2][0];
+      m_Ptr[7] = g[2][1];
+      m_Ptr[8] = g[2][2];
+    }
+
+
+    /**
      * @brief OrientationArray Copy Constructor that will do a deep copy of the elements
      * from the incoming array into the newly constructed OrientationArray class
      * @param rhs Incoming OrientationArray class to copy

@@ -147,7 +147,7 @@ OrientationMath::OrientationMath()
 OrientationMath::~OrientationMath()
 {
 }
-
+#if OM_ORIENTATION_FUNCS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -374,8 +374,20 @@ void OrientationMath::RodtoQuat(QuatF& q, float r1, float r2, float r3)
   q.z = r3 * const1;
   q.w = static_cast<float>( cosf(w / 2.0f) );
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3)
+{
+  float sum = atan(r3);
+  float diff = atan(r2 / r1);
+  ea1 = sum + diff;
+  ea2 = static_cast<float>( 2. * atan(r1 * cosf(sum) / cosf(diff)) );
+  ea3 = sum - diff;
+}
 
-#if OM_ORIENTATION_FUNCS
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -566,7 +578,77 @@ void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
   g[2][1] = -cp1 * sp;
   g[2][2] = cp;
 }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3)
+{
+  float sum = atan(r3);
+  float diff = atan(r2 / r1);
+  ea1 = sum + diff;
+  ea2 = static_cast<float>( 2. * atan(r1 * cosf(sum) / cosf(diff)) );
+  ea3 = sum - diff;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::MattoEuler(float g[3][3], float& phi1, float& Phi, float& phi2)
+{
+  if(closeEnough(g[2][2], 1.0) )
+  {
+    phi1 = atan(g[0][1] / g[0][0]) / 2.0f;
+    Phi = 0.0;
+    phi2 = phi1;
+  }
+  else if ( closeEnough(g[2][2], -1.0) )
+  {
+    phi1 = atan(g[0][1] / g[0][0]) / 2.0f;
+    Phi = 180.0;
+    phi2 = -phi1;
+  }
+  else
+  {
+    Phi = acos(g[2][2]);
+    double s = sin(Phi);
+    phi1 = atan2(g[2][0] / s, -g[2][1] / s );
+    phi2 = atan2(g[0][2] / s, g[1][2] / s );
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3)
+{
+  float sum, diff, csum, cdiff, sdiff, t2;
+  sum = (ea1 + ea3) * 0.5;
+  diff = (ea1 - ea3) * 0.5;
+  csum = cosf(sum);
+  cdiff = cosf(diff);
+  sdiff = sinf(diff);
+  t2 = tanf(ea2 * 0.5);
+  r1 = t2 * cdiff / csum;
+  r2 = t2 * sdiff / csum;
+  r3 = tanf(sum);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3)
+{
+  float r1, r2, r3;
+  // First Convert to Rodrigues
+  EulertoRod(ea1, ea2, ea3, r1, r2, r3);
+  // Convert the Rodrigues to Axis Angle
+  RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+}
 #endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -602,75 +684,6 @@ bool closeEnough(const float& a, const float& b,
 {
   return (epsilon > std::abs(a - b));
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::MattoEuler(float g[3][3], float& phi1, float& Phi, float& phi2)
-{
-  if(closeEnough(g[2][2], 1.0) )
-  {
-    phi1 = atan(g[0][1] / g[0][0]) / 2.0f;
-    Phi = 0.0;
-    phi2 = phi1;
-  }
-  else if ( closeEnough(g[2][2], -1.0) )
-  {
-    phi1 = atan(g[0][1] / g[0][0]) / 2.0f;
-    Phi = 180.0;
-    phi2 = -phi1;
-  }
-  else
-  {
-    Phi = acos(g[2][2]);
-    double s = sin(Phi);
-    phi1 = atan2(g[2][0] / s, -g[2][1] / s );
-    phi2 = atan2(g[0][2] / s, g[1][2] / s );
-  }
-}
-
-#if OM_ORIENTATION_FUNCS
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3)
-{
-  float sum, diff, csum, cdiff, sdiff, t2;
-  sum = (ea1 + ea3) * 0.5;
-  diff = (ea1 - ea3) * 0.5;
-  csum = cosf(sum);
-  cdiff = cosf(diff);
-  sdiff = sinf(diff);
-  t2 = tanf(ea2 * 0.5);
-  r1 = t2 * cdiff / csum;
-  r2 = t2 * sdiff / csum;
-  r3 = tanf(sum);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3)
-{
-  float r1, r2, r3;
-  // First Convert to Rodrigues
-  EulertoRod(ea1, ea2, ea3, r1, r2, r3);
-  // Convert the Rodrigues to Axis Angle
-  RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-}
-#endif
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3)
-{
-  float sum = atan(r3);
-  float diff = atan(r2 / r1);
-  ea1 = sum + diff;
-  ea2 = static_cast<float>( 2. * atan(r1 * cosf(sum) / cosf(diff)) );
-  ea3 = sum - diff;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -741,7 +754,9 @@ QuatF OrientationMath::PassiveRotation(float angle, float xAxis, float yAxis, fl
   QuatF q;
   QuatF qStar;
 
-  AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
+  FOrientArrayType quat(4);
+  FOrientTransformsType::ax2qu(FOrientArrayType(xAxis, yAxis, zAxis, angle), quat);
+  q = quat.toQuaternion();
 
   QuaternionMathF::Conjugate(q, qStar);
   QuatF v = QuaternionMathF::New(x, y, z, 0); // Make the Pure quaternion
@@ -758,7 +773,9 @@ QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, flo
 {
   QuatF q;
   QuatF qStar;
-  AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
+  FOrientArrayType quat(4);
+  FOrientTransformsType::ax2qu(FOrientArrayType(xAxis, yAxis, zAxis, angle), quat);
+  q = quat.toQuaternion();
 
   QuaternionMathF::Conjugate(q, qStar);
   QuatF v = QuaternionMathF::New(x, y, z, 0); // Make the Pure quaternion

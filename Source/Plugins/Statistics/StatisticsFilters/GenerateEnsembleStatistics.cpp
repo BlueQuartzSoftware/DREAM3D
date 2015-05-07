@@ -1084,11 +1084,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
       if (phase1 == phase2) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       if (phase1 == phase2)
       {
-        OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+        FOrientArrayType rod(4);
+        FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
+
         if ((nname > i || m_SurfaceFeatures[nname] == true))
         {
-
-          mbin = m_OrientationOps[phase1]->getMisoBin(FOrientArrayType(r1, r2, r3));
+          mbin = m_OrientationOps[phase1]->getMisoBin(rod);
           nsa = neighborsurfacearealist[i][j];
           misobin[m_FeaturePhases[i]]->setValue(mbin, (misobin[m_FeaturePhases[i]]->getValue(mbin) + nsa));
           totalSurfaceArea[m_FeaturePhases[i]] = totalSurfaceArea[m_FeaturePhases[i]] + nsa;

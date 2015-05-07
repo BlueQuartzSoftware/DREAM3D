@@ -71,8 +71,10 @@ class RotateEulerRefFrameImpl
     void convert(size_t start, size_t end) const
     {
       float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      FOrientArrayType om(9, 0.0f);
+      FOrientTransformsType::ax2om(FOrientArrayType(axis.x, axis.y, axis.z, angle), om);
+      om.toGMatrix(rotMat);
 
-      OrientationMath::AxisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
       float ea1 = 0, ea2 = 0, ea3 = 0;
       float ea1new = 0, ea2new = 0, ea3new = 0;
       float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };

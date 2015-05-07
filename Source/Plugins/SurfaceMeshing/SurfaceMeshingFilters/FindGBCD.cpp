@@ -212,7 +212,9 @@ class CalculateGBCDImpl
                 //calculate delta g
                 MatrixMath::Multiply3x3with3x3(g1s, g2t, dg);
                 //translate matrix to euler angles
-                OrientationMath::MattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
+                FOrientArrayType om(dg);
+
+                FOrientTransformsType::om2eu(om, FOrientArrayType(euler_mis, 3));
 
                 if(euler_mis[0] < DREAM3D::Constants::k_PiOver2 && euler_mis[1] < DREAM3D::Constants::k_PiOver2 && euler_mis[2] < DREAM3D::Constants::k_PiOver2)
                 {

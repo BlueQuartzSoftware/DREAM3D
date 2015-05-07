@@ -43,7 +43,7 @@
 #include "OrientationLib/Math/OrientationTransforms.hpp"
 
 
-#define OM_ORIENTATION_FUNCS 1
+#define OM_ORIENTATION_FUNCS 0
 
 typedef OrientationTransforms<FOrientArrayType, float> FOrientTransformsType;
 
@@ -62,6 +62,7 @@ class OrientationLib_EXPORT OrientationMath
 
     virtual ~OrientationMath();
 
+#if OM_ORIENTATION_FUNCS
     /**
      * @brief AxisAngletoHomochoric
      * @param w Angle (Radians)
@@ -107,8 +108,6 @@ class OrientationLib_EXPORT OrientationMath
      */
     static void AxisAngletoMat(float w, float n1, float n2, float n3, float g[3][3]);
 
-    static void ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, float& n3);
-
     static void HomochorictoRod(float& r1, float& r2, float& r3);
 
     static void RodtoAxisAngle(float r1, float r2, float r3, float& w, float& n1, float& n2, float& n3);
@@ -116,7 +115,7 @@ class OrientationLib_EXPORT OrientationMath
     static void RodtoHomochoric(float& r1, float& r2, float& r3);
     static void RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3);
 
-#if OM_ORIENTATION_FUNCS
+
     static void QuattoAxisAngle(QuatF& q, float& w, float& n1, float& n2, float& n3);
     static void QuattoMat(QuatF& q, float g[3][3]);
     static void QuattoRod(QuatF& q, float& r1, float& r2, float& r3);
@@ -147,7 +146,12 @@ class OrientationLib_EXPORT OrientationMath
     static void EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3);
 
     static void EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3);
+
+
+     static void MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3);
 #endif
+
+
     /**
      * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge) into a <b>ACTIVE</b> Orientation Matrix. This
      * is taking a Crystal Coordinate system and transforming it to the Sample Coordinate System (C->S). Note that to convert
@@ -159,8 +163,14 @@ class OrientationLib_EXPORT OrientationMath
      */
     static void EulertoMatActive(float ea1, float ea2, float ea3, float g[3][3]);
 
-
-    static void MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3);
+    /**
+     * @brief ChangeAxisReferenceFrame
+     * @param q
+     * @param n1
+     * @param n2
+     * @param n3
+     */
+    static void ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, float& n3);
 
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 
@@ -171,6 +181,7 @@ class OrientationLib_EXPORT OrientationMath
      * @param outVec Resulting vector
      */
     static void MultiplyQuaternionVector(QuatF& inQuat, float inVec[3], float outVec[3]);
+
     /**
     * @brief Does a passive Rotation of the coordinate system defined by w,n1,n2,n3 of the point xyz using Quaternion
     * math to perform the rotation
