@@ -988,8 +988,9 @@ void PipelineViewWidget::dragLeaveEvent(QDragLeaveEvent* event)
   {
     m_FilterWidgetLayout->insertWidget(m_FilterOrigPos, m_FilterBeingDragged);
     setSelectedFilterWidget(m_FilterBeingDragged);
-    reindexWidgetTitles();
   }
+
+  reindexWidgetTitles();
 }
 
 // -----------------------------------------------------------------------------
