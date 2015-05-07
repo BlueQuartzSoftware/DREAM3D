@@ -654,7 +654,7 @@ void PipelineFilterWidget::updateWidgetStyle()
   ss << "font-weight: bold; ";
   if (m_HasPreflightErrors == true)
   {
-    ss << "color: rgb(0, 0, 0);";
+    ss << "color: rgb(50, 50, 50);";
   }
   ss << "}\n";
 
