@@ -57,6 +57,7 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/DropBoxWidget.h"
 
 #include "QtSupportLib/FileDragMessageBox.h"
 
@@ -316,7 +317,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     PipelineFilterWidget*     m_SelectedFilterWidget;
     QVBoxLayout*              m_FilterWidgetLayout;
     PipelineFilterWidget*     m_FilterBeingDragged;
-    QFrame*                   m_DropBox;
+    DropBoxWidget*            m_DropBox;
     int                       m_DropIndex;
     QLabel*                   m_EmptyPipelineLabel;
     QPoint                    m_LastDragPoint;

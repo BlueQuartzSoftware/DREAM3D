@@ -133,26 +133,7 @@ void PipelineViewWidget::setupGui()
   newEmptyPipelineViewLayout();
   connect(&m_autoScrollTimer, SIGNAL(timeout()), this, SLOT(doAutoScroll()));
 
-  m_DropBox = new QFrame();
-  m_DropBox->setObjectName(QStringLiteral("m_DropBox"));
-  m_DropBox->setFrameShadow(QFrame::Plain);
-  m_DropBox->setFrameShape(QFrame::Box);
-  m_DropBox->setMinimumSize(30, 30);
-  m_DropBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-
-  QString str;
-  QTextStream ss(&str);
-
-  ss << "QFrame {"
-    << "color: rgb(127, 0, 63);"
-    << "border: 2px solid purple;"
-    << "border-top-left-radius: 5px;"
-    << "border-top-right-radius: 5px;"
-    << "border-bottom-left-radius: 5px;"
-    << "border-bottom-right-radius: 5px;"
-    << "}";
-
-  m_DropBox->setStyleSheet(str);
+  m_DropBox = new DropBoxWidget();
 }
 
 // -----------------------------------------------------------------------------

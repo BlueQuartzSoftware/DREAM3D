@@ -18,6 +18,7 @@ set(DREAM3D_WIDGETS
     PipelineFilterWidget
     PrebuiltPipelinesDockWidget
     DataContainerArrayWidget
+    DropBoxWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
