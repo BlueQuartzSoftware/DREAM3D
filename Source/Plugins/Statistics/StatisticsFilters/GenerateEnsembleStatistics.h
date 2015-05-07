@@ -37,18 +37,11 @@
 #ifndef _GenerateEnsembleStatistics_H_
 #define _GenerateEnsembleStatistics_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 #include "OrientationLib/OrientationOps/CubicOps.h"
 #include "OrientationLib/OrientationOps/HexagonalOps.h"
@@ -56,15 +49,9 @@
 #include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
-#include "Statistics/StatisticsConstants.h"
-
 
 /**
- * @class GenerateEnsembleStatistics GenerateEnsembleStatistics.h DREAM3DLib/GenericFilters/GenerateEnsembleStatistics.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The GenerateEnsembleStatistics class. See [Filter documentation](@ref generateensemblestatistics) for details.
  */
 class GenerateEnsembleStatistics : public AbstractFilter
 {
@@ -151,7 +138,6 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, StatisticsArrayName)
     Q_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
 
-    /* ---------- */
     DREAM3D_FILTER_PARAMETER(bool, IncludeRadialDistFunc)
     Q_PROPERTY(bool IncludeRadialDistFunc READ getIncludeRadialDistFunc WRITE setIncludeRadialDistFunc)
 
@@ -159,25 +145,25 @@ class GenerateEnsembleStatistics : public AbstractFilter
     Q_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
 
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeSizeDistribution)
-//  Q_PROPERTY(bool ComputeSizeDistribution READ getComputeSizeDistribution WRITE setComputeSizeDistribution)
+    //Q_PROPERTY(bool ComputeSizeDistribution READ getComputeSizeDistribution WRITE setComputeSizeDistribution)
 
     DREAM3D_FILTER_PARAMETER(int, SizeDistributionFitType)
     Q_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
 
     DREAM3D_FILTER_PARAMETER(bool, ComputeAspectRatioDistribution)
-// Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
+    //Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
 
     DREAM3D_FILTER_PARAMETER(int, AspectRatioDistributionFitType)
     Q_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)
 
     DREAM3D_FILTER_PARAMETER(bool, ComputeOmega3Distribution)
-//  Q_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
+    //Q_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
 
     DREAM3D_FILTER_PARAMETER(int, Omega3DistributionFitType)
     Q_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
 
     DREAM3D_FILTER_PARAMETER(bool, ComputeNeighborhoodDistribution)
-//  Q_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
+    //Q_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
 
     DREAM3D_FILTER_PARAMETER(int, NeighborhoodDistributionFitType)
     Q_PROPERTY(int NeighborhoodDistributionFitType READ getNeighborhoodDistributionFitType WRITE setNeighborhoodDistributionFitType)
@@ -186,18 +172,16 @@ class GenerateEnsembleStatistics : public AbstractFilter
     Q_PROPERTY(bool CalculateCrystallographicStats READ getCalculateCrystallographicStats WRITE setCalculateCrystallographicStats)
 
     DREAM3D_FILTER_PARAMETER(bool, CalculateODF)
-//  Q_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
+    //Q_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
 
     DREAM3D_FILTER_PARAMETER(bool, CalculateMDF)
-//  Q_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
+    //Q_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
 
     DREAM3D_FILTER_PARAMETER(bool, CalculateAxisODF)
-//  Q_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
+    //Q_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
 
     DREAM3D_FILTER_PARAMETER(float, SizeCorrelationResolution)
     Q_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
-
-
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -250,11 +234,6 @@ class GenerateEnsembleStatistics : public AbstractFilter
     void calculatePPTBoundaryFrac();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
@@ -269,9 +248,12 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
 
-    NeighborList<int>::WeakPointer m_NeighborList;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
+
+    NeighborList<int32_t>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
     StatsDataArray::Pointer m_StatsDataArray;
@@ -285,6 +267,3 @@ class GenerateEnsembleStatistics : public AbstractFilter
 };
 
 #endif /* GenerateEnsembleStatistics_H_ */
-
-
-

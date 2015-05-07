@@ -15,7 +15,7 @@ The Filter can be run in a mode where the minimum number of neighbors is applied
 |------|------|------|
 | Minimum Number Neighbors | Int | This is the number of neighbors a **Feature** must have to remain as a **Feature** |
 | Apply to Single Phase | Boolean | Tells the Filter whether to apply minimum to single ensemble or all ensembles |
-| Phase Number to Run Min Size Filter on | Int | Tells the Filter which **Ensemble** to apply minimum to (if Apply to Single Phase is set to true) |
+| Phase Index | Int | Tells the Filter which **Ensemble** to apply minimum to (if Apply to Single Phase is set to true) |
 
 ## Required Geometry ##
 Image / Rectilinear Grid

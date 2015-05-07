@@ -1,20 +1,19 @@
 Find Surface Area To Volume {#findsurfaceareatovolume}
-======
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This filter calculates the ratio of surface area to volume for each **Feature** for an *Image Geometry* . First all the boundary **Cells** are found for each **Feature**. Next the surface area for each face that is in contact with a different **Feature** is totaled. This is divided by the volume of each **Feature**, calculated by taking the number of 
-**Cells** of each **Feature** and multiplying by the volume of a **Cell**. 
+This Filter calculates the ratio of surface area to volume for each **Feature** for an *Image Geometry* . First all the boundary **Cells** are found for each **Feature**. Next the surface area for each face that is in contact with a different **Feature** is totaled. This is divided by the volume of each **Feature**, calculated by taking the number of **Cells** of each **Feature** and multiplying by the volume of a **Cell**. 
 
-*Note that the surface area will be the surface area of the **Cells** in contact with the neighboring **Feature** and will be influenced by the aliasing of the structure.  As a result, the surface area-to-volume will likely be over-estimated with respect to the *real* **Feature**.
+*Note:* The surface area will be the surface area of the **Cells** in contact with the neighboring **Feature** and will be influenced by the aliasing of the structure.  As a result, the surface area-to-volume will likely be over-estimated with respect to the *real* **Feature**.
 
 ## Parameters ##
 None
 
 ## Required Geometry ##
-Image/Rectilinear Grid
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
@@ -29,7 +28,6 @@ Image/Rectilinear Grid
 
 
 ## Authors ##
-
 **Copyright:** 
 
 **Contact Info:** dream3d@bluequartz.net

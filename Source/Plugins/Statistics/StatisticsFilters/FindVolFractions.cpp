@@ -36,26 +36,23 @@
 
 #include "FindVolFractions.h"
 
-#include <sstream>
-
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "Statistics/StatisticsConstants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, ""),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::Phases),
   m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_VolFractions(NULL)
 {
-
   setupFilterParameters();
 }
 
@@ -65,6 +62,7 @@ FindVolFractions::FindVolFractions() :
 FindVolFractions::~FindVolFractions()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -72,13 +70,15 @@ void FindVolFractions::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Element Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("VolFractions", "VolFractionsArrayName", FilterParameterWidgetType::StringWidget, getVolFractionsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Volume Fractions", "VolFractionsArrayName", FilterParameterWidgetType::StringWidget, getVolFractionsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -102,20 +102,22 @@ int FindVolFractions::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindVolFractions::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getVolFractionsArrayName() );
-  m_VolFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VolFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_VolFractions = m_VolFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -145,11 +147,11 @@ void FindVolFractions::execute()
   size_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
   size_t totalEnsembles = m_VolFractionsPtr.lock()->getNumberOfTuples();
 
-  for(size_t i = 1; i < totalEnsembles; i++)
+  for (size_t i = 1; i < totalEnsembles; i++)
   {
     m_VolFractions[i] = 0;
   }
-  for(size_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
     m_VolFractions[m_CellPhases[i]]++;
   }
@@ -176,13 +178,11 @@ AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParam
 const QString FindVolFractions::getCompiledLibraryName()
 { return StatisticsConstants::StatisticsBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindVolFractions::getGroupName()
 { return DREAM3D::FilterGroups::StatisticsFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -190,10 +190,8 @@ const QString FindVolFractions::getGroupName()
 const QString FindVolFractions::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindVolFractions::getHumanLabel()
 { return "Find Volume Fractions of Phases"; }
-

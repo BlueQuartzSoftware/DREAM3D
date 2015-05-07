@@ -38,23 +38,12 @@
 #ifndef _CalculateArrayHistogram_H_
 #define _CalculateArrayHistogram_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Statistics/StatisticsConstants.h"
 
 /**
- * @class CalculateArrayHistogram CalculateArrayHistogram.h /FilterCategoryFilters/CalculateArrayHistogram.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The CalculateArrayHistogram class. See [Filter documentation](@ref calculatearrayhistogram) for details.
  */
 class CalculateArrayHistogram : public AbstractFilter
 {
@@ -74,8 +63,10 @@ class CalculateArrayHistogram : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(double, MinRange)
     Q_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
+
     DREAM3D_FILTER_PARAMETER(double, MaxRange)
     Q_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
+
     DREAM3D_FILTER_PARAMETER(bool, UserDefinedRange)
     Q_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
 
@@ -159,6 +150,8 @@ class CalculateArrayHistogram : public AbstractFilter
     void dataCheck();
 
   private:
+    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InDataArray)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(double, NewDataArray)
 
     CalculateArrayHistogram(const CalculateArrayHistogram&); // Copy Constructor Not Implemented
@@ -166,5 +159,3 @@ class CalculateArrayHistogram : public AbstractFilter
 };
 
 #endif /* _CalculateArrayHistogram_H_ */
-
-

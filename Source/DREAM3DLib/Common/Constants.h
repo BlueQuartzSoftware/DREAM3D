@@ -156,6 +156,7 @@ namespace DREAM3D
 
     const DREAM3D_STRING DataContainerName("DataContainer");
     const DREAM3D_STRING NewDataContainerName("NewDataContainer");
+    const DREAM3D_STRING NewAttributeMatrixName("NewAttributeMatrixName");
   }
 
   namespace FilterGroups
@@ -268,6 +269,7 @@ namespace DREAM3D
     const DREAM3D_STRING TJEuclideanDistances("TJEuclideanDistances");
     const DREAM3D_STRING VectorColor("VectorColor");
     const DREAM3D_STRING VectorData("VectorData");
+    const DREAM3D_STRING Histogram("Histogram");
   }
 
   namespace FeatureData
@@ -325,11 +327,12 @@ namespace DREAM3D
     const DREAM3D_STRING SlipSystems("SlipSystems");
     const DREAM3D_STRING SurfaceAreaVol("SurfaceAreaVolumeRatio");
     const DREAM3D_STRING SurfaceFeatures("SurfaceFeatures");
-    const DREAM3D_STRING SurfaceCellFractions("SurfaceCellFractions");
+    const DREAM3D_STRING SurfaceElementFractions("SurfaceElementFractions");
     const DREAM3D_STRING Volumes("Volumes");
     const DREAM3D_STRING AvgMisorientations("AvgMisorientations");
     const DREAM3D_STRING mPrimeList("mPrimeList");
     const DREAM3D_STRING NumBins("NumBins");
+    const DREAM3D_STRING ScalarAverages("ScalarAverages");
 
   }
 
@@ -349,6 +352,7 @@ namespace DREAM3D
     const DREAM3D_STRING LatticeConstants("LatticeConstants");
     const DREAM3D_STRING GBCD("GBCD");
     const DREAM3D_STRING GBCDdimensions("GBCDdimensions");
+    const DREAM3D_STRING FitParameters("FitParameters");
   }
 
 
