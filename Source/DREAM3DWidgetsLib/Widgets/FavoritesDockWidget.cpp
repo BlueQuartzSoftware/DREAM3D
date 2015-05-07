@@ -237,7 +237,7 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
     itemWidget->setData(0, Qt::UserRole, QVariant(itemInfo.absoluteFilePath()));
     if(allowEditing == true)
     {
-      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
+      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
     }
     QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
     itemWidget->setToolTip(0, htmlFormattedString);

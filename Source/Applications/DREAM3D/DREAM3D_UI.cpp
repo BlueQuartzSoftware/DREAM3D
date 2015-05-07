@@ -674,14 +674,14 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    pipelineViewWidget, SLOT(openPipeline(QString, ExtractionType)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    pipelineViewWidget, SLOT(openPipeline(QString, int)));
 
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
 
-  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
-    pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
+    pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
 
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
@@ -1215,7 +1215,7 @@ void DREAM3D_UI::openRecentFile()
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
     QString filePath = action->data().toString();
-    int err = getPipelineViewWidget()->openPipeline(filePath);
+    int err = getPipelineViewWidget()->openPipeline(filePath, 0);
 
     if (err >= 0)
     {

@@ -187,7 +187,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief populatePipelineView
      * @param pipeline
      */
-    void populatePipelineView(FilterPipeline::Pointer pipeline, ExtractionType type);
+    void populatePipelineView(FilterPipeline::Pointer pipeline, int index);
 
     bool eventFilter(QObject*, QEvent*);
 
@@ -258,7 +258,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     /**
     * @brief Open pipeline to a file
     */
-    int openPipeline(const QString &filePath, ExtractionType type = Replace);
+    int openPipeline(const QString &filePath, int index);
 
     /**
      * @brief onCustomContextMenuRequested
@@ -275,7 +275,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief addDREAM3DReaderFilter
      * @param filePath
      */
-    void addDREAM3DReaderFilter(const QString& filePath, ExtractionType type);
+    void addDREAM3DReaderFilter(const QString& filePath, int index);
 
     /**
      * @brief readPipelineFromFile

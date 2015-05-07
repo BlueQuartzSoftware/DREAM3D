@@ -185,7 +185,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @param filePath The absolute path to the pipeline file
      * @param append Should the pipeline be appended, replaced, or prepended
      */
-    void pipelineFileActivated(const QString& filePath, ExtractionType type);
+    void pipelineFileActivated(const QString& filePath, int index);
 
     /**
      * @brief filterListGenerated
