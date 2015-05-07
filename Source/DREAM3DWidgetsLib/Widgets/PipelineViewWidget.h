@@ -316,7 +316,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
   private:
     PipelineFilterWidget*     m_SelectedFilterWidget;
     QVBoxLayout*              m_FilterWidgetLayout;
-    PipelineFilterWidget*     m_FilterBeingDragged;
+    PipelineFilterWidget*     m_CurrentFilterBeingDragged;
+    PipelineFilterWidget*     m_PreviousFilterBeingDragged;
     int                       m_FilterOrigPos;
     DropBoxWidget*            m_DropBox;
     int                       m_DropIndex;
