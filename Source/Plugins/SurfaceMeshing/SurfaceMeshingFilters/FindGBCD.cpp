@@ -214,7 +214,8 @@ class CalculateGBCDImpl
                 //translate matrix to euler angles
                 FOrientArrayType om(dg);
 
-                FOrientTransformsType::om2eu(om, FOrientArrayType(euler_mis, 3));
+                FOrientArrayType eu(euler_mis, 3);
+                FOrientTransformsType::om2eu(om, eu);
 
                 if(euler_mis[0] < DREAM3D::Constants::k_PiOver2 && euler_mis[1] < DREAM3D::Constants::k_PiOver2 && euler_mis[2] < DREAM3D::Constants::k_PiOver2)
                 {

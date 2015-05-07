@@ -938,7 +938,8 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
           m_MisorientationLists[i][3 * j] = r1;
           m_MisorientationLists[i][3 * j + 1] = r2;
           m_MisorientationLists[i][3 * j + 2] = r3;
-          mbin = m_OrientationOps[crys1]->getMisoBin(m_MisorientationLists[i][3 * j], m_MisorientationLists[i][3 * j + 1], m_MisorientationLists[i][3 * j + 2]);
+          FOrientArrayType rod(m_MisorientationLists[i][3 * j], m_MisorientationLists[i][3 * j + 1], m_MisorientationLists[i][3 * j + 2]);
+          mbin = m_OrientationOps[crys1]->getMisoBin(rod);
           if (m_SurfaceFeatures[i] == false && (nname > static_cast<int32_t>(i) || m_SurfaceFeatures[nname] == true))
           {
             simmdf->setValue(mbin, (simmdf->getValue(mbin) + (neighsurfarea / m_TotalSurfaceArea[m_FeaturePhases[i]])));

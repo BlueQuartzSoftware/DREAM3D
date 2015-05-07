@@ -224,7 +224,8 @@ void FindAvgOrientations::execute()
     QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
     QuaternionMathF::UnitQuaternion(avgQuats[i]);
 
-    FOrientTransformsType::qu2eu(FOrientArrayType(avgQuats[i]), FOrientArrayType(m_FeatureEulerAngles + (3*i), 3));
+    FOrientArrayType eu(m_FeatureEulerAngles + (3*i), 3);
+    FOrientTransformsType::qu2eu(FOrientArrayType(avgQuats[i]), eu);
   }
   notifyStatusMessage(getHumanLabel(), "Completed");
 }

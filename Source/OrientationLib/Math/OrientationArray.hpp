@@ -236,8 +236,8 @@ class OrientationArray
     typename QuaternionMath<T>::Quaternion toQuaternion(typename QuaternionMath<T>::Order layout = QuaternionMath<T>::QuaternionVectorScalar) const
     {
       assert(m_Size == 4);
-      QuaternionMath<T>::Quaternion quat;
-      if(layout = QuaternionMath<T>::QuaternionVectorScalar) {
+      typename QuaternionMath<T>::Quaternion quat;
+      if(layout == QuaternionMath<T>::QuaternionVectorScalar) {
          quat.x = m_Ptr[0], quat.y = m_Ptr[1], quat.z = m_Ptr[2], quat.w = m_Ptr[3];
       }
       else

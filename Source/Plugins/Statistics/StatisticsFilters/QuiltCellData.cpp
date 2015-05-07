@@ -281,17 +281,17 @@ float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t z
     zRangeMax = 1;
   }
 
-  for(size_t k = zRangeMin; k < zRangeMax; k++)
+  for(int64_t k = zRangeMin; k < zRangeMax; k++)
   {
     if((zc + k) >= 0 && (zc + k) < zDim)
     {
       zStride = ((zc + k) * xDim * yDim);
-      for(size_t j = yRangeMin; j < yRangeMax; j++)
+      for(int64_t j = yRangeMin; j < yRangeMax; j++)
       {
         if((yc + j) >= 0 && (yc + j) < yDim)
         {
           yStride = ((yc + j) * xDim);
-          for(size_t i = xRangeMin; i < xRangeMax; i++)
+          for(int64_t i = xRangeMin; i < xRangeMax; i++)
           {
             if((xc + i) >= 0 && (xc + i) < xDim)
             {

@@ -495,8 +495,8 @@ void YSChoiAbaqusReader::execute()
     q.y = static_cast<float>( (g[2][0] - g[0][2]) / (4.0 * q.w) );
     q.z = static_cast<float>( (g[0][1] - g[1][0]) / (4.0 * q.w) );
     QuaternionMathF::Copy(q, quats[i]);
-
-    FOrientTransformsType::qu2eu(FOrientArrayType(q), FOrientArrayType(m_CellEulerAngles + (3*i), 3) );
+    FOrientArrayType eu(m_CellEulerAngles + (3*i), 3);
+    FOrientTransformsType::qu2eu(FOrientArrayType(q), eu);
 
     delete[] mat[i];
   }

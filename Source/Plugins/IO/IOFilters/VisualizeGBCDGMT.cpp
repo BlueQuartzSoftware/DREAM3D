@@ -411,7 +411,8 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(dg, sym2t, dg1);
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           //convert to euler angle
-          FOrientTransformsType::om2eu(FOrientArrayType(dg2), FOrientArrayType(mis_euler1, 3));
+          FOrientArrayType mEuler(mis_euler1, 3);
+          FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
           if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
@@ -442,7 +443,7 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(dgt, sym2, dg1);
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           //convert to euler angle
-          FOrientTransformsType::om2eu(FOrientArrayType(dg2), FOrientArrayType(mis_euler1, 3));
+          FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
           if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);

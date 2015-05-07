@@ -76,7 +76,6 @@ class RotateEulerRefFrameImpl
       om.toGMatrix(rotMat);
 
       float ea1 = 0, ea2 = 0, ea3 = 0;
-      float ea1new = 0, ea2new = 0, ea3new = 0;
       float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       float gNew[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       for (size_t i = start; i < end; i++)
@@ -94,7 +93,8 @@ class RotateEulerRefFrameImpl
         // Because we are going to simply wrap the m_CellEulerAngles array, the new
         // Euler angles will be directly written to the m_CellEulerAngles array
         // at the proper spot
-        FOrientTransformsType::om2eu(om, FOrientArrayType( &(m_CellEulerAngles[3 * i + 0]), 3));
+        FOrientArrayType eu( m_CellEulerAngles + (3 * i), 3);
+        FOrientTransformsType::om2eu(om, eu);
       }
     }
 
