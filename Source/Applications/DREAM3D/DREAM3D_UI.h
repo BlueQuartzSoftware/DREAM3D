@@ -201,7 +201,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param format
      * @param type
      */
-    void pipelineFileLoaded(QString file, ExtractionType type);
+    void pipelineFileLoaded(QString file, int index);
 
 
     void pipelineDidFinish();

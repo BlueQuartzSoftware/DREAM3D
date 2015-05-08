@@ -972,6 +972,13 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     {
       fName = urlList[0].toLocalFile(); // convert first QUrl to local path
       fName = QDir::toNativeSeparators(fName);
+
+      if (fName.isEmpty() == true)
+      {
+        fName = urlList[0].toString();
+        fName = QDir::toNativeSeparators(fName);
+      }
+
       QFileInfo fi(fName);
       QString ext = fi.completeSuffix();
 

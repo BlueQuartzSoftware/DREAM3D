@@ -387,7 +387,7 @@ void FavoritesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath, Replace);
+    emit pipelineFileActivated(pipelinePath, 0);
   }
 
 }
@@ -846,22 +846,6 @@ void FavoritesDockWidget::actionRenameFavorite_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   filterLibraryTree->editItem(item, 0);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FavoritesDockWidget::actionAppendFavorite_triggered()
-{
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
-  if (pipelinePath.isEmpty() == false)
-  {
-    QFileInfo fi(pipelinePath);
-    if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath(), Append);
-  }
 }
 
 // -----------------------------------------------------------------------------

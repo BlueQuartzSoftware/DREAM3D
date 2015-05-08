@@ -632,17 +632,17 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-          pipelineViewWidget, SLOT(openPipeline(QString, ExtractionType)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    pipelineViewWidget, SLOT(openPipeline(QString, int)));
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
-  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
-    pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
+  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
+    pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
 
-  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
   disconnect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
@@ -677,14 +677,14 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
     pipelineViewWidget, SLOT(openPipeline(QString, int)));
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
     pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
 
-  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
@@ -764,16 +764,6 @@ void DREAM3D_UI::setupPipelineContextMenu()
   favoriteItemActions << actionRenameFavorite;
   favoriteCategoryActions << actionRenameFavorite;
 
-
-  QAction* actionAppendFavorite = new QAction(NULL);
-  actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
-  actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0));
-   menuPipeline->addAction(actionAppendFavorite);
-  QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
-  actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
-  connect(actionAppendFavorite, SIGNAL(triggered()),
-          favoritesDockWidget, SLOT( actionAppendFavorite_triggered() ) );
-  favoriteItemActions << actionAppendFavorite;
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
@@ -833,13 +823,6 @@ void DREAM3D_UI::setupPipelineContextMenu()
 
 
   /* ******************************* Prebuilt Pipelines Context Menus ***********************************************/
-  QAction* actionAppendPrebuilt = new QAction(NULL);
-  actionAppendPrebuilt->setObjectName(QString::fromUtf8("actionAppendPrebuilt"));
-  actionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0));
-  //menuPipeline->addAction(actionAppendPrebuilt);
-  connect(actionAppendPrebuilt, SIGNAL(triggered()),
-          prebuiltPipelinesDockWidget, SLOT( actionAppendPipeline_triggered() ) );
-  prebuiltItemActions << actionAppendPrebuilt;
 
   {
     QAction* separator = new QAction(this);
@@ -1000,7 +983,7 @@ void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::pipelineFileLoaded(QString file, ExtractionType type)
+void DREAM3D_UI::pipelineFileLoaded(QString file, int index)
 {
   QFileInfo fi(file);
   on_pipelineViewWidget_pipelineTitleUpdated(fi.baseName());

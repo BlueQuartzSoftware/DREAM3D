@@ -37,6 +37,11 @@
 
 #include "FilterLibraryTreeWidget.h"
 
+#include <QtGui/QMouseEvent>
+#include <QtWidgets/QApplication>
+#include <QtCore/QMimeData>
+#include <QtGui/QDrag>
+
 
 
 FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget* parent) :
@@ -137,4 +142,101 @@ void FilterLibraryTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoin
   }
 
   m_Menu.exec(globalPos);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::mousePressEvent(QMouseEvent* event)
+{
+  if (event->button() == Qt::LeftButton)
+  {
+    m_StartPos = event->pos();
+  }
+  QTreeWidget::mousePressEvent(event);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::mouseMoveEvent(QMouseEvent* event)
+{
+  if (event->buttons() & Qt::LeftButton)
+  {
+    int distance = (event->pos() - m_StartPos).manhattanLength();
+    if (distance >= QApplication::startDragDistance())
+    {
+      performDrag();
+    }
+  }
+  QTreeWidget::mouseMoveEvent(event);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::performDrag()
+{
+  QTreeWidgetItem* item = currentItem();
+  if (item)
+  {
+    QMimeData* mimeData = new QMimeData;
+    QString path = item->data(0, Qt::UserRole).toString();
+    QUrl url(path);
+    QList<QUrl> list;
+    list.append(url);
+    if (path.isEmpty() == false)
+    {
+      mimeData->setUrls(list);
+
+      QDrag* drag = new QDrag(this);
+      drag->setMimeData(mimeData);
+      drag->exec(Qt::CopyAction);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::dragEnterEvent(QDragEnterEvent* event)
+{
+  FilterLibraryTreeWidget* source =
+    qobject_cast<FilterLibraryTreeWidget*>(event->source());
+  if (source && source != this)
+  {
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::dragMoveEvent(QDragMoveEvent* event)
+{
+  FilterLibraryTreeWidget* source =
+    qobject_cast<FilterLibraryTreeWidget*>(event->source());
+  if (source && source != this)
+  {
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::dropEvent(QDropEvent* event)
+{
+#if 0
+  FilterTreeWidget* source = qobject_cast<FilterTreeWidget*>(event->source());
+  if (source && source != this)
+  {
+    addItem(event->mimeData()->text());
+    event->setDropAction(Qt::MoveAction);
+    event->accept();
+  }
+#endif
 }

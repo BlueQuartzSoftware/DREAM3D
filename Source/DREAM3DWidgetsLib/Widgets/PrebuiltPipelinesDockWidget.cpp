@@ -265,7 +265,7 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeW
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath, Replace);
+    emit pipelineFileActivated(pipelinePath, 0);
   }
 
 }
@@ -393,29 +393,6 @@ QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QStr
     prefs.endGroup();
   }
   return filterNames;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::actionAppendPipeline_triggered()
-{
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  if (NULL == item)
-  {
-    QMessageBox::critical ( this, QString::fromLatin1("PAppend to Pipeline Error"),
-                            QString::fromLatin1("Please select either a 'Favorite' or 'Prebuilt' pipeline to append to the current pipeline") );
-    return;
-  }
-
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
-  if (pipelinePath.isEmpty() == false)
-  {
-    QFileInfo fi(pipelinePath);
-    if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath(), Append);
-  }
 }
 
 // -----------------------------------------------------------------------------
