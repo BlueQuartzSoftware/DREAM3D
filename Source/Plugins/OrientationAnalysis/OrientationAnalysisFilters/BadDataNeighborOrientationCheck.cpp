@@ -325,7 +325,7 @@ const QString BadDataNeighborOrientationCheck::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -51,6 +51,8 @@
 #include "DREAM3DLib/Utilities/ColorUtilities.h"
 
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 namespace Detail
@@ -297,9 +299,7 @@ CubicOps::~CubicOps()
 // -----------------------------------------------------------------------------
 float CubicOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
-
   int numsym = 24;
-
   return _calcMisoQuat(CubicQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
@@ -318,11 +318,6 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   float sin_wmin_over_2 = 0.0;
 
   QuaternionMathF::Conjugate(q2, q2inv); // Computes the Conjugate of q2 and places the result in q2inv
-  /*
-  * Dave's Code will have this looking "opposite". he will do (q1, q2Inv, qc) because Dave's Quaternions are active
-  * where as DREAM3D seems to define a passive Quat
-  */
-
   QuaternionMathF::Multiply(q2inv, q1, qc);
   QuaternionMathF::ElementWiseAbs(qc);
 
@@ -566,13 +561,6 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 
 }
 
-void CubicOps::getODFFZRod(float& r1, float& r2, float& r3)
-{
-  int numsym = 24;
-
-  _calcRodNearestOrigin(CubicRodSym, numsym, r1, r2, r3);
-}
-
 void CubicOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(CubicQuatSym[i], q);
@@ -598,13 +586,27 @@ void CubicOps::getMatSymOp(int i, float g[3][3])
   g[2][2] = CubicMatSym[i][2][2];
 }
 
-void CubicOps::getMDFFZRod(float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicOps::getODFFZRod(FOrientArrayType rod)
+{
+  int numsym = 24;
+  return _calcRodNearestOrigin(CubicRodSym, numsym, rod);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicOps::getMDFFZRod(FOrientArrayType rod)
 {
   float w, n1, n2, n3;
   float FZw, FZn1, FZn2, FZn3;
 
-  OrientationOps::_calcRodNearestOrigin(CubicRodSym, 24, r1, r2, r3);
-  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  rod = _calcRodNearestOrigin(CubicRodSym, 12, rod);
+  FOrientArrayType ax(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
+  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZw = w;
   n1 = fabs(n1);
@@ -649,7 +651,9 @@ void CubicOps::getMDFFZRod(float& r1, float& r2, float& r3)
     }
   }
 
-  OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
+  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
+  OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
+  return rod;
 }
 
 void CubicOps::getNearestQuat(QuatF& q1, QuatF& q2)
@@ -666,13 +670,17 @@ void CubicOps::getFZQuat(QuatF& qr)
   _calcQuatNearestOrigin(CubicQuatSym, numsym, qr);
 }
 
-int CubicOps::getMisoBin(float r1, float r2, float r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicOps::getMisoBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::CubicDim1InitValue;
   dim[1] = Detail::CubicDim2InitValue;
@@ -684,15 +692,18 @@ int CubicOps::getMisoBin(float r1, float r2, float r3)
   bins[1] = 18.0f;
   bins[2] = 18.0f;
 
-  return _calcMisoBin(dim, bins, step, r1, r2, r3);
+  return _calcMisoBin(dim, bins, step, ho);
 }
 
-void CubicOps::determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicOps::determineEulerAngles(int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
-  float r1, r2, r3;
+  float h1, h2, h3;
 
   init[0] = Detail::CubicDim1InitValue;
   init[1] = Detail::CubicDim2InitValue;
@@ -704,28 +715,46 @@ void CubicOps::determineEulerAngles(int choose, float& synea1, float& synea2, fl
   phi[1] = static_cast<float>((choose / 18) % 18);
   phi[2] = static_cast<float>(choose / (18 * 18));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getODFFZRod(r1, r2, r3);
-  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+
+  ro = getODFFZRod(ro);
+  FOrientArrayType eu(4);
+  OrientationTransforms<FOrientArrayType, float>::ro2eu(ro, eu);
+  return eu;
 }
 
-void CubicOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicOps::randomizeEulerAngles(FOrientArrayType synea)
 {
-  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
-
   QuatF q;
   QuatF qc;
-  OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
+  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+
+  FOrientArrayType quat(4, 0.0f);
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
+  q = quat.toQuaternion();
   QuaternionMathF::Multiply(q, CubicQuatSym[symOp], qc);
-  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
+
+  quat.fromQuaternion(qc);
+  OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
+  return synea;
 }
 
-void CubicOps::determineRodriguesVector(int choose, float& r1, float& r2, float& r3)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FOrientArrayType CubicOps::determineRodriguesVector( int choose)
 {
   float init[3];
   float step[3];
   float phi[3];
+  float h1, h2, h3;
 
   init[0] = Detail::CubicDim1InitValue;
   init[1] = Detail::CubicDim2InitValue;
@@ -737,17 +766,25 @@ void CubicOps::determineRodriguesVector(int choose, float& r1, float& r2, float&
   phi[1] = static_cast<float>((choose / 18) % 18);
   phi[2] = static_cast<float>(choose / (18 * 18));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath::HomochorictoRod(r1, r2, r3);
-  getMDFFZRod(r1, r2, r3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  FOrientArrayType ho(h1, h2, h3);
+  FOrientArrayType ro(4);
+  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+  ro = getMDFFZRod(ro);
+  return ro;
 }
-int CubicOps::getOdfBin(float r1, float r2, float r3)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicOps::getOdfBin(FOrientArrayType rod)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  FOrientArrayType ho(3);
+  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
 
   dim[0] = Detail::CubicDim1InitValue;
   dim[1] = Detail::CubicDim2InitValue;
@@ -759,7 +796,7 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
   bins[1] = 18.0f;
   bins[2] = 18.0f;
 
-  return _calcODFBin(dim, bins, step, r1, r2, r3);
+  return _calcODFBin(dim, bins, step, ho);
 }
 
 void CubicOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
@@ -915,8 +952,11 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
   float planeMisalignment = 0, directionMisalignment = 0;
   int ss1 = 0, ss2 = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
   for(int i = 0; i < 12; i++)
@@ -1001,8 +1041,11 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
   //float directionComponent2 = 0, planeComponent2 = 0;
   float maxF1 = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1082,8 +1125,11 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
   //s float directionComponent2 = 0, planeComponent2 = 0;
   float maxF1spt = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1165,8 +1211,11 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
   // float directionComponent2 = 0, planeComponent2 = 0;
   float maxF7 = 0;
 
-  OrientationMath::QuattoMat(q1, g1);
-  OrientationMath::QuattoMat(q2, g2);
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+  om.toGMatrix(g1);
+  FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+  om.toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1255,14 +1304,14 @@ namespace Detail
         {
           float g[3][3];
           float gTranpose[3][3];
-          float* currentEuler = NULL;
           float direction[3] = {0.0, 0.0, 0.0};
 
           for(size_t i = start; i < end; ++i)
           {
-            currentEuler = m_Eulers->getPointer(i * 3);
-
-            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            FOrientArrayType eu(m_Eulers->getPointer(i * 3), 3);
+            FOrientArrayType om(9, 0.0);
+            OrientationTransforms<FOrientArrayType, float>::eu2om(eu, om);
+            om.toGMatrix(g);
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -1579,13 +1628,19 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
   float chi = 0.0f, eta = 0.0f;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
+  FOrientArrayType eu(phi1, phi, phi2);
+  FOrientArrayType qu(4);
+  FOrientArrayType om(9); // Reusable for the loop
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
+  q1 = qu.toQuaternion();
 
   for (int j = 0; j < 24; j++)
   {
     QuaternionMathF::Multiply(q1, CubicQuatSym[j], qc);
 
-    OrientationMath::QuattoMat(qc, g);
+    qu.fromQuaternion(qc);
+    OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
+    om.toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;

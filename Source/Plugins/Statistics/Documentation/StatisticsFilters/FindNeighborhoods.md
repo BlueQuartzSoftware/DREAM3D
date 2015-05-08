@@ -1,5 +1,5 @@
 Find Feature Neighborhoods {#findneighborhoods}
-======
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
@@ -9,7 +9,7 @@ This Filter determines the number of **Features**, for each **Feature**, whose *
 
 1. Define a sphere centered at the **Feature**'s *centroid* and with radius equal to the average equivalent sphere diameter multiplied by the user defined multiple.
 2. Check every other **Feature**'s *centroid* to see if it lies within the sphere and keep count and list of those that satisfy.
-3. Repeat 1&2 for all **Features**.
+3. Repeat 1 & 2 for all **Features**.
 
 ## Parameters ##
 | Name | Type | Description |
@@ -17,7 +17,7 @@ This Filter determines the number of **Features**, for each **Feature**, whose *
 | Multiples Of Average Diameter | Float | Defines the search radius to use when looking for "neighboring" **Features** |
 
 ## Required Geometry ##
-Not Applicable
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
@@ -33,7 +33,6 @@ Not Applicable
 | Feature | NeighborhoodLists | List of Ints | (1) | List of the **Features** whose centroids are within the user specified multiple of equivalent sphere diameter from each **Feature** |
 
 ## Authors ##
-
 **Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net

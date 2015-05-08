@@ -147,7 +147,7 @@ OrientationMath::OrientationMath()
 OrientationMath::~OrientationMath()
 {
 }
-
+#if OM_ORIENTATION_FUNCS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -350,6 +350,43 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float& w, flo
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::RodtoQuat(QuatF& q, float r1, float r2, float r3)
+{
+  float rmag, w;
+
+  rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
+  rmag = sqrt(rmag);
+  if(rmag == 0.0)
+  {
+    q.x = 0.0, q.y = 0.0, q.z = 0.0, q.w = 1.0;
+    return;
+  }
+  r1 = r1 / rmag;
+  r2 = r2 / rmag;
+  r3 = r3 / rmag;
+  w = 2.0f * atan(rmag);
+  float const1 = sinf(w / 2.0f);
+  q.x = r1 * const1;
+  q.y = r2 * const1;
+  q.z = r3 * const1;
+  q.w = static_cast<float>( cosf(w / 2.0f) );
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3)
+{
+  float sum = atan(r3);
+  float diff = atan(r2 / r1);
+  ea1 = sum + diff;
+  ea2 = static_cast<float>( 2. * atan(r1 * cosf(sum) / cosf(diff)) );
+  ea3 = sum - diff;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -388,31 +425,6 @@ void OrientationMath::QuattoMat(QuatF& q, float g[3][3])
   g[2][0] = ((2 * q.x * q.z) + (2 * q.y * q.w));
   g[2][1] = ((2 * q.y * q.z) - (2 * q.x * q.w));
   g[2][2] = (1 - (2 * q.x * q.x) - (2 * q.y * q.y));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::RodtoQuat(QuatF& q, float r1, float r2, float r3)
-{
-  float rmag, w;
-
-  rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
-  rmag = sqrt(rmag);
-  if(rmag == 0.0)
-  {
-    q.x = 0.0, q.y = 0.0, q.z = 0.0, q.w = 1.0;
-    return;
-  }
-  r1 = r1 / rmag;
-  r2 = r2 / rmag;
-  r3 = r3 / rmag;
-  w = 2.0f * atan(rmag);
-  float const1 = sinf(w / 2.0f);
-  q.x = r1 * const1;
-  q.y = r2 * const1;
-  q.z = r3 * const1;
-  q.w = static_cast<float>( cosf(w / 2.0f) );
 }
 
 // -----------------------------------------------------------------------------
@@ -462,6 +474,7 @@ void OrientationMath::QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3)
   ea1 = fmodf(ea1, DREAM3D::Constants::k_2Pi);
   ea3 = fmodf(ea3, DREAM3D::Constants::k_2Pi);
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -566,32 +579,6 @@ void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
   g[2][2] = cp;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::EulertoMatActive(float ea1, float ea2, float ea3, float g[3][3])
-{
-  // Calcuate all the values once
-  float cp1 = cosf(ea1);
-  float sp1 = sinf(ea1);
-  float cp = cosf(ea2);
-  float sp = sinf(ea2);
-  float cp2 = cosf(ea3);
-  float sp2 = sinf(ea3);
-
-  // 1) find rotation matrix from Euler angles
-  // g[row][col] This is an ACTIVE rotation
-  g[0][0] =  cp1 * cp2 - sp1 * sp2 * cp;
-  g[0][1] = -cp1 * sp2 - sp1 * cp2 * cp;
-  g[0][2] =  sp1 * sp;
-  g[1][0] = sp1 * cp2 + cp1 * sp2 * cp;
-  g[1][1] = -sp1 * sp2 + cp1 * cp2 * cp;
-  g[1][2] = -cp1 * sp;
-  g[2][0] = sp2 * sp;
-  g[2][1] = cp2 * sp;
-  g[2][2] = cp;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -628,7 +615,6 @@ void OrientationMath::MattoEuler(float g[3][3], float& phi1, float& Phi, float& 
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -657,18 +643,34 @@ void OrientationMath::EulerToAxisAngle(float ea1, float ea2, float ea3, float& w
   // Convert the Rodrigues to Axis Angle
   RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3)
+void OrientationMath::EulertoMatActive(float ea1, float ea2, float ea3, float g[3][3])
 {
-  float sum = atan(r3);
-  float diff = atan(r2 / r1);
-  ea1 = sum + diff;
-  ea2 = static_cast<float>( 2. * atan(r1 * cosf(sum) / cosf(diff)) );
-  ea3 = sum - diff;
+  // Calcuate all the values once
+  float cp1 = cosf(ea1);
+  float sp1 = sinf(ea1);
+  float cp = cosf(ea2);
+  float sp = sinf(ea2);
+  float cp2 = cosf(ea3);
+  float sp2 = sinf(ea3);
+
+  // 1) find rotation matrix from Euler angles
+  // g[row][col] This is an ACTIVE rotation
+  g[0][0] =  cp1 * cp2 - sp1 * sp2 * cp;
+  g[0][1] = -cp1 * sp2 - sp1 * cp2 * cp;
+  g[0][2] =  sp1 * sp;
+  g[1][0] = sp1 * cp2 + cp1 * sp2 * cp;
+  g[1][1] = -sp1 * sp2 + cp1 * cp2 * cp;
+  g[1][2] = -cp1 * sp;
+  g[2][0] = sp2 * sp;
+  g[2][1] = cp2 * sp;
+  g[2][2] = cp;
 }
+
 
 
 // -----------------------------------------------------------------------------
@@ -677,7 +679,11 @@ void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float
 void OrientationMath::MultiplyQuaternionVector(QuatF& inQuat, float* inVec, float* outVec)
 {
   float g[3][3];
-  OrientationMath::QuattoMat(inQuat, g);
+
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::qu2om(FOrientArrayType(inQuat), om);
+  om.toGMatrix(g);
+
   MatrixMath::Multiply3x3with3x1(g, inVec, outVec);
 }
 
@@ -717,7 +723,10 @@ void OrientationMath::ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, f
   n[1] = n2;
   n[2] = n3;
 
-  QuattoMat(q, g);
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::qu2om(FOrientArrayType(q), om);
+  om.toGMatrix(g);
+
   MatrixMath::Multiply3x3with3x1(g, n, nNew);
   MatrixMath::Normalize3x1(nNew);
   n1 = nNew[0];
@@ -733,7 +742,9 @@ QuatF OrientationMath::PassiveRotation(float angle, float xAxis, float yAxis, fl
   QuatF q;
   QuatF qStar;
 
-  AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
+  FOrientArrayType quat(4);
+  FOrientTransformsType::ax2qu(FOrientArrayType(xAxis, yAxis, zAxis, angle), quat);
+  q = quat.toQuaternion();
 
   QuaternionMathF::Conjugate(q, qStar);
   QuatF v = QuaternionMathF::New(x, y, z, 0); // Make the Pure quaternion
@@ -750,7 +761,9 @@ QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, flo
 {
   QuatF q;
   QuatF qStar;
-  AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
+  FOrientArrayType quat(4);
+  FOrientTransformsType::ax2qu(FOrientArrayType(xAxis, yAxis, zAxis, angle), quat);
+  q = quat.toQuaternion();
 
   QuaternionMathF::Conjugate(q, qStar);
   QuatF v = QuaternionMathF::New(x, y, z, 0); // Make the Pure quaternion

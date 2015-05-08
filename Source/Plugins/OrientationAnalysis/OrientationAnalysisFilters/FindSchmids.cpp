@@ -298,7 +298,9 @@ void FindSchmids::execute()
   for (size_t i = 1; i < totalFeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
-    OrientationMath::QuattoMat(q1, g);
+    FOrientArrayType om(9);
+    FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+    om.toGMatrix(g);
 
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 

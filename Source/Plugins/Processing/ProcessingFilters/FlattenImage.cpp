@@ -48,12 +48,13 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
-
 #include "Processing/ProcessingConstants.h"
 
+/**
+ * @brief The FlattenImageImpl class implements a threaded algorithm that flattens an RGB array into a grayscale array
+ */
 class FlattenImageImpl
 {
-
   public:
     FlattenImageImpl(uint8_t* data, uint8_t* newdata, float Rfactor, float Gfactor, float Bfactor, size_t comp) :
       m_ImageData(data),
@@ -170,6 +171,7 @@ void FlattenImage::dataCheck()
   int32_t numImageComp = 1;
 
   IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());
+  if(getErrorCondition() < 0) { return; }
   if(NULL != iDataArray.get())
   {
     numImageComp = iDataArray->getNumberOfComponents();

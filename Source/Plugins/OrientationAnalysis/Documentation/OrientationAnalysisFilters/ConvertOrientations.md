@@ -1,54 +1,68 @@
-Convert Orientations {#convertorientations}
+Convert Orientation Representations {#convertorientations}
 =======
 
 ## Group (Subgroup) ##
-OrientationAnalysis Filters (Conversion)
+Orientation Analysis Filters (Conversion)
 
 ## Description ##
 
-This filter determines the _Output Orientation Representation_ for each **Element**, given the _Input Orientation Representation_ for the **Element**.
+This filter generates a new orientation representation for each **Element**, given the _Input Orientation Representation_ for the **Element**. The following table lists the various orientation representations that are supported. DREAM3D is capable of converting between any representation with some caveats.
+
+The valid range for Euler angles is:
+    + phi-1: 0 to 360
+    + Phi : 0 to 180
+    + phi-2: 0 to 360
+
+If the angles fall outside of this range the **original** Euler Input data **WILL BE CHANGED** to ensure they are within this range.
+
+
+| Orientation Representation | No. of Components | Orientation Type Index |
+|----------------------------|------------------|-------------------------|
+| EulerAngles               | 3      | 0 |
+| OrientationMatrix | 9 | 1 |
+| Quaternions                | 4            | 2 |
+| AxisAngle           | 4       | 3 |
+| Rodrigues Vectors          | 4 | 4 |
+| Homochoric                 | 3 | 5 |
+
 
 ## Parameters ##
+
 | Name             | Type | Description |
-|------------------|------|---------|
-| Input Orientation Representation | String | Euler Angles, Quaternions, Rodrigues Vectors, or Axis-Angle pairs |
-| Output Orientation Representation | String | Euler Angles, Quaternions, Rodrigues Vectors, or Axis-Angle pairs |
+|------------------|------|-------------|
+| Input Orientation Representation | Int | Use the proper index from the table above. The GUI will do this for you. |
+| Output Orientation Representation | Int | Use the proper index from the table above. The GUI will do this for you. |
+| Input DataArray Path | DataArray Path | The path to the Input Orientation Representation Data |
+| Output Array Name | String | The name of the output array. The array will be created in the same AttributeMatrix as the input array |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Arrays ##
+
 | Type | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
-| Element     | Varies            | Float | (3) or (4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
-| Element     | CellPhases            | Int | (1) | Specifies the **Ensemble** of the **Cell** |
-| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
+|------|--------------|------|----------------------|-------------|
+| Element | Varies    | Float | see table above. |  |
+
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
-| Element     | Varies            | Float | (3) or (4) | Euler Angles, Rodrigues Vectors, Quaternions or Axis-Angle Pair values defining the orientation of the **Element** |
 
-## Default Array Names ##
-| Orientation Representation | Default Name     |
-|----------------------------|------------------|
-| Euler Angles               | EulerAngles      |
-| Quaternions                | Quats            |
-| Rodrigues Vectors          | RodriguesVectors |
-| Axis-Angle Pairs           | AxisAngles       |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-------------------|
+| Element     | Varies            | Float | Varies |           |
 
 
 ## Authors ##
 
-**Copyright:** 2014 Will Lenthe (UCSB)
+**Copyright:** 2015 BlueQuartz Software, LLC
 
-**Contact Info:** dream3d@bluequartz.net
+**Contact Info** dream3d@bluequartz.net
 
-**Version:** 1.0.0
+**Version** 1.0.0
 
-**License:**  See the License.txt file that came with DREAM3D.
+**License**  See the License.txt file that came with DREAM3D.
 
 
 
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
-

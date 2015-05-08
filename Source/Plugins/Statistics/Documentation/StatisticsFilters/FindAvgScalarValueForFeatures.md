@@ -1,14 +1,14 @@
 Find Average Value of Scalars For Feature {#findavgscalarvalueforfeatures}
-======
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Misc)
 
 ## Description ##
-This Filter determines the average value of a *scalar array* for each **Feature** by the following algorithm:
+This Filter determines the average value of a scalar **Attribute Array** for each **Feature** by the following algorithm:
 
 1. Gather all **Elements** that belong to the **Feature**
-2. Average the values of the *scalar array* for all **Elements** and store as the average for the **Feature**
+2. Average the values of the scalar **Attribute Array** for all **Elements** and store as the average for the **Feature**
 
 ## Parameters ##
 None
@@ -19,17 +19,16 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
-| Element | None | Variable | (1) | Scalar array to average for each **Feature** |
+| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Element** belongs. |
+| Element | None | Variable | (1) | Scalar **Attribute Array** to average for each **Feature** |
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | None | Float | (1) | Average value of scalar array for each **Feature** |
+| Feature | ScalarAverages | Float | (1) | Average value of scalar **Attribute Array** for each **Feature** |
 
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

@@ -37,24 +37,12 @@
 #ifndef _FindSurfaceAreaToVolume_H_
 #define _FindSurfaceAreaToVolume_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FindSurfaceAreaToVolume FindSurfaceAreaToVolume.h DREAM3DLib/GenericFilters/FindSurfaceAreaToVolume.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindSurfaceAreaToVolume class. See [Filter documentation](@ref findsurfaceareatovolume) for details.
  */
 class FindSurfaceAreaToVolume : public AbstractFilter
 {
@@ -74,9 +62,6 @@ class FindSurfaceAreaToVolume : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, SurfaceAreaVolumeRatioArrayName)
     Q_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
-
-
-
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -115,15 +100,11 @@ class FindSurfaceAreaToVolume : public AbstractFilter
   protected:
     FindSurfaceAreaToVolume();
 
-
-
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceAreaVolumeRatio)
-
-
-
 
     void dataCheck();
 
@@ -132,6 +113,3 @@ class FindSurfaceAreaToVolume : public AbstractFilter
 };
 
 #endif /* FindSurfaceAreaToVolume_H_ */
-
-
-

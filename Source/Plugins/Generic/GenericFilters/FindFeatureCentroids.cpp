@@ -141,20 +141,6 @@ void FindFeatureCentroids::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureCentroids::execute()
-{
-  setErrorCondition(0);
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  find_centroids();
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindFeatureCentroids::find_centroids()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
@@ -208,6 +194,20 @@ void FindFeatureCentroids::find_centroids()
     m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
     m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindFeatureCentroids::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  find_centroids();
+
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

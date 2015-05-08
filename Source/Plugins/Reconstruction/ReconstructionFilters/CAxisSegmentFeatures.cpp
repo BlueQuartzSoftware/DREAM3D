@@ -395,8 +395,11 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {
-      OrientationMath::QuattoMat(q1, g1);
-      OrientationMath::QuattoMat(q2, g2);
+      FOrientArrayType om(9);
+      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+      om.toGMatrix(g1);
+      FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+      om.toGMatrix(g2);
 
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along

@@ -291,7 +291,9 @@ void RotateSampleRefFrame::preflight()
   float zMin = std::numeric_limits<float>::max();
   float zMax = std::numeric_limits<float>::min();
 
-  OrientationMath::AxisAngletoMat(rotAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
+  FOrientArrayType om(9);
+  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotAngle), om);
+  om.toGMatrix(rotMat);
   for (int32_t i = 0; i < 8; i++)
   {
     if (i == 0) { col = 0, row = 0, plane = 0; }
@@ -399,7 +401,9 @@ void RotateSampleRefFrame::execute()
   float zMin = std::numeric_limits<float>::max();
   float zMax = std::numeric_limits<float>::min();
 
-  OrientationMath::AxisAngletoMat(rotAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
+  FOrientArrayType om(9);
+  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotAngle), om);
+  om.toGMatrix(rotMat);
   for (int32_t i = 0; i < 8; i++)
   {
     if (i == 0) { col = 0, row = 0, plane = 0; }

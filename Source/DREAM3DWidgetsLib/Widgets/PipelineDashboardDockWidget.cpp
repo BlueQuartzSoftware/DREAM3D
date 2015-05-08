@@ -54,6 +54,7 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 
@@ -178,7 +179,7 @@ void PipelineDashboardDockWidget::readPipelines()
   QStringList fileExtension;
   fileExtension.append("*.txt");
   fileExtension.append("*.ini");
-
+  fileExtension.append("*.json");
   // Need to add the path to the favorites directory to the root item since we may use this later on.
   filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
 
@@ -226,12 +227,18 @@ void PipelineDashboardDockWidget::addPipelinesRecursively(QDir currentDir, QTree
   foreach(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
-    QSettings itemPref(itemFilePath, QSettings::IniFormat);
-    itemPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-    QString itemName = itemPref.value("Name").toString();
-    //itemPref.setValue("DREAM3D_Version", QString::fromStdString(DREAM3DLib::Version::Package()));
-    itemPref.endGroup();
-    //qDebug() << itemInfo.absoluteFilePath() << "\n";
+    QString itemName;
+    if (itemInfo.suffix().compare("ini") == 0 || itemInfo.suffix().compare("txt") == 0)
+    {
+      QSettings itemPref(itemFilePath, QSettings::IniFormat);
+      itemPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+      itemName = itemPref.value(DREAM3D::Settings::PipelineName).toString();
+      itemPref.endGroup();
+    }
+    else if (itemInfo.suffix().compare("json") == 0)
+    {
+      itemName = JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath);
+    }
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
     itemWidget->setText(0, itemName);

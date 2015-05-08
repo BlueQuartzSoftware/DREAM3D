@@ -40,6 +40,8 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/Math/OrientationArray.hpp"
+#include "OrientationLib/Math/OrientationTransforms.hpp"
 #include "OrientationLib/OrientationOps/OrientationOps.h"
 #include "OrientationLib/OrientationOps/CubicOps.h"
 
@@ -64,9 +66,12 @@ void RemoveTestFiles()
 void TestVectorRotation()
 {
   QuatF equat;
-  OrientationMath::EulertoQuat(DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, equat);
-  // std::cout << "equat: " << equat.w << ", <" << equat.x << ", " << equat.y << ", " << equat.z << ">"  << std::endl;
 
+  FOrientArrayType eu(DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2);
+  FOrientArrayType qu(4);
+  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
+
+  equat = qu.toQuaternion();
 
   CubicOps cubic;
   int nsym = cubic.getNumSymOps();
@@ -104,39 +109,11 @@ void TestVectorRotation()
   }
 }
 
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void TestCubicOps()
-//{
-//  float e0[3] = {0.0f, 0.0f, 0.0f};
-//  float e1[3] = {0.0f, 0.0f, 30.0f * M_PI / 180.f};
-
-//  QuaternionMathF::Quaternion q0 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-//  QuaternionMathF::Quaternion q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-
-//  OrientationMath::EulertoQuat(e0[0], e0[1], e0[2], q0);
-//  OrientationMath::EulertoQuat(e1[0], e1[1], e1[2], q0);
-
-//  CubicOps co;
-
-//  float n[3] = {0.0, 0.0, 1.0f};
-//  float w = co.getMisoQuat(q0, q1, n[0], n[1], n[2]);
-//  DREAM3D_REQUIRE(w >= 0.523598900 && w <= 0.523598914)
-//}
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void TestQuat_t()
 {
-
-
-
   QuatF p = QuaternionMathF::New(1.0f, 0.0f, 0.0f, 1.0f);
   QuatF q = QuaternionMathF::New(0.0f, 1.0f, 0.0f, 2.0f);
   QuatF out = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
@@ -315,11 +292,8 @@ int main(int argc, char* argv[])
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestQuat_t() )
   DREAM3D_REGISTER_TEST( TestVectorRotation() )
-
-      //DREAM3D_REGISTER_TEST( TestCubicOps() )
-
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-      PRINT_TEST_SUMMARY();
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  PRINT_TEST_SUMMARY();
 
   // TestVectorRotation();
   return err;

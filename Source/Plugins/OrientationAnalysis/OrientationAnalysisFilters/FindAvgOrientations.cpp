@@ -215,7 +215,6 @@ void FindAvgOrientations::execute()
       QuaternionMathF::Add(avgQuats[m_FeatureIds[i]], voxquat, avgQuats[m_FeatureIds[i]]);
     }
   }
-  float ea1, ea2, ea3;
   for (size_t i = 1; i < totalFeatures; i++)
   {
     if(counts[i] == 0)
@@ -224,10 +223,9 @@ void FindAvgOrientations::execute()
     }
     QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
     QuaternionMathF::UnitQuaternion(avgQuats[i]);
-    OrientationMath::QuattoEuler(avgQuats[i], ea1, ea2, ea3);
-    m_FeatureEulerAngles[3 * i] = ea1;
-    m_FeatureEulerAngles[3 * i + 1] = ea2;
-    m_FeatureEulerAngles[3 * i + 2] = ea3;
+
+    FOrientArrayType eu(m_FeatureEulerAngles + (3*i), 3);
+    FOrientTransformsType::qu2eu(FOrientArrayType(avgQuats[i]), eu);
   }
   notifyStatusMessage(getHumanLabel(), "Completed");
 }

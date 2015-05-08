@@ -179,7 +179,7 @@ void NearestPointFuseRegularGrids::execute()
 
   if (zeroRes == true)
   {
-    QString ss = QObject::tr("A component of the resolution for the Image Geometry associated with DataContainer '%1' is zero. This would result in a division by 0 operation").arg(m_SamplingCellAttributeMatrixPath.getDataContainerName());
+    QString ss = QObject::tr("A component of the resolution for the Image Geometry associated with DataContainer '%1' is 0. This would result in a division by 0 operation").arg(m_SamplingCellAttributeMatrixPath.getDataContainerName());
     setErrorCondition(-5555);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

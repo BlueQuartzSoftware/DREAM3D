@@ -37,21 +37,12 @@
 #ifndef _FindSizes_H_
 #define _FindSizes_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 
 /**
- * @class FindSizes FindSizes.h DREAM3DLib/GenericFilters/FindSizes.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindSizes class. See [Filter documentation](@ref findsizes) for details.
  */
 class FindSizes : public AbstractFilter
 {
@@ -62,6 +53,7 @@ class FindSizes : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
 
     virtual ~FindSizes();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -111,11 +103,20 @@ class FindSizes : public AbstractFilter
 
   protected:
     FindSizes();
+
+    /**
+     * @brief find_sizes Determines the size of each Feature
+     */
     void find_sizes();
+
+    /**
+     * @brief find_sizes2D Determines the size of each Feature (2D version)
+     */
     void find_sizes2D();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumCells)
@@ -127,6 +128,3 @@ class FindSizes : public AbstractFilter
 };
 
 #endif /* FINDSIZES_H_ */
-
-
-

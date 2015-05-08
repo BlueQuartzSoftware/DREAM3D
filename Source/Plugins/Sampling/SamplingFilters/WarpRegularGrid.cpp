@@ -191,6 +191,26 @@ void WarpRegularGrid::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void WarpRegularGrid::determine_warped_coordinates(float x, float y, float &newX, float &newY)
+{
+  if(m_PolyOrder == 0)
+  {
+    newX = x*x*m_SecondOrderACoeff.c20 + y*y*m_SecondOrderACoeff.c02 + x*y*m_SecondOrderACoeff.c11 + x*m_SecondOrderACoeff.c10 + y*m_SecondOrderACoeff.c01 + m_SecondOrderACoeff.c00;
+    newY = x*x*m_SecondOrderBCoeff.c20 + y*y*m_SecondOrderBCoeff.c02 + x*y*m_SecondOrderBCoeff.c11 + x*m_SecondOrderBCoeff.c10 + y*m_SecondOrderBCoeff.c01 + m_SecondOrderBCoeff.c00;
+  }
+  if(m_PolyOrder == 1)
+  {
+
+  }
+  if(m_PolyOrder == 2)
+  {
+
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WarpRegularGrid::execute()
 {
   setErrorCondition(0);
@@ -279,26 +299,6 @@ void WarpRegularGrid::execute()
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void WarpRegularGrid::determine_warped_coordinates(float x, float y, float &newX, float &newY)
-{
-  if(m_PolyOrder == 0)
-  {
-    newX = x*x*m_SecondOrderACoeff.c20 + y*y*m_SecondOrderACoeff.c02 + x*y*m_SecondOrderACoeff.c11 + x*m_SecondOrderACoeff.c10 + y*m_SecondOrderACoeff.c01 + m_SecondOrderACoeff.c00;
-    newY = x*x*m_SecondOrderBCoeff.c20 + y*y*m_SecondOrderBCoeff.c02 + x*y*m_SecondOrderBCoeff.c11 + x*m_SecondOrderBCoeff.c10 + y*m_SecondOrderBCoeff.c01 + m_SecondOrderBCoeff.c00;
-  }
-  if(m_PolyOrder == 1)
-  {
-
-  }
-  if(m_PolyOrder == 2)
-  {
-
-  }
 }
 
 // -----------------------------------------------------------------------------

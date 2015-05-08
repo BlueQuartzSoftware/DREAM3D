@@ -1,11 +1,11 @@
 Find Feature Shapes {#findshapes}
-======
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter calculates the second-order moments of each **Feature** in order to determine the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
+This Filter calculates the second-order moments of each **Feature** in order to determine the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3s*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
 
 1. For each **Cell**, determine the x, y and z distance to the centroid of the **Feature** that owns the **Cell**.
 2. For each **Cell**, calculate Ixx, Iyy, Izz, Ixy, Ixz and Iyz using the x, y and z distances determined in step 1.
@@ -16,9 +16,8 @@ This Filter calculates the second-order moments of each **Feature** in order to 
 7. Determine the Euler angles required to represent the *principal axis directions* in the *sample reference frame* and store them as the **Feature**'s *Axis Euler Angles*.
 8. Calculate the moment variant Omega3 as definied in [2] and is discussed further in [1] and [3].
 
-
 ------------
-Sources: 
+## References ## 
 
 1. Representation and Reconstruction of Three-dimensional
 Microstructures in Ni-based Superalloys, AFOSR FA9550-07-1-0179 Final Report, 20 Dec 2010.
@@ -38,7 +37,7 @@ _
 None
 
 ## Required Geometry ##
-Image/Rectilinear Grid
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
