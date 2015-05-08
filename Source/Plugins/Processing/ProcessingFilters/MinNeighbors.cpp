@@ -79,11 +79,11 @@ void MinNeighbors::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Phase Number On Which To Run Min Neighbors Filter", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
+  parameters.push_back(FilterParameter::New("Phase Index", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Number of Neighbors", "NumNeighborsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumNeighborsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Number Of Neighbors", "NumNeighborsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumNeighborsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -429,4 +429,3 @@ const QString MinNeighbors::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString MinNeighbors::getHumanLabel()
 { return "Minimum Number of Neighbors Filter"; }
-

@@ -1,11 +1,11 @@
-Find Feature Boundary Cell Fractions {#findboundarycellfractions}
-======
+Find Feature Boundary Element Fractions {#findboundaryelementfractions}
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This filter calculates the fraction of **Elements** of each **Feature** that are on the "surface" of that **Feature**.  The filter simply iterates through all **Elements** asking for the **Feature** that owns them and if it is a "surface" **Element**.  Each **Feature** counts the total number of **Elements** it owns and the number of those **Elements** that are "surface" **Elements**.  The fraction is then stored for each **Feature**.
+This Filter calculates the fraction of **Elements** of each **Feature** that are on the "surface" of that **Feature**.  The Filter simply iterates through all **Elements** asking for the **Feature** that owns them and if the **Element** is a "surface" **Element**.  Each **Feature** counts the total number of **Elements** it owns and the number of those **Elements** that are "surface" **Elements**.  The fraction is then stored for each **Feature**.
 
 ## Parameters ##
 None
@@ -18,15 +18,14 @@ Not Applicable
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Element** belongs. |
-| Element | SurfaceCells | Int | (1) | The number of neighboring **Elements** of a given **Element** that belong to a different **Feature** than itself. Values will range from *0* to *6* |
+| Element | BoundaryCells | Int | (1) | The number of neighboring **Elements** of a given **Element** that belong to a different **Feature** than itself. Values will range from *0* to *6* |
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | SurfaceVoxelFractions | Float | (1) | Fraction of **Elements** belonging to the **Feature** that are "surface" **Elements**. |
+| Feature | SurfaceElementFractions | Float | (1) | Fraction of **Elements** belonging to the **Feature** that are "surface" **Elements**. |
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net

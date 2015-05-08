@@ -34,25 +34,24 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindBoundaryCellFractions.h"
+#include "FindBoundaryElementFractions.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
+#include "Statistics/StatisticsConstants.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryCellFractions::FindBoundaryCellFractions() :
+FindBoundaryElementFractions::FindBoundaryElementFractions() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_BoundaryCellsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::BoundaryCells),
-  m_BoundaryCellFractionsArrayName(DREAM3D::FeatureData::SurfaceCellFractions),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_BoundaryCellFractionsArrayName(DREAM3D::FeatureData::SurfaceElementFractions),
   m_FeatureIds(NULL),
-  m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
   m_BoundaryCells(NULL),
   m_BoundaryCellFractions(NULL)
 {
@@ -62,27 +61,27 @@ FindBoundaryCellFractions::FindBoundaryCellFractions() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryCellFractions::~FindBoundaryCellFractions()
+FindBoundaryElementFractions::~FindBoundaryElementFractions()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::setupFilterParameters()
+void FindBoundaryElementFractions::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Surface Cells", "BoundaryCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBoundaryCellsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Surface Cell Fractions", "BoundaryCellFractionsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellFractionsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellFractionsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
-
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindBoundaryElementFractions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
@@ -95,7 +94,7 @@ void FindBoundaryCellFractions::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindBoundaryCellFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindBoundaryElementFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
@@ -110,29 +109,36 @@ int FindBoundaryCellFractions::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::dataCheck()
+void FindBoundaryElementFractions::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+
+  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getBoundaryCellsArrayPath()); }
+
+  getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
+
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getBoundaryCellFractionsArrayName() );
-  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BoundaryCellFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::preflight()
+void FindBoundaryElementFractions::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -141,44 +147,27 @@ void FindBoundaryCellFractions::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::execute()
-{
-  setErrorCondition(0);
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  find_surface_voxel_fractions();
-
-  notifyStatusMessage(getHumanLabel(), "FindBoundaryCellFractions Completed");
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryCellFractions::find_surface_voxel_fractions()
+void FindBoundaryElementFractions::find_surface_voxel_fractions()
 {
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_BoundaryCellFractionsPtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer m_SurfVoxCounts = DataArray<float>::CreateArray(numfeatures, "SurfVoxCounts");
+  FloatArrayType::Pointer m_SurfVoxCounts = FloatArrayType::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_SurfVoxCounts");
+  m_SurfVoxCounts->initializeWithZeros();
   float* surfvoxcounts = m_SurfVoxCounts->getPointer(0);
-  DataArray<float>::Pointer m_VoxCounts = DataArray<float>::CreateArray(numfeatures, "VoxCounts");
+  FloatArrayType::Pointer m_VoxCounts = FloatArrayType::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_VoxCounts");
+  m_VoxCounts->initializeWithZeros();
   float* voxcounts = m_VoxCounts->getPointer(0);
 
-  // Initialize every element to 0.0
-  for (size_t i = 0; i < numfeatures * 1; i++)
+  for (size_t j = 0; j < totalPoints; j++)
   {
-    surfvoxcounts[i] = 0.0f;
-    voxcounts[i] = 0.0f;
-  }
-  for (int64_t j = 0; j < totalPoints; j++)
-  {
-    int gnum = m_FeatureIds[j];
+    int32_t gnum = m_FeatureIds[j];
     voxcounts[gnum]++;
-    if(m_BoundaryCells[j] > 0) { surfvoxcounts[gnum]++; }
+    if (m_BoundaryCells[j] > 0) { surfvoxcounts[gnum]++; }
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
@@ -189,12 +178,50 @@ void FindBoundaryCellFractions::find_surface_voxel_fractions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindBoundaryCellFractions::newFilterInstance(bool copyFilterParameters)
+void FindBoundaryElementFractions::execute()
 {
-  FindBoundaryCellFractions::Pointer filter = FindBoundaryCellFractions::New();
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  find_surface_voxel_fractions();
+
+  notifyStatusMessage(getHumanLabel(), "FindBoundaryElementFractions Completed");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindBoundaryElementFractions::newFilterInstance(bool copyFilterParameters)
+{
+  FindBoundaryElementFractions::Pointer filter = FindBoundaryElementFractions::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryElementFractions::getCompiledLibraryName()
+{ return StatisticsConstants::StatisticsBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryElementFractions::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryElementFractions::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryElementFractions::getHumanLabel()
+{ return "Find Feature Boundary Cell Fractions"; }

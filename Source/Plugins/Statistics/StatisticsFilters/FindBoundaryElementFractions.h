@@ -34,36 +34,26 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FindBoundaryCellFractions_H_
-#define _FindBoundaryCellFractions_H_
-
-#include <vector>
-#include <QtCore/QString>
+#ifndef _FindBoundaryElementFractions_H_
+#define _FindBoundaryElementFractions_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FindBoundaryCellFractions FindBoundaryCellFractions.h DREAM3DLib/GenericFilters/FindBoundaryCellFractions.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindBoundaryElementFractions class. See [Filter documentation](@ref findboundaryelementfractions) for details.
  */
-class FindBoundaryCellFractions : public AbstractFilter
+class FindBoundaryElementFractions : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindBoundaryCellFractions)
-    DREAM3D_STATIC_NEW_MACRO(FindBoundaryCellFractions)
-    DREAM3D_TYPE_MACRO_SUPER(FindBoundaryCellFractions, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindBoundaryElementFractions)
+    DREAM3D_STATIC_NEW_MACRO(FindBoundaryElementFractions)
+    DREAM3D_TYPE_MACRO_SUPER(FindBoundaryElementFractions, AbstractFilter)
 
-    virtual ~FindBoundaryCellFractions();
+    virtual ~FindBoundaryElementFractions();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -76,11 +66,11 @@ class FindBoundaryCellFractions : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, BoundaryCellFractionsArrayName)
     Q_PROPERTY(QString BoundaryCellFractionsArrayName READ getBoundaryCellFractionsArrayName WRITE setBoundaryCellFractionsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return StatisticsConstants::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Boundary Cell Fractions"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -110,21 +100,23 @@ class FindBoundaryCellFractions : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    FindBoundaryCellFractions();
+    FindBoundaryElementFractions();
+
+    /**
+     * @brief find_surface_voxel_fractions Computes the element-wise fraction of cells that belong to surfaces
+     */
     void find_surface_voxel_fractions();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, BoundaryCellFractions)
 
     void dataCheck();
 
-    FindBoundaryCellFractions(const FindBoundaryCellFractions&); // Copy Constructor Not Implemented
-    void operator=(const FindBoundaryCellFractions&); // Operator '=' Not Implemented
+    FindBoundaryElementFractions(const FindBoundaryElementFractions&); // Copy Constructor Not Implemented
+    void operator=(const FindBoundaryElementFractions&); // Operator '=' Not Implemented
 };
 
-#endif /* FindBoundaryCellFractions_H_ */
-
-
-
+#endif /* FindBoundaryElementFractions_H_ */

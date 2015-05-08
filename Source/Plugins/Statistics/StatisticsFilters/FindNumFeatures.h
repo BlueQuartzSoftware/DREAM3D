@@ -36,19 +36,12 @@
 #ifndef _FindNumFeatures_H_
 #define _FindNumFeatures_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Statistics/StatisticsConstants.h"
-/*
- *
+/**
+ * @brief The FindNumFeatures class. See [Filter documentation](@ref findnumfeatures) for details.
  */
 class FindNumFeatures : public AbstractFilter
 {
@@ -107,6 +100,7 @@ class FindNumFeatures : public AbstractFilter
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
     void dataCheck();
@@ -117,6 +111,3 @@ class FindNumFeatures : public AbstractFilter
 };
 
 #endif /* FindNumFeatures_H_ */
-
-
-

@@ -34,26 +34,17 @@
  *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _FindNeighborhoods_H_
 #define _FindNeighborhoods_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FindNeighborhoods FindNeighborhoods.h DREAM3DLib/GenericFilters/FindNeighborhoods.h
- * @brief
- * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Jan 30, 2014
- * @version 5.0
+ * @brief The FindNeighborhoods class. See [Filter documentation](@ref findneighborhoods) for details.
  */
 class FindNeighborhoods : public AbstractFilter
 {
@@ -118,14 +109,19 @@ class FindNeighborhoods : public AbstractFilter
   protected:
     FindNeighborhoods();
 
+    /**
+     * @brief find_neighborhoods Determines the neighborhoods for each Feature
+     */
     void find_neighborhoods();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
-    NeighborList<int>::WeakPointer m_NeighborhoodList;
+
+    NeighborList<int32_t>::WeakPointer m_NeighborhoodList;
 
     void dataCheck();
 
@@ -134,8 +130,3 @@ class FindNeighborhoods : public AbstractFilter
 };
 
 #endif /* FINDNEIGHBORHOODS_H_ */
-
-
-
-
-

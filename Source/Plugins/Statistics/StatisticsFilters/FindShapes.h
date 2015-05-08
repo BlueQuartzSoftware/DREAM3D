@@ -37,24 +37,12 @@
 #ifndef _FindShapes_H_
 #define _FindShapes_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-
-#include "Statistics/StatisticsConstants.h"
 /**
- * @class FindShapes FindShapes.h DREAM3DLib/GenericFilters/FindShapes.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindShapes class. See [Filter documentation](@ref findshapes) for details.
  */
 class FindShapes : public AbstractFilter
 {
@@ -69,6 +57,7 @@ class FindShapes : public AbstractFilter
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     DREAM3D_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
+
     DREAM3D_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
@@ -129,20 +118,41 @@ class FindShapes : public AbstractFilter
   protected:
     FindShapes();
 
+    /**
+     * @brief find_moments Determines the second order moments for each Feature
+     */
     void find_moments();
+
+    /**
+     * @brief find_moments2D Determines the second order moments for each Feature (2D version)
+     */
     void find_moments2D();
+
+    /**
+     * @brief find_axes Determine principal axis lengths for each Feature
+     */
     void find_axes();
+
+    /**
+     * @brief find_axes2D Determine principal axis lengths for each Feature (2D version)
+     */
     void find_axes2D();
+
+    /**
+     * @brief find_axiseulers Determine principal axis directions for each Feature
+     */
     void find_axiseulers();
+
+    /**
+     * @brief find_axiseulers2D Determine principal axis directions for each Feature (2D version)
+     */
     void find_axiseulers2D();
-    float find_xcoord(size_t index);
-    float find_ycoord(size_t index);
-    float find_zcoord(size_t index);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisLengths)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Omega3s)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
@@ -157,6 +167,3 @@ class FindShapes : public AbstractFilter
 };
 
 #endif /* FINDSHAPES_H_ */
-
-
-

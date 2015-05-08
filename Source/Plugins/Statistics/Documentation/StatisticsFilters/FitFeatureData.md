@@ -1,13 +1,13 @@
 Fit Feature Data {#fitfeaturedata}
-==========
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Ensemble)
 
 ## Description ##
-This filter will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can chose both which attributes to fit and with what distribution to fit them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.  The user also has the option to remove *biased* **Features** from the fitting process.
+This Filter will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can chose both which attributes to fit and with what distribution to fit them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.  The user also has the option to remove *biased* **Features** from the fitting process.
 
-Note: The array selected must be a scalar array
+*Note:* The array selected must be a scalar array
 
 ## Parameters ##
 | Name | Type | Description |
@@ -22,7 +22,7 @@ Not Applicable
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Feature | BiasedFeatures | Boolean | (1) | Flag of 1 if **Feature** is biased or of 0 if it is not (only required if *Remove Biased Features* is checked |
-| Feature | *None* | *Variable* | (1) | Selected feature array to be fit. |
+| Feature | FitParameters | Variable | (1) | Selected feature array to be fit. |
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
@@ -30,8 +30,7 @@ Not Applicable
 | Ensemble | Statistics | Float | (2) or (3) | Parameters of the fit distribution | 
 
 ## Authors ##
-
-**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 

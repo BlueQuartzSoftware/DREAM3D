@@ -9,7 +9,6 @@ This Filter changes the **Cell** spacing/resolution based on inputs from the use
 
 A new grid of **Cells** is created and "overlaid" on the existing grid of **Cells**.  There is currently no *interpolation* performed, rather the attributes of the old **Cell** that is closest to each new **Cell**'s is assigned to that new **Cell**.
 
-
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
