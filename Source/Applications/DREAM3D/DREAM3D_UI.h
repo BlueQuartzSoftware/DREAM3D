@@ -419,6 +419,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QAction* m_ActionClearPipeline;
     QAction* m_ActionAppendPrebuilt;
 
+    /**
+    * @brief Connects some necessary signals and slots between a new instance of DREAM3D_UI and the existing instances of DREAM3D_UI
+    */
+    void connectSignalsSlots(DREAM3D_UI* newInstance);
+
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented
 

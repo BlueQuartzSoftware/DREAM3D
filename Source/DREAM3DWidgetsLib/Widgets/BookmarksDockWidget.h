@@ -119,12 +119,32 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void m_ActionNewFolder_triggered();
     void m_ActionAddPipeline_triggered();
     void m_ActionUpdatePipeline_triggered();
-    void removeFavorite(QTreeWidgetItem* item);
+    void removeBookmark(QTreeWidgetItem* item);
     void m_ActionRemovePipeline_triggered();
     void m_ActionRenamePipeline_triggered();
     void m_ActionAddToPipelineView_triggered();
     void m_ActionShowInFileSystem_triggered();
-    void removeFavorite(QString favoritePath);
+    void removeBookmark(QString bookmarkName, QString bookmarkPath, QString bookmarkTreePath);
+    void renameBookmark(QString oldName, QString newName, QString filePath, QString treePath);
+
+    /**
+    * @brief Adds pipelines to the Bookmarks Dock Widget
+    */
+    void addPipelines(QList<QString> newPaths);
+
+    /**
+    * @brief Adds a folder to the Bookmarks Dock Widget
+    * @param name
+    * @param parentName
+    * @param parentTreePath
+    * @param editState
+    */
+    void addFolder(QString name, QString parentName, QString parentTreePath, bool editState);
+
+    /**
+    * @brief Updates the widget with the new information in the settings file
+    */
+    void updateWidget();
 
 
   protected:
@@ -160,11 +180,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
                              bool editState,
                              bool isExpanded);
 
-    /**
-     * @brief addFavorite
-     * @param folder Is the new favorite to be a folder or an actual pipeline file
-     */
-    void addPipeline(bool folder);
+    void readTreeSettings(QSettings& prefs);
 
   protected slots:
     //// Slots to catch signals from the QTreeWidget
@@ -173,6 +189,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
     void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+
+    void readSettings();
 
   signals:
 
@@ -200,6 +218,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
     void updateStatusBar(const QString &msg);
 
+    void settingsUpdated();
+
   private:
     QString                 m_OpenDialogLastDirectory;
 
@@ -220,6 +240,11 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     * @param treePath
     */
     QList<QString> deserializeTreePath(QString treePath);
+
+    /**
+    * @brief writeSettings
+    */
+    void writeSettings();
 
     BookmarksDockWidget(const BookmarksDockWidget&); // Copy Constructor Not Implemented
     void operator=(const BookmarksDockWidget&); // Operator '=' Not Implemented

@@ -179,6 +179,10 @@ void DREAM3D_UI::on_actionNew_triggered()
   newInstance->setLoadedPlugins(plugins);
   newInstance->setWindowTitle("[*]UntitledPipeline - DREAM3D");
   newInstance->move(this->x() + 45, this->y() + 45);
+
+  // Connect up some signals and slots between every single DREAM3D_UI instance that is currently running
+  connectSignalsSlots(newInstance);
+
   newInstance->show();
 }
 
@@ -223,6 +227,10 @@ void DREAM3D_UI::on_actionOpen_triggered()
     // Show the new instance
     newInstance->setWindowModified(false);
     newInstance->move(this->x() + 45, this->y() + 45);
+
+    // Connect up some signals and slots between every single DREAM3D_UI instance that is currently running and the new instance
+    connectSignalsSlots(newInstance);
+
     newInstance->show();
   }
   else
@@ -373,6 +381,10 @@ void DREAM3D_UI::readSettings()
     // Have the pipeline builder read its settings from the prefs file
     readWindowSettings(prefs);
     readVersionSettings(prefs);
+
+    // Read dock widget settings
+    bookmarksDockWidget->readSettings(this, prefs);
+
     QRecentFileList::instance()->readList(prefs);
   }
 }
@@ -404,7 +416,6 @@ void DREAM3D_UI::readWindowSettings(QSettings& prefs)
 
   readDockWidgetSettings(prefs, filterListDockWidget);
   readDockWidgetSettings(prefs, filterLibraryDockWidget);
-  bookmarksDockWidget->readSettings(this, prefs);
   readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   readDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -487,6 +498,9 @@ void DREAM3D_UI::writeSettings()
     // Have the version check widet write its preferences.
     writeVersionCheckSettings(prefs);
 
+    // Write dock widget settings
+    bookmarksDockWidget->writeSettings(prefs);
+
     QRecentFileList::instance()->writeList(prefs);
   }
 }
@@ -512,10 +526,8 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
 
   writeDockWidgetSettings(prefs, filterListDockWidget);
   writeDockWidgetSettings(prefs, filterLibraryDockWidget);
-  bookmarksDockWidget->writeSettings(prefs);
   writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   writeDockWidgetSettings(prefs, issuesDockWidget);
-
   writeSearchListSettings(prefs, filterListDockWidget);
 
   QByteArray splitterGeometry = splitter->saveGeometry();
@@ -712,6 +724,27 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
     this, SLOT(setStatusBarMessage(const QString&)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* newInstance)
+{
+  QWidgetList list = qApp->topLevelWidgets();
+  for (int i = 0; i < list.size(); i++)
+  {
+    DREAM3D_UI* otherInstance = qobject_cast<DREAM3D_UI*>(list[i]);
+    if (NULL != otherInstance)
+    {
+      if (otherInstance != newInstance)
+      {
+        connect(otherInstance->bookmarksDockWidget, SIGNAL(settingsUpdated()), newInstance->bookmarksDockWidget, SLOT(updateWidget()));
+
+        connect(newInstance->bookmarksDockWidget, SIGNAL(settingsUpdated()), otherInstance->bookmarksDockWidget, SLOT(updateWidget()));
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
