@@ -404,7 +404,7 @@ void DREAM3D_UI::readWindowSettings(QSettings& prefs)
 
   readDockWidgetSettings(prefs, filterListDockWidget);
   readDockWidgetSettings(prefs, filterLibraryDockWidget);
-  pipelineDashboardDockWidget->readSettings(this, prefs);
+  bookmarksDockWidget->readSettings(this, prefs);
   readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   readDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -512,7 +512,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
 
   writeDockWidgetSettings(prefs, filterListDockWidget);
   writeDockWidgetSettings(prefs, filterLibraryDockWidget);
-  pipelineDashboardDockWidget->writeSettings(prefs);
+  bookmarksDockWidget->writeSettings(prefs);
   writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   writeDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -621,9 +621,9 @@ void DREAM3D_UI::setupGui()
   setupViewMenu();
   setupPipelineContextMenu();
 
-  if(pipelineDashboardDockWidget)
+  if (bookmarksDockWidget)
   {
-    pipelineDashboardDockWidget->configureFilterLibraryTree();
+    bookmarksDockWidget->configureFilterLibraryTree();
   }
 
 }
@@ -647,13 +647,13 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
 
-  disconnect(pipelineDashboardDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
+  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
     pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
 
-  disconnect(pipelineDashboardDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
+  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
 
-  disconnect(pipelineDashboardDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
+  disconnect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
 
   disconnect(recentsList, SIGNAL(fileListChanged(const QString &)),
@@ -689,13 +689,13 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
 
-  connect(pipelineDashboardDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
+  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
     pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
 
-  connect(pipelineDashboardDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
+  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
     this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
 
-  connect(pipelineDashboardDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
+  connect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
 
   connect(recentsList, SIGNAL(fileListChanged(const QString &)),
@@ -710,7 +710,7 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
     this, SLOT(markDocumentAsDirty()));
 
-  connect(pipelineDashboardDockWidget, SIGNAL(updateStatusBar(const QString&)),
+  connect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
     this, SLOT(setStatusBarMessage(const QString&)));
 }
 
@@ -750,7 +750,7 @@ void DREAM3D_UI::setupPipelineItemMenu()
 
   favoriteItemActions << m_ActionShowInFileSystem;
 
-  pipelineDashboardDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(favoriteItemActions);
+  bookmarksDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(favoriteItemActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -779,7 +779,7 @@ void DREAM3D_UI::setupFolderMenu()
 
   favoriteCategoryActions << m_ActionNewFolder;
 
-  pipelineDashboardDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(favoriteCategoryActions);
+  bookmarksDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(favoriteCategoryActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -800,7 +800,7 @@ void DREAM3D_UI::setupDefaultMenu()
   favoriteDefaultActions << m_ActionNewFolder;
   
 
-  pipelineDashboardDockWidget->getFilterLibraryTreeWidget()->setDefaultActionList(favoriteDefaultActions);
+  bookmarksDockWidget->getFilterLibraryTreeWidget()->setDefaultActionList(favoriteDefaultActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -896,7 +896,7 @@ void DREAM3D_UI::initializeMenuActions()
   QKeySequence m_ActionAddPipelineKeySeq(Qt::CTRL + Qt::Key_F);
   m_ActionAddPipeline->setShortcut(m_ActionAddPipelineKeySeq);
   connect(m_ActionAddPipeline, SIGNAL(triggered()),
-    pipelineDashboardDockWidget, SLOT(m_ActionAddPipeline_triggered()));
+    bookmarksDockWidget, SLOT(m_ActionAddPipeline_triggered()));
 
   {
     menuPipeline->addSeparator();
@@ -909,9 +909,9 @@ void DREAM3D_UI::initializeMenuActions()
   menuPipeline->addAction(m_ActionRemovePipeline);
   QKeySequence m_ActionRemovePipelineKeySeq(Qt::CTRL + Qt::Key_Delete);
   m_ActionRemovePipeline->setShortcut(m_ActionRemovePipelineKeySeq);
-  pipelineDashboardDockWidget->setDeleteAction(m_ActionRemovePipeline);
+  bookmarksDockWidget->setDeleteAction(m_ActionRemovePipeline);
   connect(m_ActionRemovePipeline, SIGNAL(triggered()),
-    pipelineDashboardDockWidget, SLOT(m_ActionRemovePipeline_triggered()));
+    bookmarksDockWidget, SLOT(m_ActionRemovePipeline_triggered()));
 
   {
     menuPipeline->addSeparator();
@@ -925,7 +925,7 @@ void DREAM3D_UI::initializeMenuActions()
   QKeySequence m_ActionNewFolderKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_F);
   m_ActionNewFolder->setShortcut(m_ActionNewFolderKeySeq);
   connect(m_ActionNewFolder, SIGNAL(triggered()),
-    pipelineDashboardDockWidget, SLOT(m_ActionNewFolder_triggered()));
+    bookmarksDockWidget, SLOT(m_ActionNewFolder_triggered()));
 
   {
     menuPipeline->addSeparator();
@@ -951,7 +951,7 @@ void DREAM3D_UI::initializeMenuActions()
   QKeySequence m_ActionAddToPipelineViewKeySeq(Qt::CTRL + Qt::Key_A);
   m_ActionAddToPipelineView->setShortcut(m_ActionAddToPipelineViewKeySeq);
   connect(m_ActionAddToPipelineView, SIGNAL(triggered()),
-    pipelineDashboardDockWidget, SLOT(m_ActionAddToPipelineView_triggered()));
+    bookmarksDockWidget, SLOT(m_ActionAddToPipelineView_triggered()));
 
   /* m_ActionUpdatePipeline */
   m_ActionUpdatePipeline = new QAction(this);
@@ -960,7 +960,7 @@ void DREAM3D_UI::initializeMenuActions()
   QKeySequence m_ActionUpdatePipelineKeySeq(Qt::CTRL + Qt::Key_U);
   m_ActionUpdatePipeline->setShortcut(m_ActionUpdatePipelineKeySeq);
   connect(m_ActionUpdatePipeline, SIGNAL(triggered()),
-    pipelineDashboardDockWidget, SLOT(m_ActionUpdatePipeline_triggered()));
+    bookmarksDockWidget, SLOT(m_ActionUpdatePipeline_triggered()));
 
   /* m_ActionRenamePipeline */
   m_ActionRenamePipeline = new QAction(this);
@@ -968,9 +968,9 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
   QKeySequence m_ActionRenamePipelineKeySeq(Qt::CTRL + Qt::Key_R);
   m_ActionRenamePipeline->setShortcut(m_ActionRenamePipelineKeySeq);
-  pipelineDashboardDockWidget->setRenameAction(m_ActionRenamePipeline);
+  bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
   connect(m_ActionRenamePipeline, SIGNAL(triggered()),
-    pipelineDashboardDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
+    bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
 
   /* m_ActionShowInFileSystem */
   m_ActionShowInFileSystem = new QAction(this);
@@ -984,7 +984,7 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
 #endif
   connect(m_ActionShowInFileSystem, SIGNAL(triggered()),
-    pipelineDashboardDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
+    bookmarksDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
 
   /* m_ActionAppendPrebuilt */
   m_ActionAppendPrebuilt = new QAction(this);
@@ -1027,10 +1027,10 @@ void DREAM3D_UI::setupViewMenu()
   //          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
 
   //  m_FavoritesBtn = new QToolButton(this);
-  //  makeStatusBarButton("Favorites", pipelineDashboardDockWidget, m_FavoritesBtn, 2);
+  //  makeStatusBarButton("Favorites", BookmarksDockWidget, m_FavoritesBtn, 2);
   menuView->removeAction(actionShow_Favorites);
   delete actionShow_Favorites;
-  actionShow_Favorites = pipelineDashboardDockWidget->toggleViewAction();
+  actionShow_Favorites = bookmarksDockWidget->toggleViewAction();
   actionShow_Favorites->setText("Favorite Pipelines");
   menuView->addAction(actionShow_Favorites);
   connect(actionShow_Favorites, SIGNAL(triggered(bool)),
@@ -1576,7 +1576,7 @@ void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Favorites_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Favorites, pipelineDashboardDockWidget, m_FavoritesBtn, b);
+  updateAndSyncDockWidget(actionShow_Favorites, bookmarksDockWidget, m_FavoritesBtn, b);
 }
 
 // -----------------------------------------------------------------------------

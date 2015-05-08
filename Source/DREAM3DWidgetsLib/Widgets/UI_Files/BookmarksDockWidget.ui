@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PipelineDashboardDockWidget</class>
- <widget class="QDockWidget" name="PipelineDashboardDockWidget">
+ <class>BookmarksDockWidget</class>
+ <widget class="QDockWidget" name="BookmarksDockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="minimumSize">
    <size>
     <width>250</width>
-    <height>76</height>
+    <height>86</height>
    </size>
   </property>
   <property name="focusPolicy">
@@ -34,7 +34,7 @@ padding-left: 5px;
 </string>
   </property>
   <property name="windowTitle">
-   <string>[*]Pipeline Dashboard</string>
+   <string>[*]Bookmarks</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QHBoxLayout" name="horizontalLayout">

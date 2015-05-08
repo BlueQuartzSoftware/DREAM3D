@@ -147,8 +147,8 @@ sss</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1011</width>
-             <height>562</height>
+             <width>956</width>
+             <height>482</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -254,7 +254,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
      <x>0</x>
      <y>0</y>
      <width>1104</width>
-     <height>21</height>
+     <height>38</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -313,9 +313,9 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="PipelineDashboardDockWidget" name="pipelineDashboardDockWidget">
+  <widget class="BookmarksDockWidget" name="bookmarksDockWidget">
    <property name="windowTitle">
-    <string>[*]Pipeline Dashboard</string>
+    <string>[*]Bookmarks</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -557,12 +557,6 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>PipelineDashboardDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header location="global">PipelineDashboardDockWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>FilterListDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">FilterListDockWidget.h</header>
@@ -578,6 +572,12 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    <class>DREAM3DSplitter</class>
    <extends>QSplitter</extends>
    <header location="global">QtSupportLib/DREAM3DSplitter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BookmarksDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">BookmarksDockWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

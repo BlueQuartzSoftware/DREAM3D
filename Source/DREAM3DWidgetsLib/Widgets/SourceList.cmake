@@ -7,7 +7,7 @@ set(DREAM3DWidgetsLib_Widgets_UIS "")
 # --------------------------------------------------------------------
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
-    PipelineDashboardDockWidget
+    BookmarksDockWidget
     DREAM3DUpdateCheckDialog
     DREAM3DUserManualDialog
     FilterInputWidget

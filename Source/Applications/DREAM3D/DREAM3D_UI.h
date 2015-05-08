@@ -63,7 +63,7 @@
 
 class IDREAM3DPlugin;
 class FilterLibraryDockWidget;
-class PipelineDashboardDockWidget;
+class BookmarksDockWidget;
 class PrebuiltPipelinesDockWidget;
 class FilterListWidget;
 class DREAM3DUpdateCheckDialog;

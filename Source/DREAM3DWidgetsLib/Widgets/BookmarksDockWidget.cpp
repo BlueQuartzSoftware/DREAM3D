@@ -34,7 +34,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "PipelineDashboardDockWidget.h"
+#include "BookmarksDockWidget.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileInfoList>
@@ -66,7 +66,7 @@ enum ErrorCodes {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PipelineDashboardDockWidget::PipelineDashboardDockWidget(QWidget* parent) :
+BookmarksDockWidget::BookmarksDockWidget(QWidget* parent) :
   QDockWidget(parent),
   m_DeleteAction(NULL),
   m_RenameAction(NULL),
@@ -80,7 +80,7 @@ PipelineDashboardDockWidget::PipelineDashboardDockWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PipelineDashboardDockWidget::~PipelineDashboardDockWidget()
+BookmarksDockWidget::~BookmarksDockWidget()
 {
 }
 
@@ -88,7 +88,7 @@ PipelineDashboardDockWidget::~PipelineDashboardDockWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::connectFilterList(FilterListDockWidget* filterListWidget)
+void BookmarksDockWidget::connectFilterList(FilterListDockWidget* filterListWidget)
 {
   connect(this, SIGNAL(filterListGenerated(const QStringList&, bool)),
           filterListWidget, SLOT(updateFilterList(const QStringList&, bool) ) );
@@ -98,7 +98,7 @@ void PipelineDashboardDockWidget::connectFilterList(FilterListDockWidget* filter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::setupGui()
+void BookmarksDockWidget::setupGui()
 {
   // Clear out the default stuff
   filterLibraryTree->clear();
@@ -119,7 +119,7 @@ opacity: 255;\
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::configureFilterLibraryTree()
+void BookmarksDockWidget::configureFilterLibraryTree()
 {
   FilterLibraryTreeWidget* filterLibraryTree = getFilterLibraryTreeWidget();
   if(filterLibraryTree)
@@ -134,7 +134,7 @@ void PipelineDashboardDockWidget::configureFilterLibraryTree()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterLibraryTreeWidget* PipelineDashboardDockWidget::getFilterLibraryTreeWidget()
+FilterLibraryTreeWidget* BookmarksDockWidget::getFilterLibraryTreeWidget()
 {
   return filterLibraryTree;
 }
@@ -142,7 +142,7 @@ FilterLibraryTreeWidget* PipelineDashboardDockWidget::getFilterLibraryTreeWidget
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QDir PipelineDashboardDockWidget::findPipelinesDirectory()
+QDir BookmarksDockWidget::findPipelinesDirectory()
 {
 
   // Get the location of the PReferences file. The Favorites are stored in a directory located at that level.
@@ -169,7 +169,7 @@ QDir PipelineDashboardDockWidget::findPipelinesDirectory()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::readPipelines()
+void BookmarksDockWidget::readPipelines()
 {
   QDir pipelinesDir = findPipelinesDirectory();
 
@@ -196,7 +196,7 @@ void PipelineDashboardDockWidget::readPipelines()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
+void BookmarksDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
                                                   bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType)
 {
 
@@ -256,7 +256,7 @@ void PipelineDashboardDockWidget::addPipelinesRecursively(QDir currentDir, QTree
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PipelineDashboardDockWidget::generateHtmlFilterListFromPipelineFile(QString path)
+QString BookmarksDockWidget::generateHtmlFilterListFromPipelineFile(QString path)
 {
   QSettings prefs(path, QSettings::IniFormat);
 
@@ -347,7 +347,7 @@ QString PipelineDashboardDockWidget::generateHtmlFilterListFromPipelineFile(QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList PipelineDashboardDockWidget::generateFilterListFromPipelineFile(QString path)
+QStringList BookmarksDockWidget::generateFilterListFromPipelineFile(QString path)
 {
 
   QStringList filterNames;
@@ -372,7 +372,7 @@ QStringList PipelineDashboardDockWidget::generateFilterListFromPipelineFile(QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
+void BookmarksDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
 #if 0
   QString favoritePath = item->data(0, Qt::UserRole).toString();
@@ -387,7 +387,7 @@ void PipelineDashboardDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
+void BookmarksDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
   QString pipelinePath = item->data(0, Qt::UserRole).toString();
   if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
@@ -404,7 +404,7 @@ void PipelineDashboardDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item, int column)
+void BookmarksDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item, int column)
 {
 #if 0
   if (NULL != item->parent() )
@@ -434,7 +434,7 @@ void PipelineDashboardDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetIt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
+void BookmarksDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
   if (m_DeleteAction != NULL)
   {
@@ -464,7 +464,7 @@ void PipelineDashboardDockWidget::on_filterLibraryTree_currentItemChanged(QTreeW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool PipelineDashboardDockWidget::checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
+bool BookmarksDockWidget::checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
 {
   // Put all children (favorites) in a list
   QList<QTreeWidgetItem*> favoritesList;
@@ -490,7 +490,7 @@ bool PipelineDashboardDockWidget::checkFavoriteTitle(QString favoritePath, QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool PipelineDashboardDockWidget::hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
+bool BookmarksDockWidget::hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
 {
   QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
   QString displayText = "";
@@ -520,7 +520,7 @@ bool PipelineDashboardDockWidget::hasIllegalFavoriteName(QString favoritePath, Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool PipelineDashboardDockWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
+bool BookmarksDockWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
 {
   QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
   QString displayText = "";
@@ -557,7 +557,7 @@ bool PipelineDashboardDockWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PipelineDashboardDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item)
+QString BookmarksDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item)
 {
   QFileInfo original(favoritePath);
   QString newPath = original.canonicalPath() + QDir::separator() + newFavoriteTitle;
@@ -587,7 +587,7 @@ QString PipelineDashboardDockWidget::writeNewFavoriteFilePath(QString newFavorit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::m_ActionNewFolder_triggered()
+void BookmarksDockWidget::m_ActionNewFolder_triggered()
 {
   addPipeline(true);
 }
@@ -595,7 +595,7 @@ void PipelineDashboardDockWidget::m_ActionNewFolder_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::m_ActionAddPipeline_triggered()
+void BookmarksDockWidget::m_ActionAddPipeline_triggered()
 {
   addPipeline(false);
 }
@@ -603,7 +603,7 @@ void PipelineDashboardDockWidget::m_ActionAddPipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QTreeWidgetItem* PipelineDashboardDockWidget::getSelectedParentTreeItem()
+QTreeWidgetItem* BookmarksDockWidget::getSelectedParentTreeItem()
 {
   QTreeWidgetItem* selection = filterLibraryTree->currentItem();
 
@@ -627,7 +627,7 @@ QTreeWidgetItem* PipelineDashboardDockWidget::getSelectedParentTreeItem()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::addPipeline(bool folder)
+void BookmarksDockWidget::addPipeline(bool folder)
 {
   QString proposedDir = m_OpenDialogLastDirectory;
   QList<QString> newPrefPaths;
@@ -694,7 +694,7 @@ void PipelineDashboardDockWidget::addPipeline(bool folder)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PipelineDashboardDockWidget::addTreeItem(QTreeWidgetItem* selection,
+int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
   QString& favoriteTitle,
   QIcon icon,
   FilterLibraryTreeWidget::ItemType itemType,
@@ -747,7 +747,7 @@ int PipelineDashboardDockWidget::addTreeItem(QTreeWidgetItem* selection,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::m_ActionUpdatePipeline_triggered()
+void BookmarksDockWidget::m_ActionUpdatePipeline_triggered()
 {
   // Lets get the name of the favorite
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
@@ -761,7 +761,7 @@ void PipelineDashboardDockWidget::m_ActionUpdatePipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::removeFavorite(QString favoritePath)
+void BookmarksDockWidget::removeFavorite(QString favoritePath)
 {
   QFileInfo fileInfo(favoritePath);
   QString fileName = fileInfo.baseName();
@@ -773,7 +773,7 @@ void PipelineDashboardDockWidget::removeFavorite(QString favoritePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::removeFavorite(QTreeWidgetItem* item)
+void BookmarksDockWidget::removeFavorite(QTreeWidgetItem* item)
 {
   //Remove favorite, graphically, from the DREAM3D interface
   filterLibraryTree->removeItemWidget(item, 0);
@@ -786,7 +786,7 @@ void PipelineDashboardDockWidget::removeFavorite(QTreeWidgetItem* item)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool PipelineDashboardDockWidget::removeDir(const QString& dirName)
+bool BookmarksDockWidget::removeDir(const QString& dirName)
 {
   bool result = true;
   QDir dir(dirName);
@@ -818,7 +818,7 @@ bool PipelineDashboardDockWidget::removeDir(const QString& dirName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::m_ActionRemovePipeline_triggered()
+void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   //QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
@@ -839,7 +839,7 @@ void PipelineDashboardDockWidget::m_ActionRemovePipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::m_ActionRenamePipeline_triggered()
+void BookmarksDockWidget::m_ActionRenamePipeline_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   filterLibraryTree->editItem(item, 0);
@@ -848,7 +848,7 @@ void PipelineDashboardDockWidget::m_ActionRenamePipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::m_ActionAddToPipelineView_triggered()
+void BookmarksDockWidget::m_ActionAddToPipelineView_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
 
@@ -864,7 +864,7 @@ void PipelineDashboardDockWidget::m_ActionAddToPipelineView_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::m_ActionShowInFileSystem_triggered()
+void BookmarksDockWidget::m_ActionShowInFileSystem_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   if(item)
@@ -891,7 +891,7 @@ void PipelineDashboardDockWidget::m_ActionShowInFileSystem_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::readSettings(QMainWindow* main, QSettings& prefs)
+void BookmarksDockWidget::readSettings(QMainWindow* main, QSettings& prefs)
 {
   main->restoreDockWidget(this);
 
@@ -931,7 +931,7 @@ void PipelineDashboardDockWidget::readSettings(QMainWindow* main, QSettings& pre
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineDashboardDockWidget::writeSettings(QSettings& prefs)
+void BookmarksDockWidget::writeSettings(QSettings& prefs)
 {
   prefs.setValue(objectName(), isHidden());
 
@@ -966,7 +966,7 @@ void PipelineDashboardDockWidget::writeSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PipelineDashboardDockWidget::getTreePathFromItem(QTreeWidgetItem* item)
+QString BookmarksDockWidget::getTreePathFromItem(QTreeWidgetItem* item)
 {
   QTreeWidgetItem* parentItem = item->parent();
   QString treePath = "/" + item->text(0);
@@ -984,7 +984,7 @@ QString PipelineDashboardDockWidget::getTreePathFromItem(QTreeWidgetItem* item)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QTreeWidgetItem* PipelineDashboardDockWidget::getItemFromTreePath(QString treePath)
+QTreeWidgetItem* BookmarksDockWidget::getItemFromTreePath(QString treePath)
 {
   QList<QString> stringList = deserializeTreePath(treePath);
   
@@ -1019,7 +1019,7 @@ QTreeWidgetItem* PipelineDashboardDockWidget::getItemFromTreePath(QString treePa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> PipelineDashboardDockWidget::deserializeTreePath(QString treePath)
+QList<QString> BookmarksDockWidget::deserializeTreePath(QString treePath)
 {
   QList<QString> list;
   int currentIndex = 0;

@@ -49,7 +49,7 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "ui_PipelineDashboardDockWidget.h"
+#include "ui_BookmarksDockWidget.h"
 
 class QListWidget;
 class QTreeWidgetItem;
@@ -59,19 +59,19 @@ class QSettings;
 class QAction;
 
 /**
- * @brief The PipelineDashboardDockWidget class
+ * @brief The BookmarksDockWidget class
  */
-class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget, private Ui::PipelineDashboardDockWidget
+class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private Ui::BookmarksDockWidget
 {
 
     Q_OBJECT
   public:
     /**
-     * @brief PipelineDashboardDockWidget
+     * @brief BookmarksDockWidget
      * @param parent
      */
-    PipelineDashboardDockWidget(QWidget* parent = NULL);
-    virtual ~PipelineDashboardDockWidget();
+    BookmarksDockWidget(QWidget* parent = NULL);
+    virtual ~BookmarksDockWidget();
 
     DREAM3D_INSTANCE_PROPERTY(QAction*, RenameAction)
     DREAM3D_INSTANCE_PROPERTY(QAction*, DeleteAction)
@@ -143,7 +143,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget,
     void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
                                  bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
     /**
-     * @brief PipelineDashboardDockWidget::addFavoriteTreeItem
+     * @brief BookmarksDockWidget::addFavoriteTreeItem
      * @param selection
      * @param favoriteTitle
      * @param icon
@@ -221,8 +221,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineDashboardDockWidget : public QDockWidget,
     */
     QList<QString> deserializeTreePath(QString treePath);
 
-    PipelineDashboardDockWidget(const PipelineDashboardDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const PipelineDashboardDockWidget&); // Operator '=' Not Implemented
+    BookmarksDockWidget(const BookmarksDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const BookmarksDockWidget&); // Operator '=' Not Implemented
 
 
 };
