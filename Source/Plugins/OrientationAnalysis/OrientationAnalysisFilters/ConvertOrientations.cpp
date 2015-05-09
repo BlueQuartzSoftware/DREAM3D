@@ -41,9 +41,9 @@
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 
 
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/Math/OrientationConverter.hpp"
-#include "OrientationLib/Math/OrientationTransforms.hpp"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

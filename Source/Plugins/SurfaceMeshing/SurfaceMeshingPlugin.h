@@ -45,7 +45,7 @@
 /**
  * @class SurfaceMeshingPlugin SurfaceMeshingPlugin.h SurfaceMeshing/SurfaceMeshingPlugin.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 10, 2012
  * @version 1.0
  */

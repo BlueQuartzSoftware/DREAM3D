@@ -46,7 +46,7 @@
 /**
  * @class EMCalculation EMCalculation Common/CurvatureEM.h
  * @brief This class performs the EM Loops of the EM/MPM algorithm
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Sep 10, 2012
  * @version 1.0
  */

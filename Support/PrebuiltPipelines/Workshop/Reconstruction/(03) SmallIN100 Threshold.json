@@ -48,7 +48,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Threshold",
+        "Name": "(03) Small IN100 Threshold",
         "Number_Filters": 3,
         "Version": "5.2.1285.5481251"
     }

@@ -41,7 +41,11 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Math/OrientationConverter.hpp"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -219,9 +223,41 @@ int main(int argc, char* argv[])
 {
 
   int err = EXIT_SUCCESS;
+  QuatF quat;
+  float g[3][3];
+   int       w = 3,
+        x = 0,
+        y = 1,
+        z = 2;
+
+
+////// DREAM3D CODE
+
+  quat = OrientationMath::EulertoQuat(182.5, 124.5, 237.1);
+  
+  OrientationMath::QuattoMat(quat, g);
+
+  FOrientArrayType eu(182.5, 124.5, 237.1);
+  FOrientArrayType qu(4);
+  FOrientTransformsType::eu2qu(eu, qu);
+  quat = qu.toQuaternion();
+
+  FOrientArrayType om(9);
+  FOrientTransformsType::qu2om(qu, om);
+  om.toGMatrix(g);
+
+
+  CubicOps ops;
+  DREAM3D::Rgb rgb = ops.generateIPFColor(182.5, 124.5, 237.1, 0.0, 0.0, 1.0f, true);
+  
+  unsigned char* c = reinterpret_cast<unsigned char*>(&rgb );
+  unsigned char c0 = c[0];
+  unsigned char c1 = c[1];
+  unsigned char c2 = c[2];
+  unsigned char c3 = c[3];
 
   // DREAM3D_REGISTER_TEST( TestEulerConversion() );
-  DREAM3D_REGISTER_TEST( TestFilterDesign() );
+  // DREAM3D_REGISTER_TEST( TestFilterDesign() );
 
   return err;
 }

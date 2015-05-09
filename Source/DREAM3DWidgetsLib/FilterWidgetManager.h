@@ -51,7 +51,7 @@
  * @class FilterWidgetManager FilterWidgetManager.h FilterWidgets/FilterWidgetManager.h
  * @brief This class is a singleton based manager for creating Qt based widgets
  * that expose the various options for each filter.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 6, 2012
  * @version 1.0
  */

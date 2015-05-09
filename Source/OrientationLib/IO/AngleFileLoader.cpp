@@ -44,7 +44,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
 
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 

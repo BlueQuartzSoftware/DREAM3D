@@ -50,7 +50,7 @@
  * @class MicFields MicFields.h EbsdLib/HEDM/MicFields.h
  * @brief This class simply holds the names of the columns that are present in the
  * HEDM .Mic file.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 18, 2011
  * @version 1.0
  */

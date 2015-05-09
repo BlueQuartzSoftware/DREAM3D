@@ -279,7 +279,28 @@ endfunction()
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Find the QtWidgets library
-set(Qt5_COMPONENTS Core Widgets Network Gui Concurrent Script Svg Xml OpenGL PrintSupport WebKit WebKitWidgets)
+set(Qt5_COMPONENTS 
+    Core 
+      Widgets 
+      Network 
+      Gui 
+      Concurrent 
+      Script 
+      Svg 
+      Xml 
+      OpenGL 
+      PrintSupport 
+      WebKit 
+      WebKitWidgets 
+      Sensors
+      Multimedia 
+      MultimediaWidgets 
+      Qml 
+      Quick 
+      Positioning 
+      Sql 
+      WebChannel
+      )
 find_package(Qt5 COMPONENTS ${Qt5_COMPONENTS})
 if(NOT Qt5_FOUND)
   message(FATAL_ERROR "Qt5 is Required for DREAM3D to build. Please install it.")
@@ -293,9 +314,15 @@ execute_process(COMMAND "${QtQMake_location}" -query QT_VERSION OUTPUT_VARIABLE 
 message(STATUS "Qt5 Version: ${QM_QT_VERSION} ")
 
 # This is really just needed for Windows
-CopyQt5RunTimeLibraries( LIBRARIES ${Qt5_COMPONENTS} PREFIX Qt5)
+CopyQt5RunTimeLibraries(LIBRARIES ${Qt5_COMPONENTS} PREFIX Qt5)
+#CopyQt5RunTimeLibraries(LIBRARIES Multimedia MultimediaWidgets Qml Quick Positioning Sql WebChannel
+#                        PREFIX Qt5)
+
 # This is pretty much needed on all the platforms.
 AddQt5LibraryInstallRule( LIBRARIES ${Qt5_COMPONENTS})
+
+
+
 # Each Platform has a set of support libraries that need to be copied
 AddQt5SupportLibraryCopyInstallRules( LIBRARIES icudt53 icuin53 icuuc53 PREFIX "" DEBUG_SUFFIX "")
 
@@ -337,10 +364,6 @@ if(0)
               LIBRARY_SEARCH_FILE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
               PLUGIN_TYPE accessible)
 endif()
-
-CopyQt5RunTimeLibraries(LIBRARIES Multimedia MultimediaWidgets Qml Quick Positioning Sensors Sql WebChannel
-                        PREFIX Qt5)
-
 
 # Append the locations of the Qt libraries to our Library Search Paths
 list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )

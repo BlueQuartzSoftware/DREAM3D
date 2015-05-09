@@ -50,7 +50,7 @@
 /**
  * @class MicHeaderEntry MicHeaderEntry.h EbsdLib/HEDM/MicHeaderEntry.h
  * @brief Header entry that holds an integer or decimal type value
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 8, 2011
  * @version 1.0
  */
@@ -107,7 +107,7 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
 /**
  * @class MicStringHeaderEntry MicStringHeaderEntry.h EbsdLib/HEDM/MicHeaderEntry.h
  * @brief Header entry that holds a string type value
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 1, 2011
  * @version 1.0
  */

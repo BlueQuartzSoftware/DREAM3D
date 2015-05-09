@@ -38,7 +38,7 @@
 
 
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"

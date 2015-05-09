@@ -40,7 +40,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 /**
  * @brief The BadDataNeighborOrientationCheck class. See [Filter documentation](@ref baddataneighbororientationcheck) for details.
@@ -105,7 +105,7 @@ class BadDataNeighborOrientationCheck : public AbstractFilter
     BadDataNeighborOrientationCheck();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)

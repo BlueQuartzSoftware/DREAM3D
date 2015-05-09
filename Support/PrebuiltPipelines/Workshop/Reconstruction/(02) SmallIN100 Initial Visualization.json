@@ -26,7 +26,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Initial Visualization",
+        "Name": "(02) Small IN100 Initial Visualization",
         "Number_Filters": 2,
         "Version": "5.2.1285.5481251"
     }

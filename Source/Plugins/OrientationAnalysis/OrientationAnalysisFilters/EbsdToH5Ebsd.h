@@ -48,7 +48,7 @@ class AbstractFilterParametersWriter;
 /**
  * @class EbsdToH5Ebsd EbsdToH5Ebsd.h EbsdToH5Ebsd/EbsdToH5Ebsd.h
  * @brief This class is used to import multiple EBSD files into an HDF5 file.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @author Dr. Michael Groeber, US Air Force Research Laboratories
  * @date March 23, 2011
  * @version 1.2

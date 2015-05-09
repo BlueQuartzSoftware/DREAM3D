@@ -71,7 +71,7 @@
  * @class EbsdHeaderEntry EbsdHeaderEntry.h EbsdLib/EbsdHeaderEntry.h
  * @brief  This class defines the interface that subclasses need to implement in
  * order to have a conforming object.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 8, 2011
  * @version 1.0
  */

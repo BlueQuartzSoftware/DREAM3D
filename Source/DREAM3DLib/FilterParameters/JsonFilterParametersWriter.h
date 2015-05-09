@@ -50,7 +50,7 @@
 /**
  * @class
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 17, 2012
  * @version 1.0
  */

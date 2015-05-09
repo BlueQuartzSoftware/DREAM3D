@@ -52,7 +52,7 @@
  * @class PrecipitateEquiaxedPreset PrecipitateEquiaxedPreset.h StatsGenerator/Presets/PrecipitateEquiaxedPreset.h
  * @brief This class will populate the various tables with the necessary values
  * to create an Equiaxed Microstructure.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 23, 2011
  * @version 1.0
  */

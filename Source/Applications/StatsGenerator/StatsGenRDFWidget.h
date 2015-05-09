@@ -58,7 +58,7 @@ class QwtPlotCurve;
 /**
  * @class StatsGenRDFWidget StatsGenRDFWidget.h StatsGenerator/StatsGenRDFWidget.h
  * @brief This class gives GUIs an interface into the RDF settings
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Apr 20, 2011
  * @version 1.0
  */

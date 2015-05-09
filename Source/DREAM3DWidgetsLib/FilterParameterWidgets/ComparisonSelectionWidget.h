@@ -59,7 +59,7 @@
 /**
  * @class ComparisonSelectionWidget ComparisonSelectionWidget.h PipelineBuilder/UI/ComparisonSelectionWidget.h
  * @brief This class
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 30, 2011
  * @version 1.0
  */

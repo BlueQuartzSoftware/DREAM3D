@@ -246,7 +246,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Minimum Neighbors",
+        "Name": "(10) Small IN100 Minimum Neighbors",
         "Number_Filters": 4,
         "Version": "5.2.1285.5481251"
     }

@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -53,6 +53,7 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   m_Dimension(72),
   m_StepSize(sqrt(DREAM3D::Constants::k_2Pi)/72.0),
   m_VectorDataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
+  m_Logfile("CorrelateValuesWithVectorDirection.log"),
   m_VectorDataArrayName(DREAM3D::CellData::VectorData),
   m_VectorData(NULL),
   m_CorrelatedDataArrayPath("", "", "")
@@ -399,7 +400,7 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
   }
 
   FILE* f = NULL;
-  QString m_OutputFile = "c:\\Users\\groebema\\Desktop\\Data\\NDE\\test.vtk";
+  QString m_OutputFile = getLogfile();
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(NULL == f)
   {
@@ -493,7 +494,7 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
   }
 
   FILE* f = NULL;
-  QString m_OutputFile = "c:\\Users\\groebema\\Desktop\\Data\\NDE\\test2.vtk";
+  QString m_OutputFile = getLogfile();
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(NULL == f)
   {
@@ -602,7 +603,7 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
   }
 
   FILE* f = NULL;
-  QString m_OutputFile = "c:\\Users\\groebema\\Desktop\\Data\\NDE\\PFstats.txt";
+  QString m_OutputFile = getLogfile();
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(NULL == f)
   {

@@ -51,7 +51,7 @@
  * @class PrimaryRolledPreset PrimaryRolledPreset.h StatsGenerator/Presets/PrimaryRolledPreset.h
  * @brief This class will populate the various tables with the necessary values
  * to create a Rolled Microstructure.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 23, 2011
  * @version 1.0
  */

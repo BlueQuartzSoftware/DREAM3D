@@ -62,7 +62,7 @@
 #include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 
 
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 

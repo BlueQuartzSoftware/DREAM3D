@@ -53,7 +53,7 @@
 /**
  * @class SGLogNormalItemDelegate SGLogNormalItemDelegate.h StatsGenerator/SGLogNormalItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Dec 28, 2010
  * @version 1.0
  */

@@ -49,7 +49,7 @@
 /**
  * @class H5CtfReader H5CtfReader EbsdLib/HKL/H5CtfReader.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 2, 2011
  * @version 1.0
  *

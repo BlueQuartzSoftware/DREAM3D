@@ -55,7 +55,7 @@
 /**
  * @class CtfHeaderEntry CtfHeaderEntry.h EbsdLib/HKL/CtfHeaderEntry.h
  * @brief Header entry that holds an integer or decimal type value
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 8, 2011
  * @version 1.0
  */
@@ -113,7 +113,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 /**
  * @class CtfStringHeaderEntry CtfHeaderEntry.h EbsdLib/HKL/CtfHeaderEntry.h
  * @brief Header entry that holds a string type value
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 1, 2011
  * @version 1.0
  */

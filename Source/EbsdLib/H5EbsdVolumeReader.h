@@ -52,7 +52,7 @@
  * @class H5EbsdVolumeReader H5EbsdVolumeReader EbsdLib/H5EbsdVolumeReader.h
  * @brief  This class defines the C++ interface that subclasses must implement
  * in order to be able to load EBSD data into the DREAM.3D programs.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 23, 2011
  * @version 1.0
  */
