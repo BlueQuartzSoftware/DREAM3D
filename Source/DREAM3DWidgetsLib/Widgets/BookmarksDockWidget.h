@@ -192,6 +192,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
     void readSettings();
 
+    void handleHeaderChanged(int logicalIndex, int oldSize, int newSize);
+
   signals:
 
     void fireWriteSettings();

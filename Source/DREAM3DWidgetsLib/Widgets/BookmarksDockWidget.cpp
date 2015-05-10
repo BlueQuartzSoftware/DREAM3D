@@ -114,6 +114,8 @@ opacity: 255;\
 }");
   filterLibraryTree->setStyleSheet(css);
 
+  connect(filterLibraryTree->header(), SIGNAL(sectionResized(int, int, int)),
+    this, SLOT(handleHeaderChanged(int, int, int)));
 }
 
 // -----------------------------------------------------------------------------
@@ -641,7 +643,7 @@ void BookmarksDockWidget::addFolder(QString name, QString parentName, QString pa
     addTreeItem(parent, name, QIcon(":/folder_blue.png"), FilterLibraryTreeWidget::Node_Item_Type, "", true, editState, false);
   }
 
-  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(parentName, Qt::MatchExactly, 0);
+  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(parentName, Qt::MatchExactly | Qt::MatchRecursive, 0);
 
   for (int i = 0; i < list.size(); i++)
   {
@@ -770,7 +772,7 @@ void BookmarksDockWidget::m_ActionUpdatePipeline_triggered()
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::removeBookmark(QString bookmarkName, QString bookmarkPath, QString bookmarkTreePath)
 {
-  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(bookmarkName, Qt::MatchExactly, 0);
+  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(bookmarkName, Qt::MatchExactly | Qt::MatchRecursive, 0);
 
   for (int i = 0; i < list.size(); i++)
   {
@@ -805,7 +807,7 @@ void BookmarksDockWidget::removeBookmark(QTreeWidgetItem* item)
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::renameBookmark(QString oldName, QString newName, QString filePath, QString treePath)
 {
-  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(oldName, Qt::MatchExactly, 0);
+  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(oldName, Qt::MatchExactly | Qt::MatchRecursive, 0);
 
   for (int i = 0; i < list.size(); i++)
   {
@@ -964,6 +966,9 @@ void BookmarksDockWidget::readTreeSettings(QSettings& prefs)
   bool b = prefs.value(objectName(), false).toBool();
   setHidden(b);
 
+  QByteArray headerState = prefs.value("BookmarksHeaderState").toByteArray();
+  filterLibraryTree->header()->restoreState(headerState);
+
   int size = prefs.beginReadArray("Bookmarks");
   for (int i = 0; i < size; i++)
   {
@@ -1032,6 +1037,8 @@ void BookmarksDockWidget::writeSettings(QSettings& prefs)
   prefs.beginGroup("DockWidgetSettings");
 
   prefs.setValue(objectName(), isHidden());
+
+  prefs.setValue("BookmarksHeaderState", filterLibraryTree->header()->saveState());
 
   QTreeWidgetItemIterator iter(filterLibraryTree);
 
@@ -1111,7 +1118,7 @@ QTreeWidgetItem* BookmarksDockWidget::getItemFromTreePath(QString treePath)
     return filterLibraryTree->invisibleRootItem();
   }
 
-  QList<QTreeWidgetItem*> possibleItems = filterLibraryTree->findItems(stringList.back(), Qt::MatchExactly);
+  QList<QTreeWidgetItem*> possibleItems = filterLibraryTree->findItems(stringList.back(), Qt::MatchExactly | Qt::MatchRecursive);
   stringList.pop_back();
 
   QTreeWidgetItem* possibleItem = NULL;
@@ -1157,6 +1164,19 @@ QList<QString> BookmarksDockWidget::deserializeTreePath(QString treePath)
   }
 
   return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksDockWidget::handleHeaderChanged(int logicalIndex, int oldSize, int newSize)
+{
+  //std::cout << "Section resized\n";
+
+  //// Update settings in the file, since this is used by new DREAM3D instances
+  //writeSettings();
+
+  //emit settingsUpdated();
 }
 
 
