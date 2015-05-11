@@ -398,7 +398,7 @@ void ReadAngData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, ANG_READ_FLAG flag)
+void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -561,7 +561,7 @@ int ReadAngData::loadMaterialInfo(AngReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims)
+void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
 {
   float* f1 = NULL;
   float* f2 = NULL;

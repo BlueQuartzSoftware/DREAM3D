@@ -529,7 +529,7 @@ void FindShapes::find_axes()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axes2D()
 {
-  double Ixx = 0.0f, Iyy = 0.0f, Ixy= 0.0f;
+  double Ixx = 0.0f, Iyy = 0.0f, Ixy = 0.0f;
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 

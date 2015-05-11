@@ -277,7 +277,7 @@ int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 
   if (!m_FilePrefix)
   {
-      path = (m_OutputPath)+QDir::separator() + QString::number(slice);
+    path = (m_OutputPath) + QDir::separator() + QString::number(slice);
   }
   if(m_ImageFormat == TifImageType)
   {
@@ -311,13 +311,16 @@ int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 #error
 #else
       scanLine[axisB * 4 + 3] = 0xFF;
-      if (0 == m_Plane){ // XY plane
+      if (0 == m_Plane)  // XY plane
+      {
         index = (nComp * dims[0] * dims[1] * slice) + (nComp * dims[0] * axisA) + (nComp * axisB);
       }
-      if (1 == m_Plane){ // XZ plane
+      if (1 == m_Plane)  // XZ plane
+      {
         index = (nComp * dims[0] * dims[1] * axisA) + (nComp * dims[0] * slice) + (nComp * axisB);
       }
-      if (2 == m_Plane){ // YZ plane
+      if (2 == m_Plane)  // YZ plane
+      {
         index = (nComp * dims[0] * dims[1] * axisA) + (nComp * dims[0] * axisB) + (nComp * slice);
       }
       scanLine[axisB * 4 + 2] = m_Colors[index + 0];
@@ -328,10 +331,12 @@ int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
   }
   image.setText("Description", DREAM3DLib::Version::PackageComplete());
   bool success = image.save(path);
-  if (success) {
+  if (success)
+  {
     err = 0;
   }
-  else {
+  else
+  {
     err = -1;
     QString ss = QObject::tr("The image '%1' was not successfully saved").arg(path);
     setErrorCondition(-1007);

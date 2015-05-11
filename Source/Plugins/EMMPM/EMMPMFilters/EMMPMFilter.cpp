@@ -26,19 +26,19 @@
 //
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter() :
-AbstractFilter(),
-m_InputDataArrayPath(),
-m_NumClasses(4),
-m_ExchangeEnergy(0.5f),
-m_HistogramLoops(5),
-m_SegmentationLoops(5),
-m_UseSimulatedAnnealing(false),
-m_GradientPenalty(1.0f),
-m_CurvaturePenalty(1.0f),
-m_RMax(15.0f),
-m_EMLoopDelay(1),
-m_OutputDataArrayPath(),
-m_EmmpmInitType(EMMPM_Basic)
+  AbstractFilter(),
+  m_InputDataArrayPath(),
+  m_NumClasses(4),
+  m_ExchangeEnergy(0.5f),
+  m_HistogramLoops(5),
+  m_SegmentationLoops(5),
+  m_UseSimulatedAnnealing(false),
+  m_GradientPenalty(1.0f),
+  m_CurvaturePenalty(1.0f),
+  m_RMax(15.0f),
+  m_EMLoopDelay(1),
+  m_OutputDataArrayPath(),
+  m_EmmpmInitType(EMMPM_Basic)
 {
   setupFilterParameters();
 }
@@ -114,20 +114,20 @@ int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 
 
   DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayPath)
-    DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
-    DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
-    DREAM3D_FILTER_WRITE_PARAMETER(HistogramLoops)
-    DREAM3D_FILTER_WRITE_PARAMETER(SegmentationLoops)
-    DREAM3D_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
-    DREAM3D_FILTER_WRITE_PARAMETER(UseGradientPenalty)
-    DREAM3D_FILTER_WRITE_PARAMETER(GradientPenalty)
-    DREAM3D_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
-    DREAM3D_FILTER_WRITE_PARAMETER(CurvaturePenalty)
-    DREAM3D_FILTER_WRITE_PARAMETER(RMax)
-    DREAM3D_FILTER_WRITE_PARAMETER(EMLoopDelay)
-    DREAM3D_FILTER_WRITE_PARAMETER(OutputDataArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
+  DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
+  DREAM3D_FILTER_WRITE_PARAMETER(HistogramLoops)
+  DREAM3D_FILTER_WRITE_PARAMETER(SegmentationLoops)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGradientPenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(GradientPenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(CurvaturePenalty)
+  DREAM3D_FILTER_WRITE_PARAMETER(RMax)
+  DREAM3D_FILTER_WRITE_PARAMETER(EMLoopDelay)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputDataArrayPath)
 
-    writer->closeFilterGroup();
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -250,7 +250,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   {
     int gray = 255 / (data->classes - 1);
     // Generate a Gray Scale Color Table
-    data->colorTable[i] = qRgb(i*gray, i*gray, i*gray);
+    data->colorTable[i] = qRgb(i * gray, i * gray, i * gray);
     // Hard code the minimum variance to 4.5; This could be a user option.
     data->min_variance[i] = 4.5;
 
@@ -292,8 +292,8 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
     {
       for(unsigned int d = 0; d < data->dims; d++)
       {
-        data->mean[i*data->dims + d] = m_PreviousMu[i*data->dims + d];
-        data->variance[i*data->dims + d] = m_PreviousSigma[i*data->dims + d];
+        data->mean[i * data->dims + d] = m_PreviousMu[i * data->dims + d];
+        data->variance[i * data->dims + d] = m_PreviousSigma[i * data->dims + d];
       }
     }
   }
@@ -311,7 +311,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
   connect(emmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-    this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   emmpm->execute();
 
@@ -331,8 +331,8 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
       std::cout << "Mu: " << data->mean[i] << " Variance: " << sqrtf(data->variance[i]) << std::endl;
       for(unsigned int d = 0; d < data->dims; d++)
       {
-        m_PreviousMu[i*data->dims + d] = data->mean[i*data->dims + d];
-        m_PreviousSigma[i*data->dims + d] = data->variance[i*data->dims + d];
+        m_PreviousMu[i * data->dims + d] = data->mean[i * data->dims + d];
+        m_PreviousSigma[i * data->dims + d] = data->variance[i * data->dims + d];
       }
     }
   }

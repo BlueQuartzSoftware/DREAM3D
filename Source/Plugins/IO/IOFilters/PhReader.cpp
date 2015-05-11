@@ -61,24 +61,24 @@
 // -----------------------------------------------------------------------------
 class PhReaderPrivate
 {
-  Q_DISABLE_COPY(PhReaderPrivate)
+    Q_DISABLE_COPY(PhReaderPrivate)
     Q_DECLARE_PUBLIC(PhReader)
     PhReader* const q_ptr;
-  PhReaderPrivate(PhReader* ptr);
+    PhReaderPrivate(PhReader* ptr);
 
-  QVector<int> m_Dims;
-  QString m_InputFile_Cache;
-  QDateTime m_LastRead;
+    QVector<int> m_Dims;
+    QString m_InputFile_Cache;
+    QDateTime m_LastRead;
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
-q_ptr(ptr),
+  q_ptr(ptr),
   m_Dims(),
-m_InputFile_Cache(""),
-m_LastRead()
+  m_InputFile_Cache(""),
+  m_LastRead()
 {
 
 }

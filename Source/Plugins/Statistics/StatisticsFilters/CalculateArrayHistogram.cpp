@@ -251,14 +251,14 @@ void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool use
       bin = size_t((inputArrayPtr[i] - min) / increment); // find bin for this input array value
       if ((bin >= 0) && (bin < numberOfBins)) // make certain bin is in range
       {
-        newDataArrayPtr[bin*2+1]++; // increment histogram element corresponding to this input array value
+        newDataArrayPtr[bin * 2 + 1]++; // increment histogram element corresponding to this input array value
       }
     }
   }
 
   for(int32_t i = 0; i < numberOfBins; i++)
   {
-    newDataArrayPtr[i*2] = min + increment *(i+1);
+    newDataArrayPtr[i * 2] = min + increment * (i + 1);
   }
 
   //  if (normalize) // if normalize is checked, divide each element in the histogram by total number of points

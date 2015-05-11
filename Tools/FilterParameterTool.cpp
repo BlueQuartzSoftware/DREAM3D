@@ -69,7 +69,7 @@ QString quote(const QString& str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeOutput(bool didReplace, QStringList &outLines, QString filename)
+void writeOutput(bool didReplace, QStringList& outLines, QString filename)
 {
   if(didReplace == true)
   {
@@ -92,7 +92,7 @@ void writeOutput(bool didReplace, QStringList &outLines, QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeOutput(bool didReplace, QVector<QString> &outLines, QString filename)
+void writeOutput(bool didReplace, QVector<QString>& outLines, QString filename)
 {
   if(didReplace == true)
   {
@@ -119,7 +119,7 @@ void writeOutput(bool didReplace, QVector<QString> &outLines, QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void checkConstructorForSetupFilterParameters(QStringListIterator &sourceLines, QStringList &outLines)
+void checkConstructorForSetupFilterParameters(QStringListIterator& sourceLines, QStringList& outLines)
 {
 
   // get through the initializer list
@@ -296,7 +296,7 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines, const QString& hFile, const QString& cppFile)
+void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines, const QString& hFile, const QString& cppFile)
 {
   bool isPointer = false;
   QMap<float, QString> orderedInitList;
@@ -336,7 +336,7 @@ void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines,
     if(i.hasNext() && line.endsWith(",") == false)
     { line = line + ",";}
     if(i.hasNext() == false && line.endsWith(",") )
-    { line = line.mid(0, line.size() -1 ); }
+    { line = line.mid(0, line.size() - 1 ); }
     outLines.push_back(line);
     qDebug() << "index: " << i.key() << "   line:" << line;
   }
@@ -401,7 +401,7 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void fixFilterParameter(QStringListIterator &sourceLines, QStringList &outLines, const QString& searchString, const QString& line)
+void fixFilterParameter(QStringListIterator& sourceLines, QStringList& outLines, const QString& searchString, const QString& line)
 {
 
   int offset = line.indexOf(searchString);
@@ -418,7 +418,8 @@ void fixFilterParameter(QStringListIterator &sourceLines, QStringList &outLines,
   second = second.trimmed();
 
   QString third = " \"\"";
-  if(second.isEmpty() == false) {
+  if(second.isEmpty() == false)
+  {
     third = " get" + second + "()";
   }
   tokens[3] = third;
@@ -623,15 +624,18 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
             QString getProp = "get" + prop;
 
             QString front("<<<<<<");
-            if(line.contains(setProp) == false) {
+            if(line.contains(setProp) == false)
+            {
               ok = false;
               front = front + "0 ";
             }
-            if(line.contains(quotedProp) == false) {
+            if(line.contains(quotedProp) == false)
+            {
               ok = false;
               front = front + "1 ";
             }
-            if(line.contains(getProp) == false) {
+            if(line.contains(getProp) == false)
+            {
               ok = false;
               front = front + "2 ";
             }
@@ -736,7 +740,8 @@ void FindFiltersWithMultipleDataArrayPaths(AbstractFilter::Pointer filter)
   {
     if(param->getWidgetType() == FilterParameterWidgetType::DataArraySelectionWidget) { count++; }
   }
-  if(count > 1) {
+  if(count > 1)
+  {
     std::cout << "| " << filter->getCompiledLibraryName().toStdString() << " | " << filter->getNameOfClass().toStdString() << " | " << count  << " | " << std::endl;
   }
 }
@@ -797,7 +802,7 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
     index++;
   }
 
- // qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
+// qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
 
   int lineIndex = 0;
   QMapIterator<QString, int> iter(lineToInclude);
@@ -808,7 +813,7 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
     //int l = iter.value();
     str = str.split('\t').at(1);
 
-  //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
+    //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
 
     outLines[lines[lineIndex]] = str;
 
@@ -857,7 +862,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.

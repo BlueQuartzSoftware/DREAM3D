@@ -117,7 +117,7 @@ class  PhReader : public FileReader
     DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
   public slots:
-  void flushCache();
+    void flushCache();
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);

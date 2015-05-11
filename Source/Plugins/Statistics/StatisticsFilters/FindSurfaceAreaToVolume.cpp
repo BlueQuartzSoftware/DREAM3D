@@ -227,15 +227,15 @@ void FindSurfaceAreaToVolume::execute()
             {
               if (l == 0 || l == 5)  // XY face shared
               {
-                onsurf = onsurf + xRes*yRes;
+                onsurf = onsurf + xRes * yRes;
               }
               if (l == 1 || l == 4)  //YZ face shared
               {
-                onsurf = onsurf + yRes*zRes;
+                onsurf = onsurf + yRes * zRes;
               }
               if (l == 2 || l == 3)  //XZ face shared
               {
-                onsurf = onsurf + zRes*xRes;
+                onsurf = onsurf + zRes * xRes;
               }
             }
           }
@@ -248,7 +248,7 @@ void FindSurfaceAreaToVolume::execute()
 
   for (int32_t i = 1; i < numFeatures; i++)
   {
-    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i]/(m_NumCells[i]*xRes*yRes*zRes);
+    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i] / (m_NumCells[i] * xRes * yRes * zRes);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

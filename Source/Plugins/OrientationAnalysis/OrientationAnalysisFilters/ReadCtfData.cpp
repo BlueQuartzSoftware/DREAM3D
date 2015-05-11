@@ -158,10 +158,10 @@ int ReadCtfData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -388,7 +388,7 @@ void ReadCtfData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, CTF_READ_FLAG flag)
+void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, CTF_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -557,7 +557,7 @@ int ReadCtfData::loadMaterialInfo(CtfReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims)
+void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
 {
 
 
