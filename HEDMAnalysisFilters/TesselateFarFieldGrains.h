@@ -51,7 +51,7 @@
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/Geometry/ShapeOps/ShapeOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 #include "HEDMAnalysis/HEDMAnalysisConstants.h"
 
 
