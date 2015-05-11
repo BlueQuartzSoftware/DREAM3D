@@ -204,7 +204,7 @@ void TestFilterDesign()
   {
     for(float p = 0.0; p < 181.0; p = p + phiInc)
     {
-      for(float p1 = 00.0; p1 < 361.0; p1 = p1 + phi1Inc)
+      for(float p1 = 0.0; p1 < 361.0; p1 = p1 + phi1Inc)
       {
 //        std::cout << "TESTING EULER ANGLE (Degrees): " << p1 << ", " << p << ", " << p2 << std::endl;
         TestEulerAngle(p1 * DREAM3D::Constants::k_PiOver180, p * DREAM3D::Constants::k_PiOver180, p2 * DREAM3D::Constants::k_PiOver180);

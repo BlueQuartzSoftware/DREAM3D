@@ -1052,15 +1052,19 @@ class OrientationTransforms
         {
           Phi = atan2( 2.0 * chi, q03 - q12 );
           chi = 1.0 / chi;
-          phi1 = atan2( (-qq[w] * qq[y] + qq[x] * qq[z]) * chi, (-qq[w] * qq[x] - qq[y] * qq[z]) * chi );
+          phi1 = atan2((-qq[w] * qq[y] + qq[x] * qq[z]) * chi , (-qq[w] * qq[x] - qq[y] * qq[z]) * chi );
           phi2 = atan2( (qq[w] * qq[y] + qq[x] * qq[z]) * chi, (-qq[w] * qq[x] + qq[y] * qq[z]) * chi );
         }
         else
         {
           Phi = atan2( 2.0 * chi, q03 - q12 );
           chi = 1.0 / chi;
-          phi1 = atan2( (qq[w] * qq[y] + qq[x] * qq[z]) * chi, (qq[w] * qq[x] - qq[y] * qq[z]) * chi );
-          phi2 = atan2( (-qq[w] * qq[y] + qq[x] * qq[z]) * chi, (qq[w] * qq[x] + qq[y] * qq[z]) * chi );
+          K y1 = (qq[w] * qq[y] + qq[x] * qq[z]) * chi;
+          K x1 = (qq[w] * qq[x] - qq[y] * qq[z]) * chi;
+          phi1 = atan2(y1, x1 );
+          y1 = (-qq[w] * qq[y] + qq[x] * qq[z]) * chi;
+          x1 = (qq[w] * qq[x] + qq[y] * qq[z]) * chi;
+          phi2 = atan2( y1, x1);
         }
       }
       res[0] = phi1;
