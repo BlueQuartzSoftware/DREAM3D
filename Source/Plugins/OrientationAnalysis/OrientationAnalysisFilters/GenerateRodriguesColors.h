@@ -47,7 +47,7 @@
 /**
  * @class GenerateRodriguesColors GenerateRodriguesColors.h DREAM3DLib/GenericFilters/GenerateRodriguesColors.h
  * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Feb 6, 2013
  * @version 1.0
  */

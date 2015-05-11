@@ -59,7 +59,7 @@
  * @class H5MicImporter H5MicImporter.h EbsdLib/HEDM/H5MicImporter.h
  * @brief This class will read a series of .Mic files and store the values into
  * an HDF5 file according to the .h5ebsd specification
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date March 23, 2011
  * @version 1.2
  */

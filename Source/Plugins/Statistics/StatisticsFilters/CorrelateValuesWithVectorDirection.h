@@ -47,7 +47,7 @@
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "Statistics/StatisticsConstants.h"
 /**
@@ -72,6 +72,7 @@ class CorrelateValuesWithVectorDirection : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
     Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(Logfile)
     /**
     * @brief This returns the group that the filter belongs to. You can select
     * a different group if you want. The string returned here will be displayed

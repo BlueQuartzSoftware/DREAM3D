@@ -9,7 +9,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -42,7 +42,7 @@ FindDirectionalModuli::FindDirectionalModuli() :
   m_LoadingDirection.y = 0.0f;
   m_LoadingDirection.z = 1.0f;
 
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsVector();
 
   setupFilterParameters();
 }

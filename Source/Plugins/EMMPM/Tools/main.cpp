@@ -72,11 +72,11 @@ class CLIStatsDelegate : public StatsDelegate
       {
         char buff[256];
         memset(buff, 0, 256);
-#if (_WIN32)
-        snprintf(buff, 256, "C:\\Data\\emmpm_out_%d.tif", data->currentEMLoop);
-#else
-        snprintf(buff, 256, "/tmp/emmpm_out_%d.tif", data->currentEMLoop);
-#endif
+// #if (_WIN32)
+//         snprintf(buff, 256, "C:\\Data\\emmpm_out_%d.tif", data->currentEMLoop);
+// #else
+//         snprintf(buff, 256, "/tmp/emmpm_out_%d.tif", data->currentEMLoop);
+// #endif
         std::cout << "Writing Image: " << buff << std::endl;
         TiffUtilities tifUtil;
         int err = tifUtil.writeGrayScaleImage(buff, data->rows, data->columns, "Intermediate Image", data->outputImage);

@@ -44,7 +44,7 @@ class QLineEdit;
  * @class PrimaryRolledPresetDialog PrimaryRolledPresetDialog.h StatsGenerator/Presets/Dialogs/PrimaryRolledPresetDialog.h
  * @brief This class is a QDialog subclass that allows the user to input values
  * that effect the generation of a default set of statistics.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 12, 2011
  * @version 1.0
  */

@@ -51,7 +51,7 @@
 /**
  * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h DREAM3DLib/IOFilters/AvizoUniformCoordinateWriter.h
  * @brief Writes out a native Avizo Uniform Coordinate file
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 9, 2012
  * @version 1.0
  */

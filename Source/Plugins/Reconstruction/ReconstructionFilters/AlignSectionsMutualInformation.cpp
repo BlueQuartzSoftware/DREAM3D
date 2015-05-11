@@ -47,7 +47,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -81,7 +81,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
 {
   Seed = QDateTime::currentMSecsSinceEpoch();
 
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsVector();
 
   featurecounts = NULL;
 

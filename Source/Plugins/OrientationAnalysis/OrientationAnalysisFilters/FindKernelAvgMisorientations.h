@@ -46,7 +46,7 @@
 
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 /**
  * @class FindKernelAvgMisorientations FindKernelAvgMisorientations.h DREAM3DLib/GenericFilters/FindKernelAvgMisorientations.h
@@ -119,7 +119,7 @@ class FindKernelAvgMisorientations : public AbstractFilter
     FindKernelAvgMisorientations();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)

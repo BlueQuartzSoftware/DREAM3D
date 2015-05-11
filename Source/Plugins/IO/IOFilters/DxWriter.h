@@ -48,7 +48,7 @@
 /**
  * @class DxWriter DxWriter.h DREAM3DLib/IOFilters/DxWriter.h
  * @brief Writes out a Dx file.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 10, 2012
  * @version 1.0
  */

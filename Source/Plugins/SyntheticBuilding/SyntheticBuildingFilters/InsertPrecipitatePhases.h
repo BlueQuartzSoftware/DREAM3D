@@ -44,10 +44,10 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Geometry/ShapeOps/ShapeOps.h"
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 typedef struct
 {
@@ -188,9 +188,9 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param Seed Value to intialize random number generator
      * @param precip Precip_t struct pointer to be intialized
      * @param shapeclass Type of precipitate shape to be generated
-     * @param OrthoOps Pointer to OrientationOps object
+     * @param OrthoOps Pointer to SpaceGroupOps object
      */
-    void generate_precipitate(int32_t phase, uint64_t Seed, Precip_t* precip, uint32_t shapeclass, OrientationOps::Pointer OrthoOps);
+    void generate_precipitate(int32_t phase, uint64_t Seed, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
 
     /**
      * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume

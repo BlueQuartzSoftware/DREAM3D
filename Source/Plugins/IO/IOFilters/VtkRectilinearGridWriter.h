@@ -59,7 +59,7 @@
  * subclass knows how to write a specific scalar array to the file. When implementing
  * those subclasses keep in mind that you should be able to write both the ASCII
  * and Binary versions of your data to the VTK File.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jun 13, 2011
  * @version 1.0
  */

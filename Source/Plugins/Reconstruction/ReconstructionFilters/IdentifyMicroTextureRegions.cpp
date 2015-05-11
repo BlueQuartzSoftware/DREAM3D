@@ -57,8 +57,8 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 
 //included so we can call under the hood to segment the patches found in this filter

@@ -49,7 +49,7 @@
 /**
  * @class INLWriter INLWriter.h DREAM3DLib/IOFilters/INLWriter.h
  * @brief Writes out an Text file according to Brad Fromm at INL.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Nov 13, 2012
  * @version 1.0
  */

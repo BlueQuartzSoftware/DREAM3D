@@ -51,7 +51,7 @@
 /**
  * @class H5MicReader H5MicReader.h EbsdLib/HEDM/H5MicReader.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Mar 24, 2011
  * @version 1.0
  *

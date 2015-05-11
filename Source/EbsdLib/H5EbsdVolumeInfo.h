@@ -49,7 +49,7 @@
  * @class H5EbsdVolumeInfo H5EbsdVolumeInfo.h EbsdLib/H5EbsdVolumeInfo.h
  * @brief This is a higher level class that only reads the volume header information
  * from the .h5ebsd file. The actual loading of the data is left to subclasses.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 5, 2011
  * @version 1.0
  */

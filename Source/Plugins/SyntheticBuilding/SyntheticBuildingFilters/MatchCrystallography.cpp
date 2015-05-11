@@ -43,10 +43,10 @@
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 #include "OrientationLib/Texture/Texture.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -94,7 +94,7 @@ MatchCrystallography::MatchCrystallography() :
   actualmdf = FloatArrayType::NullPointer();
   simmdf = FloatArrayType::NullPointer();
 
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

@@ -233,7 +233,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Close Bad Data",
+        "Name": "(12) Small IN100 Close Bad Data",
         "Number_Filters": 4,
         "Version": "5.2.1285.5481251"
     }

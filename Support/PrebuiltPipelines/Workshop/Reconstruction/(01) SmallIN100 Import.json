@@ -12,7 +12,7 @@
         "FilterVersion": "5.2.1285.5481251",
         "Filter_Human_Label": "Import Orientation File(s) to H5Ebsd",
         "Filter_Name": "EbsdToH5Ebsd",
-        "InputPath": "Data\\SmallIN100",
+        "InputPath": "Data/SmallIN100",
         "OutputFile": "Data/Output/SmallIN100.h5ebsd",
         "PaddingDigits": 1,
         "RefFrameZDir": 1,
@@ -27,7 +27,7 @@
         "ZStartIndex": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Import",
+        "Name": "(01) Small IN100 Import",
         "Number_Filters": 1,
         "Version": "5.2.1285.5481251"
     }

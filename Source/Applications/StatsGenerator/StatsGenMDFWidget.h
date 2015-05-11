@@ -57,7 +57,7 @@ class QwtPlotCurve;
 /**
  * @class StatsGenMDFWidget StatsGenMDFWidget.h StatsGenerator/StatsGenMDFWidget.h
  * @brief This class gives GUIs an interface into the MDF settings
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Apr 20, 2011
  * @version 1.0
  */

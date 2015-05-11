@@ -46,9 +46,9 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/Math/OrientationArray.hpp"
-#include "OrientationLib/Math/OrientationTransforms.hpp"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 

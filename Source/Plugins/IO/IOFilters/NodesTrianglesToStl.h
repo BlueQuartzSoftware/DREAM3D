@@ -50,7 +50,7 @@
  * @class CMUNodesTrianglesToStl CMUNodesTrianglesToStl.h MFESurfaceSmoothing/CMUNodesTrianglesToStl.h
  * @brief Converts the Nodes and Triangles files produced by the CMU SurfaceMeshing
  * and Surface Smoothing algorithms into STL Files
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jul 17, 2012
  * @version 1.0
  */

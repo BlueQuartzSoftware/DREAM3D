@@ -141,7 +141,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Alignment 2",
+        "Name": "(05) Small IN100 Alignment 2",
         "Number_Filters": 8,
         "Version": "5.2.1285.5481251"
     }

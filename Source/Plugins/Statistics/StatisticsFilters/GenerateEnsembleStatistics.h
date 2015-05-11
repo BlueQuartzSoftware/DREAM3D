@@ -43,10 +43,10 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
@@ -234,6 +234,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     void calculatePPTBoundaryFrac();
 
   private:
+
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
@@ -251,7 +252,8 @@ class GenerateEnsembleStatistics : public AbstractFilter
 
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
 
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     NeighborList<int32_t>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;

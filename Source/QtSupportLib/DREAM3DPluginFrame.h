@@ -58,7 +58,7 @@ class QLineEdit;
  * that would get loaded from a plugin type architecture. The class implements
  * some common methods that are needed by all subclasses. Subclasses should implement
  * the pure virtual methods and so this class can not be directly instantiated.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 30, 2011
  * @version 1.0
  */

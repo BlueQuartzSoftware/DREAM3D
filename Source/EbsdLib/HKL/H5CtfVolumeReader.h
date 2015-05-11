@@ -50,7 +50,7 @@
 /**
  * @class H5CtfVolumeReader H5CtfVolumeReader.h Reconstruction/EbsdSupport/H5CtfVolumeReader.h
  * @brief This class loads EBSD data from an HDF5 based file.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 23, 2011
  * @version 1.0
  */

@@ -52,7 +52,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -67,7 +67,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
     bool* m_TwinBoundary;
     float* m_TwinBoundarySchmidFactors;
     float* m_LoadDir;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
   public:
     CalculateTwinBoundarySchmidFactorsImpl(float* LoadingDir, int32_t* Labels, double* Normals, float* Quats, bool* TwinBoundary, float* TwinBoundarySchmidFactors) :
@@ -78,7 +78,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
       m_TwinBoundarySchmidFactors(TwinBoundarySchmidFactors),
       m_LoadDir(LoadingDir)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     }
     virtual ~CalculateTwinBoundarySchmidFactorsImpl() {}
 
@@ -248,7 +248,7 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
   m_LoadingDir.z = 1.0f;
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

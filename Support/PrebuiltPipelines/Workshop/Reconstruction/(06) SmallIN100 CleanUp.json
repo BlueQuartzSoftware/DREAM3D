@@ -255,7 +255,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Clean Up",
+        "Name": "(06) Small IN100 Clean Up",
         "Number_Filters": 5,
         "Version": "5.2.1285.5481251"
     }

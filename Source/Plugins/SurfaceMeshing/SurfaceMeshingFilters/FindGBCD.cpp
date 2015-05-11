@@ -48,10 +48,10 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/Math/OrientationArray.hpp"
-#include "OrientationLib/Math/OrientationTransforms.hpp"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 
 /**
@@ -73,7 +73,7 @@ class CalculateGBCDImpl
     BoolArrayType::Pointer  m_GbcdHemiCheckArray;
 
     UInt32ArrayType::Pointer m_CrystalStructuresArray;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
   public:
     CalculateGBCDImpl(size_t i, size_t numMisoReps, Int32ArrayType::Pointer Labels, DoubleArrayType::Pointer Normals, FloatArrayType::Pointer Eulers,
@@ -94,7 +94,7 @@ class CalculateGBCDImpl
       m_GbcdHemiCheckArray(HemiCheck),
       m_CrystalStructuresArray(CrystalStructures)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     }
     virtual ~CalculateGBCDImpl() {}
 
@@ -578,10 +578,11 @@ void FindGBCD::execute()
       estimatedTime = (float)(totalFaces - i) / timeDiff;
       ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       millis = QDateTime::currentMSecsSinceEpoch();
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       //numIterationsPerTime = i - lastIteration;
       //lastIteration = i;
     }
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
 
     for(size_t j = 0; j < faceChunkSize; j++)
     {

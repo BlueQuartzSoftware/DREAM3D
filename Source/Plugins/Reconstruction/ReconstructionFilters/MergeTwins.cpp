@@ -45,7 +45,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 
 #define ERROR_TXT_OUT 1
@@ -83,7 +83,7 @@ MergeTwins::MergeTwins() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -145,18 +145,18 @@ void MergeTwins::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 int MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  GroupFeatures::writeFilterParameters(writer, index);
+  index = GroupFeatures::writeFilterParameters(writer, index) - 1;
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AxisTolerance)
   DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AxisTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
