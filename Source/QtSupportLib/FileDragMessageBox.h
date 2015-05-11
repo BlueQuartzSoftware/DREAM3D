@@ -58,30 +58,13 @@ class QtSupportLib_EXPORT FileDragMessageBox : public QDialog, private Ui::FileD
   Q_OBJECT
 
   public:
-    FileDragMessageBox(QWidget* parent = 0, int filterCount = -1);
+    FileDragMessageBox(QWidget* parent = 0);
 
-    QString getFilePath();
-    void setFilePath(QString path);
-
-    QRadioButton* getAddFilterBtn();
-    QRadioButton* getExtractPipelineBtn();
-    QLabel* getDescriptionLabel();
+    bool isExtractPipelineBtnChecked();
 
   protected slots:
-    void on_replacePipelineBtn_clicked();
-    void on_appendPipelineBtn_clicked();
-    void on_prependPipelineBtn_clicked();
+    void on_okBtn_clicked();
     void on_cancelBtn_clicked();
-    void on_addFilterRadioBtn_toggled();
-
-
-  signals:
-    void fireExtractPipelineFromFile(const QString &filePath, ExtractionType type);
-    void fireAddDREAM3DReaderFilter(const QString &filePath, ExtractionType type);
-
-  private:
-    QString filePath;
-    int     filterCount;
 };
 
 #endif /* _FileDragMessageBox_H */
