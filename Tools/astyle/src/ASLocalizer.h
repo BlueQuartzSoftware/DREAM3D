@@ -1,8 +1,7 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *   ASLocalizer.h
  *
- *   Copyright (C) 2006-2013 by Jim Pattee <jimp03@email.com>
- *   Copyright (C) 1998-2002 by Tal Davidson
+ *   Copyright (C) 2014 by Jim Pattee
  *   <http://www.gnu.org/licenses/lgpl-3.0.html>
  *
  *   This file is a part of Artistic Style - an indentation and
@@ -31,10 +30,9 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+namespace astyle {
 
-namespace astyle
-{
+using namespace std;
 
 #ifndef ASTYLE_LIB
 

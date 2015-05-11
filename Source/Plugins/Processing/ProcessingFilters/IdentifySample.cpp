@@ -167,7 +167,7 @@ void IdentifySample::execute()
   std::vector<bool> checked(totalPoints, false);
   std::vector<bool> sample(totalPoints, false);
   int64_t biggestBlock = 0;
-  int64_t count = 0;
+  size_t count = 0;
   int32_t good = 0;
   int64_t neighbor = 0;
   DimType column = 0, row = 0, plane = 0;

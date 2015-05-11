@@ -43,7 +43,7 @@
  * @class Observable Observable.h DREAM3D/Common/Observable.h
  * @brief
  *
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Sep 22, 2011
  * @version 1.0
  */

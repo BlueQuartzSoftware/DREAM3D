@@ -281,17 +281,17 @@ float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t z
     zRangeMax = 1;
   }
 
-  for(int k = zRangeMin; k < zRangeMax; k++)
+  for(int64_t k = zRangeMin; k < zRangeMax; k++)
   {
     if((zc + k) >= 0 && (zc + k) < zDim)
     {
       zStride = ((zc + k) * xDim * yDim);
-      for(int j = yRangeMin; j < yRangeMax; j++)
+      for(int64_t j = yRangeMin; j < yRangeMax; j++)
       {
         if((yc + j) >= 0 && (yc + j) < yDim)
         {
           yStride = ((yc + j) * xDim);
-          for(int i = xRangeMin; i < xRangeMax; i++)
+          for(int64_t i = xRangeMin; i < xRangeMax; i++)
           {
             if((xc + i) >= 0 && (xc + i) < xDim)
             {
@@ -345,13 +345,13 @@ void QuiltCellData::execute()
 
   int64_t zStride = 0, yStride = 0;
   int64_t xc = 0, yc = 0, zc = 0;
-  for(int64_t k = 0; k < dc2Dims[2]; k++)
+  for(size_t k = 0; k < dc2Dims[2]; k++)
   {
     zStride = (k * dc2Dims[0] * dc2Dims[1]);
-    for(int64_t j = 0; j < dc2Dims[1]; j++)
+    for(size_t j = 0; j < dc2Dims[1]; j++)
     {
       yStride = (j * dc2Dims[0]);
-      for(int64_t i = 0; i < dc2Dims[0]; i++)
+      for(size_t i = 0; i < dc2Dims[0]; i++)
       {
         xc = i * m_QuiltStep.x + m_QuiltStep.x / 2;
         yc = j * m_QuiltStep.y + m_QuiltStep.y / 2;

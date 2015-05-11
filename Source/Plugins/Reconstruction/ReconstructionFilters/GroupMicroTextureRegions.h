@@ -56,7 +56,7 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
 
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
@@ -182,7 +182,7 @@ class GroupMicroTextureRegions : public GroupFeatures
 
     float avgCaxes[3];
 
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     void dataCheck();
     void updateFeatureInstancePointers();

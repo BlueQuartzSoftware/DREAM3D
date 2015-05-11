@@ -14,6 +14,53 @@
 namespace TemplateHelpers
 {
 
+#define EXECUTE_FUNCTION_TEMPLATE(observableObj, templateName, inputData, ...)\
+  if(TemplateHelpers::CanDynamicCast<FloatArrayType>()(inputData))\
+  {\
+    templateName<float>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<DoubleArrayType>()(inputData))\
+  {\
+    templateName<double>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<Int8ArrayType>()(inputData))\
+  {\
+    templateName<int8_t>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(inputData))\
+  {\
+    templateName<uint8_t>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<Int16ArrayType>()(inputData))\
+  {\
+    templateName<int16_t>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(inputData))\
+  {\
+    templateName<uint16_t>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<Int32ArrayType>()(inputData))\
+  {\
+    templateName<int32_t>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(inputData))\
+  {\
+    templateName<uint32_t>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<Int64ArrayType>()(inputData))\
+  {\
+    templateName<int64_t>(__VA_ARGS__);\
+  }\
+  else if(TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(inputData))\
+  {\
+    templateName<uint64_t>(__VA_ARGS__);\
+  }\
+  else\
+  {\
+    observableObj->notifyErrorMessage(#templateName, "The input array was of unsupported type", TemplateHelpers::Errors::UnsupportedType);\
+    return;\
+  }
+
   /**
 * @brief Define from Error Codes
 */

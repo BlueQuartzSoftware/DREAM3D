@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 /**
  * @brief The ConvertOrientations class. See [Filter documentation](@ref convertorientations) for details.
@@ -62,35 +62,11 @@ class  ConvertOrientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, OutputType)
     Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
+    Q_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellQuatsArrayPath)
-    Q_PROPERTY(DataArrayPath CellQuatsArrayPath READ getCellQuatsArrayPath WRITE setCellQuatsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellRodriguesVectorsArrayPath)
-    Q_PROPERTY(DataArrayPath CellRodriguesVectorsArrayPath READ getCellRodriguesVectorsArrayPath WRITE setCellRodriguesVectorsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAxisAnglesArrayPath)
-    Q_PROPERTY(DataArrayPath CellAxisAnglesArrayPath READ getCellAxisAnglesArrayPath WRITE setCellAxisAnglesArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(QString, EulerAnglesArrayName)
-    Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, QuatsArrayName)
-    Q_PROPERTY(QString QuatsArrayName READ getQuatsArrayName WRITE setQuatsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, RodriguesVectorsArrayName)
-    Q_PROPERTY(QString RodriguesVectorsArrayName READ getRodriguesVectorsArrayName WRITE setRodriguesVectorsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, AxisAnglesArrayName)
-    Q_PROPERTY(QString AxisAnglesArrayName READ getAxisAnglesArrayName WRITE setAxisAnglesArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, OutputOrientationArrayName)
+    Q_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -116,7 +92,14 @@ class  ConvertOrientations : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    /**
+     * @brief execute
+     */
     virtual void execute();
+
+    /**
+     * @brief preflight
+     */
     virtual void preflight();
 
   signals:
@@ -128,21 +111,13 @@ class  ConvertOrientations : public AbstractFilter
   protected:
     ConvertOrientations();
 
-  private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellRodriguesVectors)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellAxisAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, RodriguesVectors)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisAngles)
-
-    QVector<OrientationOps::Pointer> m_OrientationOps;
-
     void dataCheck();
+
+  private:
+
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, InputOrientations)
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, OutputOrientations)
 
     ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
     void operator=(const ConvertOrientations&); // Operator '=' Not Implemented

@@ -63,7 +63,7 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   m_KernelSize.x = 1;
   m_KernelSize.y = 1;

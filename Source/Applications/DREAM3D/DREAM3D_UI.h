@@ -113,12 +113,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     /**
     * @brief setOpenedFilePath
-    * @param filePath
-    */
-    void setOpenedFilePath(const QString &filePath);
-
-    /**
-    * @brief setOpenedFilePath
     * @param path
     */
     void setOpenDialogLastDirectory(const QString &path);
@@ -138,6 +132,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void writeSettings();
 
+  public slots:
+
+    /**
+    * @brief setOpenedFilePath
+    * @param filePath
+    */
+    void setOpenedFilePath(const QString &filePath);
 
   protected slots:
 

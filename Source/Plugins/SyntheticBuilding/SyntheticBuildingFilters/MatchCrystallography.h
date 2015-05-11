@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -242,7 +242,7 @@ class MatchCrystallography : public AbstractFilter
 
     std::vector<std::vector<float> > m_MisorientationLists;
 
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     void dataCheck();
 

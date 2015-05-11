@@ -194,5 +194,5 @@ SurfaceMeshFaceLabelsArrayPath=SurfaceDataContainer|FaceData|SurfaceMeshFaceLabe
 [2]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
-OutputFile=Data/Output/SmallIN100Mesh.dream3d
+OutputFile=Data/Output/SmallIN100Mesh_Smoothed.dream3d
 WriteXdmfFile=1

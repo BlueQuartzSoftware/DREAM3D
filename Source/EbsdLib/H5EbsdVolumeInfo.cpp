@@ -45,7 +45,6 @@
 
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/HEDM/MicConstants.h"
 
 #define EBSD_VOLREADER_READ_HEADER(fileId, path, var)\
   err = H5Lite::readScalarDataset(fileId, path.toStdString(), var);\
@@ -294,23 +293,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
       m_DataArrayNames.insert(Ebsd::CellData::Phases);
     }
   }
-  else if(m_Manufacturer.compare(Ebsd::Mic::Manufacturer) == 0)
-  {
-    if(m_DataArrayNames.contains(Ebsd::Mic::Euler1)
-        && m_DataArrayNames.contains(Ebsd::Mic::Euler2)
-        && m_DataArrayNames.contains(Ebsd::Mic::Euler3) )
-    {
-      m_DataArrayNames.remove(Ebsd::Mic::Euler1);
-      m_DataArrayNames.remove(Ebsd::Mic::Euler2);
-      m_DataArrayNames.remove(Ebsd::Mic::Euler3);
-      m_DataArrayNames.insert(Ebsd::CellData::EulerAngles);
-    }
-    if(m_DataArrayNames.contains(Ebsd::Mic::Phase) )
-    {
-      m_DataArrayNames.remove(Ebsd::Mic::Phase);
-      m_DataArrayNames.insert(Ebsd::CellData::Phases);
-    }
-  }
+
 
 
   m_ValuesAreCached = true;

@@ -46,7 +46,7 @@
 
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -68,13 +68,16 @@ class MergeTwins : public GroupFeatures
     DREAM3D_TYPE_MACRO_SUPER(MergeTwins, AbstractFilter)
 
     virtual ~MergeTwins();
+    
     DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
     Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
+
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
@@ -146,7 +149,7 @@ class MergeTwins : public GroupFeatures
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     unsigned long long int Seed;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     float axisTolerance;
 

@@ -61,7 +61,7 @@ AbstractFilterParametersReader()
 // -----------------------------------------------------------------------------
 JsonFilterParametersReader::~JsonFilterParametersReader()
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -161,6 +161,43 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
     }
   }
   return pipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath, IObserver* obs)
+{
+  QFileInfo fInfo(filePath);
+
+  if (filePath.isEmpty() == true)
+  {
+    return QString("");
+  }
+  QFileInfo fi(filePath);
+  if (fi.exists() == false)
+  {
+    return QString("");
+  }
+
+  JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
+  int err = reader->openFile(filePath);
+
+  if (err < 0)
+  {
+    if (NULL != obs)
+    {
+      PipelineMessage pm(JsonFilterParametersReader::ClassName(), "File '" + fInfo.fileName() + "' could not be opened for reading.", -1, PipelineMessage::Error);
+      obs->processPipelineMessage(pm);
+    }
+    return QString("");
+  }
+
+  err = reader->openGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  QString name = reader->readString(DREAM3D::Settings::PipelineName, "");
+  reader->closeGroup();
+
+  return name;
 }
 
 // -----------------------------------------------------------------------------
@@ -520,13 +557,8 @@ bool JsonFilterParametersReader::readValue(const QString name, bool value)
   {
     return value;
   }
-
-  if (m_CurrentFilterIndex.value(name).isBool())
-  {
-    return m_CurrentFilterIndex.value(name).toBool();
-  }
-
-  return value;
+  int v = m_CurrentFilterIndex.value(name).toInt();
+  return ( v == 0 ) ? false : true;
 }
 
 // -----------------------------------------------------------------------------
@@ -1114,18 +1146,11 @@ AxisAngleInput_t JsonFilterParametersReader::readAxisAngle(const QString name, A
     return v;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  QJsonObject obj = m_CurrentFilterIndex.value(name).toObject();
+  AxisAngleInput_t aInput;
+  if (aInput.readJson(obj) == true)
   {
-    QJsonArray aInputsArray = m_CurrentFilterIndex.value(name).toArray();
-    if (aInputsArray.size() > vectorPos && aInputsArray[vectorPos].isObject())
-    {
-      QJsonObject aInputObject = aInputsArray[vectorPos].toObject();
-      AxisAngleInput_t aInput;
-      if (aInput.readJson(aInputObject) == true)
-      {
-        return aInput;
-      }
-    }
+    return aInput;
   }
 
   return v;
@@ -1181,7 +1206,7 @@ QSet<QString> JsonFilterParametersReader::readArraySelections(const QString name
   }
 
   QSet<QString> set;
-  
+
   if (m_CurrentFilterIndex[name].isArray())
   {
     QJsonArray jsonArray = m_CurrentFilterIndex[name].toArray();

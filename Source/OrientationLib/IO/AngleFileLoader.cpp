@@ -44,7 +44,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
 
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 
@@ -134,9 +134,9 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   QVector<size_t> dims(1, 5);
   angles = FloatArrayType::CreateArray(numOrients, dims, "EulerAngles_From_File");
 
-  float e1 = 0.0f, e2 = 0.0f, e3 = 0.0f;
+ // float e1 = 0.0f, e2 = 0.0f, e3 = 0.0f;
   float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
-  QuaternionMathF::Quaternion quat;
+ // QuaternionMathF::Quaternion quat;
   QList<QByteArray> tokens;
 
   for(int i = 0; i < numOrients; i++)
@@ -152,51 +152,53 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     }
     tokens = buf.split( *(getDelimiter().toLatin1().data()));
 
-
+    FOrientArrayType euler(3);
     if (m_AngleRepresentation == EulerAngles)
     {
-      e1 = tokens[0].toFloat(&ok);
-      e2 = tokens[1].toFloat(&ok);
-      e3 = tokens[2].toFloat(&ok);
+      euler[0] = tokens[0].toFloat(&ok);
+      euler[1] = tokens[1].toFloat(&ok);
+      euler[2] = tokens[2].toFloat(&ok);
     }
     else if (m_AngleRepresentation == QuaternionAngles)
     {
-      quat.x = tokens[0].toFloat(&ok);
-      quat.y = tokens[1].toFloat(&ok);
-      quat.z = tokens[2].toFloat(&ok);
-      quat.w = tokens[3].toFloat(&ok);
-      OrientationMath::QuattoEuler(quat, e1, e2, e3);
+      FOrientArrayType quat(4);
+      quat[0] = tokens[0].toFloat(&ok);
+      quat[1] = tokens[1].toFloat(&ok);
+      quat[2] = tokens[2].toFloat(&ok);
+      quat[3] = tokens[3].toFloat(&ok);
+      FOrientTransformsType::qu2eu(quat, euler);
     }
     else if (m_AngleRepresentation == RodriguezAngles)
     {
-      r1 = tokens[0].toFloat(&ok);
-      r2 = tokens[1].toFloat(&ok);
-      r3 = tokens[2].toFloat(&ok);
-      OrientationMath::RodtoEuler(r1, r2, r3, e1, e2, e3);
+      FOrientArrayType rod(4, 0.0);
+      rod[0] = tokens[0].toFloat(&ok);
+      rod[1] = tokens[1].toFloat(&ok);
+      rod[2] = tokens[2].toFloat(&ok);
+      FOrientTransformsType::ro2eu(rod, euler);
     }
 
     // Values in File are in Radians and the user wants them in Degrees
     if (m_FileAnglesInDegrees == false && m_OutputAnglesInDegrees == true)
     {
-      e1 = e1 * DREAM3D::Constants::k_RadToDeg;
-      e2 = e2 * DREAM3D::Constants::k_RadToDeg;
-      e3 = e3 * DREAM3D::Constants::k_RadToDeg;
+      euler[0] = euler[0] * DREAM3D::Constants::k_RadToDeg;
+      euler[1] = euler[1] * DREAM3D::Constants::k_RadToDeg;
+      euler[2] = euler[2] * DREAM3D::Constants::k_RadToDeg;
     }
     // Values are in Degrees but user wants them in Radians
     else if (m_FileAnglesInDegrees == true && m_OutputAnglesInDegrees == false)
     {
-      e1 = e1 * DREAM3D::Constants::k_DegToRad;
-      e2 = e2 * DREAM3D::Constants::k_DegToRad;
-      e3 = e3 * DREAM3D::Constants::k_DegToRad;
+      euler[0] = euler[0] * DREAM3D::Constants::k_DegToRad;
+      euler[1] = euler[1] * DREAM3D::Constants::k_DegToRad;
+      euler[2] = euler[2] * DREAM3D::Constants::k_DegToRad;
     }
 
     float weight = tokens[3].toFloat(&ok);
     float sigma = tokens[4].toFloat(&ok);
 
     // Store the values into our array
-    angles->setComponent(i, 0, e1);
-    angles->setComponent(i, 1, e2);
-    angles->setComponent(i, 2, e3);
+    angles->setComponent(i, 0, euler[0]);
+    angles->setComponent(i, 1, euler[1]);
+    angles->setComponent(i, 2, euler[2]);
     angles->setComponent(i, 3, weight);
     angles->setComponent(i, 4, sigma);
     //   qDebug() << "reading line: " << i ;

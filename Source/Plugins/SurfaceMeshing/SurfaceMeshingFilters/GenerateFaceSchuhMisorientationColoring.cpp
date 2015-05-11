@@ -48,17 +48,17 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/OrientationOps/CubicLowOps.h"
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalLowOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/MonoclinicOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "OrientationLib/OrientationOps/TetragonalLowOps.h"
-#include "OrientationLib/OrientationOps/TetragonalOps.h"
-#include "OrientationLib/OrientationOps/TriclinicOps.h"
-#include "OrientationLib/OrientationOps/TrigonalLowOps.h"
-#include "OrientationLib/OrientationOps/TrigonalOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
+#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
+#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
+#include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
+#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
 
 
 
@@ -69,7 +69,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
     float* m_Quats;
     uint8_t* m_Colors;
     unsigned int* m_CrystalStructures;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
   public:
     CalculateFaceSchuhMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, uint8_t* colors, unsigned int* crystalStructures) :
@@ -79,7 +79,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
       m_Colors(colors),
       m_CrystalStructures(crystalStructures)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     }
     virtual ~CalculateFaceSchuhMisorientationColorsImpl() {}
 
@@ -90,7 +90,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
      */
     void generate(size_t start, size_t end) const
     {
-      QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsQVector();
+      QVector<SpaceGroupOps::Pointer> ops = SpaceGroupOps::getOrientationOpsQVector();
       DREAM3D::Rgb argb = 0x00000000;
 
       int grain1, grain2, phase1, phase2;

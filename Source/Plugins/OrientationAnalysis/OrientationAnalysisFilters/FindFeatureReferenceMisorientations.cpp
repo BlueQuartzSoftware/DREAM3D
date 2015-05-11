@@ -44,7 +44,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -75,7 +75,7 @@ FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -244,7 +244,6 @@ void FindFeatureReferenceMisorientations::execute()
 
   float w;
   float n1, n2, n3;
-  float r1, r2, r3;
   unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0, 0, 0};
@@ -313,8 +312,10 @@ void FindFeatureReferenceMisorientations::execute()
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-          m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
+          FOrientArrayType rod(4);
+          FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
+          rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
+          w = rod[3];
           w = w * (180.0f / DREAM3D::Constants::k_Pi);
           m_FeatureReferenceMisorientations[point] = w;
           idx = m_FeatureIds[point] * 2;
@@ -336,7 +337,7 @@ void FindFeatureReferenceMisorientations::execute()
     if(avgMiso[idx] == 0.0f) { m_FeatureAvgMisorientations[i] = 0.0; }
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindFeatureReferenceMisorientations Completed");
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 // -----------------------------------------------------------------------------

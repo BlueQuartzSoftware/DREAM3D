@@ -50,7 +50,7 @@
 /**
  * @class
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 17, 2012
  * @version 1.0
  */
@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParame
   private:
     QJsonObject m_Root;
     QJsonObject m_CurrentFilterIndex;
-    int currentIndex;
+    int         m_CurrentIndex;
 
     JsonFilterParametersWriter(const JsonFilterParametersWriter&); // Copy Constructor Not Implemented
     void operator=(const JsonFilterParametersWriter&); // Operator '=' Not Implemented

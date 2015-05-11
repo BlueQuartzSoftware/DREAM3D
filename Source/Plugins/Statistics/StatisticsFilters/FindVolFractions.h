@@ -36,19 +36,12 @@
 #ifndef _FindVolFractions_H_
 #define _FindVolFractions_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Statistics/StatisticsConstants.h"
-/*
- *
+/**
+ * @brief The FindVolFractions class. See [Filter documentation](@ref findvolfractions) for details.
  */
 class FindVolFractions : public AbstractFilter
 {
@@ -59,6 +52,7 @@ class FindVolFractions : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindVolFractions, AbstractFilter)
 
     virtual ~FindVolFractions();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
@@ -106,6 +100,7 @@ class FindVolFractions : public AbstractFilter
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, VolFractions)
 
     void dataCheck();
@@ -116,6 +111,3 @@ class FindVolFractions : public AbstractFilter
 };
 
 #endif /* FindVolFractions_H_ */
-
-
-

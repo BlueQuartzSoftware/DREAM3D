@@ -49,9 +49,9 @@
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
-/*
-*
-*/
+/**
+ * @brief The JsonFilterParametersReader class
+ */
 class DREAM3DLib_EXPORT JsonFilterParametersReader : public AbstractFilterParametersReader
 {
 public:
@@ -64,7 +64,7 @@ public:
     virtual ~JsonFilterParametersReader();
 
   /**
-  * @brief ReadPipelineFromFile Reads the QSettings formatted file and returns a FilterPipeline object
+  * @brief ReadPipelineFromFile Reads the Json formatted file and returns a FilterPipeline object
   * that contains all the filters that could be found. If a filter can not be found then that filter is simply skipped.
   * If the IObserver is NON-Null then an error message will be passed to it with an error message
   * @param filePath The path to the INI formatted file
@@ -74,10 +74,38 @@ public:
   */
   static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, IObserver* obs = NULL);
 
+  /**
+   * @brief ReadNameOfPipelineFromFile
+   * @param filePath
+   * @param obs
+   * @return
+   */
+  static QString ReadNameOfPipelineFromFile(QString filePath, IObserver* obs = NULL);
+
+  /**
+   * @brief openFile
+   * @param filePath
+   * @return
+   */
   int openFile(QString filePath);
+
+  /**
+   * @brief closeFile
+   */
   void closeFile();
 
+  /**
+   * @brief openFilterGroup
+   * @param unused
+   * @param index
+   * @return
+   */
   virtual int openFilterGroup(AbstractFilter* unused, int index);
+
+  /**
+   * @brief closeFilterGroup
+   * @return
+   */
   virtual int closeFilterGroup();
 
   int openGroup(QString key);
@@ -120,7 +148,7 @@ public:
   virtual FileListInfo_t readFileListInfo(const QString name, FileListInfo_t v);
   virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
   virtual ComparisonInputs readComparisonInputs(const QString name, ComparisonInputs v);
-  virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos);
+  virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos = -1);
   virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> v);
   virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
 

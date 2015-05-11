@@ -276,7 +276,7 @@ void DREAM3D_UI::on_actionSaveAs_triggered()
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.json";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
     proposedFile,
-    tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
+    tr("Json File (*.json);;DREAM3D File (*.dream3d);;All Files (*.*)"));
   if (true == filePath.isEmpty()) { return; }
 
   filePath = QDir::toNativeSeparators(filePath);
@@ -290,16 +290,20 @@ void DREAM3D_UI::on_actionSaveAs_triggered()
   }
 
   // Write the pipeline
-  pipelineViewWidget->writePipeline(filePath);
+  int err = pipelineViewWidget->writePipeline(filePath);
 
-  // Set window title and save flag
-  QFileInfo prefFileInfo = QFileInfo(filePath);
-  setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
-  setWindowModified(false);
+  if (err >= 0)
+  {
+    // Set window title and save flag
+    QFileInfo prefFileInfo = QFileInfo(filePath);
+    setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
+    setWindowModified(false);
 
-  // Cache the last directory and opened file path
+    m_OpenedFilePath = filePath;
+  }
+
+  // Cache the last directory
   m_OpenDialogLastDirectory = fi.path();
-  m_OpenedFilePath = filePath;
 }
 
 // -----------------------------------------------------------------------------
@@ -999,9 +1003,18 @@ void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 void DREAM3D_UI::pipelineFileLoaded(QString file, ExtractionType type)
 {
   QFileInfo fi(file);
-  setWindowTitle(QString("[*]") + fi.fileName());
+  on_pipelineViewWidget_pipelineTitleUpdated(fi.baseName());
   setWindowFilePath(file);
   setWindowModified(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
+{
+  pipelineFileLoaded(file, Replace);
+  m_OpenedFilePath = file;
 }
 
 // -----------------------------------------------------------------------------
@@ -1017,7 +1030,7 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_pipelineViewWidget_pipelineTitleUpdated(QString title)
 {
-  setWindowTitle(QString("[*]") + title);
+  setWindowTitle(QString("[*]") + title + " - DREAM3D");
 }
 
 // -----------------------------------------------------------------------------
@@ -1034,18 +1047,6 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineIssuesCleared()
 void DREAM3D_UI::on_pipelineViewWidget_pipelineHasNoErrors()
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
-{
-  QFileInfo fi(file);
-  setWindowTitle(fi.fileName());
-  setWindowFilePath(file);
-  //  setWindowTitle(QString("[*] ") + fi.fileName());
-  setWindowModified(false);
 }
 
 // -----------------------------------------------------------------------------

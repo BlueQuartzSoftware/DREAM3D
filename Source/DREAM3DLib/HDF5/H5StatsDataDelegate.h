@@ -50,7 +50,7 @@
  * @class H5StatsDataDelegate H5StatsDataDelegate.h DREAM3DLib/HDF5/H5StatsDataDelegate.h
  * @brief This class handles reading to and writing from a Statistics file that is
  * HDF5 based.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 22, 2012
  * @version 1.0
  */

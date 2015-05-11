@@ -41,7 +41,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "Generic/GenericConstants.h"
 

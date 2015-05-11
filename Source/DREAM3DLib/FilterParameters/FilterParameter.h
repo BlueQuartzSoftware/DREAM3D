@@ -430,7 +430,7 @@ namespace FilterParameterWidgetType
  * @class FilterParameter FilterParameter.h DREAM3DLib/FilterParameters/FilterParameter.h
  * @brief This class holds the various properties that an input parameter to a
  * filter needs to describe itself.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 17, 2012
  * @version 1.0
  */

@@ -52,7 +52,7 @@
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -69,7 +69,7 @@ class CalculateTwinBoundaryImpl
     float* m_TwinBoundaryIncoherence;
     unsigned int* m_CrystalStructures;
     bool m_FindCoherence;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
   public:
     CalculateTwinBoundaryImpl(float angtol, float axistol, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundaryIncoherence, bool FindCoherence) :
@@ -84,7 +84,7 @@ class CalculateTwinBoundaryImpl
       m_CrystalStructures(CrystalStructures),
       m_FindCoherence(FindCoherence)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     }
 
     virtual ~CalculateTwinBoundaryImpl() {}
@@ -135,7 +135,9 @@ class CalculateTwinBoundaryImpl
             int nsym = m_OrientationOps[phase1]->getNumSymOps();
             QuaternionMathF::Conjugate(q2);
             QuaternionMathF::Multiply(q2, q1, misq);
-            OrientationMath::QuattoMat(q1, g1);
+            FOrientArrayType om(9);
+            FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+            om.toGMatrix(g1);
 
             if(m_FindCoherence)
               MatrixMath::Multiply3x3with3x1(g1, normal, xstl_norm);
@@ -156,7 +158,11 @@ class CalculateTwinBoundaryImpl
                 m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
                 QuaternionMathF::Conjugate(sym_q);
                 QuaternionMathF::Multiply(s1_misq, sym_q, s2_misq);
-                OrientationMath::QuattoAxisAngle(s2_misq, w, n1, n2, n3);
+
+                FOrientArrayType ax(n1, n2, n3, w);
+                FOrientTransformsType::qu2ax(FOrientArrayType(s2_misq), ax);
+                ax.toAxisAngle(n1, n2, n3, w);
+
                 w = w * 180.0 / DREAM3D::Constants::k_Pi;
                 axisdiff111 = acosf(fabs(n1) * 0.57735f + fabs(n2) * 0.57735f + fabs(n3) * 0.57735f);
                 angdiff60 = fabs(w - 60.0f);
@@ -216,7 +222,7 @@ FindTwinBoundaries::FindTwinBoundaries()  :
   m_SurfaceMeshTwinBoundary(NULL),
   m_SurfaceMeshTwinBoundaryIncoherence(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

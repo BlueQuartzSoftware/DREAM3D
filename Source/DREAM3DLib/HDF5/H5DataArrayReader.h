@@ -48,7 +48,7 @@
 /**
  * @class H5DataArrayReader H5DataArrayReader.h DREAM3DLib/HDF5/H5DataArrayReader.h
  * @brief This class handles reading DataArray<T> objects from an HDF5 file
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 27, 2014
  * @version 1.0
  */

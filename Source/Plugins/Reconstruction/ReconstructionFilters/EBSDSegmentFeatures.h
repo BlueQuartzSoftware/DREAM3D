@@ -54,7 +54,7 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
 
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
@@ -138,7 +138,7 @@ class EBSDSegmentFeatures : public SegmentFeatures
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)

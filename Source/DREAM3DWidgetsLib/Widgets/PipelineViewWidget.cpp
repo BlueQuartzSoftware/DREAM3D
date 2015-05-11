@@ -185,7 +185,6 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
 
     gridLayout->addItem(verticalSpacer_2, 2, 1, 1, 1);
   }
-  emit pipelineTitleUpdated(QString("Untitled Pipeline"));
   emit pipelineChanged();
 }
 
@@ -375,54 +374,52 @@ void PipelineViewWidget::updateFavorite(const QString& filePath, const QString& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::writePipeline(QString filePath)
+int PipelineViewWidget::writePipeline(QString filePath)
 {
-  //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
-  if (fi.exists() == true)
+  QString ext = fi.completeSuffix();
+
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  if (fi.exists() == true && (ext == "dream3d" || ext == "json"))
   {
     QFile f(filePath);
     if (f.remove() == false)
     {
       QMessageBox::warning(this, QString::fromLatin1("Pipeline Write Error"),
         QString::fromLatin1("There was an error removing the existing pipeline file. The pipeline was NOT saved."));
-      return;
+      return -1;
     }
   }
-
-  QString ext = fi.completeSuffix();
-  QString name = fi.fileName();
 
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = getFilterPipeline();
 
   int err = 0;
-  if (ext == "ini" || ext == "txt")
+  if (ext == "dream3d")
   {
-    err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, QSettings::IniFormat, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
-  }
-  else if (ext == "dream3d")
-  {
-    err = H5FilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
+    err = H5FilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.fileName(), reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
   }
   else if (ext == "json")
   {
-    err = JsonFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
+    err = JsonFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.fileName(), reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
   }
   else
   {
-    m_StatusBar->showMessage(tr("The pipeline was not written to file '%1'. '%2' is an unsupported file extension.").arg(name).arg(ext));
-    return;
+    m_StatusBar->showMessage(tr("The pipeline was not written to file '%1'. '%2' is an unsupported file extension.").arg(fi.fileName()).arg(ext));
+    return -1;
   }
 
   if (err < 0)
   {
-    m_StatusBar->showMessage(tr("There was an error while saving the pipeline to file '%1'.").arg(name));
+    m_StatusBar->showMessage(tr("There was an error while saving the pipeline to file '%1'.").arg(fi.fileName()));
+    return -1;
   }
   else
   {
-    m_StatusBar->showMessage(tr("The pipeline has been saved successfully to '%1'.").arg(name));
+    m_StatusBar->showMessage(tr("The pipeline has been saved successfully to '%1'.").arg(fi.fileName()));
   }
+
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -471,6 +468,9 @@ int PipelineViewWidget::openPipeline(const QString &filePath, ExtractionType typ
 
   // Notify user of successful read
   m_StatusBar->showMessage(tr("The pipeline has been read successfully from '%1'.").arg(name));
+
+  QString file = filePath;
+  emit pipelineFileDropped(file);
 
   return 0;
 }
@@ -968,6 +968,8 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     // Make sure the widget titles are all correct
     reindexWidgetTitles();
     preflightPipeline();
+
+    emit pipelineChanged();
   }
   else
   {
@@ -994,13 +996,13 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       // Now that we have an index, insert the filter.
       addFilter(name, count);
     }
+
+    emit pipelineChanged();
   }
   event->acceptProposedAction();
 
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();
-
-  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------

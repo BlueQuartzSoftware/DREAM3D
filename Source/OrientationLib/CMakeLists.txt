@@ -127,8 +127,8 @@ include_directories(${OrientationLib_BINARY_DIR})
 include_directories(${OrientationLib_SOURCE_DIR}/..)
 
 #-- Include all the Source Files
-include( ${OrientationLib_SOURCE_DIR}/OrientationOps/SourceList.cmake)
-include( ${OrientationLib_SOURCE_DIR}/Math/SourceList.cmake)
+include( ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SourceList.cmake)
+include( ${OrientationLib_SOURCE_DIR}/OrientationMath/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/IO/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/Texture/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/Utilities/SourceList.cmake)
@@ -155,10 +155,10 @@ cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/" "${OrientationLib_HDRS}" "${Orienta
 set(OrientationLib_PROJECT_SRCS
     ${OrientationLib_SRCS}
     ${OrientationLib_HDRS}
-    ${OrientationLib_OrientationOps_HDRS}
-    ${OrientationLib_OrientationOps_SRCS}
-    ${OrientationLib_Math_HDRS}
-    ${OrientationLib_Math_SRCS}
+    ${OrientationLib_SpaceGroupOps_HDRS}
+    ${OrientationLib_SpaceGroupOps_SRCS}
+    ${OrientationLib_OrientationMath_HDRS}
+    ${OrientationLib_OrientationMath_SRCS}
     ${OrientationLib_IO_HDRS}
     ${OrientationLib_IO_SRCS}
     ${OrientationLib_Utilities_HDRS}

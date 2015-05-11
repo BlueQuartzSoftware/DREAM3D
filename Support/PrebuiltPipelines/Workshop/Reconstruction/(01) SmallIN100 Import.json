@@ -1,0 +1,34 @@
+{
+    "0": {
+        "EulerTransformation": {
+            "angle": 90,
+            "h": 0,
+            "k": 0,
+            "l": 1
+        },
+        "FileExtension": "ang",
+        "FilePrefix": "Slice_",
+        "FileSuffix": "",
+        "FilterVersion": "5.2.1285.5481251",
+        "Filter_Human_Label": "Import Orientation File(s) to H5Ebsd",
+        "Filter_Name": "EbsdToH5Ebsd",
+        "InputPath": "Data/SmallIN100",
+        "OutputFile": "Data/Output/SmallIN100.h5ebsd",
+        "PaddingDigits": 1,
+        "RefFrameZDir": 1,
+        "SampleTransformation": {
+            "angle": 180,
+            "h": 0,
+            "k": 1,
+            "l": 0
+        },
+        "ZEndIndex": 117,
+        "ZResolution": 0.25,
+        "ZStartIndex": 1
+    },
+    "PipelineBuilder": {
+        "Name": "(01) Small IN100 Import",
+        "Number_Filters": 1,
+        "Version": "5.2.1285.5481251"
+    }
+}

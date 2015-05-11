@@ -49,8 +49,8 @@
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -93,7 +93,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -399,7 +399,9 @@ int GroupMicroTextureRegions::getSeed(int newFid)
     {
       QuaternionMathF::Copy(avgQuats[seed], q1);
       phase1 = m_CrystalStructures[m_FeaturePhases[seed]];
-      OrientationMath::QuattoMat(q1, g1);
+      FOrientArrayType om(9);
+      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+      om.toGMatrix(g1);
       //transpose the g matrix so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);
@@ -441,7 +443,9 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
     {
       QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
       phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
-      OrientationMath::QuattoMat(q1, g1);
+      FOrientArrayType om(9);
+      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+      om.toGMatrix(g1);
       //transpose the g matrix so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);
@@ -454,7 +458,9 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
       QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
-      OrientationMath::QuattoMat(q2, g2);
+      FOrientArrayType om(9);
+      FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+      om.toGMatrix(g2);
       //transpose the g matrix so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g2, g2t);

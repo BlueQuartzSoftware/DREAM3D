@@ -46,9 +46,6 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdImporter.h"
-#include "EbsdLib/HEDM/H5MicImporter.h"
-#include "EbsdLib/HEDM/MicConstants.h"
-#include "EbsdLib/HEDM/MicFields.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/CtfFields.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
@@ -182,9 +179,6 @@ void EbsdToH5Ebsd::dataCheck()
   bool hasMissingFiles = false;
   const bool stackLowToHigh = true;
 
-//  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-//  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
-
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
                               hasMissingFiles, stackLowToHigh, m_InputPath,
@@ -202,8 +196,6 @@ void EbsdToH5Ebsd::dataCheck()
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
     QFileInfo fi(fileList.front());
     QString ext = fi.suffix();
-    //QVector<QString> columnNames;
-    //    AbstractEbsdFields* ebsdFeatures = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
       //      ebsdFeatures = new AngFields;
@@ -211,10 +203,6 @@ void EbsdToH5Ebsd::dataCheck()
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
       //       ebsdFeatures = new CtfFields;
-    }
-    else if(ext.compare(Ebsd::Mic::FileExt) == 0)
-    {
-      //       ebsdFeatures = new MicFields;
     }
     else
     {
@@ -224,9 +212,6 @@ void EbsdToH5Ebsd::dataCheck()
       return;
     }
   }
-
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -392,19 +377,6 @@ void EbsdToH5Ebsd::execute()
 
     }
     fileImporter = H5CtfImporter::New();
-  }
-  else if(ext.compare(Ebsd::Mic::FileExt) == 0)
-  {
-    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Mic::Manufacturer);
-    if(err < 0)
-    {
-
-      QString ss = QObject::tr("Could not write the Manufacturer Data to the HDF5 File");
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
-    }
-    fileImporter = H5MicImporter::New();
   }
   else
   {

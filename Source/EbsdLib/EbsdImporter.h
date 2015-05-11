@@ -49,7 +49,7 @@
  * @class EbsdImporter EbsdImporter.h EbsdLib/EbsdImporter.h
  * @brief  This class is a pure virtual class that defines the interface that
  * subclasses should implement in order to write a conforming EBSD Data Importer
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 8, 2011
  * @version 1.0
  */

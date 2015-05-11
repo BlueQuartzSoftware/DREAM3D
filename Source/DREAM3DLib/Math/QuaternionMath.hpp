@@ -60,7 +60,6 @@ template<typename T>
 class QuaternionMath
 {
   public:
-    // -----------------------------------------------------------------------------
     /**
     * @brief
     */
@@ -77,6 +76,9 @@ class QuaternionMath
       QuaternionVectorScalar = 1
     };
 
+    /**
+     * @brief QuaternionMath
+     */
     QuaternionMath()
     {
       m_Quat.w = 0.0f;
@@ -84,6 +86,10 @@ class QuaternionMath
       m_Quat.y = 0.0f;
       m_Quat.z = 0.0f;
     }
+
+    /**
+     * @brief ~QuaternionMath
+     */
     virtual ~QuaternionMath() {}
 
     /**
@@ -493,6 +499,15 @@ class QuaternionMath
        out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
        out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );
        out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx + qyw) + v[1] * (qyz - qxw) );
+    }
+
+    /**
+     * @brief Returns a copy of the internal quaternion representation
+     * @return
+     */
+    Quaternion quaternion() const
+    {
+      return m_Quat;
     }
 
   protected:

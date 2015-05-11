@@ -42,20 +42,20 @@
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/CubicLowOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalLowOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/MonoclinicOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "OrientationLib/OrientationOps/TetragonalLowOps.h"
-#include "OrientationLib/OrientationOps/TetragonalOps.h"
-#include "OrientationLib/OrientationOps/TriclinicOps.h"
-#include "OrientationLib/OrientationOps/TrigonalLowOps.h"
-#include "OrientationLib/OrientationOps/TrigonalOps.h"
-#include "OrientationLib/OrientationOps/TriclinicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
+#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
+#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
+#include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
+#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
+#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -218,7 +218,7 @@ void GenerateRodriguesColors::execute()
   }
 
   // Create 1 of every type of Ops class. This condenses the code below
-  QVector<OrientationOps::Pointer> ops;
+  QVector<SpaceGroupOps::Pointer> ops;
   ops.push_back(HexagonalOps::New());
   ops.push_back(CubicOps::New());
   ops.push_back(HexagonalLowOps::New());
@@ -233,7 +233,6 @@ void GenerateRodriguesColors::execute()
 
   int phase;
   size_t index = 0;
-  float r1, r2, r3;
   DREAM3D::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
@@ -249,8 +248,10 @@ void GenerateRodriguesColors::execute()
     if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
         && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
-      OrientationMath::EulertoRod(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2], r1, r2, r3);
-      argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(r1, r2, r3);
+      FOrientArrayType rod(4);
+      FOrientTransformsType::eu2ro( FOrientArrayType( m_CellEulerAngles + index, 3), rod);
+
+      argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(rod[0], rod[1], rod[2]);
       m_CellRodriguesColors[index] = RgbColor::dRed(argb);
       m_CellRodriguesColors[index + 1] = RgbColor::dGreen(argb);
       m_CellRodriguesColors[index + 2] = RgbColor::dBlue(argb);

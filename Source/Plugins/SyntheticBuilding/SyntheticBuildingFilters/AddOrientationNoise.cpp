@@ -40,7 +40,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -161,7 +161,9 @@ void  AddOrientationNoise::add_orientation_noise()
     float ea1 = m_CellEulerAngles[3 * i + 0];
     float ea2 = m_CellEulerAngles[3 * i + 1];
     float ea3 = m_CellEulerAngles[3 * i + 2];
-    OrientationMath::EulertoMat(ea1, ea2, ea3, g);
+    FOrientArrayType om(9, 0.0);
+    FOrientTransformsType::eu2om(FOrientArrayType(&(m_CellEulerAngles[3 * i]), 3), om);
+    om.toGMatrix(g);
     n1 = static_cast<float>( rg.genrand_res53() );
     n2 = static_cast<float>( rg.genrand_res53() );
     n3 = static_cast<float>( rg.genrand_res53() );

@@ -43,7 +43,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
-#include "EbsdLib/HEDM/MicConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 
@@ -150,11 +149,9 @@ class ReadH5Ebsd : public AbstractFilter
 
     H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
     H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
-    H5EbsdVolumeReader::Pointer initHEDMEbsdVolumeReader();
 
     void copyTSLArrays(H5EbsdVolumeReader* ebsdReader);
     void copyHKLArrays(H5EbsdVolumeReader* ebsdReader);
-    void copyHEDMArrays(H5EbsdVolumeReader* ebsdReader);
 
 
     /**

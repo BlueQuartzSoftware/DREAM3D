@@ -47,7 +47,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/Texture/Texture.hpp"
 
 
@@ -233,7 +233,6 @@ class StatsGen
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
-      T ea1, ea2, ea3;
       T totaldensity;
       T random, density;
 
@@ -252,10 +251,10 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
-        ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3 * i + 0] = ea1;
-        eulers[3 * i + 1] = ea2;
-        eulers[3 * i + 2] = ea3;
+        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        eulers[3 * i + 0] = eu[0];
+        eulers[3 * i + 1] = eu[1];
+        eulers[3 * i + 2] = eu[2];
       }
       return err;
     }
@@ -277,7 +276,6 @@ class StatsGen
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
-      float ea1, ea2, ea3;
       float totaldensity;
       float random, density;
       HexagonalOps ops;
@@ -295,10 +293,10 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
-        ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3 * i + 0] = ea1;
-        eulers[3 * i + 1] = ea2;
-        eulers[3 * i + 2] = ea3;
+        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        eulers[3 * i + 0] = eu[0];
+        eulers[3 * i + 1] = eu[1];
+        eulers[3 * i + 2] = eu[2];
       }
       return err;
     }
@@ -320,7 +318,6 @@ class StatsGen
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
-      float ea1, ea2, ea3;
       float totaldensity;
       float random, density;
       OrthoRhombicOps ops;
@@ -342,10 +339,10 @@ class StatsGen
             break;
           }
         }
-        ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3 * i + 0] = ea1;
-        eulers[3 * i + 1] = ea2;
-        eulers[3 * i + 2] = ea3;
+        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        eulers[3 * i + 0] = eu[0];
+        eulers[3 * i + 1] = eu[1];
+        eulers[3 * i + 2] = eu[2];
       }
       return err;
     }
@@ -376,7 +373,6 @@ class StatsGen
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
-      float ea1, ea2, ea3;
       float totaldensity;
       float random, density;
       OrthoRhombicOps ops;
@@ -398,10 +394,10 @@ class StatsGen
             break;
           }
         }
-        ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        eulers[3 * i + 0] = ea1;
-        eulers[3 * i + 1] = ea2;
-        eulers[3 * i + 2] = ea3;
+        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        eulers[3 * i + 0] = eu[0];
+        eulers[3 * i + 1] = eu[1];
+        eulers[3 * i + 2] = eu[2];
       }
       return err;
     }
@@ -427,8 +423,6 @@ class StatsGen
       int choose = 0;
       float random;
       float w;
-      float n1, n2, n3;
-      float r1, r2, r3;
 
       CubicOps ops;
 
@@ -454,9 +448,11 @@ class StatsGen
             break;
           }
         }
-        ops.determineRodriguesVector(choose, r1, r2, r3);
-        OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-        w = w * radtodeg;
+        FOrientArrayType rod = ops.determineRodriguesVector(choose);
+        FOrientArrayType ax(4, 0.0);
+        FOrientTransformsType::ro2ax(rod, ax);
+
+        w = ax[3] * radtodeg;
         yval[int(w / 5.0)]++;
       }
       for (int i = 0; i < npoints; i++)
@@ -487,9 +483,6 @@ class StatsGen
       float density;
       float totaldensity;
       float random;
-      float w;
-      float n1, n2, n3;
-      float r1, r2, r3;
       HexagonalOps ops;
 
       for (int i = 0; i < npoints; i++)
@@ -510,9 +503,11 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
-        ops.determineRodriguesVector(choose, r1, r2, r3);
-        OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-        w = w * radtodeg;
+        FOrientArrayType rod = ops.determineRodriguesVector(choose);
+        FOrientArrayType ax(4, 0.0);
+        FOrientTransformsType::ro2ax(rod, ax);
+
+        float w = ax[3] * radtodeg;
         size_t index = static_cast<size_t>(w / 5.0f);
         yval[index]++;
       }

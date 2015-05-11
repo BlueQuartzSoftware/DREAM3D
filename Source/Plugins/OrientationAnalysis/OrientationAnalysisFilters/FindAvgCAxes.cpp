@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -61,7 +61,7 @@ FindAvgCAxes::FindAvgCAxes() :
   m_Quats(NULL),
   m_AvgCAxes(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 
@@ -185,7 +185,9 @@ void FindAvgCAxes::execute()
       index = 3 * m_FeatureIds[i];
       QuaternionMathF::Copy(quats[i], q1);
 
-      OrientationMath::QuattoMat(q1, g1);
+      FOrientArrayType om(9);
+      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+      om.toGMatrix(g1);
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);

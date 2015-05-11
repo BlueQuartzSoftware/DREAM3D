@@ -93,7 +93,7 @@
  * in the header of your AbstractMicrostructurePreset implementation class. This
  * class defines the minimum set of methods that each implementation requires in
  * order for it to work with the Microstructure Preset System.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Apr 27, 2011
  * @version 1.0
  */

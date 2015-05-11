@@ -51,7 +51,7 @@
  * @class CtfFields CtfFields.h EbsdLib/HKL/CtfFields.h
  * @brief This class simply holds the names of the columns that are present in the
  * HKL .ctf file.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 18, 2011
  * @version 1.0
  */

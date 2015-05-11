@@ -43,9 +43,9 @@
 
 
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 
 

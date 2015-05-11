@@ -1,16 +1,15 @@
 Calculate Frequency Histogram {#calculatearrayhistogram}
-==========
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Ensemble)
 
 ## Description ##
-This filter will create a "Frequency Distribution" histogram of a specified scalar **Array**. The user will select the number of bins (a value greater than zero). The user will enter a new attribute matrix name and a new histogram array name. If the user clicks the new Data Container check box, a new data container name must be entered. Otherwise the current data container will be used.
+This Filter will create a "Frequency Distribution" histogram of a specified scalar **Attribute Array**. The user will select the number of bins (a value greater than zero). The user will enter a new **Attribute Matrix** name and a new histogram **Attribute Array** name. If the user clicks the new **Data Container** check box, a new **Data Container** name must be entered. Otherwise the current **Data Container** will be used.
 
 The histogram is a "Left Closed, Right Open" histogram, meaning the bin intervals are denoted as [a, b). The value returned in component "0" of the output array is _b_ from the above interval while component "1" is the frequency for that bin. The output output array can be most easily be thought of as a 2 column x "num bins" row output.
 
 ## Example Data ##
-
 Using some data about the "Old Faithful" geyser in the United States from the [R site](http://www.r-tutor.com/elementary-statistics/quantitative-data/frequency-distribution-quantitative-data), here is the top few lines of data:
 
 	Duration, Wait Time
@@ -24,7 +23,6 @@ Using some data about the "Old Faithful" geyser in the United States from the [R
 	…..
 	
 ### Example Output ###
-
 The range on the data is [1.6, 5.1]. Using 8 bins starting from 1.5 with a bin width of 0.5 the expected output for a "Left Closed, Right Open" histogram is the following table data.
 	
 	[1.5,2)            51 
@@ -37,24 +35,22 @@ The range on the data is [1.6, 5.1]. Using 8 bins starting from 1.5 with a bin w
 	[5,5.5)             4
 
 ### Example Plot ###
-
 ![Example Plot of the Frequency Data from the Old Faithful data set](images/HistogramExample.png)
 
-
 ### Additional Information ###
-
-Also See Histogram Quick Reference at https://plot.ly/histogram/. 
+Also see Histogram Quick Reference at https://plot.ly/histogram/. 
 
 ## Parameters ##
-
 | Name | Type | Description |
 |------|------| ----------- |
 | Number Of Bins | Integer | Specifies number of histogram bins ( greater than zero) |
 | Use Min & Max Range | Boolean | Specifies whether the user can set the Min and Max values to consider for the histogram or if the Min and Max of the data will be used |
 | Min Value | Double | The user can set this value if the "Use Min & Max Range" is true |
 | Max Value | Double | The user can set this value if the "Use Min & Max Range" is true |
-| New Data Container | Boolean | Specifies if the output array will be stored in a new **DataContainer** or the existing one |
+| New Data Container | Boolean | Specifies if the output array will be stored in a new **Data Container** or the existing one |
 
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
@@ -67,7 +63,6 @@ Also See Histogram Quick Reference at https://plot.ly/histogram/.
 | Double | User set | Double | (2) | The output array is a two component array with [Bin cutoff {right side}, Frequency] values for each bin. |
 
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info:** dream3d@bluequartz.net
@@ -77,13 +72,14 @@ Also See Histogram Quick Reference at https://plot.ly/histogram/.
 **License:**  See the License.txt file that came with DREAM3D.
 
 
+
+
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
 
 
 ## Appendix ##
 
 ### Example Data ###
-
 	Index, Duration, Wait Time
 	{1,3.6,79},
 	{2,1.8,54},

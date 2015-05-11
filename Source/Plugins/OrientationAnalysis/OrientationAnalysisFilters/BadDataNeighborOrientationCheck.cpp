@@ -58,7 +58,7 @@ BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck() :
   m_CellPhases(NULL),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 
@@ -325,7 +325,7 @@ const QString BadDataNeighborOrientationCheck::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -1,17 +1,17 @@
 Find Feature Sizes {#findsizes}
-======
+=============
 
 ## Group (Subgroup) ##
 Statistics Filters (Morphological)
 
 ## Description ##
-This filter calculates the sizes of all **Features**.  The filter simply iterates through all **Cells** querying for the **Feature** that owns them and keeping a tally for each **Feature**.  The tally is then stored as *NumCells* and the *Volume* and *EquivalentDiameter* are also calculated (and stored) by knowing the volume of each **Cell**.
+This Filter calculates the sizes of all **Features**.  The Filter simply iterates through all **Cells** querying for the **Feature** that owns them and keeping a tally for each **Feature**.  The tally is then stored as *NumCells* and the *Volume* and *EquivalentDiameter* are also calculated (and stored) by knowing the volume of each **Cell**.
 
 ## Parameters ##
 None
 
 ## Required Geometry ##
-Image/Rectilinear Grid
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
@@ -26,7 +26,6 @@ Image/Rectilinear Grid
 | Feature | Volumes |  Float | (1) | Volume (in units^3) of the **Feature**. This value may be "redundant" from the NumCells value if all **Cells** are the same size and is calculable from the EquivalentDiameters value. |
 
 ## Authors ##
-
 **Copyright:** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software), 2014 Joseph C. Tucker (UES, Inc.)
 
 **Contact Info:** dream3d@bluequartz.net

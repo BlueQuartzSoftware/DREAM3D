@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 JsonFilterParametersWriter::JsonFilterParametersWriter() :
-currentIndex(0)
+  m_CurrentIndex(0)
 {
 
 }
@@ -54,8 +54,8 @@ currentIndex(0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-JsonFilterParametersWriter::JsonFilterParametersWriter(QString &fileName, QString &pipelineName, int &numFilters) :
-currentIndex(0)
+JsonFilterParametersWriter::JsonFilterParametersWriter(QString& fileName, QString& pipelineName, int& numFilters) :
+  m_CurrentIndex(0)
 {
   m_FileName = fileName;
   m_PipelineName = pipelineName;
@@ -76,10 +76,19 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
     parentDir.mkpath(parentPath);
   }
 
+  // Write our File Version and DREAM3D Version strings
   QJsonObject meta;
-  meta["Name"] = m_PipelineName;
-  meta["Version"] = DREAM3DLib::Version::Complete();
-  meta[DREAM3D::Settings::NumFilters] = currentIndex + 1;
+  meta[DREAM3D::Settings::PipelineName] = m_PipelineName;
+  meta[DREAM3D::Settings::Version] = DREAM3DLib::Version::Complete();
+
+  if (m_Root.size() > 0)
+  {
+    meta[DREAM3D::Settings::NumFilters] = m_CurrentIndex + 1;
+  }
+  else
+  {
+    meta[DREAM3D::Settings::NumFilters] = 0;
+  }
 
   m_Root[DREAM3D::Settings::PipelineBuilderGroup] = meta;
   QJsonDocument doc(m_Root);
@@ -90,7 +99,6 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
   }
   if (outputFile.open(QIODevice::WriteOnly))
   {
-    QByteArray byteArray = doc.toJson();
     int err = outputFile.write(doc.toJson());
     int errorCode = outputFile.error();
     outputFile.close();
@@ -117,10 +125,7 @@ int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipe
   // WRITE THE PIPELINE TO THE JSON FILE
   JsonFilterParametersWriter::Pointer writer = JsonFilterParametersWriter::New();
   writer->setFileName(filePath);
-
-  // Write our File Version and DREAM3D Version strings
-  writer->writeValue(DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
-  writer->writeValue(DREAM3D::HDF5::DREAM3DVersion, DREAM3DLib::Version::Complete());
+  writer->setPipelineName(fileInfo.completeBaseName());
 
   FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
 
@@ -151,11 +156,22 @@ int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipe
 // -----------------------------------------------------------------------------
 int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
 {
-  m_CurrentFilterIndex = QJsonObject();
-  currentIndex = index;
+  m_CurrentIndex = index;
+  QString numStr = QString::number(m_CurrentIndex);
 
-  writeValue(DREAM3D::Settings::FilterName, filter->getNameOfClass());
-  writeValue(DREAM3D::Settings::HumanLabel, filter->getHumanLabel());
+  if (m_Root.contains(numStr))
+  {
+    m_CurrentFilterIndex = m_Root.value(numStr).toObject();
+  }
+  else
+  {
+    m_CurrentFilterIndex = QJsonObject();
+    if(filter)
+    {
+      writeValue(DREAM3D::Settings::FilterName, filter->getNameOfClass());
+      writeValue(DREAM3D::Settings::HumanLabel, filter->getHumanLabel());
+    }
+  }
 
   return 0;
 }
@@ -165,7 +181,7 @@ int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int inde
 // -----------------------------------------------------------------------------
 int JsonFilterParametersWriter::closeFilterGroup()
 {
-  QString numStr = QString::number(currentIndex);
+  QString numStr = QString::number(m_CurrentIndex);
   m_Root[numStr] = m_CurrentFilterIndex;
 
   return 0;

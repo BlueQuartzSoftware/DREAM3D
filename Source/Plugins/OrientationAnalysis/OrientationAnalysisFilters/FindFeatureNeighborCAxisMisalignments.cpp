@@ -45,8 +45,8 @@
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -70,7 +70,7 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -230,7 +230,9 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
-    OrientationMath::QuattoMat(q1, g1);
+    FOrientArrayType om(9);
+    FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+    om.toGMatrix(g1);
     //transpose the g matrix so when caxis is multiplied by it
     //it will give the sample direction that the caxis is along
     MatrixMath::Transpose3x3(g1, g1t);
@@ -248,7 +250,8 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
       {
         QuaternionMathF::Copy(avgQuats[nname], q2);
-        OrientationMath::QuattoMat(q2, g2);
+        FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+        om.toGMatrix(g2);
         //transpose the g matrix so when caxis is multiplied by it
         //it will give the sample direction that the caxis is along
         MatrixMath::Transpose3x3(g2, g2t);

@@ -37,24 +37,13 @@
 #ifndef _FindNeighbors_H_
 #define _FindNeighbors_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 
 /**
- * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindNeighbors class. See [Filter documentation](@ref findneighbors) for details.
  */
 class FindNeighbors : public AbstractFilter
 {
@@ -134,10 +123,12 @@ class FindNeighbors : public AbstractFilter
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
-    NeighborList<int>::WeakPointer m_NeighborList;
+
+    NeighborList<int32_t>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
     void dataCheck();
@@ -147,6 +138,3 @@ class FindNeighbors : public AbstractFilter
 };
 
 #endif /* FINDNEIGHBORS_H_ */
-
-
-

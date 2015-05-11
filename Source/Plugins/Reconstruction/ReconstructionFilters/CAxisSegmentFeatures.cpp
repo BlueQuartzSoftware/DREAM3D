@@ -47,8 +47,8 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -88,7 +88,7 @@ CAxisSegmentFeatures::CAxisSegmentFeatures() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -395,8 +395,11 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {
-      OrientationMath::QuattoMat(q1, g1);
-      OrientationMath::QuattoMat(q2, g2);
+      FOrientArrayType om(9);
+      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+      om.toGMatrix(g1);
+      FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
+      om.toGMatrix(g2);
 
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along

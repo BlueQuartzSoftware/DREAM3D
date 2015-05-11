@@ -47,7 +47,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -71,10 +71,11 @@ class RotateEulerRefFrameImpl
     void convert(size_t start, size_t end) const
     {
       float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      FOrientArrayType om(9, 0.0f);
+      FOrientTransformsType::ax2om(FOrientArrayType(axis.x, axis.y, axis.z, angle), om);
+      om.toGMatrix(rotMat);
 
-      OrientationMath::AxisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
       float ea1 = 0, ea2 = 0, ea3 = 0;
-      float ea1new = 0, ea2new = 0, ea3new = 0;
       float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       float gNew[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       for (size_t i = start; i < end; i++)
@@ -82,13 +83,18 @@ class RotateEulerRefFrameImpl
         ea1 = m_CellEulerAngles[3 * i + 0];
         ea2 = m_CellEulerAngles[3 * i + 1];
         ea3 = m_CellEulerAngles[3 * i + 2];
-        OrientationMath::EulertoMat(ea1, ea2, ea3, g);
+        FOrientArrayType om(9);
+        FOrientTransformsType::eu2om(FOrientArrayType(ea1, ea2, ea3), om);
+        om.toGMatrix(g);
+
         MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
         MatrixMath::Normalize3x3(gNew);
-        OrientationMath::MattoEuler(gNew, ea1new, ea2new, ea3new);
-        m_CellEulerAngles[3 * i + 0] = ea1new;
-        m_CellEulerAngles[3 * i + 1] = ea2new;
-        m_CellEulerAngles[3 * i + 2] = ea3new;
+
+        // Because we are going to simply wrap the m_CellEulerAngles array, the new
+        // Euler angles will be directly written to the m_CellEulerAngles array
+        // at the proper spot
+        FOrientArrayType eu( m_CellEulerAngles + (3 * i), 3);
+        FOrientTransformsType::om2eu(om, eu);
       }
     }
 

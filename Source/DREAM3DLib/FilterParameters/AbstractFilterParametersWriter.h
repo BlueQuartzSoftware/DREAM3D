@@ -58,7 +58,7 @@ class AbstractFilter;
 /**
  * @class AbstractFilterParametersWriter AbstractFilterParametersWriter.h DREAM3DLib/Common/AbstractFilterParametersWriter.h
  * @brief This class writes the various parameters of a filter to an output file
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 17, 2012
  * @version 1.0
  */
