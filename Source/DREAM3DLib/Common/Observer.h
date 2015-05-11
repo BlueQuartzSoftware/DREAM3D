@@ -46,7 +46,7 @@
  * @brief This class implements the <b>Observer</b> pattern from the <b>Gang of
  * Four Design Patterns</b> book. There are various methods that are used for
  * notifications. The <b>Observable</b> will decide which method to call.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date September 22, 2011
  * @version 1.0
  */

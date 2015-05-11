@@ -49,10 +49,10 @@
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 #include "IO/IOConstants.h"
 
@@ -73,7 +73,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   m_MisorientationRotation.k = 0.0f;
   m_MisorientationRotation.l = 0.0f;
 
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 
@@ -355,8 +355,8 @@ void VisualizeGBCDGMT::execute()
   //take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
 
-  // Get our OrientationOps pointer for the selected crystal structure
-  OrientationOps::Pointer orientOps = m_OrientationOps[m_CrystalStructure];
+  // Get our SpaceGroupOps pointer for the selected crystal structure
+  SpaceGroupOps::Pointer orientOps = m_OrientationOps[m_CrystalStructure];
 
   //get number of symmetry operators
   int n_sym = orientOps->getNumSymOps();

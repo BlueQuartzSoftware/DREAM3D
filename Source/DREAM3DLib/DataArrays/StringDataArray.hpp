@@ -51,7 +51,7 @@
 /**
  * @class StringDataArray StringDataArray.h DREAM3DLib/Common/StringDataArray.h
  * @brief Stores an array of QString objects
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Nov 13, 2012
  * @version 1.0
  */

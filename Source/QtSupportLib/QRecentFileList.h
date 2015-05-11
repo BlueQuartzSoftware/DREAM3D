@@ -45,7 +45,7 @@ class QMenu;
  * @class QRecentFileList QRecentFileList.h Shared/QRecentFileList.h
  * @brief Holds a list of recently used files. Uses the Singleton design pattern
  * to ensure there is only one list per application instance.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Oct 2008
  * @version $Revision: 1.2 $
  */

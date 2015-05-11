@@ -88,7 +88,7 @@ class FilterWidgetManager;
  * @class IDREAM3DPlugin IDREAM3DPlugin.h IPHelper/plugins/IDREAM3DPlugin.h
  * @brief This class defines the interface used by plugins that would like to process
  * images and display their output.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jul 10, 2010
  * @version 1.0
  *

@@ -53,7 +53,7 @@
 /**
  * @class MicPhase MicPhase.h EbsdLib/HEDM/MicPhase.h
  * @brief This class holds all the values for a "Phase" header block in a HEDM file
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Mar 23, 2011
  * @version 1.0
  */

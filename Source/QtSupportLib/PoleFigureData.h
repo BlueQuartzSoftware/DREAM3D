@@ -48,7 +48,7 @@
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Nov 4, 2011
  * @version 1.0
  */

@@ -47,14 +47,14 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
-#include "OrientationLib/OrientationOps/CubicLowOps.h"
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/MonoclinicOps.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
-#include "OrientationLib/OrientationOps/TetragonalOps.h"
-#include "OrientationLib/OrientationOps/TrigonalOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
+#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
 
 
 /**
@@ -68,7 +68,7 @@ class CalculateFaceMisorientationColorsImpl
     float* m_Quats;
     float* m_Colors;
     unsigned int* m_CrystalStructures;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
   public:
     CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, float* colors, unsigned int* crystalStructures) :
@@ -78,7 +78,7 @@ class CalculateFaceMisorientationColorsImpl
       m_Colors(colors),
       m_CrystalStructures(crystalStructures)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     }
     virtual ~CalculateFaceMisorientationColorsImpl() {}
 

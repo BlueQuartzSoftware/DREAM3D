@@ -242,7 +242,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Small IN100 Minimum Size",
+        "Name": "(09) Small IN100 Minimum Size",
         "Number_Filters": 4,
         "Version": "5.2.1285.5481251"
     }

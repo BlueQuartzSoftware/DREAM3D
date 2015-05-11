@@ -52,7 +52,7 @@
 /**
  * @class H5MicVolumeReader H5MicVolumeReader.h Reconstruction/EbsdSupport/H5MicVolumeReader.h
  * @brief This class loads OIM data from an HDF5 based file.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 23, 2011
  * @version 1.0
  */

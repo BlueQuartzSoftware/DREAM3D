@@ -51,7 +51,7 @@
  * @class H5CtfImporter H5CtfImporter.h EbsdLib/HKL/H5CtfImporter.h
  * @brief This class will read a series of .ctf files and store the values into
  * an HDF5 file according to the .h5ebsd specification
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date March 23, 2011
  * @version 1.2
  *

@@ -62,7 +62,7 @@ class FindMisorientationVectorsImpl
       m_Neighbors(neighbors),
       m_FaceIds(faceIds)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     }
     virtual ~FindMisorientationVectorsImpl() {}
 
@@ -103,7 +103,7 @@ class FindMisorientationVectorsImpl
     float* m_MisoVecs;
     int64_t* m_Neighbors;
     int64_t* m_FaceIds;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 };
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ FindOrientationFieldCurl::FindOrientationFieldCurl() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   m_CurlSize.x = 1;
   m_CurlSize.y = 1;

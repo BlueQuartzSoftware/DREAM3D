@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
@@ -119,7 +119,7 @@ class AlignSectionsMutualInformation : public AlignSections
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     unsigned long long int Seed;
 

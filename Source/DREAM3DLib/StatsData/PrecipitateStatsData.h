@@ -77,7 +77,7 @@ typedef QVector<FloatArrayType::Pointer> VectorOfFloatArray;
  * @li [0] = Average
  * @li [1] = Standard Deviation
  *
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Feb 9, 2012
  * @version 1.0
  */

@@ -51,7 +51,7 @@
 /**
  * @class AvizoRectilinearCoordinateWriter AvizoRectilinearCoordinateWriter.h DREAM3DLib/IOFilters/AvizoRectilinearCoordinateWriter.h
  * @brief Writes out a native Avizo Rectilinear Coordinate file
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 9, 2012
  * @version 1.0
  */

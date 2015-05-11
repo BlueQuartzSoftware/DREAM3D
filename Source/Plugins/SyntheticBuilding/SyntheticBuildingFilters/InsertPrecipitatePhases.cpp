@@ -53,7 +53,7 @@
 #include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 
 
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -1057,7 +1057,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed, Precip_t* precip, uint32_t shapeclass, OrientationOps::Pointer OrthoOps)
+void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(seed)
 

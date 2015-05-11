@@ -46,7 +46,7 @@
 /**
  * @class SyntheticBuildingPlugin SyntheticBuildingPlugin.h SyntheticBuilding/SyntheticBuildingPlugin.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 10, 2012
  * @version 1.0
  */

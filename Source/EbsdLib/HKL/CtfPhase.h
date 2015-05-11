@@ -51,7 +51,7 @@
 /**
  * @class CtfPhase CtfPhase.h EbsdLib/HKL/CtfPhase.h
  * @brief This class holds all the values for a "Phase" header block in an HKL .ctf file
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Mar 23, 2011
  * @version 1.0
  */

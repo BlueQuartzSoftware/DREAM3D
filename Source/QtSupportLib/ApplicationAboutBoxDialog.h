@@ -51,7 +51,7 @@
  * @class ApplicationAboutBoxDialog ApplicationAboutBoxDialog.h R3D/Common/Qt/ApplicationAboutBoxDialog.h
  * @brief This will display a simple dialog box that acts like an "About Box" for
  * showing some basic information about the application being used.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Sept 14, 2010
  * @version 1.0
  */

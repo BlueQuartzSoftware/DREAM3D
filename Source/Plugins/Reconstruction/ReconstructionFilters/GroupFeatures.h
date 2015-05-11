@@ -71,11 +71,13 @@ class GroupFeatures : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
     Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
+   
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
     Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
 
     DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
     Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
+   
     DREAM3D_FILTER_PARAMETER(bool, PatchGrouping)
     Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 

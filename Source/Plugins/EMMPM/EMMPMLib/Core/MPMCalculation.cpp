@@ -86,7 +86,7 @@ else\
 /**
  * @class ParallelCalcLoop ParallelCalcLoop.h EMMPM/Curvature/ParallelCalcLoop.h
  * @brief This class can calculate the parts of the MPM loop in parallel
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date March 11, 2012
  * @version 1.0
  */

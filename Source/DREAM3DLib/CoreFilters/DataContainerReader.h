@@ -50,7 +50,7 @@
 /**
  * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jul 17, 2012
  * @version 1.0
  */

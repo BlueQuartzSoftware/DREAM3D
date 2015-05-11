@@ -47,7 +47,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 
 
@@ -115,7 +115,7 @@ class NeighborOrientationCorrelation : public AbstractFilter
     NeighborOrientationCorrelation();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)

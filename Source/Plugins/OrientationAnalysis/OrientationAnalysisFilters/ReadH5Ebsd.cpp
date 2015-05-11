@@ -555,10 +555,6 @@ void ReadH5Ebsd::execute()
 
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   {
-    QString ss = QObject::tr("Initializing %1 voxels").arg(totalPoints);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-  }
-  {
     QString ss = QObject::tr("Reading Ebsd Data from file %1").arg(getInputFile());
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }

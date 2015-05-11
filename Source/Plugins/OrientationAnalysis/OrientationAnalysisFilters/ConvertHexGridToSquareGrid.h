@@ -59,7 +59,7 @@
  * @class ConvertHexGridToSquareGrid ConvertHexGridToSquareGrid.h ConvertHexGridToSquareGrid/ConvertHexGridToSquareGrid.h
  * @brief This class is used to convert Hex grid TSL .ang files into Square grid
  * .ang files
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @author Dr. Michael Groeber, US Air Force Research Laboratories
  * @date July 23, 2012
  * @version 1.2
