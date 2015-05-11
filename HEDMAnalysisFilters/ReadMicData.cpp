@@ -43,8 +43,8 @@
 #include <QtCore/QFileInfo>
 
 #include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/HEDM/MicFields.h"
-#include "EbsdLib/HEDM/MicReader.h"
+#include "HEDMAnalysisFilters/HEDM/MicFields.h"
+#include "HEDMAnalysisFilters/HEDM/MicReader.h"
 
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -319,7 +319,7 @@ void ReadMicData::dataCheck()
 
     QString ext = fi.suffix();
     QVector<QString> names;
-    if (ext.compare(Ebsd::Mic::FileExt) == 0)
+    if (ext.compare(Mic::FileExt) == 0)
     {
       MicReader* reader = new MicReader();
 
@@ -479,8 +479,8 @@ void ReadMicData::readMicFile()
   float x, y;
   float xMin = 10000000;
   float yMin = 10000000;
-  f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Mic::X));
-  f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Mic::Y));
+  f1 = reinterpret_cast<float*>(reader->getPointerByName(Mic::X));
+  f2 = reinterpret_cast<float*>(reader->getPointerByName(Mic::Y));
   for (size_t i = 0; i < totalPoints; i++)
   {
     x = f1[i];
@@ -491,7 +491,7 @@ void ReadMicData::readMicFile()
   m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, 0.0);
 
   {
-    phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Ebsd::Mic::Phase));
+    phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Mic::Phase));
     for (size_t i = 0; i < totalPoints; i++)
     {
       if (phasePtr[i] < 1)
@@ -507,9 +507,9 @@ void ReadMicData::readMicFile()
   QVector<size_t> compDims(1, 3); // Initially set this up for the Euler Angle 1x3
   {
     //  radianconversion = M_PI / 180.0;
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Mic::Euler1));
-    f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Mic::Euler2));
-    f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Mic::Euler3));
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Mic::Euler1));
+    f2 = reinterpret_cast<float*>(reader->getPointerByName(Mic::Euler2));
+    f3 = reinterpret_cast<float*>(reader->getPointerByName(Mic::Euler3));
     fArray = FloatArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     for (size_t i = 0; i < totalPoints; i++)
@@ -523,17 +523,17 @@ void ReadMicData::readMicFile()
 
   compDims[0] = 1; // Now reset the size of the first dimension to 1
   {
-    phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Ebsd::Mic::Phase));
+    phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Mic::Phase));
     iArray = Int32ArrayType::CreateArray(totalPoints, compDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     cellAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
   }
 
   {
-    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Mic::Confidence));
-    fArray = FloatArrayType::CreateArray(totalPoints, compDims, Ebsd::Mic::Confidence);
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Mic::Confidence));
+    fArray = FloatArrayType::CreateArray(totalPoints, compDims, Mic::Confidence);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMat->addAttributeArray(Ebsd::Mic::Confidence, fArray);
+    cellAttrMat->addAttributeArray(Mic::Confidence, fArray);
   }
 }
 

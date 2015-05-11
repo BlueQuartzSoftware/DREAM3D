@@ -44,6 +44,22 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/H5MicImporter.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/H5MicImporter.cpp)
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/H5MicReader.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/H5MicReader.cpp)
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/H5MicVolumeReader.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/H5MicVolumeReader.cpp)
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicFields.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicFields.cpp)
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicPhase.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicPhase.cpp)
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicReader.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicReader.cpp)
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicHeaderEntry.h)
+ADD_DREAM3D_SUPPORT_HEADER(${HEDMAnalysis_SOURCE_DIR} ${_filterGroupName} HEDM/MicConstants.h)
+
+
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.

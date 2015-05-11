@@ -47,7 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "EbsdLib/HEDM/MicPhase.h"
+#include "HEDMAnalysisFilters/HEDM/MicPhase.h"
 
 #include "HEDMAnalysis/HEDMAnalysisConstants.h"
 
