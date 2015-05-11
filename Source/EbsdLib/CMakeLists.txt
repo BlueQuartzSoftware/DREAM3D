@@ -150,8 +150,6 @@ INCLUDE_DIRECTORIES(${EbsdLib_SOURCE_DIR}/..)
 #-- Include all the Source Files
 include( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
 include( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
-include( ${EbsdLib_SOURCE_DIR}/HEDM/SourceList.cmake)
-
 
 
 set(EbsdLib_SRCS
