@@ -356,7 +356,6 @@ FindGBCD::FindGBCD() :
   m_GbcdLimits(NULL),
   m_GbcdBins(NULL),
   m_HemiCheck(NULL)
-
 {
   setupFilterParameters();
 }

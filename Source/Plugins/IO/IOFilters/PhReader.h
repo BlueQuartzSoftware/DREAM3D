@@ -112,7 +112,7 @@ class  PhReader : public FileReader
     virtual void preflight();
     virtual void execute();
 
-  DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
+    DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
     DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 

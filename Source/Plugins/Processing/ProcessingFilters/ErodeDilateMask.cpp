@@ -55,8 +55,8 @@ ErodeDilateMask::ErodeDilateMask() :
   m_YDirOn(true),
   m_ZDirOn(true),
   m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_Mask(NULL),
-  m_MaskCopy(NULL)
+  m_MaskCopy(NULL),
+  m_Mask(NULL)
 {
   setupFilterParameters();
 }

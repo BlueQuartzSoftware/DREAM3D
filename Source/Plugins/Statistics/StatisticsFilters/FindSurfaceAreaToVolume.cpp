@@ -52,8 +52,8 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()  :
   m_NumCellsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumCells),
   m_SurfaceAreaVolumeRatioArrayName(DREAM3D::FeatureData::SurfaceAreaVol),
   m_FeatureIds(NULL),
-  m_SurfaceAreaVolumeRatio(NULL),
-  m_NumCells(NULL)
+  m_NumCells(NULL),
+  m_SurfaceAreaVolumeRatio(NULL)
 {
   setupFilterParameters();
 }

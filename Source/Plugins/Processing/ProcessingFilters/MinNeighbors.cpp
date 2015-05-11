@@ -54,10 +54,10 @@ MinNeighbors::MinNeighbors() :
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_NumNeighborsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumNeighbors),
+  m_Neighbors(NULL),
   m_FeatureIds(NULL),
   m_FeaturePhases(NULL),
-  m_NumNeighbors(NULL),
-  m_Neighbors(NULL)
+  m_NumNeighbors(NULL)
 {
   setupFilterParameters();
 }

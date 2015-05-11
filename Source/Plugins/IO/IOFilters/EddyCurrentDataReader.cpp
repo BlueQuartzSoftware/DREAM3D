@@ -62,7 +62,8 @@ EddyCurrentDataReader::EddyCurrentDataReader() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_AverageMultipleValues(false),
   m_InputFile(""),
-    m_HasMultipleValues("False")
+  m_HasMultipleValues("False"),
+  m_DataPointCount(0)
 {
   setupFilterParameters();
 }

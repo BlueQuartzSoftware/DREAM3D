@@ -84,8 +84,8 @@ DxReader::DxReader() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FileWasRead(false),
-  d_ptr(new DxReaderPrivate(this)),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  d_ptr(new DxReaderPrivate(this)),
   m_FeatureIds(NULL)
 {
   m_Origin.x = 0.0;

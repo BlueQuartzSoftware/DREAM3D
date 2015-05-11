@@ -53,10 +53,10 @@
 VtkStructuredPointsReader::VtkStructuredPointsReader() :
   AbstractFilter(),
   m_ReadCellData(true),
-  m_VertexDataContainerName("PointData DataContainer"),
+  m_VolumeDataContainerName("CellData DataContainer"),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ReadPointData(true),
-  m_VolumeDataContainerName("CellData DataContainer"),
+  m_VertexDataContainerName("PointData DataContainer"),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
   m_Comment(""),

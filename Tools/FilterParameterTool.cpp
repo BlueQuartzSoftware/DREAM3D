@@ -55,6 +55,9 @@
 
 #include "Tools/ToolConfiguration.h"
 
+#define OVERWRITE_SOURCE_FILE 1
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,7 +74,7 @@ void writeOutput(bool didReplace, QStringList &outLines, QString filename)
   if(didReplace == true)
   {
     QFileInfo fi2(filename);
-#if 0
+#if OVERWRITE_SOURCE_FILE
     QFile hOut(filename);
 #else
     QString tmpPath = "/tmp/" + fi2.fileName();
@@ -94,7 +97,7 @@ void writeOutput(bool didReplace, QVector<QString> &outLines, QString filename)
   if(didReplace == true)
   {
     QFileInfo fi2(filename);
-#if 0
+#if OVERWRITE_SOURCE_FILE
     QFile hOut(filename);
 #else
     QString tmpPath = "/tmp/" + fi2.fileName();
@@ -350,10 +353,10 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    if (fi.baseName().compare("TiDwellFatigueCrystallographicAnalysis") != 0)
-    {
-      return false;
-    }
+//    if (fi.baseName().compare("TiDwellFatigueCrystallographicAnalysis") != 0)
+//    {
+//      return false;
+//    }
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -682,12 +685,15 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
     }
   }
 
+  PluginManager* pm = PluginManager::Instance();
+  QStringList libs = pm->getPluginNames();
+
   prefix = D3DTools::GetDREAM3DPluginDir();
-  QStringList libs;
-  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
-          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
-          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
-          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
+
+//  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
+//          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
+//          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
+//          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -702,7 +708,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   }
 
 
-  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins2";
+  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins";
   for (int i = 0; i < libs.size(); ++i)
   {
     QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
@@ -820,12 +826,11 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
 void GenerateFilterParametersCode()
 {
 
+
   FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
   // Loop on each filter
-  std::cout << "| Plugin | Filter | Count |" << std::endl;
-  std::cout << "|--------|--------|-------|" << std::endl;
   while(iter.hasNext())
   {
     iter.next();
@@ -836,8 +841,8 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    //CorrectInitializerList(filter, h, cpp);
-    SplitFilterHeaderCodes(filter, h, cpp);
+    CorrectInitializerList(filter, h, cpp);
+    //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
     //FindFiltersWithMultipleDataArrayPaths(filter);
@@ -854,7 +859,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

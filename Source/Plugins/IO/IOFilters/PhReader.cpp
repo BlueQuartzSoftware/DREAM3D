@@ -76,9 +76,9 @@ class PhReaderPrivate
 // -----------------------------------------------------------------------------
 PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
 q_ptr(ptr),
+  m_Dims(),
 m_InputFile_Cache(""),
-m_LastRead(),
-m_Dims()
+m_LastRead()
 {
 
 }
@@ -91,10 +91,10 @@ PhReader::PhReader() :
   m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
   m_FileWasRead(false),
-  d_ptr(new PhReaderPrivate(this))
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  d_ptr(new PhReaderPrivate(this)),
+  m_FeatureIds(NULL)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;

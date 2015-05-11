@@ -52,11 +52,11 @@
 // -----------------------------------------------------------------------------
 SaveImages::SaveImages() :
   AbstractFilter(),
+  m_FilePrefix(false),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
   m_Plane(0),
-  m_FilePrefix(false),
   m_ColorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor),
   m_Colors(NULL)
 {
