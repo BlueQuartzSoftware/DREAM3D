@@ -81,7 +81,6 @@ void TestRotArray()
 // -----------------------------------------------------------------------------
 void Test_eu_check()
 {
-  int res = 0;
   {
     typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;

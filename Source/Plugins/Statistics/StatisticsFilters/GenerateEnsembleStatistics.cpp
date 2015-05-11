@@ -950,7 +950,6 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock());
 
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   int32_t mbin = 0;
   float w = 0.0f;
   QuatF q1 = QuaternionMathF::New();

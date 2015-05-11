@@ -63,7 +63,7 @@ class DxReaderPrivate;
 class  DxReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-	Q_DECLARE_PRIVATE(DxReader)
+  Q_DECLARE_PRIVATE(DxReader)
 
   public:
     DREAM3D_SHARED_POINTERS(DxReader)
@@ -83,8 +83,8 @@ class  DxReader : public FileReader
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-	DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
-	Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+    DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+    Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
@@ -111,12 +111,12 @@ class  DxReader : public FileReader
     virtual void preflight();
     virtual void execute();
 
-	DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
-	DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-	DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+    DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
+    DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+    DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
   public slots:
-	void flushCache();
+  void flushCache();
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -134,7 +134,7 @@ class  DxReader : public FileReader
     void updateCellInstancePointers();
 
   private:
-	  QScopedPointer<DxReaderPrivate> const d_ptr;
+    QScopedPointer<DxReaderPrivate> const d_ptr;
 
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     size_t m_Dims[3];

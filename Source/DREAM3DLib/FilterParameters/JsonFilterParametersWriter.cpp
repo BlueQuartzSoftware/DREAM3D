@@ -99,8 +99,7 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
   }
   if (outputFile.open(QIODevice::WriteOnly))
   {
-    int err = outputFile.write(doc.toJson());
-    int errorCode = outputFile.error();
+    outputFile.write(doc.toJson());
     outputFile.close();
   }
 }

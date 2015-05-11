@@ -127,9 +127,9 @@ void DerivativeHelpers::EdgeDeriv::operator()(EdgeGeom* edges, int64_t edgeId, d
 // -----------------------------------------------------------------------------
 void DerivativeHelpers::TriangleDeriv::operator()(TriangleGeom* triangles, int64_t triId, double values[3], double derivs[3])
 {
-  float x0f[3], x1f[3], x2f[3], x3f[3];
+  float x0f[3], x1f[3], x2f[3];
   double v0[2], v1[2], v2[2], v[3], v10[3], v20[3], lenX, lenTmp;
-  double x0[3], x1[3], x2[3], n[3], pCoords[3];
+  double x0[3], x1[3], x2[3], n[3];
   double funcDerivs[6], sum[2], dBydx, dBydy;
   int64_t verts[3];
 

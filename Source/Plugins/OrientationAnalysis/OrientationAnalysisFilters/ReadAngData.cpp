@@ -95,13 +95,13 @@ ReadAngData::ReadAngData() :
   m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_FileWasRead(false),
   m_PhaseNameArrayName(""),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
-  d_ptr(new ReadAngDataPrivate(this)),
-  m_FileWasRead(false),
   m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
+  d_ptr(new ReadAngDataPrivate(this)),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
@@ -398,7 +398,7 @@ void ReadAngData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, ANG_READ_FLAG flag)
+void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -561,7 +561,7 @@ int ReadAngData::loadMaterialInfo(AngReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims)
+void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
 {
   float* f1 = NULL;
   float* f2 = NULL;

@@ -53,10 +53,10 @@
 VtkStructuredPointsReader::VtkStructuredPointsReader() :
   AbstractFilter(),
   m_ReadCellData(true),
-  m_VertexDataContainerName("PointData DataContainer"),
+  m_VolumeDataContainerName("CellData DataContainer"),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ReadPointData(true),
-  m_VolumeDataContainerName("CellData DataContainer"),
+  m_VertexDataContainerName("PointData DataContainer"),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
   m_Comment(""),
@@ -1022,7 +1022,7 @@ int VtkStructuredPointsReader::parseCoordinateLine(const char* input, size_t& va
 // -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::readData(std::istream& instream)
 {
-
+#if 0
   QByteArray buf(kBufferSize, '\0');
   char* buffer = buf.data();
 
@@ -1035,7 +1035,7 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
 
   AttributeMatrix::Pointer attrMat;
 
-#if 0
+
   while(instream.atEnd() == false)
   {
     buf = instream.readLine().trimmed();

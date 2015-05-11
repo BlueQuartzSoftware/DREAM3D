@@ -58,8 +58,8 @@ FindShapes::FindShapes()  :
   m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
   m_FeatureIds(NULL),
-  m_AxisEulerAngles(NULL),
   m_Centroids(NULL),
+  m_AxisEulerAngles(NULL),
   m_AxisLengths(NULL),
   m_Omega3s(NULL),
   m_Volumes(NULL),
@@ -529,7 +529,7 @@ void FindShapes::find_axes()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axes2D()
 {
-  double Ixx = 0.0f, Iyy = 0.0f, Ixy= 0.0f;
+  double Ixx = 0.0f, Iyy = 0.0f, Ixy = 0.0f;
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 

@@ -60,8 +60,8 @@ FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
   QDockWidget(parent),
   m_ContextMenu(new QMenu(this)),
   m_Mapper(NULL),
-  m_SearchExactPhrase(false),
   m_SearchAnyWords(false),
+  m_SearchExactPhrase(false),
   m_SearchAllWords(true)
 {
   setupUi(this);
@@ -343,7 +343,6 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
       continue;
     }
 
-    bool match = false;
     QString filterHumanLabel = filter->getHumanLabel();
     QBitArray bitArray(wordList.size(), false);
 

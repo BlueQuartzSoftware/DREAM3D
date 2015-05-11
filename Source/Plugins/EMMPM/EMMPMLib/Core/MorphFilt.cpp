@@ -91,7 +91,7 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
   unsigned char* erosion;
   unsigned int  l, maxr, maxc;
   //int ii, jj;
-  int h, w;
+  int w;
   unsigned int se_cols;
   size_t ij, i1j1, iirjjr;
 

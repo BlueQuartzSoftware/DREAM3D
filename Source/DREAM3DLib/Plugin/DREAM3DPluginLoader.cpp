@@ -157,6 +157,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     }
   }
 
+  PluginManager* pluginManager = PluginManager::Instance();
   QStringList pluginFileNames;
   QVector<IDREAM3DPlugin*> loadedPlugins;
 
@@ -177,6 +178,9 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
       {
         loadedPlugins.push_back(ipPlugin);
         ipPlugin->registerFilters(filterManager);
+        ipPlugin->setDidLoad(true);
+        ipPlugin->setLocation(path);
+        pluginManager->addPlugin(ipPlugin);
       }
       pluginFileNames += fileName;
     }

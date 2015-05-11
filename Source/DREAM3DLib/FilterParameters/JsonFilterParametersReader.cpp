@@ -517,8 +517,6 @@ float JsonFilterParametersReader::readValue(const QString name, float value)
   if (m_CurrentFilterIndex.value(name).isDouble())
   {
     double val = m_CurrentFilterIndex.value(name).toDouble();
-    double max = std::numeric_limits<float>().max();
-    double min = std::numeric_limits<float>().min();
     if (val >= std::numeric_limits<float>().min() && val <= std::numeric_limits<float>().max())
     {
       return static_cast<float>(val);

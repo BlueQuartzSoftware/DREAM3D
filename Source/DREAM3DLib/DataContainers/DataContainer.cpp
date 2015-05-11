@@ -193,13 +193,13 @@ AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const QString& name)
 // -----------------------------------------------------------------------------
 AttributeMatrix::Pointer DataContainer::getAttributeMatrix(const DataArrayPath& path)
 {
-	QMap<QString, AttributeMatrix::Pointer>::iterator it;
-	it = m_AttributeMatrices.find(path.getAttributeMatrixName());
-	if (it == m_AttributeMatrices.end())
-	{
-		return AttributeMatrix::NullPointer();
-	}
-	return it.value();
+  QMap<QString, AttributeMatrix::Pointer>::iterator it;
+  it = m_AttributeMatrices.find(path.getAttributeMatrixName());
+  if (it == m_AttributeMatrices.end())
+  {
+    return AttributeMatrix::NullPointer();
+  }
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -467,8 +467,6 @@ int DataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 // -----------------------------------------------------------------------------
 int DataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
-  herr_t err = 0;
-
   if (NULL == m_Geometry.get())
   {
     return -1;

@@ -237,13 +237,6 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
-  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
-  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
-  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_InputShapeTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
@@ -256,11 +249,19 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_WriteGoalAttributes(false),
   m_ErrorOutputFile(""),
   m_VtkOutputFile(""),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
+  m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
+  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
+  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
+  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
+  m_Neighbors(NULL),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_Mask(NULL),
+  m_BoundaryCells(NULL),
   m_FeaturePhases(NULL),
-  m_NumFeatures(NULL),
   m_Neighborhoods(NULL),
   m_Centroids(NULL),
   m_Volumes(NULL),
@@ -270,8 +271,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_EquivalentDiameters(NULL),
   m_PhaseTypes(NULL),
   m_ShapeTypes(NULL),
-  m_Neighbors(NULL),
-  m_BoundaryCells(NULL)
+  m_NumFeatures(NULL)
 {
   m_StatsDataArray = StatsDataArray::NullPointer();
 
@@ -1421,7 +1421,6 @@ void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float phi1 = 0.0f, PHI = 0.0f, phi2 = 0.0f;
   float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi)) / 8.0f);
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();

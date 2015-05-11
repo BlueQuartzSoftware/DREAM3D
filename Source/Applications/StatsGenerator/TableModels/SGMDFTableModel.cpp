@@ -422,8 +422,8 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
 
     m_RowCount = count;
     endInsertRows();
-    QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex botRight = createIndex(count - 1, ColumnCount);
+    createIndex(0, 0);
+    createIndex(count - 1, ColumnCount);
   }
   emit dataChanged(topLeft, botRight);
 }

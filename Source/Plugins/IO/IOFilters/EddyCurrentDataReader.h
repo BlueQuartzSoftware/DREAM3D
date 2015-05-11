@@ -71,9 +71,10 @@ class  EddyCurrentDataReader : public AbstractFilter
     Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-    
+
     QString getHasMultipleValues();
     Q_PROPERTY(QVariant HasMultipleValues READ getHasMultipleValues)
+
     DREAM3D_FILTER_PARAMETER(bool, AverageMultipleValues)
     Q_PROPERTY(bool AverageMultipleValues READ getAverageMultipleValues WRITE setAverageMultipleValues)
 

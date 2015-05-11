@@ -161,9 +161,17 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
         {
           bin = numColors - 1;
         }
-        r = colors[3 * bin];
-        g = colors[3 * bin + 1];
-        b = colors[3 * bin + 2];
+        if (bin < 0 || bin >= colors.size())
+        {
+          r = 0x00;
+          b = 0x00;
+          g = 0x00;
+        }
+        else {
+          r = colors[3 * bin];
+          g = colors[3 * bin + 1];
+          b = colors[3 * bin + 2];
+        }
         rgbaPtr[idx] = RgbColor::dRgb(r * 255, g * 255, b * 255, 255);
       }
       else // Outside the Circle - Set pixel to White
