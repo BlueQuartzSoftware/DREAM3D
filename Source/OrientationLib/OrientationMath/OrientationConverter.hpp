@@ -126,13 +126,13 @@ class OrientationConverter
     static QVector<int> GetComponentCounts()
     {
       QVector<int> counts(6);
-      counts[0] = 3;
-      counts[1] = 9;
-      counts[2] = 4;
-      counts[3] = 4;
-      counts[4] = 4;
-      counts[5] = 3;
-      //counts[6] = 3;
+      counts[0] = 3; // Euler
+      counts[1] = 9; // Orientation Matrix
+      counts[2] = 4; // Quaternion
+      counts[3] = 4; // Axis-Angle
+      counts[4] = 4; // Rodrigues
+      counts[5] = 3; // Homchoric
+      //counts[6] = 3; // Cubochoric
       return counts;
     }
 
