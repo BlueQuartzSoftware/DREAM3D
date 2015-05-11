@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 JsonFilterParametersWriter::JsonFilterParametersWriter() :
-m_CurrentIndex(0)
+  m_CurrentIndex(0)
 {
 
 }
@@ -54,8 +54,8 @@ m_CurrentIndex(0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-JsonFilterParametersWriter::JsonFilterParametersWriter(QString &fileName, QString &pipelineName, int &numFilters) :
-m_CurrentIndex(0)
+JsonFilterParametersWriter::JsonFilterParametersWriter(QString& fileName, QString& pipelineName, int& numFilters) :
+  m_CurrentIndex(0)
 {
   m_FileName = fileName;
   m_PipelineName = pipelineName;
@@ -166,8 +166,11 @@ int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int inde
   else
   {
     m_CurrentFilterIndex = QJsonObject();
-    writeValue(DREAM3D::Settings::FilterName, filter->getNameOfClass());
-    writeValue(DREAM3D::Settings::HumanLabel, filter->getHumanLabel());
+    if(filter)
+    {
+      writeValue(DREAM3D::Settings::FilterName, filter->getNameOfClass());
+      writeValue(DREAM3D::Settings::HumanLabel, filter->getHumanLabel());
+    }
   }
 
   return 0;
