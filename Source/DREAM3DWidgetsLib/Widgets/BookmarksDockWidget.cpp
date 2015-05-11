@@ -59,8 +59,7 @@
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 
 enum ErrorCodes {
-  UNRECOGNIZED_EXT = -1,
-  DUPLICATE_PIPELINE = -2
+  UNRECOGNIZED_EXT = -1
 };
 
 // -----------------------------------------------------------------------------
@@ -113,9 +112,6 @@ opacity: 255;\
   background-color: #FFFFFF;\
 }");
   filterLibraryTree->setStyleSheet(css);
-
-  connect(filterLibraryTree->header(), SIGNAL(sectionResized(int, int, int)),
-    this, SLOT(handleHeaderChanged(int, int, int)));
 }
 
 // -----------------------------------------------------------------------------
@@ -410,10 +406,7 @@ void BookmarksDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item
 {
   if (column == 0)
   {
-    // Write the new name to settings
-    writeSettings();
-
-    emit settingsUpdated();
+    writeAndUpdateWidget();
   }
 }
 
@@ -582,10 +575,10 @@ void BookmarksDockWidget::m_ActionNewFolder_triggered()
 
   addFolder("New Folder", parentName, parentTreePath, true);
 
-  // Update settings in the file, since this is used by new DREAM3D instances
-  writeSettings();
+  // Resize the bookmarks widget header to contents
+  filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-  emit settingsUpdated();
+  writeAndUpdateWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -602,10 +595,10 @@ void BookmarksDockWidget::m_ActionAddPipeline_triggered()
 
   addPipelines(newPrefPaths);
 
-  // Update settings in the file, since this is used by new DREAM3D instances
-  writeSettings();
+  // Resize the bookmarks widget header to contents
+  filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-  emit settingsUpdated();
+  writeAndUpdateWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -674,10 +667,6 @@ void BookmarksDockWidget::addPipelines(QList<QString> newPaths)
       emit updateStatusBar("The pipeline '" + fileTitle + "' has been added successfully.");
       selection->setExpanded(true);
     }
-    else if (err == DUPLICATE_PIPELINE)
-    {
-      emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added, because a pipeline with the same name already exists in the specified folder.");
-    }
     else if (err == UNRECOGNIZED_EXT)
     {
       emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added, because the pipeline file extension was not recognized.");
@@ -713,14 +702,6 @@ int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
   if (fileInfo.isFile() && ext != "dream3d" && ext != "json" && ext != "ini" && ext != "txt")
   {
     return UNRECOGNIZED_EXT;
-  }
-
-  for (int i = 0; i < selection->childCount(); i++)
-  {
-    if (selection->child(i)->text(0) == favoriteTitle)
-    {
-      return DUPLICATE_PIPELINE;
-    }
   }
 
   filterLibraryTree->blockSignals(true);
@@ -878,10 +859,10 @@ void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
 
     removeBookmark(item);
 
-    // Update settings in the file, since this is used by new DREAM3D instances
-    writeSettings();
+    // Resize the bookmarks widget header to contents
+    filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    emit settingsUpdated();
+    writeAndUpdateWidget();
   }
 }
 
@@ -1169,14 +1150,12 @@ QList<QString> BookmarksDockWidget::deserializeTreePath(QString treePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::handleHeaderChanged(int logicalIndex, int oldSize, int newSize)
+void BookmarksDockWidget::writeAndUpdateWidget()
 {
-  //std::cout << "Section resized\n";
+  // Update settings in the file, since this is used by new DREAM3D instances
+  writeSettings();
 
-  //// Update settings in the file, since this is used by new DREAM3D instances
-  //writeSettings();
-
-  //emit settingsUpdated();
+  emit settingsUpdated();
 }
 
 
