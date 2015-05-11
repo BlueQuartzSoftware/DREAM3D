@@ -510,16 +510,18 @@ void ReadH5Ebsd::execute()
     m->getGeometryAs<ImageGeom>()->setDimensions(dcDims);
     manufacturer = volumeInfoReader->getManufacturer();
     m_RefFrameZDir = volumeInfoReader->getStackingOrder();
-    m_SampleTransformation.angle = volumeInfoReader->getSampleTransformationAngle();
+
     QVector<float> sampleTransAxis = volumeInfoReader->getSampleTransformationAxis();
     m_SampleTransformation.h = sampleTransAxis[0];
     m_SampleTransformation.k = sampleTransAxis[1];
     m_SampleTransformation.l = sampleTransAxis[2];
-    m_EulerTransformation.angle = volumeInfoReader->getEulerTransformationAngle();
+    m_SampleTransformation.angle = volumeInfoReader->getSampleTransformationAngle();
+
     QVector<float> eulerTransAxis = volumeInfoReader->getEulerTransformationAxis();
     m_EulerTransformation.h = eulerTransAxis[0];
     m_EulerTransformation.k = eulerTransAxis[1];
     m_EulerTransformation.l = eulerTransAxis[2];
+    m_EulerTransformation.angle = volumeInfoReader->getEulerTransformationAngle();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
