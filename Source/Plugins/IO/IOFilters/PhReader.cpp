@@ -77,8 +77,8 @@ class PhReaderPrivate
 PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
 q_ptr(ptr),
 m_InputFile_Cache(""),
-m_LastRead(QDateTime()),
-m_Dims(QVector<int>())
+m_LastRead(),
+m_Dims()
 {
 
 }
@@ -240,10 +240,6 @@ void PhReader::dataCheck()
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
     QDateTime lastModified(fi.lastModified());
-
-    QString lastRead = getLastRead().toString();
-    bool lastReadValid = getLastRead().isValid();
-    qint64 secs = lastModified.msecsTo(getLastRead());
 
     if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
     {

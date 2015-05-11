@@ -799,7 +799,7 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
   {
     iter.next();
     QString str = iter.key();
-    int l = iter.value();
+    //int l = iter.value();
     str = str.split('\t').at(1);
 
   //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;

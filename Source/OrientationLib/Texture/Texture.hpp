@@ -237,8 +237,6 @@ class Texture
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
       float dist, fraction;
-      //    float rmag, angle;
-      float r1 = 0, r2 = 0, r3 = 0;
       HexagonalOps ops;
       for (size_t i = 0; i < numEntries; i++)
       {
@@ -370,7 +368,6 @@ class Texture
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
       float dist, fraction;
-      float r1 = 0, r2 = 0, r3 = 0;
       for (size_t i = 0; i < numEntries; i++)
       {
         FOrientArrayType eu(e1s[i], e2s[i], e3s[i]);

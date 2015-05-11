@@ -230,8 +230,8 @@ FOrientArrayType TrigonalLowOps::getODFFZRod(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 FOrientArrayType TrigonalLowOps::getMDFFZRod(FOrientArrayType rod)
 {
-  float FZn1, FZn2, FZn3, FZw;
-  float n1n2mag;
+  float FZn1 = 0.0f, FZn2 = 0.0f, FZn3 = 0.0f, FZw = 0.0f;
+  float n1n2mag = 0.0f;
 
   rod = _calcRodNearestOrigin(TrigRodSym, 12, rod);
   FOrientArrayType ax(4, 0.0f);

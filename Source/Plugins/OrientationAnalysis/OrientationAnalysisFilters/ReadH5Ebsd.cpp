@@ -534,8 +534,7 @@ void ReadH5Ebsd::execute()
   }
 
   // Initialize all the arrays with some default values
-
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
+ // size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   {
     QString ss = QObject::tr("Reading Ebsd Data from file %1").arg(getInputFile());
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);

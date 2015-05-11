@@ -1421,7 +1421,6 @@ void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float phi1 = 0.0f, PHI = 0.0f, phi2 = 0.0f;
   float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi)) / 8.0f);
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();

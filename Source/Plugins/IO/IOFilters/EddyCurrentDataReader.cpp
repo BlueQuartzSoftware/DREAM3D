@@ -60,9 +60,9 @@ EddyCurrentDataReader::EddyCurrentDataReader() :
   m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_MetaDataAttributeMatrixName(DREAM3D::StringConstants::MetaData),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_HasMultipleValues("False"),
   m_AverageMultipleValues(false),
-  m_InputFile("")
+  m_InputFile(""),
+    m_HasMultipleValues("False")
 {
   setupFilterParameters();
 }

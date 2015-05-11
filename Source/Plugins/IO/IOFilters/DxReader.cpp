@@ -68,9 +68,9 @@ class DxReaderPrivate
 // -----------------------------------------------------------------------------
 DxReaderPrivate::DxReaderPrivate(DxReader* ptr) :
 q_ptr(ptr),
+  m_Dims(),
 m_InputFile_Cache(""),
-m_LastRead(QDateTime()),
-m_Dims(QVector<int>())
+m_LastRead()
 {
 
 }
@@ -83,10 +83,10 @@ DxReader::DxReader() :
   m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
   m_FileWasRead(false),
-  d_ptr(new DxReaderPrivate(this))
+  d_ptr(new DxReaderPrivate(this)),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIds(NULL)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -236,10 +236,6 @@ void DxReader::dataCheck()
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
     QDateTime lastModified(fi.lastModified());
-
-    QString lastRead = getLastRead().toString();
-    bool lastReadValid = getLastRead().isValid();
-    qint64 secs = lastModified.msecsTo(getLastRead());
 
     if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
     {

@@ -1069,7 +1069,6 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed,
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float phi1 = 0.0f, PHI = 0.0f, phi2 = 0.0f;
   float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi));
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();

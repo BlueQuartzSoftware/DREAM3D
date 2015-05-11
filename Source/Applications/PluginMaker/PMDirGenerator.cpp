@@ -234,7 +234,7 @@ QString PMDirGenerator::cleanName(QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PMDirGenerator::generateFileContents()
+QString PMDirGenerator::generateFileContents(QString replaceStr)
 {
   return "";
 }

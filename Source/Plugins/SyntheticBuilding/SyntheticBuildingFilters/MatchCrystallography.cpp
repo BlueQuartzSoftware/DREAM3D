@@ -460,8 +460,6 @@ void MatchCrystallography::assign_eulers(size_t ensem)
   DREAM3D_RANDOMNG_NEW()
 
   int32_t numbins = 0;
-  float synea1 = 0.0f, synea2 = 0.0f, synea3 = 0.0f;
-  QuatF q = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   float random = 0.0f;
   int32_t choose = 0, phase = 0;
@@ -607,7 +605,6 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   float ea1 = 0.0f, ea2 = 0.0f, ea3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   float g1ea1 = 0.0f, g1ea2 = 0.0f, g1ea3 = 0.0f, g2ea1 = 0.0f, g2ea2 = 0.0f, g2ea3 = 0.0f;
   int32_t g1odfbin = 0, g2odfbin = 0;
   float deltaerror = 0.0f;

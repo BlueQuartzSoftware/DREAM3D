@@ -406,7 +406,7 @@ QAbstractItemDelegate* SGODFTableModel::getItemDelegate()
   setData(weightIndex, QVariant(weight), Qt::EditRole);\
   QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);\
   setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
-   
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -438,8 +438,8 @@ void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
     m_Sigmas = sigmas;
     m_RowCount = count;
     endInsertRows();
-    QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex botRight = createIndex(count - 1, ColumnCount);
+    createIndex(0, 0);
+    createIndex(count - 1, ColumnCount);
   }
   emit dataChanged(topLeft, botRight);
 }
