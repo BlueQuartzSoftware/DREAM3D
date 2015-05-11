@@ -118,8 +118,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_ActionNewFolder(NULL),
   m_ActionRemovePipeline(NULL),
   m_ActionShowInFileSystem(NULL),
-  m_ActionClearPipeline(NULL),
-  m_ActionAppendPrebuilt(NULL)
+  m_ActionClearPipeline(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
 
@@ -844,14 +843,6 @@ void DREAM3D_UI::setupPrebuiltsMenu()
   // Prebuilt Pipeline Items
   QList<QAction*> prebuiltItemActions;
 
-  prebuiltItemActions << m_ActionAppendPrebuilt;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    prebuiltItemActions << separator;
-  }
-
   prebuiltItemActions << m_ActionShowInFileSystem;
 
   prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(prebuiltItemActions);
@@ -1018,14 +1009,6 @@ void DREAM3D_UI::initializeMenuActions()
 #endif
   connect(m_ActionShowInFileSystem, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
-
-  /* m_ActionAppendPrebuilt */
-  m_ActionAppendPrebuilt = new QAction(this);
-  m_ActionAppendPrebuilt->setObjectName(QString::fromUtf8("m_ActionAppendPrebuilt"));
-  m_ActionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0));
-  //menuPipeline->addAction(m_ActionAppendPrebuilt);
-  connect(m_ActionAppendPrebuilt, SIGNAL(triggered()),
-    prebuiltPipelinesDockWidget, SLOT(actionAppendPipeline_triggered()) );
 }
 
 // -----------------------------------------------------------------------------

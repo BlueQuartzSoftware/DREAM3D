@@ -114,6 +114,7 @@ set(QtSupportLib_SRCS
     ${QtSupportLib_SOURCE_DIR}/ApplicationFileInfo.cpp
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitter.cpp
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.cpp
+    ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.cpp
 )
 
 set(QtSupportLib_HDRS
@@ -140,6 +141,7 @@ set(QtSupportLib_HDRS
     ${QtSupportLib_SOURCE_DIR}/ApplicationFileInfo.h
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitter.h
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.h
+    ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.h
 )
 
 # --------------------------------------------------------------------
@@ -159,6 +161,7 @@ SET(DREAM3D_QT_UI_FILES
   ${QtSupportLib_SOURCE_DIR}/UI_Files/HelpDialog.ui
   ${QtSupportLib_SOURCE_DIR}/UI_Files/DistributionTypeWidget.ui
   ${QtSupportLib_SOURCE_DIR}/UI_Files/FileDragMessageBox.ui
+  ${QtSupportLib_SOURCE_DIR}/UI_Files/FavoritesChangedDialog.ui
 )
 cmp_IDE_SOURCE_PROPERTIES( "QtSupportLib/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 

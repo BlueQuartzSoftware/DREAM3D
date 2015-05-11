@@ -190,13 +190,10 @@ void FilterLibraryTreeWidget::performDrag()
   if (item)
   {
     QMimeData* mimeData = new QMimeData;
-    QString path = item->data(0, Qt::UserRole).toString();
-    QUrl url(path);
-    QList<QUrl> list;
-    list.append(url);
+    QString path = item->data(1, Qt::UserRole).toString();
     if (path.isEmpty() == false)
     {
-      mimeData->setUrls(list);
+      mimeData->setText(path);
 
       QDrag* drag = new QDrag(this);
       drag->setMimeData(mimeData);

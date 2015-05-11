@@ -417,7 +417,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QAction* m_ActionRemovePipeline;
     QAction* m_ActionShowInFileSystem;
     QAction* m_ActionClearPipeline;
-    QAction* m_ActionAppendPrebuilt;
 
     /**
     * @brief Connects some necessary signals and slots between a new instance of DREAM3D_UI and the existing instances of DREAM3D_UI

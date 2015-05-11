@@ -56,6 +56,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 
+#include "QtSupportLib/FavoritesChangedDialog.h"
+
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 
 enum ErrorCodes {
@@ -102,7 +104,13 @@ void BookmarksDockWidget::setupGui()
   // Clear out the default stuff
   filterLibraryTree->clear();
 
-  readPipelines();
+  QDir pipelinesDir = findPipelinesDirectory();
+  if (pipelinesDir.exists() && pipelinesDir.entryList().isEmpty() == false)
+  {
+    FavoritesChangedDialog* dialog = new FavoritesChangedDialog(this);
+    connect(dialog, SIGNAL(exportBtnPressed(QString)), this, SLOT(convertPipelines(QString)));
+    dialog->exec();
+  }
 
   QString css(" QToolTip {\
               border: 2px solid #434343;\
@@ -167,9 +175,11 @@ QDir BookmarksDockWidget::findPipelinesDirectory()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::readPipelines()
+void BookmarksDockWidget::convertPipelines(QString newDirectory)
 {
   QDir pipelinesDir = findPipelinesDirectory();
+
+
 
   FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
   QString iconFileName(":/text.png");
@@ -1034,6 +1044,7 @@ void BookmarksDockWidget::writeSettings(QSettings& prefs)
   while (*iter)
   {
     QTreeWidgetItem* currentItem = *iter;
+
     prefs.setArrayIndex(i);
     prefs.setValue("Title", currentItem->text(0));
     prefs.setValue("Path", currentItem->data(1, Qt::UserRole).toString());

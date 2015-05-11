@@ -149,7 +149,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
   protected:
 
     virtual QDir findPipelinesDirectory();
-    virtual void readPipelines();
     QStringList generateFilterListFromPipelineFile(QString path);
     QString generateHtmlFilterListFromPipelineFile(QString path);
 
@@ -188,6 +187,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
     void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+
+    void convertPipelines(QString newDirectory);
 
     void readSettings();
 

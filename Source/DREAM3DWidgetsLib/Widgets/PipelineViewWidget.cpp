@@ -960,70 +960,7 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
   const QMimeData* mimedata = event->mimeData();
-
-  if (mimedata->hasUrls())
-  {
-    QList<QUrl> urlList;
-    QString fName;
-    urlList = event->mimeData()->urls(); // returns list of QUrls
-    // if just text was dropped, urlList is empty (size == 0)
-
-    if (urlList.size() > 0) // if at least one QUrl is present in list
-    {
-      fName = urlList[0].toLocalFile(); // convert first QUrl to local path
-      fName = QDir::toNativeSeparators(fName);
-
-      if (fName.isEmpty() == true)
-      {
-        fName = urlList[0].toString();
-        fName = QDir::toNativeSeparators(fName);
-      }
-
-      QFileInfo fi(fName);
-      QString ext = fi.completeSuffix();
-
-      int index = 0;
-      if (NULL != m_FilterWidgetLayout)
-      {
-        index = m_FilterWidgetLayout->indexOf(m_DropBox);
-      }
-
-      if (ext == "json" || ext == "ini" || ext == "txt")
-      {
-        // Remove the drop line
-        if (NULL != m_FilterWidgetLayout && index != -1)
-        {
-          m_FilterWidgetLayout->removeWidget(m_DropBox);
-          m_DropBox->setParent(NULL);
-        }
-
-        openPipeline(fName, index);
-      }
-      else if (ext == "dream3d")
-      {
-        FileDragMessageBox* msgBox = new FileDragMessageBox(this);
-        msgBox->exec();
-        msgBox->deleteLater();
-
-        // Remove the drop line
-        if (NULL != m_FilterWidgetLayout && index != -1)
-        {
-          m_FilterWidgetLayout->removeWidget(m_DropBox);
-          m_DropBox->setParent(NULL);
-        }
-
-        if (msgBox->isExtractPipelineBtnChecked() == true)
-        {
-          openPipeline(fName, index);
-        }
-        else
-        {
-          addDREAM3DReaderFilter(fName, index);
-        }
-      }
-    }
-  }
-  else if (m_CurrentFilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
+  if (m_CurrentFilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
     // This path is take if a filter is being dragged around in the pipeline and dropped.
     if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
@@ -1078,35 +1015,83 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   {
     QByteArray dropData = mimedata->data("text/plain");
     QString data(dropData);
+    QFileInfo fi(data);
+    QString ext = fi.completeSuffix();
     FilterManager* fm = FilterManager::Instance();
     if (NULL == fm) { return; }
     IFilterFactory::Pointer wf = fm->getFactoryForFilter(data);
-    if (NULL == wf) { return; }
 
-    // Remove the drop line
-    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+    // If the dragged item is a filter item...
+    if (NULL != wf)
     {
-      m_FilterWidgetLayout->removeWidget(m_DropBox);
-      m_DropBox->setParent(NULL);
-    }
-
-    // We need to figure out where it was dropped relative to other filters
-    int count = filterCount() - 1;
-    for (int i = 0; i < count; ++i)
-    {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-      if (w != NULL)
+      // Remove the drop line
+      if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
       {
-        if (event->pos().y() < w->geometry().y())
+        m_FilterWidgetLayout->removeWidget(m_DropBox);
+        m_DropBox->setParent(NULL);
+      }
+
+      // We need to figure out where it was dropped relative to other filters
+      int count = filterCount() - 1;
+      for (int i = 0; i < count; ++i)
+      {
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+        if (w != NULL)
         {
-          count = i;
-          break;
+          if (event->pos().y() < w->geometry().y())
+          {
+            count = i;
+            break;
+          }
         }
       }
-    }
 
       // Now that we have an index, insert the filter.
       addFilter(data, count);
+    }
+    // If the dragged item is a pipeline file...
+    else if (ext == "dream3d" || ext == "json" || ext == "ini" || ext == "txt")
+    {
+      int index = 0;
+      if (NULL != m_FilterWidgetLayout)
+      {
+        index = m_FilterWidgetLayout->indexOf(m_DropBox);
+      }
+
+      if (ext == "json" || ext == "ini" || ext == "txt")
+      {
+        // Remove the drop line
+        if (NULL != m_FilterWidgetLayout && index != -1)
+        {
+          m_FilterWidgetLayout->removeWidget(m_DropBox);
+          m_DropBox->setParent(NULL);
+        }
+
+        openPipeline(data, index);
+      }
+      else if (ext == "dream3d")
+      {
+        FileDragMessageBox* msgBox = new FileDragMessageBox(this);
+        msgBox->exec();
+        msgBox->deleteLater();
+
+        // Remove the drop line
+        if (NULL != m_FilterWidgetLayout && index != -1)
+        {
+          m_FilterWidgetLayout->removeWidget(m_DropBox);
+          m_DropBox->setParent(NULL);
+        }
+
+        if (msgBox->isExtractPipelineBtnChecked() == true)
+        {
+          openPipeline(data, index);
+        }
+        else
+        {
+          addDREAM3DReaderFilter(data, index);
+        }
+      }
+    }
 
     emit pipelineChanged();
   }
