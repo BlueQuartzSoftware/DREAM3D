@@ -1146,18 +1146,11 @@ AxisAngleInput_t JsonFilterParametersReader::readAxisAngle(const QString name, A
     return v;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  QJsonObject obj = m_CurrentFilterIndex.value(name).toObject();
+  AxisAngleInput_t aInput;
+  if (aInput.readJson(obj) == true)
   {
-    QJsonArray aInputsArray = m_CurrentFilterIndex.value(name).toArray();
-    if (aInputsArray.size() > vectorPos && aInputsArray[vectorPos].isObject())
-    {
-      QJsonObject aInputObject = aInputsArray[vectorPos].toObject();
-      AxisAngleInput_t aInput;
-      if (aInput.readJson(aInputObject) == true)
-      {
-        return aInput;
-      }
-    }
+    return aInput;
   }
 
   return v;
