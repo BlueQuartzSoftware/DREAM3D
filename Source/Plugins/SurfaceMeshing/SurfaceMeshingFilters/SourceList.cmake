@@ -12,11 +12,11 @@ START_FILTER_GROUP(${SurfaceMeshing_BINARY_DIR} "${_filterGroupName}" "Surface M
 
 set(_PublicFilters
   FindGBCD
-  FindBoundaryAreas
+  #FindBoundaryAreas
   GenerateGeometryConnectivity
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
-  GenerateFaceSchuhMisorientationColoring
+  #GenerateFaceSchuhMisorientationColoring
   QuickSurfaceMesh
   ReverseTriangleWinding
   SharedFeatureFaceFilter

@@ -37,32 +37,19 @@
 #ifndef _CalculateTriangleGroupCurvatures_H_
 #define _CalculateTriangleGroupCurvatures_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
-
-class SurfaceDataContainer;
-
 
 /**
- * @class CalculateTriangleGroupCurvatures CalculateTriangleGroupCurvatures.h /SurfaceMeshFilters/CalculateTriangleGroupCurvatures.h
- * @brief Calculates the curvature values for a group of triangles where each triangle in the group will have the 2 Principal Curvature
- * values computed and optionally the 2 Principal Directions and optionally the Mean and Gaussian Curvature computed.
- * @author Mike Jackson (BlueQuartz Software)s
- * @date Dec 2012.
- * @version 1.0
+ * @brief The CalculateTriangleGroupCurvatures class calculates the curvature values for a group of triangles
+ * where each triangle in the group will have the 2 Principal Curvature values computed and optionally
+ * the 2 Principal Directions and optionally the Mean and Gaussian Curvature computed.
  */
 class CalculateTriangleGroupCurvatures
 {
   public:
-    CalculateTriangleGroupCurvatures(int nring,
+    CalculateTriangleGroupCurvatures(int64_t nring,
                                      std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting,
                                      DoubleArrayType::Pointer principleCurvature1,
                                      DoubleArrayType::Pointer principleCurvature2,
@@ -86,18 +73,19 @@ class CalculateTriangleGroupCurvatures
     CalculateTriangleGroupCurvatures();
 
     /**
-     * @brief This method extracts out the needed data values from the global arrays.
-     * @param triId The seed triangle id
+     * @brief extractPatchData Extracts out the needed data values from the global arrays
+     * @param triId The seed triangle Id
      * @param triPatch The group of triangles being used
      * @param data The data to extract from
-     * @param name The name of the data array being used.
-     * @return
+     * @param name The name of the data array being used
+     * @return Shared pointer to the extracted data
      */
     DataArray<double>::Pointer extractPatchData(int64_t triId, UniqueFaceIds_t& triPatch,
                                                 double* data,
                                                 const QString& name) const;
+
   private:
-    int m_NRing;
+    int64_t m_NRing;
     std::vector<int64_t> m_TriangleIds;
     bool m_UseNormalsForCurveFitting;
     DoubleArrayType::Pointer m_PrincipleCurvature1;
@@ -114,6 +102,3 @@ class CalculateTriangleGroupCurvatures
 };
 
 #endif /* _CalculateTriangleGroupCurvatures_H_ */
-
-
-

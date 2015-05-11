@@ -42,22 +42,15 @@
 #include <tbb/task.h>
 #endif
 
-
 #include <Eigen/Dense>
 
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/FindNRingNeighbors.h"
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
+CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring,
     std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting,
     DoubleArrayType::Pointer principleCurvature1,
     DoubleArrayType::Pointer principleCurvature2,
@@ -85,7 +78,6 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
   m_SurfaceMeshTriangleCentroids(surfaceMeshTriangleCentroids),
   m_ParentFilter(parent)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -93,7 +85,6 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::~CalculateTriangleGroupCurvatures()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -101,16 +92,14 @@ CalculateTriangleGroupCurvatures::~CalculateTriangleGroupCurvatures()
 // -----------------------------------------------------------------------------
 void subtractVector3d(DataArray<double>::Pointer data, double* v)
 {
-
   size_t count = data->getNumberOfTuples();
-  for(size_t i = 0; i < count; ++i)
+  for (size_t i = 0; i < count; ++i)
   {
     double* ptr = data->getPointer(i * 3);
     ptr[0] = ptr[0] - v[0];
     ptr[1] = ptr[1] - v[1];
     ptr[2] = ptr[2] - v[2];
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -118,12 +107,7 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
 // -----------------------------------------------------------------------------
 void CalculateTriangleGroupCurvatures::operator()() const
 {
-
-  // Get the Triangles Array
-//  FaceArray::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
-//  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
-
-  int err = 0;
+  int32_t err = 0;
 
   // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
@@ -131,8 +115,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
   int32_t* faceLabels = m_SurfaceMeshFaceLabels->getPointer(0);
 
   int32_t* fl = faceLabels + m_TriangleIds[0] * 2;
-  int feature0 = 0;
-  int feature1 = 0;
+  int32_t feature0 = 0;
+  int32_t feature1 = 0;
   if (fl[0] < fl[1])
   {
     feature0 = fl[0];
@@ -148,10 +132,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
   bool computeMean = (m_MeanCurvature.get() != NULL);
   bool computeDirection = (m_PrincipleDirection1.get() != NULL);
 
-
-  std::vector<int>::size_type tCount = m_TriangleIds.size();
+  std::vector<int64_t>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
-  for(QVector<int>::size_type i = 0; i < tCount; ++i)
+  for(std::vector<int64_t>::size_type i = 0; i < tCount; ++i)
   {
     if (m_ParentFilter->getCancel() == true) { return; }
     int64_t triId = m_TriangleIds[i];
@@ -165,8 +148,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
     UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
 
-    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("Patch_Centroids"));
-    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("Patch_Normals"));
+    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Centroids"));
+    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Normals"));
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->getComponent(0, 0), patchCentroids->getComponent(0, 1), patchCentroids->getComponent(0, 2)};
@@ -194,9 +177,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
       {vp[0], vp[1], vp[2]},
       {np[0], np[1], np[2]}
     };
-    double out[3];
+    double out[3] = { 0.0, 0.0, 0.0 };
     // Transform all centroids and normals to new coordinate system
-    for(size_t m = 0; m < patchCentroids->getNumberOfTuples(); ++m)
+    for (size_t m = 0; m < patchCentroids->getNumberOfTuples(); ++m)
     {
       ::memcpy(out, patchCentroids->getPointer(m * 3), 3 * sizeof(double));
       MatrixMath::Multiply3x3with3x1(rot, patchCentroids->getPointer(m * 3), out);
@@ -212,16 +195,15 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
     {
       // Solve the Least Squares fit
-      static const unsigned int NO_NORMALS = 3;
-      static const unsigned int USE_NORMALS = 7;
-      int cols = NO_NORMALS;
-      if (m_UseNormalsForCurveFitting == true)
-      { cols = USE_NORMALS; }
-      int rows = patchCentroids->getNumberOfTuples();
+      static const uint32_t NO_NORMALS = 3;
+      static const uint32_t USE_NORMALS = 7;
+      uint32_t cols = NO_NORMALS;
+      if (m_UseNormalsForCurveFitting == true) { cols = USE_NORMALS; }
+      size_t rows = patchCentroids->getNumberOfTuples();
       Eigen::MatrixXd A(rows, cols);
       Eigen::VectorXd b(rows);
-      double x, y, z;
-      for(int m = 0; m < rows; ++m)
+      double x = 0.0, y = 0.0, z = 0.0;
+      for (size_t m = 0; m < rows; ++m)
       {
         x = patchCentroids->getComponent(m, 0);
         y = patchCentroids->getComponent(m, 1);
@@ -296,9 +278,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
         ::memcpy(m_PrincipleDirection2->getPointer(triId * 3), dir2.data(), 3 * sizeof(double) );
       }
     }
-
   } // End Loop over this triangle
-
 }
 
 // -----------------------------------------------------------------------------
@@ -309,18 +289,18 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
     double* data,
     const QString& name) const
 {
-  QVector<size_t> dims(1, 3);
-  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), dims, name);
+  QVector<size_t> cDims(1, 3);
+  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), cDims, name);
   // This little chunk makes sure the current seed triangles centroid and normal data appear
   // first in the returned arrays which makes the next steps a tad easier.
-  int i = 0;
+  int32_t i = 0;
   extractedData->setComponent(i, 0, data[triId * 3]);
   extractedData->setComponent(i, 1, data[triId * 3 + 1]);
   extractedData->setComponent(i, 2, data[triId * 3 + 2]);
   ++i;
   triPatch.erase(triId);
 
-  for(UniqueFaceIds_t::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
+  for (UniqueFaceIds_t::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {
     int64_t t = *iter;
     extractedData->setComponent(i, 0, data[t * 3]);
@@ -332,6 +312,3 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
 
   return extractedData;
 }
-
-
-

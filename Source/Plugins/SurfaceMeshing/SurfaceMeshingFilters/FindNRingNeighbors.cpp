@@ -32,13 +32,6 @@
 
 #include "FindNRingNeighbors.h"
 
-#include <stdio.h>
-#include <sstream>
-
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -50,7 +43,6 @@ FindNRingNeighbors::FindNRingNeighbors() :
   m_WriteBinaryFile(false),
   m_WriteConformalMesh(true)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -58,13 +50,12 @@ FindNRingNeighbors::FindNRingNeighbors() :
 // -----------------------------------------------------------------------------
 FindNRingNeighbors::~FindNRingNeighbors()
 {
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::setRegionIds(int g, int r)
+void FindNRingNeighbors::setRegionIds(int32_t g, int32_t r)
 {
   m_RegionId0 = g;
   m_RegionId1 = r;
@@ -81,16 +72,17 @@ FindNRingNeighbors::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels)
+int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels)
 {
   int64_t* triangles = triangleGeom->getTriPointer(0);
-  int err = 0;
+  int32_t err = 0;
+
   // Make sure we have the proper connectivity built
   ElementDynamicList::Pointer node2TrianglePtr = triangleGeom->getElementsContainingVert();
   if (node2TrianglePtr.get() == NULL)
   {
     err = triangleGeom->findElementsContainingVert();
-    if(err < 0)
+    if (err < 0)
     {
       return err;
     }
@@ -110,41 +102,39 @@ int FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* fa
   }
 #endif
 
-
   // Add our seed triangle
   m_NRingTriangles.insert(m_TriangleId);
 
-  for (int ring = 0; ring < m_Ring; ++ring)
+  for (int64_t ring = 0; ring < m_Ring; ++ring)
   {
     // Make a copy of the 1 Ring Triangles that we just found so that we can use those triangles as the
     // seed triangles for the 2 Ring triangles
     UniqueFaceIds_t lcvTriangles(m_NRingTriangles);
 
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
-    for(UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
+    for (UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
       int64_t triangleIdx = *triIter;
       // For each node, get the triangle ids that the node belongs to
-      for(int i = 0; i < 3; ++i)
+      for(int32_t i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
         uint16_t tCount = node2TrianglePtr->getNumberOfElements(triangles[triangleIdx*3+i]);
         int64_t* data = node2TrianglePtr->getElementListPointer(triangles[triangleIdx*3+i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
-        for(uint16_t t = 0; t < tCount; ++t)
+        for (uint16_t t = 0; t < tCount; ++t)
         {
-          int tid = data[t];
+          int64_t tid = data[t];
           check0 = faceLabels[tid * 2] == m_RegionId0 && faceLabels[tid * 2 + 1] == m_RegionId1;
           check1 = faceLabels[tid * 2 + 1] == m_RegionId0 && faceLabels[tid * 2] == m_RegionId1;
           if (check0 == true || check1 == true)
           {
-            m_NRingTriangles.insert(static_cast<int>(tid) );
+            m_NRingTriangles.insert(tid);
           }
         }
       }
     }
   }
   return err;
-
 }

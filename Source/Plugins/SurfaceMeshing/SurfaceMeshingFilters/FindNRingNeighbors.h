@@ -33,23 +33,12 @@
 #ifndef _FindNRingNeighbors_H_
 #define _FindNRingNeighbors_H_
 
-#include <set>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "DREAM3DLib/Geometry/TriangleGeom.h"
 
 /**
- * @class FindNRingNeighbors FindNRingNeighbors.h SurfaceMeshFilters/FindNRingNeighbors.h
- * @brief Calculates the set of triangles that are "N" rings (based on vertex) from a seed triangle
- * @author Mike Jackson (BlueQuartz Software)
- * @date,
- * @version 1.0
+ * @brief The FindNRingNeighbors class calculates the set of triangles that are "N" rings (based on vertex) from a seed triangle
  */
 class FindNRingNeighbors
 {
@@ -62,44 +51,49 @@ class FindNRingNeighbors
 
     typedef std::set<int64_t> UniqueFaceIds_t;
 
-
-    DREAM3D_INSTANCE_PROPERTY(int, TriangleId)
-
-    /**
-     * @brief This sets the region id (Feature Id) that we are interested in.
-     */
-    DREAM3D_INSTANCE_PROPERTY(int, RegionId0)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, TriangleId)
 
     /**
      * @brief This sets the region id (Feature Id) that we are interested in.
      */
-    DREAM3D_INSTANCE_PROPERTY(int, RegionId1)
+    DREAM3D_INSTANCE_PROPERTY(int32_t, RegionId0)
 
-    void setRegionIds(int g, int r);
+    /**
+     * @brief This sets the region id (Feature Id) that we are interested in.
+     */
+    DREAM3D_INSTANCE_PROPERTY(int32_t, RegionId1)
+
+    /**
+     * @brief setRegionIds Sets the local variables for region Ids
+     * @param g Id for region 0
+     * @param r Id for region 1
+     */
+    void setRegionIds(int32_t g, int32_t r);
 
     /**
      * @brief This is the number of rings to find
      **/
-    DREAM3D_INSTANCE_PROPERTY(int, Ring)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, Ring)
 
-
+    /**
+     * @brief getNRingTriangles Returns the N ring set
+     * @return Set of N ring Ids
+     */
     UniqueFaceIds_t& getNRingTriangles();
 
     /**
-     * @brief generate
-     * @param node2Triangle - Map of QSets. The "key" for the map is the Node Id and the
-     * "value" for each key is a QSet that is the set of triangle ids that that particular
-     * node is a part of.
+     * @brief generate Generates the N rings based on the supplied TriangleGeom
+     * @param triangleGeom Incoming TriangleGeom object
+     * @param faceLabels Feature Id labels for the TriangleGeom
+     * @return Integer error value
      */
-    int generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels);
-
+    int32_t generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels);
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
   protected:
     FindNRingNeighbors();
-
 
   private:
     UniqueFaceIds_t  m_NRingTriangles;
