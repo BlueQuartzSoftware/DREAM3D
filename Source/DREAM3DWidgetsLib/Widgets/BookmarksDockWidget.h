@@ -218,6 +218,11 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
      */
     void filterListGenerated(const QStringList& filterList, bool sort);
 
+    /**
+    * @brief The signal is emitted when the pipeline view needs to be cleared
+    */
+    void pipelineNeedsToBeCleared();
+
     void updateStatusBar(const QString &msg);
 
     void settingsUpdated();

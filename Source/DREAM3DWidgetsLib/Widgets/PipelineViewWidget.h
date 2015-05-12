@@ -91,11 +91,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     PipelineFilterWidget* filterWidgetAt(int index);
 
     /**
-     * @brief clearWidgets
-     */
-    void clearWidgets();
-
-    /**
      * @brief getFilterPipeline
      * @return
      */
@@ -283,6 +278,11 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @return FilterPipeline::Pointer
      */
     FilterPipeline::Pointer readPipelineFromFile(const QString& filePath);
+
+    /**
+    * @brief clearWidgets
+    */
+    void clearWidgets();
 
 
   signals:

@@ -412,6 +412,7 @@ void BookmarksDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
   }
   if (pipelinePath.isEmpty() == false)
   {
+    emit pipelineNeedsToBeCleared();
     emit pipelineFileActivated(pipelinePath, 0);
   }
 

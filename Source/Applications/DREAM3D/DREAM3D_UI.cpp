@@ -377,6 +377,7 @@ void DREAM3D_UI::readSettings()
 
     // Read dock widget settings
     bookmarksDockWidget->readSettings(this, prefs);
+    prebuiltPipelinesDockWidget->readSettings(this, prefs);
 
     QRecentFileList::instance()->readList(prefs);
   }
@@ -493,6 +494,7 @@ void DREAM3D_UI::writeSettings()
 
     // Write dock widget settings
     bookmarksDockWidget->writeSettings(prefs);
+    prebuiltPipelinesDockWidget->writeSettings(prefs);
 
     QRecentFileList::instance()->writeList(prefs);
   }
@@ -694,11 +696,17 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
     this, SLOT(pipelineFileLoaded(QString, int)));
 
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineNeedsToBeCleared()),
+    pipelineViewWidget, SLOT(clearWidgets()));
+
   connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
     pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
 
   connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
     this, SLOT(pipelineFileLoaded(QString, int)));
+
+  connect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeCleared()),
+    pipelineViewWidget, SLOT(clearWidgets()));
 
   connect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));

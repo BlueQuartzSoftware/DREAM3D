@@ -40,6 +40,7 @@
 #include <QtCore/QSettings>
 
 #include <QtWidgets/QDockWidget>
+#include <QtWidgets/QMainWindow>
 
 #include "QtSupportLib/FileDragMessageBox.h"
 
@@ -90,6 +91,16 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      */
     FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
 
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings(QMainWindow* main, QSettings& prefs);
+
+    /**
+    * @brief Writes the preferences to the users pref file
+    */
+    void writeSettings(QSettings& prefs);
+
 
   public slots:
     void actionShowInFileSystem_triggered();
@@ -113,9 +124,9 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
   signals:
 
     /**
-     * @brief The signal is emitted when the user double clicks on a pipeline file
+     * @brief The signal is emitted when a pipeline file needs to be loaded into the view at an index
      * @param filePath The absolute path to the pipeline file
-     * @param type Should the pipeline be appended, replaced, or prepended
+     * @param index The index that the pipeline will be placed into
      */
     void pipelineFileActivated(const QString& filePath, int index);
 
@@ -124,6 +135,11 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @param filterList
      */
     void filterListGenerated(const QStringList& filterList, bool sort);
+
+    /**
+    * @brief The signal is emitted when the pipeline view needs to be cleared
+    */
+    void pipelineNeedsToBeCleared();
 
   private:
 

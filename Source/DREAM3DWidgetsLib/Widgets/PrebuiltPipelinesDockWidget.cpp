@@ -228,10 +228,11 @@ void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTree
     QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
     itemWidget->setText(0, itemName);
     itemWidget->setIcon(0, QIcon(iconFileName));
-    itemWidget->setData(0, Qt::UserRole, QVariant(itemInfo.absoluteFilePath()));
+    itemWidget->setData(0, Qt::UserRole, itemName);
+    itemWidget->setData(1, Qt::UserRole, QVariant(itemInfo.absoluteFilePath()));
     if(allowEditing == true)
     {
-      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
+      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
     }
     QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
     itemWidget->setToolTip(0, htmlFormattedString);
@@ -245,7 +246,7 @@ void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTree
 void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
 #if 0
-  QString favoritePath = item->data(0, Qt::UserRole).toString();
+  QString favoritePath = item->data(1, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
   if(filterList.size() > 0)
   {
@@ -259,13 +260,14 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  QString pipelinePath = item->data(1, Qt::UserRole).toString();
   if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
   {
     return; // The user double clicked a folder, so don't do anything
   }
   if (pipelinePath.isEmpty() == false)
   {
+    emit pipelineNeedsToBeCleared();
     emit pipelineFileActivated(pipelinePath, 0);
   }
 
@@ -410,7 +412,7 @@ QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QStr
 void PrebuiltPipelinesDockWidget::actionShowInFileSystem_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  QString pipelinePath = item->data(1, Qt::UserRole).toString();
 
   QFileInfo pipelinePathInfo(pipelinePath);
   QString pipelinePathDir = pipelinePathInfo.path();
@@ -426,6 +428,85 @@ void PrebuiltPipelinesDockWidget::actionShowInFileSystem_triggered()
 #endif
   s = s + pipelinePathDir;
   QDesktopServices::openUrl(s);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, QSettings& prefs)
+{
+  main->restoreDockWidget(this);
+
+  prefs.beginGroup("DockWidgetSettings");
+
+  bool b = prefs.value(objectName(), false).toBool();
+  setHidden(b);
+
+  QByteArray headerState = prefs.value("PrebuiltsHeaderState").toByteArray();
+  filterLibraryTree->header()->restoreState(headerState);
+
+  int size = prefs.beginReadArray("Prebuilts");
+  for (int i = 0; i < size; i++)
+  {
+    prefs.setArrayIndex(i);
+
+    QString title = prefs.value("Title").toString();
+    bool isExpanded = prefs.value("IsExpanded", false).toBool();
+
+    QList<QTreeWidgetItem*> items = filterLibraryTree->findItems(title, Qt::MatchExactly | Qt::MatchRecursive);
+    for (int i = 0; i < items.size(); i++)
+    {
+      QTreeWidgetItem* item = items[i];
+      if (item->childCount() > 0)
+      {
+        item->setExpanded(isExpanded);
+      }
+    }
+  }
+  prefs.endArray();
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrebuiltPipelinesDockWidget::writeSettings(QSettings& prefs)
+{
+  prefs.beginGroup("DockWidgetSettings");
+
+  prefs.setValue(objectName(), isHidden());
+
+  prefs.setValue("PrebuiltsHeaderState", filterLibraryTree->header()->saveState());
+
+  QTreeWidgetItemIterator iter(filterLibraryTree);
+
+  // Delete out old content
+  prefs.beginGroup("Prebuilts");
+  prefs.remove("");
+  prefs.endGroup();
+
+  // Write new content
+  prefs.beginWriteArray("Prebuilts");
+  int i = 0;
+  while (*iter)
+  {
+    QTreeWidgetItem* currentItem = *iter;
+
+    prefs.setArrayIndex(i);
+    if (currentItem->childCount() > 0)
+    {
+      // This is a folder, so save the expanded state
+      prefs.setValue("Title", currentItem->text(0));
+      prefs.setValue("IsExpanded", currentItem->isExpanded());
+    }
+
+    ++iter;
+    i++;
+  }
+  prefs.endArray();
+
+  prefs.endGroup();
 }
 
 
