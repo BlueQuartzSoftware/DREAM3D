@@ -63,8 +63,8 @@ EnsembleInfoReader::EnsembleInfoReader() :
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_CrystalStructures(NULL),
   m_PhaseTypes(NULL),
-  m_crystruct(999),
-  m_ptype(999)
+  m_ptype(999),
+    m_crystruct(999)
 {
   setupFilterParameters();
 }

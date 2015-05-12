@@ -361,7 +361,7 @@ void printArraySlice(typename DataArray<T>::Pointer ptr, NumPackage X, NumPackag
   DataArray<T> &p = *(ptr.get());
   int XP = (X.getMax() - X.getMin());
   int YP = (Y.getMax() - Y.getMin());
-  int ZP = (Z.getMax() - Z.getMin());
+  //int ZP = (Z.getMax() - Z.getMin());
 
   int numComponents = p.getNumberOfComponents();
 

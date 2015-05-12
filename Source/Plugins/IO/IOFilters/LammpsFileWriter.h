@@ -66,6 +66,7 @@ class  LammpsFileWriter : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, LammpsFile)
     Q_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 

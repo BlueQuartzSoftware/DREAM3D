@@ -1077,9 +1077,6 @@ int TestJsonWriter()
 // -----------------------------------------------------------------------------
 int TestJsonReader()
 {
-  double oldNum = static_cast<double>(std::numeric_limits<int64_t>().max());
-  double newNum = static_cast<double>(std::numeric_limits<int64_t>().max()) + 1;
-
   JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
   int err = reader->openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRE_EQUAL(err, 0)

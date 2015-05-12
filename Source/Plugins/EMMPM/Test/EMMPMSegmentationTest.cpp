@@ -184,7 +184,6 @@ void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath inp
     AbstractFilter::Pointer filter = filterFactory->create();
 
     QVariant var;
-    int err = 0;
     bool propWasSet;
 
     var.setValue(input);

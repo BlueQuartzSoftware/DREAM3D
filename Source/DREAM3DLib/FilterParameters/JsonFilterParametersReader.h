@@ -148,7 +148,7 @@ public:
   virtual FileListInfo_t readFileListInfo(const QString name, FileListInfo_t v);
   virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
   virtual ComparisonInputs readComparisonInputs(const QString name, ComparisonInputs v);
-  virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos);
+  virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos = -1);
   virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> v);
   virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
 

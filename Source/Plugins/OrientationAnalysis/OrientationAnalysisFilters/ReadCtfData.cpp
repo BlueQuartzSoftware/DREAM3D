@@ -90,13 +90,13 @@ ReadCtfData::ReadCtfData() :
   m_DataContainerName(DREAM3D::Defaults::DataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_FileWasRead(false),
   m_PhaseNameArrayName(""),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
-  d_ptr(new ReadCtfDataPrivate(this)),
-  m_FileWasRead(false),
   m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
+  d_ptr(new ReadCtfDataPrivate(this)),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
@@ -158,10 +158,10 @@ int ReadCtfData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -388,7 +388,7 @@ void ReadCtfData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, CTF_READ_FLAG flag)
+void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, CTF_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -557,7 +557,7 @@ int ReadCtfData::loadMaterialInfo(CtfReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims)
+void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
 {
 
 

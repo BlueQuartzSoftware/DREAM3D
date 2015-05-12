@@ -99,7 +99,6 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
   }
   setupUi(this);
   setupGui();
-// checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------

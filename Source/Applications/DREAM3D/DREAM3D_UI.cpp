@@ -251,12 +251,6 @@ void DREAM3D_UI::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionSave_triggered()
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-
   if (isWindowModified() == true)
   {
     QString filePath;
@@ -273,7 +267,7 @@ void DREAM3D_UI::on_actionSave_triggered()
 
     // Fix the separators
     filePath = QDir::toNativeSeparators(filePath);
-    
+
     // Write the pipeline
     pipelineViewWidget->writePipeline(filePath);
 
@@ -474,7 +468,7 @@ void DREAM3D_UI::readSearchListSettings(QSettings& prefs, FilterListDockWidget* 
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readVersionSettings(QSettings& prefs)
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -614,7 +608,7 @@ void DREAM3D_UI::setupGui()
   pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
 
   // Make the connections between the gui elements
-  QRecentFileList* recentsList = QRecentFileList::instance();
+  //QRecentFileList* recentsList = QRecentFileList::instance();
 
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
   // or load an entire pipeline into the view
@@ -1258,7 +1252,6 @@ void DREAM3D_UI::dropEvent(QDropEvent* e)
 // -----------------------------------------------------------------------------
 QMessageBox::StandardButton DREAM3D_UI::checkDirtyDocument()
 {
-  qint32 err = -1;
 
   if (this->isWindowModified() == true)
   {
@@ -1281,7 +1274,7 @@ QMessageBox::StandardButton DREAM3D_UI::checkDirtyDocument()
       return QMessageBox::Cancel;
     }
   }
-  
+
   return QMessageBox::Ignore;
 }
 

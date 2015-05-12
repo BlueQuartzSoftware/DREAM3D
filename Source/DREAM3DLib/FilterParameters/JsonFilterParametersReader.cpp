@@ -517,8 +517,6 @@ float JsonFilterParametersReader::readValue(const QString name, float value)
   if (m_CurrentFilterIndex.value(name).isDouble())
   {
     double val = m_CurrentFilterIndex.value(name).toDouble();
-    double max = std::numeric_limits<float>().max();
-    double min = std::numeric_limits<float>().min();
     if (val >= std::numeric_limits<float>().min() && val <= std::numeric_limits<float>().max())
     {
       return static_cast<float>(val);
@@ -1146,18 +1144,11 @@ AxisAngleInput_t JsonFilterParametersReader::readAxisAngle(const QString name, A
     return v;
   }
 
-  if (m_CurrentFilterIndex.value(name).isArray())
+  QJsonObject obj = m_CurrentFilterIndex.value(name).toObject();
+  AxisAngleInput_t aInput;
+  if (aInput.readJson(obj) == true)
   {
-    QJsonArray aInputsArray = m_CurrentFilterIndex.value(name).toArray();
-    if (aInputsArray.size() > vectorPos && aInputsArray[vectorPos].isObject())
-    {
-      QJsonObject aInputObject = aInputsArray[vectorPos].toObject();
-      AxisAngleInput_t aInput;
-      if (aInput.readJson(aInputObject) == true)
-      {
-        return aInput;
-      }
-    }
+    return aInput;
   }
 
   return v;

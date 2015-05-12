@@ -547,8 +547,6 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
   float p1 = 0.0f, p = 0.0f, p2 = 0.0f, x = -1.0f, y = -1.0f, iqual = -1.0f, conf = -1.0f, semSignal = -1.0f, fit = -1.0f;
   int ph = 0;
   size_t offset = 0;
-  size_t featuresRead = 0;
-//  featuresRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p, &p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
   QList<QByteArray> tokens = line.trimmed().simplified().split(' ');
   bool ok = true;
   p1 = tokens[0].toFloat(&ok);

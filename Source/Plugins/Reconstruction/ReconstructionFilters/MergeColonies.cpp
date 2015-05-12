@@ -476,7 +476,6 @@ bool MergeColonies::determineGrouping(int referenceFeature, int neighborFeature,
 {
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   bool colony = false;
   QuatF q1;
   QuatF q2;

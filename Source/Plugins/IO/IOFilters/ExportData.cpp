@@ -127,10 +127,10 @@ class ExportDataPrivate
 ExportData::ExportData() :
   AbstractFilter(),
   m_SelectedDataArrayPaths(QVector<DataArrayPath>()),
+  m_OutputPath(""),
   m_Delimeter(0),
   m_FileExtension(".txt"),
-  m_MaxValPerLine(-1),
-  m_OutputPath("")
+  m_MaxValPerLine(-1)
 {
   setupFilterParameters();
 }

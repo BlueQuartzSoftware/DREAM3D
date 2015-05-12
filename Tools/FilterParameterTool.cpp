@@ -55,6 +55,9 @@
 
 #include "Tools/ToolConfiguration.h"
 
+#define OVERWRITE_SOURCE_FILE 1
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -66,12 +69,12 @@ QString quote(const QString& str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeOutput(bool didReplace, QStringList &outLines, QString filename)
+void writeOutput(bool didReplace, QStringList& outLines, QString filename)
 {
   if(didReplace == true)
   {
     QFileInfo fi2(filename);
-#if 0
+#if OVERWRITE_SOURCE_FILE
     QFile hOut(filename);
 #else
     QString tmpPath = "/tmp/" + fi2.fileName();
@@ -89,12 +92,12 @@ void writeOutput(bool didReplace, QStringList &outLines, QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeOutput(bool didReplace, QVector<QString> &outLines, QString filename)
+void writeOutput(bool didReplace, QVector<QString>& outLines, QString filename)
 {
   if(didReplace == true)
   {
     QFileInfo fi2(filename);
-#if 0
+#if OVERWRITE_SOURCE_FILE
     QFile hOut(filename);
 #else
     QString tmpPath = "/tmp/" + fi2.fileName();
@@ -116,7 +119,7 @@ void writeOutput(bool didReplace, QVector<QString> &outLines, QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void checkConstructorForSetupFilterParameters(QStringListIterator &sourceLines, QStringList &outLines)
+void checkConstructorForSetupFilterParameters(QStringListIterator& sourceLines, QStringList& outLines)
 {
 
   // get through the initializer list
@@ -293,7 +296,7 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines, const QString& hFile, const QString& cppFile)
+void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines, const QString& hFile, const QString& cppFile)
 {
   bool isPointer = false;
   QMap<float, QString> orderedInitList;
@@ -333,7 +336,7 @@ void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines,
     if(i.hasNext() && line.endsWith(",") == false)
     { line = line + ",";}
     if(i.hasNext() == false && line.endsWith(",") )
-    { line = line.mid(0, line.size() -1 ); }
+    { line = line.mid(0, line.size() - 1 ); }
     outLines.push_back(line);
     qDebug() << "index: " << i.key() << "   line:" << line;
   }
@@ -350,10 +353,10 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    if (fi.baseName().compare("TiDwellFatigueCrystallographicAnalysis") != 0)
-    {
-      return false;
-    }
+//    if (fi.baseName().compare("TiDwellFatigueCrystallographicAnalysis") != 0)
+//    {
+//      return false;
+//    }
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -398,7 +401,7 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void fixFilterParameter(QStringListIterator &sourceLines, QStringList &outLines, const QString& searchString, const QString& line)
+void fixFilterParameter(QStringListIterator& sourceLines, QStringList& outLines, const QString& searchString, const QString& line)
 {
 
   int offset = line.indexOf(searchString);
@@ -415,7 +418,8 @@ void fixFilterParameter(QStringListIterator &sourceLines, QStringList &outLines,
   second = second.trimmed();
 
   QString third = " \"\"";
-  if(second.isEmpty() == false) {
+  if(second.isEmpty() == false)
+  {
     third = " get" + second + "()";
   }
   tokens[3] = third;
@@ -620,15 +624,18 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
             QString getProp = "get" + prop;
 
             QString front("<<<<<<");
-            if(line.contains(setProp) == false) {
+            if(line.contains(setProp) == false)
+            {
               ok = false;
               front = front + "0 ";
             }
-            if(line.contains(quotedProp) == false) {
+            if(line.contains(quotedProp) == false)
+            {
               ok = false;
               front = front + "1 ";
             }
-            if(line.contains(getProp) == false) {
+            if(line.contains(getProp) == false)
+            {
               ok = false;
               front = front + "2 ";
             }
@@ -682,12 +689,15 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
     }
   }
 
+  PluginManager* pm = PluginManager::Instance();
+  QStringList libs = pm->getPluginNames();
+
   prefix = D3DTools::GetDREAM3DPluginDir();
-  QStringList libs;
-  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
-          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
-          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
-          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
+
+//  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
+//          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
+//          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
+//          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -702,7 +712,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   }
 
 
-  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins2";
+  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins";
   for (int i = 0; i < libs.size(); ++i)
   {
     QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
@@ -730,7 +740,8 @@ void FindFiltersWithMultipleDataArrayPaths(AbstractFilter::Pointer filter)
   {
     if(param->getWidgetType() == FilterParameterWidgetType::DataArraySelectionWidget) { count++; }
   }
-  if(count > 1) {
+  if(count > 1)
+  {
     std::cout << "| " << filter->getCompiledLibraryName().toStdString() << " | " << filter->getNameOfClass().toStdString() << " | " << count  << " | " << std::endl;
   }
 }
@@ -791,7 +802,7 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
     index++;
   }
 
- // qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
+// qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
 
   int lineIndex = 0;
   QMapIterator<QString, int> iter(lineToInclude);
@@ -799,10 +810,10 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
   {
     iter.next();
     QString str = iter.key();
-    int l = iter.value();
+    //int l = iter.value();
     str = str.split('\t').at(1);
 
-  //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
+    //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
 
     outLines[lines[lineIndex]] = str;
 
@@ -820,12 +831,11 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
 void GenerateFilterParametersCode()
 {
 
+
   FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
   // Loop on each filter
-  std::cout << "| Plugin | Filter | Count |" << std::endl;
-  std::cout << "|--------|--------|-------|" << std::endl;
   while(iter.hasNext())
   {
     iter.next();
@@ -836,8 +846,8 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    //CorrectInitializerList(filter, h, cpp);
-    SplitFilterHeaderCodes(filter, h, cpp);
+    CorrectInitializerList(filter, h, cpp);
+    //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
     //FindFiltersWithMultipleDataArrayPaths(filter);
@@ -852,9 +862,9 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

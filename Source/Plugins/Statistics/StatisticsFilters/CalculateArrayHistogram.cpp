@@ -56,8 +56,8 @@ CalculateArrayHistogram::CalculateArrayHistogram() :
   m_MaxRange(1.0f),
   m_UserDefinedRange(false),
   m_Normalize(false),
-  m_NewDataArrayName(DREAM3D::CellData::Histogram),
   m_NewAttributeMatrixName(DREAM3D::Defaults::NewAttributeMatrixName),
+  m_NewDataArrayName(DREAM3D::CellData::Histogram),
   m_NewDataContainer(false),
   m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
   m_InDataArray(NULL),
@@ -164,10 +164,13 @@ void CalculateArrayHistogram::dataCheck()
   if (NULL != m_InDataArrayPtr.lock().get())
   {
     int32_t cDims = m_InDataArrayPtr.lock()->getNumberOfComponents();
-    QString ss = QObject::tr("Selected array has number of components %1 and is not a scalar array. The path is %2").arg(cDims).arg(getSelectedArrayPath().serialize());
-    setErrorCondition(-11003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    if(cDims != 1)
+    {
+      QString ss = QObject::tr("Selected array has number of components %1 and is not a scalar array. The path is %2").arg(cDims).arg(getSelectedArrayPath().serialize());
+      setErrorCondition(-11003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
   }
 
   if (m_NewDataContainer) // create a new data container
@@ -248,14 +251,14 @@ void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool use
       bin = size_t((inputArrayPtr[i] - min) / increment); // find bin for this input array value
       if ((bin >= 0) && (bin < numberOfBins)) // make certain bin is in range
       {
-        newDataArrayPtr[bin*2+1]++; // increment histogram element corresponding to this input array value
+        newDataArrayPtr[bin * 2 + 1]++; // increment histogram element corresponding to this input array value
       }
     }
   }
 
   for(int32_t i = 0; i < numberOfBins; i++)
   {
-    newDataArrayPtr[i*2] = min + increment *(i+1);
+    newDataArrayPtr[i * 2] = min + increment * (i + 1);
   }
 
   //  if (normalize) // if normalize is checked, divide each element in the histogram by total number of points

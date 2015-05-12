@@ -52,8 +52,8 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()  :
   m_NumCellsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumCells),
   m_SurfaceAreaVolumeRatioArrayName(DREAM3D::FeatureData::SurfaceAreaVol),
   m_FeatureIds(NULL),
-  m_SurfaceAreaVolumeRatio(NULL),
-  m_NumCells(NULL)
+  m_NumCells(NULL),
+  m_SurfaceAreaVolumeRatio(NULL)
 {
   setupFilterParameters();
 }
@@ -227,15 +227,15 @@ void FindSurfaceAreaToVolume::execute()
             {
               if (l == 0 || l == 5)  // XY face shared
               {
-                onsurf = onsurf + xRes*yRes;
+                onsurf = onsurf + xRes * yRes;
               }
               if (l == 1 || l == 4)  //YZ face shared
               {
-                onsurf = onsurf + yRes*zRes;
+                onsurf = onsurf + yRes * zRes;
               }
               if (l == 2 || l == 3)  //XZ face shared
               {
-                onsurf = onsurf + zRes*xRes;
+                onsurf = onsurf + zRes * xRes;
               }
             }
           }
@@ -248,7 +248,7 @@ void FindSurfaceAreaToVolume::execute()
 
   for (int32_t i = 1; i < numFeatures; i++)
   {
-    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i]/(m_NumCells[i]*xRes*yRes*zRes);
+    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i] / (m_NumCells[i] * xRes * yRes * zRes);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

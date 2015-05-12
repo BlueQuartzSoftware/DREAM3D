@@ -56,15 +56,15 @@ PMFileGenerator::PMFileGenerator(QString outputDir,
                                  QTreeWidgetItem* wi,
                                  QObject* parent):
   PMDirGenerator(outputDir, pathTemplate, QString(""), codeTemplateResourcePath, wi, parent),
-  m_FileName(fileName),
   setupFPContents(""),
+  fpContents(""),
   readFPContents(""),
   writeFPContents(""),
   dataCheckContents(""),
-  fpContents(""),
   initListContents(""),
   filterHIncludesContents(""),
-  filterCPPIncludesContents("")
+  filterCPPIncludesContents(""),
+  m_FileName(fileName)
 {
   if (NULL != wi)
   {

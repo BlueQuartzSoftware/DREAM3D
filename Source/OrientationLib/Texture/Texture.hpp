@@ -109,7 +109,7 @@ class Texture
       for (size_t i = 0; i < numEntries; i++)
       {
         FOrientArrayType eu(e1s[i], e2s[i], e3s[i]);
-        FOrientArrayType rod(3);
+        FOrientArrayType rod(4);
         OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
 
         rod = ops.getODFFZRod(rod);
@@ -191,7 +191,7 @@ class Texture
         ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
 
         FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(3);
+        FOrientArrayType rod(4);
         OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
         rod = ops.getODFFZRod(rod);
         bin = ops.getOdfBin(rod);
@@ -237,13 +237,11 @@ class Texture
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
       float dist, fraction;
-      //    float rmag, angle;
-      float r1 = 0, r2 = 0, r3 = 0;
       HexagonalOps ops;
       for (size_t i = 0; i < numEntries; i++)
       {
         FOrientArrayType eu(e1s[i], e2s[i], e3s[i]);
-        FOrientArrayType rod(3);
+        FOrientArrayType rod(4);
         OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
 
         rod = ops.getODFFZRod(rod);
@@ -324,7 +322,7 @@ class Texture
         ea2 = acos(2.0 * (random2 - 0.5));
         ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
         FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(3);
+        FOrientArrayType rod(4);
         OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
         rod = ops.getODFFZRod(rod);
         bin = ops.getOdfBin(rod);
@@ -370,11 +368,10 @@ class Texture
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
       float dist, fraction;
-      float r1 = 0, r2 = 0, r3 = 0;
       for (size_t i = 0; i < numEntries; i++)
       {
         FOrientArrayType eu(e1s[i], e2s[i], e3s[i]);
-        FOrientArrayType rod(3);
+        FOrientArrayType rod(4);
         OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
 
         rod = ops.getODFFZRod(rod);
@@ -455,7 +452,7 @@ class Texture
         ea2 = acos(2.0 * (random2 - 0.5));
         ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
         FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(3);
+        FOrientArrayType rod(4);
         OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
         rod = ops.getODFFZRod(rod);
         bin = ops.getOdfBin(rod);
@@ -511,7 +508,7 @@ class Texture
       for (int i = 0; i < aSize; i++)
       {
         FOrientArrayType ax( axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], angles[i]);
-        FOrientArrayType rod(3);
+        FOrientArrayType rod(4);
         OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
 
         rod = orientationOps.getMDFFZRod(rod);

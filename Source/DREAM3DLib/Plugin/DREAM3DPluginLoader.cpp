@@ -147,7 +147,8 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
 #ifdef QT_DEBUG
       if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
 #else
-      if (fileName.endsWith( ".plugin", Qt::CaseSensitive) )
+      if (fileName.endsWith( ".plugin", Qt::CaseSensitive) // We want ONLY Release plugins
+      && ! fileName.endsWith("_debug.plugin", Qt::CaseSensitive)) // so ignore these plugins
 #endif
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
@@ -157,6 +158,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     }
   }
 
+  PluginManager* pluginManager = PluginManager::Instance();
   QStringList pluginFileNames;
   QVector<IDREAM3DPlugin*> loadedPlugins;
 
@@ -177,6 +179,9 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
       {
         loadedPlugins.push_back(ipPlugin);
         ipPlugin->registerFilters(filterManager);
+        ipPlugin->setDidLoad(true);
+        ipPlugin->setLocation(path);
+        pluginManager->addPlugin(ipPlugin);
       }
       pluginFileNames += fileName;
     }

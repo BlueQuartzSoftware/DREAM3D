@@ -61,8 +61,8 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_EstimateNumberOfFeatures(false),
-  m_EstimatedPrimaryFeatures(0),
-  m_InputStatsFile("")
+  m_InputStatsFile(""),
+  m_EstimatedPrimaryFeatures(0)
 {
   m_Dimensions.x = 128;
   m_Dimensions.y = 128;

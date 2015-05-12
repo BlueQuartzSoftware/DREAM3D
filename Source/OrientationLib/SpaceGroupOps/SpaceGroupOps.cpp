@@ -165,7 +165,7 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
   float denom = 0.0f, dist = 0.0f;
   float smallestdist = 100000000.0f;
   float rc1 = 0.0f, rc2 = 0.0f, rc3 = 0.0f;
-  FOrientArrayType outRod(3, 0.0f);
+  FOrientArrayType outRod(4, 0.0f);
   for(int i = 0; i < numsym; i++)
   {
     denom = 1 - (rod[0] * rodsym[i][0] + rod[1] * rodsym[i][1] + rod[2] * rodsym[i][2]);

@@ -81,7 +81,6 @@ void TestRotArray()
 // -----------------------------------------------------------------------------
 void Test_eu_check()
 {
-  int res = 0;
   {
     typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
@@ -1019,6 +1018,9 @@ void TestInputs()
   fPtr[0] = 90.0 * DREAM3D::Constants::k_PiOver180;
   fPtr[1] = 0.0;
   fPtr[2] = 0.0;
+  fPtr[3] = 90.0 * DREAM3D::Constants::k_PiOver180;
+  fPtr[4] = 0.0;
+  fPtr[5] = 0.0;
 
   //& Notation
   {
@@ -1044,7 +1046,7 @@ void TestInputs()
     DREAM3D_REQUIRE_EQUAL(eu[2], fPtr[5]);
   }
 
-  // Pointer Arithmetic, results
+  // Pointer Arithmetic, placing results directly into an array
   {
     FOrientArrayType ax(0.0f, 0.0f, -1.0f, DREAM3D::Constants::k_PiOver2);
     FOrientArrayType eu( fPtr + 3, 3);
@@ -1054,11 +1056,11 @@ void TestInputs()
     DREAM3D_REQUIRE_EQUAL(eu[1], fPtr[4]);
     DREAM3D_REQUIRE_EQUAL(eu[2], fPtr[5]);
 
-    bool b = closeEnough(fPtr[3], DREAM3D::Constants::k_PiOver2, 1.0E-6f);
+    bool b = closeEnough(eu[0], fPtr[3]);
     DREAM3D_REQUIRE_EQUAL(b, true)
-    b = closeEnough(fPtr[4], 0.0f, 1.0E-6f);
+    b = closeEnough(eu[1], fPtr[4]);
     DREAM3D_REQUIRE_EQUAL(b, true)
-    b = closeEnough(fPtr[5], 0.0f, 1.0E-6f);
+    b = closeEnough(eu[2], fPtr[5]);
     DREAM3D_REQUIRE_EQUAL(b, true)
   }
 

@@ -218,9 +218,6 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   m_BrandingLabel = filter->getBrandingString()  + "  [" + w->getCompiledLibraryName() + "/" + w->getFilterGroup() + "/" + w->getFilterClassName() + "]";
 
   brandingLabel->setText(m_BrandingLabel);
-
-  int basicHeight = basicScrollArea->height();
-  int advancedHeight = advancedScrollArea->height();
 }
 
 

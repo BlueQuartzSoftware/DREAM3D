@@ -126,13 +126,13 @@ class OrientationConverter
     static QVector<int> GetComponentCounts()
     {
       QVector<int> counts(6);
-      counts[0] = 3;
-      counts[1] = 9;
-      counts[2] = 4;
-      counts[3] = 4;
-      counts[4] = 4;
-      counts[5] = 3;
-      //counts[6] = 3;
+      counts[0] = 3; // Euler
+      counts[1] = 9; // Orientation Matrix
+      counts[2] = 4; // Quaternion
+      counts[3] = 4; // Axis-Angle
+      counts[4] = 4; // Rodrigues
+      counts[5] = 3; // Homchoric
+      //counts[6] = 3; // Cubochoric
       return counts;
     }
 
@@ -250,14 +250,16 @@ class EulerConverter : public OrientationConverter<T>
       int inStride = input->getNumberOfComponents();
       for (size_t i = 0; i < nTuples; ++i)
       {
-        if(inPtr[0] < 0.0) { inPtr[0] = inPtr[0] + DREAM3D::Constants::k_2Pi; }
-        else {inPtr[0] = fmod(inPtr[0], DREAM3D::Constants::k_2Pi); }
-        if(inPtr[1] < 0.0) { inPtr[1] = inPtr[1] + DREAM3D::Constants::k_Pi; }
-        else { inPtr[1] = fmod(inPtr[1], DREAM3D::Constants::k_Pi); }
-        if(inPtr[2] < 0.0) { inPtr[2] = inPtr[2] + DREAM3D::Constants::k_2Pi; }
-        else { inPtr[2] = fmod(inPtr[2], DREAM3D::Constants::k_2Pi); }
 
-        inPtr = inPtr + inStride;
+        inPtr[0] = fmod(inPtr[0], DREAM3D::Constants::k_2Pi);
+        inPtr[1] = fmod(inPtr[1], DREAM3D::Constants::k_Pi);
+        inPtr[2] = fmod(inPtr[2], DREAM3D::Constants::k_2Pi);
+
+        if(inPtr[0] < 0.0) { inPtr[0] *= static_cast<T>(-1.0); }
+        if(inPtr[1] < 0.0) { inPtr[1] *= static_cast<T>(-1.0); }
+        if(inPtr[2] < 0.0) { inPtr[2] *= static_cast<T>(-1.0); }
+
+        inPtr = inPtr + inStride; // This is Pointer arithmetic!!
       }
     }
 
