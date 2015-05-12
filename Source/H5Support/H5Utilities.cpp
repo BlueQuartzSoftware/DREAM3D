@@ -97,7 +97,7 @@ herr_t H5Utilities::closeFile(hid_t& fileId)
   // Get the number of open identifiers of all types
   //  except files
   ssize_t num_open = H5Fget_obj_count(fileId, H5F_OBJ_DATASET | H5F_OBJ_GROUP |
-                                      H5F_OBJ_DATATYPE | H5F_OBJ_ATTR);
+                                      H5F_OBJ_DATATYPE | H5F_OBJ_ATTR | H5F_OBJ_LOCAL);
   if (num_open > 0)
   {
     std::cout << "WARNING: Some IDs weren't closed. Closing them."  << std::endl;
