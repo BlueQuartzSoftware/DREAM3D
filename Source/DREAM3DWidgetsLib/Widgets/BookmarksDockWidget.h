@@ -160,27 +160,29 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
     void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
                                  bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
-    /**
-     * @brief BookmarksDockWidget::addFavoriteTreeItem
-     * @param selection
-     * @param favoriteTitle
-     * @param icon
-     * @param itemType
-     * @param favoritePath
-     * @param allowEditing
-     */
-    int addTreeItem(QTreeWidgetItem* selection,
-                             QString& favoriteTitle,
-                             QIcon icon,
-                             FilterLibraryTreeWidget::ItemType itemType,
-                             QString favoritePath,
-                             bool allowEditing,
-                             bool editState,
-                             bool isExpanded);
 
     void readTreeSettings(QSettings& prefs);
 
   protected slots:
+
+  /**
+  * @brief BookmarksDockWidget::addFavoriteTreeItem
+  * @param selection
+  * @param favoriteTitle
+  * @param icon
+  * @param itemType
+  * @param favoritePath
+  * @param allowEditing
+  */
+  int addTreeItem(QTreeWidgetItem* selection,
+    QString& favoriteTitle,
+    QIcon icon,
+    FilterLibraryTreeWidget::ItemType itemType,
+    QString favoritePath,
+    bool allowEditing,
+    bool editState,
+    bool isExpanded);
+
     //// Slots to catch signals from the QTreeWidget
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );

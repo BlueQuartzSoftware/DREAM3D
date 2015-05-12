@@ -42,6 +42,8 @@
 #include <QtCore/QMimeData>
 #include <QtGui/QDrag>
 
+#include <iostream>
+
 
 
 FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget* parent) :
@@ -186,11 +188,11 @@ void FilterLibraryTreeWidget::mouseMoveEvent(QMouseEvent* event)
 // -----------------------------------------------------------------------------
 void FilterLibraryTreeWidget::performDrag()
 {
-  QTreeWidgetItem* item = currentItem();
-  if (item)
+  m_ItemBeingDragged = currentItem();
+  if (m_ItemBeingDragged)
   {
     QMimeData* mimeData = new QMimeData;
-    QString path = item->data(1, Qt::UserRole).toString();
+    QString path = m_ItemBeingDragged->data(1, Qt::UserRole).toString();
     if (path.isEmpty() == false)
     {
       mimeData->setText(path);
@@ -214,6 +216,10 @@ void FilterLibraryTreeWidget::dragEnterEvent(QDragEnterEvent* event)
     event->setDropAction(Qt::MoveAction);
     event->accept();
   }
+  else
+  {
+    event->acceptProposedAction();
+  }
 }
 
 
@@ -222,12 +228,36 @@ void FilterLibraryTreeWidget::dragEnterEvent(QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 void FilterLibraryTreeWidget::dragMoveEvent(QDragMoveEvent* event)
 {
+  QTreeWidgetItem* item = itemAt(event->pos());
+  if (NULL != item && item->flags().testFlag(Qt::ItemIsDropEnabled) == true)
+  {
+    clearSelection();
+    item->setSelected(true);
+  }
+  else if (NULL == item)
+  {
+    //blockSignals(true);
+    //QTreeWidgetItem* topLevelItem = new QTreeWidgetItem(this, m_ItemBeingDragged->type());
+    //topLevelItem->setText(0, "[Top Level]");
+    //topLevelItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+    //topLevelItem->
+    //blockSignals(false);
+  }
+  else
+  {
+    clearSelection();
+  }
+
   FilterLibraryTreeWidget* source =
     qobject_cast<FilterLibraryTreeWidget*>(event->source());
   if (source && source != this)
   {
     event->setDropAction(Qt::MoveAction);
     event->accept();
+  }
+  else
+  {
+    event->acceptProposedAction();
   }
 }
 
@@ -236,13 +266,31 @@ void FilterLibraryTreeWidget::dragMoveEvent(QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 void FilterLibraryTreeWidget::dropEvent(QDropEvent* event)
 {
-#if 0
-  FilterTreeWidget* source = qobject_cast<FilterTreeWidget*>(event->source());
-  if (source && source != this)
+  QTreeWidgetItem* parent = itemAt(event->pos());
+  if (NULL != parent && parent->flags().testFlag(Qt::ItemIsDropEnabled) == true && parent != m_ItemBeingDragged)
   {
-    addItem(event->mimeData()->text());
-    event->setDropAction(Qt::MoveAction);
-    event->accept();
+    // Get information needed
+    QString title = m_ItemBeingDragged->data(0, Qt::UserRole).toString();
+    QString path = m_ItemBeingDragged->data(1, Qt::UserRole).toString();
+    bool isExpanding = m_ItemBeingDragged->isExpanded();
+    FilterLibraryTreeWidget::ItemType type = FilterLibraryTreeWidget::ItemType(m_ItemBeingDragged->type());
+
+    // Remove the old tree widget item
+    delete m_ItemBeingDragged;
+
+    QIcon icon;
+    // If the dragged item is a folder
+    if (type == FilterLibraryTreeWidget::Node_Item_Type)
+    {
+      icon = QIcon(":/folder_blue.png");
+    }
+    // The dragged item is a pipeline
+    else
+    {
+      icon = QIcon(":/text.png");
+    }
+
+    emit itemWasDropped(parent, title, icon, type, path, true, false, isExpanding);
+    parent->setExpanded(true);
   }
-#endif
 }

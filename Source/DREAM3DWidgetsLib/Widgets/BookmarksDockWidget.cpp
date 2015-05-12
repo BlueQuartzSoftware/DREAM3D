@@ -102,16 +102,16 @@ void BookmarksDockWidget::connectFilterList(FilterListDockWidget* filterListWidg
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::setupGui()
 {
-  // Clear out the default stuff
-  filterLibraryTree->clear();
+  //// Clear out the default stuff
+  //filterLibraryTree->clear();
 
-  QDir pipelinesDir = findPipelinesDirectory();
-  if (pipelinesDir.exists() && pipelinesDir.entryList().isEmpty() == false)
-  {
-    FavoritesChangedDialog* dialog = new FavoritesChangedDialog(this);
-    connect(dialog, SIGNAL(exportBtnPressed(QString)), this, SLOT(convertPipelines(QString)));
-    dialog->exec();
-  }
+  //QDir pipelinesDir = findPipelinesDirectory();
+  //if (pipelinesDir.exists() && pipelinesDir.entryList().isEmpty() == false)
+  //{
+  //  FavoritesChangedDialog* dialog = new FavoritesChangedDialog(this);
+  //  connect(dialog, SIGNAL(exportBtnPressed(QString)), this, SLOT(convertPipelines(QString)));
+  //  dialog->exec();
+  //}
 
   QString css(" QToolTip {\
               border: 2px solid #434343;\
@@ -121,6 +121,8 @@ opacity: 255;\
   background-color: #FFFFFF;\
 }");
   filterLibraryTree->setStyleSheet(css);
+
+  connect(filterLibraryTree, SIGNAL(itemWasDropped(QTreeWidgetItem*, QString&, QIcon, FilterLibraryTreeWidget::ItemType, QString, bool, bool, bool)), this, SLOT(addTreeItem(QTreeWidgetItem*, QString&, QIcon, FilterLibraryTreeWidget::ItemType, QString, bool, bool, bool)));
 }
 
 // -----------------------------------------------------------------------------
@@ -680,7 +682,7 @@ void BookmarksDockWidget::addPipelines(QList<QString> newPaths)
     newPrefPath = QDir::toNativeSeparators(newPrefPath);
     QFileInfo fi(newPrefPath);
     QString fileTitle = fi.baseName();
-    int err = addTreeItem(selection, fileTitle, QIcon(":/text.png"), FilterLibraryTreeWidget::Leaf_Item_Type, newPrefPath, false, false, false);
+    int err = addTreeItem(selection, fileTitle, QIcon(":/text.png"), FilterLibraryTreeWidget::Leaf_Item_Type, newPrefPath, true, false, false);
     if (err >= 0)
     {
       emit updateStatusBar("The pipeline '" + fileTitle + "' has been added successfully.");
@@ -729,25 +731,36 @@ int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
   itemWidget->setText(0, favoriteTitle);
   itemWidget->setText(1, favoritePath);
   itemWidget->setIcon(0, icon);
+  itemWidget->setFlags(Qt::NoItemFlags);
   itemWidget->setData(0, Qt::UserRole, favoriteTitle);
   itemWidget->setData(1, Qt::UserRole, QVariant(favoritePath));
   itemWidget->setData(2, Qt::UserRole, getTreePathFromItem(itemWidget));
-  if (allowEditing == true)
-  {
-    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
-  }
   filterLibraryTree->sortItems(0, Qt::AscendingOrder);
   filterLibraryTree->blockSignals(false);
+
+  if (allowEditing == true)
+  {
+    filterLibraryTree->blockSignals(true);
+    itemWidget->setFlags(Qt::ItemIsEditable);
+    filterLibraryTree->blockSignals(false);
+  }
 
   if (itemType == FilterLibraryTreeWidget::Node_Item_Type)
   {
     filterLibraryTree->blockSignals(true);
+    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
     itemWidget->setExpanded(isExpanded);
     filterLibraryTree->blockSignals(false);
     if (editState == true)
     {
       filterLibraryTree->editItem(itemWidget);
     }
+  }
+  else if (itemType == FilterLibraryTreeWidget::Leaf_Item_Type)
+  {
+    filterLibraryTree->blockSignals(true);
+    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+    filterLibraryTree->blockSignals(false);
   }
 
   return 0;

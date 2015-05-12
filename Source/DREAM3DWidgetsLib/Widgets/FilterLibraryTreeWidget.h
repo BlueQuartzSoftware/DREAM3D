@@ -101,6 +101,9 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
      */
     void addActionList(QList<QAction*> actionList);
 
+  signals:
+    void itemWasDropped(QTreeWidgetItem* parent, QString& title, QIcon icon, FilterLibraryTreeWidget::ItemType type, QString path, bool allowEditing, bool editState, bool isExpanding);
+
   private slots:
 
     /**
@@ -130,6 +133,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     QList<QAction*>           m_NodeActions;
     QList<QAction*>           m_LeafActions;
     QList<QAction*>           m_DefaultActions;
+    QTreeWidgetItem*          m_ItemBeingDragged;
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */
