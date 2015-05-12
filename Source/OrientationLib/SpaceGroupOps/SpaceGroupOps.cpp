@@ -166,6 +166,10 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
   float smallestdist = 100000000.0f;
   float rc1 = 0.0f, rc2 = 0.0f, rc3 = 0.0f;
   FOrientArrayType outRod(4, 0.0f);
+  // Turn into an actual 3 Comp Rodrigues Vector
+  rod[0] *= rod[3];
+  rod[1] *= rod[3];
+  rod[2] *= rod[3];
   for(int i = 0; i < numsym; i++)
   {
     denom = 1 - (rod[0] * rodsym[i][0] + rod[1] * rodsym[i][1] + rod[2] * rodsym[i][2]);
@@ -181,6 +185,11 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
       outRod[2] = rc3;
     }
   }
+  float mag = sqrt(outRod[0]*outRod[0] + outRod[1]*outRod[1] + outRod[2]*outRod[2]);
+  outRod[3] = mag;
+  outRod[0] /= outRod[0]/outRod[3];
+  outRod[1] /= outRod[1]/outRod[3];
+  outRod[2] /= outRod[2]/outRod[3];
   return outRod;
 }
 
