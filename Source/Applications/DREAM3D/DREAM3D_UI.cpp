@@ -1112,7 +1112,7 @@ void DREAM3D_UI::pipelineFileLoaded(QString file, int index)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
 {
-  pipelineFileLoaded(file, Replace);
+  pipelineFileLoaded(file, 0);
   m_OpenedFilePath = file;
 }
 
