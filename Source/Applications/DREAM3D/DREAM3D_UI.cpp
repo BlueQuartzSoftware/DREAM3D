@@ -756,9 +756,8 @@ void DREAM3D_UI::setupPipelineItemMenu()
   QList<QAction*> favoriteItemActions;
 
   favoriteItemActions << m_ActionAddPipeline;
-  //favoriteItemActions << m_ActionUpdatePipeline;
-  //favoriteItemActions << m_ActionRenamePipeline;
-  favoriteItemActions << m_ActionAddToPipelineView;
+  favoriteItemActions << m_ActionRenamePipeline;
+  favoriteItemActions << m_ActionUpdatePipeline;
 
   {
     QAction* separator = new QAction(this);
@@ -924,6 +923,27 @@ void DREAM3D_UI::initializeMenuActions()
   connect(m_ActionAddPipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionAddPipeline_triggered()));
 
+  /* m_ActionRenamePipeline */
+  m_ActionRenamePipeline = new QAction(menuPipeline);
+  m_ActionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
+  m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
+  menuPipeline->addAction(m_ActionRenamePipeline);
+  QKeySequence m_ActionRenamePipelineKeySeq(Qt::CTRL + Qt::Key_R);
+  m_ActionRenamePipeline->setShortcut(m_ActionRenamePipelineKeySeq);
+  bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
+  connect(m_ActionRenamePipeline, SIGNAL(triggered()),
+    bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
+
+  /* m_ActionUpdatePipeline */
+  m_ActionUpdatePipeline = new QAction(menuPipeline);
+  m_ActionUpdatePipeline->setObjectName(QString::fromUtf8("m_ActionUpdatePipeline"));
+  m_ActionUpdatePipeline->setText(QApplication::translate("DREAM3D_UI", "Update Pipeline", 0));
+  menuPipeline->addAction(m_ActionUpdatePipeline);
+  QKeySequence m_ActionUpdatePipelineKeySeq(Qt::CTRL + Qt::Key_U);
+  m_ActionUpdatePipeline->setShortcut(m_ActionUpdatePipelineKeySeq);
+  connect(m_ActionUpdatePipeline, SIGNAL(triggered()),
+    bookmarksDockWidget, SLOT(m_ActionUpdatePipeline_triggered()));
+
   {
     menuPipeline->addSeparator();
   }
@@ -970,36 +990,9 @@ void DREAM3D_UI::initializeMenuActions()
 
 
 
-  /* m_ActionAddToPipelineView */
-  m_ActionAddToPipelineView = new QAction(this);
-  m_ActionAddToPipelineView->setObjectName(QString::fromUtf8("m_ActionAddToPipelineView"));
-  m_ActionAddToPipelineView->setText(QApplication::translate("DREAM3D_UI", "Add to Pipeline View", 0));
-  QKeySequence m_ActionAddToPipelineViewKeySeq(Qt::CTRL + Qt::Key_A);
-  m_ActionAddToPipelineView->setShortcut(m_ActionAddToPipelineViewKeySeq);
-  connect(m_ActionAddToPipelineView, SIGNAL(triggered()),
-    bookmarksDockWidget, SLOT(m_ActionAddToPipelineView_triggered()));
-
-  /* m_ActionUpdatePipeline */
-  m_ActionUpdatePipeline = new QAction(this);
-  m_ActionUpdatePipeline->setObjectName(QString::fromUtf8("m_ActionUpdatePipeline"));
-  m_ActionUpdatePipeline->setText(QApplication::translate("DREAM3D_UI", "Update Pipeline", 0));
-  QKeySequence m_ActionUpdatePipelineKeySeq(Qt::CTRL + Qt::Key_U);
-  m_ActionUpdatePipeline->setShortcut(m_ActionUpdatePipelineKeySeq);
-  connect(m_ActionUpdatePipeline, SIGNAL(triggered()),
-    bookmarksDockWidget, SLOT(m_ActionUpdatePipeline_triggered()));
-
-  /* m_ActionRenamePipeline */
-  m_ActionRenamePipeline = new QAction(this);
-  m_ActionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
-  m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
-  QKeySequence m_ActionRenamePipelineKeySeq(Qt::CTRL + Qt::Key_R);
-  m_ActionRenamePipeline->setShortcut(m_ActionRenamePipelineKeySeq);
-  bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
-  connect(m_ActionRenamePipeline, SIGNAL(triggered()),
-    bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
 
   /* m_ActionShowInFileSystem */
-  m_ActionShowInFileSystem = new QAction(this);
+  m_ActionShowInFileSystem = new QAction(menuPipeline);
   m_ActionShowInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowInFileSystem"));
   // Handle the naming based on what OS we are currently running...
 #if defined(Q_OS_WIN)

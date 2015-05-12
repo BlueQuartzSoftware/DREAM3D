@@ -94,7 +94,6 @@ void BookmarksDockWidget::connectFilterList(FilterListDockWidget* filterListWidg
 {
   connect(this, SIGNAL(filterListGenerated(const QStringList&, bool)),
           filterListWidget, SLOT(updateFilterList(const QStringList&, bool) ) );
-
 }
 
 // -----------------------------------------------------------------------------
@@ -427,6 +426,9 @@ void BookmarksDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item
 {
   if (column == 0)
   {
+    // Set the internal data with the new name
+    item->setData(0, Qt::UserRole, item->text(0));
+
     writeAndUpdateWidget();
   }
 }
