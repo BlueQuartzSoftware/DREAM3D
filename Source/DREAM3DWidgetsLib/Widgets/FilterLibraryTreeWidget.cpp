@@ -47,7 +47,9 @@
 
 
 FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget* parent) :
-  QTreeWidget(parent)
+  QTreeWidget(parent),
+  m_ItemBeingDragged(NULL),
+  m_TopLevelItemPlaceholder(NULL)
 {
   setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -236,15 +238,22 @@ void FilterLibraryTreeWidget::dragMoveEvent(QDragMoveEvent* event)
   }
   else if (NULL == item)
   {
-    //blockSignals(true);
-    //QTreeWidgetItem* topLevelItem = new QTreeWidgetItem(this, m_ItemBeingDragged->type());
-    //topLevelItem->setText(0, "[Top Level]");
-    //topLevelItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
-    //topLevelItem->
-    //blockSignals(false);
+    if (NULL == m_TopLevelItemPlaceholder)
+    {
+      blockSignals(true);
+      m_TopLevelItemPlaceholder = new QTreeWidgetItem(this, m_ItemBeingDragged->type());
+      m_TopLevelItemPlaceholder->setText(0, "[Top Level]");
+      m_TopLevelItemPlaceholder->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+      blockSignals(false);
+    }
   }
   else
   {
+    if (NULL != m_TopLevelItemPlaceholder)
+    {
+      delete m_TopLevelItemPlaceholder;
+      m_TopLevelItemPlaceholder = NULL;
+    }
     clearSelection();
   }
 

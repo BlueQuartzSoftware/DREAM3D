@@ -134,6 +134,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     QList<QAction*>           m_LeafActions;
     QList<QAction*>           m_DefaultActions;
     QTreeWidgetItem*          m_ItemBeingDragged;
+    QTreeWidgetItem*          m_TopLevelItemPlaceholder;
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */
