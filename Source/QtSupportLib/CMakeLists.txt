@@ -115,6 +115,7 @@ set(QtSupportLib_SRCS
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitter.cpp
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.cpp
     ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.cpp
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.cpp
 )
 
 set(QtSupportLib_HDRS
@@ -142,6 +143,7 @@ set(QtSupportLib_HDRS
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitter.h
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.h
     ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.h
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.h
 )
 
 # --------------------------------------------------------------------
