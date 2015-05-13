@@ -182,7 +182,6 @@ void FilterLibraryTreeWidget::mouseMoveEvent(QMouseEvent* event)
       performDrag();
     }
   }
-  QTreeWidget::mouseMoveEvent(event);
 }
 
 // -----------------------------------------------------------------------------
