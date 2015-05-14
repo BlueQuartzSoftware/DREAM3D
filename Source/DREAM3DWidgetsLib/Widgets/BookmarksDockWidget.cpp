@@ -740,17 +740,10 @@ int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
   filterLibraryTree->sortItems(0, Qt::AscendingOrder);
   filterLibraryTree->blockSignals(false);
 
-  if (allowEditing == true)
-  {
-    filterLibraryTree->blockSignals(true);
-    itemWidget->setFlags(Qt::ItemIsEditable);
-    filterLibraryTree->blockSignals(false);
-  }
-
   if (itemType == FilterLibraryTreeWidget::Node_Item_Type)
   {
     filterLibraryTree->blockSignals(true);
-    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
     itemWidget->setExpanded(isExpanded);
     filterLibraryTree->blockSignals(false);
     if (editState == true)
@@ -761,7 +754,7 @@ int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
   else if (itemType == FilterLibraryTreeWidget::Leaf_Item_Type)
   {
     filterLibraryTree->blockSignals(true);
-    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
     filterLibraryTree->blockSignals(false);
   }
 

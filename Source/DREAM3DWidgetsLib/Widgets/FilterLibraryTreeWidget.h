@@ -40,6 +40,7 @@
 
 #include <QApplication>
 
+#include <QtCore/QJsonObject>
 
 #include <QtWidgets/QMenu>
 #include <QtGui/QMouseEvent>
@@ -71,6 +72,12 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
      */
     FilterLibraryTreeWidget(QWidget* parent = 0);
 
+    /**
+    * @brief fromJsonObject
+    * @param treeObject
+    */
+    static FilterLibraryTreeWidget* FromJsonObject(QJsonObject treeObject);
+
 
     /**
      * @brief setNodeActionList
@@ -89,6 +96,12 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
      * @param list
      */
     void setDefaultActionList(QList<QAction*> list);
+
+    /**
+    * @brief toJsonObject
+    * @param tree
+    */
+    QJsonObject toJsonObject();
 
   protected:
     void mouseMoveEvent(QMouseEvent* event);
@@ -136,6 +149,9 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     QList<QAction*>           m_DefaultActions;
     QTreeWidgetItem*          m_ItemBeingDragged;
     QTreeWidgetItem*          m_TopLevelItemPlaceholder;
+
+    QJsonObject wrapTreeItem(QTreeWidgetItem* item);
+    static QTreeWidgetItem* UnwrapTreeItem(QJsonObject object);
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */

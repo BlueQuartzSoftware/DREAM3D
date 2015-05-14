@@ -331,3 +331,93 @@ void FilterLibraryTreeWidget::dropEvent(QDropEvent* event)
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterLibraryTreeWidget* FilterLibraryTreeWidget::FromJsonObject(QJsonObject treeObject)
+{
+  QTreeWidgetItem* item = FilterLibraryTreeWidget::UnwrapTreeItem(treeObject);
+    QList<QTreeWidgetItem*> list = item->takeChildren();
+
+    FilterLibraryTreeWidget* tree = new FilterLibraryTreeWidget();
+    for (int i = 0; i < list.size(); i++)
+    {
+      tree->insertTopLevelItem(i, list[i]);
+    }
+
+    tree->sortItems(0, Qt::AscendingOrder);
+    return tree;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonObject FilterLibraryTreeWidget::toJsonObject()
+{
+  QJsonObject treeObj;
+  treeObj["Type"] = FilterLibraryTreeWidget::Node_Item_Type;
+  for (int i = 0; i < topLevelItemCount(); i++)
+  {
+    QJsonObject topLevelObj = wrapTreeItem(topLevelItem(i));
+    treeObj["Child " + QString::number(i + 1)] = topLevelObj;
+  }
+  return treeObj;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonObject FilterLibraryTreeWidget::wrapTreeItem(QTreeWidgetItem* item)
+{
+  QJsonObject obj;
+  QList<QTreeWidgetItem*> childList = item->takeChildren();
+
+  for (int i = 0; i < childList.size(); i++)
+  {
+    QTreeWidgetItem* child = childList[i];
+    obj.insert("Child " + QString::number(i + 1), wrapTreeItem(child));
+  }
+
+  obj.insert("Name", item->text(0));
+  obj.insert("Path", item->text(1));
+  obj.insert("Type", item->type());
+
+  return obj;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QTreeWidgetItem* FilterLibraryTreeWidget::UnwrapTreeItem(QJsonObject object)
+{
+  FilterLibraryTreeWidget::ItemType type = FilterLibraryTreeWidget::ItemType(object["Type"].toInt());
+  QTreeWidgetItem* item = new QTreeWidgetItem(type);
+
+  if (type == FilterLibraryTreeWidget::Node_Item_Type)
+  {
+    item->setIcon(0, QIcon(":/folder_blue.png"));
+    item->setFlags(item->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+    for (QJsonObject::iterator iter = object.begin(); iter != object.end(); ++iter)
+    {
+      if (iter.value().isObject())
+      {
+        QJsonObject childObj = iter.value().toObject();
+        QTreeWidgetItem* child = FilterLibraryTreeWidget::UnwrapTreeItem(childObj);
+        item->insertChild(0, child);
+      }
+    }
+  }
+  else
+  {
+    item->setIcon(0, QIcon(":/text.png"));
+    item->setFlags(item->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
+  }
+  
+  item->setText(0, object["Name"].toString());
+  item->setData(0, Qt::UserRole, object["Name"].toString());
+  item->setText(1, object["Path"].toString());
+  item->setData(1, Qt::UserRole, object["Path"].toString());
+
+  return item;
+}

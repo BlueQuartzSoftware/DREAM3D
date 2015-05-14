@@ -39,20 +39,47 @@
 #define _DREAM3DSettings_H_
 
 #include <QtCore/QString>
+#include <QtCore/QObject>
+#include <QtCore/QVariant>
+#include <QtCore/QJsonObject>
+
+#include <QtWidgets/QTreeWidget>
+
+#include "DREAM3DWidgetsLib/Widgets/FilterLibraryTreeWidget.h"
 
 #include "QtSupportLib/QtSupportLib.h"
 
-class QtSupportLib_EXPORT DREAM3DSettings
+class QtSupportLib_EXPORT DREAM3DSettings : public QObject
 {
+  Q_OBJECT
 
 public:
-  DREAM3DSettings();
+  DREAM3DSettings(QObject * parent = 0);
+  DREAM3DSettings(const QString &filePath, QObject * parent = 0);
   ~DREAM3DSettings();
 
+  QString fileName();
+
+  bool contains(const QString &key);
+
+  bool beginGroup(const QString &prefix);
+  void endGroup();
+
+  QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
+  QJsonObject value(const QString &key, const QJsonObject &defaultObject = QJsonObject());
+
+  void setValue(const QString &key, const QVariant &value);
+  void setValue(const QString &key, const QJsonObject &object);
+
 private:
+  QString m_FilePath;
 
+  QJsonObject m_Root;
+  QJsonObject m_CurrentGroup;
+  QString m_CurrentGroupName;
 
-  QString getRootPath();
+  void openFile();
+  void closeFile();
 
   DREAM3DSettings(const DREAM3DSettings&);    // Copy Constructor Not Implemented
   void operator=(const DREAM3DSettings&);  // Operator '=' Not Implemented
