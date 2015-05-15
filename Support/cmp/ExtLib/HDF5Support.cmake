@@ -132,6 +132,8 @@ if(HDF5_FOUND)
                         TYPES ${BUILD_TYPES})
   endif()
 
+  set(HDF5_COMPONENTS hdf5 hdf5_cpp)
+
 
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")

@@ -318,7 +318,8 @@ endif()
 
 
 #-------------------------------------------------------------------------------
-# Compile the Core Plugins that come with DREAM3D
+# Compile the Core Plugins that come with DREAM3D and any other Plugins that the
+# developer has added.
 include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 
 
