@@ -433,80 +433,25 @@ void PrebuiltPipelinesDockWidget::actionShowInFileSystem_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, QSettings& prefs)
+void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
 {
   main->restoreDockWidget(this);
-
-  prefs.beginGroup("DockWidgetSettings");
 
   bool b = prefs.value(objectName(), false).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("PrebuiltsHeaderState").toByteArray();
+  QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray()).toByteArray();
   filterLibraryTree->header()->restoreState(headerState);
-
-  int size = prefs.beginReadArray("Prebuilts");
-  for (int i = 0; i < size; i++)
-  {
-    prefs.setArrayIndex(i);
-
-    QString title = prefs.value("Title").toString();
-    bool isExpanded = prefs.value("IsExpanded", false).toBool();
-
-    QList<QTreeWidgetItem*> items = filterLibraryTree->findItems(title, Qt::MatchExactly | Qt::MatchRecursive);
-    for (int i = 0; i < items.size(); i++)
-    {
-      QTreeWidgetItem* item = items[i];
-      if (item->childCount() > 0)
-      {
-        item->setExpanded(isExpanded);
-      }
-    }
-  }
-  prefs.endArray();
-
-  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::writeSettings(QSettings& prefs)
+void PrebuiltPipelinesDockWidget::writeSettings(DREAM3DSettings& prefs)
 {
-  prefs.beginGroup("DockWidgetSettings");
-
   prefs.setValue(objectName(), isHidden());
 
   prefs.setValue("PrebuiltsHeaderState", filterLibraryTree->header()->saveState());
-
-  QTreeWidgetItemIterator iter(filterLibraryTree);
-
-  // Delete out old content
-  prefs.beginGroup("Prebuilts");
-  prefs.remove("");
-  prefs.endGroup();
-
-  // Write new content
-  prefs.beginWriteArray("Prebuilts");
-  int i = 0;
-  while (*iter)
-  {
-    QTreeWidgetItem* currentItem = *iter;
-
-    prefs.setArrayIndex(i);
-    if (currentItem->childCount() > 0)
-    {
-      // This is a folder, so save the expanded state
-      prefs.setValue("Title", currentItem->text(0));
-      prefs.setValue("IsExpanded", currentItem->isExpanded());
-    }
-
-    ++iter;
-    i++;
-  }
-  prefs.endArray();
-
-  prefs.endGroup();
 }
 
 

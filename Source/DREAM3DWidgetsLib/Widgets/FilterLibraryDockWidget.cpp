@@ -38,6 +38,7 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtWidgets/QMainWindow>
 
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -287,4 +288,23 @@ void FilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& f
     filterNames << factory.key();
   }
   emit filterListGenerated(filterNames, true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryDockWidget::writeSettings(DREAM3DSettings& prefs)
+{
+  prefs.setValue(objectName(), isHidden());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+{
+  main->restoreDockWidget(this);
+
+  bool b = prefs.value(objectName(), false).toBool();
+  setHidden(b);
 }

@@ -179,9 +179,6 @@ void DREAM3D_UI::on_actionNew_triggered()
   newInstance->setWindowTitle("[*]UntitledPipeline - DREAM3D");
   newInstance->move(this->x() + 45, this->y() + 45);
 
-  // Connect up some signals and slots between every single DREAM3D_UI instance that is currently running
-  connectSignalsSlots(newInstance);
-
   newInstance->show();
 }
 
@@ -226,9 +223,6 @@ void DREAM3D_UI::on_actionOpen_triggered()
     // Show the new instance
     newInstance->setWindowModified(false);
     newInstance->move(this->x() + 45, this->y() + 45);
-
-    // Connect up some signals and slots between every single DREAM3D_UI instance that is currently running and the new instance
-    connectSignalsSlots(newInstance);
 
     newInstance->show();
   }
@@ -361,39 +355,37 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readSettings()
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QString filePath;
-  {
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  DREAM3DSettings prefs;
 
-    filePath = prefs.fileName();
-    // Have the pipeline builder read its settings from the prefs file
-    readWindowSettings(prefs);
-    readVersionSettings(prefs);
+  // Have the pipeline builder read its settings from the prefs file
+  readWindowSettings(prefs);
+  readVersionSettings(prefs);
 
-    // Read dock widget settings
-    bookmarksDockWidget->readSettings(this, prefs);
-    prebuiltPipelinesDockWidget->readSettings(this, prefs);
+  prefs.beginGroup("DockWidgetSettings");
 
-    QRecentFileList::instance()->readList(prefs);
-  }
+  // Read dock widget settings
+  bookmarksDockWidget->readSettings(this, prefs);
+  prebuiltPipelinesDockWidget->readSettings(this, prefs);
+  filterListDockWidget->readSettings(this, prefs);
+  filterLibraryDockWidget->readSettings(this, prefs);
+  issuesDockWidget->readSettings(this, prefs);
+
+  prefs.endGroup();
+
+  QRecentFileList::instance()->readList(prefs);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readWindowSettings(QSettings& prefs)
+void DREAM3D_UI::readWindowSettings(DREAM3DSettings& prefs)
 {
   QString filePath = prefs.fileName();
   bool ok = false;
   prefs.beginGroup("WindowSettings");
   if (prefs.contains(QString("MainWindowGeometry")))
   {
-    QByteArray geo_data = prefs.value(QString("MainWindowGeometry")).toByteArray();
+    QByteArray geo_data = prefs.value("MainWindowGeometry", "").toByteArray();
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
@@ -404,20 +396,13 @@ void DREAM3D_UI::readWindowSettings(QSettings& prefs)
   if (prefs.contains(QString("MainWindowState")))
   {
     std::cout << "Reading State of Main Window" << std::endl;
-    QByteArray layout_data = prefs.value(QString("MainWindowState")).toByteArray();
+    QByteArray layout_data = prefs.value("MainWindowState", "").toByteArray();
     restoreState(layout_data);
   }
 
-  readDockWidgetSettings(prefs, filterListDockWidget);
-  readDockWidgetSettings(prefs, filterLibraryDockWidget);
-  readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
-  readDockWidgetSettings(prefs, issuesDockWidget);
-
-  readSearchListSettings(prefs, filterListDockWidget);
-
-  QByteArray splitterGeometry = prefs.value(QString("Splitter_Geometry")).toByteArray();
+  QByteArray splitterGeometry = prefs.value("Splitter_Geometry", "").toByteArray();
   splitter->restoreGeometry(splitterGeometry);
-  QByteArray splitterSizes = prefs.value(QString("Splitter_Sizes")).toByteArray();
+  QByteArray splitterSizes = prefs.value("Splitter_Sizes", "").toByteArray();
   splitter->restoreState(splitterSizes);
 
   prefs.endGroup();
@@ -426,7 +411,7 @@ void DREAM3D_UI::readWindowSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
+void DREAM3D_UI::readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw)
 {
   restoreDockWidget(dw);
 
@@ -438,36 +423,7 @@ void DREAM3D_UI::readDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readSearchListSettings(QSettings& prefs, FilterListDockWidget* dw)
-{
-  QString objectName = prefs.value("ActiveSearchAction").toString();
-  QList<QAction*> list = dw->getSearchActionList();
-
-  bool didCheck = false;
-  for (int i = 0; i < list.size(); i++)
-  {
-    if (list[i]->objectName() == objectName)
-    {
-      list[i]->setChecked(true);
-      didCheck = true;
-    }
-    else
-    {
-      list[i]->setChecked(false);
-    }
-  }
-
-  if (didCheck == false && list.size() > 0)
-  {
-    // Set "All Words" as checked by default
-    list[0]->setChecked(true);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::readVersionSettings(QSettings& prefs)
+void DREAM3D_UI::readVersionSettings(DREAM3DSettings& prefs)
 {
 
 }
@@ -477,33 +433,31 @@ void DREAM3D_UI::readVersionSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeSettings()
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  // We scope these sections so that the QSettings object goes out of scope each
-  // time and is destructed
-  {
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  DREAM3DSettings prefs;
 
-    // Have the pipeline builder write its settings to the prefs file
-    writeWindowSettings(prefs);
-    // Have the version check widet write its preferences.
-    writeVersionCheckSettings(prefs);
+  // Have the pipeline builder write its settings to the prefs file
+  writeWindowSettings(prefs);
+  // Have the version check widet write its preferences.
+  writeVersionCheckSettings(prefs);
 
-    // Write dock widget settings
-    bookmarksDockWidget->writeSettings(prefs);
-    prebuiltPipelinesDockWidget->writeSettings(prefs);
+  prefs.beginGroup("DockWidgetSettings");
 
-    QRecentFileList::instance()->writeList(prefs);
-  }
+  // Write dock widget settings
+  bookmarksDockWidget->writeSettings(prefs);
+  prebuiltPipelinesDockWidget->writeSettings(prefs);
+  filterListDockWidget->writeSettings(prefs);
+  filterLibraryDockWidget->writeSettings(prefs);
+  issuesDockWidget->writeSettings(prefs);
+
+  prefs.endGroup();
+
+  QRecentFileList::instance()->writeList(prefs);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeVersionCheckSettings(QSettings& prefs)
+void DREAM3D_UI::writeVersionCheckSettings(DREAM3DSettings& prefs)
 {
 
 }
@@ -511,19 +465,13 @@ void DREAM3D_UI::writeVersionCheckSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
+void DREAM3D_UI::writeWindowSettings(DREAM3DSettings& prefs)
 {
   prefs.beginGroup("WindowSettings");
   QByteArray geo_data = saveGeometry();
   QByteArray layout_data = saveState();
   prefs.setValue(QString("MainWindowGeometry"), geo_data);
   prefs.setValue(QString("MainWindowState"), layout_data);
-
-  writeDockWidgetSettings(prefs, filterListDockWidget);
-  writeDockWidgetSettings(prefs, filterLibraryDockWidget);
-  writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
-  writeDockWidgetSettings(prefs, issuesDockWidget);
-  writeSearchListSettings(prefs, filterListDockWidget);
 
   QByteArray splitterGeometry = splitter->saveGeometry();
   QByteArray splitterSizes = splitter->saveState();
@@ -536,17 +484,9 @@ void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
+void DREAM3D_UI::writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw)
 {
   prefs.setValue(dw->objectName(), dw->isHidden() );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::writeSearchListSettings(QSettings& prefs, FilterListDockWidget* dw)
-{
-  prefs.setValue("ActiveSearchAction", dw->getActiveSearchAction()->objectName());
 }
 
 // -----------------------------------------------------------------------------
@@ -557,14 +497,10 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
   if ( d->getAutomaticallyBtn()->isChecked() )
   {
-#if defined (Q_OS_MAC)
-    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+    DREAM3DSettings updatePrefs;
 
     updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
-    QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey()).toDate();
+    QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey(), "").toDate();
     updatePrefs.endGroup();
 
     QDate systemDate;
@@ -725,27 +661,6 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
     this, SLOT(setStatusBarMessage(const QString&)));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* newInstance)
-{
-  QWidgetList list = qApp->topLevelWidgets();
-  for (int i = 0; i < list.size(); i++)
-  {
-    DREAM3D_UI* otherInstance = qobject_cast<DREAM3D_UI*>(list[i]);
-    if (NULL != otherInstance)
-    {
-      if (otherInstance != newInstance)
-      {
-        connect(otherInstance->bookmarksDockWidget, SIGNAL(settingsUpdated()), newInstance->bookmarksDockWidget, SLOT(updateWidget()));
-
-        connect(newInstance->bookmarksDockWidget, SIGNAL(settingsUpdated()), otherInstance->bookmarksDockWidget, SLOT(updateWidget()));
-      }
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1192,12 +1107,8 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
   d->setUpdateWebSite(Detail::UpdateWebSite);
   d->setApplicationName("DREAM3D");
 
-  // Read from the QSettings Pref file the information that we need
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  // Read from the DREAM3DSettings Pref file the information that we need
+  DREAM3DSettings prefs;
   prefs.beginGroup(Detail::VersionCheckGroupName);
   QDateTime dateTime = prefs.value(Detail::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
   d->setLastCheckDateTime(dateTime);

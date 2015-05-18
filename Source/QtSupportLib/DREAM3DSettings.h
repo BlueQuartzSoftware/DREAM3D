@@ -42,6 +42,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 #include <QtCore/QJsonObject>
+#include <QtCore/QJsonArray>
 
 #include <QtWidgets/QTreeWidget>
 
@@ -65,8 +66,14 @@ public:
   bool beginGroup(const QString &prefix);
   void endGroup();
 
+  void beginWriteArray(const QString & key);
+  int beginReadArray(const QString & key);
+  void setArrayIndex(int i);
+  void endArray();
+
   QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
   QJsonObject value(const QString &key, const QJsonObject &defaultObject = QJsonObject());
+  QStringList value(const QString &key, const QStringList &defaultList = QStringList());
 
   void setValue(const QString &key, const QVariant &value);
   void setValue(const QString &key, const QJsonObject &object);
@@ -77,6 +84,10 @@ private:
   QJsonObject m_Root;
   QJsonObject m_CurrentGroup;
   QString m_CurrentGroupName;
+
+  QJsonArray m_CurrentArray;
+  QString m_CurrentArrayName;
+  int m_CurrentArrayIndex;
 
   void openFile();
   void closeFile();

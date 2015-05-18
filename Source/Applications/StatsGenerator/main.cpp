@@ -37,6 +37,7 @@
 #include "StatsGeneratorUI.h"
 
 #include <QtSupportLib/QRecentFileList.h>
+#include <QtSupportLib/DREAM3DSettings.h>
 #include "SGApplication.h"
 
 //-- Qt Headers
@@ -59,7 +60,7 @@ int main (int argc, char* argv[])
 #if defined (Q_OS_MAC)
   QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  DREAM3DSettings prefs;
 #endif
   QRecentFileList::instance()->readList(prefs);
 

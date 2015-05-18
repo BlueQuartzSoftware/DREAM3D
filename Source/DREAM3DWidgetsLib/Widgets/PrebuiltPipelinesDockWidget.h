@@ -43,6 +43,7 @@
 #include <QtWidgets/QMainWindow>
 
 #include "QtSupportLib/FileDragMessageBox.h"
+#include "QtSupportLib/DREAM3DSettings.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -94,12 +95,12 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, QSettings& prefs);
+    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(QSettings& prefs);
+    void writeSettings(DREAM3DSettings& prefs);
 
 
   public slots:

@@ -44,17 +44,17 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QVector>
-#include <QtCore/QSettings>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QResizeEvent>
 #include <QtWidgets/QToolBar>
 
-
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
+#include "QtSupportLib/DREAM3DSettings.h"
 
 
 //-- UIC generated Header
@@ -338,13 +338,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      *
      * @param prefs
      */
-    void writeWindowSettings(QSettings& prefs);
-    void writeVersionCheckSettings(QSettings& prefs);
-    void writeSearchListSettings(QSettings& prefs, FilterListDockWidget* dw);
+    void writeWindowSettings(DREAM3DSettings& prefs);
+    void writeVersionCheckSettings(DREAM3DSettings& prefs);
 
-    void readWindowSettings(QSettings& prefs);
-    void readVersionSettings(QSettings& prefs);
-    void readSearchListSettings(QSettings& prefs, FilterListDockWidget* dw);
+    void readWindowSettings(DREAM3DSettings& prefs);
+    void readVersionSettings(DREAM3DSettings& prefs);
 
     void checkForUpdatesAtStartup();
 
@@ -358,14 +356,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param prefs
      * @param dw
      */
-    void readDockWidgetSettings(QSettings& prefs, QDockWidget* dw);
+    void readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
 
     /**
      * @brief writeDockWidgetSettings
      * @param prefs
      * @param dw
      */
-    void writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw);
+    void writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
 
 
     void makeStatusBarButton(QString text, QDockWidget* dockWidget, QToolButton* btn, int index);
@@ -417,11 +415,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QAction* m_ActionRemovePipeline;
     QAction* m_ActionShowInFileSystem;
     QAction* m_ActionClearPipeline;
-
-    /**
-    * @brief Connects some necessary signals and slots between a new instance of DREAM3D_UI and the existing instances of DREAM3D_UI
-    */
-    void connectSignalsSlots(DREAM3D_UI* newInstance);
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented

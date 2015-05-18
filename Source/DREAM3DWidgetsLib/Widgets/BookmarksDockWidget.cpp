@@ -155,17 +155,9 @@ QDir BookmarksDockWidget::findPipelinesDirectory()
 
   // Get the location of the PReferences file. The Favorites are stored in a directory located at that level.
   QString dirName("DREAM3D_Favorites");
-  QString prefFile;
-  {
-#if defined (Q_OS_MAC)
-    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    QString extension = ".ini";
-#else
-    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    QString extension = ".ini";
-#endif
-    prefFile = prefs.fileName();
-  }
+
+  DREAM3DSettings prefs;
+  QString prefFile = prefs.fileName();
 
   QFileInfo prefFileInfo = QFileInfo(prefFile);
   QString parentPath = prefFileInfo.path();
@@ -196,71 +188,10 @@ void BookmarksDockWidget::convertPipelines(QString newDirectory)
 
   // Now block signals and load up all the pipelines in the folder
   filterLibraryTree->blockSignals(true);
-  addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
+  //addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
   // Sort the Favorite Tree by name(?)
   filterLibraryTree->sortItems(0, Qt::AscendingOrder);
   filterLibraryTree->blockSignals(false);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                                                  bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType)
-{
-
-
-  QTreeWidgetItem* nextDirItem;
-
-  // Get a list of all the directories
-  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-  if ( dirList.size() > 0 )
-  {
-    foreach(QFileInfo fi, dirList)
-    {
-      // At this point we have the first level of directories and we want to do 2 things:
-      // 1.Create an entry in the tree widget with this name
-      // 2.drop into the directory and look for all the .txt files and add entries for those items.
-      //  qDebug() << fi.absoluteFilePath() << "\n";
-      // Add a tree widget item for this  Group
-      //  qDebug() << fi.absoluteFilePath();
-      nextDirItem = new QTreeWidgetItem(currentDirItem, FilterLibraryTreeWidget::Node_Item_Type);
-      nextDirItem->setText(0, fi.baseName());
-      nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
-      nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
-      addPipelinesRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, filters, itemType );   // Recursive call
-    }
-  }
-
-  QFileInfoList itemList = currentDir.entryInfoList(filters);
-  foreach(QFileInfo itemInfo, itemList)
-  {
-    QString itemFilePath = itemInfo.absoluteFilePath();
-    QString itemName;
-    if (itemInfo.suffix().compare("ini") == 0 || itemInfo.suffix().compare("txt") == 0)
-    {
-      QSettings itemPref(itemFilePath, QSettings::IniFormat);
-      itemPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-      itemName = itemPref.value(DREAM3D::Settings::PipelineName).toString();
-      itemPref.endGroup();
-    }
-    else if (itemInfo.suffix().compare("json") == 0)
-    {
-      itemName = JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath);
-    }
-    // Add tree widget for this Prebuilt Pipeline
-    QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
-    itemWidget->setText(0, itemName);
-    itemWidget->setIcon(0, QIcon(iconFileName));
-    itemWidget->setData(0, Qt::UserRole, QVariant(itemInfo.absoluteFilePath()));
-    if(allowEditing == true)
-    {
-      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
-    }
-    QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
-    itemWidget->setToolTip(0, htmlFormattedString);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -276,14 +207,14 @@ QString BookmarksDockWidget::generateHtmlFilterListFromPipelineFile(QString path
   QFileInfo fi(path);
   if(fi.suffix().compare("ini") == 0)
   {
-    QSettings prefs(path, QSettings::IniFormat);
+    DREAM3DSettings prefs(path);
     prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
     bool ok = false;
-    name = prefs.value("Name").toString();
-    dVers = prefs.value("DREAM3D_Version").toString();
+    name = prefs.value("Name", "").toString();
+    dVers = prefs.value("DREAM3D_Version", "").toString();
     if(dVers.isEmpty() == true)
     {
-      dVers = prefs.value("Version").toString();
+      dVers = prefs.value("Version", "").toString();
     }
     prefs.endGroup();
     if (false == ok) {filterCount = 0;}
@@ -428,8 +359,6 @@ void BookmarksDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item
   {
     // Set the internal data with the new name
     item->setData(0, Qt::UserRole, item->text(0));
-
-    writeAndUpdateWidget();
   }
 }
 
@@ -437,7 +366,7 @@ void BookmarksDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
+void BookmarksDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous)
 {
   if (m_DeleteAction != NULL)
   {
@@ -463,99 +392,6 @@ void BookmarksDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetIte
     }
   }
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool BookmarksDockWidget::checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
-{
-  // Put all children (favorites) in a list
-  QList<QTreeWidgetItem*> favoritesList;
-  int numOfChildren = item->parent()->childCount();
-  for (int i = 0; i < numOfChildren; i++)
-  {
-    favoritesList.append( item->parent()->child(i) );
-  }
-
-  // Check for illegal characters and duplicate favorite names
-  if ( hasIllegalFavoriteName(favoritePath, newFavoriteTitle, item) ||
-       hasDuplicateFavorites(favoritesList, favoritePath, newFavoriteTitle, item) )
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool BookmarksDockWidget::hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
-{
-  QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
-  QString displayText = "";
-
-  if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d ]")) )
-  {
-    displayText = "The title that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
-    displayText = displayText + "\n\nNo spaces allowed";
-
-    // Change the GUI back to the old name
-    favoritePrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-    filterLibraryTree->blockSignals(true);
-    item->setText(0, favoritePrefs.value("Name").toString() );
-    filterLibraryTree->blockSignals(false);
-    favoritePrefs.endGroup();
-
-    // Display error message
-    QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
-                          QMessageBox::Ok, QMessageBox::Ok);
-
-    return true;
-  }
-
-  return false;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool BookmarksDockWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
-{
-  QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
-  QString displayText = "";
-
-  for (int i = 0; i < favoritesList.size(); i++)
-  {
-    QSettings currentItemPrefs(favoritesList[i]->data(1, Qt::UserRole).toString(), QSettings::IniFormat);
-    currentItemPrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-
-    // If the new title matches one of the other favorite titles
-    if (currentItemPrefs.value("Name").toString() == newFavoriteTitle)
-    {
-      displayText = "A favorite that has this title already exists in the Favorites list.\n\n";
-
-      // Change the GUI back to the old name
-      favoritePrefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-      filterLibraryTree->blockSignals(true);
-      item->setText(0, favoritePrefs.value("Name").toString() );
-      filterLibraryTree->blockSignals(false);
-      favoritePrefs.endGroup();
-
-      // Display error message
-      QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
-                            QMessageBox::Ok, QMessageBox::Ok);
-
-      return true;
-    }
-  }
-
-  return false;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -600,8 +436,6 @@ void BookmarksDockWidget::m_ActionNewFolder_triggered()
 
   // Resize the bookmarks widget header to contents
   filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-  writeAndUpdateWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -620,8 +454,6 @@ void BookmarksDockWidget::m_ActionAddPipeline_triggered()
 
   // Resize the bookmarks widget header to contents
   filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-  writeAndUpdateWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -888,8 +720,6 @@ void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
 
     // Resize the bookmarks widget header to contents
     filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-    writeAndUpdateWidget();
   }
 }
 
@@ -949,74 +779,21 @@ void BookmarksDockWidget::m_ActionShowInFileSystem_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::readSettings()
+void BookmarksDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-
-    QString filePath = prefs.fileName();
-
-    readTreeSettings(prefs);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::readTreeSettings(QSettings& prefs)
-{
-  prefs.beginGroup("DockWidgetSettings");
+  main->restoreDockWidget(this);
 
   bool b = prefs.value(objectName(), false).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("BookmarksHeaderState").toByteArray();
+  QByteArray headerState = prefs.value("BookmarksHeaderState", QByteArray()).toByteArray();
   filterLibraryTree->header()->restoreState(headerState);
 
-  int size = prefs.beginReadArray("Bookmarks");
-  for (int i = 0; i < size; i++)
-  {
-    prefs.setArrayIndex(i);
+  QJsonObject treeObj = prefs.value("Bookmarks Tree", QJsonObject());
+  FilterLibraryTreeWidget* newTree = FilterLibraryTreeWidget::FromJsonObject(treeObj);
 
-    QString title = prefs.value("Title").toString();
-    QString path = prefs.value("Path").toString();
-    QString parentTreePath = prefs.value("Parent_Tree_Path").toString();
-    bool isExpanded = prefs.value("IsExpanded", false).toBool();
-
-    path = QDir::toNativeSeparators(path);
-
-    QTreeWidgetItem* parentItem = getItemFromTreePath(parentTreePath);
-
-    QIcon icon;
-    FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Unknown_Item_Type;
-    if (path.isEmpty())
-    {
-      // This is a folder
-      addTreeItem(parentItem, title, QIcon(":/folder_blue.png"), FilterLibraryTreeWidget::Node_Item_Type, path, true, false, isExpanded);
-    }
-    else
-    {
-      // This is a pipeline
-      addTreeItem(parentItem, title, QIcon(":/text.png"), FilterLibraryTreeWidget::Leaf_Item_Type, path, true, false, isExpanded);
-    }
-  }
-  prefs.endArray();
-
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::readSettings(QMainWindow* main, QSettings& prefs)
-{
-  main->restoreDockWidget(this);
-
-  readTreeSettings(prefs);
+  // Copy the children over to the filterLibraryTree.
+  filterLibraryTree->addTopLevelItems(newTree->invisibleRootItem()->takeChildren());
 }
 
 // -----------------------------------------------------------------------------
@@ -1024,13 +801,7 @@ void BookmarksDockWidget::readSettings(QMainWindow* main, QSettings& prefs)
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::writeSettings()
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-
-  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  DREAM3DSettings prefs;
 
   QString fileName = prefs.fileName();
 
@@ -1040,61 +811,14 @@ void BookmarksDockWidget::writeSettings()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::writeSettings(QSettings& prefs)
+void BookmarksDockWidget::writeSettings(DREAM3DSettings& prefs)
 {
-  prefs.beginGroup("DockWidgetSettings");
-
   prefs.setValue(objectName(), isHidden());
 
   prefs.setValue("BookmarksHeaderState", filterLibraryTree->header()->saveState());
 
-  QTreeWidgetItemIterator iter(filterLibraryTree);
-
-  // Delete out old content
-  prefs.beginGroup("Bookmarks");
-  prefs.remove("");
-  prefs.endGroup();
-
-  // Write new content
-  prefs.beginWriteArray("Bookmarks");
-  int i = 0;
-  while (*iter)
-  {
-    QTreeWidgetItem* currentItem = *iter;
-
-    prefs.setArrayIndex(i);
-    prefs.setValue("Title", currentItem->text(0));
-    prefs.setValue("Path", currentItem->data(1, Qt::UserRole).toString());
-    prefs.setValue("IsExpanded", currentItem->isExpanded());
-
-    if (NULL != currentItem->parent())
-    {
-      QString treePath = getTreePathFromItem(currentItem->parent());
-      prefs.setValue("Parent_Tree_Path", treePath);
-    }
-    else
-    {
-      prefs.setValue("Parent_Tree_Path", "");
-    }
-
-    ++iter;
-    i++;
-  }
-  prefs.endArray();
-
-  prefs.endGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::updateWidget()
-{
-  // Clear the tree
-  filterLibraryTree->clear();
-
-  // Read Settings
-  readSettings();
+  QJsonObject treeObj = filterLibraryTree->toJsonObject();
+  prefs.setValue("Bookmarks Tree", treeObj);
 }
 
 // -----------------------------------------------------------------------------
@@ -1173,17 +897,6 @@ QList<QString> BookmarksDockWidget::deserializeTreePath(QString treePath)
   }
 
   return list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::writeAndUpdateWidget()
-{
-  // Update settings in the file, since this is used by new DREAM3D instances
-  writeSettings();
-
-  emit settingsUpdated();
 }
 
 

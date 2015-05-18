@@ -46,6 +46,8 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
+#include "QtSupportLib/DREAM3DSettings.h"
+
 #include "ui_FilterLibraryDockWidget.h"
 
 class FilterListDockWidget;
@@ -78,6 +80,16 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
      * @brief refreshFilterGroups
      */
     void refreshFilterGroups();
+
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+
+    /**
+    * @brief Writes the preferences to the users pref file
+    */
+    void writeSettings(DREAM3DSettings& prefs);
 
   protected:
     void updateFilterGroupList(FilterManager::Collection& factories);

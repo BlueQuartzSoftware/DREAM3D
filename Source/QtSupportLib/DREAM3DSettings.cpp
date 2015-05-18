@@ -50,7 +50,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DSettings::DREAM3DSettings(QObject *parent)
+DREAM3DSettings::DREAM3DSettings(QObject *parent) :
+  m_CurrentArrayIndex(-1)
 {
   setParent(parent);
 
@@ -97,6 +98,8 @@ DREAM3DSettings::DREAM3DSettings(const QString &filePath, QObject *parent)
 // -----------------------------------------------------------------------------
 DREAM3DSettings::~DREAM3DSettings()
 {
+  m_Root = m_CurrentGroup;
+
   QFile outputFile(m_FilePath);
   QFileInfo info(outputFile);
   QString parentPath = info.absolutePath();
@@ -177,20 +180,60 @@ void DREAM3DSettings::endGroup()
 // -----------------------------------------------------------------------------
 QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue)
 {
-  if (m_CurrentGroup.contains(key) == false)
+  if (m_CurrentArrayName.isEmpty() == false)
   {
-    return defaultValue;
-  }
+    if (m_CurrentArray.contains(key) == false || m_CurrentArrayIndex == -1)
+    {
+      return defaultValue;
+    }
 
-  if (m_CurrentGroupName == "WindowSettings")
-  {
-    QByteArray byteArray8Bit = m_CurrentGroup.value(key).toString().toLocal8Bit();
-    QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
-    return byteArray;
+    return m_CurrentArray.at(m_CurrentArrayIndex).toVariant();
   }
   else
   {
-    return m_CurrentGroup.value(key).toVariant();
+    if (m_CurrentGroup.contains(key) == false)
+    {
+      return defaultValue;
+    }
+
+    if (m_CurrentGroupName == "WindowSettings")
+    {
+      QByteArray byteArray8Bit = m_CurrentGroup.value(key).toString().toLocal8Bit();
+      QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
+      return byteArray;
+    }
+    else
+    {
+      return m_CurrentGroup.value(key).toVariant();
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonObject DREAM3DSettings::value(const QString &key, const QJsonObject &defaultObject)
+{
+  if (m_CurrentArrayName.isEmpty() == false)
+  {
+    if (m_CurrentArrayIndex == -1)
+    {
+      return defaultObject;
+    }
+
+    if (m_CurrentArray.at(m_CurrentArrayIndex).isObject())
+    {
+      return m_CurrentArray.at(m_CurrentArrayIndex).toObject();
+    }
+    return defaultObject;
+  }
+  else
+  {
+    if (m_CurrentGroup[key].isObject())
+    {
+      return m_CurrentGroup[key].toObject();
+    }
+    return defaultObject;
   }
 }
 
@@ -199,17 +242,58 @@ QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue
 // -----------------------------------------------------------------------------
 void DREAM3DSettings::setValue(const QString &key, const QVariant &value)
 {
-  if (QString::fromStdString(std::string(value.typeName())) == "QByteArray")
+  if (m_CurrentArrayName.isEmpty() == false)
   {
-    QByteArray byteArray = value.toByteArray().toBase64();
-    QString str = QString::fromLocal8Bit(byteArray);
-    m_CurrentGroup.insert(key, str);
+    if (m_CurrentArrayIndex == -1)
+    {
+      return;
+    }
+
+    if (QString::fromStdString(std::string(value.typeName())) == "QByteArray")
+    {
+      QByteArray byteArray = value.toByteArray().toBase64();
+      QString str = QString::fromLocal8Bit(byteArray);
+      m_CurrentArray.insert(m_CurrentArrayIndex, str);
+    }
+    else
+    {
+      QJsonValue val = QJsonValue::fromVariant(value);
+      m_CurrentArray.insert(m_CurrentArrayIndex, val);
+    }
   }
   else
   {
-    QJsonValue val = QJsonValue::fromVariant(value);
-    QJsonObject obj = val.toObject();
-    m_CurrentGroup.insert(key, obj);
+    if (QString::fromStdString(std::string(value.typeName())) == "QByteArray")
+    {
+      QByteArray byteArray = value.toByteArray().toBase64();
+      QString str = QString::fromLocal8Bit(byteArray);
+      m_CurrentGroup.insert(key, str);
+    }
+    else
+    {
+      QJsonValue val = QJsonValue::fromVariant(value);
+      m_CurrentGroup.insert(key, val);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DSettings::setValue(const QString &key, const QJsonObject &object)
+{
+  if (m_CurrentArrayName.isEmpty() == false)
+  {
+    if (m_CurrentArrayIndex == -1)
+    {
+      return;
+    }
+
+    m_CurrentArray.insert(m_CurrentArrayIndex, object);
+  }
+  else
+  {
+    m_CurrentGroup.insert(key, object);
   }
 }
 
@@ -239,26 +323,72 @@ void DREAM3DSettings::closeFile()
 {
   m_Root = QJsonObject();
   m_CurrentGroup = QJsonObject();
+  m_CurrentGroupName = "";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QJsonObject DREAM3DSettings::value(const QString &key, const QJsonObject &defaultObject)
+void DREAM3DSettings::beginWriteArray(const QString & key)
 {
-  if (m_Root[key].isObject())
+  if (m_CurrentArrayName.isEmpty() == false || m_CurrentArray.isEmpty() == false)
   {
-    return m_Root[key].toObject();
+    return;
   }
-  return QJsonObject();
+
+  // Set the new array name
+  m_CurrentArrayName = key;
+
+  if (m_Root.contains(key) == true && m_Root[key].isArray())
+  {
+    m_CurrentArray = m_Root[key].toArray();
+  }
+  else
+  {
+    m_CurrentArray = QJsonArray();
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DSettings::setValue(const QString &key, const QJsonObject &object)
+int DREAM3DSettings::beginReadArray(const QString & key)
 {
-  m_Root[key] = object;
+  if (m_CurrentArrayName.isEmpty() == false || m_CurrentArray.isEmpty() == false)
+  {
+    return 0;
+  }
+  else if (m_Root.contains(key) == false || m_Root[key].isArray() == false)
+  {
+    return 0;
+  }
+
+  // Set the new array name
+  m_CurrentArrayName = key;
+
+  m_CurrentArray = m_Root[key].toArray();
+
+  return m_CurrentArray.size();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DSettings::setArrayIndex(int i)
+{
+  m_CurrentArrayIndex = i;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DSettings::endArray()
+{
+  m_CurrentGroup[m_CurrentArrayName] = m_CurrentArray;
+
+  m_CurrentArray = QJsonArray();
+  m_CurrentArrayName = "";
+  m_CurrentArrayIndex = -1;
 }
 
 

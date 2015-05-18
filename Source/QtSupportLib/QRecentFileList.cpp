@@ -117,7 +117,7 @@ void QRecentFileList::removeFile(const QString& file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::writeList(QSettings& prefs)
+void QRecentFileList::writeList(DREAM3DSettings& prefs)
 {
   QStringList fileList = this->fileList();
 
@@ -135,14 +135,14 @@ void QRecentFileList::writeList(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::readList(QSettings& prefs)
+void QRecentFileList::readList(DREAM3DSettings& prefs)
 {
   int size = prefs.beginReadArray("RecentFiles");
 
   for (int i = 0; i < size; i++)
   {
     prefs.setArrayIndex(i);
-    QString filePath = prefs.value("FilePath").toString();
+    QString filePath = prefs.value("FilePath", "").toString();
 
     QFile file(filePath);
     if (file.exists())

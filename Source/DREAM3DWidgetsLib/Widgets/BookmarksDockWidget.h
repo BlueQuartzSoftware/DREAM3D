@@ -43,6 +43,7 @@
 #include <QtWidgets/QTreeWidgetItem>
 
 #include "QtSupportLib/FileDragMessageBox.h"
+#include "QtSupportLib/DREAM3DSettings.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -107,12 +108,12 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, QSettings& prefs);
+    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(QSettings& prefs);
+    void writeSettings(DREAM3DSettings& prefs);
 
   public slots:
     //// Slots to catch signals from main menu or context menu
@@ -141,11 +142,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     */
     void addFolder(QString name, QString parentName, QString parentTreePath, bool editState);
 
-    /**
-    * @brief Updates the widget with the new information in the settings file
-    */
-    void updateWidget();
-
   protected:
 
     virtual QDir findPipelinesDirectory();
@@ -153,15 +149,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     QString generateHtmlFilterListFromPipelineFile(QString path);
 
     void populateFilterList(QStringList filterNames);
-    bool checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
-    bool hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
-    bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
-
-    void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                                 bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
-
-    void readTreeSettings(QSettings& prefs);
 
   protected slots:
 
@@ -191,10 +179,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
 
     void convertPipelines(QString newDirectory);
-
-    void readSettings();
-
-    void writeAndUpdateWidget();
 
   signals:
 
@@ -226,8 +210,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void pipelineNeedsToBeCleared();
 
     void updateStatusBar(const QString &msg);
-
-    void settingsUpdated();
 
   private:
     QString                 m_OpenDialogLastDirectory;

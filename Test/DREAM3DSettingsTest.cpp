@@ -57,7 +57,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-
+  QFile::remove(UnitTest::DREAM3DSettingsTest::TestFile);
 #endif
 }
 
@@ -66,28 +66,9 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void DREAM3DSettingsTest()
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QSettings prefs("PUT DIRECTORY HERE", QSettings::IniFormat);
-  QString filePath = prefs.fileName();
-
-  prefs.beginGroup("WindowSettings");
-  QByteArray geo_data = prefs.value(QString("MainWindowGeometry")).toByteArray();
-  QByteArray layout_data = prefs.value(QString("MainWindowState")).toByteArray();
-  prefs.endGroup();
-
   FilterLibraryTreeWidget* tree = new FilterLibraryTreeWidget();
   {
-    DREAM3DSettings dream3dPrefs(DREAM3DSettingsTest::TestFile);
-
-    // Write the data
-    dream3dPrefs.beginGroup("WindowSettings");
-    dream3dPrefs.setValue(QString("MainWindowGeometry"), geo_data);
-    dream3dPrefs.setValue(QString("MainWindowState"), layout_data);
-    dream3dPrefs.endGroup();
+    DREAM3DSettings dream3dPrefs(UnitTest::DREAM3DSettingsTest::TestFile);
 
     /* ------------------ Tree test ------------------ */
 
@@ -98,7 +79,7 @@ void DREAM3DSettingsTest()
     folder1->setData(1, Qt::UserRole, "FolderPath1");
     folder1->setIcon(0, QIcon(":/folder_blue.png"));
     folder1->setFlags(folder1->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
-    //tree->addTopLevelItem(folder1);
+    tree->addTopLevelItem(folder1);
 
     QTreeWidgetItem* item1 = new QTreeWidgetItem(tree->invisibleRootItem(), FilterLibraryTreeWidget::Node_Item_Type);
     item1->setText(0, "Item1");
@@ -107,7 +88,7 @@ void DREAM3DSettingsTest()
     item1->setData(1, Qt::UserRole, "ItemPath1");
     item1->setIcon(0, QIcon(":/text.png"));
     item1->setFlags(item1->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
-    //tree->addTopLevelItem(item1);
+    tree->addTopLevelItem(item1);
 
     QTreeWidgetItem* folder2a = new QTreeWidgetItem(folder1, FilterLibraryTreeWidget::Node_Item_Type);
     folder2a->setText(0, "Folder2a");
@@ -141,7 +122,7 @@ void DREAM3DSettingsTest()
     dream3dPrefs.endGroup();
   }
 
-  DREAM3DSettings dream3dPrefs("C:/Users/jkleingers/AppData/Roaming/bluequartz.net/DREAM3D_V5.json");
+  DREAM3DSettings dream3dPrefs(UnitTest::DREAM3DSettingsTest::TestFile);
 
   // Read it back in
   dream3dPrefs.beginGroup("Joey's Test Section");
@@ -157,6 +138,9 @@ void DREAM3DSettingsTest()
     QTreeWidgetItem* item = *iter;
     QTreeWidgetItem* newItem = *newIter;
 
+    QString name = item->text(0);
+    QString newName = newItem->text(0);
+
     DREAM3D_REQUIRE_EQUAL(item->text(0), newItem->text(0))
     DREAM3D_REQUIRE_EQUAL(item->text(1), newItem->text(1))
     DREAM3D_REQUIRE_EQUAL(item->data(0, Qt::UserRole).toString(), newItem->data(0, Qt::UserRole).toString())
@@ -166,22 +150,6 @@ void DREAM3DSettingsTest()
     ++iter;
     ++newIter;
   }
-
-
-  // Read the data
-  dream3dPrefs.beginGroup("WindowSettings");
-
-  DREAM3D_REQUIRE_EQUAL(dream3dPrefs.contains("MainWindowGeometry"), true)
-
-    QByteArray new_geo_data = dream3dPrefs.value("MainWindowGeometry", QByteArray()).toByteArray();
-  DREAM3D_REQUIRE_EQUAL(geo_data, new_geo_data)
-
-    DREAM3D_REQUIRE_EQUAL(dream3dPrefs.contains("MainWindowState"), true)
-
-    QByteArray new_layout_data = dream3dPrefs.value("MainWindowState", QByteArray()).toByteArray();
-  DREAM3D_REQUIRE_EQUAL(layout_data, new_layout_data)
-
-    dream3dPrefs.endGroup();
 }
 
 
@@ -197,6 +165,8 @@ int main(int argc, char** argv)
   QApplication::setApplicationName("DREAM3DSettingsTest");
 
   int err = EXIT_SUCCESS;
+
+  DREAM3D_REGISTER_TEST(RemoveTestFiles())
 
   DREAM3D_REGISTER_TEST(DREAM3DSettingsTest())
 

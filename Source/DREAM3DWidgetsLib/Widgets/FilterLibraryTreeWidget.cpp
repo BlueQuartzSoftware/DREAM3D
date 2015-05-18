@@ -341,10 +341,8 @@ FilterLibraryTreeWidget* FilterLibraryTreeWidget::FromJsonObject(QJsonObject tre
     QList<QTreeWidgetItem*> list = item->takeChildren();
 
     FilterLibraryTreeWidget* tree = new FilterLibraryTreeWidget();
-    for (int i = 0; i < list.size(); i++)
-    {
-      tree->insertTopLevelItem(i, list[i]);
-    }
+    
+    tree->addTopLevelItems(list);
 
     tree->sortItems(0, Qt::AscendingOrder);
     return tree;

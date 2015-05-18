@@ -39,6 +39,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QMapIterator>
 #include <QtWidgets/QTreeWidgetItem>
+#include <QtWidgets/QMainWindow>
 #include <QtGui/QPainter>
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
@@ -582,6 +583,43 @@ QMap<QString, AbstractFilter::Pointer> FilterListDockWidget::getHumanNameMap(QLi
   return map;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::writeSettings(DREAM3DSettings& prefs)
+{
+  prefs.setValue(objectName(), isHidden());
+  prefs.setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+{
+  main->restoreDockWidget(this);
 
+  QString objectName = prefs.value("ActiveSearchAction", "").toString();
+  QList<QAction*> list = getSearchActionList();
+
+  bool didCheck = false;
+  for (int i = 0; i < list.size(); i++)
+  {
+    if (list[i]->objectName() == objectName)
+    {
+      list[i]->setChecked(true);
+      didCheck = true;
+    }
+    else
+    {
+      list[i]->setChecked(false);
+    }
+  }
+
+  if (didCheck == false && list.size() > 0)
+  {
+    // Set "All Words" as checked by default
+    list[0]->setChecked(true);
+  }
+}
 
