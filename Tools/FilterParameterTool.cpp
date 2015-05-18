@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-10-D-5210
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include <iostream>
 
@@ -828,10 +828,152 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFilterParametersCode()
+void ReplaceLicenseText(QString absPath)
+{
+  QString contents;
+  {
+    // Read the Source File
+    QFileInfo fi(absPath);
+//    if (fi.baseName().compare("AddFavoriteWidget") != 0)
+//    {
+//      return;
+//    }
+
+    QFile source(absPath);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  qDebug() << absPath;
+
+  QStringList names;
+  bool didReplace = false;
+
+  QVector<int> lines(0);
+
+
+  QString searchString = "/* ============================================================================";
+  QString searchString2 = " * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */";
+  QVector<QString> outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QMap<QString, int> lineToInclude;
+  int index = 0;
+  bool hasLicense = false;
+  if(list.at(0).startsWith(searchString) == true)
+  {
+    hasLicense = true;
+    QString line = sourceLines.next();
+  }
+
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+
+    if(hasLicense == true && line.startsWith(searchString2))
+    {
+      hasLicense = false;
+
+      QString license;
+      QTextStream out(&license);
+
+      out << "/* ============================================================================\n";
+      out << "* Copyright (c) 2009-2015 BlueQuartz Software, LLC\n";
+      out << "*\n";
+      out << "* Redistribution and use in source and binary forms, with or without modification,\n";
+      out << "* are permitted provided that the following conditions are met:\n";
+      out << "*\n";
+      out << "* Redistributions of source code must retain the above copyright notice, this\n";
+      out << "* list of conditions and the following disclaimer.\n";
+      out << "*\n";
+      out << "* Redistributions in binary form must reproduce the above copyright notice, this\n";
+      out << "* list of conditions and the following disclaimer in the documentation and/or\n";
+      out << "* other materials provided with the distribution.\n";
+      out << "*\n";
+      out << "* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its \n";
+      out << "* contributors may be used to endorse or promote products derived from this software \n";
+      out << "* without specific prior written permission.\n";
+      out << "*\n";
+      out << "* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n";
+      out << "* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n";
+      out << "* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n";
+      out << "* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\n";
+      out << "* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n";
+      out << "* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n";
+      out << "* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n";
+      out << "* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n";
+      out << "* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE\n";
+      out << "* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n";
+      out << "*\n";
+      out << "* The code contained herein was partially funded by the followig contracts:\n";
+      out << "*    United States Air Force Prime Contract FA8650-07-D-5800\n";
+      out << "*    United States Air Force Prime Contract FA8650-10-D-5210\n";
+      out << "*    United States Prime Contract Navy N00173-07-C-2068\n";
+      out << "*\n";
+      out << "* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */\n";
+
+      outLines.push_back(license);
+      didReplace = true;
+      continue;
+    }
+
+    if (hasLicense == true && line.startsWith(" *"))
+    {
+      continue;
+    }
+
+    outLines.push_back(line);
+
+    index++;
+  }
+
+
+  writeOutput(didReplace, outLines, absPath);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReplaceLicenseCodeRecursively(QDir currentDir)
 {
 
+  QStringList filters;
+  filters.append("*.h");
+  filters.append("*.cpp");
+  filters.append("*.hpp");
+  filters.append("*.in");
 
+  if(currentDir.dirName().compare("zRel")== 0 || currentDir.dirName().compare("Build") == 0)
+  {
+    return;
+  }
+  // Get a list of all the directories
+  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  if ( dirList.size() > 0 )
+  {
+    foreach(QFileInfo fi, dirList)
+    {
+      ReplaceLicenseCodeRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
+    }
+  }
+
+  QFileInfoList itemList = currentDir.entryInfoList(filters);
+  foreach(QFileInfo itemInfo, itemList)
+  {
+    QString itemFilePath = itemInfo.absoluteFilePath();
+    ReplaceLicenseText(itemFilePath);
+  }
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenerateFilterParametersCode()
+{
   FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
@@ -846,7 +988,7 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    CorrectInitializerList(filter, h, cpp);
+    //CorrectInitializerList(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
@@ -864,7 +1006,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -882,7 +1024,8 @@ int main(int argc, char* argv[])
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
 
-  GenerateFilterParametersCode();
+  //GenerateFilterParametersCode();
+  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
 
   return 0;
 }

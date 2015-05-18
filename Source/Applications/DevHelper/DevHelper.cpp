@@ -45,7 +45,7 @@
 #include "DevHelper/PluginMaker.h"
 #include "DevHelper/FilterMaker.h"
 
-#include "DREAM3D/License/PluginMakerLicenseFiles.h"
+#include "DREAM3D/License/DevHelperLicenseFiles.h"
 
 #include <iostream>
 
