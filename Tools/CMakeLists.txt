@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.1.0)
 
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
-set(install_dir "tools")
+set(install_dir "bin")
 if(WIN32)
     set(install_dir ".")
 endif()
@@ -68,13 +68,10 @@ function(COMPILE_TOOL)
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
-        SOLUTION_FOLDER "Tools"
+        SOLUTION_FOLDER "Applications"
     )
 
 endfunction()
-
-
-
 
 # Create a Command line tool for the PipelineRunner
 COMPILE_TOOL(

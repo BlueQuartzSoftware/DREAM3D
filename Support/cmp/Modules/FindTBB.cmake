@@ -224,7 +224,7 @@ find_library(TBB_MALLOC_LIBRARY_DEBUG
 # Set the binary directory where the Windows DLL files are located.
 set(TBB_BIN_DIR ${TBB_INSTALL_DIR}/bin/${TBB_ARCH_PLATFORM} CACHE PATH "" FORCE )
 set(TBB_MALLOC_BIN_DIR ${TBB_INSTALL_DIR}/bin/${TBB_ARCH_PLATFORM}  CACHE PATH "" FORCE)
-
+set(TBB_COMPONENTS tbb tbbmalloc)
 
 # include the macro to adjust libraries
 INCLUDE (${CMP_MODULES_SOURCE_DIR}/cmpAdjustLibVars.cmake)

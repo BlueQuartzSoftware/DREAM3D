@@ -192,8 +192,8 @@ function(AddQt5LibraryInstallRule)
 #-- a stand alone .zip or .tgz file
   if(0)
     if(UNIX AND NOT APPLE)
-      GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_QMAKE_EXECUTABLE} PATH)
-      GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_LIB_PATH} PATH)
+      GET_FILENAME_COMPONENT(QT_LIB_PATH ${QtQMake_location} PATH)
+      #GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_LIB_PATH} PATH)
       set(QT_LIB_PATH ${QT_LIB_PATH}/lib)
       foreach(qtlib ${QTLIBLIST})
          FILE(GLOB libFiles ${QT_LIB_PATH}/lib${qtlib}.so*)
@@ -214,7 +214,7 @@ endfunction()
 #-------------------------------------------------------------------------------
 function(AddQt5Plugins)
   set(options)
-  set(oneValueArgs PLUGIN_FILE PLUGIN_FILE_TEMPLATE LIBRARY_SEARCH_FILE PLUGIN_TYPE PLUGIN_SUFFIX)
+  set(oneValueArgs PLUGIN_FILE PLUGIN_FILE_TEMPLATE PLUGIN_TYPE PLUGIN_SUFFIX)
   set(multiValueArgs PLUGIN_NAMES)
   if("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE "Release")
@@ -260,15 +260,21 @@ function(AddQt5Plugins)
   endif()
 
   if(NOT APPLE)
+      set(QTCONF_DIR "bin")
+      set(QTPLUGINS_DIR "../")
+      if(WIN32)
+        set(QTCONF_DIR ".")
+        set(QTPLUGINS_DIR "")
+      endif()
       # Create the qt.conf file so that the image plugins will be loaded correctly
-      FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = Plugins")
-      install(FILES ${PROJECT_BINARY_DIR}/qt.conf
-              DESTINATION .
+      FILE(WRITE ${PROJECT_BINARY_DIR}/${QTCONF_DIR}/qt.conf "[Paths]\nPlugins = ${QTPLUGINS_DIR}Plugins")
+      install(FILES ${PROJECT_BINARY_DIR}/${QTCONF_DIR}/qt.conf
+              DESTINATION ${QTCONF_DIR}
               COMPONENT Applications)
   endif()
 
 
-  file(APPEND ${P_LIBRARY_SEARCH_FILE} "${QT_PLUGINS_DIR}/${plugintype};")
+  #file(APPEND ${P_LIBRARY_SEARCH_FILE} "${QT_PLUGINS_DIR}/${plugintype};")
 endfunction()
 
 # ------------------------------------------------------------------------------
@@ -281,26 +287,31 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Find the QtWidgets library
 set(Qt5_COMPONENTS 
     Core 
-      Widgets 
-      Network 
-      Gui 
-      Concurrent 
-      Script 
-      Svg 
-      Xml 
-      OpenGL 
-      PrintSupport 
-      WebKit 
-      WebKitWidgets 
-      Sensors
-      Multimedia 
-      MultimediaWidgets 
-      Qml 
-      Quick 
-      Positioning 
-      Sql 
-      WebChannel
-      )
+    Widgets 
+    Network 
+    Gui 
+    Concurrent 
+    Script 
+    Svg 
+    Xml 
+    OpenGL 
+    PrintSupport 
+    WebKit 
+    WebKitWidgets 
+    Sensors
+    Multimedia 
+    MultimediaWidgets 
+    Qml 
+    Quick 
+    Positioning 
+    Sql 
+    WebChannel
+    )
+# On Linux we need the DBus library
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set(Qt5_COMPONENTS ${Qt5_COMPONENTS} DBus)
+endif()
+
 find_package(Qt5 COMPONENTS ${Qt5_COMPONENTS})
 if(NOT Qt5_FOUND)
   message(FATAL_ERROR "Qt5 is Required for DREAM3D to build. Please install it.")
@@ -319,12 +330,15 @@ CopyQt5RunTimeLibraries(LIBRARIES ${Qt5_COMPONENTS} PREFIX Qt5)
 #                        PREFIX Qt5)
 
 # This is pretty much needed on all the platforms.
-AddQt5LibraryInstallRule( LIBRARIES ${Qt5_COMPONENTS})
+AddQt5LibraryInstallRule(LIBRARIES ${Qt5_COMPONENTS})
 
 
-
+set(Qt5_ICU_COMPONENTS icudt53 icuin53 icuuc53)
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set(Qt5_ICU_COMPONENTS icui18n icuuc icudata)
+endif()
 # Each Platform has a set of support libraries that need to be copied
-AddQt5SupportLibraryCopyInstallRules( LIBRARIES icudt53 icuin53 icuuc53 PREFIX "" DEBUG_SUFFIX "")
+AddQt5SupportLibraryCopyInstallRules( LIBRARIES ${Qt5_ICU_COMPONENTS} PREFIX "" DEBUG_SUFFIX "")
 
 #-- Let CMake determine which files need to have 'moc' run on them
 set(CMAKE_AUTOMOC TRUE)
@@ -343,14 +357,20 @@ file(WRITE ${QT_PLUGINS_FILE} "")
 AddQt5Plugins(PLUGIN_NAMES QDDS QGif QICNS QICO QJp2 QJpeg QMng QTga QTiff QWbmp QWebp
               PLUGIN_FILE "${QT_PLUGINS_FILE}"
               PLUGIN_FILE_TEMPLATE "${QT_PLUGINS_FILE_TEMPLATE}"
-              LIBRARY_SEARCH_FILE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
               PLUGIN_SUFFIX Plugin
               PLUGIN_TYPE imageformats)
 if(WIN32)
   AddQt5Plugins(PLUGIN_NAMES QWindowsIntegration
               PLUGIN_FILE "${QT_PLUGINS_FILE}"
               PLUGIN_FILE_TEMPLATE "${QT_PLUGINS_FILE_TEMPLATE}"
-              LIBRARY_SEARCH_FILE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
+              PLUGIN_SUFFIX Plugin
+              PLUGIN_TYPE platforms)
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  AddQt5Plugins(PLUGIN_NAMES QXcbIntegration
+              PLUGIN_FILE "${QT_PLUGINS_FILE}"
+              PLUGIN_FILE_TEMPLATE "${QT_PLUGINS_FILE_TEMPLATE}"
               PLUGIN_SUFFIX Plugin
               PLUGIN_TYPE platforms)
 endif()
@@ -361,7 +381,6 @@ if(0)
   AddQt5Plugins(PLUGIN_NAMES AccessibleFactory
               PLUGIN_FILE "${QT_PLUGINS_FILE}"
               PLUGIN_FILE_TEMPLATE "${QT_PLUGINS_FILE_TEMPLATE}"
-              LIBRARY_SEARCH_FILE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
               PLUGIN_TYPE accessible)
 endif()
 

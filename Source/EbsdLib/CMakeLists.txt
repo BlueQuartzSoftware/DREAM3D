@@ -207,7 +207,7 @@ set(EBSDLib_LINK_LIBRARIES "")
 if(${EbsdLib_ENABLE_HDF5})
 	set(EBSDLib_LINK_LIBRARIES
 		${EBSDLib_LINK_LIBRARIES}
-		${HDF5_LIBRARIES} H5Support
+		hdf5 H5Support
 		)
 endif()
 

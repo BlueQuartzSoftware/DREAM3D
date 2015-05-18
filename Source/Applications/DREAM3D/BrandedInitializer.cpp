@@ -191,7 +191,6 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
   qDebug() << "Loading DREAM3D Plugins....";
-  //qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -235,22 +234,30 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
 #endif
 #else
   // We are on Linux - I think
-  // Try the current location of where the application was launched from
+  // Try the current location of where the application was launched from which is
+  // typically the case when debugging from a build tree
   if (aPluginDir.cd("Plugins"))
   {
     thePath = aPluginDir.absolutePath();
     pluginDirs << thePath;
-    aPluginDir.cdUp(); // Move back up a directory levels
+    aPluginDir.cdUp(); // Move back up a directory level
   }
-  // Now try moving up a directory which is what should happen when running from a
-  // proper distribution of DREAM3D
-  // qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
-  aPluginDir.cdUp();
-  //  qDebug() << "cdUp() Linux Plugins:" << aPluginDir.absolutePath();
-  if (aPluginDir.cd("Plugins"))
+
+  if(thePath.isEmpty())
   {
-    thePath = aPluginDir.absolutePath();
-    pluginDirs << thePath;
+    // Now try moving up a directory which is what should happen when running from a
+    // proper distribution of DREAM3D
+    aPluginDir.cdUp();
+    if (aPluginDir.cd("Plugins"))
+    {
+      thePath = aPluginDir.absolutePath();
+      pluginDirs << thePath;
+      aPluginDir.cdUp(); // Move back up a directory level
+      int no_error = chdir(aPluginDir.absolutePath().toLatin1().constData());
+      if( no_error < 0) {
+        qDebug() << "Could not set the working directory.";
+      }
+    }
   }
 #endif
 

@@ -118,7 +118,7 @@ if(NOT QWT_FOUND)
 ENDif(NOT QWT_FOUND)
 
 
-
+set(QWT_COMPONENTS qwt)
 
 set(TYPES Debug Release)
 set(SUPPORT_LIB_OPTION 1)

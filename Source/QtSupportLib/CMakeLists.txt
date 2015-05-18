@@ -206,7 +206,7 @@ set(QtSupportLib_LINK_LIBRARIES DREAM3DLib)
 if(${QtSupportLib_ENABLE_HDF5})
   set(QtSupportLib_LINK_LIBRARIES
     ${QtSupportLib_LINK_LIBRARIES}
-    ${HDF5_LIBRARIES} H5Support
+    hdf5 H5Support
     )
 endif()
 
