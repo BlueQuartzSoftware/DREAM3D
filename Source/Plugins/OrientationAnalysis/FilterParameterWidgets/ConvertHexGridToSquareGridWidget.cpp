@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -469,8 +469,8 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
                               m_FileExt->text(),
                               m_TotalDigits->value());
   m_FileListView->clear();
-  QIcon greenDot = QIcon(QString(":/green-dot.png"));
-  QIcon redDot = QIcon(QString(":/red-dot.png"));
+  QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
+  QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i));

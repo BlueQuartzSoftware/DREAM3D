@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -199,7 +199,7 @@ void SaveImages::dataCheck()
   else
   {
     setErrorCondition(-1006);
-    notifyErrorMessage(getHumanLabel(), "Number of Components must be 1, 3 or 4 for Gray Scale or RGB or RGBA arrays", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Number of Components must be 1 (Gray Scale), 3 (RGB) or 4 (RGBA) arrays", getErrorCondition());
     return;
   }
 
@@ -383,5 +383,5 @@ const QString SaveImages::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString SaveImages::getHumanLabel()
-{ return "Export Slice Images"; }
+{ return "Write Images"; }
 
