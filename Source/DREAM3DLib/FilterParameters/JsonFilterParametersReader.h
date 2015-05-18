@@ -77,10 +77,12 @@ public:
   /**
    * @brief ReadNameOfPipelineFromFile
    * @param filePath
+   * @param name Sets the name of the pipeline into this variable
+   * @param version Sets the DREAM3D Version into this variable.
    * @param obs
    * @return
    */
-  static QString ReadNameOfPipelineFromFile(QString filePath, IObserver* obs = NULL);
+  static void ReadNameOfPipelineFromFile(QString filePath, QString &name, QString &version, IObserver* obs = NULL);
 
   /**
    * @brief openFile
