@@ -46,11 +46,16 @@
 #endif
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 class InsertAtomsImpl
 {
@@ -100,7 +105,7 @@ class InsertAtomsImpl
         generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, m_Basis, ll_rot, ur_rot);
 
         //check points in vertex array to see if they are in the bounding box of the feature
-        int numPoints = m_Points[iter]->getNumberOfTuples();
+        int numPoints = m_Points[iter]->getNumberOfVertices();
         VertexGeom::Pointer vertArray = m_Points[iter];
         BoolArrayType::Pointer boolArray = m_InFeature[iter];
         for(int i = 0; i < numPoints; i++)
@@ -504,7 +509,7 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
   size_t numFeatures = points.size();
   for(int i = 0; i < numFeatures; i++)
   {
-    size_t numPoints = points[i]->getNumberOfTuples();
+    size_t numPoints = points[i]->getNumberOfVertices();
     bool* inside = inFeature[i]->getPointer(0);
     for(int j = 0; j < numPoints; j++)
     {
@@ -531,7 +536,7 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
   float coords[3];
   for(int i = 0; i < numFeatures; i++)
   {
-    size_t numPoints = points[i]->getNumberOfTuples();
+    size_t numPoints = points[i]->getNumberOfVertices();
     bool* inside = inFeature[i]->getPointer(0);
     for(int j = 0; j < numPoints; j++)
     {
@@ -569,13 +574,19 @@ AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters
 const QString InsertAtoms::getCompiledLibraryName()
 { return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InsertAtoms::getGroupName()
 { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertAtoms::getSubGroupName()
+{
+	return DREAM3D::FilterSubGroups::PackingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //

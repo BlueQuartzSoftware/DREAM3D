@@ -40,13 +40,9 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
 /**
  * @class InsertAtoms InsertAtoms.h DREAM3DLib/SyntheticBuilderFilters/InsertAtoms.h
  * @brief
@@ -86,9 +82,8 @@ class InsertAtoms : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName + " Filter"; }
+	virtual const QString getSubGroupName();
+	virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**
