@@ -90,7 +90,11 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     void setDefaultActionList(QList<QAction*> list);
 
   protected:
-
+    void mousePressEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dragMoveEvent(QDragMoveEvent* event);
+    void dropEvent(QDropEvent* event);
 
     /**
      * @brief Adds the actions in the actionList parameter to the right-click menu
@@ -113,6 +117,9 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
 
   private:
+    void performDrag();
+
+    QPoint                    m_StartPos;
     QMenu                     m_Menu;
     QList<QAction*>           m_NodeActions;
     QList<QAction*>           m_LeafActions;

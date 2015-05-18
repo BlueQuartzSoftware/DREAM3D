@@ -39,118 +39,20 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileDragMessageBox::FileDragMessageBox(QWidget* parent, int filterCount)
+FileDragMessageBox::FileDragMessageBox(QWidget* parent)
 {
     setupUi(this);
 
-    this->filterCount = filterCount;
-
     extractPipelineRadioBtn->setChecked(true);
-
-    if (filterCount == -1)
-    {
-        // This should never be the case - Throw error???
-        return;
-    }
-    else if (filterCount <= 0)
-    {
-        appendPipelineBtn->setHidden(true);
-        prependPipelineBtn->setHidden(true);
-        replacePipelineBtn->setText("Add to Pipeline");
-    }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FileDragMessageBox::getFilePath()
+void FileDragMessageBox::on_okBtn_clicked()
 {
-    return filePath;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FileDragMessageBox::setFilePath(QString path)
-{
-    filePath = path;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QRadioButton* FileDragMessageBox::getAddFilterBtn()
-{
-  return addFilterRadioBtn;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QRadioButton* FileDragMessageBox::getExtractPipelineBtn()
-{
-  return extractPipelineRadioBtn;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QLabel* FileDragMessageBox::getDescriptionLabel()
-{
-  return descriptionLabel;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FileDragMessageBox::on_replacePipelineBtn_clicked()
-{
-    if (addFilterRadioBtn->isChecked())
-    {
-        emit fireAddDREAM3DReaderFilter(filePath, Replace);
-    }
-    else
-    {
-        emit fireExtractPipelineFromFile(filePath, Replace);
-    }
-    // Close the dialog box
-    close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FileDragMessageBox::on_appendPipelineBtn_clicked()
-{
-    if (addFilterRadioBtn->isChecked())
-    {
-        emit fireAddDREAM3DReaderFilter(filePath, Append);
-    }
-    else
-    {
-        emit fireExtractPipelineFromFile(filePath, Append);
-    }
-
-    // Close the dialog box
-    close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FileDragMessageBox::on_prependPipelineBtn_clicked()
-{
-    if (addFilterRadioBtn->isChecked())
-    {
-        emit fireAddDREAM3DReaderFilter(filePath, Prepend);
-    }
-    else
-    {
-        emit fireExtractPipelineFromFile(filePath, Prepend);
-    }
-
-    // Close the dialog box
-    close();
+  // Close the dialog box
+  close();
 }
 
 // -----------------------------------------------------------------------------
@@ -165,17 +67,9 @@ void FileDragMessageBox::on_cancelBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FileDragMessageBox::on_addFilterRadioBtn_toggled()
+bool FileDragMessageBox::isExtractPipelineBtnChecked()
 {
-    if (addFilterRadioBtn->isChecked())
-    {
-        prependPipelineBtn->setHidden(true);
-    }
-    else
-    {
-        if (filterCount > 0)
-        {
-            prependPipelineBtn->setHidden(false);
-        }
-    }
+  return extractPipelineRadioBtn->isChecked();
 }
+
+

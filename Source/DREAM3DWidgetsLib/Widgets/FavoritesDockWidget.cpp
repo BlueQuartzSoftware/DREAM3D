@@ -239,7 +239,7 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
     itemWidget->setData(0, Qt::UserRole, QVariant(itemInfo.absoluteFilePath()));
     if(allowEditing == true)
     {
-      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
+      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
     }
     QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
     itemWidget->setToolTip(0, htmlFormattedString);
@@ -398,7 +398,7 @@ void FavoritesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath, Replace);
+    emit pipelineFileActivated(pipelinePath, 0);
   }
 
 }
@@ -857,22 +857,6 @@ void FavoritesDockWidget::actionRenameFavorite_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   filterLibraryTree->editItem(item, 0);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FavoritesDockWidget::actionAppendFavorite_triggered()
-{
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
-  if (pipelinePath.isEmpty() == false)
-  {
-    QFileInfo fi(pipelinePath);
-    if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath(), Append);
-  }
 }
 
 // -----------------------------------------------------------------------------
