@@ -124,10 +124,10 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      */
     virtual void preflight();
 
-	/**
-	* @brief This method returns an instance of the filter's plugin
-	*/
-	IDREAM3DPlugin* getPluginInstance();
+  /**
+  * @brief This method returns an instance of the filter's plugin
+  */
+  IDREAM3DPlugin* getPluginInstance();
 
     /**
      * @brief newFilterInstance
@@ -139,7 +139,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     // ------------------------------
     // Standard methods for this class the are commonly used by subclasses.
     // ------------------------------
-    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Complete(); }
+    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Package(); }
 
     DREAM3D_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)
 
