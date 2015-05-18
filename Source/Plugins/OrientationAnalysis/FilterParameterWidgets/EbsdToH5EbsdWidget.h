@@ -70,7 +70,7 @@ class EbsdToH5Ebsd;
  * should make it able to be embedded in most Qt applications. This module controls
  * the import of EBSD data files into an HDF5 file
  * for better data management and archiving.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 30, 2011
  * @version 1.0
  */

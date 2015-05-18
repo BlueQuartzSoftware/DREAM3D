@@ -55,7 +55,7 @@
  * @class H5AngImporter H5AngImporter.h EbsdLib/TSL/H5AngImporter.h
  * @brief This class will read a series of .ang files and store the values into
  * an HDF5 file according to the .h5ebsd specification
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date March 23, 2011
  * @version 1.2
  */

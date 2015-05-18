@@ -60,9 +60,10 @@ EddyCurrentDataReader::EddyCurrentDataReader() :
   m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_MetaDataAttributeMatrixName(DREAM3D::StringConstants::MetaData),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_HasMultipleValues("False"),
   m_AverageMultipleValues(false),
-  m_InputFile("")
+  m_InputFile(""),
+  m_HasMultipleValues("False"),
+  m_DataPointCount(0)
 {
   setupFilterParameters();
 }
@@ -113,10 +114,10 @@ int EddyCurrentDataReader::writeFilterParameters(AbstractFilterParametersWriter*
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(MetaDataAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(MetaDataAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -207,9 +208,9 @@ void shuffleArray(IDataArray::Pointer inputData, IDataArray::Pointer inputDataCo
 
   for(size_t i = 0; i < m_DataPointCount; i++)
   {
-    size_t row = i%yDim;
-    size_t col = i/yDim;
-    size_t newPos = (row*xDim) + col;
+    size_t row = i % yDim;
+    size_t col = i / yDim;
+    size_t newPos = (row * xDim) + col;
     copyPtr[newPos] = inPtr[i];
   }
 }
@@ -229,7 +230,7 @@ void EddyCurrentDataReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EddyCurrentDataReader::readHeader(QFile &reader)
+int EddyCurrentDataReader::readHeader(QFile& reader)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
@@ -261,7 +262,7 @@ int EddyCurrentDataReader::readHeader(QFile &reader)
     buf = buf.trimmed();
     buf = buf.simplified();
     words = buf.split(',');
-    if(words.size() > 1) keepGoing = false;
+    if(words.size() > 1) { keepGoing = false; }
     if(words.size() == 1)
     {
       words = buf.split(':');
@@ -271,9 +272,9 @@ int EddyCurrentDataReader::readHeader(QFile &reader)
         if(word.compare("Comments") != 0)
         {
           //do some comparisons to get the values of the start and stop frequencies and the number of points in the swwep
-          if(word.compare("Start Freq (Hz)") == 0) startFreq = words[1].toInt(&ok);
-          else if(word.compare("Stop Freq (Hz)") == 0) stopFreq = words[1].toInt(&ok);
-          else if(word.compare("No. of Pts Per Sweep") == 0) numPtsSweep = words[1].toInt(&ok);
+          if(word.compare("Start Freq (Hz)") == 0) { startFreq = words[1].toInt(&ok); }
+          else if(word.compare("Stop Freq (Hz)") == 0) { stopFreq = words[1].toInt(&ok); }
+          else if(word.compare("No. of Pts Per Sweep") == 0) { numPtsSweep = words[1].toInt(&ok); }
           Int32ArrayType::Pointer data = Int32ArrayType::CreateArray(tDims, cDims, word);
           metaAttrMat->addAttributeArray(word, data);
         }
@@ -287,10 +288,10 @@ int EddyCurrentDataReader::readHeader(QFile &reader)
   }
 
   //do logic check to see if there are multiple values at the frequency
-  if(startFreq == stopFreq && numPtsSweep > 1) m_HasMultipleValues = "True";
-  else m_HasMultipleValues = "False";
+  if(startFreq == stopFreq && numPtsSweep > 1) { m_HasMultipleValues = "True"; }
+  else { m_HasMultipleValues = "False"; }
 
-  for(int i=0;i<words.size();i++)
+  for(int i = 0; i < words.size(); i++)
   {
     FloatArrayType::Pointer data = FloatArrayType::CreateArray(0, words[i], false);
     GenericFloatParser::Pointer dparser = GenericFloatParser::New(data, words[i], i);
@@ -305,7 +306,7 @@ int EddyCurrentDataReader::readHeader(QFile &reader)
   }
 
   //rerun the parser with the proper number of dataPoints
-  for(int i=0;i<words.size();i++)
+  for(int i = 0; i < words.size(); i++)
   {
     FloatArrayType::Pointer data = FloatArrayType::CreateArray(m_DataPointCount, words[i], false);
     GenericFloatParser::Pointer dparser = GenericFloatParser::New(data, words[i], i);
@@ -343,7 +344,7 @@ int EddyCurrentDataReader::readHeader(QFile &reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EddyCurrentDataReader::readFile(QFile &reader)
+int EddyCurrentDataReader::readFile(QFile& reader)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
@@ -393,7 +394,7 @@ int EddyCurrentDataReader::readFile(QFile &reader)
     buf = buf.trimmed();
     buf = buf.simplified();
     words = buf.split(',');
-    if(words.size() > 1) keepGoing = false;
+    if(words.size() > 1) { keepGoing = false; }
     if(words.size() == 1)
     {
       words = buf.split(':');
@@ -445,13 +446,13 @@ int EddyCurrentDataReader::readFile(QFile &reader)
   {
     x = xVal[i];
     y = yVal[i];
-    if(x < xMin) xMin = x;
-    if(y < yMin) yMin = y;
-    if(x > xMax) xMax = x;
-    if(y > yMax) yMax = y;
+    if(x < xMin) { xMin = x; }
+    if(y < yMin) { yMin = y; }
+    if(x > xMax) { xMax = x; }
+    if(y > yMax) { yMax = y; }
     //logic to determine if x or y increments fastest in file....x assumed to be fastest, so only check y change
-    if(i == 1 && y != lastYcoord) xFastest = false;
-    if(i == 0) xDim++, yDim++;
+    if(i == 1 && y != lastYcoord) { xFastest = false; }
+    if(i == 0) { xDim++, yDim++; }
     if(i > 0 && xFastest == true)
     {
       if(x != lastXcoord)
@@ -481,14 +482,14 @@ int EddyCurrentDataReader::readFile(QFile &reader)
   }
 
   //logic here assumes the max x and y coordinate is the last data point
-  xStep = (xMax-xMin)/float(xDim-1);
-  yStep = (yMax-yMin)/float(yDim-1);
+  xStep = (xMax - xMin) / float(xDim - 1);
+  yStep = (yMax - yMin) / float(yDim - 1);
 
   m->getGeometryAs<ImageGeom>()->setDimensions(xDim, yDim, 1);
-  m->getGeometryAs<ImageGeom>()->setResolution(xStep, yStep, ((xStep+yStep)/2.0));
+  m->getGeometryAs<ImageGeom>()->setResolution(xStep, yStep, ((xStep + yStep) / 2.0));
   m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, 0.0);
 
-  QVector<size_t> tDims(3,0);
+  QVector<size_t> tDims(3, 0);
   tDims[0] = xDim;
   tDims[1] = yDim;
   tDims[2] = 1;

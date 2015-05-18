@@ -52,7 +52,7 @@ class StatsGenMDFWidget;
  * presets to make available to the end user they need to fully implement the methods
  * that they want to setup specific presets for. Each method has a default implementation
  * that does nothing.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 23, 2011
  * @version 1.0
  */

@@ -31,6 +31,12 @@ namespace UnitTest
     const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
     const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
   }
+
+  namespace CalculateArrayHistogramTest
+  {
+    const QString OldFaithfulFile("@TEST_TEMP_DIR@/OldFaithful.dream3d");
+
+  }
 }
 
 #endif

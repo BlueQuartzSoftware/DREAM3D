@@ -310,7 +310,7 @@ QAbstractItemDelegate* SGRDFTableModel::getItemDelegate()
   setData(weightIndex, QVariant(weight), Qt::EditRole);\
   QModelIndex sigmaIndex = index(rowCount() - 1, SGRDFTableModel::Sigma);\
   setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
-   
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -338,8 +338,8 @@ void SGRDFTableModel::setTableData(QVector<float> freqs)
     m_Frequencies = freqs;
     m_RowCount = count;
     endInsertRows();
-    QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex botRight = createIndex(count - 1, ColumnCount);
+    createIndex(0, 0);
+    createIndex(count - 1, ColumnCount);
   }
   emit dataChanged(topLeft, botRight);
 }

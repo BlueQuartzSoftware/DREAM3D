@@ -404,12 +404,9 @@ void QH5UtilitiesTest()
   DREAM3D_REQUIRE(attributes.size() == AttrSize);
   err = QH5Utilities::closeHDF5Object(dsetId);
   DREAM3D_REQUIRE(err >= 0);
-//
-//   MXAAbstractAttributes allAttributes;
-//   err = QH5Utilities::readAllAttributes(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", allAttributes );
-//   DREAM3D_REQUIRE(err >= 0);
-//   DREAM3D_REQUIRE(allAttributes.size() == AttrSize);
-//   DREAM3D_REQUIRE(H5Fclose(file_id) >= 0);
+
+  err = QH5Utilities::closeFile(file_id);
+  DREAM3D_REQUIRE(err >= 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -496,6 +493,53 @@ void HDF5Darwin2GBWriteTest()
 #endif
 
 // -----------------------------------------------------------------------------
+//  
+// -----------------------------------------------------------------------------
+void TestOpenSameFile2x()
+{
+
+  herr_t err = -1;
+  hid_t   file_id;
+  /* Create a new file using default properties. */
+  file_id = H5Fcreate(UnitTest::H5UtilTest::FileName.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+  DREAM3D_REQUIRE(file_id > 0);
+
+  hid_t gid = H5Utilities::createGroup(file_id, "TestGroup");
+  hid_t gid2 = H5Utilities::createGroup(file_id, "TestGroup2");
+
+  // std::cout << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------";
+  DREAM3D_REQUIRE(testWritePointer2DArrayDataset<int32_t>(gid) >= 0);
+  err = H5Gclose(gid);
+  err = H5Gclose(gid2);
+  gid = 0;
+
+  err = H5Fclose(file_id);
+  file_id = 0;
+
+
+  hid_t fileId = QH5Utilities::openFile(UnitTest::H5UtilTest::FileName.toStdString().c_str(), true); // Open the file Read Only
+  hid_t dcaGid = H5Gopen(fileId, "TestGroup", 0);
+
+
+  {
+    hid_t fileId2 = QH5Utilities::openFile(UnitTest::H5UtilTest::FileName.toStdString().c_str(), true); // Open the file Read Only
+    hid_t dcaGid2 = H5Gopen(fileId2, "TestGroup2", 0);
+    err = H5Gclose(dcaGid2);
+    dcaGid2 = 0;
+    err = H5Utilities::closeFile(fileId2);
+    DREAM3D_REQUIRE(err == 0);
+  }
+
+
+  err = H5Gclose(dcaGid);
+  DREAM3D_REQUIRE(err == 0);
+
+  err = H5Utilities::closeFile(fileId);
+  DREAM3D_REQUIRE(err == 0);
+}
+
+
+// -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
@@ -503,6 +547,7 @@ int main(int argc, char** argv)
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( QH5UtilitiesTest() )
+  DREAM3D_REGISTER_TEST( TestOpenSameFile2x() )
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();
 

@@ -46,9 +46,9 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/Math/OrientationArray.hpp"
-#include "OrientationLib/Math/OrientationTransforms.hpp"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -229,7 +229,6 @@ void JumbleOrientations::execute()
     m_CellEulerAngles[3 * i + 1] = m_FeatureEulerAngles[3 * (m_FeatureIds[i]) + 1];
     m_CellEulerAngles[3 * i + 2] = m_FeatureEulerAngles[3 * (m_FeatureIds[i]) + 2];
   }
-  QuatF q = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   for (int32_t i = 1; i < totalFeatures; i++)
   {

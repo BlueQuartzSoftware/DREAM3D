@@ -51,7 +51,7 @@
 /**
  * @class ColorPoleFigure ColorPoleFigure.h StatsGenerator/ColorPoleFigure.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Nov 4, 2011
  * @version 1.0
  */

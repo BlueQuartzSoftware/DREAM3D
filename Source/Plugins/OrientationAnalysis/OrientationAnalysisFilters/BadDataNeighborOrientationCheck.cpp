@@ -58,7 +58,7 @@ BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck() :
   m_CellPhases(NULL),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

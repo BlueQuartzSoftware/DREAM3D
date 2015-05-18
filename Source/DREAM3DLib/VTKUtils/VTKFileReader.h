@@ -80,7 +80,7 @@
  *
  *
  *
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 19, 2011
  * @version 1.0
  */

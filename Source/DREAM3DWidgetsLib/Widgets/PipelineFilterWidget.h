@@ -66,7 +66,7 @@ class QComboBox;
  * default GUI widget set for each type of Filter Option that is available. If
  * the programmer needs more specialized widgets then they can simply subclass
  * this class and over ride or implement their custom code.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 6, 2012
  * @version 1.0
  */

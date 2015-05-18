@@ -43,7 +43,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
-#include "EbsdLib/HEDM/MicConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 
@@ -77,8 +76,10 @@ class ReadH5Ebsd : public AbstractFilter
     virtual ~ReadH5Ebsd();
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
@@ -87,10 +88,13 @@ class ReadH5Ebsd : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
     DREAM3D_FILTER_PARAMETER(int, ZStartIndex)
     Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
+
     DREAM3D_FILTER_PARAMETER(int, ZEndIndex)
     Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
+
     DREAM3D_FILTER_PARAMETER(bool, UseTransformations)
     Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
 
@@ -150,11 +154,9 @@ class ReadH5Ebsd : public AbstractFilter
 
     H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
     H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
-    H5EbsdVolumeReader::Pointer initHEDMEbsdVolumeReader();
 
     void copyTSLArrays(H5EbsdVolumeReader* ebsdReader);
     void copyHKLArrays(H5EbsdVolumeReader* ebsdReader);
-    void copyHEDMArrays(H5EbsdVolumeReader* ebsdReader);
 
 
     /**

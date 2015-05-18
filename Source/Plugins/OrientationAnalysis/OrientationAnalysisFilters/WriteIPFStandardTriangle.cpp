@@ -60,7 +60,7 @@
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"

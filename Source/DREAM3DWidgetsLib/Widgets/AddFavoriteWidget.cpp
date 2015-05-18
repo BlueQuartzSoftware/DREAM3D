@@ -103,7 +103,7 @@ QString AddFavoriteWidget::getFavoriteName()
 //
 // -----------------------------------------------------------------------------
 void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
-{ 
+{
   QString prefPath = m_ParentPath + QDir::separator() + text + ".ini"; // Generate the proper path to the favorite
 
   QFileInfo fileInfo(prefPath);
@@ -195,7 +195,7 @@ void AddFavoriteWidget::on_errorMessageDisplay_linkActivated(const QString &link
   msgBox.setInformativeText("No special characters allowed due to file system restrictions.");
   msgBox.setStandardButtons(QMessageBox::Ok);
   msgBox.setDefaultButton(QMessageBox::Ok);
-  int ret = msgBox.exec();
+  msgBox.exec();
 }
 
 

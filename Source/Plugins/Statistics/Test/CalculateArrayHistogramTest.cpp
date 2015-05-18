@@ -39,7 +39,6 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-//#include "DREAM3DLib/Common/ComparisonInputs.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -49,6 +48,11 @@
 #include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+
+
+
+#include "StatisticsTestFileLocations.h"
+
 
 static const QString DCName("HistogramTest");
 static const QString Data_AMName("Data");
@@ -463,7 +467,7 @@ void TestFaithful()
 
     DataContainerWriter::Pointer writer = DataContainerWriter::New();
     writer->setDataContainerArray(dca);
-    writer->setOutputFile("/tmp/histogram.dream3d");
+    writer->setOutputFile(UnitTest::CalculateArrayHistogramTest::OldFaithfulFile);
     writer->execute();
     DREAM3D_REQUIRED(writer->getErrorCondition(), >= , 0);
 

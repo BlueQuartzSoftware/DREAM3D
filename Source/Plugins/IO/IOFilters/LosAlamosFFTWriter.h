@@ -49,7 +49,7 @@
 /**
  * @class LosAlamosFFTWriter LosAlamosFFTWriter.h DREAM3DLib/IOFilters/LosAlamosFFTWriter.h
  * @brief Writes out an Text file according to Ricardo Lebenson's FFT simulation software.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Nov 13, 2012
  * @version 1.0
  */

@@ -55,7 +55,7 @@
  * can be written for those data files. The current subclasses are for TSL (.ang)
  * and HKL (.ctf) data files and their HDF5 versions also.
  *
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 24, 2011
  * @version 1.0
  */

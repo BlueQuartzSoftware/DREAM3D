@@ -487,7 +487,7 @@ DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
     DataArrayProxy daProxy(dcaName + "|" + amName, daName, checkState);
     amProxy.dataArrays.insert(daName, daProxy);
     dcProxy.attributeMatricies.insert(amName, amProxy);
-	dcaProxy.dataContainers.insert(dcProxy.name, dcProxy);
+  dcaProxy.dataContainers.insert(dcProxy.name, dcProxy);
   }
 
   return dcaProxy;
@@ -528,33 +528,33 @@ void MultiDataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* f
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
 {
-	attributeArraysWidget->blockSignals(true);
+  attributeArraysWidget->blockSignals(true);
 
-	for (int i = 0; i < attributeArraysWidget->count(); i++)
-	{
-		if (state == Qt::Checked)
-		{
-			attributeArraysWidget->item(i)->setCheckState(Qt::Checked);
-		}
-		else if (state == Qt::Unchecked)
-		{
-			attributeArraysWidget->item(i)->setCheckState(Qt::Unchecked);
-		}
-		else
-		{
-			// Skip the "Partially Checked" check state when merely toggling the "Select All/Deselect All" checkbox
-			selectCheckBox->setCheckState(Qt::Checked);
-		}
-	}
+  for (int i = 0; i < attributeArraysWidget->count(); i++)
+  {
+    if (state == Qt::Checked)
+    {
+      attributeArraysWidget->item(i)->setCheckState(Qt::Checked);
+    }
+    else if (state == Qt::Unchecked)
+    {
+      attributeArraysWidget->item(i)->setCheckState(Qt::Unchecked);
+    }
+    else
+    {
+      // Skip the "Partially Checked" check state when merely toggling the "Select All/Deselect All" checkbox
+      selectCheckBox->setCheckState(Qt::Checked);
+    }
+  }
 
-	attributeArraysWidget->blockSignals(false);
+  attributeArraysWidget->blockSignals(false);
 
-	// This is needed to enable/disable the Data Container and Attribute Matrix combo boxes
-	updateSelectAllCheckbox();
+  // This is needed to enable/disable the Data Container and Attribute Matrix combo boxes
+  updateSelectAllCheckbox();
 
-	m_DidCausePreflight = true;
-	emit parametersChanged();
-	m_DidCausePreflight = false;
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -562,48 +562,47 @@ void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::updateSelectAllCheckbox()
 {
-	bool checkedStateExists = false;
-	int checkedStateCount = 0;
-	bool uncheckedStateExists = false;
-	int uncheckedStateCount = 0;
+  bool checkedStateExists = false;
+  int checkedStateCount = 0;
+  bool uncheckedStateExists = false;
 
-	for (int i = 0; i < attributeArraysWidget->count(); i++)
-	{
-		if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
-		{
-			checkedStateExists = true;
-			checkedStateCount++;
-		}
-		else
-		{
-			uncheckedStateExists = true;
-		}
-	}
+  for (int i = 0; i < attributeArraysWidget->count(); i++)
+  {
+    if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
+    {
+      checkedStateExists = true;
+      checkedStateCount++;
+    }
+    else
+    {
+      uncheckedStateExists = true;
+    }
+  }
 
-	if (checkedStateExists == true && uncheckedStateExists == true)
-	{
-		selectCheckBox->blockSignals(true);
-		selectCheckBox->setCheckState(Qt::PartiallyChecked);
-		dataContainerList->setDisabled(true);
-		attributeMatrixList->setDisabled(true);
-		selectCheckBox->blockSignals(false);
-	}
-	else if (checkedStateCount == attributeArraysWidget->count())
-	{
-		selectCheckBox->blockSignals(true);
-		selectCheckBox->setCheckState(Qt::Checked);
-		dataContainerList->setDisabled(true);
-		attributeMatrixList->setDisabled(true);
-		selectCheckBox->blockSignals(false);
-	}
-	else
-	{
-		selectCheckBox->blockSignals(true);
-		selectCheckBox->setCheckState(Qt::Unchecked);
-		dataContainerList->setEnabled(true);
-		attributeMatrixList->setEnabled(true);
-		selectCheckBox->blockSignals(false);
-	}
+  if (checkedStateExists == true && uncheckedStateExists == true)
+  {
+    selectCheckBox->blockSignals(true);
+    selectCheckBox->setCheckState(Qt::PartiallyChecked);
+    dataContainerList->setDisabled(true);
+    attributeMatrixList->setDisabled(true);
+    selectCheckBox->blockSignals(false);
+  }
+  else if (checkedStateCount == attributeArraysWidget->count())
+  {
+    selectCheckBox->blockSignals(true);
+    selectCheckBox->setCheckState(Qt::Checked);
+    dataContainerList->setDisabled(true);
+    attributeMatrixList->setDisabled(true);
+    selectCheckBox->blockSignals(false);
+  }
+  else
+  {
+    selectCheckBox->blockSignals(true);
+    selectCheckBox->setCheckState(Qt::Unchecked);
+    dataContainerList->setEnabled(true);
+    attributeMatrixList->setEnabled(true);
+    selectCheckBox->blockSignals(false);
+  }
 }
 
 

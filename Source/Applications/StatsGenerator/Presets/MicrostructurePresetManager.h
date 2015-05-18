@@ -50,7 +50,7 @@
  * and the actual Class that generates the data. Given a class name this class will
  * cycle through all the known factory classes looking for the proper class to instantiate
  * and hand back to the calling method.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Apr 27, 2011
  * @version 1.0
  */

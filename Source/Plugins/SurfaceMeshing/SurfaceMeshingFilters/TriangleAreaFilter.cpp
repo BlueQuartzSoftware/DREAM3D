@@ -47,6 +47,9 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+
+#define SQR(value) (value)*(value)
 
 /**
  * @brief The CalculateAreasImpl class
@@ -69,20 +72,25 @@ class CalculateAreasImpl
 
     void generate(size_t start, size_t end) const
     {
-      float* nodes = m_Nodes->getPointer(0);
       int64_t* triangles = m_Triangles->getPointer(0);
-
-      float ABx, ABy, ABz, ACx, ACy, ACz;
+      int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
+      float vecA[3];
+      float vecB[3];
+      float cross[3];
       for (size_t i = start; i < end; i++)
       {
-        ABx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+1]*3+0];
-        ABy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+1]*3+1];
-        ABz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+1]*3+2];
+        nIdx0 = triangles[i*3];
+        nIdx1 = triangles[i*3+1];
+        nIdx2 = triangles[i*3+2];
+        float* A = m_Nodes->getPointer(nIdx0 * 3);
+        float* B = m_Nodes->getPointer(nIdx1 * 3);
+        float* C = m_Nodes->getPointer(nIdx2 * 3);
 
-        ACx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+2]*3+0];
-        ACy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+2]*3+1];
-        ACz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+2]*3+2];
-        m_Areas[i]  = 0.5 * sqrt(((ABy * ACz - ABz * ACy) * (ABy * ACz - ABz * ACy)) + ((ABz * ACx - ABx * ACz) * (ABz * ACx - ABx * ACz)) + ((ABx * ACy - ABy * ACx) * (ABx * ACy - ABy * ACx)));
+        MatrixMath::Subtract3x1s(A, B, vecA);
+        MatrixMath::Subtract3x1s(A, C, vecB);
+        MatrixMath::CrossProduct(vecA, vecB, cross);
+        float area = 0.5 * MatrixMath::Magnitude3x1(cross);
+        m_Areas[i] = area;
       }
     }
 

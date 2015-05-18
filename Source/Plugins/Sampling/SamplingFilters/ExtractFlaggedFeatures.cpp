@@ -50,9 +50,9 @@ ExtractFlaggedFeatures::ExtractFlaggedFeatures() :
   AbstractFilter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FlaggedFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureBounds(NULL),
   m_FeatureIds(NULL),
-  m_FlaggedFeatures(NULL),
-  m_FeatureBounds(NULL)
+  m_FlaggedFeatures(NULL)
 {
   setupFilterParameters();
 }

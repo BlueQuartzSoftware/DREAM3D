@@ -49,7 +49,7 @@
  * @brief This class writes a "Ph" file from the Feature Generator Data but is templated
  * so that possibly other classes can use this writing method. This code was adapted
  * from code supplied by S. Sintay and J. Tucker.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jun 7, 2011
  * @version 1.0
  */

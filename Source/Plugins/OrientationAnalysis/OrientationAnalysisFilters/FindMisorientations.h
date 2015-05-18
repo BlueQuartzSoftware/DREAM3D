@@ -48,10 +48,10 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/OrientationOps/CubicOps.h"
-#include "OrientationLib/OrientationOps/HexagonalOps.h"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
-#include "OrientationLib/OrientationOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
  * @class FindMisorientations FindMisorientations.h Plugins/Statistics/StatisticsFilters/FindMisorientations.h
@@ -128,7 +128,7 @@ class FindMisorientations : public AbstractFilter
     FindMisorientations();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

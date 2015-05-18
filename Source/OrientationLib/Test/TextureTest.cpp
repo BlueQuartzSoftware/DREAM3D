@@ -39,7 +39,7 @@
 #include <vector>
 #include <string>
 #include "OrientationLib/Texture/Texture.hpp"
-#include "OrientationLib/OrientationOps/CubicOps.h"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
 
 /**

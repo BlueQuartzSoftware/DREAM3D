@@ -50,10 +50,10 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/Math/OrientationArray.hpp"
-#include "OrientationLib/Math/OrientationTransforms.hpp"
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -165,7 +165,7 @@ MergeColonies::MergeColonies() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -476,7 +476,6 @@ bool MergeColonies::determineGrouping(int referenceFeature, int neighborFeature,
 {
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   bool colony = false;
   QuatF q1;
   QuatF q2;

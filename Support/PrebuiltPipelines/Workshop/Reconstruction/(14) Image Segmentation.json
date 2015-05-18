@@ -11,7 +11,7 @@
             "FileExtension": "tif",
             "FilePrefix": "slice_",
             "FileSuffix": "",
-            "InputPath": "Data\\Image",
+            "InputPath": "Data/Image",
             "Ordering": 0,
             "PaddingDigits": 2,
             "StartIndex": 11
@@ -104,7 +104,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Image Segmentation",
+        "Name": "(14) Image Segmentation",
         "Number_Filters": 6,
         "Version": "5.2.1285.5481251"
     }

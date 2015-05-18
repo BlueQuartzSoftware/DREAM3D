@@ -41,7 +41,11 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Math/OrientationConverter.hpp"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -167,7 +171,6 @@ void TestEulerAngle(float phi1, float phi, float phi2)
       FloatArrayType::Pointer t0_output = converters[t1]->getOutputData();
 
       qStride = strides[t0];
-      bool test = false;
       std::vector<float> delta(qStride, 0);
       for(size_t i = 0; i < nTuples; i++)
       {
@@ -200,7 +203,7 @@ void TestFilterDesign()
   {
     for(float p = 0.0; p < 181.0; p = p + phiInc)
     {
-      for(float p1 = 00.0; p1 < 361.0; p1 = p1 + phi1Inc)
+      for(float p1 = 0.0; p1 < 361.0; p1 = p1 + phi1Inc)
       {
 //        std::cout << "TESTING EULER ANGLE (Degrees): " << p1 << ", " << p << ", " << p2 << std::endl;
         TestEulerAngle(p1 * DREAM3D::Constants::k_PiOver180, p * DREAM3D::Constants::k_PiOver180, p2 * DREAM3D::Constants::k_PiOver180);
@@ -220,7 +223,7 @@ int main(int argc, char* argv[])
 
   int err = EXIT_SUCCESS;
 
-  // DREAM3D_REGISTER_TEST( TestEulerConversion() );
+  DREAM3D_REGISTER_TEST( TestEulerConversion() );
   DREAM3D_REGISTER_TEST( TestFilterDesign() );
 
   return err;

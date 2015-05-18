@@ -64,9 +64,9 @@ FitFeatureData::FitFeatureData() :
   m_NewEnsembleArrayArrayName(DREAM3D::EnsembleData::FitParameters),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL),
-  m_NewEnsembleArray(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL)
+  m_FeaturePhases(NULL),
+  m_NewEnsembleArray(NULL)
 {
   setupFilterParameters();
 }

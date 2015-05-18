@@ -235,8 +235,6 @@ void ReadStlToSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 void ReadStlToSurfaceMesh::execute()
 {
-  int err = 0;
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -253,8 +251,6 @@ void ReadStlToSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 void ReadStlToSurfaceMesh::readFile()
 {
-  int err = 0;
-
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
   //Open File
@@ -336,8 +332,6 @@ void ReadStlToSurfaceMesh::readFile()
 // -----------------------------------------------------------------------------
 void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
 {
-  int err = 0;
-
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();

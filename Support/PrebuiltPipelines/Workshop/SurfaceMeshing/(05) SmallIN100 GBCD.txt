@@ -6,7 +6,7 @@ Version=5.0.6753
 [0]
 Filter_Name=DataContainerReader
 Filter_Human_Label=Read DREAM3D Data File
-InputFile=Data/Output/SmallIN100Mesh.dream3d
+InputFile=Data/Output/SmallIN100Mesh_Statistics.dream3d
 OverwriteExistingDataContainers=0
 DataContainerArrayProxy\size=47
 DataContainerArrayProxy\1\Path=SurfaceDataContainer|FaceData|SurfaceMeshFaceAreas
@@ -205,7 +205,7 @@ FaceEnsembleAttributeMatrixName=FaceEnsembleData
 GBCDArrayName=GBCD
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
 FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
-FeatureEulerAnglesArrayPath=VolumeDataContainer|CellFeatureData|EulerAngles
+FeatureEulerAnglesArrayPath=VolumeDataContainer|CellFeatureData|AvgEulerAngles
 SurfaceMeshFaceAreasArrayPath=SurfaceDataContainer|FaceData|SurfaceMeshFaceAreas
 SurfaceMeshFaceNormalsArrayPath=SurfaceDataContainer|FaceData|SurfaceMeshFaceNormals
 SurfaceMeshFaceLabelsArrayPath=SurfaceDataContainer|FaceData|SurfaceMeshFaceLabels

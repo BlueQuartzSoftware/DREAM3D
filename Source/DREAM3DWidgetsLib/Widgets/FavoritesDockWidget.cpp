@@ -52,6 +52,7 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 
@@ -249,19 +250,33 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
 // -----------------------------------------------------------------------------
 QString FavoritesDockWidget::generateHtmlFilterListFromPipelineFile(QString path)
 {
-  QSettings prefs(path, QSettings::IniFormat);
+  int filterCount = 0;
+  QString name;
+  QString dVers;
+  FilterPipeline::Pointer pipeline;
 
-  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
-  bool ok = false;
-  int filterCount = prefs.value("Number_Filters").toInt(&ok);
-  QString name = prefs.value("Name").toString();
-  QString dVers = prefs.value("DREAM3D_Version").toString();
-  if(dVers.isEmpty() == true)
+  QFileInfo fi(path);
+  if(fi.suffix().compare("ini") == 0)
   {
-    dVers = prefs.value("Version").toString();
+    QSettings prefs(path, QSettings::IniFormat);
+    prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+    bool ok = false;
+    name = prefs.value("Name").toString();
+    dVers = prefs.value("DREAM3D_Version").toString();
+    if(dVers.isEmpty() == true)
+    {
+      dVers = prefs.value("Version").toString();
+    }
+    prefs.endGroup();
+    if (false == ok) {filterCount = 0;}
+
+    pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat, NULL);
   }
-  prefs.endGroup();
-  if (false == ok) {filterCount = 0;}
+  else if (fi.suffix().compare(".json") == 0)
+  {
+    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path, NULL);
+    name = JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, NULL);
+  }
 
   QString html;
   QTextStream ss(&html);
@@ -277,45 +292,38 @@ QString FavoritesDockWidget::generateHtmlFilterListFromPipelineFile(QString path
   ss << "</tbody>\n";
   ss << "</table>\n";
   ss << "<p></p>\n";
-
+  if(NULL == pipeline.get())
+  {
+    ss << "<b>Unkonwn Pipeline File format for file " << path << "</b>";
+    ss << "</tbody></table>\n";
+    ss << "</body></html>";
+    return html;
+  }
   // Start the table of the Pipeline
   ss << "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"300px\">\n";
   ss << "<tbody>\n";
   ss << "<tr bgcolor=\"#A2E99C\"><th>Index</th><th>Filter Group</th><th>Filter Name</th></tr>\n";
 
-  FilterManager* filtManager = FilterManager::Instance();
+//  FilterManager* filtManager = FilterManager::Instance();
   char rowColor = 0;
   QString red("#FFAAAA");
   QString odd("#FFFFFF");
   QString even("#B0E4FF");
   QString color = odd;
-  QString unknownFilter("Unknown");
   bool unknownFilters = false;
 
+  FilterPipeline::FilterContainerType filters = pipeline->getFilterContainer();
+  filterCount = filters.size();
   for (int i = 0; i < filterCount; ++i)
   {
     if (rowColor == 0) { rowColor = 1; color = odd; }
     else { rowColor = 0; color = even; }
-    QString gName = QString::number(i);
-    prefs.beginGroup(gName);
-    QString item = prefs.value("Filter_Name", "").toString();
-    prefs.endGroup();
 
-    IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(item);
-    if(factory.get() != NULL)
+    AbstractFilter::Pointer filter = filters.at(i);
+
+    if(NULL != filter.get())
     {
-      AbstractFilter::Pointer filter = factory->create();
-      if(NULL != filter.get())
-      {
-        AbstractFilter::Pointer filter = factory->create();
-        ss << "<tr bgcolor=\"" << color << "\"><td>" << i << "</td><td>" << filter->getGroupName() << "</td><td>" << item << "</td></tr>\n";
-      }
-    }
-    else
-    {
-      color = red;
-      ss << "<tr bgcolor=\"" << color << "\"><td>" << i << "</td><td>" << unknownFilter << "</td><td>" << item << "</td></tr>\n";
-      unknownFilters = true;
+      ss << "<tr bgcolor=\"" << color << "\"><td>" << i << "</td><td>" << filter->getGroupName() << "</td><td>" << filter->getHumanLabel() << "</td></tr>\n";
     }
   }
 

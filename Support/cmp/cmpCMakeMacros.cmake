@@ -177,7 +177,12 @@ function(BuildQtAppBundle)
                 DEBUG_OUTPUT_NAME ${QAB_TARGET}${QAB_DEBUG_EXTENSION}
                 RELEASE_OUTPUT_NAME ${QAB_TARGET}
     )
-
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+        SET_TARGET_PROPERTIES( ${QAB_TARGET}
+                PROPERTIES
+                INSTALL_RPATH \$ORIGIN/../lib
+    )
+    endif()
 #-- Create install rules for any Qt Plugins that are needed
     set(pi_dest ${QAB_INSTALL_DEST}/Plugins)
     # if we are on OS X then we set the plugin installation location to inside the App bundle
@@ -260,33 +265,29 @@ function(BuildQtAppBundle)
     endif(APPLE)
 
 #-- This should be called when we are on Linux
-    if(NOT APPLE AND UNIX)
-        set(linux_app_name ${QAB_TARGET})
-        set(LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT
-                    "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}.sh")
-        configure_file("${CMP_LINUX_TOOLS_SOURCE_DIR}/launch_script.sh.in"
-                "${LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT}" @ONLY IMMEDIATE)
-        install(PROGRAMS "${LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT}"
-                DESTINATION "bin"
-                COMPONENT ${QAB_COMPONENT})
-        set(lib_suffix "")
-        set(build_type "${CMAKE_BUILD_TYPE}")
-        if("${build_type}" STREQUAL "Debug")
-            set(lib_suffix "_debug")
-        endif()
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+      set(linux_app_name ${QAB_TARGET})
+      set(LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT
+                  "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}.sh")
+      set(lib_suffix "")
+      set(build_type "${CMAKE_BUILD_TYPE}")
+      if("${build_type}" STREQUAL "Debug")
+          set(lib_suffix "_debug")
+      endif()
 
       set(LINUX_INSTALL_LIBS_CMAKE_SCRIPT
-                "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
-        set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
-                "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_InstallLibraries.sh")
+              "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
+      set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
+              "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_InstallLibraries.sh")
 
       configure_file("${CMP_LINUX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
-      "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
-        set(PROJECT_INSTALL_DIR ${linux_app_name}.app)
-        configure_file("${CMP_LINUX_TOOLS_SOURCE_DIR}/InstallLibraries.sh.in"
-                "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
+                    "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
+      set(PROJECT_INSTALL_DIR ${linux_app_name})
 
-        install(SCRIPT "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
+      configure_file("${CMP_LINUX_TOOLS_SOURCE_DIR}/InstallLibraries.sh.in"
+                     "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
+
+      install(SCRIPT "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
     endif()
 
 
@@ -343,11 +344,15 @@ function(BuildToolBundle)
                 DEBUG_OUTPUT_NAME ${QAB_TARGET}${QAB_DEBUG_EXTENSION}
                 RELEASE_OUTPUT_NAME ${QAB_TARGET}
     )
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+      SET_TARGET_PROPERTIES( ${QAB_TARGET}
+            PROPERTIES
+            INSTALL_RPATH \$ORIGIN/../lib )
+    endif()
     if(NOT "${QAB_SOLUTION_FOLDER}" STREQUAL "")
-    SET_TARGET_PROPERTIES(${QAB_TARGET}
+      SET_TARGET_PROPERTIES(${QAB_TARGET}
                           PROPERTIES FOLDER ${QAB_SOLUTION_FOLDER})
-
-  endif()
+    endif()
 
   if( NOT ${QAB_INSTALL_DEST} STREQUAL "")
   #-- Create an Install Rule for the main app bundle target
@@ -458,6 +463,15 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
               )
          endif(CMP_BUILD_WITH_INSTALL_NAME)
      endif(APPLE)
+
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+      set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
+      SET_TARGET_PROPERTIES( ${targetName}
+                PROPERTIES
+                INSTALL_RPATH \$ORIGIN/../lib)
+    endif()
+
+
 
    endif( BUILD_SHARED_LIBS)
 

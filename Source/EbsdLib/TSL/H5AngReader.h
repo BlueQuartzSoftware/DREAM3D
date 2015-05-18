@@ -55,7 +55,7 @@
 /**
  * @class H5AngReader H5AngReader.h EbsdLib/TSL/H5AngReader.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Mar 24, 2011
  * @version 1.0
  *

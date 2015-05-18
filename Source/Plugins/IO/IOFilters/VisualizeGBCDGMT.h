@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
-#include "OrientationLib/OrientationOps/OrientationOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 
 typedef float real;
@@ -146,7 +146,7 @@ class VisualizeGBCDGMT : public AbstractFilter
     bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     QVector<float> gmtValues;
 

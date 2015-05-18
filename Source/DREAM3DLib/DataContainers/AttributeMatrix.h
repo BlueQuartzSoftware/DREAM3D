@@ -74,7 +74,7 @@ enum RenameErrorCodes
  * @class AttributeMatrix AttributeMatrix DREAM3DLib/DataContainers/AttributeMatrix.h
  * @brief This data container holds data the represents a structured rectangular
  * grid of data typically referred to as a Voxel Volume
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @author Michael A. Groeber for AFRL
  * @date
  * @version 1.0

@@ -365,36 +365,35 @@ void TestPreflight()
 // -----------------------------------------------------------------------------
 void TestUniqueHumanLabels()
 {
-	FilterManager* fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
 
-	FilterManager::Collection factories = fm->getFactories();
-	FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
-	int err = 0;
-	QMap<QString, AbstractFilter::Pointer> filterMap;
-	while (factoryMapIter != factories.constEnd())
-	{
-		IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
-		if (factory.get() != NULL)
-		{
-			AbstractFilter::Pointer filter = factory->create();
-			if (filter.get() != NULL)
-			{
-				QString name = filter->getHumanLabel();
-				if (filterMap.contains(name))
-				{
-					AbstractFilter::Pointer other = filterMap.value(name);
-					qDebug() << "Filters in class names '" << filter->getNameOfClass() << "' and '" << other->getNameOfClass()
-						<< "' have the same human label, and this is not allowed.";
-					DREAM3D_REQUIRE_EQUAL(0, 1)
-				}
-				else
-				{
-					filterMap.insert(name, filter);
-				}
-			}
-		}
-		factoryMapIter++;
-	}
+  FilterManager::Collection factories = fm->getFactories();
+  FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
+  QMap<QString, AbstractFilter::Pointer> filterMap;
+  while (factoryMapIter != factories.constEnd())
+  {
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    if (factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+      if (filter.get() != NULL)
+      {
+        QString name = filter->getHumanLabel();
+        if (filterMap.contains(name))
+        {
+          AbstractFilter::Pointer other = filterMap.value(name);
+          qDebug() << "Filters in class names '" << filter->getNameOfClass() << "' and '" << other->getNameOfClass()
+            << "' have the same human label, and this is not allowed.";
+          DREAM3D_REQUIRE_EQUAL(0, 1)
+        }
+        else
+        {
+          filterMap.insert(name, filter);
+        }
+      }
+    }
+    factoryMapIter++;
+  }
 }
 
 
@@ -432,7 +431,6 @@ void PrintFilterInfo()
 
   FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
-  int err = 0;
   while (factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());

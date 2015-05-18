@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 JsonFilterParametersWriter::JsonFilterParametersWriter() :
-m_CurrentIndex(0)
+  m_CurrentIndex(0)
 {
 
 }
@@ -54,8 +54,8 @@ m_CurrentIndex(0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-JsonFilterParametersWriter::JsonFilterParametersWriter(QString &fileName, QString &pipelineName, int &numFilters) :
-m_CurrentIndex(0)
+JsonFilterParametersWriter::JsonFilterParametersWriter(QString& fileName, QString& pipelineName, int& numFilters) :
+  m_CurrentIndex(0)
 {
   m_FileName = fileName;
   m_PipelineName = pipelineName;
@@ -99,8 +99,7 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
   }
   if (outputFile.open(QIODevice::WriteOnly))
   {
-    int err = outputFile.write(doc.toJson());
-    int errorCode = outputFile.error();
+    outputFile.write(doc.toJson());
     outputFile.close();
   }
 }
@@ -156,11 +155,22 @@ int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipe
 // -----------------------------------------------------------------------------
 int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
 {
-  m_CurrentFilterIndex = QJsonObject();
   m_CurrentIndex = index;
+  QString numStr = QString::number(m_CurrentIndex);
 
-  writeValue(DREAM3D::Settings::FilterName, filter->getNameOfClass());
-  writeValue(DREAM3D::Settings::HumanLabel, filter->getHumanLabel());
+  if (m_Root.contains(numStr))
+  {
+    m_CurrentFilterIndex = m_Root.value(numStr).toObject();
+  }
+  else
+  {
+    m_CurrentFilterIndex = QJsonObject();
+    if(filter)
+    {
+      writeValue(DREAM3D::Settings::FilterName, filter->getNameOfClass());
+      writeValue(DREAM3D::Settings::HumanLabel, filter->getHumanLabel());
+    }
+  }
 
   return 0;
 }

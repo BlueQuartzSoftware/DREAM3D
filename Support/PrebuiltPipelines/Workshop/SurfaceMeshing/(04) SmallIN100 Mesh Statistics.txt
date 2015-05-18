@@ -6,7 +6,7 @@ Version=5.0.6753
 [0]
 Filter_Name=DataContainerReader
 Filter_Human_Label=Read DREAM3D Data File
-InputFile=Data/Output/SmallIN100Mesh.dream3d
+InputFile=Data/Output/SmallIN100Mesh_Smoothed.dream3d
 OverwriteExistingDataContainers=0
 DataContainerArrayProxy\size=42
 DataContainerArrayProxy\1\Path=SurfaceDataContainer|FaceData|SurfaceMeshFaceLabels
@@ -202,7 +202,7 @@ Filter_Human_Label=Generate Face IPF Colors
 SurfaceMeshFaceIPFColorsArrayName=SurfaceMeshFaceIPFColors
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
 FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
-FeatureEulerAnglesArrayPath=VolumeDataContainer|CellFeatureData|EulerAngles
+FeatureEulerAnglesArrayPath=VolumeDataContainer|CellFeatureData|AvgEulerAngles
 SurfaceMeshFaceNormalsArrayPath=SurfaceDataContainer|FaceData|SurfaceMeshFaceNormals
 SurfaceMeshFaceLabelsArrayPath=SurfaceDataContainer|FaceData|SurfaceMeshFaceLabels
 
@@ -218,5 +218,5 @@ SurfaceMeshFaceLabelsArrayPath=SurfaceDataContainer|FaceData|SurfaceMeshFaceLabe
 [6]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
-OutputFile=Data/Output/SmallIN100Mesh.dream3d
+OutputFile=Data/Output/SmallIN100Mesh_Statistics.dream3d
 WriteXdmfFile=1

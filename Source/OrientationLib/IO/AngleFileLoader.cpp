@@ -44,7 +44,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
 
-#include "OrientationLib/Math/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 
@@ -134,9 +134,6 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   QVector<size_t> dims(1, 5);
   angles = FloatArrayType::CreateArray(numOrients, dims, "EulerAngles_From_File");
 
- // float e1 = 0.0f, e2 = 0.0f, e3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
- // QuaternionMathF::Quaternion quat;
   QList<QByteArray> tokens;
 
   for(int i = 0; i < numOrients; i++)

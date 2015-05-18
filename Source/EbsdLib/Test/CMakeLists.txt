@@ -46,8 +46,4 @@ AddDREAM3DUnitTest(TESTNAME EdaxOIMReaderTest
                     FOLDER "Test/EbsdLib" 
                     LINK_LIBRARIES Qt5::Core H5Support EbsdLib)
 
-AddDREAM3DUnitTest(TESTNAME HedmReaderTest 
-                    SOURCES ${EbsdLibTest_SOURCE_DIR}/HedmReaderTest.cpp
-                    FOLDER "Test/EbsdLib" 
-                    LINK_LIBRARIES Qt5::Core EbsdLib)
 

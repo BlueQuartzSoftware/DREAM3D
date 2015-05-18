@@ -48,7 +48,7 @@
 /**
  * @class EditPhaseDialog EditPhaseDialog.h StatsGenerator/EditPhaseDialog.h
  * @brief Simple dialog that is presented to the user when a new phase is added.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Apr 14, 2011
  * @version 1.0
  */

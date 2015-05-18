@@ -44,9 +44,9 @@
 #include "DREAM3DLib/FilterParameters/PhaseTypesFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
-#include "OrientationLib/Math/OrientationMath.h"
-#include "OrientationLib/Math/OrientationArray.hpp"
-#include "OrientationLib/Math/OrientationTransforms.hpp"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
@@ -115,7 +115,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_DistributionAnalysis.push_back(LogNormalOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
 
-  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
@@ -950,7 +950,6 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock());
 
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   int32_t mbin = 0;
   float w = 0.0f;
   QuatF q1 = QuaternionMathF::New();

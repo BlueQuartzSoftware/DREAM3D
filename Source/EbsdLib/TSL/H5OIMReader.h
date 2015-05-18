@@ -50,7 +50,7 @@
 /**
  * @class H5OIMReader H5OIMReader.h EbsdLib/TSL/H5OIMReader.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Mar 24, 2011
  * @version 1.0
  *
