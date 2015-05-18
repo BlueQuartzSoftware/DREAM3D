@@ -205,7 +205,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumCellsArrayName": "NumCells",
@@ -223,7 +223,7 @@
             "Data Array Name": "",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Minimum Size Filter",
         "Filter_Name": "MinSize",
         "MinAllowedFeatureSize": 16,
@@ -235,7 +235,7 @@
         "PhaseNumber": 0
     },
     "3": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -244,6 +244,6 @@
     "PipelineBuilder": {
         "Name": "(09) Small IN100 Minimum Size",
         "Number_Filters": 4,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }

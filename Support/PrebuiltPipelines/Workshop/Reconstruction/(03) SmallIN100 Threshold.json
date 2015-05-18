@@ -3,7 +3,7 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "DataContainer",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Read H5Ebsd File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
@@ -20,7 +20,7 @@
     },
     "1": {
         "DestinationArrayName": "ThresholdArray",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -41,7 +41,7 @@
         ]
     },
     "2": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
@@ -50,6 +50,6 @@
     "PipelineBuilder": {
         "Name": "(03) Small IN100 Threshold",
         "Number_Filters": 3,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }

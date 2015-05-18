@@ -200,7 +200,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
         "NumIterations": 2,
@@ -216,7 +216,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
         "NumIterations": 2,
@@ -226,7 +226,7 @@
         "ZDirOn": 1
     },
     "3": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -235,6 +235,6 @@
     "PipelineBuilder": {
         "Name": "(12) Small IN100 Close Bad Data",
         "Number_Filters": 4,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }

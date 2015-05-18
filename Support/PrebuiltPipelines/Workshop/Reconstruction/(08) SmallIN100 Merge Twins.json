@@ -210,7 +210,7 @@
             "Data Container Name": "VolumeDataContainer"
         },
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Find Feature Phases",
         "Filter_Name": "FindFeaturePhases"
     },
@@ -240,7 +240,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
@@ -261,7 +261,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -302,7 +302,7 @@
         "NewCellFeatureAttributeMatrixName": "NewCellFeatureData"
     },
     "5": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -311,6 +311,6 @@
     "PipelineBuilder": {
         "Name": "(08) Small IN100 Merge Twins",
         "Number_Filters": 6,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }
