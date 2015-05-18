@@ -229,7 +229,8 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
     }
     else if (itemInfo.suffix().compare("json") == 0)
     {
-      itemName = JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath);
+      QString dVers;
+      JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath, itemName, dVers, NULL);
     }
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
@@ -271,11 +272,13 @@ QString FavoritesDockWidget::generateHtmlFilterListFromPipelineFile(QString path
     if (false == ok) {filterCount = 0;}
 
     pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat, NULL);
+    filterCount = pipeline->getFilterContainer().size();
   }
   else if (fi.suffix().compare(".json") == 0)
   {
     pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path, NULL);
-    name = JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, NULL);
+    JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, name, dVers, NULL);
+    filterCount = pipeline->getFilterContainer().size();
   }
 
   QString html;

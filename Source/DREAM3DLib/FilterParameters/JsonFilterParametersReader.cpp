@@ -166,18 +166,22 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath, IObserver* obs)
+void JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath, QString &name, QString &version, IObserver* obs)
 {
   QFileInfo fInfo(filePath);
 
   if (filePath.isEmpty() == true)
   {
-    return QString("");
+    name = QString("ERROR: No File Path Specified");
+    version = QString("ERROR: No File Path Specified");
+    return;
   }
   QFileInfo fi(filePath);
   if (fi.exists() == false)
   {
-    return QString("");
+    name = QString("ERROR: File Path Does Not Exist");
+    version = QString("ERROR: File Path Does Not Exist");
+    return;
   }
 
   JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
@@ -190,14 +194,15 @@ QString JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath,
       PipelineMessage pm(JsonFilterParametersReader::ClassName(), "File '" + fInfo.fileName() + "' could not be opened for reading.", -1, PipelineMessage::Error);
       obs->processPipelineMessage(pm);
     }
-    return QString("");
+    name = QString("ERROR: Could not open file specified.");
+    version = QString("ERROR: Could not open file specified.");
+    return;
   }
 
   err = reader->openGroup(DREAM3D::Settings::PipelineBuilderGroup);
-  QString name = reader->readString(DREAM3D::Settings::PipelineName, "");
+  name = reader->readString(DREAM3D::Settings::PipelineName, "");
+  version = reader->readString(DREAM3D::Settings::Version, "Unknown DREAM3D Version");
   reader->closeGroup();
-
-  return name;
 }
 
 // -----------------------------------------------------------------------------

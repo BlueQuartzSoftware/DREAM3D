@@ -174,7 +174,7 @@
             "Data Container Name": "VolumeDataContainer"
         },
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Segment Features (Misorientation)",
         "Filter_Name": "EBSDSegmentFeatures",
         "GoodVoxelsArrayPath": {
@@ -191,7 +191,7 @@
         "UseGoodVoxels": 1
     },
     "2": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -200,6 +200,6 @@
     "PipelineBuilder": {
         "Name": "(07) Small IN100 Segmentation",
         "Number_Filters": 3,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }

@@ -2,7 +2,7 @@
     "0": {
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "VolumeDataContainer",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Import Images (3D Stack)",
         "Filter_Name": "ImportImageStack",
         "ImageDataArrayName": "ImageData",
@@ -28,7 +28,7 @@
         }
     },
     "1": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/Images.dream3d",
@@ -37,6 +37,6 @@
     "PipelineBuilder": {
         "Name": "(13) Image Initial Visualization",
         "Number_Filters": 2,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }

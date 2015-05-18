@@ -2,7 +2,7 @@
     "0": {
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "VolumeDataContainer",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Import Images (3D Stack)",
         "Filter_Name": "ImportImageStack",
         "ImageDataArrayName": "ImageData",
@@ -29,7 +29,7 @@
     },
     "1": {
         "DestinationArrayName": "GoodVoxels",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -46,7 +46,7 @@
         "ActiveArrayName": "Active",
         "CellFeatureAttributeMatrixName": "CellFeatureData",
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Segment Features (Scalar)",
         "Filter_Name": "ScalarSegmentFeatures",
         "GoodVoxelsArrayPath": {
@@ -74,7 +74,7 @@
             "Data Array Name": "",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumCellsArrayName": "NumCells",
@@ -87,7 +87,7 @@
             "Data Array Name": "",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Create Cell Array From Feature Array",
         "Filter_Name": "CopyFeatureArrayToCellArray",
         "SelectedFeatureArrayPath": {
@@ -97,7 +97,7 @@
         }
     },
     "5": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/Images.dream3d",
@@ -106,6 +106,6 @@
     "PipelineBuilder": {
         "Name": "(14) Image Segmentation",
         "Number_Filters": 6,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }

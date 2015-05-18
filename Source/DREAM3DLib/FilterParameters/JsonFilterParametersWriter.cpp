@@ -79,7 +79,7 @@ JsonFilterParametersWriter::~JsonFilterParametersWriter()
   // Write our File Version and DREAM3D Version strings
   QJsonObject meta;
   meta[DREAM3D::Settings::PipelineName] = m_PipelineName;
-  meta[DREAM3D::Settings::Version] = DREAM3DLib::Version::Complete();
+  meta[DREAM3D::Settings::Version] = DREAM3DLib::Version::Package();
 
   if (m_Root.size() > 0)
   {

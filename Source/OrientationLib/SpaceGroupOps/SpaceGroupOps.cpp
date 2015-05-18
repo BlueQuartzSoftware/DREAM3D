@@ -31,6 +31,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SpaceGroupOps.h"
 
+#include <limits>
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
@@ -186,10 +187,17 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
     }
   }
   float mag = sqrt(outRod[0]*outRod[0] + outRod[1]*outRod[1] + outRod[2]*outRod[2]);
-  outRod[3] = mag;
-  outRod[0] = outRod[0]/outRod[3];
-  outRod[1] = outRod[1]/outRod[3];
-  outRod[2] = outRod[2]/outRod[3];
+  if(mag == 0.0f)
+  {
+    outRod[3] = std::numeric_limits<float>::infinity();
+  }
+  else
+  {
+    outRod[3] = mag;
+    outRod[0] = outRod[0]/outRod[3];
+    outRod[1] = outRod[1]/outRod[3];
+    outRod[2] = outRod[2]/outRod[3];
+  }
   return outRod;
 }
 
