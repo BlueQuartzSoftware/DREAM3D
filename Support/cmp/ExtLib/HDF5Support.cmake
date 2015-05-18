@@ -132,7 +132,7 @@ if(HDF5_FOUND)
                         TYPES ${BUILD_TYPES})
   endif()
 
-  set(HDF5_COMPONENTS hdf5 hdf5_cpp hdf5_tools)
+  set(HDF5_COMPONENTS hdf5)
 
 
 ELSE(HDF5_FOUND)
