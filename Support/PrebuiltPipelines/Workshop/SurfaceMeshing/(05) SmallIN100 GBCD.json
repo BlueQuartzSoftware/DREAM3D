@@ -561,7 +561,7 @@
             "k": 1,
             "l": 1
         },
-        "OutputFile": "/Users/mjackson/Workspace/DREAM3D_Rewrite/Build/Bin/Data/Output/SmallIN100GBCD/SmallIn100GMT_1.dat"
+        "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100GMT_1.dat"
     },
     "3": {
         "CrystalStructure": 1,

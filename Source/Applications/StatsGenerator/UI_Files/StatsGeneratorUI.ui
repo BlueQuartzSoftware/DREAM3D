@@ -24,7 +24,16 @@
     <property name="spacing">
      <number>4</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
      <number>2</number>
     </property>
     <item>
@@ -148,7 +157,7 @@
         </property>
         <property name="icon">
          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
-          <normaloff>:/cube_molecule_gearwheel.png</normaloff>:/cube_molecule_gearwheel.png</iconset>
+          <normaloff>:/gear.png</normaloff>:/gear.png</iconset>
         </property>
         <property name="iconSize">
          <size>

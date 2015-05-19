@@ -106,10 +106,22 @@ void GEOM_CLASS_NAME::getVertsAtQuad(int64_t quadId, int64_t verts[4])
 void GEOM_CLASS_NAME::getVertCoordsAtQuad(int64_t quadId, float vert1[3], float vert2[3], float vert3[3], float vert4[3])
 {
   int64_t* Quad = m_QuadList->getTuplePointer(quadId);
-  vert1 = m_VertexList->getTuplePointer(Quad[0]);
-  vert2 = m_VertexList->getTuplePointer(Quad[1]);
-  vert3 = m_VertexList->getTuplePointer(Quad[2]);
-  vert4 = m_VertexList->getTuplePointer(Quad[3]);
+  float* tmp1 = m_VertexList->getTuplePointer(Quad[0]);
+  float* tmp2 = m_VertexList->getTuplePointer(Quad[1]);
+  float* tmp3 = m_VertexList->getTuplePointer(Quad[2]);
+  float* tmp4 = m_VertexList->getTuplePointer(Quad[3]);
+  vert1[0] = tmp1[0];
+  vert1[1] = tmp1[1];
+  vert1[2] = tmp1[2];
+  vert2[0] = tmp2[0];
+  vert2[1] = tmp2[1];
+  vert2[2] = tmp2[2];
+  vert3[0] = tmp3[0];
+  vert3[1] = tmp3[1];
+  vert3[2] = tmp3[2];
+  vert4[0] = tmp4[0];
+  vert4[1] = tmp4[1];
+  vert4[2] = tmp4[2];
 }
 
 // -----------------------------------------------------------------------------

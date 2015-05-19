@@ -39,7 +39,6 @@
 
 
 #include <QtCore/QString>
-#include <QtCore/QSettings>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
