@@ -204,7 +204,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Fill Bad Data",
         "Filter_Name": "FillBadData",
         "MinAllowedDefectSize": 1000,
@@ -212,7 +212,7 @@
         "StoreAsNewPhase": 0
     },
     "2": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -221,6 +221,6 @@
     "PipelineBuilder": {
         "Name": "(11) Small IN100 Fill Bad Data",
         "Number_Filters": 3,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }

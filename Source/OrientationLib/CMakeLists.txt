@@ -181,7 +181,7 @@ set(OrientationLib_LINK_LIBRARIES "")
 if(${OrientationLib_ENABLE_HDF5})
   set(OrientationLib_LINK_LIBRARIES
     ${OrientationLib_LINK_LIBRARIES}
-    ${HDF5_LIBRARIES} H5Support
+    hdf5 H5Support
     )
 endif()
 

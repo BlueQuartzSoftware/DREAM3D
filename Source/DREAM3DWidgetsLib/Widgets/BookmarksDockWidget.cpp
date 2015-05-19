@@ -220,11 +220,13 @@ QString BookmarksDockWidget::generateHtmlFilterListFromPipelineFile(QString path
     if (false == ok) {filterCount = 0;}
 
     pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat, NULL);
+    filterCount = pipeline->getFilterContainer().size();
   }
   else if (fi.suffix().compare(".json") == 0)
   {
     pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path, NULL);
-    name = JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, NULL);
+    JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, name, dVers, NULL);
+    filterCount = pipeline->getFilterContainer().size();
   }
 
   QString html;
