@@ -50,8 +50,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DSettings::DREAM3DSettings(QObject *parent) :
-  m_CurrentArrayIndex(-1)
+DREAM3DSettings::DREAM3DSettings(QObject *parent)
 {
   setParent(parent);
 
@@ -74,8 +73,6 @@ DREAM3DSettings::DREAM3DSettings(QObject *parent) :
 
   // Open the file and read the contents, if it exists
   openFile();
-
-  m_CurrentGroup = m_Root;
 }
 
 // -----------------------------------------------------------------------------
@@ -89,8 +86,6 @@ DREAM3DSettings::DREAM3DSettings(const QString &filePath, QObject *parent)
 
   // Open the file and read the contents, if it exists
   openFile();
-
-  m_CurrentGroup = m_Root;
 }
 
 // -----------------------------------------------------------------------------
@@ -114,30 +109,27 @@ QString DREAM3DSettings::fileName()
 // -----------------------------------------------------------------------------
 bool DREAM3DSettings::contains(const QString &key)
 {
-  return m_CurrentGroup.contains(key);
+  return m_Stack.top()->group.contains(key);
 }
 
 // -----------------------------------------------------------------------------
-// Opens a group.  Groups CAN NOT currently be nested.
+// 
 // -----------------------------------------------------------------------------
 bool DREAM3DSettings::beginGroup(const QString &prefix)
 {
-  if (m_CurrentGroupName.isEmpty() == false)
+  if (prefix.isEmpty())
   {
-    // A group is already open, so return.
     return false;
   }
-
-  // Set the new group name
-  m_CurrentGroupName = prefix;
-
-  if (m_Root.contains(prefix) == true)
+  else if (m_Stack.top()->group.contains(prefix) == true)
   {
-    m_CurrentGroup = m_Root[prefix].toObject();
+    DREAM3DSettingsGroup* newGroup = new DREAM3DSettingsGroup(prefix, m_Stack.top()->group[prefix].toObject());
+    m_Stack.push(newGroup);
   }
   else
   {
-    m_CurrentGroup = QJsonObject();
+    DREAM3DSettingsGroup* newGroup = new DREAM3DSettingsGroup(prefix, QJsonObject());
+    m_Stack.push(newGroup);
   }
 
   return true;
@@ -148,11 +140,12 @@ bool DREAM3DSettings::beginGroup(const QString &prefix)
 // -----------------------------------------------------------------------------
 void DREAM3DSettings::endGroup()
 {
-  m_Root[m_CurrentGroupName] = m_CurrentGroup;
-  m_CurrentGroup = m_Root;
-  m_CurrentGroupName = "";
-
   writeToFile();
+
+  if (m_Stack.size() > 1)
+  {
+    m_Stack.pop();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -160,20 +153,20 @@ void DREAM3DSettings::endGroup()
 // -----------------------------------------------------------------------------
 QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue)
 {
-  if (m_CurrentGroup.contains(key) == false)
+  if (m_Stack.top()->group.contains(key) == false)
   {
     return defaultValue;
   }
 
-  if (m_CurrentGroupName == "WindowSettings")
+  if (m_Stack.top()->groupName == "WindowSettings")
   {
-    QByteArray byteArray8Bit = m_CurrentGroup.value(key).toString().toLocal8Bit();
+    QByteArray byteArray8Bit = m_Stack.top()->group.value(key).toString().toLocal8Bit();
     QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
     return byteArray;
   }
   else
   {
-    return m_CurrentGroup.value(key).toVariant();
+    return m_Stack.top()->group.value(key).toVariant();
   }
 }
 
@@ -182,9 +175,9 @@ QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue
 // -----------------------------------------------------------------------------
 QJsonObject DREAM3DSettings::value(const QString &key, const QJsonObject &defaultObject)
 {
-  if (m_CurrentGroup[key].isObject())
+  if (m_Stack.top()->group[key].isObject())
   {
-    return m_CurrentGroup[key].toObject();
+    return m_Stack.top()->group[key].toObject();
   }
   return defaultObject;
 }
@@ -194,12 +187,12 @@ QJsonObject DREAM3DSettings::value(const QString &key, const QJsonObject &defaul
 // -----------------------------------------------------------------------------
 QStringList DREAM3DSettings::value(const QString &key, const QStringList &defaultList)
 {
-  if (m_CurrentGroup[key].isArray() == false)
+  if (m_Stack.top()->group[key].isArray() == false)
   {
     return defaultList;
   }
 
-  QJsonArray jsonArray = m_CurrentGroup[key].toArray();
+  QJsonArray jsonArray = m_Stack.top()->group[key].toArray();
   QStringList list;
 
   for (int i = 0; i < jsonArray.size(); i++)
@@ -220,18 +213,17 @@ void DREAM3DSettings::setValue(const QString &key, const QVariant &value)
   {
     QByteArray byteArray = value.toByteArray().toBase64();
     QString str = QString::fromLocal8Bit(byteArray);
-    m_CurrentGroup.insert(key, str);
+    m_Stack.top()->group.insert(key, str);
   }
   else
   {
     QJsonValue val = QJsonValue::fromVariant(value);
-    m_CurrentGroup.insert(key, val);
+    m_Stack.top()->group.insert(key, val);
   }
 
   // If this is the root, write to the file
-  if (m_CurrentGroupName.isEmpty())
+  if (m_Stack.top()->groupName.isEmpty())
   {
-    m_Root = m_CurrentGroup;
     writeToFile();
   }
 }
@@ -241,12 +233,11 @@ void DREAM3DSettings::setValue(const QString &key, const QVariant &value)
 // -----------------------------------------------------------------------------
 void DREAM3DSettings::setValue(const QString &key, const QJsonObject &object)
 {
-  m_CurrentGroup.insert(key, object);
+  m_Stack.top()->group.insert(key, object);
 
   // If this is the root, write to the file
-  if (m_CurrentGroupName.isEmpty())
+  if (m_Stack.top()->groupName.isEmpty())
   {
-    m_Root = m_CurrentGroup;
     writeToFile();
   }
 }
@@ -263,12 +254,11 @@ void DREAM3DSettings::setValue(const QString &key, const QStringList &list)
     jsonArray.push_back(list[i]);
   }
 
-  m_CurrentGroup.insert(key, jsonArray);
+  m_Stack.top()->group.insert(key, jsonArray);
 
   // If this is the root, write to the file
-  if (m_CurrentGroupName.isEmpty())
+  if (m_Stack.top()->groupName.isEmpty())
   {
-    m_Root = m_CurrentGroup;
     writeToFile();
   }
 }
@@ -278,7 +268,7 @@ void DREAM3DSettings::setValue(const QString &key, const QStringList &list)
 // -----------------------------------------------------------------------------
 void DREAM3DSettings::openFile()
 {
-  if (m_Root.isEmpty() == false || m_CurrentGroup.isEmpty() == false)
+  if (m_Stack.size() > 0)
   {
     closeFile();
   }
@@ -288,7 +278,8 @@ void DREAM3DSettings::openFile()
   {
     QByteArray byteArray = inputFile.readAll();
     QJsonDocument doc = QJsonDocument::fromJson(byteArray);
-    m_Root = doc.object();
+    DREAM3DSettingsGroup* root = new DREAM3DSettingsGroup("", doc.object());
+    m_Stack.push(root);
   }
 }
 
@@ -297,9 +288,7 @@ void DREAM3DSettings::openFile()
 // -----------------------------------------------------------------------------
 void DREAM3DSettings::closeFile()
 {
-  m_Root = QJsonObject();
-  m_CurrentGroup = QJsonObject();
-  m_CurrentGroupName = "";
+  m_Stack.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -307,6 +296,11 @@ void DREAM3DSettings::closeFile()
 // -----------------------------------------------------------------------------
 void DREAM3DSettings::writeToFile()
 {
+  for (int i = m_Stack.size() - 2; i >= 0; i--)
+  {
+    m_Stack[i]->group[m_Stack[i + 1]->groupName] = m_Stack[i + 1]->group;
+  }
+
   QFile outputFile(m_FilePath);
   QFileInfo info(outputFile);
   QString parentPath = info.absolutePath();
@@ -317,7 +311,7 @@ void DREAM3DSettings::writeToFile()
     parentDir.mkpath(parentPath);
   }
 
-  QJsonDocument doc(m_Root);
+  QJsonDocument doc(m_Stack.front()->group);
 
   if (outputFile.exists() == true)
   {

@@ -43,12 +43,25 @@
 #include <QtCore/QVariant>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
+#include <QtCore/QStack>
 
 #include <QtWidgets/QTreeWidget>
 
 #include "DREAM3DWidgetsLib/Widgets/FilterLibraryTreeWidget.h"
 
 #include "QtSupportLib/QtSupportLib.h"
+
+struct DREAM3DSettingsGroup
+{
+  DREAM3DSettingsGroup(QString name, QJsonObject object)
+  {
+    groupName = name;
+    group = object;
+  }
+
+  QString groupName;
+  QJsonObject group;
+};
 
 class QtSupportLib_EXPORT DREAM3DSettings : public QObject
 {
@@ -77,13 +90,7 @@ public:
 private:
   QString m_FilePath;
 
-  QJsonObject m_Root;
-  QJsonObject m_CurrentGroup;
-  QString m_CurrentGroupName;
-
-  QJsonArray m_CurrentArray;
-  QString m_CurrentArrayName;
-  int m_CurrentArrayIndex;
+  QStack<DREAM3DSettingsGroup*> m_Stack;
 
   void openFile();
   void closeFile();
