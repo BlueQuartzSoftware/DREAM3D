@@ -89,7 +89,6 @@ public:
 
 private:
   QString m_FilePath;
-
   QStack<DREAM3DSettingsGroup*> m_Stack;
 
   void openFile();

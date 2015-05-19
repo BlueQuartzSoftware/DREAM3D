@@ -296,11 +296,14 @@ void DREAM3DSettings::closeFile()
 // -----------------------------------------------------------------------------
 void DREAM3DSettings::writeToFile()
 {
+  /* Percolate the information that has changed all the way to the root group
+     (The root group is what will ultimately be written to the file) */
   for (int i = m_Stack.size() - 2; i >= 0; i--)
   {
     m_Stack[i]->group[m_Stack[i + 1]->groupName] = m_Stack[i + 1]->group;
   }
 
+  // Write the root to the file
   QFile outputFile(m_FilePath);
   QFileInfo info(outputFile);
   QString parentPath = info.absolutePath();
