@@ -346,8 +346,7 @@ void BookmarksDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineNeedsToBeCleared();
-    emit pipelineFileActivated(pipelinePath, 0);
+    emit pipelineFileActivated(pipelinePath);
   }
 
 }
@@ -747,7 +746,7 @@ void BookmarksDockWidget::m_ActionAddToPipelineView_triggered()
   {
     QFileInfo fi(pipelinePath);
     if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath(), Append);
+    emit pipelineFileActivated(fi.absoluteFilePath());
   }
 }
 

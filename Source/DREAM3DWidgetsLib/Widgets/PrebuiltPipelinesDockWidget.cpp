@@ -268,8 +268,7 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeW
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineNeedsToBeCleared();
-    emit pipelineFileActivated(pipelinePath, 0);
+    emit pipelineFileActivated(pipelinePath);
   }
 
 }

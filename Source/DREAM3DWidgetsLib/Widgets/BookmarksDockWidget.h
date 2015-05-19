@@ -192,22 +192,16 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void pipelineNeedsToBeSaved(const QString& path, const QString& name);
 
     /**
-     * @brief The signal is emitted when the user double clicks on a pipeline file
-     * @param filePath The absolute path to the pipeline file
-     * @param append Should the pipeline be appended, replaced, or prepended
-     */
-    void pipelineFileActivated(const QString& filePath, int index);
-
-    /**
      * @brief filterListGenerated
      * @param filterList
      */
     void filterListGenerated(const QStringList& filterList, bool sort);
 
     /**
-    * @brief The signal is emitted when the pipeline view needs to be cleared
+    * @brief The signal is emitted when the user double clicks on a pipeline file
+    * @param filePath The absolute path to the pipeline file
     */
-    void pipelineNeedsToBeCleared();
+    void pipelineFileActivated(QString& filePath);
 
     void updateStatusBar(const QString &msg);
 

@@ -193,7 +193,21 @@ void DREAM3D_UI::on_actionOpen_triggered()
   if (true == filePath.isEmpty()) { return; }
 
   filePath = QDir::toNativeSeparators(filePath);
-  QFileInfo fileInfo(filePath);
+  QFileInfo fi(filePath);
+
+  // Open the new pipeline
+  openNewPipeline(filePath);
+
+  // Cache the last directory on old instance
+  m_OpenDialogLastDirectory = fi.path();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::openNewPipeline(QString &filePath)
+{
+  QFileInfo fi(filePath);
 
   PluginManager* pluginManager = PluginManager::Instance();
   QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
@@ -201,12 +215,10 @@ void DREAM3D_UI::on_actionOpen_triggered()
   // Create new DREAM3D instance
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
   newInstance->setLoadedPlugins(plugins);
-  newInstance->setWindowTitle("[*]" + fileInfo.baseName() + " - DREAM3D");
+  newInstance->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
 
   // Read Pipeline
-  int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, Replace);
-
-  QFileInfo fi(filePath);
+  int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0);
 
   // Set Current File Path
   if (err >= 0)
@@ -239,9 +251,6 @@ void DREAM3D_UI::on_actionOpen_triggered()
     // Delete new DREAM3D instance
     delete newInstance;
   }
-
-  // Cache the last directory on old instance
-  m_OpenDialogLastDirectory = fi.path();
 }
 
 // -----------------------------------------------------------------------------
@@ -583,22 +592,16 @@ void DREAM3D_UI::disconnectSignalsSlots()
 {
   QRecentFileList* recentsList = QRecentFileList::instance();
   disconnect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
-          pipelineViewWidget, SLOT(addFilter(const QString&)) );
+    pipelineViewWidget, SLOT(addFilter(const QString&)));
 
   disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
-          pipelineViewWidget, SLOT(addFilter(const QString&)) );
+    pipelineViewWidget, SLOT(addFilter(const QString&)));
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
-    pipelineViewWidget, SLOT(openPipeline(QString, int)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString&)),
+    this, SLOT(openNewPipeline(QString&)));
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
-    this, SLOT(pipelineFileLoaded(QString, int)));
-
-  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
-    pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
-
-  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
-    this, SLOT(pipelineFileLoaded(QString, int)));
+  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString&)),
+    this, SLOT(openNewPipeline(QString&)));
 
   disconnect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
@@ -614,6 +617,9 @@ void DREAM3D_UI::disconnectSignalsSlots()
 
   disconnect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
     this, SLOT(markDocumentAsDirty()));
+
+  disconnect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
+    this, SLOT(setStatusBarMessage(const QString&)));
 }
 
 
@@ -630,23 +636,11 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
-    pipelineViewWidget, SLOT(openPipeline(QString, int)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString&)),
+    this, SLOT(openNewPipeline(QString&)));
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
-    this, SLOT(pipelineFileLoaded(QString, int)));
-
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineNeedsToBeCleared()),
-    pipelineViewWidget, SLOT(clearWidgets()));
-
-  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
-    pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
-
-  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
-    this, SLOT(pipelineFileLoaded(QString, int)));
-
-  connect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeCleared()),
-    pipelineViewWidget, SLOT(clearWidgets()));
+  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString&)),
+    this, SLOT(openNewPipeline(QString&)));
 
   connect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));

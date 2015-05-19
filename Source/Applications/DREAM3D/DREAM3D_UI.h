@@ -209,6 +209,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void pipelineFileLoaded(QString file, int index);
 
+    /**
+    * @brief openNewPipeline
+    * @param filePath
+    */
+    void openNewPipeline(QString &filePath);
 
     void pipelineDidFinish();
 

@@ -127,20 +127,14 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
     /**
      * @brief The signal is emitted when a pipeline file needs to be loaded into the view at an index
      * @param filePath The absolute path to the pipeline file
-     * @param index The index that the pipeline will be placed into
      */
-    void pipelineFileActivated(const QString& filePath, int index);
+    void pipelineFileActivated(QString& filePath);
 
     /**
      * @brief filterListGenerated
      * @param filterList
      */
     void filterListGenerated(const QStringList& filterList, bool sort);
-
-    /**
-    * @brief The signal is emitted when the pipeline view needs to be cleared
-    */
-    void pipelineNeedsToBeCleared();
 
   private:
 
