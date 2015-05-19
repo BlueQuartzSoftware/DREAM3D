@@ -443,6 +443,19 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
 
   QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray()).toByteArray();
   filterLibraryTree->header()->restoreState(headerState);
+
+  QTreeWidgetItemIterator iter(filterLibraryTree);
+
+  while (*iter)
+  {
+    QTreeWidgetItem* item = *iter;
+    if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+    {
+      item->setExpanded(prefs.value(item->text(0), false).toBool());
+    }
+
+    ++iter;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -453,6 +466,19 @@ void PrebuiltPipelinesDockWidget::writeSettings(DREAM3DSettings& prefs)
   prefs.setValue(objectName(), isHidden());
 
   prefs.setValue("PrebuiltsHeaderState", filterLibraryTree->header()->saveState());
+  
+  QTreeWidgetItemIterator iter(filterLibraryTree);
+
+  while (*iter)
+  {
+    QTreeWidgetItem* item = *iter;
+    if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+    {
+      prefs.setValue(item->text(0), item->isExpanded());
+    }
+
+    ++iter;
+  }
 }
 
 

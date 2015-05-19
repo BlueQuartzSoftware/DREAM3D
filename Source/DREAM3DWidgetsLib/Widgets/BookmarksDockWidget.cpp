@@ -795,6 +795,19 @@ void BookmarksDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs
 
   // Copy the children over to the filterLibraryTree.
   filterLibraryTree->addTopLevelItems(newTree->invisibleRootItem()->takeChildren());
+
+  // Add expansion metadata for all folders, since we can only do this when everything is added to the tree
+  QTreeWidgetItemIterator iter(filterLibraryTree);
+  while (*iter)
+  {
+    QTreeWidgetItem* item = *iter;
+    if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+    {
+      item->setExpanded(item->data(2, Qt::UserRole).toBool());
+      item->setData(2, Qt::UserRole, "");
+    }
+    ++iter;
+  }
 }
 
 // -----------------------------------------------------------------------------

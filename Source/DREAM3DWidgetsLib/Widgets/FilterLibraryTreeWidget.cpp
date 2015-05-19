@@ -336,15 +336,15 @@ void FilterLibraryTreeWidget::dropEvent(QDropEvent* event)
 // -----------------------------------------------------------------------------
 FilterLibraryTreeWidget* FilterLibraryTreeWidget::FromJsonObject(QJsonObject treeObject)
 {
-  QTreeWidgetItem* item = FilterLibraryTreeWidget::UnwrapTreeItem(treeObject);
-    QList<QTreeWidgetItem*> list = item->takeChildren();
+  QTreeWidgetItem* root = FilterLibraryTreeWidget::UnwrapTreeItem(treeObject);
 
-    FilterLibraryTreeWidget* tree = new FilterLibraryTreeWidget();
-    
-    tree->addTopLevelItems(list);
+  QList<QTreeWidgetItem*> list = root->takeChildren();
 
-    tree->sortItems(0, Qt::AscendingOrder);
-    return tree;
+  FilterLibraryTreeWidget* tree = new FilterLibraryTreeWidget();
+  tree->addTopLevelItems(list);
+
+  tree->sortItems(0, Qt::AscendingOrder);
+  return tree;
 }
 
 // -----------------------------------------------------------------------------
@@ -377,8 +377,16 @@ QJsonObject FilterLibraryTreeWidget::wrapTreeItem(QTreeWidgetItem* item)
   }
 
   obj.insert("Name", item->text(0));
-  obj.insert("Path", item->text(1));
   obj.insert("Type", item->type());
+
+  if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+  {
+    obj.insert("Expanded", item->isExpanded());
+  }
+  else
+  {
+    obj.insert("Path", item->text(1));
+  }
 
   return obj;
 }
@@ -391,10 +399,15 @@ QTreeWidgetItem* FilterLibraryTreeWidget::UnwrapTreeItem(QJsonObject object)
   FilterLibraryTreeWidget::ItemType type = FilterLibraryTreeWidget::ItemType(object["Type"].toInt());
   QTreeWidgetItem* item = new QTreeWidgetItem(type);
 
+  QString name = object["Name"].toString();
+  item->setText(0, name);
+  item->setData(0, Qt::UserRole, name);
+
   if (type == FilterLibraryTreeWidget::Node_Item_Type)
   {
     item->setIcon(0, QIcon(":/folder_blue.png"));
     item->setFlags(item->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+    item->setData(2, Qt::UserRole, object["Expanded"].toBool());
     for (QJsonObject::iterator iter = object.begin(); iter != object.end(); ++iter)
     {
       if (iter.value().isObject())
@@ -409,12 +422,9 @@ QTreeWidgetItem* FilterLibraryTreeWidget::UnwrapTreeItem(QJsonObject object)
   {
     item->setIcon(0, QIcon(":/text.png"));
     item->setFlags(item->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
+    item->setText(1, object["Path"].toString());
+    item->setData(1, Qt::UserRole, object["Path"].toString());
   }
-  
-  item->setText(0, object["Name"].toString());
-  item->setData(0, Qt::UserRole, object["Name"].toString());
-  item->setText(1, object["Path"].toString());
-  item->setData(1, Qt::UserRole, object["Path"].toString());
 
   return item;
 }
