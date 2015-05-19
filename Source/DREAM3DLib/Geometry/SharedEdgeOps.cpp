@@ -102,8 +102,14 @@ void GEOM_CLASS_NAME::getVertsAtEdge(int64_t edgeId, int64_t verts[2])
 void GEOM_CLASS_NAME::getVertCoordsAtEdge(int64_t edgeId, float vert1[3], float vert2[3])
 {
   int64_t* Edge = m_EdgeList->getTuplePointer(edgeId);
-  vert1 = m_VertexList->getTuplePointer(Edge[0]);
-  vert2 = m_VertexList->getTuplePointer(Edge[1]);
+  float* tmp1 = m_VertexList->getTuplePointer(Edge[0]);
+  float* tmp2 = m_VertexList->getTuplePointer(Edge[1]);
+  vert1[0] = tmp1[0];
+  vert1[1] = tmp1[1];
+  vert1[2] = tmp1[2];
+  vert2[0] = tmp2[0];
+  vert2[1] = tmp2[1];
+  vert2[2] = tmp2[2];
 }
 
 // -----------------------------------------------------------------------------
