@@ -229,7 +229,7 @@ void DREAM3DSettings::setValue(const QString &key, const QVariant &value)
   }
 
   // If this is the root, write to the file
-  if (m_CurrentGroup == m_Root)
+  if (m_CurrentGroupName.isEmpty())
   {
     m_Root = m_CurrentGroup;
     writeToFile();
@@ -244,7 +244,7 @@ void DREAM3DSettings::setValue(const QString &key, const QJsonObject &object)
   m_CurrentGroup.insert(key, object);
 
   // If this is the root, write to the file
-  if (m_CurrentGroup == m_Root)
+  if (m_CurrentGroupName.isEmpty())
   {
     m_Root = m_CurrentGroup;
     writeToFile();
@@ -266,7 +266,7 @@ void DREAM3DSettings::setValue(const QString &key, const QStringList &list)
   m_CurrentGroup.insert(key, jsonArray);
 
   // If this is the root, write to the file
-  if (m_CurrentGroup == m_Root)
+  if (m_CurrentGroupName.isEmpty())
   {
     m_Root = m_CurrentGroup;
     writeToFile();
