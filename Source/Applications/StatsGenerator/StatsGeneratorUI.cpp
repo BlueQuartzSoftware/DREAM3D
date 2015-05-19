@@ -127,12 +127,9 @@ void StatsGeneratorUI::closeEvent(QCloseEvent* event)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::readSettings()
 {
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  DREAM3DSettings prefs;
 
+  // Read preferences here
 }
 
 // -----------------------------------------------------------------------------
@@ -140,12 +137,9 @@ void StatsGeneratorUI::readSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::writeSettings()
 {
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  DREAM3DSettings prefs;
 
+  // Write preferences here
 }
 
 // -----------------------------------------------------------------------------

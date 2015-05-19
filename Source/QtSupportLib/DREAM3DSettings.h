@@ -66,17 +66,13 @@ public:
   bool beginGroup(const QString &prefix);
   void endGroup();
 
-  void beginWriteArray(const QString & key);
-  int beginReadArray(const QString & key);
-  void setArrayIndex(int i);
-  void endArray();
-
   QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
   QJsonObject value(const QString &key, const QJsonObject &defaultObject = QJsonObject());
   QStringList value(const QString &key, const QStringList &defaultList = QStringList());
 
   void setValue(const QString &key, const QVariant &value);
   void setValue(const QString &key, const QJsonObject &object);
+  void setValue(const QString &key, const QStringList &list);
 
 private:
   QString m_FilePath;
@@ -91,6 +87,7 @@ private:
 
   void openFile();
   void closeFile();
+  void writeToFile();
 
   DREAM3DSettings(const DREAM3DSettings&);    // Copy Constructor Not Implemented
   void operator=(const DREAM3DSettings&);  // Operator '=' Not Implemented

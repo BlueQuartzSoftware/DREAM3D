@@ -88,7 +88,7 @@ bool QRecentFileList::contains(const QString& file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::addFile(const QString& file)
+void QRecentFileList::addFile(const QString& file, AddType type)
 {
   //qDebug() << "QRecentFileList::addFile()" << "\n";
   //qDebug() << "recentFiles.count: " << recentFiles.count() << "\n";
@@ -96,7 +96,14 @@ void QRecentFileList::addFile(const QString& file)
   {
     if (this->recentFiles.contains(file) == false)
     {
-      this->recentFiles.append(file);
+      if (type == APPEND)
+      {
+        this->recentFiles.append(file);
+      }
+      else if (type == PREPEND)
+      {
+        this->recentFiles.prepend(file);
+      }
       emit fileListChanged(file); // Emit the signal so all the menus can update thier contents
     }
   }
@@ -110,6 +117,13 @@ QStringList QRecentFileList::fileList()
   return this->recentFiles;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QRecentFileList::popBack()
+{
+  this->recentFiles.pop_back();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -123,19 +137,17 @@ void QRecentFileList::removeFile(const QString& file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QRecentFileList::clear()
+{
+  this->recentFiles.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QRecentFileList::writeList(DREAM3DSettings& prefs)
 {
-  QStringList fileList = this->fileList();
-
-  prefs.beginWriteArray("RecentFiles");
-
-  for (int i = 0; i < fileList.size(); i++)
-  {
-    prefs.setArrayIndex(i);
-    prefs.setValue("FilePath", fileList[i]);
-  }
-
-  prefs.endArray();
+  prefs.setValue("Recent Files", this->fileList());
 }
 
 // -----------------------------------------------------------------------------
@@ -143,21 +155,17 @@ void QRecentFileList::writeList(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void QRecentFileList::readList(DREAM3DSettings& prefs)
 {
-  int size = prefs.beginReadArray("RecentFiles");
+  QStringList list = prefs.value("Recent Files", QStringList());
 
-  for (int i = 0; i < size; i++)
+  for (int i = 0; i < list.size(); i++)
   {
-    prefs.setArrayIndex(i);
-    QString filePath = prefs.value("FilePath", "").toString();
-
+    QString filePath = list[i];
     QFile file(filePath);
     if (file.exists())
     {
-      this->addFile(filePath);
+      this->addFile(filePath, APPEND);
     }
   }
-
-  prefs.endArray();
 }
 
 // -----------------------------------------------------------------------------

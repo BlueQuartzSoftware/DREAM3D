@@ -43,6 +43,7 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QDialog>
 
+#include "QtSupportLib/DREAM3DSettings.h"
 
 #include "ui_DREAM3DUpdateCheckDialog.h"
 
@@ -103,8 +104,8 @@ class DREAM3DWidgetsLib_EXPORT DREAM3DUpdateCheckDialog : public QDialog, privat
     void setUpdateWebSite(QString url);
     void setApplicationName(QString name);
 
-    void readUpdatePreferences(QSettings& prefs);
-    void writeUpdatePreferences(QSettings& prefs);
+    void readUpdatePreferences(DREAM3DSettings& prefs);
+    void writeUpdatePreferences(DREAM3DSettings& prefs);
 
     /**
     * @brief Hides the UI items necessary to change the dialog into a simple prompt

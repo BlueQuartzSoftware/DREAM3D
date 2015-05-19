@@ -77,11 +77,7 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   setupGui();
 
 
-#if defined (Q_OS_MAC)
-  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  DREAM3DSettings updatePrefs;
 
   updatePrefs.beginGroup(Detail::UpdatePreferencesGroup);
   // If the update preferences exist in the preferences file, read them in
@@ -94,11 +90,7 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   else
   {
     updatePrefs.endGroup();
-    automatically->blockSignals(true);
-    manually->blockSignals(true);
     automatically->setChecked(true);
-    automatically->blockSignals(false);
-    manually->blockSignals(false);
     howOften->setCurrentIndex(UpdateCheckMonthly);
   }
 }
@@ -318,11 +310,7 @@ void DREAM3DUpdateCheckDialog::on_howOften_currentIndexChanged(int index)
     setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
   }
 
-#if defined (Q_OS_MAC)
-  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  DREAM3DSettings updatePrefs;
   writeUpdatePreferences(updatePrefs);
 }
 
@@ -346,12 +334,7 @@ void DREAM3DUpdateCheckDialog::on_automatically_toggled(bool boolValue)
       setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
     }
 
-#if defined (Q_OS_MAC)
-    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-
+    DREAM3DSettings updatePrefs;
     writeUpdatePreferences(updatePrefs);
   }
 }
@@ -365,12 +348,7 @@ void DREAM3DUpdateCheckDialog::on_manually_toggled(bool)
   {
     setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
 
-#if defined (Q_OS_MAC)
-    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-
+    DREAM3DSettings updatePrefs;
     writeUpdatePreferences(updatePrefs);
   }
 }
@@ -378,12 +356,12 @@ void DREAM3DUpdateCheckDialog::on_manually_toggled(bool)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings& prefs)
+void DREAM3DUpdateCheckDialog::readUpdatePreferences(DREAM3DSettings& prefs)
 {
   // Read in value from preferences file
   prefs.beginGroup(Detail::UpdatePreferencesGroup);
   bool ok = false;
-  m_WhenToCheck = static_cast<UpdateType>( prefs.value(Detail::UpdateFrequencyKey).toInt(&ok) );
+  m_WhenToCheck = static_cast<UpdateType>( prefs.value(Detail::UpdateFrequencyKey, -1).toInt(&ok) );
   prefs.endGroup();
 
   if (m_WhenToCheck == UpdateCheckManual)
@@ -420,10 +398,10 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings& prefs)
+void DREAM3DUpdateCheckDialog::writeUpdatePreferences(DREAM3DSettings& prefs)
 {
   prefs.beginGroup(Detail::UpdatePreferencesGroup);
-  prefs.setValue( "Frequency", m_WhenToCheck );
+  prefs.setValue(Detail::UpdateFrequencyKey, m_WhenToCheck);
   prefs.endGroup();
 }
 

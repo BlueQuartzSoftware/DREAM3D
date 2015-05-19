@@ -218,6 +218,10 @@ void DREAM3D_UI::on_actionOpen_triggered()
 
     // Add file path to the recent files list for both instances
     QRecentFileList* list = QRecentFileList::instance();
+    if (list->fileList().size() == 7)
+    {
+      list->popBack();
+    }
     list->addFile(filePath);
 
     // Show the new instance
@@ -1462,6 +1466,10 @@ void DREAM3D_UI::on_actionClearRecentFiles_triggered()
 {
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
+
+  // Clear the actual list
+  QRecentFileList* recents = QRecentFileList::instance();
+  recents->clear();
 
   this->menu_RecentFiles->addSeparator();
   this->menu_RecentFiles->addAction(actionClearRecentFiles);

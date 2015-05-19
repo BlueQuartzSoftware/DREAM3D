@@ -204,11 +204,7 @@ void UpdateCheck::writeUpdateCheckDate()
   QDate systemDate;
   QDate currentDateToday = systemDate.currentDate();
 
-#if defined (Q_OS_MAC)
-  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  DREAM3DSettings updatePrefs;
 
   updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
   updatePrefs.setValue (DREAM3DUpdateCheckDialog::getUpdateCheckKey(), currentDateToday.currentDate());
