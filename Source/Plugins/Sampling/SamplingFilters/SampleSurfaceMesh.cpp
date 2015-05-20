@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SampleSurfaceMesh.h"
 
 #include <QtCore/QMap>
@@ -48,8 +47,12 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
+#include "Sampling/SamplingConstants.h"
 
 class SampleSurfaceMeshImpl
 {
@@ -73,9 +76,11 @@ class SampleSurfaceMeshImpl
     {
       float radius;
       int64_t numPoints = m_Points->getNumberOfVertices();
-      float* ll;
-      float* ur;
-      float* point;
+	  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "Lower_Left_Internal_Use_Only");
+	  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "Upper_Right_Internal_Use_Only");
+	  float* ll = llPtr->getPointer(0);
+	  float* ur = urPtr->getPointer(0);
+	  float* point;
       char code;
 
       for(int iter = start; iter < end; iter++)
@@ -230,8 +235,10 @@ void SampleSurfaceMesh::execute()
   int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   //create array to hold bounding vertices for each face
-  float* ll;
-  float* ur;
+  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "Lower_Left_Internal_Use_Only");
+  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "Upper_Right_Internal_Use_Only");
+  float* ll = llPtr->getPointer(0);
+  float* ur = urPtr->getPointer(0);
   //VertexArray::Vert_t point;
   VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "faceBBs");
 

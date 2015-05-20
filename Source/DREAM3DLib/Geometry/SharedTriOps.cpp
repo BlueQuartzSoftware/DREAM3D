@@ -104,9 +104,18 @@ void GEOM_CLASS_NAME::getVertsAtTri(int64_t triId, int64_t verts[3])
 void GEOM_CLASS_NAME::getVertCoordsAtTri(int64_t triId, float vert1[3], float vert2[3], float vert3[3])
 {
   int64_t* Tri = m_TriList->getTuplePointer(triId);
-  vert1 = m_VertexList->getTuplePointer(Tri[0]);
-  vert2 = m_VertexList->getTuplePointer(Tri[1]);
-  vert3 = m_VertexList->getTuplePointer(Tri[2]);
+  float* temp1 = m_VertexList->getTuplePointer(Tri[0]);
+  float* temp2 = m_VertexList->getTuplePointer(Tri[1]);
+  float* temp3 = m_VertexList->getTuplePointer(Tri[2]);
+  vert1[0] = temp1[0];
+  vert1[1] = temp1[1];
+  vert1[2] = temp1[2];
+  vert2[0] = temp2[0];
+  vert2[1] = temp2[1];
+  vert2[2] = temp2[2];
+  vert3[0] = temp3[0];
+  vert3[1] = temp3[1];
+  vert3[2] = temp3[2];
 }
 
 // -----------------------------------------------------------------------------

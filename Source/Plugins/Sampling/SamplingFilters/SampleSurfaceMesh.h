@@ -37,17 +37,10 @@
 #ifndef _SampleSurfaceMesh_H_
 #define _SampleSurfaceMesh_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "Sampling/SamplingConstants.h"
 /**
  * @class SampleSurfaceMesh SampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/SampleSurfaceMesh.h
  * @brief

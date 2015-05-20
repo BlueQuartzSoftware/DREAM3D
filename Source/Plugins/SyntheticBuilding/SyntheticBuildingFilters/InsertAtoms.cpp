@@ -84,10 +84,14 @@ class InsertAtomsImpl
     void checkPoints(size_t start, size_t end) const
     {
       float radius;
-      float* ll;
-      float* ur;
-      float* ll_rot;
-      float* ur_rot;
+	  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "Lower_Left_Internal_Use_Only");
+	  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "Upper_Right_Internal_Use_Only");
+	  FloatArrayType::Pointer ll_rotPtr = FloatArrayType::CreateArray(3, "Lower_Left_Rotated_Internal_Use_Only");
+	  FloatArrayType::Pointer ur_rotPtr = FloatArrayType::CreateArray(3, "Upper_Right_Rotated_Internal_Use_Only");
+	  float* ll = llPtr->getPointer(0);
+	  float* ur = urPtr->getPointer(0);
+	  float* ll_rot = ll_rotPtr->getPointer(0);
+	  float* ur_rot = ur_rotPtr->getPointer(0);
       float* point;
       char code;
       float g[3][3];
@@ -414,8 +418,10 @@ void InsertAtoms::execute()
   int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   //create array to hold bounding vertices for each face
-  float* ll;
-  float* ur;
+  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "Lower_Left_Internal_Use_Only");
+  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "Upper_Right_Internal_Use_Only");
+  float* ll = llPtr->getPointer(0);
+  float* ur = urPtr->getPointer(0);
   VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "faceBBs");
 
   //walk through faces to see how many features there are
