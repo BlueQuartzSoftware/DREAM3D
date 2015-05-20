@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,17 +37,26 @@
 #include "ImportVectorImageStackWidget.h"
 
 //-- Qt Includes
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QString>
+#include <QtCore/QUrl>
+#include <QtCore/QThread>
+#include <QtCore/QFileInfoList>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QListWidgetItem>
+
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/ImageGeom.h"
-
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 
 #include "ImageImport/ImageImportFilters/ImportVectorImageStack.h"
+
 
 #include "ImageImport/moc_ImportVectorImageStackWidget.cpp"
 
@@ -335,7 +344,7 @@ void ImportVectorImageStackWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
+  outputFile = QFileDialog::getExistingDirectory(this, tr("Select Image Directory"), outputFile);
   if (!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
@@ -514,8 +523,8 @@ void ImportVectorImageStackWidget::generateExampleInputFile()
                               m_FileExt->text(),
                               m_TotalDigits->value());
   m_FileListView->clear();
-  QIcon greenDot = QIcon(QString(":/green-dot.png"));
-  QIcon redDot = QIcon(QString(":/red-dot.png"));
+  QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
+  QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i));

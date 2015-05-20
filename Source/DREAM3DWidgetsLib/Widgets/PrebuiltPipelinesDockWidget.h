@@ -92,7 +92,6 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
 
 
   public slots:
-    void actionAppendPipeline_triggered();
     void actionShowInFileSystem_triggered();
 
 
@@ -118,7 +117,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @param filePath The absolute path to the pipeline file
      * @param type Should the pipeline be appended, replaced, or prepended
      */
-    void pipelineFileActivated(const QString& filePath, ExtractionType type);
+    void pipelineFileActivated(const QString& filePath, int index);
 
     /**
      * @brief filterListGenerated

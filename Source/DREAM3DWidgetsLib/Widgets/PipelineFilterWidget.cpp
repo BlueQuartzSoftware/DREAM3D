@@ -647,14 +647,14 @@ void PipelineFilterWidget::updateWidgetStyle()
 #if defined(Q_OS_WIN)
   ss << "font: 9pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #elif defined(Q_OS_MAC)
-  ss << "font: 100 italic 12pt \"" << DREAM3DStyles::GetUIFont() << "\";";
+  ss << "font: 100 12pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #else
-  ss << "font: 100 italic 10pt \"" << DREAM3DStyles::GetUIFont() << "\";";
+  ss << "font: 100 10pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #endif
-  ss << "font-weight: bold; ";
+  ss << "/* font-weight: bold; */";
   if (m_HasPreflightErrors == true)
   {
-    ss << "color: rgb(0, 0, 0);";
+    ss << "color: rgb(240, 240, 240);";
   }
   ss << "}\n";
 

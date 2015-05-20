@@ -46,6 +46,7 @@
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QStatusBar>
+#include <QtGui/QPainter>
 
 
 #include "DREAM3DLib/Common/PipelineMessage.h"
@@ -56,6 +57,7 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/DropBoxWidget.h"
 
 #include "QtSupportLib/FileDragMessageBox.h"
 
@@ -185,7 +187,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief populatePipelineView
      * @param pipeline
      */
-    void populatePipelineView(FilterPipeline::Pointer pipeline, ExtractionType type);
+    void populatePipelineView(FilterPipeline::Pointer pipeline, int index);
 
     bool eventFilter(QObject*, QEvent*);
 
@@ -256,7 +258,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     /**
     * @brief Open pipeline to a file
     */
-    int openPipeline(const QString &filePath, ExtractionType type = Replace);
+    int openPipeline(const QString &filePath, int index);
 
     /**
      * @brief onCustomContextMenuRequested
@@ -273,7 +275,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief addDREAM3DReaderFilter
      * @param filePath
      */
-    void addDREAM3DReaderFilter(const QString& filePath, ExtractionType type);
+    void addDREAM3DReaderFilter(const QString& filePath, int index);
 
     /**
      * @brief readPipelineFromFile
@@ -303,10 +305,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
   protected:
     void setupGui();
     void dragEnterEvent(QDragEnterEvent* event);
-    //  void dragLeaveEvent(QDragLeaveEvent* event);
+    void dragLeaveEvent(QDragLeaveEvent* event);
     void dragMoveEvent(QDragMoveEvent* event);
     void dropEvent(QDropEvent* event);
-
     void showContextMenu(const QPoint& globalPos);
 
   protected slots:
@@ -315,7 +316,10 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
   private:
     PipelineFilterWidget*     m_SelectedFilterWidget;
     QVBoxLayout*              m_FilterWidgetLayout;
-    PipelineFilterWidget*     m_FilterBeingDragged;
+    PipelineFilterWidget*     m_CurrentFilterBeingDragged;
+    PipelineFilterWidget*     m_PreviousFilterBeingDragged;
+    int                       m_FilterOrigPos;
+    DropBoxWidget*            m_DropBox;
     int                       m_DropIndex;
     QLabel*                   m_EmptyPipelineLabel;
     QPoint                    m_LastDragPoint;

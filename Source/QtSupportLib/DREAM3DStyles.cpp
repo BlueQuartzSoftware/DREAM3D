@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -58,12 +58,15 @@ DREAM3DStyles::~DREAM3DStyles()
 QString DREAM3DStyles::GetUIFont()
 {
 #if defined (Q_OS_MAC)
-  return QString::fromUtf8("Helvetica");
-#elif defined (Q_OS_WIN)
-  return QString::fromUtf8("Trebuchet MS");
-#endif
+  //return QString::fromUtf8("Helvetica");
   QFont font;
   return font.defaultFamily();
+#elif defined (Q_OS_WIN)
+  return QString::fromUtf8("Trebuchet MS");
+#else
+  QFont font;
+  return font.defaultFamily();
+  #endif
 }
 
 // -----------------------------------------------------------------------------

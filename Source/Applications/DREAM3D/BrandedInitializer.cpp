@@ -155,7 +155,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
     if (!filePath.isEmpty())
     {
       QFileInfo fi(filePath);
-      int err = this->MainWindow->getPipelineViewWidget()->openPipeline(filePath);
+      int err = this->MainWindow->getPipelineViewWidget()->openPipeline(filePath, 0);
 
       // If the pipeline was read correctly, change the title
       if (err >= 0)
