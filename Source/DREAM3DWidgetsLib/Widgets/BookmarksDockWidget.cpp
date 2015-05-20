@@ -60,6 +60,7 @@
 #include "QtSupportLib/FavoritesChangedDialog.h"
 
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
 
 enum ErrorCodes {
   UNRECOGNIZED_EXT = -1

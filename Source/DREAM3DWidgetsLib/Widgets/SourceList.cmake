@@ -40,6 +40,8 @@ set(DREAM3DWidgetsLib_Widgets_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterTreeWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItem.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksModel.h
   )
 set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_Widgets_SRCS}
@@ -47,6 +49,8 @@ set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterTreeWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItem.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksModel.cpp
   )
 
 
