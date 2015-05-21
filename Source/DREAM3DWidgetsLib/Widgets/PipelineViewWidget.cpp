@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
+* contributors may be used to endorse or promote products derived from this software 
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "PipelineViewWidget.h"
 
 #include <iostream>
@@ -84,13 +84,15 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   QFrame(parent),
   m_SelectedFilterWidget(NULL),
   m_FilterWidgetLayout(NULL),
-  m_FilterBeingDragged(NULL),
+  m_CurrentFilterBeingDragged(NULL),
+  m_PreviousFilterBeingDragged(NULL),
   m_DropIndex(-1),
   m_EmptyPipelineLabel(NULL),
   m_ScrollArea(NULL),
   m_AutoScroll(false),
   m_AutoScrollMargin(10),
   m_autoScrollCount(0),
+  m_FilterOrigPos(-1),
   m_PipelineMessageObserver(NULL)
 {
   setupGui();
@@ -132,6 +134,8 @@ void PipelineViewWidget::setupGui()
 {
   newEmptyPipelineViewLayout();
   connect(&m_autoScrollTimer, SIGNAL(timeout()), this, SLOT(doAutoScroll()));
+
+  m_DropBox = new DropBoxWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -425,7 +429,7 @@ int PipelineViewWidget::writePipeline(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PipelineViewWidget::openPipeline(const QString &filePath, ExtractionType type)
+int PipelineViewWidget::openPipeline(const QString &filePath, int index)
 {
   //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
@@ -452,19 +456,8 @@ int PipelineViewWidget::openPipeline(const QString &filePath, ExtractionType typ
     return -1;
   }
 
-  // Choose whether to append, replace, or prepend existing pipeline
-  if (type == Append)
-  {
-    populatePipelineView(pipeline, Append);
-  }
-  else if (type == Replace)
-  {
-    populatePipelineView(pipeline, Replace);
-  }
-  else
-  {
-    populatePipelineView(pipeline, Prepend);
-  }
+  // Populate the pipeline view
+  populatePipelineView(pipeline, index);
 
   // Notify user of successful read
   m_StatusBar->showMessage(tr("The pipeline has been read successfully from '%1'.").arg(name));
@@ -723,7 +716,7 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setFilterBeingDragged(PipelineFilterWidget* w)
 {
-  m_FilterBeingDragged = w;
+  m_CurrentFilterBeingDragged = w;
 }
 
 // -----------------------------------------------------------------------------
@@ -751,103 +744,57 @@ void PipelineViewWidget::setStatusBar(QStatusBar* statusBar)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
-{
-  event->acceptProposedAction();
-#if 0
-
-  PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(childAt(event->pos()));
-  if (w != NULL)
-  {
-    qDebug() << "PipelineFilterWidget Found: " << w->getFilter()->getNameOfClass() << "\n";
-  }
-  QVBoxLayout* l = qobject_cast<QVBoxLayout*>(childAt(event->pos()));
-  if (l != NULL)
-  {
-    qDebug() << "PipelineViewWidget::dragEnterEvent: Found the QVBoxLayout" << "\n";
-  }
-  PipelineViewWidget* o = qobject_cast<PipelineViewWidget*>(childAt(event->pos()));
-  if (o != NULL)
-  {
-    qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName() << "\n";
-  }
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::addDREAM3DReaderFilter(const QString& filePath, ExtractionType type)
+void PipelineViewWidget::addDREAM3DReaderFilter(const QString& filePath, int index)
 {
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(filePath);
 
-  switch(type)
-  {
-    case Replace:
-    {
-      clearWidgets();
-      // Do not place a break statement here - Replace needs to use the "Append" code below.
-    }
-    case Append:
-    {
-      // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
-      PipelineFilterWidget* w = new PipelineFilterWidget(reader, NULL, this);
-      int index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
-      addFilterWidget(w, index);
-      break;
-    }
-    case Prepend:
-    {
-      // Prepend filter to pipeline
-    }
-  }
+  // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
+  PipelineFilterWidget* w = new PipelineFilterWidget(reader, NULL, this);
+  addFilterWidget(w, index);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::populatePipelineView(FilterPipeline::Pointer pipeline, ExtractionType type)
+void PipelineViewWidget::populatePipelineView(FilterPipeline::Pointer pipeline, int index)
 {
   if (NULL == pipeline.get()) { clearWidgets(); return; }
-  // Clear the Pipeline First
-  if (type == Replace) { clearWidgets(); }
+
   // get a reference to the filters which are in some type of container object.
   FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
   int fCount = filters.size();
-
-  int index = -1;
 
   // QProgressDialog progress("Opening Pipeline File....", "Cancel", 0, fCount, this);
   // progress.setWindowModality(Qt::WindowModal);
   // progress.setMinimumDuration(2000);
   PipelineFilterWidget* firstWidget = NULL;
   // Start looping on each filter
+
   for (int i = 0; i < fCount; i++)
   {
     //   progress.setValue(i);
     // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
     PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
-    if (type == Replace || type == Append)
-    {
-      index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
-    }
-    else
-    {
-      index++;
-    }
 
     addFilterWidget(w, index);
-    if(i == 0) { firstWidget = w; }
+    if (index == 0)
+    {
+      firstWidget = w;
+    }
 
+    index++;
   }
-  if (firstWidget) { firstWidget->setIsSelected(true); }
-  // progress.setValue(fCount);
 
+  if (firstWidget) 
+  { 
+    firstWidget->setIsSelected(true); 
+  }
 
   // Now preflight the pipeline for this filter.
   preflightPipeline();
-  if (type == Append || type == Prepend) { emit pipelineChanged(); }
+
+  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -856,6 +803,14 @@ void PipelineViewWidget::populatePipelineView(FilterPipeline::Pointer pipeline, 
 void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 {
 	m_LastDragPoint = event->pos();
+
+  // Remove the filter widget
+  if (NULL != m_FilterWidgetLayout && NULL != m_CurrentFilterBeingDragged && m_FilterWidgetLayout->indexOf(m_CurrentFilterBeingDragged) != -1)
+  {
+    m_FilterOrigPos = m_FilterWidgetLayout->indexOf(m_CurrentFilterBeingDragged);
+    m_FilterWidgetLayout->removeWidget(m_CurrentFilterBeingDragged);
+    m_CurrentFilterBeingDragged->setParent(NULL);
+  }
 
 	// If cursor is within margin boundaries, start scrolling
 	if (shouldAutoScroll(event->pos()))
@@ -868,40 +823,27 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 		stopAutoScroll();
 	}
 
-	QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
-	if (o == NULL && event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
+  const QMimeData* mimedata = event->mimeData();
+	if (event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
 	{
-		int count = filterCount();
-		for (int i = 0; i < count; ++i)
-		{
-			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
-			{
-				if (event->pos().y() < w->geometry().y())
-				{
-					m_FilterWidgetLayout->removeWidget(m_FilterBeingDragged);
-					break;
-				}
-			}
-		}
+    // Remove the drop box
+    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+    {
+      m_FilterWidgetLayout->removeWidget(m_DropBox);
+      m_DropBox->setParent(NULL);
+    }
+
 		bool didInsert = false;
-		count = filterCount();
+    int count = filterCount();
 		for (int i = 0; i < count; ++i)
 		{
 			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
+			if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
 			{
-				/*if (event->pos().y() <= 0)
+        if (event->pos().y() <= w->geometry().y() + w->geometry().height()/2)
 				{
-				m_FilterWidgetLayout->insertWidget(draggedWidgetIndex, m_FilterBeingDragged);
-				setSelectedFilterWidget(m_FilterBeingDragged);
-				didInsert = true;
-				break;
-				}*/
-				if (event->pos().y() < w->geometry().y())
-				{
-					m_FilterWidgetLayout->insertWidget(i, m_FilterBeingDragged);
-					setSelectedFilterWidget(m_FilterBeingDragged);
+          m_DropBox->setLabel("    [" + QString::number(i + 1) + "] " + m_CurrentFilterBeingDragged->getHumanLabel());
+          m_FilterWidgetLayout->insertWidget(i, m_DropBox);
 					reindexWidgetTitles();
 					didInsert = true;
 					break;
@@ -912,17 +854,104 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 		if (false == didInsert && count > 0)
 		{
 			PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
-			if (w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
+			if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
 			{
-				if (event->pos().y() > w->geometry().y() + w->geometry().height())
+				if (event->pos().y() >= w->geometry().y() + w->geometry().height()/2)
 				{
-					m_FilterWidgetLayout->insertWidget(count - 2, m_FilterBeingDragged);
-					setSelectedFilterWidget(m_FilterBeingDragged);
+          m_DropBox->setLabel("    [" + QString::number(count) + "] " + m_CurrentFilterBeingDragged->getHumanLabel());
+          m_FilterWidgetLayout->insertWidget(count - 1, m_DropBox);
 					reindexWidgetTitles();
 				}
 			}
 		}
 	}
+  else if (mimedata->hasText())
+  {
+    QByteArray dropData = mimedata->data("text/plain");
+    QString data(dropData);
+    QFileInfo fi(data);
+    QString ext = fi.completeSuffix();
+    FilterManager* fm = FilterManager::Instance();
+    if (NULL == fm) { return; }
+    IFilterFactory::Pointer wf = fm->getFactoryForFilter(data);
+
+    // If the dragged item is a filter item...
+    if (NULL != wf)
+    {
+      QString humanName = wf->getFilterHumanLabel();
+
+      bool didInsert = false;
+      // This path is taken if a filter is dragged from the list of filters
+      if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+      {
+        m_FilterWidgetLayout->removeWidget(m_DropBox);
+        m_DropBox->setParent(NULL);
+      }
+
+      int count = filterCount();
+      for (int i = 0; i < count; ++i)
+      {
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+        if (NULL != w && event->pos().y() <= w->geometry().y() + w->geometry().height() / 2)
+        {
+          m_DropBox->setLabel("    [" + QString::number(i + 1) + "] " + humanName);
+          m_FilterWidgetLayout->insertWidget(i, m_DropBox);
+          reindexWidgetTitles();
+          didInsert = true;
+          break;
+        }
+      }
+      // Check to see if we are trying to move it to the end
+      if (false == didInsert && count > 0)
+      {
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
+        if (NULL != w && event->pos().y() >= w->geometry().y() + w->geometry().height() / 2)
+        {
+          m_DropBox->setLabel("    [" + QString::number(count) + "] " + humanName);
+          m_FilterWidgetLayout->insertWidget(count - 1, m_DropBox);
+          reindexWidgetTitles();
+        }
+      }
+    }
+    // If the dragged item is a pipeline file...
+    else if (ext == "dream3d" || ext == "json" || ext == "ini" || ext == "txt")
+    {
+      QString pipelineName = fi.baseName();
+
+      bool didInsert = false;
+      // This path is taken if a filter is dragged from the list of filters
+      if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+      {
+        m_FilterWidgetLayout->removeWidget(m_DropBox);
+        m_DropBox->setParent(NULL);
+      }
+
+      int count = filterCount();
+      for (int i = 0; i < count; ++i)
+      {
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+        if (NULL != w && event->pos().y() <= w->geometry().y() + w->geometry().height() / 2)
+        {
+          m_DropBox->setLabel("Place '" + pipelineName + "' Here");
+          m_FilterWidgetLayout->insertWidget(i, m_DropBox);
+          reindexWidgetTitles();
+          didInsert = true;
+          break;
+        }
+      }
+      // Check to see if we are trying to move it to the end
+      if (false == didInsert && count > 0)
+      {
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
+        if (NULL != w && event->pos().y() >= w->geometry().y() + w->geometry().height() / 2)
+        {
+          m_DropBox->setLabel("Place '" + pipelineName + "' Here");
+          m_FilterWidgetLayout->insertWidget(count - 1, m_DropBox);
+          reindexWidgetTitles();
+        }
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -930,72 +959,154 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
+  const QMimeData* mimedata = event->mimeData();
 
-  if (event->mimeData()->hasUrls())
+  if (mimedata->hasUrls())
   {
     QList<QUrl> urlList;
     QString fName;
     urlList = event->mimeData()->urls(); // returns list of QUrls
     // if just text was dropped, urlList is empty (size == 0)
 
-    if ( urlList.size() > 0) // if at least one QUrl is present in list
+    if (urlList.size() > 0) // if at least one QUrl is present in list
     {
       fName = urlList[0].toLocalFile(); // convert first QUrl to local path
       fName = QDir::toNativeSeparators(fName);
-      QFileInfo fi(fName);
 
-      FileDragMessageBox* msgBox = new FileDragMessageBox(this, filterCount());
-      msgBox->setFilePath(fName);
-      connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString&, ExtractionType)), this, SLOT(openPipeline(const QString&, ExtractionType)));
-      connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString&, ExtractionType)), this, SLOT(addDREAM3DReaderFilter(const QString&, ExtractionType)));
-
-      if(fi.suffix().endsWith("dream3d") == false)
+      if (fName.isEmpty() == true)
       {
-        msgBox->getAddFilterBtn()->hide();
-        msgBox->getExtractPipelineBtn()->hide();
-        msgBox->getDescriptionLabel()->hide();
+        fName = urlList[0].toString();
+        fName = QDir::toNativeSeparators(fName);
       }
 
-      msgBox->exec();
-      msgBox->deleteLater();
+      QFileInfo fi(fName);
+      QString ext = fi.completeSuffix();
+
+      int index = 0;
+      if (NULL != m_FilterWidgetLayout)
+      {
+        index = m_FilterWidgetLayout->indexOf(m_DropBox);
+      }
+
+      if (ext == "json" || ext == "ini" || ext == "txt")
+      {
+        // Remove the drop line
+        if (NULL != m_FilterWidgetLayout && index != -1)
+        {
+          m_FilterWidgetLayout->removeWidget(m_DropBox);
+          m_DropBox->setParent(NULL);
+        }
+
+        openPipeline(fName, index);
+      }
+      else if (ext == "dream3d")
+      {
+        FileDragMessageBox* msgBox = new FileDragMessageBox(this);
+        msgBox->exec();
+        msgBox->deleteLater();
+
+        // Remove the drop line
+        if (NULL != m_FilterWidgetLayout && index != -1)
+        {
+          m_FilterWidgetLayout->removeWidget(m_DropBox);
+          m_DropBox->setParent(NULL);
+        }
+
+        if (msgBox->isExtractPipelineBtnChecked() == true)
+        {
+          openPipeline(fName, index);
+        }
+        else
+        {
+          addDREAM3DReaderFilter(fName, index);
+        }
+      }
     }
   }
-  else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
+  else if (m_CurrentFilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
     // This path is take if a filter is being dragged around in the pipeline and dropped.
-    setSelectedFilterWidget(m_FilterBeingDragged);
-    m_FilterBeingDragged = NULL;
+    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+    {
+      m_FilterWidgetLayout->removeWidget(m_DropBox);
+      m_DropBox->setParent(NULL);
+    }
+
+    int count = filterCount();
+    bool didInsert = false;
+    for (int i = 0; i < count; ++i)
+    {
+      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+      if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
+      {
+        if (event->pos().y() < w->geometry().y() + w->geometry().height() / 3)
+        {
+          m_FilterWidgetLayout->insertWidget(i, m_CurrentFilterBeingDragged);
+          setSelectedFilterWidget(m_CurrentFilterBeingDragged);
+          reindexWidgetTitles();
+          didInsert = true;
+          break;
+        }
+      }
+    }
+    // Check to see if we are trying to move it to the end
+    if (false == didInsert && count > 0)
+    {
+      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
+      if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
+      {
+        if (event->pos().y() > w->geometry().y() + w->geometry().height())
+        {
+          m_FilterWidgetLayout->insertWidget(count - 1, m_CurrentFilterBeingDragged);
+          setSelectedFilterWidget(m_CurrentFilterBeingDragged);
+          reindexWidgetTitles();
+        }
+      }
+    }
+
+    setSelectedFilterWidget(m_CurrentFilterBeingDragged);
+    m_CurrentFilterBeingDragged = NULL;
+    m_PreviousFilterBeingDragged = NULL;
+
     // Make sure the widget titles are all correct
     reindexWidgetTitles();
     preflightPipeline();
 
     emit pipelineChanged();
   }
-  else
+  else if (mimedata->hasText())
   {
-    const QMimeData* mimedata = event->mimeData();
     QByteArray dropData = mimedata->data("text/plain");
-    // This path is taken if a filter is dropped from the list of filters
-    if(mimedata->hasText())
+    QString data(dropData);
+    FilterManager* fm = FilterManager::Instance();
+    if (NULL == fm) { return; }
+    IFilterFactory::Pointer wf = fm->getFactoryForFilter(data);
+    if (NULL == wf) { return; }
+
+    // Remove the drop line
+    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
     {
-      QString name(dropData);
-      // We need to figure out where it was dropped relative to other filters
-      int count = filterCount() - 1;
-      for (int i = 0; i < count; ++i)
+      m_FilterWidgetLayout->removeWidget(m_DropBox);
+      m_DropBox->setParent(NULL);
+    }
+
+    // We need to figure out where it was dropped relative to other filters
+    int count = filterCount() - 1;
+    for (int i = 0; i < count; ++i)
+    {
+      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+      if (w != NULL)
       {
-        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-        if(w != NULL)
+        if (event->pos().y() < w->geometry().y())
         {
-          if(event->pos().y() < w->geometry().y())
-          {
-            count = i;
-            break;
-          }
+          count = i;
+          break;
         }
       }
-      // Now that we have an index, insert the filter.
-      addFilter(name, count);
     }
+
+      // Now that we have an index, insert the filter.
+      addFilter(data, count);
 
     emit pipelineChanged();
   }
@@ -1003,6 +1114,53 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::dragLeaveEvent(QDragLeaveEvent* event)
+{
+  int index;
+  if (NULL != m_FilterWidgetLayout)
+  {
+    index = m_FilterWidgetLayout->indexOf(m_DropBox);
+  }
+
+  // Remove the drop line
+  if (NULL != m_FilterWidgetLayout && index != -1)
+  {
+    m_FilterWidgetLayout->removeWidget(m_DropBox);
+    m_DropBox->setParent(NULL);
+  }
+
+  // Put filter widget back to original position
+  if (NULL != m_CurrentFilterBeingDragged)
+  {
+    m_FilterWidgetLayout->insertWidget(m_FilterOrigPos, m_CurrentFilterBeingDragged);
+    setSelectedFilterWidget(m_CurrentFilterBeingDragged);
+  }
+
+  reindexWidgetTitles();
+
+  // Set the current filter as previous, and nullify the current
+  m_PreviousFilterBeingDragged = m_CurrentFilterBeingDragged;
+  m_CurrentFilterBeingDragged = NULL;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::dragEnterEvent(QDragEnterEvent* event)
+{
+  event->acceptProposedAction();
+
+  // If there is a previous filter, set it as current
+  if (NULL != m_PreviousFilterBeingDragged && event->dropAction() == Qt::MoveAction)
+  {
+    m_CurrentFilterBeingDragged = m_PreviousFilterBeingDragged;
+  }
 }
 
 // -----------------------------------------------------------------------------

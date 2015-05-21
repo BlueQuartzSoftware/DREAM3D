@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
+* contributors may be used to endorse or promote products derived from this software 
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "MatchCrystallography.h"
 
@@ -533,7 +533,6 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
 {
   float w = 0.0f;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   float curmiso1 = 0.0f, curmiso2 = 0.0f, curmiso3 = 0.0f;
   size_t curmisobin = 0, newmisobin = 0;
 
@@ -543,8 +542,9 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
   curmisobin = m_OrientationOps[sym]->getMisoBin(FOrientArrayType(curmiso1, curmiso2, curmiso3));
   w = m_OrientationOps[sym]->getMisoQuat(q1, q2, n1, n2, n3);
 
-  OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-  newmisobin = m_OrientationOps[sym]->getMisoBin(FOrientArrayType(n1, n2, n3));
+  FOrientArrayType rod(4);
+  FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
+  newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   mdfchange = mdfchange
               + (((actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)) * (actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)))
                  - ((actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
@@ -560,11 +560,10 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
 // -----------------------------------------------------------------------------
 void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2)
 {
-  float w;
-  float n1, n2, n3;
-  float r1, r2, r3;
-  float curmiso1, curmiso2, curmiso3;
-  size_t curmisobin, newmisobin;
+  float w = 0.0f;
+  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  float curmiso1 = 0.0f, curmiso2 = 0.0f, curmiso3 = 0.0f;
+  size_t curmisobin = 0, newmisobin = 0;
   float miso1 = 0.0f, miso2 = 0.0f, miso3 = 0.0f;
 
   curmiso1 = m_MisorientationLists[feature][3 * j];
@@ -572,8 +571,10 @@ void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j,
   curmiso3 = m_MisorientationLists[feature][3 * j + 2];
   curmisobin = m_OrientationOps[sym]->getMisoBin(FOrientArrayType(curmiso1, curmiso2, curmiso3));
   w = m_OrientationOps[sym]->getMisoQuat(q1, q2, n1, n2, n3);
-  OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-  newmisobin = m_OrientationOps[sym]->getMisoBin(FOrientArrayType(n1, n2, n3));
+
+  FOrientArrayType rod(4);
+  FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
+  newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   m_MisorientationLists[feature][3 * j] = miso1;
   m_MisorientationLists[feature][3 * j + 1] = miso2;
   m_MisorientationLists[feature][3 * j + 2] = miso3;
@@ -840,7 +841,8 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
               ea1 = m_FeatureEulerAngles[3 * neighbor];
               ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
               ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-              OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
+              FOrientTransformsType::eu2qu(FOrientArrayType(ea1, ea2, ea3), quat);
+              q2 = quat.toQuaternion();
               float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
               if (neighbor != selectedfeature2)
               {
@@ -848,7 +850,8 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
               }
             }
 
-            OrientationMath::EulertoQuat(g1ea1, g1ea2, g1ea3, q1);
+            FOrientTransformsType::eu2qu(FOrientArrayType(g1ea1, g1ea2, g1ea3), quat);
+            q1 = quat.toQuaternion();
             QuaternionMathF::Copy(q1, avgQuats[selectedfeature2]);
             size = 0;
             if (neighborlist[selectedfeature2].size() != 0) { size = neighborlist[selectedfeature2].size(); }
@@ -858,7 +861,8 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
               ea1 = m_FeatureEulerAngles[3 * neighbor];
               ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
               ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-              OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
+              FOrientTransformsType::eu2qu(FOrientArrayType(ea1, ea2, ea3), quat);
+              q2 = quat.toQuaternion();
               float neighsurfarea = neighborsurfacearealist[selectedfeature2][j];
               if (neighbor != selectedfeature1)
               {
@@ -892,7 +896,6 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
 
   float w = 0.0f;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   QuatF q1 = QuaternionMathF::New();
   QuatF q2 = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -931,11 +934,11 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
           float neighsurfarea = neighborsurfacearealist[i][j];
           QuaternionMathF::Copy(avgQuats[nname], q2);
           w = m_OrientationOps[crys1]->getMisoQuat(q1, q2, n1, n2, n3);
-          OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-          m_MisorientationLists[i][3 * j] = r1;
-          m_MisorientationLists[i][3 * j + 1] = r2;
-          m_MisorientationLists[i][3 * j + 2] = r3;
-          FOrientArrayType rod(m_MisorientationLists[i][3 * j], m_MisorientationLists[i][3 * j + 1], m_MisorientationLists[i][3 * j + 2]);
+          FOrientArrayType rod(4);
+          FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
+          m_MisorientationLists[i][3 * j] = rod[0];
+          m_MisorientationLists[i][3 * j + 1] = rod[1];
+          m_MisorientationLists[i][3 * j + 2] = rod[2];
           mbin = m_OrientationOps[crys1]->getMisoBin(rod);
           if (m_SurfaceFeatures[i] == false && (nname > static_cast<int32_t>(i) || m_SurfaceFeatures[nname] == true))
           {

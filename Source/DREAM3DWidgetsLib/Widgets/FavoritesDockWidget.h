@@ -112,7 +112,6 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     void removeFavorite(QTreeWidgetItem* item);
     void actionRemoveFavorite_triggered();
     void actionRenameFavorite_triggered();
-    void actionAppendFavorite_triggered();
     void actionShowInFileSystem_triggered();
     void removeFavorite(QString favoritePath);
 
@@ -185,7 +184,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @param filePath The absolute path to the pipeline file
      * @param append Should the pipeline be appended, replaced, or prepended
      */
-    void pipelineFileActivated(const QString& filePath, ExtractionType type);
+    void pipelineFileActivated(const QString& filePath, int index);
 
     /**
      * @brief filterListGenerated

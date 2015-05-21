@@ -14,11 +14,11 @@ set(_PublicFilters
   ChangeResolution
   CropVolume
   ExtractFlaggedFeatures
-  #RegularGridSampleSurfaceMesh
+  RegularGridSampleSurfaceMesh
   RegularizeZSpacing
   RotateSampleRefFrame
   NearestPointFuseRegularGrids
-  #UncertainRegularGridSampleSurfaceMesh
+  UncertainRegularGridSampleSurfaceMesh
   WarpRegularGrid
 )
 
@@ -36,7 +36,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-  #SampleSurfaceMesh
+  SampleSurfaceMesh
 )
 
 #-----------------

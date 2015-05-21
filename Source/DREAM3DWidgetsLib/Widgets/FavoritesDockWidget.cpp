@@ -229,7 +229,8 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
     }
     else if (itemInfo.suffix().compare("json") == 0)
     {
-      itemName = JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath);
+      QString dVers;
+      JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath, itemName, dVers, NULL);
     }
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
@@ -238,7 +239,7 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
     itemWidget->setData(0, Qt::UserRole, QVariant(itemInfo.absoluteFilePath()));
     if(allowEditing == true)
     {
-      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
+      itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
     }
     QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
     itemWidget->setToolTip(0, htmlFormattedString);
@@ -271,11 +272,13 @@ QString FavoritesDockWidget::generateHtmlFilterListFromPipelineFile(QString path
     if (false == ok) {filterCount = 0;}
 
     pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat, NULL);
+    filterCount = pipeline->getFilterContainer().size();
   }
   else if (fi.suffix().compare(".json") == 0)
   {
     pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path, NULL);
-    name = JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, NULL);
+    JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, name, dVers, NULL);
+    filterCount = pipeline->getFilterContainer().size();
   }
 
   QString html;
@@ -395,7 +398,7 @@ void FavoritesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath, Replace);
+    emit pipelineFileActivated(pipelinePath, 0);
   }
 
 }
@@ -854,22 +857,6 @@ void FavoritesDockWidget::actionRenameFavorite_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   filterLibraryTree->editItem(item, 0);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FavoritesDockWidget::actionAppendFavorite_triggered()
-{
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
-  if (pipelinePath.isEmpty() == false)
-  {
-    QFileInfo fi(pipelinePath);
-    if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath(), Append);
-  }
 }
 
 // -----------------------------------------------------------------------------

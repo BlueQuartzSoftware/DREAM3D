@@ -171,46 +171,16 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="appendPipelineBtn">
-         <property name="text">
-          <string>Append</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="prependPipelineBtn">
-         <property name="text">
-          <string>Prepend</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="replacePipelineBtn">
-         <property name="text">
-          <string>Replace</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <widget class="QPushButton" name="cancelBtn">
          <property name="text">
           <string>Cancel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="okBtn">
+         <property name="text">
+          <string>OK</string>
          </property>
         </widget>
        </item>

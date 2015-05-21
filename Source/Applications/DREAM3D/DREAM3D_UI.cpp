@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
+* contributors may be used to endorse or promote products derived from this software 
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "DREAM3D_UI.h"
 
 //-- Qt Includes
@@ -626,17 +626,17 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-          pipelineViewWidget, SLOT(openPipeline(QString, ExtractionType)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    pipelineViewWidget, SLOT(openPipeline(QString, int)));
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
-  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
-    pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
+  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
+    pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
 
-  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  disconnect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
   disconnect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
@@ -668,17 +668,17 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    pipelineViewWidget, SLOT(openPipeline(QString, ExtractionType)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    pipelineViewWidget, SLOT(openPipeline(QString, int)));
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
-  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, ExtractionType)),
-    pipelineViewWidget, SLOT(openPipeline(const QString&, ExtractionType)));
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(const QString&, int)),
+    pipelineViewWidget, SLOT(openPipeline(const QString&, int)));
 
-  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, ExtractionType)),
-    this, SLOT(pipelineFileLoaded(QString, ExtractionType)));
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, int)),
+    this, SLOT(pipelineFileLoaded(QString, int)));
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
@@ -758,16 +758,6 @@ void DREAM3D_UI::setupPipelineContextMenu()
   favoriteItemActions << actionRenameFavorite;
   favoriteCategoryActions << actionRenameFavorite;
 
-
-  QAction* actionAppendFavorite = new QAction(NULL);
-  actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
-  actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0));
-   menuPipeline->addAction(actionAppendFavorite);
-  QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
-  actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
-  connect(actionAppendFavorite, SIGNAL(triggered()),
-          favoritesDockWidget, SLOT( actionAppendFavorite_triggered() ) );
-  favoriteItemActions << actionAppendFavorite;
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
@@ -827,13 +817,6 @@ void DREAM3D_UI::setupPipelineContextMenu()
 
 
   /* ******************************* Prebuilt Pipelines Context Menus ***********************************************/
-  QAction* actionAppendPrebuilt = new QAction(NULL);
-  actionAppendPrebuilt->setObjectName(QString::fromUtf8("actionAppendPrebuilt"));
-  actionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0));
-  //menuPipeline->addAction(actionAppendPrebuilt);
-  connect(actionAppendPrebuilt, SIGNAL(triggered()),
-          prebuiltPipelinesDockWidget, SLOT( actionAppendPipeline_triggered() ) );
-  prebuiltItemActions << actionAppendPrebuilt;
 
   {
     QAction* separator = new QAction(this);
@@ -994,7 +977,7 @@ void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::pipelineFileLoaded(QString file, ExtractionType type)
+void DREAM3D_UI::pipelineFileLoaded(QString file, int index)
 {
   QFileInfo fi(file);
   on_pipelineViewWidget_pipelineTitleUpdated(fi.baseName());
@@ -1208,7 +1191,7 @@ void DREAM3D_UI::openRecentFile()
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
     QString filePath = action->data().toString();
-    int err = getPipelineViewWidget()->openPipeline(filePath);
+    int err = getPipelineViewWidget()->openPipeline(filePath, 0);
 
     if (err >= 0)
     {

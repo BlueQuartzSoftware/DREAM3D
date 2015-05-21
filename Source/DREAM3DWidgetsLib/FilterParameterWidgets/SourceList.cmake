@@ -78,7 +78,7 @@ foreach(FPW ${DREAM3D_PARAMETER_WIDGETS})
   file(APPEND  ${REGISTER_KNOWN_WIDGETS} "}\n")
   file(APPEND  ${FILTER_WIDGET_HEADERS} "#include \"DREAM3DWidgetsLib/FilterParameterWidgets/${FPW}.h\"\n")
 
-  file(APPEND  ${FILTER_PARAMETER_CODEGEN_INCLUDES_FILE} "#include \"PluginMaker/CodeGenerators/${FPW}CodeGenerator.h\"\n")
+  file(APPEND  ${FILTER_PARAMETER_CODEGEN_INCLUDES_FILE} "#include \"DevHelper/CodeGenerators/${FPW}CodeGenerator.h\"\n")
 
   file(APPEND  ${FILTER_PARAMETER_TYPELIST_FILE} "list.push_back(\"${FPW}\");\n")
 

@@ -330,10 +330,10 @@ if(DREAM3D_BUILD_STATS_GENERATOR)
 endif()
 
 
-#- Add in the PluginMaker application
-option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
+#- Add in the DevHelper application
+option(DREAM3D_BUILD_PLUGINMAKER "Compile the DevHelper Application" ON)
 if(DREAM3D_BUILD_PLUGINMAKER)
-    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DevHelper  ${PROJECT_BINARY_DIR}/Applications/DevHelper)
 endif()
 
 

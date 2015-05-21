@@ -205,7 +205,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -227,7 +227,7 @@
             "Data Array Name": "",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Minimum Number of Neighbors Filter",
         "Filter_Name": "MinNeighbors",
         "MinNumNeighbors": 2,
@@ -239,7 +239,7 @@
         "PhaseNumber": 0
     },
     "3": {
-        "FilterVersion": "5.2.1285.5481251",
+        "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -248,6 +248,6 @@
     "PipelineBuilder": {
         "Name": "(10) Small IN100 Minimum Neighbors",
         "Number_Filters": 4,
-        "Version": "5.2.1285.5481251"
+        "Version": "5.2.1285"
     }
 }
