@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SaveImages_H_
-#define _SaveImages_H_
+#ifndef _WriteImages_H_
+#define _WriteImages_H_
 
 #include <QtCore/QString>
 
@@ -46,21 +46,21 @@
 #include "ImageImport/ImageImportConstants.h"
 
 /**
- * @class SaveImages SaveImages.h /IOFilters/SaveImages.h
+ * @class WriteImages WriteImages.h /IOFilters/WriteImages.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class SaveImages : public AbstractFilter
+class WriteImages : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SaveImages)
-    DREAM3D_STATIC_NEW_MACRO(SaveImages)
-    DREAM3D_TYPE_MACRO_SUPER(SaveImages, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(WriteImages)
+    DREAM3D_STATIC_NEW_MACRO(WriteImages)
+    DREAM3D_TYPE_MACRO_SUPER(WriteImages, AbstractFilter)
 
-    virtual ~SaveImages();
+    virtual ~WriteImages();
 
     DREAM3D_FILTER_PARAMETER(bool, FilePrefix)
     Q_PROPERTY(bool FilePrefix READ getFilePrefix WRITE setFilePrefix)
@@ -155,7 +155,7 @@ class SaveImages : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    SaveImages();
+    WriteImages();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -167,11 +167,11 @@ class SaveImages : public AbstractFilter
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, Colors)
 
-    SaveImages(const SaveImages&); // Copy Constructor Not Implemented
-    void operator=(const SaveImages&); // Operator '=' Not Implemented
+    WriteImages(const WriteImages&); // Copy Constructor Not Implemented
+    void operator=(const WriteImages&); // Operator '=' Not Implemented
 };
 
-#endif /* _SaveImages_H_ */
+#endif /* _WriteImages_H_ */
 
 
 
