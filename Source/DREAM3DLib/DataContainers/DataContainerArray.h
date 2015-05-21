@@ -516,8 +516,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 
     /**
      * @brief validateNumberOfTuples This method will validate that all of the DataArray
-     * paths supplied are valid, return non-NULL DataArray pointers, and that all are
-     * have the same number of tuples.  It will return false if and any of the checks fail, or
+     * paths supplied are valid, return non-NULL DataArray pointers, and that all have the 
+     * same number of tuples.  It will return false if and any of the checks fail, or
      * if the QVector of input paths has 0 or 1 element.
      * @param filter The filter calling the validation
      * @param paths The paths that should be checked
@@ -588,9 +588,9 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 
     /**
      * @brief validateNumberOfTuples This method will validate that all of the DataArray
-     * paths supplied are valid, return non-NULL DataArray pointers, and that all are
-     * have the same number of tuples.  It will return false if and any of the checks fail, or
-     * if the QVector of input paths has 0 or 1 element.
+     * objects supplied are non-NULL and that all are have the same number of tuples.
+     * It will return false if and any of the checks fail, or
+     * if the QVector of input DataArray objects has 0 or 1 element.
      * @param filter The filter calling the validation
      * @param paths The paths that should be checked
      * @return bool Validation check
