@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,26 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _GenerateFaceMisorientationColoring_H_
 #define _GenerateFaceMisorientationColoring_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
-
 /**
- * @class GenerateFaceMisorientationColoring GenerateFaceMisorientationColoring.h /SurfaceMeshFilters/GenerateFaceMisorientationColoring.h
- * @brief This filter calculates the normal of each triangle in the surface mesh. The calculated normals have been
- * normalized themselves. This filter is parallelized using the Threading Building Blocks library and will attempt to
- * use the optimal number of processors to do the computation.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
- * @version 1.0
+ * @brief The GenerateFaceMisorientationColoring class. See [Filter documentation](@ref generatefacemisorientationcoloring) for details.
  */
 class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
 {
@@ -64,11 +56,6 @@ class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
 
     virtual ~GenerateFaceMisorientationColoring();
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
@@ -133,29 +120,20 @@ class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
   protected:
     GenerateFaceMisorientationColoring();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheckSurfaceMesh();
+
     void dataCheckVoxel();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshFaceMisorientationColors)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshFaceMisorientationColors)
 
     GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented
     void operator=(const GenerateFaceMisorientationColoring&); // Operator '=' Not Implemented
 };
 
 #endif /* _GenerateFaceMisorientationColoring_H_ */
-
-
-

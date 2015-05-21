@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,6 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "GenerateFaceIPFColoring.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -43,8 +44,6 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
@@ -59,12 +58,11 @@
 #include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
 #include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 /**
- * @brief The CalculateNormalsImpl class is the actual code that does the computation and can be called either
- * from serial code or from Parallelized code (using TBB).
+ * @brief The CalculateNormalsImpl class implements a threaded algorithm that computes the IPF colors for the given list of
+ * surface mesh labels
  */
 class CalculateFaceIPFColorsImpl
 {
@@ -73,10 +71,10 @@ class CalculateFaceIPFColorsImpl
     double* m_Normals;
     float* m_Eulers;
     uint8_t* m_Colors;
-    unsigned int* m_CrystalStructures;
+    uint32_t* m_CrystalStructures;
 
   public:
-    CalculateFaceIPFColorsImpl(int32_t* labels, int32_t* phases, double* normals, float* eulers, uint8_t* colors, unsigned int* crystalStructures) :
+    CalculateFaceIPFColorsImpl(int32_t* labels, int32_t* phases, double* normals, float* eulers, uint8_t* colors, uint32_t* crystalStructures) :
       m_Labels(labels),
       m_Phases(phases),
       m_Normals(normals),
@@ -86,14 +84,8 @@ class CalculateFaceIPFColorsImpl
     {}
     virtual ~CalculateFaceIPFColorsImpl() {}
 
-    /**
-     * @brief generate Generates the Normals for the triangles
-     * @param start The starting FaceArray::Face_t Index
-     * @param end The ending FaceArray::Face_t Index
-     */
     void generate(size_t start, size_t end) const
     {
-
       // Create 1 of every type of Ops class. This condenses the code below
       QVector<SpaceGroupOps::Pointer> ops;
       ops.push_back(HexagonalOps::New());
@@ -112,18 +104,18 @@ class CalculateFaceIPFColorsImpl
       double dEuler[3] = {0.0, 0.0, 0.0};
       DREAM3D::Rgb argb = 0x00000000;
 
-      int feature1, feature2, phase1, phase2;
+      int32_t feature1 = 0, feature2 = 0, phase1 = 0, phase2 = 0;
       for (size_t i = start; i < end; i++)
       {
         feature1 = m_Labels[2 * i];
         feature2 = m_Labels[2 * i + 1];
-        if(feature1 > 0) { phase1 = m_Phases[feature1]; }
+        if (feature1 > 0) { phase1 = m_Phases[feature1]; }
         else { phase1 = 0; }
 
-        if(feature2 > 0) { phase2 = m_Phases[feature2]; }
+        if( feature2 > 0) { phase2 = m_Phases[feature2]; }
         else { phase2 = 0; }
 
-        if(phase1 > 0 )
+        if (phase1 > 0 )
         {
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
           if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
@@ -150,7 +142,7 @@ class CalculateFaceIPFColorsImpl
 
 
         // Now compute for Phase 2
-        if(phase2 > 0)
+        if (phase2 > 0)
         {
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
           if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
@@ -187,11 +179,7 @@ class CalculateFaceIPFColorsImpl
       generate(r.begin(), r.end());
     }
 #endif
-
-
 };
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -204,16 +192,11 @@ GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceNormals(NULL),
   m_SurfaceMeshFaceIPFColors(NULL),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   setupFilterParameters();
@@ -233,13 +216,13 @@ void GenerateFaceIPFColoring::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeatureEulerAngles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Euler Angles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceIPFColors", "SurfaceMeshFaceIPFColorsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFaceIPFColorsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("IPF Colors", "SurfaceMeshFaceIPFColorsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFaceIPFColorsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -280,26 +263,32 @@ int GenerateFaceIPFColoring::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::dataCheckSurfaceMesh()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
 
-  QVector<size_t> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 2);
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 3;
-  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceLabelsArrayPath()); }
+
+  cDims[0] = 3;
+  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 6;
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceNormalsArrayPath()); }
+
+  cDims[0] = 6;
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshFaceIPFColorsArrayName() );
-  m_SurfaceMeshFaceIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceIPFColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceIPFColors = m_SurfaceMeshFaceIPFColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -307,21 +296,28 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::dataCheckVoxel()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 3);
-  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 3);
+  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureEulerAnglesArrayPath()); }
+
+  cDims[0] = 1;
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  //typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -343,17 +339,12 @@ void GenerateFaceIPFColoring::preflight()
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
-
   dataCheckVoxel();
   if(getErrorCondition() < 0) { return; }
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
-
-  // Run the data check to allocate the memory for the centroid array
   int64_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -396,13 +387,11 @@ AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilt
 const QString GenerateFaceIPFColoring::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceIPFColoring::getGroupName()
 { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -410,10 +399,8 @@ const QString GenerateFaceIPFColoring::getGroupName()
 const QString GenerateFaceIPFColoring::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MiscFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceIPFColoring::getHumanLabel()
 { return "Generate Face IPF Colors"; }
-

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,8 +37,6 @@
 #ifndef _UncertainRegularGridSampleSurfaceMesh_H_
 #define _UncertainRegularGridSampleSurfaceMesh_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -46,11 +44,7 @@
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
- * @class UncertainRegularGridSampleSurfaceMesh UncertainRegularGridSampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/UncertainRegularGridSampleSurfaceMesh.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The UncertainRegularGridSampleSurfaceMesh class. See [Filter documentation](@ref uncertainregulargridsamplesurfacemesh) for details.
  */
 class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
@@ -61,6 +55,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_TYPE_MACRO_SUPER(UncertainRegularGridSampleSurfaceMesh, AbstractFilter)
 
     virtual ~UncertainRegularGridSampleSurfaceMesh();
+
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
@@ -69,12 +64,16 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 
     DREAM3D_FILTER_PARAMETER(int, XPoints)
     Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
+
     DREAM3D_FILTER_PARAMETER(int, YPoints)
     Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
+
     DREAM3D_FILTER_PARAMETER(int, ZPoints)
     Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Uncertainty)
     Q_PROPERTY(FloatVec3_t Uncertainty READ getUncertainty WRITE setUncertainty)
 
@@ -84,7 +83,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -115,17 +114,18 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
   protected:
     UncertainRegularGridSampleSurfaceMesh();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
+    /**
+     * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
+     * @return VertexGeom object
+     */
     virtual VertexGeom::Pointer generate_points();
+
+    /**
+     * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
+     * @param iArray Sampled Feature Ids from superclass
+     */
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
@@ -136,8 +136,3 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 };
 
 #endif /* UncertainRegularGridSampleSurfaceMesh_H_ */
-
-
-
-
-

@@ -34,26 +34,18 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
 #ifndef _SurfaceMeshFilter_H_
 #define _SurfaceMeshFilter_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
-
 /**
- * @class SurfaceMeshFilter SurfaceMeshFilter.h /FilterCategoryFilters/SurfaceMeshFilter.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The SurfaceMeshFilter class.  This class serves as a superclass for other classes
+ * in the SurfaceMeshing plugin.
  */
 class SurfaceMeshFilter : public AbstractFilter
 {
@@ -64,8 +56,8 @@ class SurfaceMeshFilter : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
 
     virtual ~SurfaceMeshFilter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
   protected:
     SurfaceMeshFilter();
@@ -77,4 +69,3 @@ class SurfaceMeshFilter : public AbstractFilter
 };
 
 #endif /* _SurfaceMeshFilter_H_ */
-

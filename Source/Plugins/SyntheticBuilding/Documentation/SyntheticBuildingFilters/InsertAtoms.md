@@ -1,21 +1,21 @@
 Insert Atoms {#insertatoms}
-======
+=============
 
 ## Group (Subgroup) ##
 Synthetic Builder Filters (Packing)
 
 ## Description ##
-This filter creates a **Vertex** geometry where the **Vertices** represent atom positions.  The filter requires a **Triangle** surface mesh that bounds **Features** of different crystallographic orientation.  The filter then extracts the **Triangles** associated with each **Feature** and in parallel inserts atoms on the crystal lattice of each **Feature**.  The steps associated with inserting the atoms in each **Feature** are as follows:
+This Filter creates a **Vertex** geometry where the **Vertices** represent atom positions.  The Filter requires a **Triangle** surface mesh that bounds **Features** of different crystallographic orientation.  The Filter then extracts the **Triangles** associated with each **Feature** and in parallel inserts atoms on the crystal lattice of each **Feature**.  The steps associated with inserting the atoms in each **Feature** are as follows:
 
-1) Transform the coordinates of the **Triangles** into the reference frame of the **Feature**'s crystallographic orientation using its stored orientation.
-2) Determine the minimum and maximum x, y and z coordinate of the transformed **Triangles**.
-3) Generate a grid of points starting at the minimum x, y, z coordinate using the lattice constants entered (with a||x, b||y and c||z) until reaching the maximum x, y, z coordinate. Add points at the proper positions given the crystal basis choosen by the user. 
-4) Transform list of points generated in 3 into the original **Triangle** reference frame using the inverse of the **Feature**'s crystallographic orientation.
-5) Check whether each point in the list falls inside of the n-sided polyhedron defined by the **Triangles** that bound the **Feature**.  Remove the point from the list if it falls outside of the **Feature**'s bounds. Assign the **Feature**'s number to the point if it does fall inside of the **Feature**.
+1. Transform the coordinates of the **Triangles** into the reference frame of the **Feature**'s crystallographic orientation using its stored orientation.
+2. Determine the minimum and maximum X, Y and Z coordinate of the transformed **Triangles**.
+3. Generate a grid of points starting at the minimum (X,Y,Z) coordinate using the lattice constants entered (with a||x, b||y and c||z) until reaching the maximum (X,Y,Z) coordinate. Add points at the proper positions given the crystal basis choosen by the user. 
+4. Transform list of points generated in 3 into the original **Triangle** reference frame using the inverse of the **Feature**'s crystallographic orientation.
+5. Check whether each point in the list falls inside of the n-sided polyhedron defined by the **Triangles** that bound the **Feature**.  Remove the point from the list if it falls outside of the **Feature**'s bounds. Assign the **Feature**'s number to the point if it does fall inside of the **Feature**.
 
 After all **Features** have had atoms inserted, combine the point lists for all the **Features**.
 
-**Note: since each **Feature** is treated independently (in parallel), the interface between neighboring **Features** may not be "in equilibrium".  For example, at one point along the interface, each of the neighboring **Features** may have an atom fall just slightly outside its bounds.  In this case, there may not be an atom on the "ideal" lattice for both **Features**, but maybe there should be a single atom that sits at the midpoint between the two ideal positions.  The algorithm will instead just omit any atom from that area.
+*Note:* Since each **Feature** is treated independently (in parallel), the interface between neighboring **Features** may not be "in equilibrium".  For example, at one point along the interface, each of the neighboring **Features** may have an atom fall just slightly outside its bounds.  In this case, there may not be an atom on the "ideal" lattice for both **Features**, but maybe there should be a single atom that sits at the midpoint between the two ideal positions.  The algorithm will instead just omit any atom from that area.
 
 ## Parameters ##
 | Name | Type | Description |
@@ -37,9 +37,7 @@ Triangle
 |------|--------------|-------------|---------|-----|
 | Vertex | AtomFeatureLabels | Int | (1) | Specifies to which **Feature** each **Vertex** (or atom) belongs. |
 
-
 ## Authors ##
-
 **Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
@@ -47,6 +45,7 @@ Triangle
 **Version** 1.0.0
 
 **License**  See the License.txt file that came with DREAM3D.
+
 
 
 

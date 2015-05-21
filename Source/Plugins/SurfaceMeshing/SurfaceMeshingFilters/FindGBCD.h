@@ -36,29 +36,21 @@
 #ifndef _FindGBCD_H_
 #define _FindGBCD_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
+#include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 /**
- * @class FindGBCD FindGBCD.h DREAM3DLib/SurfaceMeshFilters/FindGBCD.h
- * @brief This filter calculates the centroid of each triangle in the surface mesh.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
- * @version 1.0
+ * @brief The FindGBCD class. See [Filter documentation](@ref findgbcd) for details.
  */
 class FindGBCD : public SurfaceMeshFilter
 {
@@ -69,22 +61,13 @@ class FindGBCD : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(FindGBCD, SurfaceMeshFilter)
 
     virtual ~FindGBCD();
+
     DREAM3D_FILTER_PARAMETER(QString, FaceEnsembleAttributeMatrixName)
     Q_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, GBCDRes)
     Q_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes)
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
@@ -105,6 +88,8 @@ class FindGBCD : public SurfaceMeshFilter
 
     DREAM3D_FILTER_PARAMETER(QString, GBCDArrayName)
     Q_PROPERTY(QString GBCDArrayName READ getGBCDArrayName WRITE setGBCDArrayName)
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -157,14 +142,6 @@ class FindGBCD : public SurfaceMeshFilter
   protected:
     FindGBCD();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheckSurfaceMesh();
     void dataCheckVoxel();
 
@@ -177,6 +154,7 @@ class FindGBCD : public SurfaceMeshFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(double, GBCD)
 
     FloatArrayType::Pointer m_GbcdDeltasArray;
@@ -196,5 +174,3 @@ class FindGBCD : public SurfaceMeshFilter
 };
 
 #endif /* _FindGBCD_H_ */
-
-
