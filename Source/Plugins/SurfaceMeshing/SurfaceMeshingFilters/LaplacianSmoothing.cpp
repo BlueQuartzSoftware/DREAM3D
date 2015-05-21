@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -42,10 +42,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -83,17 +81,16 @@ LaplacianSmoothing::~LaplacianSmoothing()
 void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
   parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget, getIterationSteps(), false));
   parameters.push_back(FilterParameter::New("Default Lambda", "Lambda", FilterParameterWidgetType::DoubleWidget, getLambda(), false));
   parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget, getTripleLineLambda(), false));
-  parameters.push_back(FilterParameter::New("Quad Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget, getQuadPointLambda(), false));
+  parameters.push_back(FilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget, getQuadPointLambda(), false));
   parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget, getSurfacePointLambda(), false));
   parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceTripleLineLambda(), false));
-  parameters.push_back(FilterParameter::New("Outer Quad Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceQuadPointLambda(), false));
+  parameters.push_back(FilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceQuadPointLambda(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -141,27 +138,41 @@ int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* wr
 void LaplacianSmoothing::dataCheck()
 {
   // Algorithm should work for ANY surface mesh
-  IGeometry2D::Pointer surfaceMesh = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry2D>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0 || NULL == surfaceMesh.get()) { return; }
+  IGeometry2D::Pointer iGeom2D = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry2D>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
 
-  QVector<size_t> dims(1, 1);
-  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 2;
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  cDims[0] = 2;
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  // Make sure that nodes + faces belong to the same data container (and therefore geoemtry) and use to set datacontainer
-  if(0 != getSurfaceMeshNodeTypeArrayPath().getDataContainerName().compare(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName()))
+  // If we had no problems up to this point, verify that the sizes of the node/face arrays match the chosen geometry
+  if (getErrorCondition() >= 0)
   {
-    setErrorCondition(-386);
-    notifyErrorMessage(getHumanLabel(), "Node types and Face labels must belong to the same Geometry.", getErrorCondition());
-  }
-  setSurfaceDataContainerName(getSurfaceMeshNodeTypeArrayPath().getDataContainerName());
-}
+    if (m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples() != iGeom2D->getNumberOfElements())
+    {
+      QString ss = QObject::tr("The number of tuples (%1) in the selected SurfaceMeshFaceLabels array does not match the number of elements (%2) in the selected Geometry").arg(m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples()).arg(iGeom2D->getNumberOfElements());
+      setErrorCondition(-5555);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
 
+    if (m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples() != iGeom2D->getNumberOfVertices())
+    {
+      QString ss = QObject::tr("The number of tuples (%1) in the selected SurfaceMeshNodeType array does not match the number of elements (%2) in the selected Geometry").arg(m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples()).arg(iGeom2D->getNumberOfElements());
+      setErrorCondition(-5555);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
+
+  setSurfaceDataContainerName(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -181,7 +192,7 @@ void LaplacianSmoothing::preflight()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::execute()
 {
-  int err = 0;
+  int32_t err = 0;
   setErrorCondition(err);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
@@ -200,18 +211,18 @@ void LaplacianSmoothing::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LaplacianSmoothing::generateLambdaArray()
+int32_t LaplacianSmoothing::generateLambdaArray()
 {
   notifyStatusMessage(getHumanLabel(), "Generating Lambda values");
 
-  int numNodes = m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples();
+  size_t numNodes = m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "Laplacian_Smoothing_Lambda_Array");
+  DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Lambda_Array");
   lambdas->initializeWithZeros();
 
-  for(int i = 0; i < numNodes; ++i)
+  for (size_t i = 0; i < numNodes; ++i)
   {
-    switch(m_SurfaceMeshNodeType[i])
+    switch (m_SurfaceMeshNodeType[i])
     {
       case DREAM3D::SurfaceMesh::NodeType::Unused:
         break;
@@ -245,10 +256,9 @@ int LaplacianSmoothing::generateLambdaArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LaplacianSmoothing::edgeBasedSmoothing()
+int32_t LaplacianSmoothing::edgeBasedSmoothing()
 {
-  int err = 0;
-
+  int32_t err = 0;
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   IGeometry2D::Pointer surfaceMesh = sm->getGeometryAs<IGeometry2D>();
   float* verts = surfaceMesh->getVertexPointer(0);
@@ -262,10 +272,10 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     notifyErrorMessage(getHumanLabel(), "Error generating the Lambda Array", getErrorCondition());
     return err;
   }
+
   // Get a Pointer to the Lambda array for conveneince
   DataArray<float>::Pointer lambdas = getLambdaArray();
   float* lambda = lambdas->getPointer(0);
-
 
   //  Generate the Unique Edges
   if (NULL == surfaceMesh->getEdges().get())
@@ -278,22 +288,23 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     notifyErrorMessage(getHumanLabel(), "Error retrieving the SharedEdgeList", getErrorCondition());
     return getErrorCondition();
   }
+
   int64_t* uedges = surfaceMesh->getEdgePointer(0);
   int64_t nedges = surfaceMesh->getNumberOfEdges();
 
   notifyStatusMessage(getHumanLabel(), "Starting to Smooth Vertices");
 
-  DataArray<int>::Pointer numConnections = DataArray<int>::CreateArray(nvert, "Laplacian_Smoothing_NumberConnections_Array");
+  DataArray<int32_t>::Pointer numConnections = DataArray<int32_t>::CreateArray(nvert, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_NumberConnections_Array");
   numConnections->initializeWithZeros();
-  int* ncon = numConnections->getPointer(0);
+  int32_t* ncon = numConnections->getPointer(0);
 
-  QVector<size_t> dims(1, 3);
-  DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, dims, "Laplacian_Smoothing_Delta_Array");
+  QVector<size_t> cDims(1, 3);
+  DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, cDims, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Delta_Array");
   deltaArray->initializeWithZeros();
   double* delta = deltaArray->getPointer(0);
 
   double dlta = 0.0;
-  for (int q = 0; q < m_IterationSteps; q++)
+  for (int32_t q = 0; q < m_IterationSteps; q++)
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
@@ -303,7 +314,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
       int64_t in1 = uedges[2 * i];   // row of the first vertex
       int64_t in2 = uedges[2 * i + 1]; // row the second vertex
 
-      for (int j = 0; j < 3; j++)
+      for (int32_t j = 0; j < 3; j++)
       {
         BOOST_ASSERT( static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3) );
         BOOST_ASSERT( static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3) );
@@ -315,13 +326,12 @@ int LaplacianSmoothing::edgeBasedSmoothing()
       ncon[in2] += 1;
     }
 
-
     float ll = 0.0f;
-    for (int i = 0; i < nvert; i++)
+    for (int64_t i = 0; i < nvert; i++)
     {
-      for (int j = 0; j < 3; j++)
+      for (int32_t j = 0; j < 3; j++)
       {
-        int in0 = 3 * i + j;
+        int64_t in0 = 3 * i + j;
         dlta = delta[in0] / ncon[i];
 
         ll = lambda[i];

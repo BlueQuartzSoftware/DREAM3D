@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -104,7 +104,6 @@ void GEOM_CLASS_NAME::getVertsAtTri(int64_t triId, int64_t verts[3])
 void GEOM_CLASS_NAME::getVertCoordsAtTri(int64_t triId, float vert1[3], float vert2[3], float vert3[3])
 {
   int64_t* Tri = m_TriList->getTuplePointer(triId);
-
   float* tmp1 = m_VertexList->getTuplePointer(Tri[0]);
   float* tmp2 = m_VertexList->getTuplePointer(Tri[1]);
   float* tmp3 = m_VertexList->getTuplePointer(Tri[2]);

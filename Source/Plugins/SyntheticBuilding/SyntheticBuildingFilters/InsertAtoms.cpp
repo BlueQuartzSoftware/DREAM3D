@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,8 +36,6 @@
 
 #include "InsertAtoms.h"
 
-#include <QtCore/QMap>
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -51,12 +49,17 @@
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
+/**
+ * @brief The InsertAtomsImpl class implements a threaded algorithm that inserts vertex points ('atoms') onto surface meshed Features
+ */
 class InsertAtomsImpl
 {
     TriangleGeom::Pointer m_Faces;
@@ -83,42 +86,45 @@ class InsertAtomsImpl
 
     void checkPoints(size_t start, size_t end) const
     {
-      float radius;
-	  FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "Lower_Left_Internal_Use_Only");
-	  FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "Upper_Right_Internal_Use_Only");
-	  FloatArrayType::Pointer ll_rotPtr = FloatArrayType::CreateArray(3, "Lower_Left_Rotated_Internal_Use_Only");
-	  FloatArrayType::Pointer ur_rotPtr = FloatArrayType::CreateArray(3, "Upper_Right_Rotated_Internal_Use_Only");
-	  float* ll = llPtr->getPointer(0);
-	  float* ur = urPtr->getPointer(0);
-	  float* ll_rot = ll_rotPtr->getPointer(0);
-	  float* ur_rot = ur_rotPtr->getPointer(0);
-      float* point;
-      char code;
-      float g[3][3];
+      float radius = 0.0f;
+      FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower_Left");
+      FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right");
+      FloatArrayType::Pointer ll_rotPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower_Left_Rotated");
+      FloatArrayType::Pointer ur_rotPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right_Rotated");
+      float* ll = llPtr->getPointer(0);
+      float* ur = urPtr->getPointer(0);
+      float* ll_rot = ll_rotPtr->getPointer(0);
+      float* ur_rot = ur_rotPtr->getPointer(0);
+      float* point = NULL;
+      char code = ' ';
+      float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
-      for(int iter = start; iter < end; iter++)
+      for (size_t iter = start; iter < end; iter++)
       {
         Int32Int32DynamicListArray::ElementList& faceIds = m_FaceIds->getElementList(iter);
 
-        OrientationMath::QuattoMat(m_AvgQuats[iter], g);
-        //find bounding box for current feature
+        FOrientArrayType om(9, 0.0);
+        FOrientTransformsType::qu2om(FOrientArrayType(m_AvgQuats[iter]), om);
+        om.toGMatrix(g);
+
+        // find bounding box for current feature
         GeometryMath::FindBoundingBoxOfFaces(m_Faces, faceIds, ll, ur);
         GeometryMath::FindBoundingBoxOfRotatedFaces(m_Faces, faceIds, g, ll_rot, ur_rot);
         GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
         generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, m_Basis, ll_rot, ur_rot);
 
-        //check points in vertex array to see if they are in the bounding box of the feature
-        int numPoints = m_Points[iter]->getNumberOfVertices();
+        // check points in vertex array to see if they are in the bounding box of the feature
+        int64_t numPoints = m_Points[iter]->getNumberOfVertices();
         VertexGeom::Pointer vertArray = m_Points[iter];
         BoolArrayType::Pointer boolArray = m_InFeature[iter];
-        for(int i = 0; i < numPoints; i++)
+        for (int64_t i = 0; i < numPoints; i++)
         {
           point = vertArray->getVertexPointer(i);
-          if(boolArray->getValue(i) == false)
+          if (boolArray->getValue(i) == false)
           {
             code = GeometryMath::PointInPolyhedron(m_Faces, faceIds, m_FaceBBs, point, ll, ur, radius);
-            if(code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_InFeature[start]->setValue(i, true); }
+            if (code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_InFeature[start]->setValue(i, true); }
           }
         }
       }
@@ -131,12 +137,14 @@ class InsertAtomsImpl
     }
 #endif
 
-    void generatePoints(int iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3_t latticeConstants, uint32_t basis, float* ll, float* ur) const
+    void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3_t latticeConstants, uint32_t basis, float* ll, float* ur) const
     {
-      float g[3][3];
-      float gT[3][3];
+      float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      float gT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
-      OrientationMath::QuattoMat(m_AvgQuats[iter], g);
+      FOrientArrayType om(9, 0.0);
+      FOrientTransformsType::qu2om(FOrientArrayType(m_AvgQuats[iter]), om);
+      om.toGMatrix(g);
       MatrixMath::Transpose3x3(g, gT);
 
       float minx = ll[0];
@@ -148,26 +156,26 @@ class InsertAtomsImpl
       float deltaX = maxx - minx;
       float deltaY = maxy - miny;
       float deltaZ = maxz - minz;
-      size_t atomMult = 1;
-      if(basis == 0) { atomMult = 1; }
-      if(basis == 1) { atomMult = 2; }
-      if(basis == 2) { atomMult = 4; }
-      size_t xPoints = (size_t(deltaX / latticeConstants.x) + 1);
-      size_t yPoints = (size_t(deltaY / latticeConstants.y) + 1);
-      size_t zPoints = (size_t(deltaZ / latticeConstants.z) + 1);
-      size_t nPoints = atomMult * xPoints * yPoints * zPoints;
+      int64_t atomMult = 1;
+      if (basis == 0) { atomMult = 1; }
+      if (basis == 1) { atomMult = 2; }
+      if (basis == 2) { atomMult = 4; }
+      int64_t xPoints = (int64_t(deltaX / latticeConstants.x) + 1);
+      int64_t yPoints = (int64_t(deltaY / latticeConstants.y) + 1);
+      int64_t zPoints = (int64_t(deltaZ / latticeConstants.z) + 1);
+      int64_t nPoints = atomMult * xPoints * yPoints * zPoints;
 
       points[iter]->resizeVertexList(nPoints);
       inFeature[iter]->resize(nPoints);
 
-      int count = 0;
-      float coords[3];
-      float coordsT[3];
-      for(int k = 0; k < zPoints; k++)
+      int64_t count = 0;
+      float coords[3] = { 0.0f, 0.0f, 0.0f };
+      float coordsT[3] = { 0.0f, 0.0f, 0.0f };
+      for (int64_t k = 0; k < zPoints; k++)
       {
-        for(int j = 0; j < yPoints; j++)
+        for (int64_t j = 0; j < yPoints; j++)
         {
-          for(int i = 0; i < xPoints; i++)
+          for (int64_t i = 0; i < xPoints; i++)
           {
             coords[0] = float(i) * latticeConstants.x + minx;
             coords[1] = float(j) * latticeConstants.y + miny;
@@ -175,7 +183,7 @@ class InsertAtomsImpl
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
-            if(basis == 1)
+            if (basis == 1)
             {
               coords[0] = coords[0] + (0.5 * latticeConstants.x);
               coords[1] = coords[1] + (0.5 * latticeConstants.y);
@@ -184,23 +192,23 @@ class InsertAtomsImpl
               points[iter]->setCoords(count, coordsT);
               count++;
             }
-            if(basis == 2)
+            if (basis == 2)
             {
-              //makes the (0.5,0.5,0) atom
+              // makes the (0.5,0.5,0) atom
               coords[0] = coords[0] + (0.5 * latticeConstants.x);
               coords[1] = coords[1] + (0.5 * latticeConstants.y);
               coords[2] = coords[2];
               MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
               points[iter]->setCoords(count, coordsT);
               count++;
-              //makes the (0.5,0,0.5) atom
+              // makes the (0.5,0,0.5) atom
               coords[0] = coords[0];
               coords[1] = coords[1] - (0.5 * latticeConstants.y);
               coords[2] = coords[2] + (0.5 * latticeConstants.z);
               MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
               points[iter]->setCoords(count, coordsT);
               count++;
-              //makes the (0,0.5,0.5) atom
+              // makes the (0,0.5,0.5) atom
               coords[0] = coords[0] - (0.5 * latticeConstants.x);
               coords[1] = coords[1] + (0.5 * latticeConstants.y);
               coords[2] = coords[2];
@@ -225,9 +233,7 @@ InsertAtoms::InsertAtoms() :
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_AtomFeatureLabels(NULL)
 {
@@ -251,7 +257,7 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget, getLatticeConstants(), false, "Angstroms"));
+  parameters.push_back(FilterParameter::New("Lattice Constants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget, getLatticeConstants(), false, "Angstroms"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
@@ -266,16 +272,17 @@ void InsertAtoms::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container Name", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix Name", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("AtomFeatureLabels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, getAtomFeatureLabelsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, getAtomFeatureLabelsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
-
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -314,7 +321,6 @@ int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void InsertAtoms::updateVertexInstancePointers()
 {
   setErrorCondition(0);
-
   if( NULL != m_AtomFeatureLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomFeatureLabels = m_AtomFeatureLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -324,13 +330,14 @@ void InsertAtoms::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void InsertAtoms::dataCheck()
 {
+  setErrorCondition(0);
   DataArrayPath tempPath;
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
-  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0) { return; }
+  QVector<IDataArray::Pointer> dataArrays;
+
+  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
@@ -342,37 +349,24 @@ void InsertAtoms::dataCheck()
   AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
 
-  // We MUST have Nodes
-  if(triangles->getVertices().get() == NULL)
-  {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-  }
+  QVector<size_t> cDims(1, 2);
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
-  // We MUST have Triangles defined also.
-  if(triangles->getTriangles().get() == NULL)
-  {
-    setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-  }
-  else
-  {
-    QVector<size_t> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
-  QVector<size_t> dims(1, 4);
-  // Feature Data
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 4;
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0] = 1;
+  cDims[0] = 1;
   tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomFeatureLabelsArrayName() );
-  m_AtomFeatureLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -301, dims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AtomFeatureLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -301, cDims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomFeatureLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomFeatureLabels = m_AtomFeatureLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
 
 // -----------------------------------------------------------------------------
@@ -391,11 +385,83 @@ void InsertAtoms::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature)
+{
+  size_t count = 0;
+  int32_t numFeatures = points.size();
+  for (int32_t i = 0; i < numFeatures; i++)
+  {
+    int64_t numPoints = points[i]->getNumberOfVertices();
+    bool* inside = inFeature[i]->getPointer(0);
+    for (int64_t j = 0; j < numPoints; j++)
+    {
+      if (inside[j] == true) { count++; }
+    }
+  }
+
+  DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(count, DREAM3D::VertexData::SurfaceMeshNodes);
+
+
+  AttributeMatrix::Pointer vertexAttrMat = v->getAttributeMatrix(getVertexAttributeMatrixName());
+  QVector<size_t> tDims(1, count);
+  vertexAttrMat->resizeAttributeArrays(tDims);
+  updateVertexInstancePointers();
+
+  count = 0;
+  float coords[3] = { 0.0f, 0.0f, 0.0f };
+  for (int32_t i = 0; i < numFeatures; i++)
+  {
+    int64_t numPoints = points[i]->getNumberOfVertices();
+    bool* inside = inFeature[i]->getPointer(0);
+    for (int64_t j = 0; j < numPoints; j++)
+    {
+      if (inside[j] == true)
+      {
+        coords[0] = points[i]->getVertexPointer(j)[0];
+        coords[1] = points[i]->getVertexPointer(j)[1];
+        coords[2] = points[i]->getVertexPointer(j)[2];
+        vertices->setCoords(count, coords);
+        m_AtomFeatureLabels[count] = i;
+        count++;
+      }
+    }
+  }
+  v->setGeometry(vertices);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertAtoms::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+
+  // Validate that the selected AvgQuats array has tuples equal to the largest
+  // Feature Id; the filter would not crash otherwise, but the user should
+  // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
+  // we don't have acces to the data yet
+  int32_t numFeaturesIn = static_cast<int32_t>(m_AvgQuatsPtr.lock()->getNumberOfTuples());
+  bool mismatchedFeatures = true;
+  size_t numTuples = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
+  for (size_t i = 0; i < numTuples; i++)
+  {
+    if (m_SurfaceMeshFaceLabels[2 * i] == numFeaturesIn || m_SurfaceMeshFaceLabels[2 * i + 1] == numFeaturesIn)
+    {
+      mismatchedFeatures = false;
+      break;
+    }
+  }
+
+  if (mismatchedFeatures == true)
+  {
+    QString ss = QObject::tr("The number of Features in the AvgQuats array (%1) does not match the largest Feature Id in the SurfaceMeshFaceLabels array").arg(numFeaturesIn);
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   FloatVec3_t latticeConstants;
   latticeConstants.x = m_LatticeConstants.x / 10000.0;
@@ -410,42 +476,39 @@ void InsertAtoms::execute()
   bool doParallel = true;
 #endif
 
-  setErrorCondition(0);
-
-  //pull down faces
+  // pull down faces
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
-  //FaceArray::Pointer faces = sm->getFaces();
   int64_t numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
-  //create array to hold bounding vertices for each face
+  // create array to hold bounding vertices for each face
   FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "Lower_Left_Internal_Use_Only");
   FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "Upper_Right_Internal_Use_Only");
   float* ll = llPtr->getPointer(0);
   float* ur = urPtr->getPointer(0);
   VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "faceBBs");
 
-  //walk through faces to see how many features there are
-  int g1, g2;
-  int maxFeatureId = 0;
-  for(int64_t i = 0; i < numFaces; i++)
+  // walk through faces to see how many features there are
+  int32_t g1 = 0, g2 = 0;
+  int32_t maxFeatureId = 0;
+  for (int64_t i = 0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
-    if(g1 > maxFeatureId) { maxFeatureId = g1; }
-    if(g2 > maxFeatureId) { maxFeatureId = g2; }
+    if (g1 > maxFeatureId) { maxFeatureId = g1; }
+    if (g2 > maxFeatureId) { maxFeatureId = g2; }
   }
-  //add one to account for feature 0
-  int numFeatures = maxFeatureId + 1;
 
-  //create a dynamic list array to hold face lists
+  // add one to account for feature 0
+  int32_t numFeatures = maxFeatureId + 1;
+
+  // create a dynamic list array to hold face lists
   Int32Int32DynamicListArray::Pointer faceLists = Int32Int32DynamicListArray::New();
   QVector<size_t> linkCount(numFeatures, 0);
-  int32_t* linkLoc;
 
   // fill out lists with number of references to cells
   typedef boost::shared_array<int32_t> SharedInt32Array_t;
   SharedInt32Array_t linkLocPtr(new int32_t[numFaces]);
-  linkLoc = linkLocPtr.get();
+  int32_t* linkLoc = linkLocPtr.get();
 
   ::memset(linkLoc, 0, numFaces * sizeof(int32_t));
 
@@ -454,8 +517,8 @@ void InsertAtoms::execute()
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
-    if(g1 > 0) { linkCount[g1]++; }
-    if(g2 > 0) { linkCount[g2]++; }
+    if (g1 > 0) { linkCount[g1]++; }
+    if (g2 > 0) { linkCount[g2]++; }
   }
 
   // now allocate storage for the faces
@@ -466,21 +529,21 @@ void InsertAtoms::execute()
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
-    if(g1 > 0) { faceLists->insertCellReference(g1, (linkLoc[g1])++, i); }
-    if(g2 > 0) { faceLists->insertCellReference(g2, (linkLoc[g2])++, i); }
-    //find bounding box for each face
+    if (g1 > 0) { faceLists->insertCellReference(g1, (linkLoc[g1])++, i); }
+    if (g2 > 0) { faceLists->insertCellReference(g2, (linkLoc[g2])++, i); }
+    // find bounding box for each face
     GeometryMath::FindBoundingBoxOfFace(triangleGeom, i, ll, ur);
     faceBBs->setCoords(2 * i, ll);
     faceBBs->setCoords(2 * i + 1, ur);
   }
 
-  //generate the list of sampling points fom subclass
+  // generate the list of sampling points fom subclass
   QVector<VertexGeom::Pointer> points(numFeatures);
   QVector<BoolArrayType::Pointer> inFeature(numFeatures);
-  for(int i = 0; i < numFeatures; i++)
+  for (int32_t i = 0; i < numFeatures; i++)
   {
-    points[i] = VertexGeom::CreateGeometry(0, "points");
-    inFeature[i] = BoolArrayType::CreateArray(0, "inside");
+    points[i] = VertexGeom::CreateGeometry(0, "_INTERNAL_USE_ONLY_points");
+    inFeature[i] = BoolArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_inside");
   }
 
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -501,63 +564,10 @@ void InsertAtoms::execute()
 
 
   notifyStatusMessage(getHumanLabel(), "Assigning Points");
+
   assign_points(points, inFeature);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature)
-{
-  size_t count = 0;
-  size_t numFeatures = points.size();
-  for(int i = 0; i < numFeatures; i++)
-  {
-    size_t numPoints = points[i]->getNumberOfVertices();
-    bool* inside = inFeature[i]->getPointer(0);
-    for(int j = 0; j < numPoints; j++)
-    {
-      if(inside[j] == true) { count++; }
-    }
-  }
-
-  notifyStatusMessage(getHumanLabel(), "Getting VDC");
-  DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
-
-  notifyStatusMessage(getHumanLabel(), "Creating Verts");
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(count, DREAM3D::VertexData::SurfaceMeshNodes);
-
-  notifyStatusMessage(getHumanLabel(), "Getting VAM");
-  AttributeMatrix::Pointer vertexAttrMat = v->getAttributeMatrix(getVertexAttributeMatrixName());
-  QVector<size_t> tDims(1, count);
-  notifyStatusMessage(getHumanLabel(), "Resizing VAM");
-  vertexAttrMat->resizeAttributeArrays(tDims);
-  notifyStatusMessage(getHumanLabel(), "updating Pointers");
-  updateVertexInstancePointers();
-
-  notifyStatusMessage(getHumanLabel(), "Making Verts");
-  count = 0;
-  float coords[3];
-  for(int i = 0; i < numFeatures; i++)
-  {
-    size_t numPoints = points[i]->getNumberOfVertices();
-    bool* inside = inFeature[i]->getPointer(0);
-    for(int j = 0; j < numPoints; j++)
-    {
-      if(inside[j] == true)
-      {
-        coords[0] = points[i]->getVertexPointer(j)[0];
-        coords[1] = points[i]->getVertexPointer(j)[1];
-        coords[2] = points[i]->getVertexPointer(j)[2];
-        vertices->setCoords(count, coords);
-        m_AtomFeatureLabels[count] = i;
-        count++;
-      }
-    }
-  }
-  v->setGeometry(vertices);
 }
 
 // -----------------------------------------------------------------------------
@@ -590,13 +600,10 @@ const QString InsertAtoms::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString InsertAtoms::getSubGroupName()
-{
-	return DREAM3D::FilterSubGroups::PackingFilters;
-}
+{ return DREAM3D::FilterSubGroups::PackingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InsertAtoms::getHumanLabel()
 { return "Insert Atoms"; }
-

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,14 +36,11 @@
 
 #include "UncertainRegularGridSampleSurfaceMesh.h"
 
-#include <QtCore/QMap>
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "Sampling/SamplingConstants.h"
@@ -88,13 +85,14 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
   parameters.push_back(FilterParameter::New("Uncertainty", "Uncertainty", FilterParameterWidgetType::FloatVec3Widget, getUncertainty(), false, "Microns"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("New DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("New Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
-
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -125,22 +123,30 @@ int UncertainRegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
+
+  // Set the Dimensions, Resolution and Origin of the output data container
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
   QVector<size_t> tDims(3, 0);
+  tDims[0] = m_XPoints;
+  tDims[1] = m_YPoints;
+  tDims[2] = m_ZPoints;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
 
-  QVector<size_t> dims(1, 1);
+  QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -162,46 +168,24 @@ void UncertainRegularGridSampleSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UncertainRegularGridSampleSurfaceMesh::execute()
-{
-  setErrorCondition(0);
-
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-  DREAM3D_RANDOMNG_NEW()
-
-  m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-  m->getGeometryAs<ImageGeom>()->setOrigin(0.0, 0.0, 0.0);
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-
-  SampleSurfaceMesh::execute();
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 VertexGeom::Pointer UncertainRegularGridSampleSurfaceMesh::generate_points()
 {
   VertexGeom::Pointer points = VertexGeom::CreateGeometry((m_XPoints * m_YPoints * m_ZPoints), "points");
 
   DREAM3D_RANDOMNG_NEW()
 
-  int count = 0;
-  float coords[3];
-  float lastX = 0, lastY = 0, lastZ = 0;
-  for(int k = 0; k < m_ZPoints; k++)
+  int64_t count = 0;
+  float coords[3] = {0.0f, 0.0f, 0.0f };
+  float lastX = 0.0f, lastY = 0.0f, lastZ = 0.0f;
+  for (int64_t k = 0; k < m_ZPoints; k++)
   {
-    float randomZ = 2 * static_cast<float>(rg.genrand_res53()) - 1;
-    for(int j = 0; j < m_YPoints; j++)
+    float randomZ = 2.0f * static_cast<float>(rg.genrand_res53()) - 1.0f;
+    for (int64_t j = 0; j < m_YPoints; j++)
     {
-      float randomY = 2 * static_cast<float>(rg.genrand_res53()) - 1;
-      for(int i = 0; i < m_XPoints; i++)
+      float randomY = 2.0f * static_cast<float>(rg.genrand_res53()) - 1.0f;
+      for (int64_t i = 0; i < m_XPoints; i++)
       {
-        float randomX = 2 * static_cast<float>(rg.genrand_res53()) - 1;
+        float randomX = 2.0f * static_cast<float>(rg.genrand_res53()) - 1.0f;
         coords[0] = lastX + m_Resolution.x + (m_Uncertainty.x * randomX);
         coords[1] = lastY + m_Resolution.y + (m_Uncertainty.y * randomY);
         coords[2] = lastZ + m_Resolution.z + (m_Uncertainty.z * randomZ);
@@ -223,11 +207,33 @@ VertexGeom::Pointer UncertainRegularGridSampleSurfaceMesh::generate_points()
 void UncertainRegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 {
   int32_t* ids = iArray->getPointer(0);
-  for(int i = 0; i < (m_XPoints * m_YPoints * m_ZPoints); i++)
+  for (int64_t i = 0; i < (m_XPoints * m_YPoints * m_ZPoints); i++)
   {
     m_FeatureIds[i] = ids[i];
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+  DREAM3D_RANDOMNG_NEW()
+
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  m->getGeometryAs<ImageGeom>()->setOrigin(0.0, 0.0, 0.0);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+
+  SampleSurfaceMesh::execute();
+
+  notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -247,17 +253,20 @@ AbstractFilter::Pointer UncertainRegularGridSampleSurfaceMesh::newFilterInstance
 const QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName()
 { return SamplingConstants::SamplingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString UncertainRegularGridSampleSurfaceMesh::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString UncertainRegularGridSampleSurfaceMesh::getHumanLabel()
 { return "Sample Surface Mesh on Uncertain Regular Grid"; }
-

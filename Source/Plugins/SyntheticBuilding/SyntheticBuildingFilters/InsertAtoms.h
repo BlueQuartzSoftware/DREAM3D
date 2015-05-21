@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,18 +37,12 @@
 #ifndef _InsertAtoms_H_
 #define _InsertAtoms_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @class InsertAtoms InsertAtoms.h DREAM3DLib/SyntheticBuilderFilters/InsertAtoms.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The InsertAtoms class. See [Filter documentation](@ref insertatoms) for details.
  */
 class InsertAtoms : public AbstractFilter
 {
@@ -62,11 +56,13 @@ class InsertAtoms : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
     Q_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
+
     DREAM3D_FILTER_PARAMETER(int, Basis)
     Q_PROPERTY(int Basis READ getBasis WRITE setBasis)
 
@@ -82,8 +78,8 @@ class InsertAtoms : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-	virtual const QString getSubGroupName();
-	virtual const QString getHumanLabel();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**
@@ -114,21 +110,19 @@ class InsertAtoms : public AbstractFilter
   protected:
     InsertAtoms();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
+    /**
+     * @brief assign_points Assigns Feature Ids to the generated 'atoms'
+     * @param points VertexGeom object of 'atom' points
+     * @param inFeature Boolean array to determine inside/outside relationships for points
+     */
     virtual void assign_points(QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, AtomFeatureLabels)
 
     InsertAtoms(const InsertAtoms&); // Copy Constructor Not Implemented
@@ -136,6 +130,3 @@ class InsertAtoms : public AbstractFilter
 };
 
 #endif /* InsertAtoms_H_ */
-
-
-

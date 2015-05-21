@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -44,11 +44,7 @@
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
- * @class RegularGridSampleSurfaceMesh RegularGridSampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/RegularGridSampleSurfaceMesh.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The RegularGridSampleSurfaceMesh class. See [Filter documentation](@ref regulargridsamplesurfacemesh) for details.
  */
 class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
@@ -59,6 +55,7 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_TYPE_MACRO_SUPER(RegularGridSampleSurfaceMesh, AbstractFilter)
 
     virtual ~RegularGridSampleSurfaceMesh();
+
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
@@ -67,10 +64,13 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 
     DREAM3D_FILTER_PARAMETER(int, XPoints)
     Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
+
     DREAM3D_FILTER_PARAMETER(int, YPoints)
     Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
+
     DREAM3D_FILTER_PARAMETER(int, ZPoints)
     Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
@@ -111,17 +111,18 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
   protected:
     RegularGridSampleSurfaceMesh();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
+    /**
+     * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
+     * @return VertexGeom object
+     */
     virtual VertexGeom::Pointer generate_points();
+
+    /**
+     * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
+     * @param iArray Sampled Feature Ids from superclass
+     */
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
@@ -132,7 +133,3 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 };
 
 #endif /* RegularGridSampleSurfaceMesh_H_ */
-
-
-
-
