@@ -38,12 +38,15 @@
 
 #include <QtCore/QMap>
 
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
+#include "Sampling/SamplingConstants.h" 
 
 // -----------------------------------------------------------------------------
 //
@@ -93,7 +96,11 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
 {
   SampleSurfaceMesh::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
+  setXPoints(reader->readValue("XPoints", getXPoints()));
+  setYPoints(reader->readValue("YPoints", getYPoints()));
+  setZPoints(reader->readValue("ZPoints", getZPoints()));
+  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   reader->closeFilterGroup();
@@ -106,6 +113,10 @@ int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParameters
 {
   SampleSurfaceMesh::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(XPoints)
+  DREAM3D_FILTER_WRITE_PARAMETER(YPoints)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZPoints)
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
@@ -124,8 +135,13 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
+
+  // Set the Dimensions, Resolution and Origin of the output data container
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;

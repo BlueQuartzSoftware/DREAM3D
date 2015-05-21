@@ -97,6 +97,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_NumCells(NULL),
   m_PhaseTypes(NULL),
   m_ShapeTypes(NULL),
+  m_Neighbors(NULL),
   m_NumFeatures(NULL)
 {
   m_FirstPrecipitateFeature  = 1;
@@ -729,94 +730,117 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   float boundaryFraction = (float)boundaryVoxels / (float)m_TotalPoints;
 
+  //boolean used to determine if current placement is acceptable if the precipitates are being treated as "hard"
+  bool good = false;
+
   for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
   {
     QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
-    precipboundaryfraction = pp->getPrecipBoundaryFraction();
-    random = static_cast<float>(rg.genrand_res53());
+	m_Centroids[3 * i] = m_SizeX * 0.5;
+	m_Centroids[3 * i + 1] = m_SizeY * 0.5;
+	m_Centroids[3 * i + 2] = m_SizeZ * 0.5;
+	insert_precipitate(i);
 
-    if (boundaryFraction != 0)
-    {
-      if (random <= precipboundaryfraction)
-      {
-        // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-        if (availablePointsCount > 0)
-        {
-          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-          featureOwnersIdx = availablePointsInv[key];
-          while (m_BoundaryCells[featureOwnersIdx] == 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-            featureOwnersIdx = availablePointsInv[key];
-          }
-        }
-        else
-        {
-          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-          while (m_BoundaryCells[featureOwnersIdx] == 0)
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-          }
-        }
+	good = false;
+	int32_t iterCount = 0;
+	while (good == false && iterCount < 100000 )
+	{
+		PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
+		precipboundaryfraction = pp->getPrecipBoundaryFraction();
+		random = static_cast<float>(rg.genrand_res53());
 
-      }
-      else if (random > precipboundaryfraction)
-      {
-        if (availablePointsCount > 0)
-        {
-          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-          featureOwnersIdx = availablePointsInv[key];
-          while (m_BoundaryCells[featureOwnersIdx] != 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-            featureOwnersIdx = availablePointsInv[key];
-          }
-        }
-        else
-        {
-          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-          while (m_BoundaryCells[featureOwnersIdx] != 0)
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-          }
-        }
-      }
-    }
-    else
-    {
+		if (boundaryFraction != 0)
+		{
+		  if (random <= precipboundaryfraction)
+		  {
+			// figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
+			if (availablePointsCount > 0)
+			{
+			  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+			  featureOwnersIdx = availablePointsInv[key];
+			  while (m_BoundaryCells[featureOwnersIdx] == 0)
+			  {
+				key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+				featureOwnersIdx = availablePointsInv[key];
+			  }
+			}
+			else
+			{
+			  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+			  while (m_BoundaryCells[featureOwnersIdx] == 0)
+			  {
+				featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+			  }
+			}
 
-      if (precipboundaryfraction > 0)
-      {
-        QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
-        notifyWarningMessage(getHumanLabel(), msg, -5010);
-      }
+		  }
+		  else if (random > precipboundaryfraction)
+		  {
+			if (availablePointsCount > 0)
+			{
+			  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+			  featureOwnersIdx = availablePointsInv[key];
+			  while (m_BoundaryCells[featureOwnersIdx] != 0)
+			  {
+				key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+				featureOwnersIdx = availablePointsInv[key];
+			  }
+			}
+			else
+			{
+			  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+			  while (m_BoundaryCells[featureOwnersIdx] != 0)
+			  {
+				featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+			  }
+			}
+		  }
+		}
+		else
+		{
 
-      if (availablePointsCount > 0)
-      {
-        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-        featureOwnersIdx = availablePointsInv[key];
-      }
-      else
-      {
-        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-      }
-    }
+		  if (precipboundaryfraction > 0)
+		  {
+			QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
+			notifyWarningMessage(getHumanLabel(), msg, -5010);
+		  }
 
-    column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
-    row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
-    plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
-    xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
-    yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
-    zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
-    m_Centroids[3 * i] = xc;
-    m_Centroids[3 * i + 1] = yc;
-    m_Centroids[3 * i + 2] = zc;
-    insert_precipitate(i);
+		  if (availablePointsCount > 0)
+		  {
+			key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+			featureOwnersIdx = availablePointsInv[key];
+		  }
+		  else
+		  {
+			featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+		  }
+		}
+	
+		column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
+		row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
+		plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
+		xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
+		yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
+		zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
+		//m_Centroids[3 * i] = xc;
+		//m_Centroids[3 * i + 1] = yc;
+		//m_Centroids[3 * i + 2] = zc;
+		move_precipitate(i, xc, yc, zc);
+//		insert_precipitate(i);
+		good = check_for_overlap(i, exclusionZonesPtr);
+		iterCount++;
+	}
     update_exclusionZones(i, -1000, exclusionZonesPtr);
     update_availablepoints(availablePoints, availablePointsInv);
+	if (iterCount >= 100000)
+	{
+		tDims[0] = i + 1;
+		m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
+		updateFeatureInstancePointers();
+		numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+	}
   }
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
@@ -1298,6 +1322,49 @@ void InsertPrecipitatePhases::update_exclusionZones(size_t gadd, int32_t gremove
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool InsertPrecipitatePhases::check_for_overlap(size_t gNum, Int32ArrayType::Pointer exclusionZonesPtr)
+{
+	size_t featureOwnersIdx = 0;
+	int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
+	int64_t col = 0, row = 0, plane = 0;
+	int64_t overlapCount = 0;
+
+	size_t size = columnlist[gNum].size();
+	std::vector<int64_t>& cl = columnlist[gNum];
+	std::vector<int64_t>& rl = rowlist[gNum];
+	std::vector<int64_t>& pl = planelist[gNum];
+	for (size_t i = 0; i < size; i++)
+	{
+		col = cl[i];
+		row = rl[i];
+		plane = pl[i];
+		if (m_PeriodicBoundaries == true)
+		{
+			if (col < 0) { col = col + m_XPoints; }
+			if (col > m_XPoints - 1) { col = col - m_XPoints; }
+			if (row < 0) { row = row + m_YPoints; }
+			if (row > m_YPoints - 1) { row = row - m_YPoints; }
+			if (plane < 0) { plane = plane + m_ZPoints; }
+			if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
+			featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
+			if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
+		}
+		else
+		{
+			if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
+			{
+				featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
+				if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
+			}
+		}
+	}
+	if ((static_cast<float>(overlapCount) / static_cast<float>(size)) > 0.1) return false;
+	return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -1946,183 +2013,119 @@ void InsertPrecipitatePhases::assign_voxels()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_gaps()
 {
-  notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
+	notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+	DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  size_t totpoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+	int32_t featurename = 0, feature = 0;
+	int32_t current = 0;
+	int32_t most = 0;
+	int64_t gapVoxelCount = 1;
+	int32_t iterationCounter = 0;
+	int64_t neighpoint;
+	bool good = false;
+	int32_t neighbor = 0;
 
-  size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+	int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+	int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+	int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+	size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+	size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
 
+	int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+	neighpoints[0] = -xPoints * yPoints;
+	neighpoints[1] = -xPoints;
+	neighpoints[2] = -1;
+	neighpoints[3] = 1;
+	neighpoints[4] = xPoints;
+	neighpoints[5] = xPoints * yPoints;
 
-  DimType index = 0;
-  int32_t timestep = 100;
-  DimType unassignedcount = 1;
-  DimType column = 0, row = 0, plane = 0;
-  float inside = 0.0f;
-  float xc = 0.0f, yc = 0.0f, zc = 0.0f;
-  float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
-  float dist = 0.0f;
-  float coords[3] = { 0.0f, 0.0f, 0.0f };
+	Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors");
+	neighborsPtr->initializeWithValue(-1);
+	m_Neighbors = neighborsPtr->getPointer(0);
 
-  DimType xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
+	std::vector<int32_t> n(totalFeatures + 1, 0);
 
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
-
-  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totpoints, "_INTERNAL_USE_ONLY_newowners");
-  int32_t* newowners = newownersPtr->getPointer(0);
-  newownersPtr->initializeWithZeros();
-
-  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totpoints, "_INTERNAL_USE_ONLY_ellipfuncs");
-  float* ellipfuncs = ellipfuncsPtr->getPointer(0);
-  ellipfuncsPtr->initializeWithValue(-1);
-
-  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-
-  while (unassignedcount != 0)
-  {
-    unassignedcount = 0;
-    timestep = timestep + 50;
-    for (size_t i = size_t(m_FirstPrecipitateFeature); i < numFeatures; i++)
-    {
-      float volcur = m_Volumes[i];
-      float bovera = m_AxisLengths[3 * i + 1];
-      float covera = m_AxisLengths[3 * i + 2];
-      float omega3 = m_Omega3s[i];
-      xc = m_Centroids[3 * i];
-      yc = m_Centroids[3 * i + 1];
-      zc = m_Centroids[3 * i + 2];
-      float radcur1 = 0.0f;
-      // Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase ; this has been checked in insert_precipitate
-      uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[i]];
-
-      // init any values for each of the Shape Ops
-      for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
-      {
-        ops.value()->init();
-      }
-      // Create our Argument Map
-      QMap<ShapeOps::ArgName, float> shapeArgMap;
-      shapeArgMap[ShapeOps::Omega3] = omega3;
-      shapeArgMap[ShapeOps::VolCur] = volcur;
-      shapeArgMap[ShapeOps::B_OverA] = bovera;
-      shapeArgMap[ShapeOps::C_OverA] = covera;
-
-      radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
-
-      float radcur2 = (radcur1 * bovera);
-      float radcur3 = (radcur1 * covera);
-      radcur1 = (float(timestep) / 100.0f) * radcur1;
-      radcur2 = (float(timestep) / 100.0f) * radcur2;
-      radcur3 = (float(timestep) / 100.0f) * radcur3;
-      float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      FOrientArrayType om(9, 0.0);
-      FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
-      om.toGMatrix(ga);
-      column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
-      row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
-      plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
-      xmin = DimType(column - ((radcur1 / xRes) + 1));
-      xmax = DimType(column + ((radcur1 / xRes) + 1));
-      ymin = DimType(row - ((radcur1 / yRes) + 1));
-      ymax = DimType(row + ((radcur1 / yRes) + 1));
-      zmin = DimType(plane - ((radcur1 / zRes) + 1));
-      zmax = DimType(plane + ((radcur1 / zRes) + 1));
-      if (m_PeriodicBoundaries == true)
-      {
-        if (xmin < -dims[0]) { xmin = -dims[0]; }
-        if (xmax > 2 * dims[0] - 1) { xmax = (2 * dims[0] - 1); }
-        if (ymin < -dims[1]) { ymin = -dims[1]; }
-        if (ymax > 2 * dims[1] - 1) { ymax = (2 * dims[1] - 1); }
-        if (zmin < -dims[2]) { zmin = -dims[2]; }
-        if (zmax > 2 * dims[2] - 1) { zmax = (2 * dims[2] - 1); }
-      }
-      if (m_PeriodicBoundaries == false)
-      {
-        if (xmin < 0) { xmin = 0; }
-        if (xmax > dims[0] - 1) { xmax = dims[0] - 1; }
-        if (ymin < 0) { ymin = 0; }
-        if (ymax > dims[1] - 1) { ymax = dims[1] - 1; }
-        if (zmin < 0) { zmin = 0; }
-        if (zmax > dims[2] - 1) { zmax = dims[2] - 1; }
-      }
-      for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
-      {
-        for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
-        {
-          for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
-          {
-            column = iter1;
-            row = iter2;
-            plane = iter3;
-            if (iter1 < 0) { column = iter1 + dims[0]; }
-            if (iter1 > dims[0] - 1) { column = iter1 - dims[0]; }
-            if (iter2 < 0) { row = iter2 + dims[1]; }
-            if (iter2 > dims[1] - 1) { row = iter2 - dims[1]; }
-            if (iter3 < 0) { plane = iter3 + dims[2]; }
-            if (iter3 > dims[2] - 1) { plane = iter3 - dims[2]; }
-            index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
-            if (m_FeatureIds[index] <= 0)
-            {
-              inside = -1.0f;
-              coords[0] = float(column) * xRes;
-              coords[1] = float(row) * yRes;
-              coords[2] = float(plane) * zRes;
-              if (iter1 < 0) { coords[0] = coords[0] - m_SizeX; }
-              if (iter1 > dims[0] - 1) { coords[0] = coords[0] + m_SizeX; }
-              if (iter2 < 0) { coords[1] = coords[1] - m_SizeY; }
-              if (iter2 > dims[1] - 1) { coords[1] = coords[1] + m_SizeY; }
-              if (iter3 < 0) { coords[2] = coords[2] - m_SizeZ; }
-              if (iter3 > dims[2] - 1) { coords[2] = coords[2] + m_SizeZ; }
-              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-              dist = sqrtf(dist);
-              if (dist < radcur1)
-              {
-                coords[0] = coords[0] - xc;
-                coords[1] = coords[1] - yc;
-                coords[2] = coords[2] - zc;
-                MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
-                float axis1comp = coordsRotated[0] / radcur1;
-                float axis2comp = coordsRotated[1] / radcur2;
-                float axis3comp = coordsRotated[2] / radcur3;
-                inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-                if (inside >= 0 && inside > ellipfuncs[index])
-                {
-                  newowners[index] = i;
-                  ellipfuncs[index] = inside;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    for (size_t i = 0; i < totpoints; i++)
-    {
-      if (ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
-      if (m_FeatureIds[i] <= 0) { unassignedcount++; }
-      newowners[i] = -1;
-      ellipfuncs[i] = -1.0f;
-    }
-  }
-  for (size_t i = 0; i < totpoints; i++)
-  {
-    if (m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
-  }
+	while (gapVoxelCount != 0)
+	{
+		iterationCounter++;
+		gapVoxelCount = 0;
+		int64_t zStride, yStride;
+		for (int64_t i = 0; i < zPoints; i++)
+		{
+			zStride = i * xPoints * yPoints;
+			for (int64_t j = 0; j < yPoints; j++)
+			{
+				yStride = j * xPoints;
+				for (int64_t k = 0; k < xPoints; k++)
+				{
+					featurename = m_FeatureIds[zStride + yStride + k];
+					if (featurename < 0)
+					{
+						gapVoxelCount++;
+						current = 0;
+						most = 0;
+						for (int32_t l = 0; l < 6; l++)
+						{
+							good = true;
+							neighpoint = zStride + yStride + k + neighpoints[l];
+							if (l == 0 && i == 0) { good = false; }
+							if (l == 5 && i == (zPoints - 1)) { good = false; }
+							if (l == 1 && j == 0) { good = false; }
+							if (l == 4 && j == (yPoints - 1)) { good = false; }
+							if (l == 2 && k == 0) { good = false; }
+							if (l == 3 && k == (xPoints - 1)) { good = false; }
+							if (good == true)
+							{
+								feature = m_FeatureIds[neighpoint];
+								if (feature > 0)
+								{
+									n[feature]++;
+									current = n[feature];
+									if (current > most)
+									{
+										most = current;
+										m_Neighbors[zStride + yStride + k] = neighpoint;
+									}
+								}
+							}
+						}
+						for (int32_t l = 0; l < 6; l++)
+						{
+							good = true;
+							neighpoint = zStride + yStride + k + neighpoints[l];
+							if (l == 0 && i == 0) { good = false; }
+							if (l == 5 && i == (zPoints - 1)) { good = false; }
+							if (l == 1 && j == 0) { good = false; }
+							if (l == 4 && j == (yPoints - 1)) { good = false; }
+							if (l == 2 && k == 0) { good = false; }
+							if (l == 3 && k == (xPoints - 1)) { good = false; }
+							if (good == true)
+							{
+								feature = m_FeatureIds[neighpoint];
+								if (feature > 0) { n[feature] = 0; }
+							}
+						}
+					}
+				}
+			}
+		}
+		for (size_t j = 0; j < totalPoints; j++)
+		{
+			featurename = m_FeatureIds[j];
+			neighbor = m_Neighbors[j];
+			if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
+			{
+				m_FeatureIds[j] = m_FeatureIds[neighbor];
+				m_CellPhases[j] = m_FeaturePhases[m_FeatureIds[neighbor]];
+			}
+		}
+		if (iterationCounter >= 1)
+		{
+			QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
+			notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+		}
+	}
 }
 
 // -----------------------------------------------------------------------------
