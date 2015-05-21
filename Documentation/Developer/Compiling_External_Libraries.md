@@ -13,7 +13,7 @@ A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The foll
 
 ## Note for MinGW/MSys/Cygwin ##
 
-Due to incompatibilities of HDF5 and these environments we can not support compiling DREAM3D using these environments. Visual Studio Express is Free for anyone to use and has no restrictions on the software produced and its distribution.
+Due to incompatibilities of HDF5 and these environments we can not support compiling DREAM3D using these environments. Visual Studio Community 2013 is Free for anyone to use and has no restrictions on the software produced and its distribution.
 
 
 
@@ -23,7 +23,7 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 |  Package   | Minimum Version | Download Location |  
 |  ------	| ------	| ------	|  
 | Git | 1.97.x | [http://www.git-scm.com](http://www.git-scm.com) |  
-| CMake | 3.1.0 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
+| CMake | 3.1.3 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
 | Doxygen | 1.8.9 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
 | HDF5 | 1.8.14 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
 | Boost | 1.57.0 | [http://www.boost.org](http://www.boost.org) |  
@@ -35,7 +35,7 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 
 # DREAM3D SDK Availability #
 
-The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries (Except Qt 5), CMake and Doxygen as a single installer. Please send an email to _dream3d@bluequartz.net_ to request this installer.
+The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries (Except Qt 5 and ITK), CMake and Doxygen as a single installer. Please send an email to _dream3d@bluequartz.net_ to request this installer.
 
 
 # Setting Up the Environment #

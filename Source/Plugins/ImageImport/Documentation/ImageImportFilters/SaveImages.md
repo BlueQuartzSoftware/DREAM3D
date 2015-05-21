@@ -1,4 +1,4 @@
-Save Slice Images {#saveimages}
+Save Images {#saveimages}
 =====
 
 ## Group (Subgroup) ##
@@ -12,6 +12,7 @@ This filter will save images based on an array that represents RGB, Gray Scale o
 
 An example filter to run would be the [Generate IPF Colors](generateipfcolors.html) filter which will generate RGB values for each voxel in the volume.
 
+**NOTE** The saved image will be in RGBA format regardless of the initial input array. This means that Gray Scale images will be 4x the size of the original input data to the array.
 
 ## Parameters ##
 
