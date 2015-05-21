@@ -40,20 +40,39 @@
 #include <QModelIndex>
 #include <QVariant>
 
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterLibraryTreeWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/BookmarksItem.h"
 
 class BookmarksItem;
 
-class BookmarksModel : public QAbstractItemModel
+class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
 {
   Q_OBJECT
 
 public:
-  BookmarksModel(const QStringList &headers, FilterLibraryTreeWidget* tree, QObject *parent = 0);
+  DREAM3D_TYPE_MACRO(BookmarksModel)
+
   ~BookmarksModel();
+
+  static BookmarksModel* Instance();
+
+  static BookmarksModel* NewInstanceFromFile(QString filePath);
+
+  /**
+  * @brief fromJsonObject
+  * @param modelObject
+  */
+  static BookmarksModel* FromJsonObject(QJsonObject modelObject);
 
   QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+
+  QModelIndex sibling(const QModelIndex &index);
+
+  bool isExpanded(const QModelIndex &index);
 
   QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
   QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -61,25 +80,35 @@ public:
   int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
   int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-
-  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
-  bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
-
-  bool insertColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
-  bool removeColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
-
   bool insertRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
   bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
 
+  Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+  bool setData(const QModelIndex &index, const QVariant &value);
+  void setExpanded(const QModelIndex &index, const bool expanded);
+
+  void setRootItem(const QModelIndex &index);
+
+  /**
+  * @brief toJsonObject
+  */
+  QJsonObject toJsonObject();
+
 private:
+  BookmarksModel(QObject* parent = 0);
+
   BookmarksItem *rootItem;
 
-  void setupModelData(BookmarksItem* parentItem, QTreeWidgetItem* parent);
+  static BookmarksModel* self;
+
   BookmarksItem *getItem(const QModelIndex &index) const;
 
   BookmarksModel(const BookmarksModel&);    // Copy Constructor Not Implemented
   void operator=(const BookmarksModel&);  // Operator '=' Not Implemented
+
+  QJsonObject wrapModel(QModelIndex index);
+  static void UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 };
 
 #endif // BookmarksModel_H

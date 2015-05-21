@@ -40,10 +40,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent)
+BookmarksItem::BookmarksItem(const QVector<QVariant> &data, bool expanded, BookmarksItem *parent)
 {
-  parentItem = parent;
-  itemData = data;
+  m_ParentItem = parent;
+  m_ItemData = data;
+  m_Expanded = expanded;
 }
 
 // -----------------------------------------------------------------------------
@@ -51,7 +52,7 @@ BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *paren
 // -----------------------------------------------------------------------------
 BookmarksItem::~BookmarksItem()
 {
-  qDeleteAll(childItems);
+  qDeleteAll(m_ChildItems);
 }
 
 // -----------------------------------------------------------------------------
@@ -59,7 +60,7 @@ BookmarksItem::~BookmarksItem()
 // -----------------------------------------------------------------------------
 BookmarksItem *BookmarksItem::child(int number)
 {
-  return childItems.value(number);
+  return m_ChildItems.value(number);
 }
 
 // -----------------------------------------------------------------------------
@@ -67,7 +68,7 @@ BookmarksItem *BookmarksItem::child(int number)
 // -----------------------------------------------------------------------------
 int BookmarksItem::childCount() const
 {
-  return childItems.count();
+  return m_ChildItems.count();
 }
 
 // -----------------------------------------------------------------------------
@@ -75,8 +76,8 @@ int BookmarksItem::childCount() const
 // -----------------------------------------------------------------------------
 int BookmarksItem::childNumber() const
 {
-  if (parentItem)
-    return parentItem->childItems.indexOf(const_cast<BookmarksItem*>(this));
+  if (m_ParentItem)
+    return m_ParentItem->m_ChildItems.indexOf(const_cast<BookmarksItem*>(this));
 
   return 0;
 }
@@ -86,7 +87,7 @@ int BookmarksItem::childNumber() const
 // -----------------------------------------------------------------------------
 int BookmarksItem::columnCount() const
 {
-  return itemData.count();
+  return m_ItemData.count();
 }
 
 // -----------------------------------------------------------------------------
@@ -94,21 +95,37 @@ int BookmarksItem::columnCount() const
 // -----------------------------------------------------------------------------
 QVariant BookmarksItem::data(int column) const
 {
-  return itemData.value(column);
+  return m_ItemData.value(column);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksItem::insertChildren(int position, int count, int columns)
+bool BookmarksItem::expanded() const
 {
-  if (position < 0 || position > childItems.size())
+  return m_Expanded;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksItem::setExpanded(bool value)
+{
+  m_Expanded = value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BookmarksItem::insertChildren(int position, int count, int columns, bool expanded)
+{
+  if (position < 0 || position > m_ChildItems.size())
     return false;
 
   for (int row = 0; row < count; ++row) {
     QVector<QVariant> data(columns);
-    BookmarksItem *item = new BookmarksItem(data, this);
-    childItems.insert(position, item);
+    BookmarksItem *item = new BookmarksItem(data, expanded, this);
+    m_ChildItems.insert(position, item);
   }
 
   return true;
@@ -119,13 +136,13 @@ bool BookmarksItem::insertChildren(int position, int count, int columns)
 // -----------------------------------------------------------------------------
 bool BookmarksItem::insertColumns(int position, int columns)
 {
-  if (position < 0 || position > itemData.size())
+  if (position < 0 || position > m_ItemData.size())
     return false;
 
   for (int column = 0; column < columns; ++column)
-    itemData.insert(position, QVariant());
+    m_ItemData.insert(position, QVariant());
 
-  foreach(BookmarksItem *child, childItems)
+  foreach(BookmarksItem *child, m_ChildItems)
     child->insertColumns(position, columns);
 
   return true;
@@ -136,7 +153,7 @@ bool BookmarksItem::insertColumns(int position, int columns)
 // -----------------------------------------------------------------------------
 BookmarksItem *BookmarksItem::parent()
 {
-  return parentItem;
+  return m_ParentItem;
 }
 
 // -----------------------------------------------------------------------------
@@ -144,11 +161,11 @@ BookmarksItem *BookmarksItem::parent()
 // -----------------------------------------------------------------------------
 bool BookmarksItem::removeChildren(int position, int count)
 {
-  if (position < 0 || position + count > childItems.size())
+  if (position < 0 || position + count > m_ChildItems.size())
     return false;
 
   for (int row = 0; row < count; ++row)
-    delete childItems.takeAt(position);
+    delete m_ChildItems.takeAt(position);
 
   return true;
 }
@@ -158,13 +175,13 @@ bool BookmarksItem::removeChildren(int position, int count)
 // -----------------------------------------------------------------------------
 bool BookmarksItem::removeColumns(int position, int columns)
 {
-  if (position < 0 || position + columns > itemData.size())
+  if (position < 0 || position + columns > m_ItemData.size())
     return false;
 
   for (int column = 0; column < columns; ++column)
-    itemData.remove(position);
+    m_ItemData.remove(position);
 
-  foreach(BookmarksItem *child, childItems)
+  foreach(BookmarksItem *child, m_ChildItems)
     child->removeColumns(position, columns);
 
   return true;
@@ -175,9 +192,9 @@ bool BookmarksItem::removeColumns(int position, int columns)
 // -----------------------------------------------------------------------------
 bool BookmarksItem::setData(int column, const QVariant &value)
 {
-  if (column < 0 || column >= itemData.size())
+  if (column < 0 || column >= m_ItemData.size())
     return false;
 
-  itemData[column] = value;
+  m_ItemData[column] = value;
   return true;
 }

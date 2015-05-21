@@ -33,57 +33,37 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef BookmarksItem_H
-#define BookmarksItem_H
 
-#include <QList>
-#include <QVariant>
-#include <QVector>
 
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#ifndef _TreeViewTest_H_
+#define _TreeViewTest_H_
 
-enum ColumnData
+#include <QtCore/QObject>
+
+//-- UIC generated Header
+#include "ui_TreeViewTest.h"
+
+class TreeViewTest : public QWidget, private Ui::TreeViewTest
 {
-  Name,
-  Path
-};
+  Q_OBJECT
 
-const QString topLevelString = "[Top Level]";
-
-class DREAM3DWidgetsLib_EXPORT BookmarksItem
-{
 public:
-  explicit BookmarksItem(const QVector<QVariant> &data, bool expanded, BookmarksItem *parent = 0);
-  ~BookmarksItem();
+  TreeViewTest(QWidget* parent = 0);
+  virtual ~TreeViewTest();
 
-  BookmarksItem *child(int number);
-  BookmarksItem *parent();
+  void setupGui();
 
-  int childCount() const;
-  int columnCount() const;
+protected:
+  void writeSettings();
 
-  QVariant data(int column) const;
-  bool setData(int column, const QVariant &value);
-
-  bool expanded() const;
-  void setExpanded(bool value);
-
-  bool insertChildren(int position, int count, int columns, bool expanded);
-  bool insertColumns(int position, int columns);
-
-  bool removeChildren(int position, int count);
-  bool removeColumns(int position, int columns);
-
-  int childNumber() const;
+protected slots:
+  void on_treeView1_expanded(const QModelIndex &index);
+  void on_treeView1_collapsed(const QModelIndex &index);
 
 private:
-  QList<BookmarksItem*>               m_ChildItems;
-  QVector<QVariant>                   m_ItemData;
-  BookmarksItem*                      m_ParentItem;
-  bool                                m_Expanded;
-
-  BookmarksItem(const BookmarksItem&);    // Copy Constructor Not Implemented
-  void operator=(const BookmarksItem&);  // Operator '=' Not Implemented
+  TreeViewTest(const TreeViewTest&); // Copy Constructor Not Implemented
+  void operator=(const TreeViewTest&); // Operator '=' Not Implemented
 };
 
-#endif // BookmarksItem_H
+#endif /* _TreeViewTest_H_ */
+

@@ -343,6 +343,17 @@ FilterLibraryTreeWidget* FilterLibraryTreeWidget::FromJsonObject(QJsonObject tre
   FilterLibraryTreeWidget* tree = new FilterLibraryTreeWidget();
   tree->addTopLevelItems(list);
 
+  QTreeWidgetItemIterator iter(tree);
+
+  while (*iter)
+  {
+    QTreeWidgetItem* item = *iter;
+    bool expanded = item->data(2, Qt::UserRole).toBool();
+    item->setExpanded(expanded);
+
+    ++iter;
+  }
+
   tree->sortItems(0, Qt::AscendingOrder);
   return tree;
 }
