@@ -90,7 +90,7 @@ void PrebuiltPipelinesDockWidget::connectFilterList(FilterListDockWidget* filter
 void PrebuiltPipelinesDockWidget::setupGui()
 {
   // Clear out the default stuff
-  filterLibraryTree->clear();
+  prebuiltsLibraryTree->clear();
 
   readPipelines();
 
@@ -101,7 +101,7 @@ void PrebuiltPipelinesDockWidget::setupGui()
               opacity: 255;\
               background-color: #FFFFFF;\
               }");
-  filterLibraryTree->setStyleSheet(css);
+  prebuiltsLibraryTree->setStyleSheet(css);
 
 }
 
@@ -110,7 +110,7 @@ void PrebuiltPipelinesDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 FilterLibraryTreeWidget* PrebuiltPipelinesDockWidget::getFilterLibraryTreeWidget()
 {
-  return filterLibraryTree;
+  return prebuiltsLibraryTree;
 }
 
 // -----------------------------------------------------------------------------
@@ -169,12 +169,12 @@ void PrebuiltPipelinesDockWidget::readPipelines()
   fileExtension.append("*.ini");
   fileExtension.append("*.json");
   // Need to add the path to the prebuilts directory to the root item since we may use this later on.
-  filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
+  prebuiltsLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
 
   // Now block signals and load up all the pipelines in the folder
-  filterLibraryTree->blockSignals(true);
-  addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
-  filterLibraryTree->blockSignals(false);
+  prebuiltsLibraryTree->blockSignals(true);
+  addPipelinesRecursively(pipelinesDir, prebuiltsLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
+  prebuiltsLibraryTree->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +244,7 @@ void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTree
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
+void PrebuiltPipelinesDockWidget::on_prebuiltsLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
 #if 0
   QString favoritePath = item->data(1, Qt::UserRole).toString();
@@ -259,7 +259,7 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
+void PrebuiltPipelinesDockWidget::on_prebuiltsLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
   QString pipelinePath = item->data(1, Qt::UserRole).toString();
   if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
@@ -277,9 +277,9 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
+void PrebuiltPipelinesDockWidget::on_prebuiltsLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
-//  on_filterLibraryTree_itemClicked(item, 0);
+//  on_prebuiltsLibraryTree_itemClicked(item, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -412,7 +412,7 @@ QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QStr
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::actionShowInFileSystem_triggered()
 {
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* item = prebuiltsLibraryTree->currentItem();
   QString pipelinePath = item->data(1, Qt::UserRole).toString();
 
   QFileInfo pipelinePathInfo(pipelinePath);
@@ -442,10 +442,10 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
   setHidden(b);
 
   QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray()).toByteArray();
-  filterLibraryTree->header()->restoreState(headerState);
+  prebuiltsLibraryTree->header()->restoreState(headerState);
 
   prefs.beginGroup("Prebuilts Expansion Metadata");
-  QTreeWidgetItemIterator iter(filterLibraryTree);
+  QTreeWidgetItemIterator iter(prebuiltsLibraryTree);
 
   while (*iter)
   {
@@ -467,10 +467,10 @@ void PrebuiltPipelinesDockWidget::writeSettings(DREAM3DSettings& prefs)
 {
   prefs.setValue(objectName(), isHidden());
 
-  prefs.setValue("PrebuiltsHeaderState", filterLibraryTree->header()->saveState());
+  prefs.setValue("PrebuiltsHeaderState", prebuiltsLibraryTree->header()->saveState());
   
   prefs.beginGroup("Prebuilts Expansion Metadata");
-  QTreeWidgetItemIterator iter(filterLibraryTree);
+  QTreeWidgetItemIterator iter(prebuiltsLibraryTree);
 
   while (*iter)
   {

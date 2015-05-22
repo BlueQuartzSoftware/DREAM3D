@@ -117,9 +117,9 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
 
 
   protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+    void on_prebuiltsLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
+    void on_prebuiltsLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
+    void on_prebuiltsLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
 
 
   signals:

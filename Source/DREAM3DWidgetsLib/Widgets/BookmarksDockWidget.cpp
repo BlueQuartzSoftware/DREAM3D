@@ -102,7 +102,7 @@ void BookmarksDockWidget::connectFilterList(FilterListDockWidget* filterListWidg
 void BookmarksDockWidget::setupGui()
 {
   //// Clear out the default stuff
-  //filterLibraryTree->clear();
+  //bookmarksTreeView->clear();
 
   //QDir pipelinesDir = findPipelinesDirectory();
   //if (pipelinesDir.exists() && pipelinesDir.entryList().isEmpty() == false)
@@ -119,9 +119,9 @@ void BookmarksDockWidget::setupGui()
 opacity: 255;\
   background-color: #FFFFFF;\
 }");
-  filterLibraryTree->setStyleSheet(css);
+  bookmarksTreeView->setStyleSheet(css);
 
-  connect(filterLibraryTree, SIGNAL(itemWasDropped(QTreeWidgetItem*, QString&, QIcon, FilterLibraryTreeWidget::ItemType, QString, bool, bool, bool)), this, SLOT(addTreeItem(QTreeWidgetItem*, QString&, QIcon, FilterLibraryTreeWidget::ItemType, QString, bool, bool, bool)));
+  connect(bookmarksTreeView, SIGNAL(itemWasDropped(QModelIndex, QString&, QIcon, QString, bool, bool, bool)), this, SLOT(addTreeItem(QModelIndex, QString&, QIcon, QString, bool, bool, bool)));
 }
 
 // -----------------------------------------------------------------------------
@@ -129,22 +129,27 @@ opacity: 255;\
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::configureFilterLibraryTree()
 {
-  FilterLibraryTreeWidget* filterLibraryTree = getFilterLibraryTreeWidget();
-  if(filterLibraryTree)
-  {
+  BookmarksModel* model = BookmarksModel::Instance();
 
-    QItemSelectionModel* selectionModel = filterLibraryTree->selectionModel();
-    QModelIndex index = selectionModel->model()->index(0, 0);
-    filterLibraryTree->setCurrentIndex(index);
+  if(bookmarksTreeView)
+  {
+    for (int row = 0; row < model->rowCount(QModelIndex()); row++)
+    {
+      QModelIndex index = model->index(row, 0, QModelIndex());
+      if (index.isValid())
+      {
+        bookmarksTreeView->setCurrentIndex(index);
+      }
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterLibraryTreeWidget* BookmarksDockWidget::getFilterLibraryTreeWidget()
+BookmarksTreeView* BookmarksDockWidget::getBookmarksTreeView()
 {
-  return filterLibraryTree;
+  return bookmarksTreeView;
 }
 
 // -----------------------------------------------------------------------------
@@ -152,8 +157,7 @@ FilterLibraryTreeWidget* BookmarksDockWidget::getFilterLibraryTreeWidget()
 // -----------------------------------------------------------------------------
 QDir BookmarksDockWidget::findPipelinesDirectory()
 {
-
-  // Get the location of the PReferences file. The Favorites are stored in a directory located at that level.
+  // Get the location of the Preferences file. The Favorites are stored in a directory located at that level.
   QString dirName("DREAM3D_Favorites");
 
   DREAM3DSettings prefs;
@@ -173,8 +177,6 @@ void BookmarksDockWidget::convertPipelines(QString newDirectory)
 {
   QDir pipelinesDir = findPipelinesDirectory();
 
-
-
   FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
   QString iconFileName(":/text.png");
   bool allowEditing = true;
@@ -182,16 +184,13 @@ void BookmarksDockWidget::convertPipelines(QString newDirectory)
   fileExtension.append("*.txt");
   fileExtension.append("*.ini");
   fileExtension.append("*.json");
-  // Need to add the path to the favorites directory to the root item since we may use this later on.
-  filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
-
 
   // Now block signals and load up all the pipelines in the folder
-  filterLibraryTree->blockSignals(true);
-  //addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
+  bookmarksTreeView->blockSignals(true);
+  //addPipelinesRecursively(pipelinesDir, bookmarksTreeView->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
   // Sort the Favorite Tree by name(?)
-  filterLibraryTree->sortItems(0, Qt::AscendingOrder);
-  filterLibraryTree->blockSignals(false);
+  bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);
+  bookmarksTreeView->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -322,29 +321,24 @@ QStringList BookmarksDockWidget::generateFilterListFromPipelineFile(QString path
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
+void BookmarksDockWidget::on_bookmarksTreeView_clicked(const QModelIndex & index)
 {
-#if 0
-  QString favoritePath = item->data(1, Qt::UserRole).toString();
-  QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
-  if(filterList.size() > 0)
-  {
-    emit filterListGenerated(filterList, false);
-  }
-#endif
+  
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
+void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex & index)
 {
-  QString pipelinePath = item->data(1, Qt::UserRole).toString();
-  if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QString pipelinePath = model->index(index.row(), Path, index.parent()).data().toString();
+  if (pipelinePath.isEmpty())
   {
     return; // The user double clicked a folder, so don't do anything
   }
-  if (pipelinePath.isEmpty() == false)
+  else
   {
     emit pipelineFileActivated(pipelinePath);
   }
@@ -354,28 +348,18 @@ void BookmarksDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item, int column)
+void BookmarksDockWidget::on_bookmarksTreeView_currentIndexChanged(const QModelIndex & current, const QModelIndex & previous)
 {
-  if (column == 0)
-  {
-    // Set the internal data with the new name
-    item->setData(0, Qt::UserRole, item->text(0));
-  }
-}
+  BookmarksModel* model = BookmarksModel::Instance();
+  QString path = model->index(current.row(), Path, current.parent()).data().toString();
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous)
-{
   if (m_DeleteAction != NULL)
   {
-    if (item == NULL)
+    if (current.isValid() == false)
     {
       m_DeleteAction->setVisible(false);
     }
-    else if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+    else if (path.isEmpty())
     {
       m_DeleteAction->setText("Remove Folder");
       m_DeleteAction->setVisible(true);
@@ -417,9 +401,9 @@ QString BookmarksDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
     Q_UNUSED(reply);
   }
 
-  filterLibraryTree->blockSignals(true);
+  bookmarksTreeView->blockSignals(true);
   item->setData(0, Qt::UserRole, QVariant(newPath));
-  filterLibraryTree->blockSignals(false);
+  bookmarksTreeView->blockSignals(false);
 
   return newPath;
 }
@@ -429,14 +413,17 @@ QString BookmarksDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionNewFolder_triggered()
 {
-  QTreeWidgetItem* parent = getSelectedParentTreeItem();
-  QString parentName = parent->text(0);
-  QString parentTreePath = parent->data(2, Qt::UserRole).toString();
+  BookmarksModel* model = BookmarksModel::Instance();
 
-  addFolder("New Folder", parentName, parentTreePath, true);
+  QModelIndex parent = getSelectedParentTreeItem();
+  QString parentName = model->index(parent.row(), Name, parent.parent()).data().toString();
+  
+  QString name = "New Folder";
+
+  addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", true, true, false);
 
   // Resize the bookmarks widget header to contents
-  filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+  bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 // -----------------------------------------------------------------------------
@@ -444,6 +431,8 @@ void BookmarksDockWidget::m_ActionNewFolder_triggered()
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionAddPipeline_triggered()
 {
+  BookmarksModel* model = BookmarksModel::Instance();
+
   QString proposedDir = m_OpenDialogLastDirectory;
   QList<QString> newPrefPaths;
 
@@ -451,77 +440,19 @@ void BookmarksDockWidget::m_ActionAddPipeline_triggered()
     proposedDir, tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
   if (true == newPrefPaths.isEmpty()) { return; }
 
-  addPipelines(newPrefPaths);
+  QModelIndex parent = getSelectedParentTreeItem();
 
-  // Resize the bookmarks widget header to contents
-  filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QTreeWidgetItem* BookmarksDockWidget::getSelectedParentTreeItem()
-{
-  QTreeWidgetItem* selection = filterLibraryTree->currentItem();
-
-  // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
-  // selected an actual favorite item, get it's parent which MUST be a folder
-  if(NULL != selection && selection->type() == FilterLibraryTreeWidget::Leaf_Item_Type)
+  for (int i = 0; i < newPrefPaths.size(); i++)
   {
-    selection = selection->parent();
-    // We can _still_ get a null item (for some odd reason) so check that next
-  }
-
-  // Make sure we have a valid selection otherwise select the root item
-  if (NULL == selection)
-  {
-    selection = filterLibraryTree->invisibleRootItem();
-  }
-
-  return selection;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::addFolder(QString name, QString parentName, QString parentTreePath, bool editState)
-{
-  if (parentName.isEmpty() && parentTreePath.isEmpty())
-  {
-    QTreeWidgetItem* parent = filterLibraryTree->invisibleRootItem();
-    addTreeItem(parent, name, QIcon(":/folder_blue.png"), FilterLibraryTreeWidget::Node_Item_Type, "", true, editState, false);
-  }
-
-  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(parentName, Qt::MatchExactly | Qt::MatchRecursive, 0);
-
-  for (int i = 0; i < list.size(); i++)
-  {
-    QTreeWidgetItem* potentialParent = list[i];
-    if (potentialParent->data(2, Qt::UserRole).toString() == parentTreePath)
-    {
-      addTreeItem(potentialParent, name, QIcon(":/folder_blue.png"), FilterLibraryTreeWidget::Node_Item_Type, "", true, editState, false);
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::addPipelines(QList<QString> newPaths)
-{
-  QTreeWidgetItem* selection = getSelectedParentTreeItem();
-
-  for (int i = 0; i < newPaths.size(); i++)
-  {
-    QString newPrefPath = newPaths[i];
+    QString newPrefPath = newPrefPaths[i];
     newPrefPath = QDir::toNativeSeparators(newPrefPath);
     QFileInfo fi(newPrefPath);
     QString fileTitle = fi.baseName();
-    int err = addTreeItem(selection, fileTitle, QIcon(":/text.png"), FilterLibraryTreeWidget::Leaf_Item_Type, newPrefPath, true, false, false);
+    int err = addTreeItem(parent, fileTitle, QIcon(":/text.png"), newPrefPath, true, false, false);
     if (err >= 0)
     {
       emit updateStatusBar("The pipeline '" + fileTitle + "' has been added successfully.");
-      selection->setExpanded(true);
+      bookmarksTreeView->expand(parent);
     }
     else if (err == UNRECOGNIZED_EXT)
     {
@@ -533,20 +464,46 @@ void BookmarksDockWidget::addPipelines(QList<QString> newPaths)
     }
   }
 
-  if (newPaths.size() > 0)
+  if (newPrefPaths.size() > 0)
   {
     // Cache the directory from the last path added
-    m_OpenDialogLastDirectory = newPaths[newPaths.size() - 1];
+    m_OpenDialogLastDirectory = newPrefPaths[newPrefPaths.size() - 1];
   }
+
+  // Resize the bookmarks widget header to contents
+  bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
+QModelIndex BookmarksDockWidget::getSelectedParentTreeItem()
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+  QModelIndex index = bookmarksTreeView->currentIndex();
+
+  // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
+  // selected an actual favorite item, get it's parent which MUST be a folder
+  if(index.isValid() && model->index(index.row(), Path, index.parent()).data().toString().isEmpty() == false)
+  {
+    index = index.parent();
+  }
+
+  // Make sure we have a valid selection otherwise select the root item
+  if (index.isValid() == false)
+  {
+    index = QModelIndex();
+  }
+
+  return index;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int BookmarksDockWidget::addTreeItem(QModelIndex parent,
   QString& favoriteTitle,
   QIcon icon,
-  FilterLibraryTreeWidget::ItemType itemType,
   QString favoritePath,
   bool allowEditing,
   bool editState,
@@ -560,35 +517,41 @@ int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
     return UNRECOGNIZED_EXT;
   }
 
-  filterLibraryTree->blockSignals(true);
-  // Add a new Item to the Tree
-  QTreeWidgetItem* itemWidget = new QTreeWidgetItem(selection, itemType);
-  itemWidget->setText(0, favoriteTitle);
-  itemWidget->setText(1, favoritePath);
-  itemWidget->setIcon(0, icon);
-  itemWidget->setFlags(Qt::NoItemFlags);
-  itemWidget->setData(0, Qt::UserRole, favoriteTitle);
-  itemWidget->setData(1, Qt::UserRole, QVariant(favoritePath));
-  itemWidget->setData(2, Qt::UserRole, getTreePathFromItem(itemWidget));
-  filterLibraryTree->sortItems(0, Qt::AscendingOrder);
-  filterLibraryTree->blockSignals(false);
+  BookmarksModel* model = BookmarksModel::Instance();
 
-  if (itemType == FilterLibraryTreeWidget::Node_Item_Type)
+  bookmarksTreeView->blockSignals(true);
+  // Add a new Item to the Tree
+  int rowPos = model->rowCount(parent);
+  model->insertRow(rowPos, parent);
+  QModelIndex nameIndex = model->index(rowPos, Name, parent);
+  model->setData(nameIndex, favoriteTitle);
+  QModelIndex pathIndex = model->index(rowPos, Path, parent);
+  model->setData(pathIndex, favoritePath);
+  //itemWidget->setIcon(0, icon);
+
+  bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);
+  bookmarksTreeView->blockSignals(false);
+
+  if (favoritePath.isEmpty())
   {
-    filterLibraryTree->blockSignals(true);
-    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
-    itemWidget->setExpanded(isExpanded);
-    filterLibraryTree->blockSignals(false);
+    // This is a node
+    bookmarksTreeView->blockSignals(true);
+    if (isExpanded)
+    {
+      bookmarksTreeView->expand(nameIndex);
+      bookmarksTreeView->setExpanded(nameIndex, true);
+      bookmarksTreeView->setExpanded(pathIndex, true);
+    }
+    else
+    {
+      bookmarksTreeView->setExpanded(nameIndex, false);
+      bookmarksTreeView->setExpanded(pathIndex, false);
+    }
+    bookmarksTreeView->blockSignals(false);
     if (editState == true)
     {
-      filterLibraryTree->editItem(itemWidget);
+      bookmarksTreeView->edit(nameIndex);
     }
-  }
-  else if (itemType == FilterLibraryTreeWidget::Leaf_Item_Type)
-  {
-    filterLibraryTree->blockSignals(true);
-    itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
-    filterLibraryTree->blockSignals(false);
   }
 
   return 0;
@@ -599,70 +562,15 @@ int BookmarksDockWidget::addTreeItem(QTreeWidgetItem* selection,
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionUpdatePipeline_triggered()
 {
-  // Lets get the name of the favorite
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  BookmarksModel* model = BookmarksModel::Instance();
 
-  QString name = item->text(0);
-  QString filePath = item->data(1, Qt::UserRole).toString();
+  // Lets get the name of the favorite
+  QModelIndex index = bookmarksTreeView->currentIndex();
+
+  QString name = model->index(index.row(), Name, index.parent()).data().toString();
+  QString filePath = model->index(index.row(), Path, index.parent()).data().toString();
 
   emit pipelineNeedsToBeSaved(filePath, name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::removeBookmark(QString bookmarkName, QString bookmarkPath, QString bookmarkTreePath)
-{
-  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(bookmarkName, Qt::MatchExactly | Qt::MatchRecursive, 0);
-
-  for (int i = 0; i < list.size(); i++)
-  {
-    QTreeWidgetItem* item = list[i];
-    QString itemName = item->text(0);
-    QString itemFilePath = item->data(1, Qt::UserRole).toString();
-    QString itemTreePath = item->data(2, Qt::UserRole).toString();
-
-    if (itemName == bookmarkName && itemFilePath == bookmarkPath && itemTreePath == bookmarkTreePath)
-    {
-      removeBookmark(item);
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::removeBookmark(QTreeWidgetItem* item)
-{
-  //Remove favorite, graphically, from the DREAM3D interface
-  filterLibraryTree->removeItemWidget(item, 0);
-  filterLibraryTree->removeItemWidget(item, 1);
-  delete item;
-
-  // Write these changes out to the preferences file
-  emit fireWriteSettings();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::renameBookmark(QString oldName, QString newName, QString filePath, QString treePath)
-{
-  QList<QTreeWidgetItem*> list = filterLibraryTree->findItems(oldName, Qt::MatchExactly | Qt::MatchRecursive, 0);
-
-  for (int i = 0; i < list.size(); i++)
-  {
-    QTreeWidgetItem* item = list[i];
-    QString itemName = item->text(0);
-    QString itemFilePath = item->data(1, Qt::UserRole).toString();
-    QString itemTreePath = item->data(2, Qt::UserRole).toString();
-
-    if (itemName == oldName && itemFilePath == filePath && itemTreePath == treePath)
-    {
-      item->setText(0, newName);
-      item->setData(0, Qt::UserRole, newName);
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -702,25 +610,28 @@ bool BookmarksDockWidget::removeDir(const QString& dirName)
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
 {
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  //QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QModelIndex index = bookmarksTreeView->currentIndex();
+  QString name = model->index(index.row(), Name, index.parent()).data().toString();
+  QString path = model->index(index.row(), Path, index.parent()).data().toString();
 
   QMessageBox msgBox;
-  msgBox.setText("Are you sure that you want to remove \"" + item->text(0) + "\"?");
+  msgBox.setText("Are you sure that you want to remove \"" + name + "\"?");
   msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
   msgBox.setDefaultButton(QMessageBox::Yes);
   int ret = msgBox.exec();
 
   if (ret == QMessageBox::Yes)
   {
-    QString name = item->data(0, Qt::UserRole).toString();
-    QString path = item->data(1, Qt::UserRole).toString();
-    QString treePath = item->data(2, Qt::UserRole).toString();
+    //Remove favorite, graphically, from the DREAM3D interface
+    model->removeRow(index.row(), index.parent());
 
-    removeBookmark(item);
+    // Write these changes out to the preferences file
+    emit fireWriteSettings();
 
     // Resize the bookmarks widget header to contents
-    filterLibraryTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
   }
 }
 
@@ -730,8 +641,8 @@ void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionRenamePipeline_triggered()
 {
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  filterLibraryTree->editItem(item, 0);
+  QModelIndex index = bookmarksTreeView->currentIndex();
+  bookmarksTreeView->edit(index);
 }
 
 // -----------------------------------------------------------------------------
@@ -739,9 +650,11 @@ void BookmarksDockWidget::m_ActionRenamePipeline_triggered()
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionAddToPipelineView_triggered()
 {
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  BookmarksModel* model = BookmarksModel::Instance();
 
-  QString pipelinePath = item->data(1, Qt::UserRole).toString();
+  QModelIndex index = bookmarksTreeView->currentIndex();
+
+  QString pipelinePath = model->index(index.row(), Path, index.parent()).data().toString();
   if (pipelinePath.isEmpty() == false)
   {
     QFileInfo fi(pipelinePath);
@@ -755,10 +668,12 @@ void BookmarksDockWidget::m_ActionAddToPipelineView_triggered()
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionShowInFileSystem_triggered()
 {
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  if(item)
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QModelIndex index = bookmarksTreeView->currentIndex();
+  if(index.isValid())
   {
-    QString pipelinePath = item->data(1, Qt::UserRole).toString();
+    QString pipelinePath = model->index(index.row(), Path, index.parent()).data().toString();
 
     QFileInfo pipelinePathInfo(pipelinePath);
     QString pipelinePathDir = pipelinePathInfo.path();
@@ -788,26 +703,17 @@ void BookmarksDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs
   setHidden(b);
 
   QByteArray headerState = prefs.value("BookmarksHeaderState", QByteArray()).toByteArray();
-  filterLibraryTree->header()->restoreState(headerState);
+  bookmarksTreeView->header()->restoreState(headerState);
 
-  QJsonObject treeObj = prefs.value("Bookmarks Tree", QJsonObject());
-  FilterLibraryTreeWidget* newTree = FilterLibraryTreeWidget::FromJsonObject(treeObj);
+  QString path = prefs.fileName();
 
-  // Copy the children over to the filterLibraryTree.
-  filterLibraryTree->addTopLevelItems(newTree->invisibleRootItem()->takeChildren());
-
-  // Add expansion metadata for all folders, since we can only do this when everything is added to the tree
-  QTreeWidgetItemIterator iter(filterLibraryTree);
-  while (*iter)
+  BookmarksModel* model = BookmarksModel::Instance();
+  if (model->isEmpty())
   {
-    QTreeWidgetItem* item = *iter;
-    if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
-    {
-      item->setExpanded(item->data(2, Qt::UserRole).toBool());
-      item->setData(2, Qt::UserRole, "");
-    }
-    ++iter;
+    model = BookmarksModel::NewInstanceFromFile(path);
   }
+
+  bookmarksTreeView->setModel(model);
 }
 
 // -----------------------------------------------------------------------------
@@ -829,63 +735,12 @@ void BookmarksDockWidget::writeSettings(DREAM3DSettings& prefs)
 {
   prefs.setValue(objectName(), isHidden());
 
-  prefs.setValue("BookmarksHeaderState", filterLibraryTree->header()->saveState());
+  prefs.setValue("BookmarksHeaderState", bookmarksTreeView->header()->saveState());
 
-  QJsonObject treeObj = filterLibraryTree->toJsonObject();
-  prefs.setValue("Bookmarks Tree", treeObj);
-}
+  BookmarksModel* model = BookmarksModel::Instance();
+  QJsonObject modelObj = bookmarksTreeView->toJsonObject();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString BookmarksDockWidget::getTreePathFromItem(QTreeWidgetItem* item)
-{
-  QTreeWidgetItem* parentItem = item->parent();
-  QString treePath = "/" + item->text(0);
-
-  while (NULL != parentItem)
-  {
-    treePath.prepend(parentItem->text(0));
-    treePath.prepend("/");
-    parentItem = parentItem->parent();
-  }
-
-  return treePath;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QTreeWidgetItem* BookmarksDockWidget::getItemFromTreePath(QString treePath)
-{
-  QList<QString> stringList = deserializeTreePath(treePath);
-  
-  if (stringList.size() <= 0)
-  {
-    return filterLibraryTree->invisibleRootItem();
-  }
-
-  QList<QTreeWidgetItem*> possibleItems = filterLibraryTree->findItems(stringList.back(), Qt::MatchExactly | Qt::MatchRecursive);
-  stringList.pop_back();
-
-  QTreeWidgetItem* possibleItem = NULL;
-  for (int i = 0; i < possibleItems.size(); i++)
-  {
-    possibleItem = possibleItems[i];
-    QTreeWidgetItem* parentItem = possibleItem->parent();
-    for (int j = stringList.size() - 1; j >= 0; j--)
-    {
-      QString parentString = stringList[j];
-      if (NULL == parentItem || parentItem->text(0) != parentString)
-      {
-        possibleItem = NULL;
-        break;
-      }
-      parentItem = parentItem->parent();
-    }
-  }
-
-  return possibleItem;
+  prefs.setValue("Bookmarks Model", modelObj);
 }
 
 // -----------------------------------------------------------------------------

@@ -74,6 +74,22 @@ public:
   BookmarksTreeView(QWidget* parent = 0);
 
   /**
+  * @brief ~BookmarksTreeView()
+  */
+  ~BookmarksTreeView();
+
+  /**
+  * @brief fromJsonObject
+  * @param modelObject
+  */
+  static BookmarksModel* FromJsonObject(QJsonObject modelObject);
+
+  /**
+  * @brief toJsonObject
+  */
+  QJsonObject toJsonObject();
+
+  /**
   * @brief setNodeActionList
   * @param list
   */
@@ -97,6 +113,10 @@ public:
   */
   void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
 
+public slots:
+  void collapseIndex(const QModelIndex & index);
+  void expandIndex(const QModelIndex & index);
+
 protected:
   void mouseMoveEvent(QMouseEvent* event);
   void dragEnterEvent(QDragEnterEvent* event);
@@ -104,13 +124,17 @@ protected:
   void dragMoveEvent(QDragMoveEvent* event);
   void dropEvent(QDropEvent* event);
 
+  void currentChanged(const QModelIndex & current, const QModelIndex & previous) Q_DECL_OVERRIDE;
+
   /**
   * @brief Adds the actions in the actionList parameter to the right-click menu
   */
   void addActionList(QList<QAction*> actionList);
 
 signals:
-  void itemWasDropped(QTreeWidgetItem* parent, QString& title, QIcon icon, BookmarksTreeView::ItemType type, QString path, bool allowEditing, bool editState, bool isExpanding);
+  void itemWasDropped(QModelIndex parent, QString& title, QIcon icon, QString path, bool allowEditing, bool editState, bool isExpanding);
+  void currentIndexChanged(const QModelIndex & current, const QModelIndex & previous);
+  void folderChangedState(const QModelIndex &index, bool expand);
 
   private slots:
 
@@ -125,7 +149,7 @@ signals:
   * @param item
   * @param globalPos
   */
-  void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
+  void showContextMenu(QModelIndex index, const QPoint& globalPos);
 
   /**
   * @brief mousePressEvent
@@ -136,6 +160,8 @@ signals:
 private:
   void performDrag();
   void expandChildren(const QModelIndex &parent, BookmarksModel* model);
+  QJsonObject wrapModel(QModelIndex index);
+  static void UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 
   QPoint                    m_StartPos;
   QMenu                     m_Menu;

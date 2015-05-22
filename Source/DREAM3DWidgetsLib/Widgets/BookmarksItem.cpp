@@ -40,11 +40,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksItem::BookmarksItem(const QVector<QVariant> &data, bool expanded, BookmarksItem *parent)
+BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent)
 {
   m_ParentItem = parent;
   m_ItemData = data;
-  m_Expanded = expanded;
+  m_NeedsToBeExpanded = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -101,30 +101,14 @@ QVariant BookmarksItem::data(int column) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksItem::expanded() const
-{
-  return m_Expanded;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksItem::setExpanded(bool value)
-{
-  m_Expanded = value;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool BookmarksItem::insertChildren(int position, int count, int columns, bool expanded)
+bool BookmarksItem::insertChildren(int position, int count, int columns)
 {
   if (position < 0 || position > m_ChildItems.size())
     return false;
 
   for (int row = 0; row < count; ++row) {
     QVector<QVariant> data(columns);
-    BookmarksItem *item = new BookmarksItem(data, expanded, this);
+    BookmarksItem *item = new BookmarksItem(data, this);
     m_ChildItems.insert(position, item);
   }
 
@@ -197,4 +181,20 @@ bool BookmarksItem::setData(int column, const QVariant &value)
 
   m_ItemData[column] = value;
   return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BookmarksItem::needsToBeExpanded()
+{
+  return m_NeedsToBeExpanded;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksItem::setNeedsToBeExpanded(bool value)
+{
+  m_NeedsToBeExpanded = value;
 }

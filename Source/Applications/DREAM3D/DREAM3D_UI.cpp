@@ -179,6 +179,8 @@ void DREAM3D_UI::on_actionNew_triggered()
   newInstance->setWindowTitle("[*]UntitledPipeline - DREAM3D");
   newInstance->move(this->x() + 45, this->y() + 45);
 
+  connectSignalsSlots(newInstance);
+
   newInstance->show();
 }
 
@@ -239,6 +241,8 @@ void DREAM3D_UI::openNewPipeline(QString &filePath)
     // Show the new instance
     newInstance->setWindowModified(false);
     newInstance->move(this->x() + 45, this->y() + 45);
+
+    connectSignalsSlots(newInstance);
 
     newInstance->show();
   }
@@ -664,6 +668,24 @@ void DREAM3D_UI::connectSignalsSlots()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* other)
+{
+  connect(bookmarksDockWidget->getBookmarksTreeView(), SIGNAL(collapsed(const QModelIndex&)),
+    other->getBookmarksDockWidget()->getBookmarksTreeView(), SLOT(collapse(const QModelIndex&)));
+
+  connect(other->getBookmarksDockWidget()->getBookmarksTreeView(), SIGNAL(collapsed(const QModelIndex&)),
+    bookmarksDockWidget->getBookmarksTreeView(), SLOT(collapse(const QModelIndex&)));
+
+  connect(bookmarksDockWidget->getBookmarksTreeView(), SIGNAL(expanded(const QModelIndex&)),
+    other->getBookmarksDockWidget()->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
+
+  connect(other->getBookmarksDockWidget()->getBookmarksTreeView(), SIGNAL(expanded(const QModelIndex&)),
+    bookmarksDockWidget->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3D_UI::setupPipelineItemMenu()
 {
   QList<QAction*> favoriteItemActions;
@@ -696,7 +718,7 @@ void DREAM3D_UI::setupPipelineItemMenu()
 
   favoriteItemActions << m_ActionShowInFileSystem;
 
-  bookmarksDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(favoriteItemActions);
+  bookmarksDockWidget->getBookmarksTreeView()->setLeafActionList(favoriteItemActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -725,7 +747,7 @@ void DREAM3D_UI::setupFolderMenu()
 
   favoriteCategoryActions << m_ActionNewFolder;
 
-  bookmarksDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(favoriteCategoryActions);
+  bookmarksDockWidget->getBookmarksTreeView()->setNodeActionList(favoriteCategoryActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -746,7 +768,7 @@ void DREAM3D_UI::setupDefaultMenu()
   favoriteDefaultActions << m_ActionNewFolder;
   
 
-  bookmarksDockWidget->getFilterLibraryTreeWidget()->setDefaultActionList(favoriteDefaultActions);
+  bookmarksDockWidget->getBookmarksTreeView()->setDefaultActionList(favoriteDefaultActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -1547,6 +1569,14 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
 PipelineViewWidget* DREAM3D_UI::getPipelineViewWidget()
 {
   return pipelineViewWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+BookmarksDockWidget* DREAM3D_UI::getBookmarksDockWidget()
+{
+  return bookmarksDockWidget;
 }
 
 // -----------------------------------------------------------------------------

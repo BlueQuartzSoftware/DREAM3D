@@ -95,12 +95,12 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     static bool removeDir(const QString& dirName);
 
     /**
-     * @brief getFilterLibraryTreeWidget
+     * @brief getBookmarksTreeView
      * @return
      */
-    FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
+    BookmarksTreeView* getBookmarksTreeView();
 
-    QTreeWidgetItem* getSelectedParentTreeItem();
+    QModelIndex getSelectedParentTreeItem();
 
     void configureFilterLibraryTree();
 
@@ -119,27 +119,10 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void m_ActionNewFolder_triggered();
     void m_ActionAddPipeline_triggered();
     void m_ActionUpdatePipeline_triggered();
-    void removeBookmark(QTreeWidgetItem* item);
     void m_ActionRemovePipeline_triggered();
     void m_ActionRenamePipeline_triggered();
     void m_ActionAddToPipelineView_triggered();
     void m_ActionShowInFileSystem_triggered();
-    void removeBookmark(QString bookmarkName, QString bookmarkPath, QString bookmarkTreePath);
-    void renameBookmark(QString oldName, QString newName, QString filePath, QString treePath);
-
-    /**
-    * @brief Adds pipelines to the Bookmarks Dock Widget
-    */
-    void addPipelines(QList<QString> newPaths);
-
-    /**
-    * @brief Adds a folder to the Bookmarks Dock Widget
-    * @param name
-    * @param parentName
-    * @param parentTreePath
-    * @param editState
-    */
-    void addFolder(QString name, QString parentName, QString parentTreePath, bool editState);
 
   protected:
 
@@ -154,28 +137,24 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
   /**
   * @brief BookmarksDockWidget::addFavoriteTreeItem
-  * @param selection
+  * @param parent
   * @param favoriteTitle
   * @param icon
-  * @param itemType
   * @param favoritePath
   * @param allowEditing
   */
-  int addTreeItem(QTreeWidgetItem* selection,
+  int addTreeItem(QModelIndex parent,
     QString& favoriteTitle,
     QIcon icon,
-    FilterLibraryTreeWidget::ItemType itemType,
     QString favoritePath,
     bool allowEditing,
     bool editState,
     bool isExpanded);
 
     //// Slots to catch signals from the QTreeWidget
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
-
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+    void on_bookmarksTreeView_clicked(const QModelIndex & index);
+    void on_bookmarksTreeView_doubleClicked(const QModelIndex & index);
+    void on_bookmarksTreeView_currentIndexChanged(const QModelIndex & current, const QModelIndex & previous);
 
     void convertPipelines(QString newDirectory);
 
@@ -206,18 +185,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
   private:
     QString                 m_OpenDialogLastDirectory;
-
-    /**
-    * @brief getTreePathFromItem
-    * @param item
-    */
-    QString getTreePathFromItem(QTreeWidgetItem* item);
-
-    /**
-    * @brief getItemFromTreePath
-    * @param treePath
-    */
-    QTreeWidgetItem* getItemFromTreePath(QString treePath);
 
     /**
     * @brief serializeTreePath

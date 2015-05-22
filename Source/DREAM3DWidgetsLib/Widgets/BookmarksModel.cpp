@@ -36,6 +36,7 @@
 #include <QtWidgets>
 
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
+#include "DREAM3DWidgetsLib/Widgets/BookmarksTreeView.h"
 
 #include "QtSupportLib/DREAM3DSettings.h"
 
@@ -50,7 +51,7 @@ QAbstractItemModel(parent)
   QVector<QVariant> vector;
   vector.push_back("Name");
   vector.push_back("Path");
-  rootItem = new BookmarksItem(vector, true);
+  rootItem = new BookmarksItem(vector);
 }
 
 // -----------------------------------------------------------------------------
@@ -87,8 +88,12 @@ BookmarksModel* BookmarksModel::NewInstanceFromFile(QString filePath)
     self = NULL;
 
     DREAM3DSettings prefs(filePath);
-    QJsonObject modelObj = prefs.value("Test Model", QJsonObject());
-    self = BookmarksModel::FromJsonObject(modelObj);
+
+    prefs.beginGroup("DockWidgetSettings");
+    QJsonObject modelObj = prefs.value("Bookmarks Model", QJsonObject());
+    prefs.endGroup();
+
+    self = BookmarksTreeView::FromJsonObject(modelObj);
   }
 
   return self;
@@ -144,6 +149,7 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
   Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
 
   BookmarksItem* item = getItem(index);
+  QString name = item->data(Name).toString();
   if (item->data(Path).toString().isEmpty())
   {
     // This is a node
@@ -207,7 +213,7 @@ bool BookmarksModel::insertRows(int position, int rows, const QModelIndex &paren
   bool success;
 
   beginInsertRows(parent, position, position + rows - 1);
-  success = parentItem->insertChildren(position, rows, rootItem->columnCount(), false);
+  success = parentItem->insertChildren(position, rows, rootItem->columnCount());
   endInsertRows();
 
   return success;
@@ -272,122 +278,39 @@ bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::setExpanded(const QModelIndex &index, const bool expanded)
+void BookmarksModel::setNeedsToBeExpanded(const QModelIndex &index, bool value)
 {
   BookmarksItem *item = getItem(index);
-  item->setExpanded(expanded);
+  item->setNeedsToBeExpanded(value);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QJsonObject BookmarksModel::toJsonObject()
+bool BookmarksModel::needsToBeExpanded(const QModelIndex &index)
 {
-  QJsonObject treeObj;
-  for (int i = 0; i < rootItem->childCount(); i++)
-  {
-    QModelIndex childIndex = index(i, Name, QModelIndex());
-
-    QJsonObject childObj = wrapModel(childIndex);
-    treeObj["Child " + QString::number(i + 1)] = childObj;
-  }
-
-  return treeObj;
+  BookmarksItem *item = getItem(index);
+  return item->needsToBeExpanded();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QJsonObject BookmarksModel::wrapModel(QModelIndex currentIndex)
+BookmarksItem* BookmarksModel::getRootItem()
 {
-  QJsonObject obj;
-
-  for (int i = 0; i < rowCount(currentIndex); i++)
-  {
-    QModelIndex childIndex = index(i, 0, currentIndex);
-
-    QJsonObject childObj = wrapModel(childIndex);
-    obj["Child " + QString::number(i + 1)] = childObj;
-  }
-
-  QString name = index(currentIndex.row(), Name, parent(currentIndex)).data().toString();
-  QString path = index(currentIndex.row(), Path, parent(currentIndex)).data().toString();
-  bool expanded = isExpanded(currentIndex);
-
-  obj.insert("Name", name);
-
-  if (flags(currentIndex).testFlag(Qt::ItemIsDropEnabled) == true)
-  {
-    obj.insert("Expanded", isExpanded(currentIndex));
-  }
-  else
-  {
-    obj.insert("Path", path);
-  }
-
-  return obj;
+  return rootItem;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksModel* BookmarksModel::FromJsonObject(QJsonObject treeObject)
+bool BookmarksModel::isEmpty()
 {
-  BookmarksModel* model = new BookmarksModel();
-  
-  for (QJsonObject::iterator iter = treeObject.begin(); iter != treeObject.end(); ++iter)
+  if (rowCount(QModelIndex()) <= 0)
   {
-    QJsonValue val = *iter;
-    if (val.isObject())
-    {
-      BookmarksModel::UnwrapModel(val.toObject(), model, QModelIndex());
-    }
+    return true;
   }
-
-  return model;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksModel::UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex)
-{
-  int row = model->rowCount(parentIndex);
-  bool value = model->insertRow(row, parentIndex);
-  QModelIndex nameIndex = model->index(row, Name, parentIndex);
-  QModelIndex pathIndex = model->index(row, Path, parentIndex);
-
-  QString name = object["Name"].toString();
-  QString path = object["Path"].toString();
-  bool expanded = object["Expanded"].toBool();
-
-  model->setData(nameIndex, name);
-  model->setData(pathIndex, path);
-  model->setExpanded(nameIndex, expanded);
-  model->setExpanded(pathIndex, expanded);
-
-  for (QJsonObject::iterator iter = object.begin(); iter != object.end(); ++iter)
-  {
-    QJsonValue val = *iter;
-    if (val.isObject())
-    {
-      BookmarksModel::UnwrapModel(val.toObject(), model, nameIndex);
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool BookmarksModel::isExpanded(const QModelIndex &index)
-{
-  if (!index.isValid())
-  {
-    return false;
-  }
-
-  BookmarksItem* item = getItem(index);
-  return item->expanded();
+  return false;
 }
 
 

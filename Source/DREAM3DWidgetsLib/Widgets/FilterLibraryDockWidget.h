@@ -95,10 +95,10 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     void updateFilterGroupList(FilterManager::Collection& factories);
 
   protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
+    void on_bookmarksTreeView_itemClicked( QTreeWidgetItem* item, int column );
+    void on_bookmarksTreeView_itemChanged( QTreeWidgetItem* item, int column );
+    void on_bookmarksTreeView_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+    void on_bookmarksTreeView_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
     /**
     * @brief showContextMenuForWidget

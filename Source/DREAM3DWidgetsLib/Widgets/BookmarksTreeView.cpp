@@ -44,7 +44,9 @@
 #include <iostream>
 
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 BookmarksTreeView::BookmarksTreeView(QWidget* parent) :
 QTreeView(parent),
 m_IndexBeingDragged(QModelIndex()),
@@ -55,6 +57,17 @@ m_TopLevelItemPlaceholder(QModelIndex())
   connect(this,
     SIGNAL(customContextMenuRequested(const QPoint&)),
     SLOT(onCustomContextMenuRequested(const QPoint&)));
+
+  connect(this, SIGNAL(collapsed(const QModelIndex&)), SLOT(collapseIndex(const QModelIndex&)));
+  connect(this, SIGNAL(expanded(const QModelIndex&)), SLOT(expandIndex(const QModelIndex&)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+BookmarksTreeView::~BookmarksTreeView()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -98,18 +111,18 @@ void BookmarksTreeView::setDefaultActionList(QList<QAction*> list)
 // -----------------------------------------------------------------------------
 void BookmarksTreeView::onCustomContextMenuRequested(const QPoint& pos)
 {
-  //QTreeWidgetItem* item = itemAt(pos);
+  QModelIndex index = indexAt(pos);
 
-  //if (item)
-  //{
-  //  // Note: We must map the point to global from the viewport to
-  //  // account for the header.
-  //  showContextMenu(item, viewport()->mapToGlobal(pos));
-  //}
-  //else
-  //{
-  //  showContextMenu(NULL, mapToGlobal(pos));
-  //}
+  if (index.isValid())
+  {
+    // Note: We must map the point to global from the viewport to
+    // account for the header.
+    showContextMenu(index, viewport()->mapToGlobal(pos));
+  }
+  else
+  {
+    showContextMenu(QModelIndex(), mapToGlobal(pos));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -137,12 +150,14 @@ void BookmarksTreeView::mousePressEvent(QMouseEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos)
+void BookmarksTreeView::showContextMenu(QModelIndex index, const QPoint& globalPos)
 {
+  BookmarksModel* model = BookmarksModel::Instance();
+
   // Clear menu's previous actions
   m_Menu.clear();
 
-  if (item == NULL)
+  if (index.isValid() == false)
   {
     if (!m_LeafActions.isEmpty())
     {
@@ -151,23 +166,14 @@ void BookmarksTreeView::showContextMenu(QTreeWidgetItem* item, const QPoint& glo
   }
   else
   {
-    int itemType = item->type();
-    switch (itemType)
+    QString path = model->index(index.row(), Path, index.parent()).data().toString();
+    if (path.isEmpty() && !m_LeafActions.isEmpty())
     {
-    case Leaf_Item_Type:
-      if (!m_LeafActions.isEmpty())
-      {
-        addActionList(m_LeafActions);
-      }
-      break;
-
-
-    case Node_Item_Type:
-      if (!m_NodeActions.isEmpty())
-      {
-        addActionList(m_NodeActions);
-      }
-      break;
+      addActionList(m_LeafActions);
+    }
+    else if (path.isEmpty() == false && !m_NodeActions.isEmpty())
+    {
+      addActionList(m_NodeActions);
     }
   }
 
@@ -325,7 +331,6 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
       // Get information needed
       QString name = model->index(m_IndexBeingDragged.row(), Name, oldParent).data().toString();
       QString path = model->index(m_IndexBeingDragged.row(), Path, oldParent).data().toString();
-      bool isExpanding = model->isExpanded(m_IndexBeingDragged);
 
       if (model->removeRow(m_IndexBeingDragged.row(), oldParent))
       {
@@ -338,7 +343,7 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
 
       model->sort(Name, Qt::AscendingOrder);
       
-      model->setExpanded(newParent, true);
+      expand(newParent);
     }
   }
 }
@@ -365,13 +370,148 @@ void BookmarksTreeView::expandChildren(const QModelIndex &parent, BookmarksModel
   for (int row = 0; row < model->rowCount(parent); row++)
   {
     QModelIndex index = model->index(row, 0, parent);
-    if (model->isExpanded(index))
+    if (model->needsToBeExpanded(index))
     {
       expand(index);
     }
 
     // Recursive call, to expand all items in the tree
     expandChildren(index, model);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksTreeView::collapseIndex(const QModelIndex & index)
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+  QModelIndex sibling = model->sibling(index);
+
+  model->setNeedsToBeExpanded(index, false);
+  model->setNeedsToBeExpanded(sibling, false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksTreeView::expandIndex(const QModelIndex & index)
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+  QModelIndex sibling = model->sibling(index);
+
+  QTreeView::expand(index);
+  model->setNeedsToBeExpanded(index, true);
+  model->setNeedsToBeExpanded(sibling, true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksTreeView::currentChanged(const QModelIndex & current, const QModelIndex & previous)
+{
+  emit currentIndexChanged(current, previous);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonObject BookmarksTreeView::toJsonObject()
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+  BookmarksItem* rootItem = model->getRootItem();
+
+  QJsonObject treeObj;
+  for (int i = 0; i < rootItem->childCount(); i++)
+  {
+    QModelIndex childIndex = model->index(i, Name, QModelIndex());
+
+    QJsonObject childObj = wrapModel(childIndex);
+    treeObj["Child " + QString::number(i + 1)] = childObj;
+  }
+
+  return treeObj;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonObject BookmarksTreeView::wrapModel(QModelIndex currentIndex)
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QJsonObject obj;
+
+  for (int i = 0; i < model->rowCount(currentIndex); i++)
+  {
+    QModelIndex childIndex = model->index(i, 0, currentIndex);
+
+    QJsonObject childObj = wrapModel(childIndex);
+    obj["Child " + QString::number(i + 1)] = childObj;
+  }
+
+  QString name = model->index(currentIndex.row(), Name, model->parent(currentIndex)).data().toString();
+  QString path = model->index(currentIndex.row(), Path, model->parent(currentIndex)).data().toString();
+
+  obj.insert("Name", name);
+
+  if (model->flags(currentIndex).testFlag(Qt::ItemIsDropEnabled) == true)
+  {
+    obj.insert("Expanded", isExpanded(currentIndex));
+  }
+  else
+  {
+    obj.insert("Path", path);
+  }
+
+  return obj;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  for (QJsonObject::iterator iter = treeObject.begin(); iter != treeObject.end(); ++iter)
+  {
+    QJsonValue val = *iter;
+    if (val.isObject())
+    {
+      BookmarksTreeView::UnwrapModel(val.toObject(), model, QModelIndex());
+    }
+  }
+
+  return model;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex)
+{
+  int row = model->rowCount(parentIndex);
+  bool value = model->insertRow(row, parentIndex);
+  QModelIndex nameIndex = model->index(row, Name, parentIndex);
+  QModelIndex pathIndex = model->index(row, Path, parentIndex);
+
+  QString name = object["Name"].toString();
+  QString path = object["Path"].toString();
+  bool expanded = object["Expanded"].toBool();
+
+  model->setData(nameIndex, name);
+  model->setData(pathIndex, path);
+  model->setNeedsToBeExpanded(nameIndex, expanded);
+  model->setNeedsToBeExpanded(pathIndex, expanded);
+
+  for (QJsonObject::iterator iter = object.begin(); iter != object.end(); ++iter)
+  {
+    QJsonValue val = *iter;
+    if (val.isObject())
+    {
+      BookmarksTreeView::UnwrapModel(val.toObject(), model, nameIndex);
+    }
   }
 }
 

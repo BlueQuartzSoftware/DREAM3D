@@ -61,18 +61,12 @@ public:
 
   static BookmarksModel* NewInstanceFromFile(QString filePath);
 
-  /**
-  * @brief fromJsonObject
-  * @param modelObject
-  */
-  static BookmarksModel* FromJsonObject(QJsonObject modelObject);
-
   QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
   QModelIndex sibling(const QModelIndex &index);
 
-  bool isExpanded(const QModelIndex &index);
+  bool isEmpty();
 
   QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
   QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -86,19 +80,17 @@ public:
   Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
   bool setData(const QModelIndex &index, const QVariant &value);
-  void setExpanded(const QModelIndex &index, const bool expanded);
 
-  void setRootItem(const QModelIndex &index);
+  bool needsToBeExpanded(const QModelIndex &index);
+  void setNeedsToBeExpanded(const QModelIndex &index, bool value);
 
-  /**
-  * @brief toJsonObject
-  */
-  QJsonObject toJsonObject();
+  BookmarksItem* getRootItem();
 
-private:
+protected:
   BookmarksModel(QObject* parent = 0);
 
-  BookmarksItem *rootItem;
+private:
+  BookmarksItem*            rootItem;
 
   static BookmarksModel* self;
 
@@ -106,9 +98,6 @@ private:
 
   BookmarksModel(const BookmarksModel&);    // Copy Constructor Not Implemented
   void operator=(const BookmarksModel&);  // Operator '=' Not Implemented
-
-  QJsonObject wrapModel(QModelIndex index);
-  static void UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 };
 
 #endif // BookmarksModel_H

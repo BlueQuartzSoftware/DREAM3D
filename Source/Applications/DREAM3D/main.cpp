@@ -40,7 +40,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
 
-#include "TreeViewTest.h"
 #include "BrandedInitializer.h"
 
 #ifdef Q_WS_X11
@@ -89,15 +88,12 @@ int main(int argc, char* argv[])
 #endif
 
   setlocale(LC_NUMERIC, "C");
-  //BrandedInitializer d3dInitializer;
+  BrandedInitializer d3dInitializer;
 
-  //if (!d3dInitializer.initialize(argc, argv))
-  //{
-  //  return 1;
-  //}
-
-  TreeViewTest testApp;
-  testApp.show();
+  if (!d3dInitializer.initialize(argc, argv))
+  {
+    return 1;
+  }
 
   return qtapp.exec();
 }

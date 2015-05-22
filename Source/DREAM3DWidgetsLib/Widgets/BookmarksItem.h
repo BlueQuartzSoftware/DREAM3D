@@ -53,7 +53,7 @@ const QString topLevelString = "[Top Level]";
 class DREAM3DWidgetsLib_EXPORT BookmarksItem
 {
 public:
-  explicit BookmarksItem(const QVector<QVariant> &data, bool expanded, BookmarksItem *parent = 0);
+  explicit BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent = 0);
   ~BookmarksItem();
 
   BookmarksItem *child(int number);
@@ -65,10 +65,10 @@ public:
   QVariant data(int column) const;
   bool setData(int column, const QVariant &value);
 
-  bool expanded() const;
-  void setExpanded(bool value);
+  bool needsToBeExpanded();
+  void setNeedsToBeExpanded(bool value);
 
-  bool insertChildren(int position, int count, int columns, bool expanded);
+  bool insertChildren(int position, int count, int columns);
   bool insertColumns(int position, int columns);
 
   bool removeChildren(int position, int count);
@@ -80,7 +80,7 @@ private:
   QList<BookmarksItem*>               m_ChildItems;
   QVector<QVariant>                   m_ItemData;
   BookmarksItem*                      m_ParentItem;
-  bool                                m_Expanded;
+  bool                                m_NeedsToBeExpanded;
 
   BookmarksItem(const BookmarksItem&);    // Copy Constructor Not Implemented
   void operator=(const BookmarksItem&);  // Operator '=' Not Implemented

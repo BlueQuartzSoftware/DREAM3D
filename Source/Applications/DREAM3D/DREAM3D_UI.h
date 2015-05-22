@@ -112,6 +112,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     PipelineViewWidget* getPipelineViewWidget();
 
     /**
+    * @brief getBookmarksDockWidget
+    * @param
+    */
+    BookmarksDockWidget* getBookmarksDockWidget();
+
+    /**
     * @brief setOpenedFilePath
     * @param path
     */
@@ -317,6 +323,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief 
     */
     void connectSignalsSlots();
+
+    /**
+    * @brief
+    */
+    void connectSignalsSlots(DREAM3D_UI* other);
 
     /**
     * @brief 
