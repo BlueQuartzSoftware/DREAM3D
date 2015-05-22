@@ -580,12 +580,6 @@ void DREAM3D_UI::setupGui()
 
   setupViewMenu();
   setupPipelineContextMenu();
-
-  if (bookmarksDockWidget)
-  {
-    bookmarksDockWidget->configureFilterLibraryTree();
-  }
-
 }
 
 
@@ -862,7 +856,6 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionRenamePipeline = new QAction(menuPipeline);
   m_ActionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
   m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
-  menuPipeline->addAction(m_ActionRenamePipeline);
   QKeySequence m_ActionRenamePipelineKeySeq(Qt::CTRL + Qt::Key_R);
   m_ActionRenamePipeline->setShortcut(m_ActionRenamePipelineKeySeq);
   bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
@@ -873,7 +866,6 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionUpdatePipeline = new QAction(menuPipeline);
   m_ActionUpdatePipeline->setObjectName(QString::fromUtf8("m_ActionUpdatePipeline"));
   m_ActionUpdatePipeline->setText(QApplication::translate("DREAM3D_UI", "Update Pipeline", 0));
-  menuPipeline->addAction(m_ActionUpdatePipeline);
   QKeySequence m_ActionUpdatePipelineKeySeq(Qt::CTRL + Qt::Key_U);
   m_ActionUpdatePipeline->setShortcut(m_ActionUpdatePipelineKeySeq);
   connect(m_ActionUpdatePipeline, SIGNAL(triggered()),
@@ -887,7 +879,6 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionRemovePipeline = new QAction(menuPipeline);
   m_ActionRemovePipeline->setObjectName(QString::fromUtf8("m_ActionRemovePipeline"));
   m_ActionRemovePipeline->setText(QApplication::translate("DREAM3D_UI", "Remove Pipeline", 0));
-  menuPipeline->addAction(m_ActionRemovePipeline);
   QKeySequence m_ActionRemovePipelineKeySeq(Qt::CTRL + Qt::Key_Delete);
   m_ActionRemovePipeline->setShortcut(m_ActionRemovePipelineKeySeq);
   bookmarksDockWidget->setDeleteAction(m_ActionRemovePipeline);

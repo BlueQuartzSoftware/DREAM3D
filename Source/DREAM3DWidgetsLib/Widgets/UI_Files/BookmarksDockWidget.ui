@@ -96,6 +96,9 @@ padding-left: 5px;
       <property name="editTriggers">
        <set>QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
       </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
       <property name="dragDropMode">
        <enum>QAbstractItemView::InternalMove</enum>
       </property>
@@ -109,6 +112,9 @@ padding-left: 5px;
        <bool>true</bool>
       </property>
       <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="sortingEnabled">
        <bool>true</bool>
       </property>
       <property name="animated">

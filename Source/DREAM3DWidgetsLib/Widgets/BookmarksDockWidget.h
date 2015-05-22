@@ -102,8 +102,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
     QModelIndex getSelectedParentTreeItem();
 
-    void configureFilterLibraryTree();
-
     /**
     * @brief Reads the preferences from the users pref file
     */
@@ -156,7 +154,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void on_bookmarksTreeView_doubleClicked(const QModelIndex & index);
     void on_bookmarksTreeView_currentIndexChanged(const QModelIndex & current, const QModelIndex & previous);
 
-    void convertPipelines(QString newDirectory);
+    //void convertPipelines(QString newDirectory);
 
   signals:
 

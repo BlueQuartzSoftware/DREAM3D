@@ -101,17 +101,6 @@ void BookmarksDockWidget::connectFilterList(FilterListDockWidget* filterListWidg
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::setupGui()
 {
-  //// Clear out the default stuff
-  //bookmarksTreeView->clear();
-
-  //QDir pipelinesDir = findPipelinesDirectory();
-  //if (pipelinesDir.exists() && pipelinesDir.entryList().isEmpty() == false)
-  //{
-  //  FavoritesChangedDialog* dialog = new FavoritesChangedDialog(this);
-  //  connect(dialog, SIGNAL(exportBtnPressed(QString)), this, SLOT(convertPipelines(QString)));
-  //  dialog->exec();
-  //}
-
   QString css(" QToolTip {\
               border: 2px solid #434343;\
       padding: 2px;\
@@ -122,26 +111,6 @@ opacity: 255;\
   bookmarksTreeView->setStyleSheet(css);
 
   connect(bookmarksTreeView, SIGNAL(itemWasDropped(QModelIndex, QString&, QIcon, QString, bool, bool, bool)), this, SLOT(addTreeItem(QModelIndex, QString&, QIcon, QString, bool, bool, bool)));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::configureFilterLibraryTree()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  if(bookmarksTreeView)
-  {
-    for (int row = 0; row < model->rowCount(QModelIndex()); row++)
-    {
-      QModelIndex index = model->index(row, 0, QModelIndex());
-      if (index.isValid())
-      {
-        bookmarksTreeView->setCurrentIndex(index);
-      }
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -170,28 +139,28 @@ QDir BookmarksDockWidget::findPipelinesDirectory()
   return pipelinesDir;
 }
 
-// -----------------------------------------------------------------------------
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+//void BookmarksDockWidget::convertPipelines(QString newDirectory)
+//{
+//  QDir pipelinesDir = findPipelinesDirectory();
 //
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::convertPipelines(QString newDirectory)
-{
-  QDir pipelinesDir = findPipelinesDirectory();
-
-  FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
-  QString iconFileName(":/text.png");
-  bool allowEditing = true;
-  QStringList fileExtension;
-  fileExtension.append("*.txt");
-  fileExtension.append("*.ini");
-  fileExtension.append("*.json");
-
-  // Now block signals and load up all the pipelines in the folder
-  bookmarksTreeView->blockSignals(true);
-  //addPipelinesRecursively(pipelinesDir, bookmarksTreeView->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
-  // Sort the Favorite Tree by name(?)
-  bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);
-  bookmarksTreeView->blockSignals(false);
-}
+//  FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
+//  QString iconFileName(":/text.png");
+//  bool allowEditing = true;
+//  QStringList fileExtension;
+//  fileExtension.append("*.txt");
+//  fileExtension.append("*.ini");
+//  fileExtension.append("*.json");
+//
+//  // Now block signals and load up all the pipelines in the folder
+//  bookmarksTreeView->blockSignals(true);
+//  //addPipelinesRecursively(pipelinesDir, bookmarksTreeView->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
+//  // Sort the Favorite Tree by name(?)
+//  bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);
+//  bookmarksTreeView->blockSignals(false);
+//}
 
 // -----------------------------------------------------------------------------
 //

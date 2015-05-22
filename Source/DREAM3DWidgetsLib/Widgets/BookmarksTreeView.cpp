@@ -34,7 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "BookmarksTreeView.h"
+#include "DREAM3DWidgetsLib/Widgets/BookmarksTreeView.h"
+#include "DREAM3DWidgetsLib/Widgets/BookmarksItemDelegate.h"
 
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QApplication>
@@ -60,6 +61,9 @@ m_TopLevelItemPlaceholder(QModelIndex())
 
   connect(this, SIGNAL(collapsed(const QModelIndex&)), SLOT(collapseIndex(const QModelIndex&)));
   connect(this, SIGNAL(expanded(const QModelIndex&)), SLOT(expandIndex(const QModelIndex&)));
+
+  BookmarksItemDelegate* dlg = new BookmarksItemDelegate(this);
+  setItemDelegate(dlg);
 }
 
 // -----------------------------------------------------------------------------
@@ -167,11 +171,11 @@ void BookmarksTreeView::showContextMenu(QModelIndex index, const QPoint& globalP
   else
   {
     QString path = model->index(index.row(), Path, index.parent()).data().toString();
-    if (path.isEmpty() && !m_LeafActions.isEmpty())
+    if (path.isEmpty() == false && !m_LeafActions.isEmpty())
     {
       addActionList(m_LeafActions);
     }
-    else if (path.isEmpty() == false && !m_NodeActions.isEmpty())
+    else if (path.isEmpty() && !m_NodeActions.isEmpty())
     {
       addActionList(m_NodeActions);
     }
@@ -206,15 +210,12 @@ void BookmarksTreeView::performDrag()
   if (m_IndexBeingDragged.isValid())
   {
     QMimeData* mimeData = new QMimeData;
-    QString path = model->index(m_IndexBeingDragged.row(), 1, QModelIndex()).data().toString();
-    if (path.isEmpty() == false)
-    {
-      mimeData->setText(path);
+    QString path = model->index(m_IndexBeingDragged.row(), Path, m_IndexBeingDragged.parent()).data().toString();
+    mimeData->setText(path);
 
-      QDrag* drag = new QDrag(this);
-      drag->setMimeData(mimeData);
-      drag->exec(Qt::CopyAction);
-    }
+    QDrag* drag = new QDrag(this);
+    drag->setMimeData(mimeData);
+    drag->exec(Qt::CopyAction);
   }
 }
 
@@ -324,6 +325,12 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
 
       if (m_TopLevelItemPlaceholder.isValid())
       {
+        // If the parent is the placeholder, change the parent to the root.
+        if (m_TopLevelItemPlaceholder == newParent)
+        {
+          newParent = QModelIndex();
+        }
+
         model->removeRow(model->rowCount() - 1, rootIndex());
         m_TopLevelItemPlaceholder = QModelIndex();
       }
@@ -331,13 +338,19 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
       // Get information needed
       QString name = model->index(m_IndexBeingDragged.row(), Name, oldParent).data().toString();
       QString path = model->index(m_IndexBeingDragged.row(), Path, oldParent).data().toString();
-
-      if (model->removeRow(m_IndexBeingDragged.row(), oldParent))
+      
+      if (path.isEmpty())
       {
-        model->insertRow(0, newParent);
-        QModelIndex newNameIndex = model->index(0, Name, newParent);
+
+      }
+      else
+      {
+        model->removeRow(m_IndexBeingDragged.row(), oldParent);
+        int rowPos = model->rowCount(newParent);
+        model->insertRow(rowPos, newParent);
+        QModelIndex newNameIndex = model->index(rowPos, Name, newParent);
         model->setData(newNameIndex, name);
-        QModelIndex newPathIndex = model->index(0, Path, newParent);
+        QModelIndex newPathIndex = model->index(rowPos, Path, newParent);
         model->setData(newPathIndex, path);
       }
 
