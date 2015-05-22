@@ -342,7 +342,7 @@ void InsertAtoms::dataCheck()
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(1, DREAM3D::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, DREAM3D::Geometry::VertexGeometry);
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
@@ -401,7 +401,6 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(count, DREAM3D::VertexData::SurfaceMeshNodes);
-
 
   AttributeMatrix::Pointer vertexAttrMat = v->getAttributeMatrix(getVertexAttributeMatrixName());
   QVector<size_t> tDims(1, count);
