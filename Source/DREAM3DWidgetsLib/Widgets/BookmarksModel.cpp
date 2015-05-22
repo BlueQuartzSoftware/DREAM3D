@@ -141,16 +141,18 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
   if (!index.isValid())
     return 0;
 
+  Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+
   BookmarksItem* item = getItem(index);
   if (item->data(Path).toString().isEmpty())
   {
     // This is a node
-    return (Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+    return (defaultFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
   }
   else
   {
     // This is a leaf
-    return (Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
+    return (defaultFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
   }
 }
 
