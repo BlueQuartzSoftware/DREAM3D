@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,24 +37,16 @@
 #ifndef _LaplacianSmoothing_H_
 #define _LaplacianSmoothing_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "Plugins/SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
+#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 #define OUTPUT_DEBUG_VTK_FILES 1
 
-
 /**
- * @class LaplacianSmoothing LaplacianSmoothing.h SurfaceMesh/Code/SurfaceMeshFilters/LaplacianSmoothing.h
- * @brief This filter performs a Laplacian smoothing operation on a surface mesh. Some of the options allow
- * the user to set specific lambda values for the various types of nodes that the surface meshers generate.
- * @author Michael Jackson (mike.jackson@bluequartz.net)
- * @date   Oct 2012
- * @version 1.0
+ * @brief The LaplacianSmoothing class. See [Filter documentation](@ref laplaciansmoothing) for details.
  */
 class LaplacianSmoothing : public SurfaceMeshFilter
 {
@@ -65,28 +57,34 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, SurfaceMeshFilter)
 
     virtual ~LaplacianSmoothing();
+
     DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-    // We need these arrays for this filter to work correctly
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, IterationSteps)
     Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
+
     DREAM3D_FILTER_PARAMETER(float, Lambda)
     Q_PROPERTY(float Lambda READ getLambda WRITE setLambda)
+
     DREAM3D_FILTER_PARAMETER(float, SurfacePointLambda)
     Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
+
     DREAM3D_FILTER_PARAMETER(float, TripleLineLambda)
     Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
+
     DREAM3D_FILTER_PARAMETER(float, QuadPointLambda)
     Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
+
     DREAM3D_FILTER_PARAMETER(float, SurfaceTripleLineLambda)
     Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
+
     DREAM3D_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
     Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
 
@@ -99,12 +97,6 @@ class LaplacianSmoothing : public SurfaceMeshFilter
      */
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
 
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -154,27 +146,19 @@ class LaplacianSmoothing : public SurfaceMeshFilter
   protected:
     LaplacianSmoothing();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
     /**
-     * @brief This method generates the Lambda array that will be use during the smoothing
-     * @return
+     * @brief generateLambdaArray Generates the Lambda array that will be use during the smoothing
+     * @return Integer error code
      */
-    virtual int generateLambdaArray();
+    virtual int32_t generateLambdaArray();
 
     /**
-     * @brief This version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
-     * @return
+     * @brief edgeBasedSmoothing Version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
+     * @return Integer error code
      */
-    virtual int edgeBasedSmoothing();
+    virtual int32_t edgeBasedSmoothing();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
@@ -185,10 +169,3 @@ class LaplacianSmoothing : public SurfaceMeshFilter
 };
 
 #endif /* _LaplacianSmoothing_H_ */
-
-
-
-
-
-
-

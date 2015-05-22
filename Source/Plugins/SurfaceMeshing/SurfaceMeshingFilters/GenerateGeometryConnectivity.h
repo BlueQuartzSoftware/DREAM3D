@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,25 +34,17 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
 #ifndef _GenerateGeometryConnectivity_H_
 #define _GenerateGeometryConnectivity_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
-
 /**
- * @class GenerateGeometryConnectivity GenerateGeometryConnectivity.h DREAM3DLib/SurfaceMeshing/GenerateGeometryConnectivity.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The GenerateGeometryConnectivity class. See [Filter documentation](@ref generategeometryconnectivity) for details.
  */
 class GenerateGeometryConnectivity : public SurfaceMeshFilter
 {
@@ -73,11 +65,6 @@ class GenerateGeometryConnectivity : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
     Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -126,15 +113,12 @@ class GenerateGeometryConnectivity : public SurfaceMeshFilter
 
   protected:
     GenerateGeometryConnectivity();
+
     void dataCheck();
 
   private:
-
     GenerateGeometryConnectivity(const GenerateGeometryConnectivity&); // Copy Constructor Not Implemented
     void operator=(const GenerateGeometryConnectivity&); // Operator '=' Not Implemented
 };
 
 #endif /* _GenerateGeometryConnectivity_H_ */
-
-
-

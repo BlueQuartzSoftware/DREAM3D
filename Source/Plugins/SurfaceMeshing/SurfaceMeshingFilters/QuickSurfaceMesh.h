@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,27 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _QuickSurfaceMesh_H_
 #define _QuickSurfaceMesh_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-
-
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
-
-
-/*
- *
+/**
+ * @brief The QuickSurfaceMesh class. See [Filter documentation](@ref quicksurfacemesh) for details.
  */
 class QuickSurfaceMesh : public AbstractFilter
 {
@@ -64,10 +55,13 @@ class QuickSurfaceMesh : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
 
     virtual ~QuickSurfaceMesh();
+
     DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
@@ -119,20 +113,19 @@ class QuickSurfaceMesh : public AbstractFilter
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FaceLabels)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, NodeTypes)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FacePhases)
 
     void dataCheck();
+
     void updateFaceInstancePointers();
+
     void updateVertexInstancePointers();
 
     QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented
-
 };
 
 #endif /* QuickSurfaceMesh_H_ */
-
-
-

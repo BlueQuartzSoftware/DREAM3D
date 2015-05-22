@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,23 +37,12 @@
 #ifndef _SampleSurfaceMesh_H_
 #define _SampleSurfaceMesh_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "Sampling/SamplingConstants.h"
 /**
- * @class SampleSurfaceMesh SampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/SampleSurfaceMesh.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The SampleSurfaceMesh class serves as a superclass for filters to sample IGeometry surface mesh objects.
  */
 class SampleSurfaceMesh : public AbstractFilter
 {
@@ -68,9 +57,11 @@ class SampleSurfaceMesh : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Sample Surface Mesh"; }
+    virtual const QString getCompiledLibraryName();
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**
@@ -100,17 +91,19 @@ class SampleSurfaceMesh : public AbstractFilter
   protected:
     SampleSurfaceMesh();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
+    /**
+     * @brief generate_points Returns a VertexGeom object whose points correspond to the sampling
+     * input points from the user
+     * @return VertexGeom object
+     */
     virtual VertexGeom::Pointer generate_points();
+
+    /**
+     * @brief assign_points Assigns the voxel-level Feature Ids to the Ids sampled in the superclass
+     * @param iArray Sampled Feature Ids from superclass
+     */
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:

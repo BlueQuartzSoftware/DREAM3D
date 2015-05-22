@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -362,35 +362,35 @@ namespace DREAM3D
     const DREAM3D_STRING AtomFeatureLabels("AtomFeatureLabels");
     const DREAM3D_STRING NumberOfArms("NumberOfArms");
     const DREAM3D_STRING NodeConstraints("NodeConstraints");
-    const DREAM3D_STRING SurfaceMeshNodes("SurfaceMeshNodes");
-    const DREAM3D_STRING SurfaceMeshNodeType("SurfaceMeshNodeType");
-    const DREAM3D_STRING SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
-    const DREAM3D_STRING SurfaceMeshNodeFaces("SurfaceMeshNodeFaces");
+    const DREAM3D_STRING SurfaceMeshNodes("Nodes");
+    const DREAM3D_STRING SurfaceMeshNodeType("NodeType");
+    const DREAM3D_STRING SurfaceMeshNodeNormals("NodeNormals");
+    const DREAM3D_STRING SurfaceMeshNodeFaces("NodeFaces");
   }
 
   namespace FaceData
   {
-    const DREAM3D_STRING SurfaceMeshFaces("SurfaceMeshFaces");
-    const DREAM3D_STRING SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
-    const DREAM3D_STRING SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
-    const DREAM3D_STRING SurfaceMeshFaceSchuhMisorientationColors("SurfaceMeshFaceSchuhMisorientationColors");
-    const DREAM3D_STRING SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
-    const DREAM3D_STRING SurfaceMeshFacePhases("SurfaceMeshFacePhases");
-    const DREAM3D_STRING SurfaceMeshF1s("SurfaceMeshF1s");
-    const DREAM3D_STRING SurfaceMeshF1spts("SurfaceMeshF1spts");
-    const DREAM3D_STRING SurfaceMeshF7s("SurfaceMeshF7s");
-    const DREAM3D_STRING SurfaceMeshmPrimes("SurfaceMeshmPrimes");
+    const DREAM3D_STRING SurfaceMeshFaces("Faces");
+    const DREAM3D_STRING SurfaceMeshFaceIPFColors("IPFColors");
+    const DREAM3D_STRING SurfaceMeshFaceMisorientationColors("MisorientationColors");
+    const DREAM3D_STRING SurfaceMeshFaceSchuhMisorientationColors("SchuhMisorientationColors");
+    const DREAM3D_STRING SurfaceMeshFaceLabels("FaceLabels");
+    const DREAM3D_STRING SurfaceMeshFacePhases("Phases");
+    const DREAM3D_STRING SurfaceMeshF1s("F1s");
+    const DREAM3D_STRING SurfaceMeshF1spts("F1spts");
+    const DREAM3D_STRING SurfaceMeshF7s("F7s");
+    const DREAM3D_STRING SurfaceMeshmPrimes("mPrimes");
     const DREAM3D_STRING SurfaceMeshVoxels("SurfaceMeshVoxels");
-    const DREAM3D_STRING SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
-    const DREAM3D_STRING SurfaceMeshFaceAreas("SurfaceMeshFaceAreas");
-    const DREAM3D_STRING SurfaceMeshTwinBoundary("SurfaceMeshTwinBoundary");
-    const DREAM3D_STRING SurfaceMeshTwinBoundaryIncoherence("SurfaceMeshTwinBoundaryIncoherence");
-    const DREAM3D_STRING SurfaceMeshTwinBoundarySchmidFactors("SurfaceMeshTwinBoundarySchmidFactors");
-    const DREAM3D_STRING SurfaceMeshFaceDihedralAngles("SurfaceMeshFaceDihedralAngles");
-    const DREAM3D_STRING SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
-    const DREAM3D_STRING SurfaceMeshFeatureFaceId("SurfaceMeshFeatureFaceId");
-    const DREAM3D_STRING SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
-    const DREAM3D_STRING SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
+    const DREAM3D_STRING SurfaceMeshFaceCentroids("FaceCentroids");
+    const DREAM3D_STRING SurfaceMeshFaceAreas("FaceAreas");
+    const DREAM3D_STRING SurfaceMeshTwinBoundary("TwinBoundary");
+    const DREAM3D_STRING SurfaceMeshTwinBoundaryIncoherence("TwinBoundaryIncoherence");
+    const DREAM3D_STRING SurfaceMeshTwinBoundarySchmidFactors("TwinBoundarySchmidFactors");
+    const DREAM3D_STRING SurfaceMeshFaceDihedralAngles("FaceDihedralAngles");
+    const DREAM3D_STRING SurfaceMeshFaceNormals("FaceNormals");
+    const DREAM3D_STRING SurfaceMeshFeatureFaceId("FeatureFaceId");
+    const DREAM3D_STRING SurfaceMeshGaussianCurvatures("GaussianCurvatures");
+    const DREAM3D_STRING SurfaceMeshMeanCurvatures("MeanCurvatures");
     const DREAM3D_STRING SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
     const DREAM3D_STRING SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
     const DREAM3D_STRING SurfaceMeshPrincipalDirection1("PrincipalDirection1");

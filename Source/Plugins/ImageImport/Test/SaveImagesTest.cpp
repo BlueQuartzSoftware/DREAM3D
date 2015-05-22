@@ -229,7 +229,7 @@ void SaveImagesTest(AbstractFilter::Pointer filter, DataContainerArray::Pointer 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SaveImages()
+int WriteImages()
 {
   DataContainerArray::Pointer dca;
 
@@ -292,7 +292,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST( loadFilterPlugins() );
   DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-  DREAM3D_REGISTER_TEST(SaveImages())
+  DREAM3D_REGISTER_TEST(WriteImages())
 
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();

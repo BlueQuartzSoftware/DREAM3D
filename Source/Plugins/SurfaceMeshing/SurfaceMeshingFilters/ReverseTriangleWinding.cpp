@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,10 +34,10 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include "ReverseTriangleWinding.h"
+
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
-#include "ReverseTriangleWinding.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -45,10 +45,11 @@
 #include <tbb/partitioner.h>
 #endif
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 /**
- * @brief The CalculateNormalsImpl class is the actual code that does the computation and can be called either
- * from serial code or from Parallelized code (using TBB).
+ * @brief The ReverseWindingImpl class implements a threaded algorithm that reverses the node
+ * windings for a set of triangles
  */
 class ReverseWindingImpl
 {
@@ -60,11 +61,6 @@ class ReverseWindingImpl
     {}
     virtual ~ReverseWindingImpl() {}
 
-    /**
-     * @brief generate Generates the Normals for the triangles
-     * @param start The starting Triangle Index
-     * @param end The ending Triangle Index
-     */
     void generate(size_t start, size_t end) const
     {
       int64_t* triangles = m_Triangles->getPointer(0);
@@ -72,8 +68,8 @@ class ReverseWindingImpl
       for (size_t i = start; i < end; i++)
       {
         // Swap the indices
-        int nId0 = triangles[i*3+0];
-        int nId2 = triangles[i*3+2];
+        int64_t nId0 = triangles[i*3+0];
+        int64_t nId2 = triangles[i*3+2];
 
         triangles[i*3+0] = nId2;
         triangles[i*3+2] = nId0;
@@ -90,12 +86,7 @@ class ReverseWindingImpl
       generate(r.begin(), r.end());
     }
 #endif
-
-
 };
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -121,7 +112,7 @@ void ReverseTriangleWinding::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Surface Data Contaienr Name", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -152,20 +143,8 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::dataCheck()
 {
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-
-  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0) { return; }
-
-  // We MUST have Triangles defined also.
-  if (NULL == triangles->getTriangles().get())
-  {
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
-  }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceDataContainerName());
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -185,19 +164,16 @@ void ReverseTriangleWinding::preflight()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
 #endif
 
-  // No check because datacheck() made sure we can do the next line.
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -213,7 +189,6 @@ void ReverseTriangleWinding::execute()
     ReverseWindingImpl serial(triangleGeom->getTriangles());
     serial.generate(0, triangleGeom->getNumberOfTris());
   }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -238,13 +213,11 @@ AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilte
 const QString ReverseTriangleWinding::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getGroupName()
 { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -252,10 +225,8 @@ const QString ReverseTriangleWinding::getGroupName()
 const QString ReverseTriangleWinding::getSubGroupName()
 { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getHumanLabel()
 { return "Reverse Triangle Winding"; }
-

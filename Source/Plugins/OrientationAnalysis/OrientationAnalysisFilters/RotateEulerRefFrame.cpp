@@ -70,14 +70,14 @@ class RotateEulerRefFrameImpl
 
     void convert(size_t start, size_t end) const
     {
-      float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       FOrientArrayType om(9, 0.0f);
       FOrientTransformsType::ax2om(FOrientArrayType(axis.x, axis.y, axis.z, angle), om);
       om.toGMatrix(rotMat);
 
       float ea1 = 0, ea2 = 0, ea3 = 0;
-      float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      float gNew[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } , { 0.0f, 0.0f, 0.0f } };
+      float gNew[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       for (size_t i = start; i < end; i++)
       {
         ea1 = m_CellEulerAngles[3 * i + 0];
@@ -94,7 +94,7 @@ class RotateEulerRefFrameImpl
         // Euler angles will be directly written to the m_CellEulerAngles array
         // at the proper spot
         FOrientArrayType eu( m_CellEulerAngles + (3 * i), 3);
-        FOrientTransformsType::om2eu(om, eu);
+        FOrientTransformsType::om2eu(FOrientArrayType(gNew), eu);
       }
     }
 

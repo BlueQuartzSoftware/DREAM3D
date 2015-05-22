@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,25 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _SharedFeatureFaceFilter_H_
 #define _SharedFeatureFaceFilter_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
-
 /**
- * @class SharedFeatureFaceFilter SharedFeatureFaceFilter.h SurfaceMeshing/SurfaceMeshingFilters/SharedFeatureFaceFilter.h
- * @brief This filter groups triangles together in a way where each group would define a feature face where the group
- * of triangles share a common pair of feature ids or region ids.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 28, 2012
- * @version 1.0
+ * @brief The SharedFeatureFaceFilter class. See [Filter documentation](@ref sharedfeaturefacefilter) for details.
  */
 class SharedFeatureFaceFilter : public SurfaceMeshFilter
 {
@@ -63,8 +56,7 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
 
     virtual ~SharedFeatureFaceFilter();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    typedef QVector<int> FaceIds_t;
+    typedef QVector<int32_t> FaceIds_t;
     typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
     DREAM3D_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
@@ -82,11 +74,6 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -136,18 +123,11 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
   protected:
     SharedFeatureFaceFilter();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
@@ -157,6 +137,3 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
 };
 
 #endif /* _FeatureFaceFilter_H_ */
-
-
-

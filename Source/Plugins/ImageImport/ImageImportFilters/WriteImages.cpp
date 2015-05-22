@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SaveImages.h"
+#include "WriteImages.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SaveImages::SaveImages() :
+WriteImages::WriteImages() :
   AbstractFilter(),
   m_FilePrefix(false),
   m_ImagePrefix(""),
@@ -66,14 +66,14 @@ SaveImages::SaveImages() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SaveImages::~SaveImages()
+WriteImages::~WriteImages()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SaveImages::setupFilterParameters()
+void WriteImages::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
@@ -115,7 +115,7 @@ void SaveImages::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void WriteImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()) );
@@ -130,7 +130,7 @@ void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int WriteImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
@@ -147,7 +147,7 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SaveImages::dataCheck()
+void WriteImages::dataCheck()
 {
   setErrorCondition(0);
 
@@ -213,7 +213,7 @@ void SaveImages::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SaveImages::preflight()
+void WriteImages::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -226,7 +226,7 @@ void SaveImages::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SaveImages::execute()
+void WriteImages::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -267,7 +267,7 @@ void SaveImages::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
+int WriteImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 {
   int err = 0;
   // Sets up for Gray Scale or RGB or RGBA arrays
@@ -348,9 +348,9 @@ int SaveImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SaveImages::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WriteImages::newFilterInstance(bool copyFilterParameters)
 {
-  SaveImages::Pointer filter = SaveImages::New();
+  WriteImages::Pointer filter = WriteImages::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -361,27 +361,27 @@ AbstractFilter::Pointer SaveImages::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SaveImages::getCompiledLibraryName()
+const QString WriteImages::getCompiledLibraryName()
 { return ImageImportConstants::ImageImportBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SaveImages::getGroupName()
+const QString WriteImages::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SaveImages::getSubGroupName()
+const QString WriteImages::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SaveImages::getHumanLabel()
+const QString WriteImages::getHumanLabel()
 { return "Write Images"; }
 

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "TriangleNormalFilter.h"
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -48,10 +47,11 @@
 #include <tbb/partitioner.h>
 #endif
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 /**
- * @brief The CalculateNormalsImpl class is the actual code that does the computation and can be called either
- * from serial code or from Parallelized code (using TBB).
+ * @brief The CalculateNormalsImpl class implements a threaded algorithm that computes the normal for
+ * each triangle in a set of triangles
  */
 class CalculateNormalsImpl
 {
@@ -69,11 +69,6 @@ class CalculateNormalsImpl
     {}
     virtual ~CalculateNormalsImpl() {}
 
-    /**
-     * @brief generate Generates the Normals for the triangles
-     * @param start The starting Index
-     * @param end The ending Index
-     */
     void generate(size_t start, size_t end) const
     {
       float* nodes = m_Nodes->getPointer(0);
@@ -105,8 +100,6 @@ class CalculateNormalsImpl
       generate(r.begin(), r.end());
     }
 #endif
-
-
 };
 
 // -----------------------------------------------------------------------------
@@ -137,7 +130,7 @@ void TriangleNormalFilter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Face Attribute Matrix Name", "FaceAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshTriangleNormals", "SurfaceMeshTriangleNormalsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleNormalsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Face Normals", "SurfaceMeshTriangleNormalsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleNormalsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -171,36 +164,16 @@ int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 void TriangleNormalFilter::dataCheck()
 {
   setErrorCondition(0);
-
   DataArrayPath tempPath;
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
 
-  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0) { return; }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName());
 
-  // We MUST have Nodes
-  if (NULL == triangles->getVertices().get())
-  {
-    setErrorCondition(-386);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
-  }
-  // We MUST have Triangles defined also.
-  if (NULL == triangles->getTriangles().get())
-  {
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
-  }
-  else
-  {
-    QVector<size_t> dims(1, 3);
-    tempPath.update(getFaceAttributeMatrixName().getDataContainerName(), getFaceAttributeMatrixName().getAttributeMatrixName(), getSurfaceMeshTriangleNormalsArrayName() );
-    m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+  QVector<size_t> cDims(1, 3);
+  tempPath.update(getFaceAttributeMatrixName().getDataContainerName(), getFaceAttributeMatrixName().getAttributeMatrixName(), getSurfaceMeshTriangleNormalsArrayName() );
+  m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -220,28 +193,23 @@ void TriangleNormalFilter::preflight()
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getFaceAttributeMatrixName().getDataContainerName());
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
-  // No check because datacheck() made sure we can do the next line.
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;
 #endif
 
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
                       CalculateNormalsImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
-
   }
   else
 #endif
@@ -272,13 +240,11 @@ AbstractFilter::Pointer TriangleNormalFilter::newFilterInstance(bool copyFilterP
 const QString TriangleNormalFilter::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleNormalFilter::getGroupName()
 { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -286,10 +252,8 @@ const QString TriangleNormalFilter::getGroupName()
 const QString TriangleNormalFilter::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MiscFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleNormalFilter::getHumanLabel()
-{ return "Generate Triangle Normals Filter"; }
-
+{ return "Generate Triangle Normals"; }

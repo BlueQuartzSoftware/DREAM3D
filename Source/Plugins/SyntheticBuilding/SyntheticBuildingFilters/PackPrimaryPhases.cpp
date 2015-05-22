@@ -2854,20 +2854,17 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
 const QString PackPrimaryPhases::getCompiledLibraryName()
 { return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PackPrimaryPhases::getGroupName()
 { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PackPrimaryPhases::getSubGroupName()
 { return DREAM3D::FilterSubGroups::PackingFilters; }
-
 
 // -----------------------------------------------------------------------------
 //

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,24 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _ReverseTriangleWinding_H_
 #define _ReverseTriangleWinding_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
-
 /**
- * @class ReverseTriangleWinding ReverseTriangleWinding.h DREAM3DLib/SurfaceMeshFilters/ReverseTriangleWinding.h
- * @brief This filter reverses the triangle winding for a surface mesh
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Jan 10, 2013
- * @version 1.0
+ * @brief The ReverseTriangleWinding class. See [Filter documentation](@ref reversetrianglewinding) for details.
  */
 class ReverseTriangleWinding : public SurfaceMeshFilter
 {
@@ -61,16 +55,10 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(ReverseTriangleWinding, SurfaceMeshFilter)
 
     virtual ~ReverseTriangleWinding();
+
     DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -120,14 +108,6 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
   protected:
     ReverseTriangleWinding();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
@@ -137,6 +117,3 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
 };
 
 #endif /* _ReverseTriangleWinding_H_ */
-
-
-

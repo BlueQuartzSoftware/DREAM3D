@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -516,8 +516,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 
     /**
      * @brief validateNumberOfTuples This method will validate that all of the DataArray
-     * paths supplied are valid, return non-NULL DataArray pointers, and that all are
-     * have the same number of tuples.  It will return false if and any of the checks fail, or
+     * paths supplied are valid, return non-NULL DataArray pointers, and that all have the 
+     * same number of tuples.  It will return false if and any of the checks fail, or
      * if the QVector of input paths has 0 or 1 element.
      * @param filter The filter calling the validation
      * @param paths The paths that should be checked
@@ -586,9 +586,48 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       return valid;
     }
 
+    /**
+     * @brief validateNumberOfTuples This method will validate that all of the DataArray
+     * objects supplied are non-NULL and that all are have the same number of tuples.
+     * It will return false if and any of the checks fail, or
+     * if the QVector of input DataArray objects has 0 or 1 element.
+     * @param filter The filter calling the validation
+     * @param paths The paths that should be checked
+     * @return bool Validation check
+     */
+    template<typename Filter>
+    bool validateNumberOfTuples(Filter* filter, QVector<IDataArray::Pointer> dataArrays)
+    {
+      if (dataArrays.size() <= 1) { return false; }
+      bool valid = true;
+      QString ss;
+      for (int32_t i = 0; i < dataArrays.size(); i++)
+      {
+        if (NULL == dataArrays.at(0).get() && NULL != filter)
+        {
+          filter->setErrorCondition(-10100);
+          ss = QObject::tr("DataContainerArray::validateNumberOfTuples Error at line %1. The DataArray object was not available").arg(__LINE__);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          valid = false;
+        }
+      }
+      size_t numTuples = dataArrays[0]->getNumberOfTuples();
+      for (int32_t i = 1; i < dataArrays.size(); i++)
+      {
+        if (numTuples != dataArrays[i]->getNumberOfTuples() && NULL != filter)
+        {
+          filter->setErrorCondition(-10200);
+          ss = QObject::tr("The number of Tuples for the DataArray '%1' is '%2' and for DataArray '%3' is '%4'. The number of tuples must match.")
+              .arg(dataArrays[i-1]->getName()).arg(dataArrays[i-1]->getNumberOfTuples()).arg(dataArrays[i]->getName()).arg(dataArrays[i]->getNumberOfTuples());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          valid = false;
+        }
+      }
+      return valid;
+    }
+
   protected:
     DataContainerArray();
-
 
   private:
     QList<DataContainer::Pointer>  m_Array;

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,26 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _TriangleNormalFilter_H_
 #define _TriangleNormalFilter_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-#include "SurfaceMeshing/SurfaceMeshingConstants.h"
-
 /**
- * @class TriangleNormalFilter TriangleNormalFilter.h /SurfaceMeshFilters/TriangleNormalFilter.h
- * @brief This filter calculates the normal of each triangle in the surface mesh. The calculated normals have been
- * normalized themselves. This filter is parallelized using the Threading Building Blocks library and will attempt to
- * use the optimal number of processors to do the computation.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
- * @version 1.0
+ * @brief The TriangleNormalFilter class. See [Filter documentation](@ref trianglenormalfilter) for details.
  */
 class TriangleNormalFilter : public SurfaceMeshFilter
 {
@@ -67,11 +59,6 @@ class TriangleNormalFilter : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixName)
     Q_PROPERTY(DataArrayPath FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleNormalsArrayName)
     Q_PROPERTY(QString SurfaceMeshTriangleNormalsArrayName READ getSurfaceMeshTriangleNormalsArrayName WRITE setSurfaceMeshTriangleNormalsArrayName)
 
@@ -124,14 +111,6 @@ class TriangleNormalFilter : public SurfaceMeshFilter
   protected:
     TriangleNormalFilter();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
@@ -142,6 +121,3 @@ class TriangleNormalFilter : public SurfaceMeshFilter
 };
 
 #endif /* _TriangleNormalFilter_H_ */
-
-
-

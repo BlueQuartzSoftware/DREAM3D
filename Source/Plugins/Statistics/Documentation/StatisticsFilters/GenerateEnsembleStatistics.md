@@ -5,54 +5,53 @@ Generate Ensemble Statistics {#generateensemblestatistics}
 Statistics Filters (Ensemble)
 
 ## Description ##
-This filter will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can chose both which attributes to fit and with what distribution to fit them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.
+This filter will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can choose which types of attributes to fit (morphological and/or crystallographic) and what distribution to use when fitting them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.  The **Ensemble** array will be an array of *Statistics Objects* that are defined structures within *DREAM.3D*.  The *Statistics Objects* are used when building synthetic structures in DREAM.3D.  There are other filters for fitting a distribution to an individual array, but this filter is intended to be used to populate the *Statistics Objects* needed to build synthetic structures.  
+
+Note: the choice of *Phase Type* for each **Ensemble** will change the arrays that are fit for that **Ensemble**.
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------| ----------- |
-| Size Distribution | Boolean | Whether to fit the size distibution |
-| Aspect Ratio Distribution | Boolean | Whether to fit the aspect ratio distibution |
-| Omega3 Distribution | Boolean | Whether to fit the omega3 distibution |
-| Neighborhoods Distribution | Boolean | Whether to fit the neighborhood distibution |
-| Orientation Distribution| Boolean | Whether to fit the orientation distibution |
-| Misorientation Distribution | Boolean | Whether to fit the misorientation distibution |
-| Axis Orientation Distribution | Boolean | Whether to fit the axis orientation distibution |
-| Size Distribution Fit Type | Choice | Which distribution to fit the size distibution with |
-| Aspect Ratio Distribution Fit Type | Choice | Which distribution to fit the aspect ratio distibution with |
-| Omega3 Distribution Fit Type | Choice | Which distribution to fit the omega3 distibution with |
-| Neighborhoods Distribution Fit Type | Choice | Which distribution to fit the neighborhood distibution with |
+| Phase Types | Choice | Informs the filter what "statistical type" each **Ensemble** is |
+| Size Correlation Resolution | Float | Defines the width of *bins* used to discretize the size distribution when correlating other parameters to the size distribution |
+| Include Radial Distribution Function | Boolean | Specifies whether to calculate the RDF |
+| Calculate Morphological Stats | Boolean | Specifies whether to calculate the fits for each of the *morphological* statistics (size, shape, orientation, neighbors) |
+| Calculate Crystallographic Stats | Boolean | Specifies whether to calculate the fits for each of the *crystallographic* statistics (orientation distribution function, misorientation distribution function) |
+| Size Distribution Fit Type | Choice | Which distribution to fit the size distibution with (only necessary if *Calculate Morphological Stats* is *true*) |
+| Aspect Ratio Distribution Fit Type | Choice | Which distribution to fit the aspect ratio distibution with (only necessary if *Calculate Morphological Stats* is *true*) |
+| Omega3 Distribution Fit Type | Choice | Which distribution to fit the omega3 distibution with (only necessary if *Calculate Morphological Stats* is *true*) |
+| Neighborhoods Distribution Fit Type | Choice | Which distribution to fit the neighborhood distibution with (only necessary if *Calculate Morphological Stats* is *true*) |
 
-## Required DataContainers ##
-Volume
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
-| Feature | FeatureEulerAngles | Three (3) angles (floats) defining the orientation of each **Feature** in Bunge convention (Z-X-Z) | This array is only required if the ODF option is checked | Find Feature Average Orientations (Statistics) |
-| Feature | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Feature**. | This array is only required if the Size, Aspect Ratio, Omega3, Neighborhoods or AxisODF option is checked | Find Feature Sizes (Statistics) |
-| Feature | Volumes | Volume (float) in um^3 of the **Feature**. | This array is only required if the ODF option is checked | Find Feature Sizes (Statistics) |
-| Feature | AspectRatios |  | This array is only required if the Aspect Ratio option is checked | Find Feature Shapes (Statistics) |
-| Feature | AxisEulerAngles |  | This array is only required if the AxisODF option is checked | Find Feature Shapes (Statistics) |
-| Feature | Omega3s |  | This array is only required if the Omega3 option is checked | Find Feature Shapes (Statistics) |
-| Feature | NeighborLists | List of the  contiguous neighboring **Features** for a given **Feature** | This array is only required if the MDF option is checked | Find Feature Neighbors (Statistics) |
-| Feature | SharedSurfaceAreaLists | List of the area shared between contiguous neighboring **Features** for a given **Feature** | This array is only required if the MDF option is checked | Find Feature Neighbors (Statistics) |
-| Feature | SurfaceFeatures | Boolean flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. | This array is only required if the ODF or MDF option is checked | Find Surface Features (Generic)
-| Feature | Neighborhoods | Number (int) of **Features** that have their centroid within one equivalent sphere diameter of each **Feature** | This array is only required if the Neighborhoods option is checked | Find Feature Neighborhoods (Statistics)
-| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not | This array is only required if the Size, Aspect Ratio, Omega3, Neighborhoods or AxisODF option is checked | Find Biased Features (Bounding Box) (Generic) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Feature | FeaturePhases | Int | (1) | Specifies the phase of the **Feature** - Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
+| Feature | AvgQuats | Float | (4) | Defines the average orientation of the **Feature** in quaternion representation  (<x,y,z>, w) (Only required if *Calculate Crystallographic Stats* is *true*) |
+| Feature | FeatureEulerAngles | Float | (3) | Defines the orientation of each **Feature** in Bunge convention (Z-X-Z) (Only required if *Calculate Crystallographic Stats* is *true*) |
+| Feature | EquivalentDiameters | Float | (1) | Diameter of a sphere with the same volume as the **Feature**. (Only required if *Calculate Morphological Stats* is *true*)|
+| Feature | Volumes |  Float | (1) | Volume (in units^3) of the **Feature**. (Only required if *Calculate Crystallographic Stats* is *true*) | 
+| Feature | AspectRatios | Float | (2) | Ratio of axis lengths (b/a and c/a) for best-fit ellipsoid to **Feature** (Only required if *Calculate Morphological Stats* is *true*) |
+| Feature | AxisEulerAngles | Float | (3) | Euler angles (in radians) necessary to rotate the sample reference frame to the reference frame of the **Feature**, where the prinicpal axes of the best-fit ellipsoid are (x,y,z). (Only required if *Calculate Morphological Stats* is *true*) |
+| Feature | Omega3s | Float | (1) | 3rd invariant of the second-order moment matrix for the **Feature**, does not assume a shape type (ie ellipsoid) (Only required if *Calculate Morphological Stats* is *true*) |
+| Feature | NeighborLists | List of Ints | (1) | List of the contiguous neighboring **Features** for a given **Feature** (Only required if *Calculate Morphological Stats* is *true*) |
+| Feature | SharedSurfaceAreaLists | List of Floats | (1) | List of the shared surface area for each of the contiguous neighboring **Features** for a given **Feature** (Only required if *Calculate Crystallographic Stats* is *true*) |
+| Feature | SurfaceFeatures | Boolean | (1) | Flag of 1 if **Feature** touches an outer surface or of 0 if it does not (Only required if *Calculate Crystallographic Stats* is *true*) |
+| Feature | Neighborhoods | Int | (1) | Number of **Features** that have their centroid within the user specified multiple of equivalent sphere diameters from each **Feature** (Only required if *Calculate Morphological Stats* is *true*) |
+| Feature | BiasedFeatures | Boolean | (1) | Flag of 1 if **Feature** is biased or of 0 if it is not (Only required if *Calculate Morphological Stats* is *true*) |
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) (Only required if *Calculate Crystallographic Stats* is *true*) |
 
 ## Created Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Ensemble | Statistics |  |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Ensemble | Statistics | Statistics Object | (1) | Statistics objects (depending on *Phase Type*) that store fits to descriptors like: size distribution, shape distribution, neighbor distribution, ODF, MDF, etc) |
 
 ## Authors ##
 
-**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 
