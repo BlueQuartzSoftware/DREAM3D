@@ -91,6 +91,12 @@ public:
   */
   void setDefaultActionList(QList<QAction*> list);
 
+  /**
+  * @brief setModel
+  * @param model
+  */
+  void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
+
 protected:
   void mouseMoveEvent(QMouseEvent* event);
   void dragEnterEvent(QDragEnterEvent* event);
@@ -129,6 +135,7 @@ signals:
 
 private:
   void performDrag();
+  void expandChildren(const QModelIndex &parent, BookmarksModel* model);
 
   QPoint                    m_StartPos;
   QMenu                     m_Menu;

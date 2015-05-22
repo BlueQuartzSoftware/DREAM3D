@@ -342,3 +342,40 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksTreeView::setModel(QAbstractItemModel* model)
+{
+  // Set the model
+  QTreeView::setModel(model);
+
+  BookmarksModel* bModel = qobject_cast<BookmarksModel*>(model);
+
+  // Expand indexes that have their expand member set to true
+  expandChildren(QModelIndex(), bModel);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksTreeView::expandChildren(const QModelIndex &parent, BookmarksModel* model)
+{
+  for (int row = 0; row < model->rowCount(parent); row++)
+  {
+    QModelIndex index = model->index(row, 0, parent);
+    if (model->isExpanded(index))
+    {
+      expand(index);
+    }
+
+    // Recursive call, to expand all items in the tree
+    expandChildren(index, model);
+  }
+}
+
+
+
+
+
