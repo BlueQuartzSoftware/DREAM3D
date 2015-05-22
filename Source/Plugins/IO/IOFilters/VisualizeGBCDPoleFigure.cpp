@@ -300,11 +300,17 @@ void VisualizeGBCDPoleFigure::execute()
   gbcdLimits[0] = 0.0;
   gbcdLimits[1] = 0.0;
   gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
-  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[3] = 0.0;
+  gbcdLimits[4] = 0.0;
   gbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
   gbcdLimits[6] = 1.0;
   gbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
+  gbcdLimits[8] = 1.0;
+  gbcdLimits[9] = DREAM3D::Constants::k_2Pi;
+
+  //reset the 3rd and 4th dimensions using the square grid approach
+  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
   gbcdLimits[8] = sqrt(DREAM3D::Constants::k_PiOver2);
   gbcdLimits[9] = sqrt(DREAM3D::Constants::k_PiOver2);
 
@@ -466,7 +472,10 @@ void VisualizeGBCDPoleFigure::execute()
             }
           }
         }
-        poleFigure[(k * xpoints) + l] = sum / float(count);;
+		if (count > 0)
+		{
+			poleFigure[(k * xpoints) + l] = sum / float(count);
+		}
       }
     }
   }

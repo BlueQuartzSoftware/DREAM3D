@@ -89,12 +89,12 @@ class RotateEulerRefFrameImpl
 
         MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
         MatrixMath::Normalize3x3(gNew);
-
+		FOrientArrayType omGNew(gNew);
         // Because we are going to simply wrap the m_CellEulerAngles array, the new
         // Euler angles will be directly written to the m_CellEulerAngles array
         // at the proper spot
         FOrientArrayType eu( m_CellEulerAngles + (3 * i), 3);
-        FOrientTransformsType::om2eu(om, eu);
+        FOrientTransformsType::om2eu(omGNew, eu);
       }
     }
 
