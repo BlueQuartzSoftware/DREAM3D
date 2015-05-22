@@ -843,17 +843,17 @@ void DREAM3D_UI::setupPipelineContextMenu()
 void DREAM3D_UI::initializeMenuActions()
 {
   /* m_ActionAddPipeline */
-  m_ActionAddPipeline = new QAction(menuPipeline);
+  m_ActionAddPipeline = new QAction(menuBookmarks);
   m_ActionAddPipeline->setObjectName(QString::fromUtf8("m_ActionAddPipeline"));
   m_ActionAddPipeline->setText(QApplication::translate("DREAM3D_UI", "Add Pipeline", 0));
-  menuPipeline->addAction(m_ActionAddPipeline);
-  QKeySequence m_ActionAddPipelineKeySeq(Qt::CTRL + Qt::Key_F);
+  menuBookmarks->addAction(m_ActionAddPipeline);
+  QKeySequence m_ActionAddPipelineKeySeq(Qt::CTRL + Qt::Key_Plus);
   m_ActionAddPipeline->setShortcut(m_ActionAddPipelineKeySeq);
   connect(m_ActionAddPipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionAddPipeline_triggered()));
 
   /* m_ActionRenamePipeline */
-  m_ActionRenamePipeline = new QAction(menuPipeline);
+  m_ActionRenamePipeline = new QAction(this);
   m_ActionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
   m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
   QKeySequence m_ActionRenamePipelineKeySeq(Qt::CTRL + Qt::Key_R);
@@ -863,7 +863,7 @@ void DREAM3D_UI::initializeMenuActions()
     bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
 
   /* m_ActionUpdatePipeline */
-  m_ActionUpdatePipeline = new QAction(menuPipeline);
+  m_ActionUpdatePipeline = new QAction(this);
   m_ActionUpdatePipeline->setObjectName(QString::fromUtf8("m_ActionUpdatePipeline"));
   m_ActionUpdatePipeline->setText(QApplication::translate("DREAM3D_UI", "Update Pipeline", 0));
   QKeySequence m_ActionUpdatePipelineKeySeq(Qt::CTRL + Qt::Key_U);
@@ -872,36 +872,32 @@ void DREAM3D_UI::initializeMenuActions()
     bookmarksDockWidget, SLOT(m_ActionUpdatePipeline_triggered()));
 
   {
-    menuPipeline->addSeparator();
+    menuBookmarks->addSeparator();
   }
 
   /* m_ActionRemovePipeline */
-  m_ActionRemovePipeline = new QAction(menuPipeline);
+  m_ActionRemovePipeline = new QAction(this);
   m_ActionRemovePipeline->setObjectName(QString::fromUtf8("m_ActionRemovePipeline"));
   m_ActionRemovePipeline->setText(QApplication::translate("DREAM3D_UI", "Remove Pipeline", 0));
-  QKeySequence m_ActionRemovePipelineKeySeq(Qt::CTRL + Qt::Key_Delete);
+  QKeySequence m_ActionRemovePipelineKeySeq(Qt::CTRL + Qt::Key_Minus);
   m_ActionRemovePipeline->setShortcut(m_ActionRemovePipelineKeySeq);
   bookmarksDockWidget->setDeleteAction(m_ActionRemovePipeline);
   connect(m_ActionRemovePipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionRemovePipeline_triggered()));
 
   {
-    menuPipeline->addSeparator();
+    menuBookmarks->addSeparator();
   }
 
   /* m_ActionNewFolder */
-  m_ActionNewFolder = new QAction(menuPipeline);
+  m_ActionNewFolder = new QAction(menuBookmarks);
   m_ActionNewFolder->setObjectName(QString::fromUtf8("m_ActionNewFolder"));
   m_ActionNewFolder->setText(QApplication::translate("DREAM3D_UI", "New Folder", 0));
-  menuPipeline->addAction(m_ActionNewFolder);
-  QKeySequence m_ActionNewFolderKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_F);
+  menuBookmarks->addAction(m_ActionNewFolder);
+  QKeySequence m_ActionNewFolderKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_Plus);
   m_ActionNewFolder->setShortcut(m_ActionNewFolderKeySeq);
   connect(m_ActionNewFolder, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionNewFolder_triggered()));
-
-  {
-    menuPipeline->addSeparator();
-  }
 
   /* m_ActionClearPipeline */
   m_ActionClearPipeline = new QAction(menuPipeline);
@@ -918,7 +914,7 @@ void DREAM3D_UI::initializeMenuActions()
 
 
   /* m_ActionShowInFileSystem */
-  m_ActionShowInFileSystem = new QAction(menuPipeline);
+  m_ActionShowInFileSystem = new QAction(this);
   m_ActionShowInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowInFileSystem"));
   // Handle the naming based on what OS we are currently running...
 #if defined(Q_OS_WIN)
@@ -1621,7 +1617,7 @@ void DREAM3D_UI::clearFilterInputWidget()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::disableMenuItems()
 {
-  menuPipeline->setDisabled(true);
+  menuBookmarks->setDisabled(true);
   menuView->setDisabled(true);
   actionSave->setDisabled(true);
   actionSaveAs->setDisabled(true);

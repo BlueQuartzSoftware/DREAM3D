@@ -147,8 +147,8 @@ sss</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>956</width>
-             <height>482</height>
+             <width>1011</width>
+             <height>562</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -254,7 +254,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
      <x>0</x>
      <y>0</y>
      <width>1104</width>
-     <height>38</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -288,9 +288,9 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
     <addaction name="actionShow_Favorites"/>
     <addaction name="actionShow_Issues"/>
    </widget>
-   <widget class="QMenu" name="menuPipeline">
+   <widget class="QMenu" name="menuBookmarks">
     <property name="title">
-     <string>Pipeline</string>
+     <string>Bookmarks</string>
     </property>
     <addaction name="separator"/>
     <addaction name="separator"/>
@@ -307,8 +307,14 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
     <addaction name="actionAbout_DREAM3D"/>
     <addaction name="actionPlugin_Information"/>
    </widget>
+   <widget class="QMenu" name="menuPipeline">
+    <property name="title">
+     <string>Pipeline</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
+   <addaction name="menuBookmarks"/>
    <addaction name="menuPipeline"/>
    <addaction name="menuHelp"/>
   </widget>
