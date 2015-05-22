@@ -34,12 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
-
 #include "SurfaceMeshFilter.h"
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -57,4 +52,3 @@ SurfaceMeshFilter::SurfaceMeshFilter() :
 SurfaceMeshFilter::~SurfaceMeshFilter()
 {
 }
-

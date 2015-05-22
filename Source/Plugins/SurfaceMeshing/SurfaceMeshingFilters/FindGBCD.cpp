@@ -35,14 +35,12 @@
 
 #include "FindGBCD.h"
 
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
 
 #include <QtCore/QDateTime>
 
@@ -53,9 +51,11 @@
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 /**
- * @brief The CalculateAreasImpl class
+ * @brief The CalculateGBCDImpl class implements a threaded algorithm that calculates the
+ * grain boundary character distribution (GBCD) for a surface mesh
  */
 class CalculateGBCDImpl
 {
@@ -323,14 +323,13 @@ class CalculateGBCDImpl
     }
 };
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FindGBCD::FindGBCD() :
   SurfaceMeshFilter(),
   m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
-  m_GBCDRes(9.0),
+  m_GBCDRes(9.0f),
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),

@@ -8,7 +8,7 @@ A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The foll
 | Compiler Version | Notes |  
 |  ------	| ------	|  
 | Visual Studio 2013 Pro & Express SP1 | 64 Bit builds |  
-| Xcode 5.1.1 (OS X Version 10.8 & 10.9) | 64 bit Intel Only |  
+| Xcode 5.1.1 (OS X Version 10.8, 10.9, 10.10) | 64 bit Intel Only |  
 | GCC 4.7.x (Ubuntu 12.04) | 64 Bit Intel Only |  
 
 ## Note for MinGW/MSys/Cygwin ##

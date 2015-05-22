@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,12 +34,12 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include "GenerateGeometryConnectivity.h"
+
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "GenerateGeometryConnectivity.h"
-
-
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -66,8 +66,8 @@ GenerateGeometryConnectivity::~GenerateGeometryConnectivity()
 void GenerateGeometryConnectivity::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Generate Per Vertex Cell List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget, getGenerateVertexTriangleLists(), false));
-  parameters.push_back(FilterParameter::New("Generate Cell Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget, getGenerateTriangleNeighbors(), false));
+  parameters.push_back(FilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget, getGenerateVertexTriangleLists(), false));
+  parameters.push_back(FilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget, getGenerateTriangleNeighbors(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true, ""));
   setFilterParameters(parameters);
@@ -104,19 +104,8 @@ int GenerateGeometryConnectivity::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::dataCheck()
 {
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == sm.get()) { return; }
-
-  IGeometry::Pointer geom = sm->getGeometry();
-  if(NULL == geom.get())
-  {
-    setErrorCondition(-385);
-    QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getSurfaceDataContainerName());
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -136,7 +125,7 @@ void GenerateGeometryConnectivity::preflight()
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::execute()
 {
-  int err = 0;
+  int32_t err = 0;
   setErrorCondition(err);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
@@ -146,23 +135,23 @@ void GenerateGeometryConnectivity::execute()
 
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
-    notifyStatusMessage(getHumanLabel(), "Generating Vertex Cell List");
+    notifyStatusMessage(getHumanLabel(), "Generating Vertex Element List");
     err = geom->findElementsContainingVert();
     if (err < 0)
     {
       setErrorCondition(-400);
-      QString ss = QObject::tr("Error generating vertex cell list for Geometry type %1.").arg(geom->getGeometryTypeAsString());
+      QString ss = QObject::tr("Error generating vertex element list for Geometry type %1.").arg(geom->getGeometryTypeAsString());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
   if (m_GenerateTriangleNeighbors == true)
   {
-    notifyStatusMessage(getHumanLabel(), "Generating Cell Neighbors List");
+    notifyStatusMessage(getHumanLabel(), "Generating Element Neighbors List");
     err = geom->findElementNeighbors();
     if (err < 0)
     {
       setErrorCondition(-401);
-      QString ss = QObject::tr("Error generating cell neighbor list for Geometry type %1.").arg(geom->getGeometryTypeAsString());
+      QString ss = QObject::tr("Error generating element neighbor list for Geometry type %1.").arg(geom->getGeometryTypeAsString());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
@@ -190,13 +179,11 @@ AbstractFilter::Pointer GenerateGeometryConnectivity::newFilterInstance(bool cop
 const QString GenerateGeometryConnectivity::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getGroupName()
 { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -204,10 +191,8 @@ const QString GenerateGeometryConnectivity::getGroupName()
 const QString GenerateGeometryConnectivity::getSubGroupName()
 { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getHumanLabel()
-{ return "Generate Surface Mesh Connectivity"; }
-
+{ return "Generate Geometry Connectivity"; }
