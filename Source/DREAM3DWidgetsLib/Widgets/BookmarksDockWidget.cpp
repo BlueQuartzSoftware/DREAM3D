@@ -111,6 +111,9 @@ opacity: 255;\
   bookmarksTreeView->setStyleSheet(css);
 
   connect(bookmarksTreeView, SIGNAL(itemWasDropped(QModelIndex, QString&, QIcon, QString, bool, bool, bool)), this, SLOT(addTreeItem(QModelIndex, QString&, QIcon, QString, bool, bool, bool)));
+
+  // Resize the bookmarks widget header to contents
+  bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 // -----------------------------------------------------------------------------
@@ -390,9 +393,6 @@ void BookmarksDockWidget::m_ActionNewFolder_triggered()
   QString name = "New Folder";
 
   addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", true, true, false);
-
-  // Resize the bookmarks widget header to contents
-  bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 // -----------------------------------------------------------------------------
@@ -438,9 +438,6 @@ void BookmarksDockWidget::m_ActionAddPipeline_triggered()
     // Cache the directory from the last path added
     m_OpenDialogLastDirectory = newPrefPaths[newPrefPaths.size() - 1];
   }
-
-  // Resize the bookmarks widget header to contents
-  bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 // -----------------------------------------------------------------------------
@@ -598,9 +595,6 @@ void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
 
     // Write these changes out to the preferences file
     emit fireWriteSettings();
-
-    // Resize the bookmarks widget header to contents
-    bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
   }
 }
 

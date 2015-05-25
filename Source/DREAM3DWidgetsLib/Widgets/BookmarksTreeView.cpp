@@ -334,15 +334,10 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
         model->removeRow(model->rowCount() - 1, rootIndex());
         m_TopLevelItemPlaceholder = QModelIndex();
       }
-
-      // Get the path
-      QString path = model->index(m_IndexBeingDragged.row(), Path, oldParent).data().toString();
       
       model->moveIndex(m_IndexBeingDragged, oldParent, newParent);
-
-      model->sort(Name, Qt::AscendingOrder);
-      
       expand(newParent);
+      model->sort(Name, Qt::AscendingOrder);
     }
   }
 }
