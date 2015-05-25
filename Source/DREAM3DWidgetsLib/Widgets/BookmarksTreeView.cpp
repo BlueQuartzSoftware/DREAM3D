@@ -107,6 +107,14 @@ void BookmarksTreeView::setLeafActionList(QList<QAction*> list)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void BookmarksTreeView::setLeafErrorActionList(QList<QAction*> list)
+{
+  m_LeafErrorActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void BookmarksTreeView::setDefaultActionList(QList<QAction*> list)
 {
   m_DefaultActions = list;
@@ -172,10 +180,18 @@ void BookmarksTreeView::showContextMenu(QModelIndex index, const QPoint& globalP
   }
   else
   {
-    QString path = model->index(index.row(), Path, index.parent()).data().toString();
-    if (path.isEmpty() == false && !m_LeafActions.isEmpty())
+    QModelIndex actualIndex = model->index(index.row(), Path, index.parent());
+    QString path = actualIndex.data().toString();
+    if (path.isEmpty() == false)
     {
-      addActionList(m_LeafActions);
+      if (model->data(actualIndex, Qt::BackgroundRole) != QColor(Qt::white) && !m_LeafErrorActions.isEmpty())
+      {
+        addActionList(m_LeafErrorActions);
+      }
+      else if (!m_LeafActions.isEmpty())
+      {
+        addActionList(m_LeafActions);
+      }
     }
     else if (path.isEmpty() && !m_NodeActions.isEmpty())
     {
@@ -191,10 +207,14 @@ void BookmarksTreeView::showContextMenu(QModelIndex index, const QPoint& globalP
 // -----------------------------------------------------------------------------
 void BookmarksTreeView::mouseMoveEvent(QMouseEvent* event)
 {
+  BookmarksModel* model = BookmarksModel::Instance();
+
   if (event->buttons() & Qt::LeftButton)
   {
+    QModelIndex index = model->index(currentIndex().row(), Name, currentIndex().parent());
+    QColor bgColor = model->data(index, Qt::BackgroundColorRole).value<QColor>();
     int distance = (event->pos() - m_StartPos).manhattanLength();
-    if (distance >= QApplication::startDragDistance())
+    if (distance >= QApplication::startDragDistance() && bgColor == QColor(Qt::white))
     {
       performDrag();
     }
@@ -276,7 +296,7 @@ void BookmarksTreeView::dragMoveEvent(QDragMoveEvent* event)
       blockSignals(true);
       model->insertRow(topLevelPHPos, rootIndex());
       m_TopLevelItemPlaceholder = model->index(topLevelPHPos, 0, rootIndex());
-      model->setData(m_TopLevelItemPlaceholder, topLevelString);
+      model->setData(m_TopLevelItemPlaceholder, topLevelString, Qt::DisplayRole);
       setCurrentIndex(m_TopLevelItemPlaceholder);
       blockSignals(false);
     }
@@ -530,8 +550,10 @@ void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, Q
   QString path = object["Path"].toString();
   bool expanded = object["Expanded"].toBool();
 
-  model->setData(nameIndex, name);
-  model->setData(pathIndex, path);
+  path = QDir::toNativeSeparators(path);
+
+  model->setData(nameIndex, name, Qt::DisplayRole);
+  model->setData(pathIndex, path, Qt::DisplayRole);
   model->setNeedsToBeExpanded(nameIndex, expanded);
   model->setNeedsToBeExpanded(pathIndex, expanded);
 

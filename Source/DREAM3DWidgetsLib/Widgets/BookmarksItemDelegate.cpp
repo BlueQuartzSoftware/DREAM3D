@@ -34,11 +34,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <QtCore/QFileInfo>
+
+#include <QtWidgets/QLineEdit>
+
+#include <QtGui/QIntValidator>
+#include <QtGui/QPainter>
+
 #include "DREAM3DWidgetsLib/Widgets/BookmarksItemDelegate.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksItem.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
-#include <QLineEdit>
-#include <QIntValidator>
 
 // -----------------------------------------------------------------------------
 //
@@ -71,7 +76,7 @@ QWidget* BookmarksItemDelegate::createEditor(QWidget* parent, const QStyleOption
 // -----------------------------------------------------------------------------
 void BookmarksItemDelegate::setEditorData(QWidget* editor, const QModelIndex &index) const
 {
-  QString value = index.model()->data(index, Qt::EditRole).toString();
+  QString value = index.model()->data(index, Qt::DisplayRole).toString();
   QLineEdit* line = static_cast<QLineEdit*>(editor);
   line->setText(value);
 }
@@ -85,8 +90,12 @@ void BookmarksItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
 
   QLineEdit* line = static_cast<QLineEdit*>(editor);
   QString value = line->text();
-  QModelIndex bIndex = bModel->index(index.row(), Name, index.parent());
-  bModel->setData(bIndex, value);
+
+  if (value.isEmpty() == false)
+  {
+    QModelIndex bIndex = bModel->index(index.row(), Name, index.parent());
+    bModel->setData(bIndex, value, Qt::DisplayRole);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -102,9 +111,29 @@ void BookmarksItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOp
 // -----------------------------------------------------------------------------
 void BookmarksItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  if (index.column() == Name)
-  {
+  BookmarksModel* model = BookmarksModel::Instance();
 
+  QModelIndex actualIndex = model->index(index.row(), Path, index.parent());
+  if (actualIndex.isValid())
+  {
+    QString path = actualIndex.data().toString();
+    if (path.isEmpty() == false)
+    {
+      QFileInfo fi(path);
+      if (fi.exists() == false)
+      {
+        QModelIndex sibling = model->sibling(actualIndex);
+        QString tooltip = "'" + sibling.data().toString() + "' was not found on the file system.\nYou can either locate the file or delete the entry from the table.";
+
+        model->setData(index, QColor(235, 110, 110), Qt::BackgroundRole);
+        model->setData(index, QColor(240, 240, 240), Qt::TextColorRole);
+        model->setData(index, tooltip, Qt::ToolTipRole);
+
+        model->setData(sibling, QColor(235, 110, 110), Qt::BackgroundRole);
+        model->setData(sibling, QColor(240, 240, 240), Qt::TextColorRole);
+        model->setData(sibling, tooltip, Qt::ToolTipRole);
+      }
+    }
   }
   
   QStyledItemDelegate::paint(painter, option, index);

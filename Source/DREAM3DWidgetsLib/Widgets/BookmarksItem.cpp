@@ -33,14 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "BookmarksItem.h"
+#include <QtGui/QColor>
 
-#include <QStringList>
+#include <QtCore/QStringList>
+
+#include "BookmarksItem.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent)
+BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent) :
+m_ItemBackgroundColor(QColor(Qt::white)),
+m_ItemTextColor(QColor(Qt::black)),
+m_ItemTooltip("")
 {
   m_ParentItem = parent;
   m_ItemData = data;
@@ -180,6 +185,57 @@ bool BookmarksItem::setData(int column, const QVariant &value)
     return false;
 
   m_ItemData[column] = value;
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QColor BookmarksItem::getItemBackgroundColor()
+{
+  return m_ItemBackgroundColor;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BookmarksItem::setItemBackgroundColor(QColor &value)
+{
+  m_ItemBackgroundColor = value;
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QColor BookmarksItem::getItemTextColor()
+{
+  return m_ItemTextColor;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BookmarksItem::setItemTextColor(QColor &value)
+{
+  m_ItemTextColor = value;
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString BookmarksItem::getItemTooltip()
+{
+  return m_ItemTooltip;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BookmarksItem::setItemTooltip(QString &value)
+{
+  m_ItemTooltip = value;
   return true;
 }
 

@@ -426,6 +426,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QAction* m_ActionAddPipeline;
     QAction* m_ActionUpdatePipeline;
     QAction* m_ActionRenamePipeline;
+    QAction* m_ActionLocateFile;
     QAction* m_ActionAddToPipelineView;
     QAction* m_ActionNewFolder;
     QAction* m_ActionRemovePipeline;

@@ -114,6 +114,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_ActionAddPipeline(NULL),
   m_ActionUpdatePipeline(NULL),
   m_ActionRenamePipeline(NULL),
+  m_ActionLocateFile(NULL),
   m_ActionAddToPipelineView(NULL),
   m_ActionNewFolder(NULL),
   m_ActionRemovePipeline(NULL),
@@ -682,6 +683,7 @@ void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* other)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupPipelineItemMenu()
 {
+  // Normal items
   QList<QAction*> favoriteItemActions;
 
   favoriteItemActions << m_ActionAddPipeline;
@@ -712,7 +714,19 @@ void DREAM3D_UI::setupPipelineItemMenu()
 
   favoriteItemActions << m_ActionShowInFileSystem;
 
+  // Items with errors
+  QList<QAction*> errorItemActions;
+
+  errorItemActions << m_ActionLocateFile;
+  {
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    errorItemActions << separator;
+  }
+  errorItemActions << m_ActionRemovePipeline;
+
   bookmarksDockWidget->getBookmarksTreeView()->setLeafActionList(favoriteItemActions);
+  bookmarksDockWidget->getBookmarksTreeView()->setLeafErrorActionList(errorItemActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -845,7 +859,7 @@ void DREAM3D_UI::initializeMenuActions()
   /* m_ActionAddPipeline */
   m_ActionAddPipeline = new QAction(menuBookmarks);
   m_ActionAddPipeline->setObjectName(QString::fromUtf8("m_ActionAddPipeline"));
-  m_ActionAddPipeline->setText(QApplication::translate("DREAM3D_UI", "Add Pipeline", 0));
+  m_ActionAddPipeline->setText(QApplication::translate("DREAM3D_UI", "Add Bookmark", 0));
   menuBookmarks->addAction(m_ActionAddPipeline);
   QKeySequence m_ActionAddPipelineKeySeq(Qt::CTRL + Qt::Key_Plus);
   m_ActionAddPipeline->setShortcut(m_ActionAddPipelineKeySeq);
@@ -856,8 +870,6 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionRenamePipeline = new QAction(this);
   m_ActionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
   m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
-  QKeySequence m_ActionRenamePipelineKeySeq(Qt::CTRL + Qt::Key_R);
-  m_ActionRenamePipeline->setShortcut(m_ActionRenamePipelineKeySeq);
   bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
   connect(m_ActionRenamePipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
@@ -865,9 +877,7 @@ void DREAM3D_UI::initializeMenuActions()
   /* m_ActionUpdatePipeline */
   m_ActionUpdatePipeline = new QAction(this);
   m_ActionUpdatePipeline->setObjectName(QString::fromUtf8("m_ActionUpdatePipeline"));
-  m_ActionUpdatePipeline->setText(QApplication::translate("DREAM3D_UI", "Update Pipeline", 0));
-  QKeySequence m_ActionUpdatePipelineKeySeq(Qt::CTRL + Qt::Key_U);
-  m_ActionUpdatePipeline->setShortcut(m_ActionUpdatePipelineKeySeq);
+  m_ActionUpdatePipeline->setText(QApplication::translate("DREAM3D_UI", "Update Bookmark", 0));
   connect(m_ActionUpdatePipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionUpdatePipeline_triggered()));
 
@@ -878,9 +888,7 @@ void DREAM3D_UI::initializeMenuActions()
   /* m_ActionRemovePipeline */
   m_ActionRemovePipeline = new QAction(this);
   m_ActionRemovePipeline->setObjectName(QString::fromUtf8("m_ActionRemovePipeline"));
-  m_ActionRemovePipeline->setText(QApplication::translate("DREAM3D_UI", "Remove Pipeline", 0));
-  QKeySequence m_ActionRemovePipelineKeySeq(Qt::CTRL + Qt::Key_Minus);
-  m_ActionRemovePipeline->setShortcut(m_ActionRemovePipelineKeySeq);
+  m_ActionRemovePipeline->setText(QApplication::translate("DREAM3D_UI", "Remove Bookmark", 0));
   bookmarksDockWidget->setDeleteAction(m_ActionRemovePipeline);
   connect(m_ActionRemovePipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionRemovePipeline_triggered()));
@@ -912,6 +920,12 @@ void DREAM3D_UI::initializeMenuActions()
 
 
 
+  /* m_ActionLocateFile */
+  m_ActionLocateFile = new QAction(this);
+  m_ActionLocateFile->setObjectName(QString::fromUtf8("m_ActionLocateFile"));
+  m_ActionLocateFile->setText(QApplication::translate("DREAM3D_UI", "Locate Bookmark...", 0));
+  connect(m_ActionLocateFile, SIGNAL(triggered()),
+    bookmarksDockWidget, SLOT(m_ActionLocateFile_triggered()));
 
   /* m_ActionShowInFileSystem */
   m_ActionShowInFileSystem = new QAction(this);

@@ -56,7 +56,7 @@
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 
-#include "QtSupportLib/FavoritesChangedDialog.h"
+#include "QtSupportLib/BookmarkMissingDialog.h"
 
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
@@ -305,14 +305,31 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
 {
   BookmarksModel* model = BookmarksModel::Instance();
 
-  QString pipelinePath = model->index(index.row(), Path, index.parent()).data().toString();
+  QModelIndex nameIndex = model->index(index.row(), Name, index.parent());
+  QModelIndex pathIndex = model->index(index.row(), Path, index.parent());
+
+  QString pipelinePath = pathIndex.data().toString();
   if (pipelinePath.isEmpty())
   {
     return; // The user double clicked a folder, so don't do anything
   }
   else
   {
-    emit pipelineFileActivated(pipelinePath);
+    QColor bgColor = model->data(pathIndex, Qt::BackgroundColorRole).value<QColor>();
+    if (bgColor != QColor(Qt::white))
+    {
+      bookmarksTreeView->blockSignals(true);
+      BookmarkMissingDialog* dialog = new BookmarkMissingDialog();
+      connect(dialog, SIGNAL(locateBtnPressed()), this, SLOT(m_ActionLocateFile_triggered()));
+      dialog->setBookmarkName(nameIndex.data().toString());
+      dialog->exec();
+      delete dialog;
+      bookmarksTreeView->blockSignals(false);
+    }
+    else
+    {
+      emit pipelineFileActivated(pipelinePath);
+    }
   }
 
 }
@@ -341,10 +358,10 @@ void BookmarksDockWidget::on_bookmarksTreeView_currentIndexChanged(const QModelI
     }
     else
     {
-      m_DeleteAction->setText("Remove Pipeline");
+      m_DeleteAction->setText("Remove Bookmark");
       m_DeleteAction->setVisible(true);
 
-      m_RenameAction->setText("Rename Pipeline");
+      m_RenameAction->setText("Rename Bookmark");
       m_RenameAction->setVisible(true);
     }
   }
@@ -378,6 +395,55 @@ QString BookmarksDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
   bookmarksTreeView->blockSignals(false);
 
   return newPath;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksDockWidget::m_ActionLocateFile_triggered()
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+  QModelIndex current = getBookmarksTreeView()->currentIndex();
+
+  QModelIndex nameIndex = model->index(current.row(), Name, current.parent());
+  QModelIndex pathIndex = model->index(current.row(), Path, current.parent());
+
+  QFileInfo fi(pathIndex.data().toString());
+  QString restrictions;
+  if (fi.completeSuffix() == "json")
+  {
+    restrictions = "Json File (*.json)";
+  }
+  else if (fi.completeSuffix() == "dream3d")
+  {
+    restrictions = "Dream3d File(*.dream3d)";
+  }
+  else if (fi.completeSuffix() == "txt")
+  {
+    restrictions = "Text File (*.txt)";
+  }
+  else
+  {
+    restrictions = "Ini File (*.ini)";
+  }
+
+  QString filePath = QFileDialog::getOpenFileName(this, tr("Locate Pipeline File"),
+    pathIndex.data().toString(), tr(restrictions.toStdString().c_str()));
+  if (true == filePath.isEmpty()) { return; }
+
+  filePath = QDir::toNativeSeparators(filePath);
+
+  // Set the new path into the item
+  model->setData(pathIndex, filePath, Qt::DisplayRole);
+
+  // Change item back to default look and functionality
+  model->setData(nameIndex, QColor(Qt::white), Qt::BackgroundRole);
+  model->setData(nameIndex, QColor(Qt::black), Qt::TextColorRole);
+  model->setData(nameIndex, "", Qt::ToolTipRole);
+
+  model->setData(pathIndex, QColor(Qt::white), Qt::BackgroundRole);
+  model->setData(pathIndex, QColor(Qt::black), Qt::TextColorRole);
+  model->setData(pathIndex, "", Qt::ToolTipRole);
 }
 
 // -----------------------------------------------------------------------------
@@ -476,6 +542,8 @@ int BookmarksDockWidget::addTreeItem(QModelIndex parent,
   bool isExpanded)
 {
 
+  favoritePath = QDir::toNativeSeparators(favoritePath);
+
   QFileInfo fileInfo(favoritePath);
   QString ext = fileInfo.completeSuffix();
   if (fileInfo.isFile() && ext != "dream3d" && ext != "json" && ext != "ini" && ext != "txt")
@@ -490,9 +558,9 @@ int BookmarksDockWidget::addTreeItem(QModelIndex parent,
   int rowPos = model->rowCount(parent);
   model->insertRow(rowPos, parent);
   QModelIndex nameIndex = model->index(rowPos, Name, parent);
-  model->setData(nameIndex, favoriteTitle);
+  model->setData(nameIndex, favoriteTitle, Qt::DisplayRole);
   QModelIndex pathIndex = model->index(rowPos, Path, parent);
-  model->setData(pathIndex, favoritePath);
+  model->setData(pathIndex, favoritePath, Qt::DisplayRole);
   //itemWidget->setIcon(0, icon);
 
   bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);

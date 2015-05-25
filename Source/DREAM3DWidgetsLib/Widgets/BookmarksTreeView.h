@@ -102,6 +102,12 @@ public:
   void setLeafActionList(QList<QAction*> list);
 
   /**
+  * @brief setLeafErrorActionList
+  * @param list
+  */
+  void setLeafErrorActionList(QList<QAction*> list);
+
+  /**
   * @brief setDefaultActionList
   * @param list
   */
@@ -167,6 +173,7 @@ private:
   QMenu                     m_Menu;
   QList<QAction*>           m_NodeActions;
   QList<QAction*>           m_LeafActions;
+  QList<QAction*>           m_LeafErrorActions;
   QList<QAction*>           m_DefaultActions;
   QModelIndex               m_IndexBeingDragged;
   QModelIndex               m_TopLevelItemPlaceholder;

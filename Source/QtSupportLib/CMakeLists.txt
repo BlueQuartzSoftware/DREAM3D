@@ -116,6 +116,7 @@ set(QtSupportLib_SRCS
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.cpp
     ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.cpp
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.cpp
+    ${QtSupportLib_SOURCE_DIR}/BookmarkMissingDialog.cpp
 )
 
 set(QtSupportLib_HDRS
@@ -144,6 +145,7 @@ set(QtSupportLib_HDRS
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.h
     ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.h
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.h
+    ${QtSupportLib_SOURCE_DIR}/BookmarkMissingDialog.h
 )
 
 # --------------------------------------------------------------------
@@ -164,6 +166,7 @@ SET(DREAM3D_QT_UI_FILES
   ${QtSupportLib_SOURCE_DIR}/UI_Files/DistributionTypeWidget.ui
   ${QtSupportLib_SOURCE_DIR}/UI_Files/FileDragMessageBox.ui
   ${QtSupportLib_SOURCE_DIR}/UI_Files/FavoritesChangedDialog.ui
+  ${QtSupportLib_SOURCE_DIR}/UI_Files/BookmarkMissingDialog.ui
 )
 cmp_IDE_SOURCE_PROPERTIES( "QtSupportLib/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 

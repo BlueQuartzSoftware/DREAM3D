@@ -65,6 +65,15 @@ public:
   QVariant data(int column) const;
   bool setData(int column, const QVariant &value);
 
+  QColor getItemBackgroundColor();
+  bool setItemBackgroundColor(QColor &value);
+
+  QColor getItemTextColor();
+  bool setItemTextColor(QColor &value);
+
+  QString getItemTooltip();
+  bool setItemTooltip(QString &value);
+
   bool needsToBeExpanded();
   void setNeedsToBeExpanded(bool value);
 
@@ -80,6 +89,9 @@ private:
   QList<BookmarksItem*>               m_ChildItems;
   QVector<QVariant>                   m_ItemData;
   BookmarksItem*                      m_ParentItem;
+  QColor                              m_ItemBackgroundColor;
+  QColor                              m_ItemTextColor;
+  QString                             m_ItemTooltip;
   bool                                m_NeedsToBeExpanded;
 
   BookmarksItem(const BookmarksItem&);    // Copy Constructor Not Implemented

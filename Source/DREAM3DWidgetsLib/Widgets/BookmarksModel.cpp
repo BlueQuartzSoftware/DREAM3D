@@ -128,14 +128,33 @@ QModelIndex BookmarksModel::sibling(const QModelIndex &currentIndex)
 QVariant BookmarksModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid())
+  {
     return QVariant();
-
-  if (role != Qt::DisplayRole && role != Qt::EditRole)
+  }
+  else if (role == Qt::DisplayRole || role == Qt::UserRole)
+  {
+    BookmarksItem *item = getItem(index);
+    return item->data(index.column());
+  }
+  else if (role == Qt::BackgroundRole)
+  {
+    BookmarksItem *item = getItem(index);
+    return item->getItemBackgroundColor();
+  }
+  else if (role == Qt::TextColorRole)
+  {
+    BookmarksItem *item = getItem(index);
+    return item->getItemTextColor();
+  }
+  else if (role == Qt::ToolTipRole)
+  {
+    BookmarksItem* item = getItem(index);
+    return item->getItemTooltip();
+  }
+  else
+  {
     return QVariant();
-
-  BookmarksItem *item = getItem(index);
-
-  return item->data(index.column());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -264,10 +283,27 @@ int BookmarksModel::rowCount(const QModelIndex &parent) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value)
+bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
   BookmarksItem *item = getItem(index);
-  bool result = item->setData(index.column(), value);
+  bool result = false;
+
+  if (role == Qt::BackgroundRole)
+  {
+    result = item->setItemBackgroundColor(value.value<QColor>());
+  }
+  else if (role == Qt::TextColorRole)
+  {
+    result = item->setItemTextColor(value.value<QColor>());
+  }
+  else if (role == Qt::ToolTipRole)
+  {
+    result = item->setItemTooltip(value.toString());
+  }
+  else
+  {
+    result = item->setData(index.column(), value);
+  }
 
   if (result)
     emit dataChanged(index, index);
@@ -326,9 +362,9 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
   int rowPos = tempModel->rowCount(tempParent);
   tempModel->insertRow(rowPos, tempParent);
   QModelIndex newNameIndex = tempModel->index(rowPos, Name, tempParent);
-  tempModel->setData(newNameIndex, name);
+  tempModel->setData(newNameIndex, name, Qt::DisplayRole);
   QModelIndex newPathIndex = tempModel->index(rowPos, Path, tempParent);
-  tempModel->setData(newPathIndex, path);
+  tempModel->setData(newPathIndex, path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -353,9 +389,9 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
   int rowPos = self->rowCount(newParent);
   self->insertRow(rowPos, newParent);
   QModelIndex newNameIndex = self->index(rowPos, Name, newParent);
-  self->setData(newNameIndex, name);
+  self->setData(newNameIndex, name, Qt::DisplayRole);
   QModelIndex newPathIndex = self->index(rowPos, Path, newParent);
-  self->setData(newPathIndex, path);
+  self->setData(newPathIndex, path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -400,12 +436,12 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
   int rowPos = self->rowCount(specifiedParent);
   self->insertRow(rowPos, specifiedParent);
   QModelIndex newNameIndex = self->index(rowPos, Name, specifiedParent);
-  self->setData(newNameIndex, name);
+  self->setData(newNameIndex, name, Qt::DisplayRole);
 
   if (fi.isFile())
   {
     QModelIndex newPathIndex = self->index(rowPos, Path, specifiedParent);
-    self->setData(newPathIndex, path);
+    self->setData(newPathIndex, path, Qt::DisplayRole);
   }
   else
   {

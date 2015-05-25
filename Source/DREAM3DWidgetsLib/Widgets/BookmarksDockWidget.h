@@ -117,6 +117,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void m_ActionNewFolder_triggered();
     void m_ActionAddPipeline_triggered();
     void m_ActionUpdatePipeline_triggered();
+    void m_ActionLocateFile_triggered();
     void m_ActionRemovePipeline_triggered();
     void m_ActionRenamePipeline_triggered();
     void m_ActionAddToPipelineView_triggered();

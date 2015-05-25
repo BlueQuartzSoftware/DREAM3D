@@ -79,7 +79,7 @@ public:
 
   Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-  bool setData(const QModelIndex &index, const QVariant &value);
+  bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
 
   bool needsToBeExpanded(const QModelIndex &index);
   void setNeedsToBeExpanded(const QModelIndex &index, bool value);
