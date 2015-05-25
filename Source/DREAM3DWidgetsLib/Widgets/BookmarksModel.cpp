@@ -313,6 +313,100 @@ bool BookmarksModel::isEmpty()
   return false;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::moveLeafIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent)
+{
+  BookmarksModel* model = new BookmarksModel();
+
+  QString name = model->index(index.row(), Name, oldParent).data().toString();
+  QString path = model->index(index.row(), Path, oldParent).data().toString();
+
+  model->removeRow(index.row(), oldParent);
+  int rowPos = model->rowCount(newParent);
+  model->insertRow(rowPos, newParent);
+  QModelIndex newNameIndex = model->index(rowPos, Name, newParent);
+  model->setData(newNameIndex, name);
+  QModelIndex newPathIndex = model->index(rowPos, Path, newParent);
+  model->setData(newPathIndex, path);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, QModelIndex &tempParent, BookmarksModel* tempModel)
+{
+  // Get the name of the index
+  QString name = self->index(index.row(), Name, oldParent).data().toString();
+  QString path = self->index(index.row(), Path, oldParent).data().toString();
+
+  // Copy the index to the temporary model
+  int rowPos = tempModel->rowCount(tempParent);
+  tempModel->insertRow(rowPos, tempParent);
+  QModelIndex newNameIndex = tempModel->index(rowPos, Name, tempParent);
+  tempModel->setData(newNameIndex, name);
+  QModelIndex newPathIndex = tempModel->index(rowPos, Path, tempParent);
+  tempModel->setData(newPathIndex, path);
+
+  if (path.isEmpty())
+  {
+    // This is a node, so recursively call this function
+    for (int i = 0; i < self->rowCount(index); i++)
+    {
+      copyIndexToTemp(index.child(i, Name), index, newNameIndex, tempModel);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newParent, QModelIndex &tempParent,  BookmarksModel* tempModel)
+{
+  // Get the name of the index
+  QString name = tempModel->index(tempIndex.row(), Name, tempParent).data().toString();
+  QString path = tempModel->index(tempIndex.row(), Path, tempParent).data().toString();
+
+  // Copy the index to the new location
+  int rowPos = self->rowCount(newParent);
+  self->insertRow(rowPos, newParent);
+  QModelIndex newNameIndex = self->index(rowPos, Name, newParent);
+  self->setData(newNameIndex, name);
+  QModelIndex newPathIndex = self->index(rowPos, Path, newParent);
+  self->setData(newPathIndex, path);
+
+  if (path.isEmpty())
+  {
+    // This is a node, so recursively call this function
+    for (int i = 0; i < tempModel->rowCount(tempIndex); i++)
+    {
+      QModelIndex nextIndex = tempModel->index(i, Name, tempIndex);
+      copyTempToIndex(nextIndex, newNameIndex, tempIndex, tempModel);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::moveIndex(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent)
+{
+  BookmarksModel* tempModel = new BookmarksModel();
+  
+  // Copy the sub-tree to a temporary model
+  copyIndexToTemp(index, oldParent, QModelIndex(), tempModel);
+
+  for (int i = 0; i < tempModel->rowCount(QModelIndex()); i++)
+  {
+    QModelIndex tempIndex = tempModel->index(i, Name, QModelIndex());
+    copyTempToIndex(tempIndex, newParent, QModelIndex(), tempModel);
+  }
+
+  // Remove the index from its original spot
+  self->removeRow(index.row(), oldParent);
+}
+
 
 
 

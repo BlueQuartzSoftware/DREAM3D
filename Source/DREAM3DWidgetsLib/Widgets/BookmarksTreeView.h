@@ -160,8 +160,6 @@ signals:
 private:
   void performDrag();
   void expandChildren(const QModelIndex &parent, BookmarksModel* model);
-  void moveLeafIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent);
-  void moveNodeIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent);
   QJsonObject wrapModel(QModelIndex index);
   static void UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 

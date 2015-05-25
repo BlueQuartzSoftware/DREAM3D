@@ -86,6 +86,9 @@ public:
 
   BookmarksItem* getRootItem();
 
+  void moveLeafIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent);
+  void moveIndex(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent);
+
 protected:
   BookmarksModel(QObject* parent = 0);
 
@@ -95,6 +98,9 @@ private:
   static BookmarksModel* self;
 
   BookmarksItem *getItem(const QModelIndex &index) const;
+  void copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, QModelIndex &tempParent, BookmarksModel* tempModel);
+
+  void copyTempToIndex(QModelIndex &index, QModelIndex &newParent, QModelIndex &tempParent, BookmarksModel* tempModel);
 
   BookmarksModel(const BookmarksModel&);    // Copy Constructor Not Implemented
   void operator=(const BookmarksModel&);  // Operator '=' Not Implemented

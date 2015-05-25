@@ -338,14 +338,7 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
       // Get the path
       QString path = model->index(m_IndexBeingDragged.row(), Path, oldParent).data().toString();
       
-      if (path.isEmpty())
-      {
-        //moveNodeIndex(m_IndexBeingDragged, oldParent, newParent);
-      }
-      else
-      {
-        moveLeafIndex(m_IndexBeingDragged, oldParent, newParent);
-      }
+      model->moveIndex(m_IndexBeingDragged, oldParent, newParent);
 
       model->sort(Name, Qt::AscendingOrder);
       
@@ -519,65 +512,6 @@ void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, Q
       BookmarksTreeView::UnwrapModel(val.toObject(), model, nameIndex);
     }
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::moveLeafIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent)
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  QString name = model->index(m_IndexBeingDragged.row(), Name, oldParent).data().toString();
-  QString path = model->index(m_IndexBeingDragged.row(), Path, oldParent).data().toString();
-
-  model->removeRow(m_IndexBeingDragged.row(), oldParent);
-  int rowPos = model->rowCount(newParent);
-  model->insertRow(rowPos, newParent);
-  QModelIndex newNameIndex = model->index(rowPos, Name, newParent);
-  model->setData(newNameIndex, name);
-  QModelIndex newPathIndex = model->index(rowPos, Path, newParent);
-  model->setData(newPathIndex, path);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::moveNodeIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent)
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  // Get the name of the folder
-  QString name = model->index(m_IndexBeingDragged.row(), Name, oldParent).data().toString();
-
-  // Insert the folder into the new location
-  int rowPos = model->rowCount(newParent);
-  model->insertRow(rowPos, newParent);
-  QModelIndex newNameIndex = model->index(rowPos, Name, newParent);
-  model->setData(newNameIndex, name);
-
-  // Iterate through all its children
-  int count = model->rowCount(index);
-  for (int i = 0; i < count; i++)
-  {
-    QModelIndex childIndex = index.child(i, Name);
-    QString childPath = model->index(childIndex.row(), Path, index).data().toString();
-
-    // If the child index is a node, recursively call this function.  If it is a leaf, call the leaf function.
-    if (childPath.isEmpty())
-    {
-      // This is a node
-      //moveNodeIndex(childIndex, index, newNameIndex);
-    }
-    else
-    {
-      // This is a leaf
-      moveLeafIndex(childIndex, index, newNameIndex);
-    }
-  }
-
-  // Remove the folder from its original spot
-  model->removeRow(m_IndexBeingDragged.row(), oldParent);
 }
 
 
