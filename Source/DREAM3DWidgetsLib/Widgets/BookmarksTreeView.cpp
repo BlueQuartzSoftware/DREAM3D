@@ -40,6 +40,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QApplication>
 #include <QtCore/QMimeData>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 #include <QtGui/QDrag>
 
 #include <iostream>
@@ -211,6 +213,8 @@ void BookmarksTreeView::performDrag()
   {
     QMimeData* mimeData = new QMimeData;
     QString path = model->index(m_IndexBeingDragged.row(), Path, m_IndexBeingDragged.parent()).data().toString();
+    QString source = "Bookmarks";
+    mimeData->setData("Source", source.toLatin1());
     mimeData->setText(path);
 
     QDrag* drag = new QDrag(this);
@@ -313,32 +317,64 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
 {
   BookmarksModel* model = BookmarksModel::Instance();
 
-  QModelIndexList selectList = selectedIndexes();
-
-  if (selectList.size() > 0)
+  const QMimeData* mimedata = event->mimeData();
+  if (mimedata->hasFormat("Source"))
   {
-    QModelIndex newParent = selectList[0];
-
-    if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true && newParent != m_IndexBeingDragged)
+    QByteArray byteArray = mimedata->data("Source");
+    QString source = QString::fromStdString(byteArray.toStdString());
+    if (source == "Bookmarks")
     {
-      QModelIndex oldParent = m_IndexBeingDragged.parent();
-
-      if (m_TopLevelItemPlaceholder.isValid())
+      QModelIndexList selectList = selectedIndexes();
+      if (selectList.size() > 0)
       {
-        // If the parent is the placeholder, change the parent to the root.
-        if (m_TopLevelItemPlaceholder == newParent)
-        {
-          newParent = QModelIndex();
-        }
+        QModelIndex newParent = selectList[0];
 
-        model->removeRow(model->rowCount() - 1, rootIndex());
-        m_TopLevelItemPlaceholder = QModelIndex();
+        if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true && newParent != m_IndexBeingDragged)
+        {
+          QModelIndex oldParent = m_IndexBeingDragged.parent();
+
+          if (m_TopLevelItemPlaceholder.isValid())
+          {
+            // If the parent is the placeholder, change the parent to the root.
+            if (m_TopLevelItemPlaceholder == newParent)
+            {
+              newParent = QModelIndex();
+            }
+
+            model->removeRow(model->rowCount() - 1, rootIndex());
+            m_TopLevelItemPlaceholder = QModelIndex();
+          }
+
+          if (m_IndexBeingDragged.isValid())
+          {
+            model->moveIndexInternally(m_IndexBeingDragged, oldParent, newParent);
+            expand(newParent);
+            model->sort(Name, Qt::AscendingOrder);
+          }
+        }
       }
-      
-      model->moveIndex(m_IndexBeingDragged, oldParent, newParent);
-      expand(newParent);
-      model->sort(Name, Qt::AscendingOrder);
     }
+  }
+  else
+  {
+    QUrl url(mimedata->text());
+    QString path = url.toLocalFile();
+    path = QDir::toNativeSeparators(path);
+    QModelIndex parentIndex = currentIndex();
+    if (m_TopLevelItemPlaceholder.isValid())
+    {
+      if (parentIndex == m_TopLevelItemPlaceholder)
+      {
+        parentIndex = rootIndex();
+      }
+
+      model->removeRow(model->rowCount() - 1, rootIndex());
+      m_TopLevelItemPlaceholder = QModelIndex();
+    }
+
+    model->addFileToTree(path, parentIndex);
+    expand(parentIndex);
+    model->sort(Name, Qt::AscendingOrder);
   }
 }
 

@@ -864,6 +864,8 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 				}
 			}
 		}
+
+    event->accept();
 	}
   else if (mimedata->hasText())
   {
@@ -912,6 +914,8 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
           reindexWidgetTitles();
         }
       }
+
+      event->accept();
     }
     // If the dragged item is a pipeline file...
     else if (ext == "dream3d" || ext == "json" || ext == "ini" || ext == "txt")
@@ -950,6 +954,12 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
           reindexWidgetTitles();
         }
       }
+
+      event->accept();
+    }
+    else
+    {
+      event->ignore();
     }
   }
 }
@@ -1010,6 +1020,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     preflightPipeline();
 
     emit pipelineChanged();
+    event->acceptProposedAction();
   }
   else if (mimedata->hasText())
   {
@@ -1048,6 +1059,9 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
       // Now that we have an index, insert the filter.
       addFilter(data, count);
+
+      emit pipelineChanged();
+      event->acceptProposedAction();
     }
     // If the dragged item is a pipeline file...
     else if (ext == "dream3d" || ext == "json" || ext == "ini" || ext == "txt")
@@ -1091,11 +1105,14 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
           addDREAM3DReaderFilter(data, index);
         }
       }
+      emit pipelineChanged();
+      event->acceptProposedAction();
     }
-
-    emit pipelineChanged();
+    else
+    {
+      event->ignore();
+    }
   }
-  event->acceptProposedAction();
 
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();

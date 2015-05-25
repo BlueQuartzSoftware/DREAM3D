@@ -100,7 +100,7 @@ padding-left: 5px;
        <bool>true</bool>
       </property>
       <property name="dragDropMode">
-       <enum>QAbstractItemView::InternalMove</enum>
+       <enum>QAbstractItemView::DragDrop</enum>
       </property>
       <property name="alternatingRowColors">
        <bool>true</bool>

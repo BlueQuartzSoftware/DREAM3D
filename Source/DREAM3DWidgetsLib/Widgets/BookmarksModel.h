@@ -86,8 +86,9 @@ public:
 
   BookmarksItem* getRootItem();
 
-  void moveLeafIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent);
-  void moveIndex(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent);
+  void moveIndexInternally(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent);
+
+  void addFileToTree(QString &path, QModelIndex &specifiedParent);
 
 protected:
   BookmarksModel(QObject* parent = 0);

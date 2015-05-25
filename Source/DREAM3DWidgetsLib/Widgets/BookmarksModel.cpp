@@ -316,25 +316,6 @@ bool BookmarksModel::isEmpty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::moveLeafIndex(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &newParent)
-{
-  BookmarksModel* model = new BookmarksModel();
-
-  QString name = model->index(index.row(), Name, oldParent).data().toString();
-  QString path = model->index(index.row(), Path, oldParent).data().toString();
-
-  model->removeRow(index.row(), oldParent);
-  int rowPos = model->rowCount(newParent);
-  model->insertRow(rowPos, newParent);
-  QModelIndex newNameIndex = model->index(rowPos, Name, newParent);
-  model->setData(newNameIndex, name);
-  QModelIndex newPathIndex = model->index(rowPos, Path, newParent);
-  model->setData(newPathIndex, path);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, QModelIndex &tempParent, BookmarksModel* tempModel)
 {
   // Get the name of the index
@@ -390,13 +371,14 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::moveIndex(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent)
+void BookmarksModel::moveIndexInternally(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent)
 {
   BookmarksModel* tempModel = new BookmarksModel();
   
-  // Copy the sub-tree to a temporary model
+  // Copy the sub-tree to a temporary model, to retain its data and structure
   copyIndexToTemp(index, oldParent, QModelIndex(), tempModel);
 
+  // Now copy the sub-tree to its new position
   for (int i = 0; i < tempModel->rowCount(QModelIndex()); i++)
   {
     QModelIndex tempIndex = tempModel->index(i, Name, QModelIndex());
@@ -405,6 +387,37 @@ void BookmarksModel::moveIndex(const QModelIndex &index, QModelIndex &oldParent,
 
   // Remove the index from its original spot
   self->removeRow(index.row(), oldParent);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
+{
+  QFileInfo fi(path);
+  QString name = fi.baseName();
+
+  int rowPos = self->rowCount(specifiedParent);
+  self->insertRow(rowPos, specifiedParent);
+  QModelIndex newNameIndex = self->index(rowPos, Name, specifiedParent);
+  self->setData(newNameIndex, name);
+
+  if (fi.isFile())
+  {
+    QModelIndex newPathIndex = self->index(rowPos, Path, specifiedParent);
+    self->setData(newPathIndex, path);
+  }
+  else
+  {
+    QStringList filters;
+    filters << "*.dream3d" << "*.ini" << "*.txt" << "*.json";
+    QDirIterator iter(path, filters, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
+    while (iter.hasNext())
+    {
+      QString nextPath = iter.next();
+      addFileToTree(nextPath, newNameIndex);
+    }
+  }
 }
 
 
