@@ -46,7 +46,8 @@ BookmarksModel* BookmarksModel::self = 0;
 //
 // -----------------------------------------------------------------------------
 BookmarksModel::BookmarksModel(QObject *parent) :
-QAbstractItemModel(parent)
+QAbstractItemModel(parent),
+m_Watcher(NULL)
 {
   QVector<QVariant> vector;
   vector.push_back("Name");
@@ -84,8 +85,11 @@ BookmarksModel* BookmarksModel::NewInstanceFromFile(QString filePath)
   if (fi.exists() & fi.isFile())
   {
     // Erase the old content
-    delete self;
-    self = NULL;
+    if (self)
+    {
+      delete self;
+      self = NULL;
+    }
 
     DREAM3DSettings prefs(filePath);
 
@@ -97,6 +101,38 @@ BookmarksModel* BookmarksModel::NewInstanceFromFile(QString filePath)
   }
 
   return self;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::setFileSystemWatcher(QFileSystemWatcher* watcher)
+{
+  m_Watcher = watcher;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QFileSystemWatcher* BookmarksModel::getFileSystemWatcher()
+{
+  return m_Watcher;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::updateRowState(const QString &path)
+{
+  QFileInfo fi(path);
+  if (fi.exists() == false)
+  {
+    QModelIndexList indexList = findIndexByPath(path);
+    for (int i = 0; i < indexList.size(); i++)
+    {
+      setRowState(indexList[i], Error);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -442,6 +478,7 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
   {
     QModelIndex newPathIndex = self->index(rowPos, Path, specifiedParent);
     self->setData(newPathIndex, path, Qt::DisplayRole);
+    m_Watcher->addPath(path);
   }
   else
   {
@@ -454,6 +491,118 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
       addFileToTree(nextPath, newNameIndex);
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::setRowState(const QModelIndex &current, IndexState state)
+{
+  QModelIndex nameIndex = index(current.row(), Name, current.parent());
+  QModelIndex pathIndex = index(current.row(), Path, current.parent());
+
+  QString tooltip = "'" + nameIndex.data().toString() + "' was not found on the file system.\nYou can either locate the file or delete the entry from the table.";
+
+  if (state == Error)
+  {
+    setData(nameIndex, QColor(235, 110, 110), Qt::BackgroundRole);
+    setData(nameIndex, QColor(240, 240, 240), Qt::TextColorRole);
+    setData(nameIndex, tooltip, Qt::ToolTipRole);
+
+    setData(pathIndex, QColor(235, 110, 110), Qt::BackgroundRole);
+    setData(pathIndex, QColor(240, 240, 240), Qt::TextColorRole);
+    setData(pathIndex, tooltip, Qt::ToolTipRole);
+  }
+  else
+  {
+    setData(nameIndex, QColor(Qt::white), Qt::BackgroundRole);
+    setData(nameIndex, QColor(Qt::black), Qt::TextColorRole);
+    setData(nameIndex, "", Qt::ToolTipRole);
+
+    setData(pathIndex, QColor(Qt::white), Qt::BackgroundRole);
+    setData(pathIndex, QColor(Qt::black), Qt::TextColorRole);
+    setData(pathIndex, "", Qt::ToolTipRole);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList BookmarksModel::getFilePaths()
+{
+  return getFilePaths(rootItem);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList BookmarksModel::getFilePaths(BookmarksItem* item)
+{
+  QStringList list;
+  if (item != rootItem && item->childCount() <= 0)
+  {
+    QString filePath = item->data(Path).toString();
+    if (filePath.isEmpty() == false)
+    {
+      list.append(filePath);
+    }
+    return list;
+  }
+
+  for (int i = 0; i < item->childCount(); i++)
+  {
+    list.append(getFilePaths(item->child(i)));
+  }
+
+  return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QModelIndexList BookmarksModel::findIndexByPath(QString filePath)
+{
+  QModelIndexList list;
+  for (int i = 0; i < rootItem->childCount(); i++)
+  {
+    QModelIndex child = index(i, Path, QModelIndex());
+    if (rowCount(child) <= 0 && child.data().toString() == filePath)
+    {
+      list.append(child);
+    }
+
+    for (int j = 0; j < rowCount(child); j++)
+    {
+      QModelIndexList subList = findIndexByPath(child, filePath);
+      list.append(subList);
+    }
+  }
+
+  return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QModelIndexList BookmarksModel::findIndexByPath(const QModelIndex &current, QString filePath)
+{
+  QModelIndex actual = index(current.row(), Name, current.parent());
+
+  QModelIndexList list;
+  for (int i = 0; i < rowCount(actual); i++)
+  {
+    QModelIndex pathIndex = index(i, Path, actual);
+
+    if (rowCount(pathIndex) <= 0 && pathIndex.data().toString() == filePath)
+    {
+      list.append(pathIndex);
+    }
+
+    QModelIndexList subList = findIndexByPath(pathIndex, filePath);
+    list.append(subList);
+  }
+
+  return list;
 }
 
 

@@ -50,7 +50,7 @@ class QtSupportLib_EXPORT BookmarkMissingDialog : public QDialog, private Ui::Bo
   Q_OBJECT
 
 public:
-  BookmarkMissingDialog(QWidget* parent = 0);
+  BookmarkMissingDialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
   virtual ~BookmarkMissingDialog();
 
   void setBookmarkName(QString name);

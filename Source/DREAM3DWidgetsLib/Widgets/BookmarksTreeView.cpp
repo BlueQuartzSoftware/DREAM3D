@@ -435,11 +435,15 @@ void BookmarksTreeView::expandChildren(const QModelIndex &parent, BookmarksModel
 // -----------------------------------------------------------------------------
 void BookmarksTreeView::collapseIndex(const QModelIndex & index)
 {
-  BookmarksModel* model = BookmarksModel::Instance();
-  QModelIndex sibling = model->sibling(index);
+  if (index.isValid())
+  {
+    BookmarksModel* model = BookmarksModel::Instance();
+    QModelIndex sibling = model->sibling(index);
 
-  model->setNeedsToBeExpanded(index, false);
-  model->setNeedsToBeExpanded(sibling, false);
+    QTreeView::collapse(index);
+    model->setNeedsToBeExpanded(index, false);
+    model->setNeedsToBeExpanded(sibling, false);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -533,6 +537,10 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
     }
   }
 
+  QStringList paths = model->getFilePaths();
+  model->setFileSystemWatcher(new QFileSystemWatcher(paths, model));
+  connect(model->getFileSystemWatcher(), SIGNAL(fileChanged(const QString &)), model, SLOT(updateRowState(const QString &)));
+
   return model;
 }
 
@@ -549,6 +557,12 @@ void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, Q
   QString name = object["Name"].toString();
   QString path = object["Path"].toString();
   bool expanded = object["Expanded"].toBool();
+
+  QFileInfo fi(path);
+  if (path.isEmpty() == false && fi.exists() == false)
+  {
+    model->setRowState(nameIndex, Error);
+  }
 
   path = QDir::toNativeSeparators(path);
 

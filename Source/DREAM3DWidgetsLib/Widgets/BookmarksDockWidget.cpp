@@ -316,10 +316,12 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
   else
   {
     QColor bgColor = model->data(pathIndex, Qt::BackgroundColorRole).value<QColor>();
-    if (bgColor != QColor(Qt::white))
+    QString path = pathIndex.data().toString();
+    QFileInfo fi(path);
+    if (fi.exists() == false)
     {
       bookmarksTreeView->blockSignals(true);
-      BookmarkMissingDialog* dialog = new BookmarkMissingDialog();
+      BookmarkMissingDialog* dialog = new BookmarkMissingDialog(this, Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint | Qt::WindowTitleHint);
       connect(dialog, SIGNAL(locateBtnPressed()), this, SLOT(m_ActionLocateFile_triggered()));
       dialog->setBookmarkName(nameIndex.data().toString());
       dialog->exec();
@@ -328,6 +330,10 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
     }
     else
     {
+      if (bgColor != QColor(Qt::white))
+      {
+        model->setRowState(pathIndex, Default);
+      }
       emit pipelineFileActivated(pipelinePath);
     }
   }
@@ -437,13 +443,7 @@ void BookmarksDockWidget::m_ActionLocateFile_triggered()
   model->setData(pathIndex, filePath, Qt::DisplayRole);
 
   // Change item back to default look and functionality
-  model->setData(nameIndex, QColor(Qt::white), Qt::BackgroundRole);
-  model->setData(nameIndex, QColor(Qt::black), Qt::TextColorRole);
-  model->setData(nameIndex, "", Qt::ToolTipRole);
-
-  model->setData(pathIndex, QColor(Qt::white), Qt::BackgroundRole);
-  model->setData(pathIndex, QColor(Qt::black), Qt::TextColorRole);
-  model->setData(pathIndex, "", Qt::ToolTipRole);
+  model->setRowState(pathIndex, Default);
 }
 
 // -----------------------------------------------------------------------------
@@ -586,6 +586,10 @@ int BookmarksDockWidget::addTreeItem(QModelIndex parent,
     {
       bookmarksTreeView->edit(nameIndex);
     }
+  }
+  else
+  {
+    model->getFileSystemWatcher()->addPath(favoritePath);
   }
 
   return 0;

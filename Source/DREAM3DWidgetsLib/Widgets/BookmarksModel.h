@@ -36,15 +36,22 @@
 #ifndef BookmarksModel_H
 #define BookmarksModel_H
 
-#include <QAbstractItemModel>
-#include <QModelIndex>
-#include <QVariant>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QModelIndex>
+#include <QtCore/QVariant>
+#include <QtCore/QFileSystemWatcher>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterLibraryTreeWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksItem.h"
+
+enum IndexState
+{
+  Error,
+  Default
+};
 
 class BookmarksItem;
 
@@ -84,17 +91,30 @@ public:
   bool needsToBeExpanded(const QModelIndex &index);
   void setNeedsToBeExpanded(const QModelIndex &index, bool value);
 
+  void setRowState(const QModelIndex &index, IndexState state);
+
   BookmarksItem* getRootItem();
 
   void moveIndexInternally(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent);
 
   void addFileToTree(QString &path, QModelIndex &specifiedParent);
 
+  QStringList getFilePaths();
+
+  QModelIndexList findIndexByPath(QString filePath);
+
+  void setFileSystemWatcher(QFileSystemWatcher* watcher);
+  QFileSystemWatcher* getFileSystemWatcher();
+
 protected:
   BookmarksModel(QObject* parent = 0);
 
+protected slots:
+  void updateRowState(const QString &path);
+
 private:
   BookmarksItem*            rootItem;
+  QFileSystemWatcher*       m_Watcher;
 
   static BookmarksModel* self;
 
@@ -102,6 +122,10 @@ private:
   void copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, QModelIndex &tempParent, BookmarksModel* tempModel);
 
   void copyTempToIndex(QModelIndex &index, QModelIndex &newParent, QModelIndex &tempParent, BookmarksModel* tempModel);
+
+  QStringList getFilePaths(BookmarksItem* item);
+
+  QModelIndexList findIndexByPath(const QModelIndex &index, QString filePath);
 
   BookmarksModel(const BookmarksModel&);    // Copy Constructor Not Implemented
   void operator=(const BookmarksModel&);  // Operator '=' Not Implemented
