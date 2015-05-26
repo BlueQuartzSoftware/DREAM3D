@@ -2,9 +2,9 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ImageImport)
+project(ImageIO)
 
-set(PLUGIN_NAME ImageImport)
+set(PLUGIN_NAME ImageIO)
 
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated

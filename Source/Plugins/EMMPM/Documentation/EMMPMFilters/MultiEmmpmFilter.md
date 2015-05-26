@@ -56,4 +56,8 @@ There is also an option to use the last Mu (mean) and Sigma (variance) values ca
 ## Citations ##
 H. C. Chuang, M. L. Comer, and J. Simmons, “Texture Segmentation in Microstructure Images of Advanced Materials,” In Proceedings of the _2008 IEEE Southwest Symposium on Image Analysis and Interpretation_, March 24-26, 2008, Santa Fe, NM
 
-See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
+## DREAM3D Mailing Lists ##
+
+If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
+https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+
