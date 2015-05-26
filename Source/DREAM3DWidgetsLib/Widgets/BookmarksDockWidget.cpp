@@ -561,7 +561,7 @@ int BookmarksDockWidget::addTreeItem(QModelIndex parent,
   model->setData(nameIndex, favoriteTitle, Qt::DisplayRole);
   QModelIndex pathIndex = model->index(rowPos, Path, parent);
   model->setData(pathIndex, favoritePath, Qt::DisplayRole);
-  //itemWidget->setIcon(0, icon);
+  model->setData(nameIndex, icon, Qt::DecorationRole);
 
   bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);
   bookmarksTreeView->blockSignals(false);

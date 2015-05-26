@@ -45,7 +45,8 @@
 BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent) :
 m_ItemBackgroundColor(QColor(Qt::white)),
 m_ItemTextColor(QColor(Qt::black)),
-m_ItemTooltip("")
+m_ItemTooltip(""),
+m_Icon(QIcon())
 {
   m_ParentItem = parent;
   m_ItemData = data;
@@ -236,6 +237,23 @@ QString BookmarksItem::getItemTooltip()
 bool BookmarksItem::setItemTooltip(QString &value)
 {
   m_ItemTooltip = value;
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QIcon BookmarksItem::getIcon()
+{
+  return m_Icon;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BookmarksItem::setIcon(QIcon &icon)
+{
+  m_Icon = icon;
   return true;
 }
 

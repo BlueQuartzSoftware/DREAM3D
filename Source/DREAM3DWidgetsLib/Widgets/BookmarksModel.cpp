@@ -187,6 +187,19 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
     BookmarksItem* item = getItem(index);
     return item->getItemTooltip();
   }
+  else if (role == Qt::DecorationRole)
+  {
+    QModelIndex nameIndex = this->index(index.row(), Name, index.parent());
+    if (nameIndex == index)
+    {
+      BookmarksItem* item = getItem(index);
+      return item->getIcon();
+    }
+    else
+    {
+      return QVariant();
+    }
+  }
   else
   {
     return QVariant();
@@ -336,6 +349,10 @@ bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, in
   {
     result = item->setItemTooltip(value.toString());
   }
+  else if (role == Qt::DecorationRole)
+  {
+    result = item->setIcon(value.value<QIcon>());
+  }
   else
   {
     result = item->setData(index.column(), value);
@@ -478,10 +495,13 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
   {
     QModelIndex newPathIndex = self->index(rowPos, Path, specifiedParent);
     self->setData(newPathIndex, path, Qt::DisplayRole);
+    self->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
     m_Watcher->addPath(path);
   }
   else
   {
+    self->setData(newNameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
+
     QStringList filters;
     filters << "*.dream3d" << "*.ini" << "*.txt" << "*.json";
     QDirIterator iter(path, filters, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);

@@ -559,9 +559,17 @@ void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, Q
   bool expanded = object["Expanded"].toBool();
 
   QFileInfo fi(path);
-  if (path.isEmpty() == false && fi.exists() == false)
+  if (path.isEmpty() == false)
   {
-    model->setRowState(nameIndex, Error);
+    model->setData(nameIndex, QIcon(":/text.png"), Qt::DecorationRole);
+    if (fi.exists() == false)
+    {
+      model->setRowState(nameIndex, Error);
+    }
+  }
+  else
+  {
+    model->setData(nameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
   }
 
   path = QDir::toNativeSeparators(path);

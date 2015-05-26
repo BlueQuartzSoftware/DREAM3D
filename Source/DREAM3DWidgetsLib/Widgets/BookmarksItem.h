@@ -36,9 +36,11 @@
 #ifndef BookmarksItem_H
 #define BookmarksItem_H
 
-#include <QList>
-#include <QVariant>
-#include <QVector>
+#include <QtCore/QList>
+#include <QtCore/QVariant>
+#include <QtCore/QVector>
+
+#include <QtGui/QIcon>
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
@@ -74,6 +76,9 @@ public:
   QString getItemTooltip();
   bool setItemTooltip(QString &value);
 
+  QIcon getIcon();
+  bool setIcon(QIcon &icon);
+
   bool needsToBeExpanded();
   void setNeedsToBeExpanded(bool value);
 
@@ -93,6 +98,7 @@ private:
   QColor                              m_ItemTextColor;
   QString                             m_ItemTooltip;
   bool                                m_NeedsToBeExpanded;
+  QIcon                               m_Icon;
 
   BookmarksItem(const BookmarksItem&);    // Copy Constructor Not Implemented
   void operator=(const BookmarksItem&);  // Operator '=' Not Implemented
