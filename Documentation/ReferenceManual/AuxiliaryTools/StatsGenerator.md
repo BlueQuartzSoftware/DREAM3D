@@ -4,6 +4,7 @@ Stats Generator {#statsgenerator}
 ## Introduction ##
 In order to allow the user to quickly generate a set of statistics that can be used to create a synthetic microstructure, the “StatsGenerator” program was created. Using this program, the user can generate the necessary statistics that describe a microstructure and save those statistics to a DREAM3D file that can then be used in a DREAM3D pipeline to generate a synthetic microstructure.
 The main features are:
+
 + Describe the grain size distribution via a preset Gaussian distribution
 + Select from several preset microstructure types
 + Define the Omega 3 Distributions
