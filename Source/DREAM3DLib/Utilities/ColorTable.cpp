@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ColorTable::ColorTable()
+DREAM3DColorTable::DREAM3DColorTable()
 {
 
 }
@@ -50,7 +50,7 @@ ColorTable::ColorTable()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ColorTable::~ColorTable()
+DREAM3DColorTable::~DREAM3DColorTable()
 {
 
 }
@@ -58,7 +58,7 @@ ColorTable::~ColorTable()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ColorTable::GetColorTable(int numColors, QVector<float>& colors)
+void DREAM3DColorTable::GetColorTable(int numColors, QVector<float>& colors)
 {
   static const int numColorNodes = 8;
   float color[numColorNodes][3] =
