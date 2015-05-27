@@ -67,6 +67,8 @@
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 
@@ -163,7 +165,27 @@ int main (int argc, char  *argv[])
   }
 
   // Use the static method to read the Pipeline file and return a Filter Pipeline
-  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
+  QString ext = fi.completeSuffix();
+
+  FilterPipeline::Pointer pipeline;
+  if (ext == "ini" || "txt")
+  {
+    pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
+  }
+  else if (ext == "dream3d")
+  {
+    pipeline = H5FilterParametersReader::ReadPipelineFromFile(pipelineFile);
+  }
+  else if (ext == "json")
+  {
+    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(pipelineFile);
+  }
+  else
+  {
+    std::cout << "Unsupported pipeline file type. Exiting now." << std::endl;
+    return EXIT_FAILURE;
+  }
+  
   if (NULL == pipeline.get())
   {
     std::cout << "An error occurred trying to read the pipeline file. Exiting now." << std::endl;
