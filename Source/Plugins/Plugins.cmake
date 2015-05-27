@@ -109,7 +109,7 @@ endfunction()
 set(DREAM3D_BASE_PLUGINS
   Generic
   IO
-  ImageImport
+  ImageIO
   OrientationAnalysis
   Processing
   Reconstruction

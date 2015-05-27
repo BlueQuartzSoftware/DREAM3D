@@ -39,6 +39,7 @@ This filter does the following...
 **License:**  See the License.txt file that came with DREAM3D.
 
 
+## DREAM3D Mailing Lists ##
 
-See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
-
+If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
+https://groups.google.com/forum/?hl=en#!forum/dream3d-users

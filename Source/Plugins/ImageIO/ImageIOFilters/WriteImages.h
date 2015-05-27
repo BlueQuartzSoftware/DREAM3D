@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
-#include "ImageImport/ImageImportConstants.h"
+#include "ImageIO/ImageIOConstants.h"
 
 /**
  * @class WriteImages WriteImages.h /IOFilters/WriteImages.h

@@ -362,7 +362,7 @@ AbstractFilter::Pointer WriteImages::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString WriteImages::getCompiledLibraryName()
-{ return ImageImportConstants::ImageImportBaseName; }
+{ return ImageIOConstants::ImageIOBaseName; }
 
 
 // -----------------------------------------------------------------------------

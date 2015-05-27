@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImageImportPlugin_H_
-#define _ImageImportPlugin_H_
+#ifndef _ImageIOPlugin_H_
+#define _ImageIOPlugin_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -42,21 +42,21 @@
 
 
 /**
- * @class ImageImportPlugin ImageImportPlugin.h SurfaceMeshing/ImageImportPlugin.h
+ * @class ImageIOPlugin ImageIOPlugin.h SurfaceMeshing/ImageIOPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class ImageImportPlugin : public QObject, public IDREAM3DPlugin
+class ImageIOPlugin : public QObject, public IDREAM3DPlugin
 {
     Q_OBJECT
     Q_INTERFACES(IDREAM3DPlugin)
-    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.ImageImportPlugin")
+    Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.ImageIOPlugin")
 
   public:
-    ImageImportPlugin();
-    virtual ~ImageImportPlugin();
+    ImageIOPlugin();
+    virtual ~ImageIOPlugin();
     /**
      * @brief Returns the name of the plugin
      */
@@ -162,9 +162,9 @@ class ImageImportPlugin : public QObject, public IDREAM3DPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    ImageImportPlugin(const ImageImportPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ImageImportPlugin&); // Operator '=' Not Implemented
+    ImageIOPlugin(const ImageIOPlugin&); // Copy Constructor Not Implemented
+    void operator=(const ImageIOPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* _ImageImportPlugin_H_ */
+#endif /* _ImageIOPlugin_H_ */
 

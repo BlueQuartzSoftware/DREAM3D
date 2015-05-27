@@ -687,7 +687,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = prefix + "Plugins/";
   QStringList libs;
-  libs << "DDDAnalysisToolbox" << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
+  libs << "DDDAnalysisToolbox" << "ImageIO" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
 
   for (int i = 0; i < libs.size(); ++i)
   {
