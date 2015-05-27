@@ -130,7 +130,10 @@ void BookmarksModel::updateRowState(const QString &path)
     QModelIndexList indexList = findIndexByPath(path);
     for (int i = 0; i < indexList.size(); i++)
     {
-      setRowState(indexList[i], Error);
+      QModelIndex nameIndex = index(indexList[i].row(), Name, indexList[i].parent());
+
+      // Set the itemHasError variable
+      setData(nameIndex, true, Qt::UserRole);
     }
   }
 }
@@ -167,25 +170,51 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
   {
     return QVariant();
   }
-  else if (role == Qt::DisplayRole || role == Qt::UserRole)
+
+  BookmarksItem *item = getItem(index);
+  
+  if (role == Qt::DisplayRole)
   {
-    BookmarksItem *item = getItem(index);
     return item->data(index.column());
+  }
+  else if (role == Qt::UserRole)
+  {
+    return item->getItemHasErrors();
   }
   else if (role == Qt::BackgroundRole)
   {
-    BookmarksItem *item = getItem(index);
-    return item->getItemBackgroundColor();
+    if (item->getItemHasErrors() == true)
+    {
+      return QColor(235, 110, 110);
+    }
+    else
+    {
+      return QVariant();
+    }
   }
-  else if (role == Qt::TextColorRole)
+  else if (role == Qt::ForegroundRole)
   {
-    BookmarksItem *item = getItem(index);
-    return item->getItemTextColor();
+    if (item->getItemHasErrors() == true)
+    {
+      return QColor(240, 240, 240);
+    }
+    else
+    {
+      return QColor(Qt::black);
+    }
   }
   else if (role == Qt::ToolTipRole)
   {
-    BookmarksItem* item = getItem(index);
-    return item->getItemTooltip();
+    QString tooltip = "'" + this->index(index.row(), Path, index.parent()).data().toString() + "' was not found on the file system.\nYou can either locate the file or delete the entry from the table.";
+
+    if (item->getItemHasErrors() == true)
+    {
+      return tooltip;
+    }
+    else
+    {
+      return "";
+    }
   }
   else if (role == Qt::DecorationRole)
   {
@@ -337,17 +366,9 @@ bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, in
   BookmarksItem *item = getItem(index);
   bool result = false;
 
-  if (role == Qt::BackgroundRole)
+  if (role == Qt::UserRole)
   {
-    result = item->setItemBackgroundColor(value.value<QColor>());
-  }
-  else if (role == Qt::TextColorRole)
-  {
-    result = item->setItemTextColor(value.value<QColor>());
-  }
-  else if (role == Qt::ToolTipRole)
-  {
-    result = item->setItemTooltip(value.toString());
+    result = item->setItemHasErrors(value.value<bool>());
   }
   else if (role == Qt::DecorationRole)
   {
@@ -510,38 +531,6 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
       QString nextPath = iter.next();
       addFileToTree(nextPath, newNameIndex);
     }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksModel::setRowState(const QModelIndex &current, IndexState state)
-{
-  QModelIndex nameIndex = index(current.row(), Name, current.parent());
-  QModelIndex pathIndex = index(current.row(), Path, current.parent());
-
-  QString tooltip = "'" + nameIndex.data().toString() + "' was not found on the file system.\nYou can either locate the file or delete the entry from the table.";
-
-  if (state == Error)
-  {
-    setData(nameIndex, QColor(235, 110, 110), Qt::BackgroundRole);
-    setData(nameIndex, QColor(240, 240, 240), Qt::TextColorRole);
-    setData(nameIndex, tooltip, Qt::ToolTipRole);
-
-    setData(pathIndex, QColor(235, 110, 110), Qt::BackgroundRole);
-    setData(pathIndex, QColor(240, 240, 240), Qt::TextColorRole);
-    setData(pathIndex, tooltip, Qt::ToolTipRole);
-  }
-  else
-  {
-    setData(nameIndex, QColor(Qt::white), Qt::BackgroundRole);
-    setData(nameIndex, QColor(Qt::black), Qt::TextColorRole);
-    setData(nameIndex, "", Qt::ToolTipRole);
-
-    setData(pathIndex, QColor(Qt::white), Qt::BackgroundRole);
-    setData(pathIndex, QColor(Qt::black), Qt::TextColorRole);
-    setData(pathIndex, "", Qt::ToolTipRole);
   }
 }
 

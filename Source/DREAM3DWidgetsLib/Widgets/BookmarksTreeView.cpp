@@ -184,7 +184,8 @@ void BookmarksTreeView::showContextMenu(QModelIndex index, const QPoint& globalP
     QString path = actualIndex.data().toString();
     if (path.isEmpty() == false)
     {
-      if (model->data(actualIndex, Qt::BackgroundRole) != QColor(Qt::white) && !m_LeafErrorActions.isEmpty())
+      bool itemHasErrors = model->data(actualIndex, Qt::UserRole).value<bool>();
+      if (itemHasErrors == true && !m_LeafErrorActions.isEmpty())
       {
         addActionList(m_LeafErrorActions);
       }
@@ -212,9 +213,9 @@ void BookmarksTreeView::mouseMoveEvent(QMouseEvent* event)
   if (event->buttons() & Qt::LeftButton)
   {
     QModelIndex index = model->index(currentIndex().row(), Name, currentIndex().parent());
-    QColor bgColor = model->data(index, Qt::BackgroundColorRole).value<QColor>();
+    bool itemHasErrors = model->data(index, Qt::UserRole).value<bool>();
     int distance = (event->pos() - m_StartPos).manhattanLength();
-    if (distance >= QApplication::startDragDistance() && bgColor == QColor(Qt::white))
+    if (distance >= QApplication::startDragDistance() && itemHasErrors == false)
     {
       performDrag();
     }
@@ -570,7 +571,8 @@ void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, Q
     model->setData(nameIndex, QIcon(":/text.png"), Qt::DecorationRole);
     if (fi.exists() == false)
     {
-      model->setRowState(nameIndex, Error);
+      // Set the itemHasError variable
+      model->setData(nameIndex, true, Qt::UserRole);
     }
   }
   else

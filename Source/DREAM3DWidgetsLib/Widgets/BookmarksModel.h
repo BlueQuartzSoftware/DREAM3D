@@ -91,8 +91,6 @@ public:
   bool needsToBeExpanded(const QModelIndex &index);
   void setNeedsToBeExpanded(const QModelIndex &index, bool value);
 
-  void setRowState(const QModelIndex &index, IndexState state);
-
   BookmarksItem* getRootItem();
 
   void moveIndexInternally(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent);

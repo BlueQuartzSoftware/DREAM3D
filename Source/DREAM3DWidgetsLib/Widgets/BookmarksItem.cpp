@@ -43,9 +43,8 @@
 //
 // -----------------------------------------------------------------------------
 BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent) :
-m_ItemBackgroundColor(QColor(Qt::white)),
-m_ItemTextColor(QColor(Qt::black)),
 m_ItemTooltip(""),
+m_ItemHasErrors(false),
 m_Icon(QIcon())
 {
   m_ParentItem = parent;
@@ -192,34 +191,17 @@ bool BookmarksItem::setData(int column, const QVariant &value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QColor BookmarksItem::getItemBackgroundColor()
+bool BookmarksItem::getItemHasErrors()
 {
-  return m_ItemBackgroundColor;
+  return m_ItemHasErrors;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksItem::setItemBackgroundColor(const QColor &value)
+bool BookmarksItem::setItemHasErrors(const bool &value)
 {
-  m_ItemBackgroundColor = QColor(value);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QColor BookmarksItem::getItemTextColor()
-{
-  return m_ItemTextColor;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool BookmarksItem::setItemTextColor(const QColor &value)
-{
-  m_ItemTextColor = QColor(value);
+  m_ItemHasErrors = value;
   return true;
 }
 

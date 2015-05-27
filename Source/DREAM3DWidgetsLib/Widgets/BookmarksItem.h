@@ -67,11 +67,8 @@ public:
   QVariant data(int column) const;
   bool setData(int column, const QVariant &value);
 
-  QColor getItemBackgroundColor();
-  bool setItemBackgroundColor(const QColor &value);
-
-  QColor getItemTextColor();
-  bool setItemTextColor(const QColor &value);
+  bool getItemHasErrors();
+  bool setItemHasErrors(const bool &value);
 
   QString getItemTooltip();
   bool setItemTooltip(const QString &value);
@@ -94,8 +91,7 @@ private:
   QList<BookmarksItem*>               m_ChildItems;
   QVector<QVariant>                   m_ItemData;
   BookmarksItem*                      m_ParentItem;
-  QColor                              m_ItemBackgroundColor;
-  QColor                              m_ItemTextColor;
+  bool                                m_ItemHasErrors;
   QString                             m_ItemTooltip;
   bool                                m_NeedsToBeExpanded;
   QIcon                               m_Icon;

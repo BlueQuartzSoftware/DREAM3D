@@ -315,7 +315,7 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
   }
   else
   {
-    QColor bgColor = model->data(pathIndex, Qt::BackgroundColorRole).value<QColor>();
+    bool itemHasErrors = model->data(pathIndex, Qt::UserRole).value<bool>();
     QString path = pathIndex.data().toString();
     QFileInfo fi(path);
     if (fi.exists() == false)
@@ -330,9 +330,11 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
     }
     else
     {
-      if (bgColor != QColor(Qt::white))
+      if (itemHasErrors == true)
       {
-        model->setRowState(pathIndex, Default);
+        // Set the itemHasError variable, and have the watcher monitor the file again
+        model->setData(nameIndex, false, Qt::UserRole);
+        model->getFileSystemWatcher()->addPath(pathIndex.data().toString());
       }
       emit pipelineFileActivated(pipelinePath);
     }
@@ -443,7 +445,7 @@ void BookmarksDockWidget::m_ActionLocateFile_triggered()
   model->setData(pathIndex, filePath, Qt::DisplayRole);
 
   // Change item back to default look and functionality
-  model->setRowState(pathIndex, Default);
+  model->setData(nameIndex, false, Qt::UserRole);
 }
 
 // -----------------------------------------------------------------------------
