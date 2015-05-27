@@ -55,10 +55,10 @@
 
 #include "QtSupportLib/QFileCompleter.h"
 
-#include "ImageImport/ImageImportFilters/ImportVectorImageStack.h"
+#include "ImageIO/ImageIOFilters/ImportVectorImageStack.h"
 
 
-#include "ImageImport/moc_ImportVectorImageStackWidget.cpp"
+#include "ImageIO/moc_ImportVectorImageStackWidget.cpp"
 
 // Initialize private static member variable
 QString ImportVectorImageStackWidget::m_OpenDialogLastDirectory = "";

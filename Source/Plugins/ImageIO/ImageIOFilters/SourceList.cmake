@@ -2,10 +2,10 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-set(_filterGroupName ImageImportFilters)
+set(_filterGroupName ImageIOFilters)
 set(${_filterGroupName}_FILTERS_HDRS "")
 
-START_FILTER_GROUP(${ImageImport_BINARY_DIR} "${_filterGroupName}" "Image Import Filters")
+START_FILTER_GROUP(${ImageIO_BINARY_DIR} "${_filterGroupName}" "Image Import Filters")
 
 
 #---------
@@ -22,9 +22,9 @@ set(_PublicFilters
 # Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
 # interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
 foreach(f ${_PublicFilters} )
-  ADD_DREAM3D_FILTER(  "ImageImport" "ImageImport"
+  ADD_DREAM3D_FILTER(  "ImageIO" "ImageIO"
                         ${_filterGroupName} ${f}
-                        ${ImageImport_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
+                        ${ImageIO_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
 endforeach()
 
 
@@ -38,7 +38,7 @@ set(_PrivateFilters
 #-----------------
 # Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
 foreach(f ${_PrivateFilters} )
-  ADD_DREAM3D_FILTER(  "ImageImport" "ImageImport"
+  ADD_DREAM3D_FILTER(  "ImageIO" "ImageIO"
                         ${_filterGroupName} ${f}
                         ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
@@ -46,5 +46,5 @@ endforeach()
 
 
 
-END_FILTER_GROUP(${ImageImport_BINARY_DIR} "${_filterGroupName}" "Image Import Filters")
+END_FILTER_GROUP(${ImageIO_BINARY_DIR} "${_filterGroupName}" "Image Import Filters")
 

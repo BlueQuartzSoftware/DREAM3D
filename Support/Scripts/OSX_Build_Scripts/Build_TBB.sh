@@ -36,7 +36,7 @@ SDK_INSTALL=/Users/Shared/Toolkits
 
 cd $SDK_INSTALL
 
-TBB_VERS=tbb42_20140601
+TBB_VERS=tbb43_20150424
 
 #https://www.threadingbuildingblocks.org/sites/default/files/software_releases/mac/${TBB_VERS}oss_src.tgz
 # First check to see if we have already downloaded the archive file

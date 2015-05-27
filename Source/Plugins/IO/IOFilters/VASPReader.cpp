@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -139,7 +139,7 @@ void VASPReader::dataCheck()
   AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
 
-  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(1, DREAM3D::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, DREAM3D::Geometry::VertexGeometry);
   m->setGeometry(vertex);
 
   QFileInfo fi(getInputFile());

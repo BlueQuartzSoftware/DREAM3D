@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "ImageImportPlugin.h"
+#include "ImageIOPlugin.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
@@ -43,21 +43,21 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "ImageImport/moc_ImageImportPlugin.cpp"
+#include "ImageIO/moc_ImageIOPlugin.cpp"
 
 
 
 namespace Detail
 {
-  const QString ImageImportPluginFile("ImageImportPlugin");
-  const QString ImageImportPluginDisplayName("ImageImport");
-  const QString ImageImportPluginBaseName("ImageImportPlugin");
+  const QString ImageIOPluginFile("ImageIOPlugin");
+  const QString ImageIOPluginDisplayName("ImageIO");
+  const QString ImageIOPluginBaseName("ImageIOPlugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImageImportPlugin::ImageImportPlugin() :
+ImageIOPlugin::ImageIOPlugin() :
 m_Version(DREAM3DLib::Version::Package()),
 m_CompatibilityVersion(DREAM3DLib::Version::Package()),
 m_Vendor(DREAM3D::BlueQuartz::VendorName),
@@ -72,22 +72,22 @@ m_Copyright(DREAM3D::BlueQuartz::Copyright),
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImageImportPlugin::~ImageImportPlugin()
+ImageIOPlugin::~ImageIOPlugin()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getPluginName()
+QString ImageIOPlugin::getPluginName()
 {
-  return (Detail::ImageImportPluginDisplayName);
+  return (Detail::ImageIOPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getVersion()
+QString ImageIOPlugin::getVersion()
 {
   return m_Version;
 }
@@ -95,7 +95,7 @@ QString ImageImportPlugin::getVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getCompatibilityVersion()
+QString ImageIOPlugin::getCompatibilityVersion()
 {
   return m_CompatibilityVersion;
 }
@@ -103,7 +103,7 @@ QString ImageImportPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getVendor()
+QString ImageIOPlugin::getVendor()
 {
   return m_Vendor;
 }
@@ -111,7 +111,7 @@ QString ImageImportPlugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getURL()
+QString ImageIOPlugin::getURL()
 {
   return m_URL;
 }
@@ -119,7 +119,7 @@ QString ImageImportPlugin::getURL()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getLocation()
+QString ImageIOPlugin::getLocation()
 {
   return m_Location;
 }
@@ -127,9 +127,9 @@ QString ImageImportPlugin::getLocation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getDescription()
+QString ImageIOPlugin::getDescription()
 {
-  QFile licenseFile(":/ImageImport/ImageImportDescription.txt");
+  QFile licenseFile(":/ImageIO/ImageIODescription.txt");
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--Description was not read-->>";
 
@@ -147,7 +147,7 @@ QString ImageImportPlugin::getDescription()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getCopyright()
+QString ImageIOPlugin::getCopyright()
 {
   return m_Copyright;
 }
@@ -155,7 +155,7 @@ QString ImageImportPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageImportPlugin::getLicense()
+QString ImageIOPlugin::getLicense()
 {
   QFile licenseFile(":/DREAM3D/DREAM3DLicense.txt");
   QFileInfo licenseFileInfo(licenseFile);
@@ -175,7 +175,7 @@ QString ImageImportPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QMap<QString, QString> ImageImportPlugin::getThirdPartyLicenses()
+QMap<QString, QString> ImageIOPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;
   QList<QString> fileStrList;
@@ -205,7 +205,7 @@ QMap<QString, QString> ImageImportPlugin::getThirdPartyLicenses()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ImageImportPlugin::getDidLoad()
+bool ImageIOPlugin::getDidLoad()
 {
   return m_DidLoad;
 }
@@ -213,7 +213,7 @@ bool ImageImportPlugin::getDidLoad()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageImportPlugin::setDidLoad(bool didLoad)
+void ImageIOPlugin::setDidLoad(bool didLoad)
 {
   m_DidLoad = didLoad;
 }
@@ -221,7 +221,7 @@ void ImageImportPlugin::setDidLoad(bool didLoad)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageImportPlugin::setLocation(QString filePath)
+void ImageIOPlugin::setLocation(QString filePath)
 {
   m_Location = filePath;
 }
@@ -229,7 +229,7 @@ void ImageImportPlugin::setLocation(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageImportPlugin::writeSettings(QSettings& prefs)
+void ImageIOPlugin::writeSettings(QSettings& prefs)
 {
 
 }
@@ -237,13 +237,13 @@ void ImageImportPlugin::writeSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageImportPlugin::readSettings(QSettings& prefs)
+void ImageIOPlugin::readSettings(QSettings& prefs)
 {
 
 }
 
 
-#include "ImageImportFilters/RegisterKnownFilters.cpp"
+#include "ImageIOFilters/RegisterKnownFilters.cpp"
 
-#include "ImageImport/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "ImageIO/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

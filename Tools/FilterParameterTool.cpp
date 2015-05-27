@@ -694,7 +694,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = D3DTools::GetDREAM3DPluginDir();
 
-//  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
+//  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageIO" <<
 //          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
 //          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
 //          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";

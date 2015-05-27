@@ -2,10 +2,7 @@ Writing a Plugin {#writingplugins}
 =========
 
 ##  Introduction
-Creating a plugin for the DREAM.3D Application involves many different types of files being created and being placed in the correct positions in the project directory. To alleviate the developer of the tedious task of creating all of these files there is a shortcut that has been written using the CMake build system. Nicely enough there is a **PluginMaker** application that the developer can Launch and fill in a few text features and then have all the files generated with skeleton source code. This minimal set of files will compile with DREAM3D but will have no functionality. The developer now needs to add their own algorithms to filter the results and produce what they need.
 
-
-![PluginMaker Application](Images/PluginMaker.png)
 
 
 Now that we have the plugin files ready to go we need to tell the DREAM.3D build system where to find the new plugin. Go back to CMake-GUI.app/CMake-GUI.exe/ccmake and set the **DREAM3D_EXTRA_PLUGINS** cmake variable to have the name of your plugin. This is the same name you gave it in the **PluginMaker** application. If you are building multiple extra plugins then use a semi-colon ";" to separate each plugin name. You may have to tell CMake where the source directory is for the new plugin at which point you will be prompted to enter that path into CMake.

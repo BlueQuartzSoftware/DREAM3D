@@ -114,23 +114,7 @@ COMPILE_TOOL(
     LINK_LIBRARIES DREAM3DLib
 )
 
-#COMPILE_TOOL(
-#    TARGET ModifiedLambertTest
-#    SOURCES ${DREAM3DTools_SOURCE_DIR}/ModifiedLambertTest.cpp
-#    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-#    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-#    VERSION_MINOR ${DREAM3D_VER_MINOR}
-#    VERSION_PATCH ${DREAM3D_VER_PATCH}
-#    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-#    COMPONENT     Applications
-#    INSTALL_DEST  "${install_dir}"
-#    LINK_LIBRARIES Qt5::Gui Qt5::Widgets
-#)
-
-
 # --------------------------------------------------------------------
-# Run Qts automoc program to generate some source files that get compiled
-#QT5_WRAP_CPP( DREAM3DFileStructure_Generated_MOC_SRCS ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.h)
 COMPILE_TOOL(
     TARGET DREAM3DFileStructure
     SOURCES ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.cpp
@@ -147,76 +131,21 @@ COMPILE_TOOL(
 
 # Create a Command line tool for the DocsToPdf
 if(0)
-set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)
-#  message(STATUS "DREAM3D_DOCS_ROOT_DIR: ${DREAM3D_DOCS_ROOT_DIR}")
-#  message(STATUS "DREAM3D_DOCS_PDF_FILENAME: ${DREAM3D_DOCS_PDF_FILENAME}" )
+    set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)
+    #  message(STATUS "DREAM3D_DOCS_ROOT_DIR: ${DREAM3D_DOCS_ROOT_DIR}")
+    #  message(STATUS "DREAM3D_DOCS_PDF_FILENAME: ${DREAM3D_DOCS_PDF_FILENAME}" )
 
-configure_file(${DREAM3DTools_SOURCE_DIR}/DocsToPdf.h.in ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h)
-include_directories(${DREAM3DTools_BINARY_DIR})
-COMPILE_TOOL(
-    TARGET DocsToPdf
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/DocsToPdf.cpp ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    LINK_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets
-)
-endif()
-
-option(COMPILE_EBSD_TO_TIFF "Compile the EbsdToTiff program" OFF)
-if(COMPILE_EBSD_TO_TIFF)
-     # Prepend our own "FindTiff" code in front of what CMake itself provides
-        set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
-        FIND_PACKAGE(Tiff)
-        if(NOT TIFF_FOUND)
-              MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
-        endif(NOT TIFF_FOUND)
-        INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
-      # Copy DLL libraries into the correct build location on MSVC platforms
-      if(HAVE_TIFF_DLL)
-        CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
-        CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
-      endif()
-
+    configure_file(${DREAM3DTools_SOURCE_DIR}/DocsToPdf.h.in ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h)
+    include_directories(${DREAM3DTools_BINARY_DIR})
     COMPILE_TOOL(
-        TARGET EbsdToTiff
-        SOURCES ${DREAM3DTools_SOURCE_DIR}/EbsdToTiff.cpp
+        TARGET DocsToPdf
+        SOURCES ${DREAM3DTools_SOURCE_DIR}/DocsToPdf.cpp ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h
         DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
         VERSION_MAJOR ${DREAM3D_VER_MAJOR}
         VERSION_MINOR ${DREAM3D_VER_MINOR}
         VERSION_PATCH ${DREAM3D_VER_PATCH}
         BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
         COMPONENT     Applications
-        LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib  DREAM3DLib
+        LINK_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets
     )
-
-
-    # Create a Command line tool for the AngReaderTest
-    COMPILE_TOOL(
-        TARGET BcfDumper
-        SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.h
-        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-        VERSION_MINOR ${DREAM3D_VER_MINOR}
-        VERSION_PATCH ${DREAM3D_VER_PATCH}
-        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-        COMPONENT     Applications
-        LINK_LIBRARIES  ${TIFF_LIBRARY}
-    )
-
-    # create a tool to generate the IPF Triangle
-  COMPILE_TOOL(
-       TARGET TSLTriangle
-       SOURCES ${DREAM3DTools_SOURCE_DIR}/TSLTriangle.cpp
-       DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-       VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-       VERSION_MINOR ${DREAM3D_VER_MINOR}
-       VERSION_PATCH ${DREAM3D_VER_PATCH}
-       BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-       COMPONENT     Applications
-       LINK_LIBRARIES ${TIFF_LIBRARY}
-   )
 endif()

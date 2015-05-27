@@ -51,7 +51,7 @@
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "ImageImportTestFileLocations.h"
+#include "ImageIOTestFileLocations.h"
 
 QList<QString> fileNames;
 
@@ -84,7 +84,7 @@ int TestFilterAvailability()
   if (NULL == filterFactory.get() )
   {
     std::stringstream ss;
-    ss << "The SaveImagesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageImport Plugin";
+    ss << "The SaveImagesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageIO Plugin";
     DREAM3D_TEST_THROW_EXCEPTION(ss.str())
   }
   return 0;

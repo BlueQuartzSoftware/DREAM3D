@@ -199,8 +199,8 @@ void QuickSurfaceMesh::dataCheck()
   sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
 
   // Create a Triangle Geometry
-  SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(1);
-  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(1, vertices, DREAM3D::Geometry::TriangleGeometry);
+  SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, DREAM3D::Geometry::TriangleGeometry);
   sm->setGeometry(triangleGeom);
 
   cDims[0] = 2;

@@ -3,8 +3,8 @@ Import & Export File Formats {#miscfileformats}
 
 ## Supported Input File Types
 + TSL .ang files
++ TSL .h5 files
 + HKL .ctf files
-+ HEDM .mic files
 + Raw Binary Files
 + Dx files (Limited Subset)
 + H5Ebsd files

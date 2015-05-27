@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -176,8 +176,8 @@ void BinaryNodesTrianglesReader::dataCheck()
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
-  SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(1);
-  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(1, vertices, DREAM3D::Geometry::TriangleGeometry);
+  SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, DREAM3D::Geometry::TriangleGeometry);
   sm->setGeometry(triangleGeom);
 
   dims[0] = 2;

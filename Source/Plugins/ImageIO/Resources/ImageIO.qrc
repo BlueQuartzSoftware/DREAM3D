@@ -1,6 +1,6 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
- <file>ImageImport/ImageImportDescription.txt</file>
+ <file>ImageIO/ImageIODescription.txt</file>
  </qresource>
  </RCC>
