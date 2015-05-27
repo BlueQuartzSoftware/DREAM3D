@@ -164,7 +164,13 @@ DREAM3D_UI::~DREAM3D_UI()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::resizeEvent ( QResizeEvent* event )
 {
+  QMainWindow::resizeEvent(event);
+
   emit parentResized();
+
+  // We need to write the window settings so that any new windows will open with these window settings
+  DREAM3DSettings prefs;
+  writeWindowSettings(prefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -366,7 +372,6 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
     qApp->quit();
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //  Read our settings from a file
