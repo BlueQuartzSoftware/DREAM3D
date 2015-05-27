@@ -51,7 +51,7 @@ padding-left: 5px;
      <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>4</number>
+     <number>0</number>
     </property>
     <item>
      <widget class="BookmarksTreeView" name="bookmarksTreeView">
