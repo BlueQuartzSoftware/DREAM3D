@@ -55,18 +55,10 @@ None. This filter will create data arrays
 One data array for each data set attribute in the vtk file.
 
 
-## Authors ##
 
-**Copyright:** 2014 Michael A. Jackson (BlueQuartz Software)
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 2.0.0. Version 1.0.0 of this filter would ONLY read GrainIds or Feature Ids.
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

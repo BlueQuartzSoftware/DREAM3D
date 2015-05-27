@@ -40,14 +40,14 @@ SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surf
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL)
 
-**Contact Info:** dream3d@bluequartz.net
 
-**Version:** 1.0.0
 
-**License:**  See the License.txt file that came with DREAM3D.
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

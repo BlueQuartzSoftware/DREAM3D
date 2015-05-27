@@ -49,7 +49,6 @@ None
 
 ## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 
@@ -58,6 +57,10 @@ None
 **License**  See the License.txt file that came with DREAM3D.
 
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

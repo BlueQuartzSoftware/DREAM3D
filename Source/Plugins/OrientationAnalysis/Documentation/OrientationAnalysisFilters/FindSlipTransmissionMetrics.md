@@ -44,14 +44,14 @@ Voxel
 
 ## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC, 2014 Joseph C. Tucker (UES, Inc)
 
-**Contact Info:** dream3d@bluequartz.net
 
-**Version:** 5.0
 
-**License:**  See the License.txt file that came with DREAM3D.
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

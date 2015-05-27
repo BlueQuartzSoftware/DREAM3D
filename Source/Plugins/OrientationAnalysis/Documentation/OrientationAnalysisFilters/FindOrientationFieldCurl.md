@@ -36,7 +36,6 @@ This filter does the following...
 
 ## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 
@@ -45,6 +44,10 @@ This filter does the following...
 **License**  See the License.txt file that came with DREAM3D.
 
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 
