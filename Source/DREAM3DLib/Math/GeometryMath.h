@@ -139,7 +139,28 @@ class DREAM3DLib_EXPORT GeometryMath
      */
     static void FindPlaneCoefficients(const float a[3], const float b[3], const float c[3], float n[3], float& d);
 
-    /**
+	/**
+	* @brief Computes the distance of a point from the centroid of a triangle defined by 3 points
+	* @param q
+	* @param a
+	* @param b
+	* @param c
+	* @param distance
+	* @return
+	*/
+	static void FindDistanceToTriangleCentroid(const float* a, const float* b, const float* c, const float* q, float& distance);
+
+	/**
+	* @brief Computes the distance of a point from a plane.
+	* @param q
+	* @param n 1x3 Vector
+	* @param d float
+	* @param distance float
+	* @return
+	*/
+	static void FindDistanceFromPlane(const float* q, float n[3], float d, float& distance);
+	
+	/**
      * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
      * @param p
      * @param ll
@@ -153,6 +174,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @param lowerLeft
      * @param upperRight
+	 * @param radius
      * @return
      */
     static char PointInPolyhedron(const TriangleGeom::Pointer faces,
@@ -163,7 +185,25 @@ class DREAM3DLib_EXPORT GeometryMath
                                   const float* ur,
                                   float radius);
 
-    /**
+	/**
+	* @brief Determines if a point is inside of a polyhedron defined by a set of faces
+	* @param p
+	* @param lowerLeft
+	* @param upperRight
+	* @param radius
+	* @param distToBoundary
+	* @return
+	*/
+	static char PointInPolyhedron(const TriangleGeom::Pointer faces,
+		const Int32Int32DynamicListArray::ElementList& faceIds,
+		const VertexGeom::Pointer faceBBs,
+		const float* q,
+		const float* ll,
+		const float* ur,
+		float radius,
+		float& distToBoundary);
+
+	/**
      * @brief Determines if a point is inside of a triangle defined by 3 points
      * @param a
      * @param b

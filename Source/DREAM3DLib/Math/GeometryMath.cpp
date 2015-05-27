@@ -647,6 +647,27 @@ void GeometryMath::FindPlaneCoefficients(const float a[3], const float b[3], con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GeometryMath::FindDistanceToTriangleCentroid(const float* a, const float* b, const float* c, const float* q, float& distance)
+{
+	float centroid[3];
+	centroid[0] = (a[0] + b[0] + c[0]) / 3.0f;
+	centroid[1] = (a[1] + b[1] + c[1]) / 3.0f;
+	centroid[2] = (a[2] + b[2] + c[2]) / 3.0f;
+
+	FindDistanceBetweenPoints(centroid, q, distance);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeometryMath::FindDistanceFromPlane(const float* q, float n[3], float d, float& distance)
+{
+	distance = (q[0] * n[0]) + (q[1] * n[1]) + (q[2] * n[2]) - d;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GeometryMath::FindDistanceBetweenPoints(const float a[3], const float b[3], float& distance)
 {
   float dx = b[0] - a[0];
@@ -931,7 +952,7 @@ LOOP:
       }
 
       /* If ray is degenerate, then goto outer while to generate another. */
-      if ( code == 'p' || code == 'v' || code == 'e' )
+      if ( code == 'p' || code == 'v' || code == 'e' || code == '?')
       {
         goto LOOP;
       }
@@ -964,5 +985,114 @@ LOOP:
   {
     return 'o';
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
+	const Int32Int32DynamicListArray::ElementList& faceIds,
+	const VertexGeom::Pointer faceBBs,
+	const float* q,
+	const float* ll,
+	const float* ur,
+	float radius,
+	float& distToBoundary)
+{
+	float ray[3];  /* Ray */
+	float r[3];  /* Ray endpoint. */
+	float p[3];  /* Intersection point; not used. */
+	int f, k = 0, crossings = 0;
+	char code = '?';
+	float a[3];
+	float b[3];
+	float c[3];
+	float n[3];
+	float d = 0.0f;
+	float closestTriangleDistance = std::numeric_limits<float>::max();
+	float distance = 0.0f;
+
+	//* If query point is outside bounding box, finished. */
+	if (PointInBox(q, ll, ur) == false)
+	{
+		return 'o';
+	}
+
+	int numFaces = faceIds.ncells;
+	int32_t* faceId = faceIds.cells;
+
+	p[0] = 0;
+	p[1] = 0;
+	p[2] = 0;
+
+LOOP:
+	while (k++ < numFaces)
+	{
+		crossings = 0;
+
+		//Generate and add ray to point to find other end
+		GenerateRandomRay(radius, ray);
+		r[0] = q[0] + ray[0];
+		r[1] = q[1] + ray[1];
+		r[2] = q[2] + ray[2];
+
+		for (f = 0; f < numFaces; f++)
+		{
+			/* Begin check each face */
+			int32_t idx = 2 * faceId[f];
+			float* v0 = faceBBs->getVertexPointer(idx);
+			float* v1 = faceBBs->getVertexPointer(idx + 1);
+			faces->getVertCoordsAtTri(faceId[f], a, b, c);
+			FindDistanceToTriangleCentroid(a, b, c, q, distance);
+			if (distance < closestTriangleDistance)
+			{
+				closestTriangleDistance = distance;
+				FindPlaneCoefficients(a, b, c, n, d);
+				FindDistanceFromPlane(q, n, d, distance);
+				distToBoundary = distance;
+			}
+			if (RayIntersectsBox(q, r, v0, v1) == false)
+			{
+				code = '0';
+			}
+			else
+			{
+				code = RayIntersectsTriangle(a, b, c, q, r, p);
+			}
+
+			/* If ray is degenerate, then goto outer while to generate another. */
+			if (code == 'p' || code == 'v' || code == 'e' || code == '?')
+			{
+				goto LOOP;
+			}
+
+			/* If ray hits face at interior point, increment crossings. */
+			else if (code == 'f')
+			{
+				crossings++;
+			}
+
+			/* If query endpoint q sits on a V/E/F, return that code. */
+			else if (code == 'V' || code == 'E' || code == 'F')
+			{
+				return(code);
+			}
+
+		} /* End check each face */
+
+		/* No degeneracies encountered: ray is generic, so finished. */
+		break;
+
+	} /* End while loop */
+
+	/* q strictly interior to polyhedron if an odd number of crossings. */
+	if ((crossings % 2) == 1)
+	{
+		return 'i';
+	}
+	else
+	{
+		return 'o';
+	}
 }
 
