@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -94,11 +94,11 @@ class DREAM3DLib_EXPORT RgbColor
  * @date Aug 1 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ColorTable
+class DREAM3DLib_EXPORT DREAM3DColorTable
 {
   public:
-    ColorTable();
-    virtual ~ColorTable();
+    DREAM3DColorTable();
+    virtual ~DREAM3DColorTable();
 
     /**
     * @brief Assumes you've already generated min and max -- the extrema for the data
@@ -117,8 +117,8 @@ class DREAM3DLib_EXPORT ColorTable
     static void GetColorTable(int numColors, QVector<float>& colors);
 
   private:
-    ColorTable(const ColorTable&); // Copy Constructor Not Implemented
-    void operator=(const ColorTable&); // Operator '=' Not Implemented
+    DREAM3DColorTable(const DREAM3DColorTable&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DColorTable&); // Operator '=' Not Implemented
 
 };
 #endif /* _ColorTable_H_ */

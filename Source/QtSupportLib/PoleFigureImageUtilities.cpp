@@ -181,7 +181,7 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
   //Get all the colors that we will need
   QVector<DREAM3D::Rgb> colorTable(numColors);
   QVector<float> colors(3 * numColors, 0.0);
-  ColorTable::GetColorTable(numColors, colors); // Generate the color table values
+  DREAM3DColorTable::GetColorTable(numColors, colors); // Generate the color table values
   float r = 0.0, g = 0.0, b = 0.0;
   for (int i = 0; i < numColors; i++) // Convert them to QRgbColor values
   {
