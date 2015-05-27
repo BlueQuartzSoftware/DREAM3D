@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -219,7 +219,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief openNewPipeline
     * @param filePath
     */
-    void openNewPipeline(QString &filePath);
+    void openNewPipeline(const QString &filePath);
 
     void pipelineDidFinish();
 
@@ -315,12 +315,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setupPipelineViewMenu();
 
     /**
-    * @brief 
+    * @brief
     */
     void setupViewMenu();
 
     /**
-    * @brief 
+    * @brief
     */
     void connectSignalsSlots();
 
@@ -330,7 +330,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void connectSignalsSlots(DREAM3D_UI* other);
 
     /**
-    * @brief 
+    * @brief
     */
     void disconnectSignalsSlots();
 

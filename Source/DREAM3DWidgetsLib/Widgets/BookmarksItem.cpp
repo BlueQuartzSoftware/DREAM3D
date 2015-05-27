@@ -200,9 +200,9 @@ QColor BookmarksItem::getItemBackgroundColor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksItem::setItemBackgroundColor(QColor &value)
+bool BookmarksItem::setItemBackgroundColor(const QColor &value)
 {
-  m_ItemBackgroundColor = value;
+  m_ItemBackgroundColor = QColor(value);
   return true;
 }
 
@@ -217,9 +217,9 @@ QColor BookmarksItem::getItemTextColor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksItem::setItemTextColor(QColor &value)
+bool BookmarksItem::setItemTextColor(const QColor &value)
 {
-  m_ItemTextColor = value;
+  m_ItemTextColor = QColor(value);
   return true;
 }
 
@@ -234,7 +234,7 @@ QString BookmarksItem::getItemTooltip()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksItem::setItemTooltip(QString &value)
+bool BookmarksItem::setItemTooltip(const QString &value)
 {
   m_ItemTooltip = value;
   return true;
@@ -251,7 +251,7 @@ QIcon BookmarksItem::getIcon()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksItem::setIcon(QIcon &icon)
+bool BookmarksItem::setIcon(const QIcon &icon)
 {
   m_Icon = icon;
   return true;

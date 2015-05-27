@@ -178,7 +178,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     * @brief The signal is emitted when the user double clicks on a pipeline file
     * @param filePath The absolute path to the pipeline file
     */
-    void pipelineFileActivated(QString& filePath);
+    void pipelineFileActivated(const QString& filePath);
 
     void updateStatusBar(const QString &msg);
 

@@ -113,7 +113,7 @@ bool DREAM3DSettings::contains(const QString &key)
 }
 
 // -----------------------------------------------------------------------------
-// 
+//
 // -----------------------------------------------------------------------------
 bool DREAM3DSettings::beginGroup(const QString &prefix)
 {
@@ -121,7 +121,7 @@ bool DREAM3DSettings::beginGroup(const QString &prefix)
   {
     return false;
   }
-  else if (m_Stack.top()->group.contains(prefix) == true)
+  else if (m_Stack.isEmpty() == false && m_Stack.top()->group.contains(prefix) == true)
   {
     DREAM3DSettingsGroup* newGroup = new DREAM3DSettingsGroup(prefix, m_Stack.top()->group[prefix].toObject());
     m_Stack.push(newGroup);

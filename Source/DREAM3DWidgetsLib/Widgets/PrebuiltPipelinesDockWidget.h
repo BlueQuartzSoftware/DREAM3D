@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -128,7 +128,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @brief The signal is emitted when a pipeline file needs to be loaded into the view at an index
      * @param filePath The absolute path to the pipeline file
      */
-    void pipelineFileActivated(QString& filePath);
+    void pipelineFileActivated(const QString& filePath);
 
     /**
      * @brief filterListGenerated

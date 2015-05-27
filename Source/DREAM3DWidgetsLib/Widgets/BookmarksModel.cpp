@@ -40,7 +40,7 @@
 
 #include "QtSupportLib/DREAM3DSettings.h"
 
-BookmarksModel* BookmarksModel::self = 0;
+BookmarksModel* BookmarksModel::self = NULL;
 
 // -----------------------------------------------------------------------------
 //
@@ -405,7 +405,7 @@ bool BookmarksModel::isEmpty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, QModelIndex &tempParent, BookmarksModel* tempModel)
+void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent,const QModelIndex &tempParent, BookmarksModel* tempModel)
 {
   // Get the name of the index
   QString name = self->index(index.row(), Name, oldParent).data().toString();
@@ -432,7 +432,7 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newParent, QModelIndex &tempParent,  BookmarksModel* tempModel)
+void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newParent, const QModelIndex &tempParent, BookmarksModel* tempModel)
 {
   // Get the name of the index
   QString name = tempModel->index(tempIndex.row(), Name, tempParent).data().toString();
@@ -463,7 +463,7 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
 void BookmarksModel::moveIndexInternally(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent)
 {
   BookmarksModel* tempModel = new BookmarksModel();
-  
+
   // Copy the sub-tree to a temporary model, to retain its data and structure
   copyIndexToTemp(index, oldParent, QModelIndex(), tempModel);
 

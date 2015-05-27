@@ -119,9 +119,9 @@ private:
   static BookmarksModel* self;
 
   BookmarksItem *getItem(const QModelIndex &index) const;
-  void copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, QModelIndex &tempParent, BookmarksModel* tempModel);
+  void copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &tempParent, BookmarksModel* tempModel);
 
-  void copyTempToIndex(QModelIndex &index, QModelIndex &newParent, QModelIndex &tempParent, BookmarksModel* tempModel);
+  void copyTempToIndex(QModelIndex &index, QModelIndex &newParent, const QModelIndex &tempParent, BookmarksModel* tempModel);
 
   QStringList getFilePaths(BookmarksItem* item);
 

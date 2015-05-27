@@ -68,16 +68,16 @@ public:
   bool setData(int column, const QVariant &value);
 
   QColor getItemBackgroundColor();
-  bool setItemBackgroundColor(QColor &value);
+  bool setItemBackgroundColor(const QColor &value);
 
   QColor getItemTextColor();
-  bool setItemTextColor(QColor &value);
+  bool setItemTextColor(const QColor &value);
 
   QString getItemTooltip();
-  bool setItemTooltip(QString &value);
+  bool setItemTooltip(const QString &value);
 
   QIcon getIcon();
-  bool setIcon(QIcon &icon);
+  bool setIcon(const QIcon &icon);
 
   bool needsToBeExpanded();
   void setNeedsToBeExpanded(bool value);

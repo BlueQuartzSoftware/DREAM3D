@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -208,7 +208,7 @@ void DREAM3D_UI::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::openNewPipeline(QString &filePath)
+void DREAM3D_UI::openNewPipeline(const QString &filePath)
 {
   QFileInfo fi(filePath);
 
@@ -596,11 +596,11 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
     pipelineViewWidget, SLOT(addFilter(const QString&)));
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString&)),
-    this, SLOT(openNewPipeline(QString&)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+    this, SLOT(openNewPipeline(const QString&)));
 
-  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString&)),
-    this, SLOT(openNewPipeline(QString&)));
+  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+    this, SLOT(openNewPipeline(const QString&)));
 
   disconnect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
@@ -635,11 +635,11 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString&)),
-    this, SLOT(openNewPipeline(QString&)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+    this, SLOT(openNewPipeline(const QString&)));
 
-  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(QString&)),
-    this, SLOT(openNewPipeline(QString&)));
+  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&)),
+    this, SLOT(openNewPipeline(const QString&)));
 
   connect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
     pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
@@ -774,7 +774,7 @@ void DREAM3D_UI::setupDefaultMenu()
   }
 
   favoriteDefaultActions << m_ActionNewFolder;
-  
+
 
   bookmarksDockWidget->getBookmarksTreeView()->setDefaultActionList(favoriteDefaultActions);
 }
