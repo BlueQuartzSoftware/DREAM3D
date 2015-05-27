@@ -217,50 +217,67 @@ void DREAM3D_UI::on_actionOpen_triggered()
 void DREAM3D_UI::openNewPipeline(const QString &filePath)
 {
   QFileInfo fi(filePath);
+  QRecentFileList* list = QRecentFileList::instance();
 
-  PluginManager* pluginManager = PluginManager::Instance();
-  QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
-
-  // Create new DREAM3D instance
-  DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
-  newInstance->setLoadedPlugins(plugins);
-  newInstance->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
-
-  // Read Pipeline
-  int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0);
-
-  // Set Current File Path
-  if (err >= 0)
+  // If there are filters in the pipeline view, create a new window
+  if (pipelineViewWidget->filterCount() > 0)
   {
-    newInstance->setOpenedFilePath(filePath);
+    PluginManager* pluginManager = PluginManager::Instance();
+    QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
 
-    // Cache the last directory on new instance
-    newInstance->setOpenDialogLastDirectory(fi.path());
+    // Create new DREAM3D instance
+    DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
+    newInstance->setLoadedPlugins(plugins);
+    newInstance->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
+
+    // Read Pipeline
+    int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0);
+
+    // Set Current File Path
+    if (err >= 0)
+    {
+      newInstance->setOpenedFilePath(filePath);
+
+      // Cache the last directory on new instance
+      newInstance->setOpenDialogLastDirectory(fi.path());
+
+      // Add file path to the recent files list for both instances
+      if (list->fileList().size() == 7)
+      {
+        list->popBack();
+      }
+      list->addFile(filePath);
+
+      // Show the new instance
+      newInstance->setWindowModified(false);
+      newInstance->move(this->x() + 45, this->y() + 45);
+
+      connectSignalsSlots(newInstance);
+
+      newInstance->show();
+    }
+    else
+    {
+      // Show error message on old DREAM3D instance
+      QString errorMessage = newInstance->getPipelineViewWidget()->getStatusBar()->currentMessage();
+      pipelineViewWidget->getStatusBar()->showMessage(errorMessage);
+
+      // Delete new DREAM3D instance
+      delete newInstance;
+    }
+  }
+  // The pipeline view is empty, so open the pipeline in the pipeline view
+  else
+  {
+    pipelineViewWidget->openPipeline(filePath, 0);
+    setOpenDialogLastDirectory(fi.path());
 
     // Add file path to the recent files list for both instances
-    QRecentFileList* list = QRecentFileList::instance();
     if (list->fileList().size() == 7)
     {
       list->popBack();
     }
     list->addFile(filePath);
-
-    // Show the new instance
-    newInstance->setWindowModified(false);
-    newInstance->move(this->x() + 45, this->y() + 45);
-
-    connectSignalsSlots(newInstance);
-
-    newInstance->show();
-  }
-  else
-  {
-    // Show error message on old DREAM3D instance
-    QString errorMessage = newInstance->getPipelineViewWidget()->getStatusBar()->currentMessage();
-    pipelineViewWidget->getStatusBar()->showMessage(errorMessage);
-
-    // Delete new DREAM3D instance
-    delete newInstance;
   }
 }
 
