@@ -348,6 +348,7 @@ void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int inde
   if(attributeMatrixList->count() > 0)
   {
     on_attributeMatrixList_currentIndexChanged(0);
+
   }
 
 }
@@ -361,10 +362,8 @@ void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int in
   //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
   populateAttributeArrayList();
 
-  if(attributeArrayList->count() > 0)
-  {
-    attributeArrayList->setCurrentIndex(0);
-  }
+  // Blank the attribute array choice, because we don't want to choose for them
+  attributeArrayList->setCurrentIndex(-1);
 }
 
 
