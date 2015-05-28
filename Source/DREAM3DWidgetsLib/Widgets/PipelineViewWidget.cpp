@@ -1024,112 +1024,112 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   }
   else if (mimedata->hasUrls() || mimedata->hasText())
   {
-      QByteArray dropData = mimedata->data("text/plain");
-      QString data(dropData);
-      QString filePath;
+    QByteArray dropData = mimedata->data("text/plain");
+    QString data(dropData);
+    QString filePath;
 
-      if (mimedata->hasUrls())
+    if (mimedata->hasUrls())
+    {
+      QUrl url(data);
+      filePath = url.toLocalFile();
+    }
+    else
+    {
+      filePath = data;
+    }
+
+    QFileInfo fi(filePath);
+    QString ext = fi.completeSuffix();
+    FilterManager* fm = FilterManager::Instance();
+    if (NULL == fm) { return; }
+    IFilterFactory::Pointer wf = fm->getFactoryForFilter(data);
+
+    // If the dragged item is a filter item...
+    if (NULL != wf)
+    {
+      // Remove the drop line
+      if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
       {
-        QUrl url(data);
-        filePath = url.toLocalFile();
+        m_FilterWidgetLayout->removeWidget(m_DropBox);
+        m_DropBox->setParent(NULL);
       }
-      else
+
+      // We need to figure out where it was dropped relative to other filters
+      int count = filterCount() - 1;
+      for (int i = 0; i < count; ++i)
       {
-        filePath = data;
+        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
+        if (w != NULL)
+        {
+          if (event->pos().y() < w->geometry().y())
+          {
+            count = i;
+            break;
+          }
+        }
       }
 
-      QFileInfo fi(filePath);
-      QString ext = fi.completeSuffix();
-      FilterManager* fm = FilterManager::Instance();
-      if (NULL == fm) { return; }
-      IFilterFactory::Pointer wf = fm->getFactoryForFilter(data);
+      // Now that we have an index, insert the filter.
+      addFilter(data, count);
 
-      // If the dragged item is a filter item...
-      if (NULL != wf)
+      emit pipelineChanged();
+      event->acceptProposedAction();
+    }
+    // If the dragged item is a pipeline file...
+    else if (ext == "dream3d" || ext == "json" || ext == "ini" || ext == "txt")
+    {
+      int index = 0;
+      if (NULL != m_FilterWidgetLayout)
       {
-          // Remove the drop line
-          if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
-          {
-              m_FilterWidgetLayout->removeWidget(m_DropBox);
-              m_DropBox->setParent(NULL);
-          }
+        index = m_FilterWidgetLayout->indexOf(m_DropBox);
+      }
 
-          // We need to figure out where it was dropped relative to other filters
-          int count = filterCount() - 1;
-          for (int i = 0; i < count; ++i)
-          {
-              PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-              if (w != NULL)
-              {
-                  if (event->pos().y() < w->geometry().y())
-                  {
-                      count = i;
-                      break;
-                  }
-              }
-          }
+      if (ext == "json" || ext == "ini" || ext == "txt")
+      {
+        // Remove the drop line
+        if (NULL != m_FilterWidgetLayout && index != -1)
+        {
+          m_FilterWidgetLayout->removeWidget(m_DropBox);
+          m_DropBox->setParent(NULL);
+        }
 
-          // Now that we have an index, insert the filter.
-          addFilter(data, count);
+        openPipeline(filePath, index, false);
+
+        emit pipelineChanged();
+      }
+      else if (ext == "dream3d")
+      {
+        FileDragMessageBox* msgBox = new FileDragMessageBox(this);
+        msgBox->exec();
+        msgBox->deleteLater();
+
+        // Remove the drop line
+        if (NULL != m_FilterWidgetLayout && index != -1)
+        {
+          m_FilterWidgetLayout->removeWidget(m_DropBox);
+          m_DropBox->setParent(NULL);
+        }
+
+        if (msgBox->didPressOkBtn() == true)
+        {
+          if (msgBox->isExtractPipelineBtnChecked() == true)
+          {
+            openPipeline(filePath, index, false);
+          }
+          else
+          {
+            addDREAM3DReaderFilter(filePath, index);
+          }
 
           emit pipelineChanged();
-          event->acceptProposedAction();
+        }
       }
-      // If the dragged item is a pipeline file...
-      else if (ext == "dream3d" || ext == "json" || ext == "ini" || ext == "txt")
-      {
-          int index = 0;
-          if (NULL != m_FilterWidgetLayout)
-          {
-              index = m_FilterWidgetLayout->indexOf(m_DropBox);
-          }
-
-          if (ext == "json" || ext == "ini" || ext == "txt")
-          {
-              // Remove the drop line
-              if (NULL != m_FilterWidgetLayout && index != -1)
-              {
-                  m_FilterWidgetLayout->removeWidget(m_DropBox);
-                  m_DropBox->setParent(NULL);
-              }
-
-              openPipeline(filePath, index, false);
-
-              emit pipelineChanged();
-          }
-          else if (ext == "dream3d")
-          {
-              FileDragMessageBox* msgBox = new FileDragMessageBox(this);
-              msgBox->exec();
-              msgBox->deleteLater();
-
-              // Remove the drop line
-              if (NULL != m_FilterWidgetLayout && index != -1)
-              {
-                  m_FilterWidgetLayout->removeWidget(m_DropBox);
-                  m_DropBox->setParent(NULL);
-              }
-
-              if (msgBox->didPressOkBtn() == true)
-              {
-                  if (msgBox->isExtractPipelineBtnChecked() == true)
-                  {
-                      openPipeline(filePath, index, false);
-                  }
-                  else
-                  {
-                      addDREAM3DReaderFilter(filePath, index);
-                  }
-
-                  emit pipelineChanged();
-              }
-          }
-          event->acceptProposedAction();
-      }
-      else
-      {
-          event->ignore();
-      }
+      event->acceptProposedAction();
+    }
+    else
+    {
+      event->ignore();
+    }
   }
 
   // Stop auto scrolling if widget is dropped
