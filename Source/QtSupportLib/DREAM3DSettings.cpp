@@ -61,15 +61,11 @@ DREAM3DSettings::DREAM3DSettings(QObject *parent)
 #endif
 
   QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-  QString filePath = prefs.fileName();
+  QString oldFilePath = prefs.fileName();
 
-  // Now turn the .ini path into .json path
-  QFileInfo fi(filePath);
-  QString ext = fi.completeSuffix();
-  filePath.chop(ext.size());
-  filePath.append("json");
-
-  m_FilePath = filePath;
+  QFileInfo fi(oldFilePath);
+  QString newFilePath = fi.path() + "/DREAM3D_V5.json";
+  m_FilePath = QDir::toNativeSeparators(newFilePath);
 
   // Open the file and read the contents, if it exists
   openFile();
