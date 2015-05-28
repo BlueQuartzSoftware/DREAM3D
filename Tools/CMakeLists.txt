@@ -53,7 +53,7 @@ function(COMPILE_TOOL)
     cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     if( ${D3DTOOL_DEFINITION} )
-    add_definitions(-D${DEFINITION})
+        add_definitions(-D${DEFINITION})
     endif()
 
     BuildToolBundle(
