@@ -281,6 +281,11 @@ void DREAM3DSettings::openFile()
     DREAM3DSettingsGroup* root = new DREAM3DSettingsGroup("", doc.object());
     m_Stack.push(root);
   }
+  else
+  {
+    DREAM3DSettingsGroup* root = new DREAM3DSettingsGroup("", QJsonObject());
+    m_Stack.push(root);
+  }
 }
 
 // -----------------------------------------------------------------------------
