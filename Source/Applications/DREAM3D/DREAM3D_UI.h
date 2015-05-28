@@ -208,18 +208,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void openRecentFile();
 
     /**
-     * @brief pipelineFileLoaded
-     * @param file
-     * @param format
-     * @param type
-     */
-    void pipelineFileLoaded(QString file, int index);
-
-    /**
     * @brief openNewPipeline
     * @param filePath
+    * @param setOpenedFilePath
     */
-    void openNewPipeline(const QString &filePath);
+    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath);
 
     void pipelineDidFinish();
 
@@ -232,7 +225,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_pipelineViewWidget_pipelineTitleUpdated(QString title);
     void on_pipelineViewWidget_pipelineIssuesCleared();
     void on_pipelineViewWidget_pipelineHasNoErrors();
-    void on_pipelineViewWidget_pipelineFileDropped(QString& file);
+    void on_pipelineViewWidget_pipelineFileDropped(QString& file, const bool &setOpenedFilePath);
 
     /**
     * @brief setFilterInputWidget

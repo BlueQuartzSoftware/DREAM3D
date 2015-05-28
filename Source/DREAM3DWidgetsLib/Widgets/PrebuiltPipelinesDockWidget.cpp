@@ -268,7 +268,7 @@ void PrebuiltPipelinesDockWidget::on_prebuiltsLibraryTree_itemDoubleClicked( QTr
   }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath);
+    emit pipelineFileActivated(pipelinePath, false);
   }
 
 }

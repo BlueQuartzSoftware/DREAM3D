@@ -112,6 +112,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     */
     void writeSettings(DREAM3DSettings& prefs);
 
+    virtual QDir findV4FavoritesDirectory();
+
   public slots:
     //// Slots to catch signals from main menu or context menu
     void m_ActionNewFolder_triggered();
@@ -120,12 +122,9 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     void m_ActionLocateFile_triggered();
     void m_ActionRemovePipeline_triggered();
     void m_ActionRenamePipeline_triggered();
-    void m_ActionAddToPipelineView_triggered();
     void m_ActionShowInFileSystem_triggered();
 
   protected:
-
-    virtual QDir findPipelinesDirectory();
     QStringList generateFilterListFromPipelineFile(QString path);
     QString generateHtmlFilterListFromPipelineFile(QString path);
 
@@ -177,8 +176,9 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     /**
     * @brief The signal is emitted when the user double clicks on a pipeline file
     * @param filePath The absolute path to the pipeline file
+    * @param setOpenedFilePath A boolean that decides whether to cache the opened file path to use when re-saving.
     */
-    void pipelineFileActivated(const QString& filePath);
+    void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath);
 
     void updateStatusBar(const QString &msg);
 

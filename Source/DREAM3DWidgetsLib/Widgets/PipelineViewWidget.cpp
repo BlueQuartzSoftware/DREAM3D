@@ -429,7 +429,7 @@ int PipelineViewWidget::writePipeline(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PipelineViewWidget::openPipeline(const QString &filePath, int index)
+int PipelineViewWidget::openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath)
 {
   //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
@@ -463,7 +463,7 @@ int PipelineViewWidget::openPipeline(const QString &filePath, int index)
   m_StatusBar->showMessage(tr("The pipeline has been read successfully from '%1'.").arg(name));
 
   QString file = filePath;
-  emit pipelineFileDropped(file);
+  emit pipelineFileDropped(file, setOpenedFilePath);
 
   return 0;
 }
@@ -1083,7 +1083,9 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
           m_DropBox->setParent(NULL);
         }
 
-        openPipeline(filePath, index);
+        openPipeline(filePath, index, false);
+
+        emit pipelineChanged();
       }
       else if (ext == "dream3d")
       {
@@ -1098,16 +1100,20 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
           m_DropBox->setParent(NULL);
         }
 
-        if (msgBox->isExtractPipelineBtnChecked() == true)
+        if (msgBox->didPressOkBtn() == true)
         {
-          openPipeline(filePath, index);
-        }
-        else
-        {
-          addDREAM3DReaderFilter(filePath, index);
+          if (msgBox->isExtractPipelineBtnChecked() == true)
+          {
+            openPipeline(filePath, index, false);
+          }
+          else
+          {
+            addDREAM3DReaderFilter(filePath, index);
+          }
+
+          emit pipelineChanged();
         }
       }
-      emit pipelineChanged();
       event->acceptProposedAction();
     }
     else

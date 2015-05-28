@@ -128,7 +128,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @brief The signal is emitted when a pipeline file needs to be loaded into the view at an index
      * @param filePath The absolute path to the pipeline file
      */
-    void pipelineFileActivated(const QString& filePath);
+    void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath);
 
     /**
      * @brief filterListGenerated

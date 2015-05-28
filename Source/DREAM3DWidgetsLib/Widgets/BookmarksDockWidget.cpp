@@ -127,7 +127,7 @@ BookmarksTreeView* BookmarksDockWidget::getBookmarksTreeView()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QDir BookmarksDockWidget::findPipelinesDirectory()
+QDir BookmarksDockWidget::findV4FavoritesDirectory()
 {
   // Get the location of the Preferences file. The Favorites are stored in a directory located at that level.
   QString dirName("DREAM3D_Favorites");
@@ -336,7 +336,7 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
         model->setData(nameIndex, false, Qt::UserRole);
         model->getFileSystemWatcher()->addPath(pathIndex.data().toString());
       }
-      emit pipelineFileActivated(pipelinePath);
+      emit pipelineFileActivated(pipelinePath, true);
     }
   }
 
@@ -680,24 +680,6 @@ void BookmarksDockWidget::m_ActionRenamePipeline_triggered()
 {
   QModelIndex index = bookmarksTreeView->currentIndex();
   bookmarksTreeView->edit(index);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionAddToPipelineView_triggered()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  QModelIndex index = bookmarksTreeView->currentIndex();
-
-  QString pipelinePath = model->index(index.row(), Path, index.parent()).data().toString();
-  if (pipelinePath.isEmpty() == false)
-  {
-    QFileInfo fi(pipelinePath);
-    if (fi.exists() == false) { return; }
-    emit pipelineFileActivated(fi.absoluteFilePath());
-  }
 }
 
 // -----------------------------------------------------------------------------

@@ -39,7 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileDragMessageBox::FileDragMessageBox(QWidget* parent)
+FileDragMessageBox::FileDragMessageBox(QWidget* parent) :
+okBtnPressed(false)
 {
     setupUi(this);
 
@@ -51,6 +52,8 @@ FileDragMessageBox::FileDragMessageBox(QWidget* parent)
 // -----------------------------------------------------------------------------
 void FileDragMessageBox::on_okBtn_clicked()
 {
+  okBtnPressed = true;
+
   // Close the dialog box
   close();
 }
@@ -60,8 +63,8 @@ void FileDragMessageBox::on_okBtn_clicked()
 // -----------------------------------------------------------------------------
 void FileDragMessageBox::on_cancelBtn_clicked()
 {
-    // Close the dialog box
-    close();
+  // Close the dialog box
+  close();
 }
 
 // -----------------------------------------------------------------------------
@@ -70,6 +73,14 @@ void FileDragMessageBox::on_cancelBtn_clicked()
 bool FileDragMessageBox::isExtractPipelineBtnChecked()
 {
   return extractPipelineRadioBtn->isChecked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool FileDragMessageBox::didPressOkBtn()
+{
+  return okBtnPressed;
 }
 
 

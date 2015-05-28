@@ -253,7 +253,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     /**
     * @brief Open pipeline to a file
     */
-    int openPipeline(const QString &filePath, int index);
+    int openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath);
 
     /**
      * @brief onCustomContextMenuRequested
@@ -290,7 +290,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void removePlaceHolderFilter();
     void preflightHasMessage(PipelineMessage msg);
 
-    void pipelineFileDropped(QString& file);
+    void pipelineFileDropped(QString& file, const bool &setOpenedFilePath);
     void pipelineHasErrorsSignal();
     void pipelineHasNoErrors();
     void pipelineIssuesCleared();
