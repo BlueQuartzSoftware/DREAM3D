@@ -505,12 +505,21 @@ void BookmarksModel::moveIndexInternally(const QModelIndex &index, QModelIndex &
 void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
 {
   QFileInfo fi(path);
-  QString name = fi.baseName();
 
   int rowPos = self->rowCount(specifiedParent);
   self->insertRow(rowPos, specifiedParent);
   QModelIndex newNameIndex = self->index(rowPos, Name, specifiedParent);
-  self->setData(newNameIndex, name, Qt::DisplayRole);
+
+  if (fi.isFile())
+  {
+    QString name = fi.baseName();
+    self->setData(newNameIndex, name, Qt::DisplayRole);
+  }
+  else
+  {
+    QDir dir(path);
+    self->setData(newNameIndex, dir.dirName(), Qt::DisplayRole);
+  }
 
   if (fi.isFile())
   {
