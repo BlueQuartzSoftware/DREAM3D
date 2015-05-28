@@ -971,18 +971,6 @@ int TestJsonWriter()
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
-  // AxisAngleInput_t write test
-  {
-    AxisAngleInput_t input;
-    input.angle = AxisAngleInputTest::Angle;
-    input.h = AxisAngleInputTest::H;
-    input.k = AxisAngleInputTest::K;
-    input.l = AxisAngleInputTest::L;
-
-    err = writer->writeValue(AxisAngleInputTest::Key, input);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
   // QVector<AxisAngleInput_t> write test
   {
     QVector<AxisAngleInput_t> inputs;
@@ -1002,6 +990,18 @@ int TestJsonWriter()
     inputs.push_back(input2);
 
     err = writer->writeValue(MultipleAxisAngleInputTest::Key, inputs);
+    DREAM3D_REQUIRE_EQUAL(err, 0)
+  }
+
+  // AxisAngleInput_t write test
+  {
+    AxisAngleInput_t input;
+    input.angle = AxisAngleInputTest::Angle;
+    input.h = AxisAngleInputTest::H;
+    input.k = AxisAngleInputTest::K;
+    input.l = AxisAngleInputTest::L;
+
+    err = writer->writeValue(AxisAngleInputTest::Key, input);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -1466,10 +1466,10 @@ int TestJsonReader()
   {
     ComparisonInput_t input = reader->readComparisonInput(MultipleComparisonInputTest::Key, ComparisonInput_t(), 0);
     DREAM3D_REQUIRE_EQUAL(input.attributeArrayName, MultipleComparisonInputTest::AttributeArrayName1)
-      DREAM3D_REQUIRE_EQUAL(input.attributeMatrixName, MultipleComparisonInputTest::AttributeMatrixName1)
-      DREAM3D_REQUIRE_EQUAL(input.compOperator, MultipleComparisonInputTest::CompOperator1)
-      DREAM3D_REQUIRE_EQUAL(input.compValue, MultipleComparisonInputTest::CompValue1)
-      DREAM3D_REQUIRE_EQUAL(input.dataContainerName, MultipleComparisonInputTest::DataContainerName1)
+    DREAM3D_REQUIRE_EQUAL(input.attributeMatrixName, MultipleComparisonInputTest::AttributeMatrixName1)
+    DREAM3D_REQUIRE_EQUAL(input.compOperator, MultipleComparisonInputTest::CompOperator1)
+    DREAM3D_REQUIRE_EQUAL(input.compValue, MultipleComparisonInputTest::CompValue1)
+    DREAM3D_REQUIRE_EQUAL(input.dataContainerName, MultipleComparisonInputTest::DataContainerName1)
   }
 
   // QVector<AxisAngleInput_t> read test
@@ -1477,24 +1477,24 @@ int TestJsonReader()
     QVector<AxisAngleInput_t> inputs = reader->readAxisAngles(MultipleAxisAngleInputTest::Key, QVector<AxisAngleInput_t>());
     DREAM3D_REQUIRE_EQUAL(inputs.size(), 2)
 
-      DREAM3D_REQUIRE_EQUAL(inputs[0].angle, MultipleAxisAngleInputTest::Angle1)
-      DREAM3D_REQUIRE_EQUAL(inputs[0].h, MultipleAxisAngleInputTest::H1)
-      DREAM3D_REQUIRE_EQUAL(inputs[0].k, MultipleAxisAngleInputTest::K1)
-      DREAM3D_REQUIRE_EQUAL(inputs[0].l, MultipleAxisAngleInputTest::L1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].angle, MultipleAxisAngleInputTest::Angle1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].h, MultipleAxisAngleInputTest::H1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].k, MultipleAxisAngleInputTest::K1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].l, MultipleAxisAngleInputTest::L1)
 
-      DREAM3D_REQUIRE_EQUAL(inputs[1].angle, MultipleAxisAngleInputTest::Angle2)
-      DREAM3D_REQUIRE_EQUAL(inputs[1].h, MultipleAxisAngleInputTest::H2)
-      DREAM3D_REQUIRE_EQUAL(inputs[1].k, MultipleAxisAngleInputTest::K2)
-      DREAM3D_REQUIRE_EQUAL(inputs[1].l, MultipleAxisAngleInputTest::L2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].angle, MultipleAxisAngleInputTest::Angle2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].h, MultipleAxisAngleInputTest::H2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].k, MultipleAxisAngleInputTest::K2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].l, MultipleAxisAngleInputTest::L2)
   }
 
   // AxisAngleInput_t read test
   {
-    AxisAngleInput_t input = reader->readAxisAngle(MultipleAxisAngleInputTest::Key, AxisAngleInput_t(), 0);
-    DREAM3D_REQUIRE_EQUAL(input.angle, MultipleAxisAngleInputTest::Angle1)
-      DREAM3D_REQUIRE_EQUAL(input.h, MultipleAxisAngleInputTest::H1)
-      DREAM3D_REQUIRE_EQUAL(input.k, MultipleAxisAngleInputTest::K1)
-      DREAM3D_REQUIRE_EQUAL(input.l, MultipleAxisAngleInputTest::L1)
+    AxisAngleInput_t input = reader->readAxisAngle(AxisAngleInputTest::Key, AxisAngleInput_t(), 0);
+    DREAM3D_REQUIRE_EQUAL(input.angle, AxisAngleInputTest::Angle)
+    DREAM3D_REQUIRE_EQUAL(input.h, AxisAngleInputTest::H)
+    DREAM3D_REQUIRE_EQUAL(input.k, AxisAngleInputTest::K)
+    DREAM3D_REQUIRE_EQUAL(input.l, AxisAngleInputTest::L)
   }
 
   // QSet<QString> read test
@@ -1502,10 +1502,10 @@ int TestJsonReader()
     QSet<QString> strings = reader->readArraySelections(StringSetTest::Key, QSet<QString>());
     DREAM3D_REQUIRE_EQUAL(strings.size(), 4)
 
-      DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String1), true)
-      DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String2), true)
-      DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String3), true)
-      DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String4), true)
+    DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String1), true)
+    DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String2), true)
+    DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String3), true)
+    DREAM3D_REQUIRE_EQUAL(strings.contains(StringSetTest::String4), true)
   }
 
   // DataContainerArrayProxy read test

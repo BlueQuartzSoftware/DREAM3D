@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -53,6 +53,9 @@
 
 #include "ImageIOTestFileLocations.h"
 
+
+#define WRITE_IMAGES_FILTER_NAME "WriteImages"
+
 QList<QString> fileNames;
 
 // -----------------------------------------------------------------------------
@@ -78,13 +81,13 @@ void RemoveTestFiles()
 int TestFilterAvailability()
 {
   // Now instantiate the SaveImages Filter from the FilterManager
-  QString filtName = "SaveImages";
+  QString filtName = WRITE_IMAGES_FILTER_NAME;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL == filterFactory.get() )
   {
     std::stringstream ss;
-    ss << "The SaveImagesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageIO Plugin";
+    ss << "The WriteImagesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageIO Plugin";
     DREAM3D_TEST_THROW_EXCEPTION(ss.str())
   }
   return 0;
@@ -234,7 +237,7 @@ int WriteImages()
   DataContainerArray::Pointer dca;
 
   // Now instantiate the SaveImages Filter from the FilterManager
-  QString filtName = "SaveImages";
+  QString filtName = WRITE_IMAGES_FILTER_NAME;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL != filterFactory.get())
@@ -257,7 +260,7 @@ int WriteImages()
   }
   else
   {
-    QString ss = QObject::tr("SaveImagesTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+    QString ss = QObject::tr("WriteImagesTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
     DREAM3D_REQUIRE_EQUAL(0, 1)
   }
   return 1;
@@ -286,7 +289,7 @@ int main(int argc, char** argv)
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("SaveImagesTest");
+  QCoreApplication::setApplicationName("WriteImagesTest");
 
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( loadFilterPlugins() );

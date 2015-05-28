@@ -118,7 +118,7 @@ class CalculateFaceIPFColorsImpl
         if (phase1 > 0 )
         {
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
-          if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
+          if (m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd)
           {
             dEuler[0] = m_Eulers[3 * feature1 + 0];
             dEuler[1] = m_Eulers[3 * feature1 + 1];
@@ -145,7 +145,7 @@ class CalculateFaceIPFColorsImpl
         if (phase2 > 0)
         {
           // Make sure we are using a valid Euler Angles with valid crystal symmetry
-          if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
+          if (m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd)
           {
             dEuler[0] = m_Eulers[3 * feature2 + 0];
             dEuler[1] = m_Eulers[3 * feature2 + 1];
@@ -266,21 +266,23 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh()
   setErrorCondition(0);
   DataArrayPath tempPath;
 
-  getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
 
-  QVector<DataArrayPath> dataArrayPaths;
+  QVector<IDataArray::Pointer> dataArrays;
+
+  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceLabelsArrayPath()); }
+  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
   cDims[0] = 3;
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceNormalsArrayPath()); }
+  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceNormalsPtr.lock()); }
 
   cDims[0] = 6;
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshFaceIPFColorsArrayName() );
@@ -288,7 +290,7 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh()
   if( NULL != m_SurfaceMeshFaceIPFColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceIPFColors = m_SurfaceMeshFaceIPFColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
 
 // -----------------------------------------------------------------------------
