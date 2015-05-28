@@ -1,11 +1,5 @@
 #ifndef _SamplingTestFileLocation_H_
-#define _SamplingTe
-
-  namespace SampleSurfaceMeshSpecifiedPointsTest
-  {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
-  }stFileLocation_H_
+#define _SamplingTestFileLocation_H_
 
 #include <QtCore/QString>
 
@@ -37,6 +31,13 @@ namespace UnitTest
     const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
     const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
   }
+
+  namespace SampleSurfaceMeshSpecifiedPointsTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+
 }
 
 #endif
