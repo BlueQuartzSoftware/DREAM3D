@@ -504,6 +504,8 @@ void BookmarksModel::moveIndexInternally(const QModelIndex &index, QModelIndex &
 // -----------------------------------------------------------------------------
 void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
 {
+  path = QDir::toNativeSeparators(path);
+
   QFileInfo fi(path);
 
   int rowPos = self->rowCount(specifiedParent);
