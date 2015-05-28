@@ -442,11 +442,17 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
 
   if (path.isEmpty())
   {
+    tempModel->setData(newNameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
+
     // This is a node, so recursively call this function
     for (int i = 0; i < self->rowCount(index); i++)
     {
       copyIndexToTemp(index.child(i, Name), index, newNameIndex, tempModel);
     }
+  }
+  else
+  {
+    tempModel->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
   }
 }
 
@@ -469,12 +475,18 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
 
   if (path.isEmpty())
   {
+    self->setData(newNameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
+
     // This is a node, so recursively call this function
     for (int i = 0; i < tempModel->rowCount(tempIndex); i++)
     {
       QModelIndex nextIndex = tempModel->index(i, Name, tempIndex);
       copyTempToIndex(nextIndex, newNameIndex, tempIndex, tempModel);
     }
+  }
+  else
+  {
+    self->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
   }
 }
 
