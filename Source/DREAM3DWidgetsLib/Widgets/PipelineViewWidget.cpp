@@ -1028,6 +1028,10 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     QString data(dropData);
     QUrl url(data);
     QString filePath = url.toLocalFile();
+    if (filePath.isEmpty())
+    {
+      filePath = url.toDisplayString();
+    }
     QFileInfo fi(filePath);
     QString ext = fi.completeSuffix();
     FilterManager* fm = FilterManager::Instance();
