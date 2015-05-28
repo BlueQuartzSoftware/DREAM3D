@@ -33,18 +33,10 @@ Between the *Find Shapes* and *Find Centroids* filters, an ideal ellipsoid for e
 | Cell | IdealFeatureIds | This assigns each cell the feature number that owns it if each feature was a perfect ellipse. | This is primarily for visualization purposes. Often two ideal ellipses may overlap, and only one feature can own a cell, so it may seem as though some ellipses are cut off. For the actual calculation of the error, the ideal ellipses are not cut off.  |
 
 
-## Authors ##
 
-**Copyright:** 
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

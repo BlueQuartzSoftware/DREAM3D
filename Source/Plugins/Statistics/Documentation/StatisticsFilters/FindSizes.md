@@ -25,17 +25,9 @@ Image / Rectilinear Grid
 | Feature | NumCells |  Int | (1) | Number of **Cells** that are owned by the **Feature**. This value does not place any distinction between **Cells** that may be of a different size. |
 | Feature | Volumes |  Float | (1) | Volume (in units^3) of the **Feature**. This value may be "redundant" from the NumCells value if all **Cells** are the same size and is calculable from the EquivalentDiameters value. |
 
-## Authors ##
-**Copyright:** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software), 2014 Joseph C. Tucker (UES, Inc.)
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 5.1.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

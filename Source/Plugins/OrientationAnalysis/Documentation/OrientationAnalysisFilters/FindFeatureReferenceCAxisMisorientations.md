@@ -28,18 +28,10 @@ Not Applicable
 | Feature | FeatureAvgCAxisMisorientations | Float | (1) | Average of the *FeatureReferenceCAxisMisorientation* values for all of the **Elements** that belong to the **Feature** |
 | Feature | FeatureStdevCAxisMisorientations | Float | (1) | Standard deviation of the *FeatureReferenceCAxisMisorientation* values for all of the **Elements** that belong to the **Feature** |
 
-## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

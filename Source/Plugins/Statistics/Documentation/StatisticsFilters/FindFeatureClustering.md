@@ -47,16 +47,9 @@ Volume
 | Ensemble | RDFMaxMinDistances | The max and min distance (float) found between particles  | This array will automatically be created and the named by appending “MaxMinDistances” to whatever the RDF array is named|
 
 
-## Authors ##
+## License & Copyright ##
 
-**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
-
-**Version:** 5.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

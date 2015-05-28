@@ -34,7 +34,6 @@ Triangle
 | Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Authors ##
-**Copyright:** 2015 BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 
@@ -44,6 +43,10 @@ Triangle
 
 
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

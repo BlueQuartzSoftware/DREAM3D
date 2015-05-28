@@ -30,15 +30,15 @@ This filter shows an example usage of the DynamicTable Filter Parameter Widget.
 
 ## Authors: ##
 
-**Copyright:** BlueQuartz Software, LLC
-
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
 
 
+
+
+
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

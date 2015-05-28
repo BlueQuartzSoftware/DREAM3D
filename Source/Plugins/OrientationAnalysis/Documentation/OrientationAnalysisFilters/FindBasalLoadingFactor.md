@@ -33,18 +33,10 @@ Voxel
 |------|--------------|-------------|---------|
 | Feature | BasalLoadingFactor | Value of the Basal Loading Factor (float) the stress on the basal plane for the given loading direction. |
 
-## Authors ##
 
-**Copyright:** 2013 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

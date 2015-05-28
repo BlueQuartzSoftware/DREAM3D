@@ -51,13 +51,13 @@ Voxel DataContainer
 | Cell | EulerColors | | The RGB colors are encoded as an unsigned char triplet  |
 
 ### Authors ##
-**Copyright:** 2015 BlueQuartz Software, LLC
 
-**Contact Info:** dream3d@bluequartz.net
 
-**Version:** 1.0.0
 
-**License:** See the License.txt file that came with DREAM3D.
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

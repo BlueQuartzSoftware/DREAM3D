@@ -43,14 +43,14 @@ None
 
 ## Authors ##
 
-**Copyright:** 2012 Dr. Anthony Rollet, Dr. Jason Gruber, Dr. Stephen Sintay, Dr. Sukbin Lee
 
-**Contact Info:** Carnegie-Mellon University, School of Materials Engineering
 
-**Version:** 1.0.0
 
-**License:** BSD
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

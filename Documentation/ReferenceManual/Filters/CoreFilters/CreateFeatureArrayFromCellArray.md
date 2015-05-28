@@ -32,17 +32,9 @@ Voxel DataContainer
 |------|--------------|-------------|---------|
 | Feature | *User Chosen* | | Array will have same name as its **Cell** counterpart |
 
-## Authors ##
+## License & Copyright ##
 
-**Copyright:** 2013 Joseph C. Tucker (UES)
-
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

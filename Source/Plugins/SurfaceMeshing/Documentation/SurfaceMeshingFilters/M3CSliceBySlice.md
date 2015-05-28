@@ -61,13 +61,9 @@ SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surf
 
 ## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
 
-**Contact Info:** dream3d@bluequartz.net
 
-**Version:** 1.0.0
 
-**License:**  See the License.txt file that came with DREAM3D.
 
 
 \*\*
@@ -78,6 +74,10 @@ Ziji Wu, John M. Sullivan Jr, 2003, "Multiple material marching cubes algorithm"
 
 _The accurate reconstruction of three-dimensional (3D) boundary surfaces from two-dimensional (2D) medical images is a crucial procedure in most applications of computational biomedical engineering. This paper addresses an innovative system that efficiently reconstructs accurate, multiple-material, 3D surface meshes from 2D medical images. It is based on an enhanced marching cubes algorithm, the multi-material marching cubes algorithm (M3C), which extracts boundary surfaces between different materials within one sweep of the image stack in an integrated manner. The continuity and integrity of the surfaces are ensured with this robust algorithm. Surface adjustment algorithms were also revised to adapt to the multiple-material nature of the system. Copyright © 2003 John Wiley & Sons, Ltd._
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

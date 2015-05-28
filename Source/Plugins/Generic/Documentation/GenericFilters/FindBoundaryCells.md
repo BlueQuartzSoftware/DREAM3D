@@ -28,17 +28,9 @@ Image / Rectilinear Grid
 |------|--------------|-------------|---------|-----|
 | Cell | SurfaceCells | Int | (1) | The number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* |
 
-## Authors ##
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

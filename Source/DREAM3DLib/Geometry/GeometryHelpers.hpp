@@ -10,11 +10,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
 
 /**
 * @brief This file contains a namespace with classes for manipulating IGeometry objects
 */
-
 namespace GeometryHelpers
 {
   /**
@@ -39,30 +39,20 @@ namespace GeometryHelpers
         QVector<hsize_t> dims;
         H5T_class_t type_class;
         size_t type_size;
-        typename ListType::Pointer mesh = ListType::CreateArray(0, listName);
+        IDataArray::Pointer mesh = IDataArray::NullPointer();
         err = QH5Lite::getDatasetInfo(parentId, listName, dims, type_class, type_size);
         if (err < 0)
         {
           err = -2;
-          return mesh = ListType::NullPointer();
+          return ListType::NullPointer();
         }
-        if (preflight == true)
+        mesh = H5DataArrayReader::ReadIDataArray(parentId, listName, preflight);
+        if (NULL == mesh.get())
         {
-          if (err < 0)
-          {
-            return mesh = ListType::NullPointer();
-          }
+          err = -1;
+          return ListType::NullPointer();
         }
-        else
-        {
-          err = mesh->readH5Data(parentId);
-          if (err < 0)
-          {
-            return mesh = ListType::NullPointer();
-          }
-        }
-
-        return mesh;
+        return boost::dynamic_pointer_cast<ListType>(mesh);
       }
 
       /**
