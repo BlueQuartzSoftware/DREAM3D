@@ -1026,7 +1026,9 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   {
     QByteArray dropData = mimedata->data("text/plain");
     QString data(dropData);
-    QFileInfo fi(data);
+    QUrl url(data);
+    QString filePath = url.toLocalFile();
+    QFileInfo fi(filePath);
     QString ext = fi.completeSuffix();
     FilterManager* fm = FilterManager::Instance();
     if (NULL == fm) { return; }
@@ -1081,7 +1083,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
           m_DropBox->setParent(NULL);
         }
 
-        openPipeline(data, index);
+        openPipeline(filePath, index);
       }
       else if (ext == "dream3d")
       {
@@ -1098,11 +1100,11 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
         if (msgBox->isExtractPipelineBtnChecked() == true)
         {
-          openPipeline(data, index);
+          openPipeline(filePath, index);
         }
         else
         {
-          addDREAM3DReaderFilter(data, index);
+          addDREAM3DReaderFilter(filePath, index);
         }
       }
       emit pipelineChanged();
