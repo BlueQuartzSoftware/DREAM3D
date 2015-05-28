@@ -31,14 +31,14 @@ None
 
 ## Authors ##
 
-**Copyright:** 2014 Will Lenthe (UCSB)
 
-**Contact Info:** dream3d@bluequartz.net
 
-**Version:** 5.1.0
 
-**License:**  See the License.txt file that came with DREAM3D.
 
+
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

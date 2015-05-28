@@ -32,17 +32,9 @@ Image / Rectilinear Grid
 | Feature | Neighborhoods | Int | (1) | Number of **Features** that have their centroid within the user specified multiple of equivalent sphere diameters from each **Feature** |
 | Feature | NeighborhoodLists | List of Ints | (1) | List of the **Features** whose centroids are within the user specified multiple of equivalent sphere diameter from each **Feature** |
 
-## Authors ##
-**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

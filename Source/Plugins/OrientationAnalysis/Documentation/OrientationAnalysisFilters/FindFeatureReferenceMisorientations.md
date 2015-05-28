@@ -33,18 +33,10 @@ Not Applicable
 | Element | FeatureReferenceMisorientations | Float | (1) | Misorientation angle (in degrees) between **Element**'s orientation and the reference orientation of the **Feature** that owns that **Element** |
 | Feature | FeatureAvgMisorientations | Float | (1) | Average of the *FeatureReferenceMisorientation* values for all of the **Elements** that belong to the **Feature** |
 
-## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

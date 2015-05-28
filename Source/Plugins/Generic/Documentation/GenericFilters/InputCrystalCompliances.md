@@ -25,17 +25,9 @@ None
 |------|--------------|-------------|---------|-----|
 | Ensemble | CrystalCompliances | Float | (6,6) | 6x6 matrix that specify compliance of the crystal (in the crystal reference frame) |
 
-## Authors ##
-**Copyright:** 2014 Will Lenthe (UCSB)
+## License & Copyright ##
 
-**Contact Info:** willlenthe@gmail.com
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

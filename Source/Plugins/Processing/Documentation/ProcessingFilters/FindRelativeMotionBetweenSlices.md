@@ -31,17 +31,9 @@ Image / Rectilinear Grid
 |------|--------------|-------------|---------|-----|
 | Cell | MotionDirection | Float | (3) | Specifies the direction, as a unit vector, that the extracted patch *moved* |
 
-## Authors ##
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

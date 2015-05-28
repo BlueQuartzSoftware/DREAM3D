@@ -29,18 +29,10 @@ Not Applicable
 | Feature | MisorientationLists | List of Floats | (1) | List of the misorientation angles with the contiguous neighboring **Features** for a given **Feature** |
 | Feature | AvgMisorientation | Float | (1) | Number weighted average of neighbor misorientations. Only created if Find Average Misorientation Per Feature is checked |
 
-## Authors ##
 
-**Copyright:** Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

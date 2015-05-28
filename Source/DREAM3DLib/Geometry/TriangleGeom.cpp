@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -552,7 +552,7 @@ int TriangleGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
   herr_t err = 0;
   SharedVertexList::Pointer vertices = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedVertexList>(DREAM3D::Geometry::SharedVertexList, parentId, preflight, err);
-  SharedQuadList::Pointer tris = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedQuadList>(DREAM3D::Geometry::SharedTriList, parentId, preflight, err);
+  SharedTriList::Pointer tris = GeometryHelpers::GeomIO::ReadListFromHDF5<SharedQuadList>(DREAM3D::Geometry::SharedTriList, parentId, preflight, err);
   if (tris.get() == NULL || vertices.get() == NULL)
   {
     return -1;

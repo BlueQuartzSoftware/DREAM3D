@@ -28,17 +28,9 @@ Not Applicable
 | Feature | ScalarAverages | Float | (1) | Average value of scalar **Attribute Array** for each **Feature** |
 
 
-## Authors ##
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

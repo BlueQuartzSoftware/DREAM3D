@@ -41,18 +41,10 @@ Voxel
 | Feature | Schmids | Value of the Schmid Factor (float) for the most favorably oriented slip system (ie the one with the highest Schmid Factor). | Only the Schmid Factor was used in determining which slip system's Schmid Factor to report.  The critical resolved shear stress for the different slip systems is not considered. |
 | Feature | SlipSystems | Enumeration (int) of the slip system that has the highest Schmid Factor | Numbers correspond to specific slip systems for the different crystal structures as follows: |
 
-## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

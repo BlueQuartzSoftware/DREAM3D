@@ -27,17 +27,9 @@ Image / Rectilinear Grid
 | Feature | SurfaceAReaVolumeRatio | Float | (1) | Ratio of surface area to volume for each **Feature**. The units are in inverse length units |
 
 
-## Authors ##
-**Copyright:** 
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

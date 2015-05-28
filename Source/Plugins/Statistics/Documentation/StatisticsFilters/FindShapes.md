@@ -54,18 +54,10 @@ Image / Rectilinear Grid
 | Feature | AxisLengths | Float | (3) | Axis lengths (a, b, c) for best-fit ellipsoid to **Feature** |
 | Feature | Omega3s | Float | (1) | 3rd invariant of the second-order moment matrix for the **Feature**, does not assume a shape type (ie ellipsoid) |
 
-## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 

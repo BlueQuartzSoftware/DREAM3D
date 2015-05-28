@@ -42,18 +42,10 @@ Voxel
 | Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** |  |
 | Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. |  |
 
-## Authors ##
 
-**Copyright:** 2015 BlueQuartz Software, LLC
+## License & Copyright ##
 
-**Contact Info:** dream3d@bluequartz.net
-
-**Version:** 1.0.0
-
-**License:**  See the License.txt file that came with DREAM3D.
-
-
-
+Please see the description file distributed with this plugin.
 
 ## DREAM3D Mailing Lists ##
 
