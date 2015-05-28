@@ -137,39 +137,27 @@ int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::dataCheck()
 {
-  // Algorithm should work for ANY surface mesh
-  IGeometry2D::Pointer iGeom2D = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry2D>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+
+  QVector<IDataArray::Pointer> faceDataArrays;
+  QVector<IDataArray::Pointer> nodeDataArrays;
+
+  if(getErrorCondition() >= 0) { faceDataArrays.push_back(triangles->getTriangles()); nodeDataArrays.push_back(triangles->getVertices()); }
 
   QVector<size_t> cDims(1, 1);
   m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { nodeDataArrays.push_back(m_SurfaceMeshNodeTypePtr.lock()); }
 
   cDims[0] = 2;
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { faceDataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
-  // If we had no problems up to this point, verify that the sizes of the node/face arrays match the chosen geometry
-  if (getErrorCondition() >= 0)
-  {
-    if (m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples() != iGeom2D->getNumberOfElements())
-    {
-      QString ss = QObject::tr("The number of tuples (%1) in the selected SurfaceMeshFaceLabels array does not match the number of elements (%2) in the selected Geometry").arg(m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples()).arg(iGeom2D->getNumberOfElements());
-      setErrorCondition(-5555);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    if (m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples() != iGeom2D->getNumberOfVertices())
-    {
-      QString ss = QObject::tr("The number of tuples (%1) in the selected SurfaceMeshNodeType array does not match the number of elements (%2) in the selected Geometry").arg(m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples()).arg(iGeom2D->getNumberOfElements());
-      setErrorCondition(-5555);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-  }
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, faceDataArrays);
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, nodeDataArrays);
 
   setSurfaceDataContainerName(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 }
