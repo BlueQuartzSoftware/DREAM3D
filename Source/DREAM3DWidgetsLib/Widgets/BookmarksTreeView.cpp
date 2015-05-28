@@ -345,44 +345,54 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
     QString source = QString::fromStdString(byteArray.toStdString());
     if (source == "Bookmarks")
     {
-      QModelIndexList selectList = selectedIndexes();
-      if (selectList.size() > 0)
+      QModelIndex newParent = model->index(currentIndex().row(), Name, currentIndex().parent());
+
+      if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true && newParent != m_IndexBeingDragged)
       {
-        QModelIndex newParent = selectList[0];
+        QModelIndex oldParent = m_IndexBeingDragged.parent();
 
-        if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true && newParent != m_IndexBeingDragged)
+        if (m_TopLevelItemPlaceholder.isValid())
         {
-          QModelIndex oldParent = m_IndexBeingDragged.parent();
-
-          if (m_TopLevelItemPlaceholder.isValid())
+          // If the parent is the placeholder, change the parent to the root.
+          if (m_TopLevelItemPlaceholder == newParent)
           {
-            // If the parent is the placeholder, change the parent to the root.
-            if (m_TopLevelItemPlaceholder == newParent)
-            {
-              newParent = QModelIndex();
-            }
-
-            model->removeRow(model->rowCount() - 1, rootIndex());
-            m_TopLevelItemPlaceholder = QModelIndex();
+            newParent = QModelIndex();
           }
 
-          if (m_IndexBeingDragged.isValid())
-          {
-            model->moveIndexInternally(m_IndexBeingDragged, oldParent, newParent);
-            expand(newParent);
-            model->sort(Name, Qt::AscendingOrder);
-            event->accept();
-            return;
-          }
+          model->removeRow(model->rowCount() - 1, rootIndex());
+          m_TopLevelItemPlaceholder = QModelIndex();
+        }
+
+        if (m_IndexBeingDragged.isValid())
+        {
+          model->moveIndexInternally(m_IndexBeingDragged, oldParent, newParent);
+          expand(newParent);
+          model->sort(Name, Qt::AscendingOrder);
+          event->accept();
+          return;
         }
       }
     }
   }
-  else
+  else if (mimedata->hasUrls() || mimedata->hasText())
   {
-    QUrl url(mimedata->text());
-    QString path = url.toLocalFile();
-    path = QDir::toNativeSeparators(path);
+    QByteArray dropData = mimedata->data("text/plain");
+    QString data(dropData);
+
+    QList<QString> paths;
+    if (mimedata->hasUrls())
+    {
+      QList<QUrl> urls = mimedata->urls();
+      for (int i = 0; i < urls.size(); i++)
+      {
+        paths.push_back(urls[i].toLocalFile());
+      }
+    }
+    else
+    {
+      paths.push_back(data);
+    }
+
     QModelIndex parentIndex = currentIndex();
     if (m_TopLevelItemPlaceholder.isValid())
     {
@@ -395,8 +405,12 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
       m_TopLevelItemPlaceholder = QModelIndex();
     }
 
-    model->addFileToTree(path, parentIndex);
-    expand(parentIndex);
+    for (int i = 0; i < paths.size(); i++)
+    {
+      model->addFileToTree(paths[i], parentIndex);
+      expand(parentIndex);
+    }
+
     model->sort(Name, Qt::AscendingOrder);
     event->accept();
     return;
