@@ -46,6 +46,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QProcess>
 #include <QtCore/QMimeData>
+#include <QtCore/QDirIterator>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtGui/QCloseEvent>
@@ -80,6 +81,7 @@
 
 #include "AboutDREAM3D.h"
 #include "AboutPlugins.h"
+#include "DREAM3Dv5Dialog.h"
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
@@ -123,6 +125,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
 {
   m_OpenDialogLastDirectory = QDir::homePath();
 
+  // Update first run
+  updateFirstRun();
+
   // Register all of the Filters we know about - the rest will be loaded through plugins
   //  which all should have been loaded by now.
   m_FilterManager = FilterManager::Instance();
@@ -157,6 +162,66 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
 DREAM3D_UI::~DREAM3D_UI()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::updateFirstRun()
+{
+  DREAM3DSettings prefs;
+  QString filePath = prefs.fileName();
+  QFileInfo fi(filePath);
+  
+  if (fi.exists() == false)
+  {
+    prefs.setValue("First Run", true);
+  }
+  else
+  {
+    prefs.setValue("First Run", false);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::checkFirstRun()
+{
+  // Launch v5.2 dialog box if this is the first run of v5.2
+  DREAM3DSettings prefs;
+  bool firstRun = prefs.value("First Run", true).toBool();
+  if (firstRun == true)
+  {
+    // This is the first run of DREAM3D v5.2, so we need to show the splash screen
+    DREAM3Dv5Dialog* dialog = new DREAM3Dv5Dialog(this, Qt::WindowTitleHint);
+    dialog->exec();
+
+    bool didClickYes = dialog->getDidPressYesBtn();
+    if (didClickYes == true)
+    {
+      BookmarksModel* model = BookmarksModel::Instance();
+
+      model->insertRow(0, QModelIndex());
+      QModelIndex nameIndex = model->index(0, Name, QModelIndex());
+      model->setData(nameIndex, "DREAM3D v4 Favorites", Qt::DisplayRole);
+      model->setData(nameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
+
+      QDir favoritesDir = bookmarksDockWidget->findV4FavoritesDirectory();
+      QString favoritesPath = favoritesDir.path();
+      QFileInfo fi(favoritesPath);
+
+      if (fi.exists() && favoritesPath.isEmpty() == false)
+      {
+        QDirIterator iter(favoritesPath, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
+        while (iter.hasNext())
+        {
+          QString path = iter.next();
+          model->addFileToTree(path, nameIndex);
+        }
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -397,15 +462,6 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
 void DREAM3D_UI::readSettings()
 {
   DREAM3DSettings prefs;
-
-  QString path = prefs.fileName();
-  QFileInfo fi(path);
-
-  QDir favoritesDir = bookmarksDockWidget->findV4FavoritesDirectory();
-  if (fi.exists() == false && favoritesDir.exists())
-  {
-    // This is the first run of DREAM3D v5, so we need to show the splash screen
-  }
 
   // Have the pipeline builder read its settings from the prefs file
   readWindowSettings(prefs);

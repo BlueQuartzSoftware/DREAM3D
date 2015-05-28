@@ -138,6 +138,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void writeSettings();
 
+    /**
+    * @brief Checks if this the first run of DREAM3D v5.2
+    * and if so, displays an informative dialog box.
+    */
+    void checkFirstRun();
+
   public slots:
 
     /**
@@ -425,6 +431,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QAction* m_ActionRemovePipeline;
     QAction* m_ActionShowInFileSystem;
     QAction* m_ActionClearPipeline;
+
+    /**
+    * @brief Updates the "first run" variable in the preferences file
+    */
+    void updateFirstRun();
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented
