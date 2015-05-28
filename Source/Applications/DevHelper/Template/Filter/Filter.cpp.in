@@ -162,7 +162,7 @@ AbstractFilter::Pointer @ClassName@::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 const QString @ClassName@::getCompiledLibraryName()
 {
-  return @PluginName@::@PluginName@BaseName;
+  return @PluginName@Constants::@PluginName@BaseName;
 }
 
 // -----------------------------------------------------------------------------
