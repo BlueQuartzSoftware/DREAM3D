@@ -54,13 +54,10 @@ void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  SampleSurfaceMesh::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-
-  /* Place code in here that will read the parameters from a file */
-
   setInputFilePath(reader->readString("InputFilePath", getInputFilePath()));
   setOutputFilePath(reader->readString("OutputFilePath", getOutputFilePath()));
-
   reader->closeFilterGroup();
 }
 
@@ -69,13 +66,10 @@ void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 int SampleSurfaceMeshSpecifiedPoints::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  SampleSurfaceMesh::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-
   DREAM3D_FILTER_WRITE_PARAMETER(InputFilePath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFilePath)
-
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -143,6 +137,7 @@ void SampleSurfaceMeshSpecifiedPoints::preflight()
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
+  SampleSurfaceMesh::preflight();
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
 }
 

@@ -663,6 +663,7 @@ void GeometryMath::FindDistanceToTriangleCentroid(const float* a, const float* b
 void GeometryMath::FindDistanceFromPlane(const float* q, float n[3], float d, float& distance)
 {
 	distance = (q[0] * n[0]) + (q[1] * n[1]) + (q[2] * n[2]) - d;
+	distance /= sqrt((n[0] * n[0]) + (n[1] * n[1]) + (n[2] * n[2]));
 }
 
 // -----------------------------------------------------------------------------
@@ -1049,7 +1050,7 @@ LOOP:
 				closestTriangleDistance = distance;
 				FindPlaneCoefficients(a, b, c, n, d);
 				FindDistanceFromPlane(q, n, d, distance);
-				distToBoundary = distance;
+				distToBoundary = fabs(distance);
 			}
 			if (RayIntersectsBox(q, r, v0, v1) == false)
 			{

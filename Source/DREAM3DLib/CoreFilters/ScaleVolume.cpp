@@ -190,11 +190,11 @@ void ScaleVolume::dataCheck()
     {
       return;
     }
-    VertexGeom::Pointer vertices = sm->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
-    if(vertices.get() == NULL)
+    TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+    if(triangles.get() == NULL)
     {
       setErrorCondition(-384);
-      notifyErrorMessage(getHumanLabel(), "DataContainer missing VertexGeom (nodes) geometry", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "DataContainer missing TriangleGeom geometry", getErrorCondition());
     }
   }
 }
@@ -263,15 +263,15 @@ void ScaleVolume::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  VertexGeom::Pointer nodesPtr = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName())->getGeometryAs<VertexGeom>();
-  float* nodes = nodesPtr->getVertexPointer(0);
+  TriangleGeom::Pointer trianglesPtr = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName())->getGeometryAs<TriangleGeom>();
+  float* nodes = trianglesPtr->getVertexPointer(0);
 
   // First get the min/max coords.
 
   float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
   float max[3] = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
 
-  size_t count = nodesPtr->getNumberOfVertices();
+  size_t count = trianglesPtr->getNumberOfVertices();
   for (size_t i = 0; i < count; i++)
   {
     if (nodes[3*i] > max[0])
