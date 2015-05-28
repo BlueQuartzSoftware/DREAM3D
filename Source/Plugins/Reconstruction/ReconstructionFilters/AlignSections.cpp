@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,23 +36,16 @@
 
 #include "AlignSections.h"
 
-#include <QtCore/QtDebug>
-#include <fstream>
-#include <sstream>
-
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
+#include "Reconstruction/ReconstructionConstants.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
-
-using namespace std;
 
 // -----------------------------------------------------------------------------
 //
@@ -81,12 +74,10 @@ AlignSections::~AlignSections()
 void AlignSections::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", getWriteAlignmentShifts(), linkedProps, false));
   parameters.push_back(FileSystemFilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget, "QString", false));
   parameters.push_back(FilterParameter::New("Linear Background Subtraction", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
-
   setFilterParameters(parameters);
 }
 
@@ -113,7 +104,6 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
   DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
   writer->closeFilterGroup();
-
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -123,12 +113,19 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void AlignSections::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
+  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
+
+  if (true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
   {
-    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
+    QString ss = QObject::tr("The Alignment Shift file name is empty");
     setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -149,16 +146,23 @@ void AlignSections::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AlignSections::find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSections::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -172,18 +176,17 @@ void AlignSections::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  int slice;
-  int xspot, yspot;
-  DimType newPosition;
-  DimType currentPosition;
-  //  unsigned int  phase2;
+  DimType slice = 0;
+  DimType xspot = 0, yspot = 0;
+  DimType newPosition = 0;
+  DimType currentPosition = 0;
 
-  std::vector<int> xshifts(dims[2], 0);
-  std::vector<int> yshifts(dims[2], 0);
+  std::vector<int64_t> xshifts(dims[2], 0);
+  std::vector<int64_t> yshifts(dims[2], 0);
 
   find_shifts(xshifts, yshifts);
 
-  if(getSubtractBackground())
+  if (getSubtractBackground())
   {
     /**fit x and y shifts to lines
      *
@@ -195,55 +198,52 @@ void AlignSections::execute()
      *
      */
 
-    //same for both
-    double sumX = 0;//sum(x_i)
-    double sumX_2 = 0;//sum(x_i^2)
+    // same for both
+    double sumX = 0.0; // sum(x_i)
+    double sumX_2 = 0.0; // sum(x_i^2)
 
-    //x shift line
-    double x_sumY = 0;//sum(y_i)
-    double x_sumXY = 0;//sum(x_i * y_i)
+    // x shift line
+    double x_sumY = 0.0; // sum(y_i)
+    double x_sumXY = 0.0; // sum(x_i * y_i)
 
-    //y shift line
-    double y_sumY = 0;//sum(y_i)
-    double y_sumXY = 0;//sum(x_i * y_i)
+    // y shift line
+    double y_sumY = 0.0; // sum(y_i)
+    double y_sumXY = 0.0; // sum(x_i * y_i)
 
     for (DimType iter = 0; iter < dims[2]; iter++)
     {
-      slice = static_cast<int>( (dims[2] - 1) - iter );
-      sumX = sumX + iter;
-      sumX_2 = sumX_2 + iter * iter;
-      x_sumY = x_sumY + xshifts[iter];
-      x_sumXY = x_sumXY + iter * xshifts[iter];
-      y_sumY = y_sumY + yshifts[iter];
-      y_sumXY = y_sumXY + iter * yshifts[iter];
+      slice = static_cast<DimType>( (dims[2] - 1) - iter );
+      sumX = static_cast<double>(sumX + iter);
+      sumX_2 = static_cast<double>(sumX_2 + iter * iter);
+      x_sumY = static_cast<double>(x_sumY + xshifts[iter]);
+      x_sumXY = static_cast<double>(x_sumXY + iter * xshifts[iter]);
+      y_sumY = static_cast<double>(y_sumY + yshifts[iter]);
+      y_sumXY = static_cast<double>(y_sumXY + iter * yshifts[iter]);
     }
 
-    double mx, my, bx, by;
-    mx = (dims[2] * x_sumXY - x_sumXY) / (dims[2] * sumX_2 - sumX);
-    my = (dims[2] * y_sumXY - y_sumXY) / (dims[2] * sumX_2 - sumX);
-    bx = (x_sumY - mx * sumX) / dims[2];
-    by = (y_sumY - my * sumX) / dims[2];
+    double mx = static_cast<double>((dims[2] * x_sumXY - x_sumXY) / (dims[2] * sumX_2 - sumX));
+    double my = static_cast<double>((dims[2] * y_sumXY - y_sumXY) / (dims[2] * sumX_2 - sumX));
 
-    ///adjust shifts so that fit line has 0 slope (~ends of the sample are fixed)
+    // adjust shifts so that fit line has 0 slope (~ends of the sample are fixed)
     for (DimType iter = 1; iter < dims[2]; iter++)
     {
-      slice = static_cast<int>( (dims[2] - 1) - iter );
-      xshifts[iter] = xshifts[iter] - iter * mx;
-      yshifts[iter] = yshifts[iter] - iter * my;
+      slice = (dims[2] - 1) - iter;
+      xshifts[iter] = static_cast<int64_t>(xshifts[iter] - iter * mx);
+      yshifts[iter] = static_cast<int64_t>(yshifts[iter] - iter * my);
     }
   }
 
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
   DimType progIncrement = dims[2] / 100;
   DimType prog = 1;
-  int progressInt = 0;
+  DimType progressInt = 0;
 
   for (DimType i = 1; i < dims[2]; i++)
   {
     if (i > prog)
     {
 
-      progressInt = ((float)i / dims[2]) * 100.0;
+      progressInt = ((float)i / dims[2]) * 100.0f;
       QString ss = QObject::tr("Transferring Cell Data - %1% Complete").arg(progressInt);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       prog = prog + progIncrement;
@@ -252,35 +252,33 @@ void AlignSections::execute()
     {
       return;
     }
-    slice = static_cast<int>( (dims[2] - 1) - i );
+    slice = (dims[2] - 1) - i;
     for (DimType l = 0; l < dims[1]; l++)
     {
       for (DimType n = 0; n < dims[0]; n++)
       {
-        if(yshifts[i] >= 0) { yspot = static_cast<int>(l); }
-        else if(yshifts[i] < 0) { yspot = static_cast<int>( dims[1] - 1 - l ); }
-        if(xshifts[i] >= 0) { xspot = static_cast<int>(n); }
-        else if(xshifts[i] < 0) { xspot = static_cast<int>( dims[0] - 1 - n ); }
+        if (yshifts[i] >= 0) { yspot = l; }
+        else if (yshifts[i] < 0) { yspot = dims[1] - 1 - l; }
+        if (xshifts[i] >= 0) { xspot = n; }
+        else if (xshifts[i] < 0) { xspot = dims[0] - 1 - n; }
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
         currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
-        if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
+        if ((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
             && (xspot + xshifts[i]) <= dims[0] - 1)
         {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            QString name = *iter;
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
             p->copyTuple(currentPosition, newPosition);
           }
         }
-        if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
+        if ((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
             || (xspot + xshifts[i]) > dims[0] - 1)
         {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            QString name = *iter;
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->initializeTuple(newPosition, 0.0);
+            p->initializeTuple(newPosition, 0);
           }
         }
       }
@@ -291,11 +289,39 @@ void AlignSections::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSections::newFilterInstance(bool copyFilterParameters)
+{
+  AlignSections::Pointer filter = AlignSections::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
-{
+const QString AlignSections::getCompiledLibraryName()
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
-}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSections::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSections::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::AlignmentFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSections::getHumanLabel()
+{ return "Align Sections"; }
