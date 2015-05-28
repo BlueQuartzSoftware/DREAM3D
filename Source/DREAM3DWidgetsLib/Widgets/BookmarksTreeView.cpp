@@ -371,6 +371,8 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
             model->moveIndexInternally(m_IndexBeingDragged, oldParent, newParent);
             expand(newParent);
             model->sort(Name, Qt::AscendingOrder);
+            event->accept();
+            return;
           }
         }
       }
@@ -396,7 +398,11 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
     model->addFileToTree(path, parentIndex);
     expand(parentIndex);
     model->sort(Name, Qt::AscendingOrder);
+    event->accept();
+    return;
   }
+
+  event->ignore();
 }
 
 // -----------------------------------------------------------------------------
