@@ -129,6 +129,18 @@ COMPILE_TOOL(
     LINK_LIBRARIES Qt5::Gui Qt5::Widgets
 )
 
+# --------------------------------------------------------------------
+COMPILE_TOOL(
+    TARGET CreateWebServerJson
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    LINK_LIBRARIES Qt5::Core
+)
+
 # Create a Command line tool for the DocsToPdf
 if(0)
     set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)

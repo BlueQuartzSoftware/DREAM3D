@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -89,7 +89,7 @@ namespace Detail
   static const QString VersionCheckGroupName("VersionCheck");
   static const QString LastVersionCheck("LastVersionCheck");
   static const QString WhenToCheck("WhenToCheck");
-  static const QString UpdateWebSite("http://dream3d.bluequartz.net/version.txt");
+  static const QString UpdateWebSite("http://dream3d.bluequartz.net/dream3d_version.json");
 }
 
 // -----------------------------------------------------------------------------

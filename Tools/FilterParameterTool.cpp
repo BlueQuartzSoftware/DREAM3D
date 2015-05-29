@@ -1006,7 +1006,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -1024,7 +1024,7 @@ int main(int argc, char* argv[])
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
 
-  GenerateFilterParametersCode();
+  //GenerateFilterParametersCode();
   //ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
 
   return 0;
