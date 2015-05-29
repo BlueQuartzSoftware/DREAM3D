@@ -40,6 +40,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QVector>
 
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMenu>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 //#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 
@@ -65,6 +68,9 @@ class BrandedInitializer : public QObject
 
   protected:
     QVector<IDREAM3DPlugin*> loadPlugins();
+
+  protected slots:
+    void on_m_ActionNew_triggered();
 
   private:
     bool                            show_splash;

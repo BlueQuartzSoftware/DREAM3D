@@ -249,6 +249,7 @@ void DREAM3D_UI::on_actionNew_triggered()
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
   newInstance->setLoadedPlugins(plugins);
   newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
+  newInstance->setAttribute(Qt::WA_DeleteOnClose);
   newInstance->move(this->x() + 45, this->y() + 45);
 
   connectSignalsSlots(newInstance);
@@ -316,6 +317,7 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
       list->addFile(filePath);
 
       // Show the new instance
+      newInstance->setAttribute(Qt::WA_DeleteOnClose);
       newInstance->move(this->x() + 45, this->y() + 45);
 
       connectSignalsSlots(newInstance);

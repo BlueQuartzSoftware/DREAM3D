@@ -69,7 +69,7 @@ BrandedInitializer::BrandedInitializer() :
   Splash(NULL),
   MainWindow(NULL)
 {
-
+  initializeGlobalMenu();
 }
 
 // -----------------------------------------------------------------------------
@@ -79,9 +79,6 @@ BrandedInitializer::~BrandedInitializer()
 {
   delete this->Splash;
   this->Splash = NULL;
-
-  delete this->MainWindow;
-  this->MainWindow = NULL;
 
   /*
   for(int i = 0; i < m_PluginLoaders.size(); i++)
@@ -97,34 +94,49 @@ BrandedInitializer::~BrandedInitializer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void delay(int seconds)
+{
+  QTime dieTime = QTime::currentTime().addSecs(seconds);
+  while( QTime::currentTime() < dieTime )
+  {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void BrandedInitializer::initializeGlobalMenu()
 {
-  m_GlobalMenu = new QMenuBar();
+  m_GlobalMenu = new QMenuBar(NULL);
   m_GlobalMenu->setObjectName(QStringLiteral("m_GlobalMenu"));
 
-  m_MenuFile = new QMenu(m_GlobalMenu);
+  m_MenuFile = new QMenu("File", m_GlobalMenu);
   m_MenuFile->setObjectName(QStringLiteral("m_MenuFile"));
-  m_Menu_RecentFiles = new QMenu(m_MenuFile);
+  m_GlobalMenu->addMenu(m_MenuFile);
+  m_Menu_RecentFiles = new QMenu("Recent Files", m_GlobalMenu);
   m_Menu_RecentFiles->setObjectName(QStringLiteral("m_Menu_RecentFiles"));
-  m_MenuHelp = new QMenu(m_GlobalMenu);
+  m_MenuFile->addMenu(m_Menu_RecentFiles);
+  m_MenuHelp = new QMenu("Help", m_GlobalMenu);
   m_MenuHelp->setObjectName(QStringLiteral("m_MenuHelp"));
+  m_GlobalMenu->addMenu(m_MenuHelp);
 
-  m_ActionNew = new QAction(this);
+  m_ActionNew = new QAction("New...", this);
   m_ActionNew->setObjectName(QStringLiteral("m_ActionNew"));
-  m_ActionOpen = new QAction(this);
+  m_ActionOpen = new QAction("Open...", this);
   m_ActionOpen->setObjectName(QStringLiteral("m_ActionOpen"));
-  m_ActionClearRecentFiles = new QAction(this);
+  m_ActionClearRecentFiles = new QAction("Clear Recent Files", this);
   m_ActionClearRecentFiles->setObjectName(QStringLiteral("m_ActionClearRecentFiles"));
 
-  m_ActionShowIndex = new QAction(this);
+  m_ActionShowIndex = new QAction("DREAM3D Help", this);
   m_ActionShowIndex->setObjectName(QStringLiteral("m_ActionShowIndex"));
-  m_ActionLicense_Information = new QAction(this);
+  m_ActionLicense_Information = new QAction("Show License", this);
   m_ActionLicense_Information->setObjectName(QStringLiteral("m_ActionLicense_Information"));
-  m_ActionAbout_DREAM3D = new QAction(this);
+  m_ActionAbout_DREAM3D = new QAction("About DREAM3D", this);
   m_ActionAbout_DREAM3D->setObjectName(QStringLiteral("m_ActionAbout_DREAM3D"));
-  m_ActionCheck_For_Updates = new QAction(this);
+  m_ActionCheck_For_Updates = new QAction("Check For Updates", this);
   m_ActionCheck_For_Updates->setObjectName(QStringLiteral("m_ActionCheck_For_Updates"));
-  m_ActionPlugin_Information = new QAction(this);
+  m_ActionPlugin_Information = new QAction("Plugin Information...", this);
   m_ActionPlugin_Information->setObjectName(QStringLiteral("m_ActionPlugin_Information"));
 
   m_MenuFile->addAction(m_ActionNew);
@@ -141,18 +153,25 @@ void BrandedInitializer::initializeGlobalMenu()
   m_MenuHelp->addSeparator();
   m_MenuHelp->addAction(m_ActionAbout_DREAM3D);
   m_MenuHelp->addAction(m_ActionPlugin_Information);
+
+  m_GlobalMenu->show();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void delay(int seconds)
+void BrandedInitializer::on_m_ActionNew_triggered()
 {
-  QTime dieTime = QTime::currentTime().addSecs(seconds);
-  while( QTime::currentTime() < dieTime )
-  {
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-  }
+    PluginManager* pluginManager = PluginManager::Instance();
+    QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
+
+    // Create new DREAM3D instance
+    DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
+    newInstance->setLoadedPlugins(plugins);
+
+    // Show the new instance
+    newInstance->setAttribute(Qt::WA_DeleteOnClose);
+    newInstance->show();
 }
 
 // -----------------------------------------------------------------------------
@@ -195,6 +214,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   this->MainWindow = new DREAM3D_UI(NULL);
   this->MainWindow->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
   this->MainWindow->setLoadedPlugins(plugins);
+  this->MainWindow->setAttribute(Qt::WA_DeleteOnClose);
 
   // Open pipeline if DREAM3D was opened from a compatible file
   if (argc == 2)
