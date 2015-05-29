@@ -42,9 +42,6 @@
 
 #include "Reconstruction/ReconstructionConstants.h"
 
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -128,6 +125,7 @@ void AlignSectionsFeature::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  AlignSections::preflight();
   setInPreflight(false);
 }
 

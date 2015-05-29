@@ -38,13 +38,10 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
-
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
 
 // -----------------------------------------------------------------------------
 //
@@ -121,6 +118,16 @@ void AlignSectionsFeatureCentroid::dataCheck()
   setDataContainerName(m_GoodVoxelsArrayPath.getDataContainerName());
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, m_GoodVoxelsArrayPath.getDataContainerName());
+  if(getErrorCondition() >= 0) { return; }
+
+  if (m_ReferenceSlice > image->getZPoints())
+  {
+    QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied reference slice (%2)").arg(image->getZPoints()).arg(m_ReferenceSlice);
+    setErrorCondition(-5556);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
   QVector<size_t> cDims(1, 1);
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -138,24 +145,9 @@ void AlignSectionsFeatureCentroid::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  AlignSections::preflight();
   setInPreflight(false);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::execute()
-{
-  setErrorCondition(0);
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  AlignSections::execute();
-
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -240,6 +232,21 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   {
     outFile.close();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsFeatureCentroid::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  AlignSections::execute();
+
+  // If there is an error set this to something negative and also set a message
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

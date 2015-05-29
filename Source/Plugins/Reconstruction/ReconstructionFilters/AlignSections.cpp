@@ -44,9 +44,6 @@
 
 #include "Reconstruction/ReconstructionConstants.h"
 
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -115,15 +112,22 @@ void AlignSections::dataCheck()
   setErrorCondition(0);
   DataArrayPath tempPath;
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  if (image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
+  {
+    QString ss = QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
+    setErrorCondition(-999);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
 
   if (true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
   {
-    QString ss = QObject::tr("The Alignment Shift file name is empty");
+    QString ss = QObject::tr("The alignment shift file name is empty");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

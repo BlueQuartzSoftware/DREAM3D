@@ -1,8 +1,3 @@
-
- //
- //  This code was written under United States Air Force Contract number
- //                           FA8650-07-D-5800
- //
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
@@ -16,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"

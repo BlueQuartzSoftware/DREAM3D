@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,52 +37,44 @@
 #ifndef _GroupMicroTextureRegions_H_
 #define _GroupMicroTextureRegions_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-///Boost Random Number generator stuff
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-
-typedef boost::uniform_int<int> NumberDistribution;
-typedef boost::mt19937 RandomNumberGenerator;
-typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
+
 /**
- * @class GroupMicroTextureRegions GroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/GroupMicroTextureRegions.h
- * @brief
- * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Mar 4, 2014
- * @version 5.0
+ * @brief The GroupMicroTextureRegions class. See [Filter documentation](@ref groupmicrotextureregions) for details.
  */
 class GroupMicroTextureRegions : public GroupFeatures
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
+    typedef boost::uniform_int<int32_t> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+
     DREAM3D_SHARED_POINTERS(GroupMicroTextureRegions)
     DREAM3D_STATIC_NEW_MACRO(GroupMicroTextureRegions)
     DREAM3D_TYPE_MACRO_SUPER(GroupMicroTextureRegions, AbstractFilter)
 
-
     virtual ~GroupMicroTextureRegions();
+
     DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
+
     DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
     Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
+
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
@@ -114,7 +106,6 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     /**
      * @brief setupFilterParameters
@@ -150,56 +141,56 @@ class GroupMicroTextureRegions : public GroupFeatures
   protected:
     GroupMicroTextureRegions();
 
-    virtual int getSeed(int newFid);
-    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-
-    void characterize_micro_texture_regions();
+    /**
+     * @brief getSeed Reimplemented from @see GroupFeatures class
+     */
+    virtual int32_t getSeed(int32_t newFid);
 
     /**
-     * @brief randomizeGrainIds
-     * @param totalPoints
-     * @param totalFields
+     * @brief determineGrouping Reimplemented from @see GroupFeatures class
      */
-    void randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures);
+    virtual bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
 
     /**
-     * @brief initializeVoxelSeedGenerator
-     * @param totalPoints
+     * @brief randomizeGrainIds Randomizes Feature Ids
+     * @param totalPoints Size of Feature Ids array to randomize
+     * @param totalFeatures Number of Features
      */
-    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
+    void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
+
+    /**
+     * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
+     * @param rangeMin Minimum range for random number selection
+     * @param rangeMax Maximum range for random number selection
+     */
+    void initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
 
     float avgCaxes[3];
+    float caxisTolerance;
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     void dataCheck();
     void updateFeatureInstancePointers();
 
-    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
-    ///filter is deleted
     boost::shared_ptr<NumberDistribution> m_Distribution;
     boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     boost::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
-
-    float caxisTolerance;
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
     void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented
 };
 
 #endif /* GroupMicroTextureRegions_H_ */
-
-
-

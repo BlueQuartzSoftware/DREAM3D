@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,37 +37,22 @@
 #ifndef _IdentifyMicroTextureRegions_H_
 #define _IdentifyMicroTextureRegions_H_
 
-#include <vector>
-
-///Boost Random Number generator stuff
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include <QtCore/QString>
-#include <QtCore/QDateTime>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Reconstruction/ReconstructionConstants.h"
 
 /**
- * @class IdentifyMicroTextureRegions IdentifyMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/IdentifyMicroTextureRegions.h
- * @brief
- * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Mar 25, 2014
- * @version 5.0
+ * @brief The IdentifyMicroTextureRegions class. See [Filter documentation](@ref identifymicrotextureregions) for details.
  */
 class IdentifyMicroTextureRegions : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    typedef boost::uniform_int<int> NumberDistribution;
+    typedef boost::uniform_int<int32_t> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
@@ -76,13 +61,16 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(IdentifyMicroTextureRegions, AbstractFilter)
 
     virtual ~IdentifyMicroTextureRegions();
+
     DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
+
     DREAM3D_FILTER_PARAMETER(float, MinMTRSize)
     Q_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
+
     DREAM3D_FILTER_PARAMETER(float, MinVolFrac)
     Q_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
 
@@ -108,7 +96,6 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     /**
      * @brief setupFilterParameters
@@ -145,42 +132,40 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     IdentifyMicroTextureRegions();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, MTRIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CAxisLocations)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    //These are temp arrays only stored during this filter, but we are using the DC structure to manage them in this filter.
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, MTRIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, InMTR)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, VolFrac)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxis)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, PatchIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, PatchActive)
 
-    float caxisTolerance;
-
-    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
-    ///filter is deleted
     boost::shared_ptr<NumberDistribution> m_Distribution;
     boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     boost::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
+    float caxisTolerance;
+
     /**
-     * @brief randomizeGrainIds
-     * @param totalPoints
-     * @param totalFields
+     * @brief randomizeGrainIds Randomizes Feature Ids
+     * @param totalPoints Size of Feature Ids array to randomize
+     * @param totalFeatures Number of Features
      */
-    void randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures);
+    void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
 
     void findMTRregions();
 
     /**
-     * @brief initializeVoxelSeedGenerator
-     * @param totalPoints
+     * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
+     * @param rangeMin Minimum range for random number selection
+     * @param rangeMax Maximum range for random number selection
      */
-    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
+    void initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax);
 
     void dataCheck();
     void updateFeatureInstancePointers();

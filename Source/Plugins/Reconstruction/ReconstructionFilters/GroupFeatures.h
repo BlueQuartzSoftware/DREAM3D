@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,26 +37,16 @@
 #ifndef _GroupFeatures_H_
 #define _GroupFeatures_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 #include "Plugins/Reconstruction/ReconstructionConstants.h"
 
 /**
- * @class GroupFeatures GroupFeatures.h DREAM3DLib/ReconstructionFilters/GroupFeatures.h
- * @brief
- * @author Joseph C Tucker (UES) & Michael A Groeber (AFRL)
- * @date Mar 11, 2014
- * @version 5.0
+ * @brief The GroupFeatures class. This class serves as a superclass for other classes
+ * in the Reconstruction plugin.
  */
 class GroupFeatures : public AbstractFilter
 {
@@ -70,20 +60,21 @@ class GroupFeatures : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
     Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
-   
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
     Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
 
     DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
     Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
-   
+
     DREAM3D_FILTER_PARAMETER(bool, PatchGrouping)
     Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 
-    virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const QString getHumanLabel() {return "Group Features";}
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
+    virtual const QString getCompiledLibraryName();
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**
@@ -113,14 +104,41 @@ class GroupFeatures : public AbstractFilter
   protected:
     GroupFeatures();
 
-    virtual int getSeed(int newFid);
-    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-    virtual bool growPatch(int currentPatch);
-    virtual bool growGrouping(int referenceFeature, int neighborFeature, int newFid);
+    /**
+     * @brief getSeed Initializes a new seed from which to star the burn algorithm
+     * @param newFid Feature Id to initialize seed
+     * @return Integer seed index
+     */
+    virtual int32_t getSeed(int32_t newFid);
+
+    /**
+     * @brief determineGrouping Determines if a neighbor should be added to the growing seed
+     * @param referenceFeature Point of growing seed
+     * @param neighborFeature Point to be compared for adding
+     * @param newFid Feature Id of growing seed
+     * @return Boolean check for whether the neighbor was added to the seed
+     */
+    virtual bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
+
+    /**
+     * @brief growPatch Iteratively grows a patch
+     * @param currentPatch Patch to grow
+     * @return Boolean check for whether patch was grown
+     */
+    virtual bool growPatch(int32_t currentPatch);
+
+    /**
+     * @brief growGrouping Adds a Feature to an existing patch
+     * @param referenceFeature Existing patch
+     * @param neighborFeature Feature to be added
+     * @param newFid Existing patch Id
+     * @return Boolean check for whether Feature was added to the patch
+     */
+    virtual bool growGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
 
   private:
-    NeighborList<int>::WeakPointer m_ContiguousNeighborList;
-    NeighborList<int>::WeakPointer m_NonContiguousNeighborList;
+    NeighborList<int32_t>::WeakPointer m_ContiguousNeighborList;
+    NeighborList<int32_t>::WeakPointer m_NonContiguousNeighborList;
 
     void dataCheck();
 
@@ -129,4 +147,3 @@ class GroupFeatures : public AbstractFilter
 };
 
 #endif /* GroupFeatures_H_ */
-

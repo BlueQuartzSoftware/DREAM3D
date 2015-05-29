@@ -87,8 +87,6 @@ class AlignSectionsFeatureCentroid : public AlignSections
 
     /**
      * @brief find_shifts Reimplemented from @see AlignSections class
-     * @param xshifts Vector of integer shifts in x direction
-     * @param yshifts Vector of integer shifts in y direction
      */
     virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 

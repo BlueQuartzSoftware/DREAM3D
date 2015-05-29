@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -62,6 +62,8 @@
 
 //included so we can call under the hood to segment the patches found in this filter
 #include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
+
+#include "Reconstruction/ReconstructionConstants.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -596,7 +598,7 @@ void IdentifyMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
+void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
   notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range

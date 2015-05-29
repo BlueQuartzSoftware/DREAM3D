@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,26 +37,14 @@
 #ifndef _AlignSectionsList_H_
 #define _AlignSectionsList_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
-
 /**
- * @class AlignSectionsList AlignSectionsList.h DREAM3DLib/ReconstructionFilters/AlignSectionsList.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The AlignSectionsList class. See [Filter documentation](@ref alignsectionslist) for details.
  */
 class AlignSectionsList : public AlignSections
 {
@@ -76,7 +64,10 @@ class AlignSectionsList : public AlignSections
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
+
+    virtual void setupFilterParameters();
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -84,18 +75,15 @@ class AlignSectionsList : public AlignSections
     virtual void execute();
     virtual void preflight();
 
-
   protected:
     AlignSectionsList();
 
-    virtual void find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts);
-
-    virtual void setupFilterParameters();
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    /**
+     * @brief find_shifts Reimplemented from @see AlignSections class
+     */
+    virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
   private:
-
     void dataCheck();
 
     AlignSectionsList(const AlignSectionsList&); // Copy Constructor Not Implemented
@@ -103,6 +91,3 @@ class AlignSectionsList : public AlignSections
 };
 
 #endif /* AlignSectionsList_H_ */
-
-
-

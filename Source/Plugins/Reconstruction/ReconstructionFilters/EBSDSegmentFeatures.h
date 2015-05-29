@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,44 +37,35 @@
 #ifndef _EBSDSegmentFeatures_H_
 #define _EBSDSegmentFeatures_H_
 
-#include <QtCore/QString>
-
-///Boost Random Number generator stuff
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-
-typedef boost::uniform_int<int> NumberDistribution;
-typedef boost::mt19937 RandomNumberGenerator;
-typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
 /**
- * @class EBSDSegmentFeatures EBSDSegmentFeatures.h DREAM3DLib/ReconstructionFilters/EBSDSegmentFeatures.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The EBSDSegmentFeatures class. See [Filter documentation](@ref ebsdsegmentfeatures) for details.
  */
 class EBSDSegmentFeatures : public SegmentFeatures
 {
     Q_OBJECT
   public:
+    typedef boost::uniform_int<int64_t> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+
     DREAM3D_SHARED_POINTERS(EBSDSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(EBSDSegmentFeatures)
     DREAM3D_TYPE_MACRO_SUPER(EBSDSegmentFeatures, AbstractFilter)
 
     virtual ~EBSDSegmentFeatures();
+
     DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -109,7 +100,6 @@ class EBSDSegmentFeatures : public SegmentFeatures
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
     /**
@@ -134,22 +124,27 @@ class EBSDSegmentFeatures : public SegmentFeatures
   protected:
     EBSDSegmentFeatures();
 
-    virtual int64_t getSeed(size_t gnum);
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
+    /**
+     * @brief getSeed Reimplemented from @see SegmentFeatures class
+     */
+    virtual int64_t getSeed(int32_t gnum);
+
+    /**
+     * @brief determineGrouping Reimplemented from @see SegmentFeatures class
+     */
+    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
   private:
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
-    ///filter is deleted
     boost::shared_ptr<NumberDistribution> m_Distribution;
     boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     boost::shared_ptr<Generator> m_NumberGenerator;
@@ -158,28 +153,24 @@ class EBSDSegmentFeatures : public SegmentFeatures
     float misoTolerance;
 
     /**
-     * @brief randomizeGrainIds
-     * @param totalPoints
-     * @param totalFields
+     * @brief randomizeGrainIds Randomizes Feature Ids
+     * @param totalPoints Size of Feature Ids array to randomize
+     * @param totalFeatures Number of Features
      */
-    void randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures);
+    void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
 
     /**
-     * @brief initializeVoxelSeedGenerator
-     * @param totalPoints
+     * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
+     * @param rangeMin Minimum range for random number selection
+     * @param rangeMax Maximum range for random number selection
      */
-    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
+    void initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax);
 
     void dataCheck();
     void updateFeatureInstancePointers();
-
-    bool missingGoodVoxels;
 
     EBSDSegmentFeatures(const EBSDSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const EBSDSegmentFeatures&); // Operator '=' Not Implemented
 };
 
 #endif /* EBSDSegmentFeatures_H_ */
-
-
-
