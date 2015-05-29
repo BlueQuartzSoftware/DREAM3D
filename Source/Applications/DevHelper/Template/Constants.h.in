@@ -9,7 +9,8 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace @PluginName@ {
+namespace @PluginName@Constants
+{
   const QString @PluginName@PluginFile("@PluginName@Plugin");
   const QString @PluginName@PluginDisplayName("@PluginName@Plugin");
   const QString @PluginName@BaseName("@PluginName@Plugin");

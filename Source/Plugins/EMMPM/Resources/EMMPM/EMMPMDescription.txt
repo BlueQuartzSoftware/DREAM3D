@@ -1,1 +1,17 @@
-<< ADD PLUGIN DESCRIPTION HERE >>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>EMMPM Plugin Description</title>
+</head>
+<body>
+<h3>EMMPM Plugin</h3>
+
+<p>This plugin implements the Expectation Maximization/Maximization of Posterior Marginals algorithm that can segment gray scale images or other 8 bit unsigned data arrays that nominally form a <i>2D image</i>. The algorithm is well documented in the following paper:
+</p>
+<h4>Citations</h4>
+<p>
+H. C. Chuang, M. L. Comer, and J. Simmons, “Texture Segmentation in Microstructure Images of Advanced Materials,” In Proceedings of the <i>2008 IEEE Southwest Symposium on Image Analysis and Interpretation</i>, March 24-26, 2008, Santa Fe, NM
+</p>
+</body>
+</html>

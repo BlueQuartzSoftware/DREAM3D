@@ -81,17 +81,13 @@ set(PREBUILT_PIPELINE_NAMES
  "Reconstruction/(12) SmallIN100 Close Bad Data"
  "Reconstruction/(13) Image Initial Visualization"
  "Reconstruction/(14) Image Segmentation"
- "Reconstruction/(15) 12 Percent Full Reconstruction"
- "Reconstruction/(16) MicroTextureReconstruction"
- "Reconstruction/(17) Small IN100 Full Reconstruction"
+ "Reconstruction/(15) Small IN100 Full Reconstruction"
  "Statistics/(01) SmallIN100 Morphological Statistics"
  "Statistics/(02) SmallIN100 Export Statistics"
  "Statistics/(03) SmallIN100 Transfer Field Data"
  "Statistics/(04) SmallIN100 Field Threshold"
  "Statistics/(05) SmallIN100 Crystallographic Statistics"
- "Statistics/(06) 12 Percent Tension Crystallographic Statistics"
  "SurfaceMeshing/(01) SmallIN100 Quick Mesh"
- "SurfaceMeshing/(02) SmallIN100 Marching Cubes"
  "SurfaceMeshing/(03) SmallIN100 Smooth Mesh"
  "SurfaceMeshing/(04) SmallIN100 Mesh Statistics"
  "SurfaceMeshing/(05) SmallIN100 GBCD"
@@ -108,11 +104,12 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
 add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib DREAM3DLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER Test)
+add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
 
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
-  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 
@@ -125,7 +122,7 @@ set(PREBUILT_PIPELINE_NAMES
 )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
-  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 
