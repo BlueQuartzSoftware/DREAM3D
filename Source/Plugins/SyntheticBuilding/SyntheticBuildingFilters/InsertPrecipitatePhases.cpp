@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -97,8 +97,8 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_NumCells(NULL),
   m_PhaseTypes(NULL),
   m_ShapeTypes(NULL),
-  m_Neighbors(NULL),
-  m_NumFeatures(NULL)
+  m_NumFeatures(NULL),
+  m_Neighbors(NULL)
 {
   m_FirstPrecipitateFeature  = 1;
   Seed = QDateTime::currentMSecsSinceEpoch();
@@ -738,109 +738,109 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-	m_Centroids[3 * i] = m_SizeX * 0.5;
-	m_Centroids[3 * i + 1] = m_SizeY * 0.5;
-	m_Centroids[3 * i + 2] = m_SizeZ * 0.5;
-	insert_precipitate(i);
+  m_Centroids[3 * i] = m_SizeX * 0.5;
+  m_Centroids[3 * i + 1] = m_SizeY * 0.5;
+  m_Centroids[3 * i + 2] = m_SizeZ * 0.5;
+  insert_precipitate(i);
 
-	good = false;
-	int32_t iterCount = 0;
-	while (good == false && iterCount < 100000 )
-	{
-		PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
-		precipboundaryfraction = pp->getPrecipBoundaryFraction();
-		random = static_cast<float>(rg.genrand_res53());
+  good = false;
+  int32_t iterCount = 0;
+  while (good == false && iterCount < 100000 )
+  {
+    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
+    precipboundaryfraction = pp->getPrecipBoundaryFraction();
+    random = static_cast<float>(rg.genrand_res53());
 
-		if (boundaryFraction != 0)
-		{
-		  if (random <= precipboundaryfraction)
-		  {
-			// figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-			if (availablePointsCount > 0)
-			{
-			  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-			  featureOwnersIdx = availablePointsInv[key];
-			  while (m_BoundaryCells[featureOwnersIdx] == 0)
-			  {
-				key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-				featureOwnersIdx = availablePointsInv[key];
-			  }
-			}
-			else
-			{
-			  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-			  while (m_BoundaryCells[featureOwnersIdx] == 0)
-			  {
-				featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-			  }
-			}
+    if (boundaryFraction != 0)
+    {
+      if (random <= precipboundaryfraction)
+      {
+      // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
+      if (availablePointsCount > 0)
+      {
+        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+        featureOwnersIdx = availablePointsInv[key];
+        while (m_BoundaryCells[featureOwnersIdx] == 0)
+        {
+        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+        featureOwnersIdx = availablePointsInv[key];
+        }
+      }
+      else
+      {
+        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+        while (m_BoundaryCells[featureOwnersIdx] == 0)
+        {
+        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+        }
+      }
 
-		  }
-		  else if (random > precipboundaryfraction)
-		  {
-			if (availablePointsCount > 0)
-			{
-			  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-			  featureOwnersIdx = availablePointsInv[key];
-			  while (m_BoundaryCells[featureOwnersIdx] != 0)
-			  {
-				key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-				featureOwnersIdx = availablePointsInv[key];
-			  }
-			}
-			else
-			{
-			  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-			  while (m_BoundaryCells[featureOwnersIdx] != 0)
-			  {
-				featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-			  }
-			}
-		  }
-		}
-		else
-		{
+      }
+      else if (random > precipboundaryfraction)
+      {
+      if (availablePointsCount > 0)
+      {
+        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+        featureOwnersIdx = availablePointsInv[key];
+        while (m_BoundaryCells[featureOwnersIdx] != 0)
+        {
+        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+        featureOwnersIdx = availablePointsInv[key];
+        }
+      }
+      else
+      {
+        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+        while (m_BoundaryCells[featureOwnersIdx] != 0)
+        {
+        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+        }
+      }
+      }
+    }
+    else
+    {
 
-		  if (precipboundaryfraction > 0)
-		  {
-			QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
-			notifyWarningMessage(getHumanLabel(), msg, -5010);
-		  }
+      if (precipboundaryfraction > 0)
+      {
+      QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
+      notifyWarningMessage(getHumanLabel(), msg, -5010);
+      }
 
-		  if (availablePointsCount > 0)
-		  {
-			key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-			featureOwnersIdx = availablePointsInv[key];
-		  }
-		  else
-		  {
-			featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-		  }
-		}
-	
-		column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
-		row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
-		plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
-		xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
-		yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
-		zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
-		//m_Centroids[3 * i] = xc;
-		//m_Centroids[3 * i + 1] = yc;
-		//m_Centroids[3 * i + 2] = zc;
-		move_precipitate(i, xc, yc, zc);
+      if (availablePointsCount > 0)
+      {
+      key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+      featureOwnersIdx = availablePointsInv[key];
+      }
+      else
+      {
+      featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+      }
+    }
+
+    column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
+    row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
+    plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
+    xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
+    yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
+    zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
+    //m_Centroids[3 * i] = xc;
+    //m_Centroids[3 * i + 1] = yc;
+    //m_Centroids[3 * i + 2] = zc;
+    move_precipitate(i, xc, yc, zc);
 //		insert_precipitate(i);
-		good = check_for_overlap(i, exclusionZonesPtr);
-		iterCount++;
-	}
+    good = check_for_overlap(i, exclusionZonesPtr);
+    iterCount++;
+  }
     update_exclusionZones(i, -1000, exclusionZonesPtr);
     update_availablepoints(availablePoints, availablePointsInv);
-	if (iterCount >= 100000)
-	{
-		tDims[0] = i + 1;
-		m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
-		updateFeatureInstancePointers();
-		numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
-	}
+  if (iterCount >= 100000)
+  {
+    tDims[0] = i + 1;
+    m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
+    updateFeatureInstancePointers();
+    numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+  }
   }
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
@@ -1329,42 +1329,42 @@ void InsertPrecipitatePhases::update_exclusionZones(size_t gadd, int32_t gremove
 // -----------------------------------------------------------------------------
 bool InsertPrecipitatePhases::check_for_overlap(size_t gNum, Int32ArrayType::Pointer exclusionZonesPtr)
 {
-	size_t featureOwnersIdx = 0;
-	int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
-	int64_t col = 0, row = 0, plane = 0;
-	int64_t overlapCount = 0;
+  size_t featureOwnersIdx = 0;
+  int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
+  int64_t col = 0, row = 0, plane = 0;
+  int64_t overlapCount = 0;
 
-	size_t size = columnlist[gNum].size();
-	std::vector<int64_t>& cl = columnlist[gNum];
-	std::vector<int64_t>& rl = rowlist[gNum];
-	std::vector<int64_t>& pl = planelist[gNum];
-	for (size_t i = 0; i < size; i++)
-	{
-		col = cl[i];
-		row = rl[i];
-		plane = pl[i];
-		if (m_PeriodicBoundaries == true)
-		{
-			if (col < 0) { col = col + m_XPoints; }
-			if (col > m_XPoints - 1) { col = col - m_XPoints; }
-			if (row < 0) { row = row + m_YPoints; }
-			if (row > m_YPoints - 1) { row = row - m_YPoints; }
-			if (plane < 0) { plane = plane + m_ZPoints; }
-			if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
-			featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-			if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
-		}
-		else
-		{
-			if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
-			{
-				featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-				if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
-			}
-		}
-	}
-	if ((static_cast<float>(overlapCount) / static_cast<float>(size)) > 0.1) return false;
-	return true;
+  size_t size = columnlist[gNum].size();
+  std::vector<int64_t>& cl = columnlist[gNum];
+  std::vector<int64_t>& rl = rowlist[gNum];
+  std::vector<int64_t>& pl = planelist[gNum];
+  for (size_t i = 0; i < size; i++)
+  {
+    col = cl[i];
+    row = rl[i];
+    plane = pl[i];
+    if (m_PeriodicBoundaries == true)
+    {
+      if (col < 0) { col = col + m_XPoints; }
+      if (col > m_XPoints - 1) { col = col - m_XPoints; }
+      if (row < 0) { row = row + m_YPoints; }
+      if (row > m_YPoints - 1) { row = row - m_YPoints; }
+      if (plane < 0) { plane = plane + m_ZPoints; }
+      if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
+      featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
+      if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
+    }
+    else
+    {
+      if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
+      {
+        featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
+        if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
+      }
+    }
+  }
+  if ((static_cast<float>(overlapCount) / static_cast<float>(size)) > 0.1) return false;
+  return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -2013,119 +2013,119 @@ void InsertPrecipitatePhases::assign_voxels()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_gaps()
 {
-	notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
+  notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
-	DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-	int32_t featurename = 0, feature = 0;
-	int32_t current = 0;
-	int32_t most = 0;
-	int64_t gapVoxelCount = 1;
-	int32_t iterationCounter = 0;
-	int64_t neighpoint;
-	bool good = false;
-	int32_t neighbor = 0;
+  int32_t featurename = 0, feature = 0;
+  int32_t current = 0;
+  int32_t most = 0;
+  int64_t gapVoxelCount = 1;
+  int32_t iterationCounter = 0;
+  int64_t neighpoint;
+  bool good = false;
+  int32_t neighbor = 0;
 
-	int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
-	int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
-	int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
-	size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-	size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+  int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
+  int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
+  int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
 
-	int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-	neighpoints[0] = -xPoints * yPoints;
-	neighpoints[1] = -xPoints;
-	neighpoints[2] = -1;
-	neighpoints[3] = 1;
-	neighpoints[4] = xPoints;
-	neighpoints[5] = xPoints * yPoints;
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  neighpoints[0] = -xPoints * yPoints;
+  neighpoints[1] = -xPoints;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xPoints;
+  neighpoints[5] = xPoints * yPoints;
 
-	Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors");
-	neighborsPtr->initializeWithValue(-1);
-	m_Neighbors = neighborsPtr->getPointer(0);
+  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors");
+  neighborsPtr->initializeWithValue(-1);
+  m_Neighbors = neighborsPtr->getPointer(0);
 
-	std::vector<int32_t> n(totalFeatures + 1, 0);
+  std::vector<int32_t> n(totalFeatures + 1, 0);
 
-	while (gapVoxelCount != 0)
-	{
-		iterationCounter++;
-		gapVoxelCount = 0;
-		int64_t zStride, yStride;
-		for (int64_t i = 0; i < zPoints; i++)
-		{
-			zStride = i * xPoints * yPoints;
-			for (int64_t j = 0; j < yPoints; j++)
-			{
-				yStride = j * xPoints;
-				for (int64_t k = 0; k < xPoints; k++)
-				{
-					featurename = m_FeatureIds[zStride + yStride + k];
-					if (featurename < 0)
-					{
-						gapVoxelCount++;
-						current = 0;
-						most = 0;
-						for (int32_t l = 0; l < 6; l++)
-						{
-							good = true;
-							neighpoint = zStride + yStride + k + neighpoints[l];
-							if (l == 0 && i == 0) { good = false; }
-							if (l == 5 && i == (zPoints - 1)) { good = false; }
-							if (l == 1 && j == 0) { good = false; }
-							if (l == 4 && j == (yPoints - 1)) { good = false; }
-							if (l == 2 && k == 0) { good = false; }
-							if (l == 3 && k == (xPoints - 1)) { good = false; }
-							if (good == true)
-							{
-								feature = m_FeatureIds[neighpoint];
-								if (feature > 0)
-								{
-									n[feature]++;
-									current = n[feature];
-									if (current > most)
-									{
-										most = current;
-										m_Neighbors[zStride + yStride + k] = neighpoint;
-									}
-								}
-							}
-						}
-						for (int32_t l = 0; l < 6; l++)
-						{
-							good = true;
-							neighpoint = zStride + yStride + k + neighpoints[l];
-							if (l == 0 && i == 0) { good = false; }
-							if (l == 5 && i == (zPoints - 1)) { good = false; }
-							if (l == 1 && j == 0) { good = false; }
-							if (l == 4 && j == (yPoints - 1)) { good = false; }
-							if (l == 2 && k == 0) { good = false; }
-							if (l == 3 && k == (xPoints - 1)) { good = false; }
-							if (good == true)
-							{
-								feature = m_FeatureIds[neighpoint];
-								if (feature > 0) { n[feature] = 0; }
-							}
-						}
-					}
-				}
-			}
-		}
-		for (size_t j = 0; j < totalPoints; j++)
-		{
-			featurename = m_FeatureIds[j];
-			neighbor = m_Neighbors[j];
-			if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
-			{
-				m_FeatureIds[j] = m_FeatureIds[neighbor];
-				m_CellPhases[j] = m_FeaturePhases[m_FeatureIds[neighbor]];
-			}
-		}
-		if (iterationCounter >= 1)
-		{
-			QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
-			notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-		}
-	}
+  while (gapVoxelCount != 0)
+  {
+    iterationCounter++;
+    gapVoxelCount = 0;
+    int64_t zStride, yStride;
+    for (int64_t i = 0; i < zPoints; i++)
+    {
+      zStride = i * xPoints * yPoints;
+      for (int64_t j = 0; j < yPoints; j++)
+      {
+        yStride = j * xPoints;
+        for (int64_t k = 0; k < xPoints; k++)
+        {
+          featurename = m_FeatureIds[zStride + yStride + k];
+          if (featurename < 0)
+          {
+            gapVoxelCount++;
+            current = 0;
+            most = 0;
+            for (int32_t l = 0; l < 6; l++)
+            {
+              good = true;
+              neighpoint = zStride + yStride + k + neighpoints[l];
+              if (l == 0 && i == 0) { good = false; }
+              if (l == 5 && i == (zPoints - 1)) { good = false; }
+              if (l == 1 && j == 0) { good = false; }
+              if (l == 4 && j == (yPoints - 1)) { good = false; }
+              if (l == 2 && k == 0) { good = false; }
+              if (l == 3 && k == (xPoints - 1)) { good = false; }
+              if (good == true)
+              {
+                feature = m_FeatureIds[neighpoint];
+                if (feature > 0)
+                {
+                  n[feature]++;
+                  current = n[feature];
+                  if (current > most)
+                  {
+                    most = current;
+                    m_Neighbors[zStride + yStride + k] = neighpoint;
+                  }
+                }
+              }
+            }
+            for (int32_t l = 0; l < 6; l++)
+            {
+              good = true;
+              neighpoint = zStride + yStride + k + neighpoints[l];
+              if (l == 0 && i == 0) { good = false; }
+              if (l == 5 && i == (zPoints - 1)) { good = false; }
+              if (l == 1 && j == 0) { good = false; }
+              if (l == 4 && j == (yPoints - 1)) { good = false; }
+              if (l == 2 && k == 0) { good = false; }
+              if (l == 3 && k == (xPoints - 1)) { good = false; }
+              if (good == true)
+              {
+                feature = m_FeatureIds[neighpoint];
+                if (feature > 0) { n[feature] = 0; }
+              }
+            }
+          }
+        }
+      }
+    }
+    for (size_t j = 0; j < totalPoints; j++)
+    {
+      featurename = m_FeatureIds[j];
+      neighbor = m_Neighbors[j];
+      if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
+      {
+        m_FeatureIds[j] = m_FeatureIds[neighbor];
+        m_CellPhases[j] = m_FeaturePhases[m_FeatureIds[neighbor]];
+      }
+    }
+    if (iterationCounter >= 1)
+    {
+      QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
