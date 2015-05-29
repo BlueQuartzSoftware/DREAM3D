@@ -34,35 +34,28 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DREAM3Dv5Dialog_H_
-#define _DREAM3Dv5Dialog_H_
+#ifndef _DREAM3Dv5Wizard_H_
+#define _DREAM3Dv5Wizard_H_
 
-#include <QtWidgets/QDialog>
+#include <QtWidgets/QWizard>
 
 //-- UIC generated Header
-#include <ui_DREAM3Dv5Dialog.h>
+#include <ui_DREAM3Dv5Wizard.h>
 
 
-class DREAM3Dv5Dialog : public QDialog, private Ui::DREAM3Dv5Dialog
+class DREAM3Dv5Wizard : public QWizard, private Ui::DREAM3Dv5Wizard
 {
   Q_OBJECT
 
 public:
-  DREAM3Dv5Dialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
-  virtual ~DREAM3Dv5Dialog();
+  DREAM3Dv5Wizard(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  virtual ~DREAM3Dv5Wizard();
 
-  bool getDidPressYesBtn();
+  bool isBookmarkBtnChecked();
 
-  protected slots:
-  void on_yesBtn_clicked();
-  void on_noBtn_clicked();
-
-private:
-  bool  m_DidPressYesBtn;
-
-  DREAM3Dv5Dialog(const DREAM3Dv5Dialog&); // Copy Constructor Not Implemented
-  void operator=(const DREAM3Dv5Dialog&); // Operator '=' Not Implemented
+  DREAM3Dv5Wizard(const DREAM3Dv5Wizard&); // Copy Constructor Not Implemented
+  void operator=(const DREAM3Dv5Wizard&); // Operator '=' Not Implemented
 };
 
-#endif /* DREAM3Dv5Dialog_H_ */
+#endif /* DREAM3Dv5Wizard_H_ */
 

@@ -81,7 +81,7 @@
 
 #include "AboutDREAM3D.h"
 #include "AboutPlugins.h"
-#include "DREAM3Dv5Dialog.h"
+#include "DREAM3Dv5Wizard.h"
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
@@ -194,11 +194,11 @@ void DREAM3D_UI::checkFirstRun()
   if (firstRun == true)
   {
     // This is the first run of DREAM3D v5.2, so we need to show the splash screen
-    DREAM3Dv5Dialog* dialog = new DREAM3Dv5Dialog(this, Qt::WindowTitleHint);
-    dialog->exec();
+    DREAM3Dv5Wizard* wizard = new DREAM3Dv5Wizard(this, Qt::WindowTitleHint);
+    wizard->exec();
 
-    bool didClickYes = dialog->getDidPressYesBtn();
-    if (didClickYes == true)
+    bool value = wizard->isBookmarkBtnChecked();
+    if (value == true)
     {
       BookmarksModel* model = BookmarksModel::Instance();
 

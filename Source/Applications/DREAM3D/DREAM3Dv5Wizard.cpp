@@ -34,7 +34,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3Dv5Dialog.h"
+#include "DREAM3Dv5Wizard.h"
 
 #include <QtWidgets/QFileDialog>
 
@@ -42,9 +42,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3Dv5Dialog::DREAM3Dv5Dialog(QWidget* parent, Qt::WindowFlags flags) :
-QDialog(parent, flags),
-m_DidPressYesBtn(false)
+DREAM3Dv5Wizard::DREAM3Dv5Wizard(QWidget* parent, Qt::WindowFlags flags) :
+QWizard(parent, flags)
 {
   setupUi(this);
 }
@@ -52,7 +51,7 @@ m_DidPressYesBtn(false)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3Dv5Dialog::~DREAM3Dv5Dialog()
+DREAM3Dv5Wizard::~DREAM3Dv5Wizard()
 {
 
 }
@@ -60,26 +59,9 @@ DREAM3Dv5Dialog::~DREAM3Dv5Dialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3Dv5Dialog::on_yesBtn_clicked()
+bool DREAM3Dv5Wizard::isBookmarkBtnChecked()
 {
-  m_DidPressYesBtn = true;
-  close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3Dv5Dialog::on_noBtn_clicked()
-{
-  close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool DREAM3Dv5Dialog::getDidPressYesBtn()
-{
-  return m_DidPressYesBtn;
+  return true;
 }
 
 
