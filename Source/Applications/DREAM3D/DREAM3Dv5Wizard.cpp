@@ -61,7 +61,7 @@ DREAM3Dv5Wizard::~DREAM3Dv5Wizard()
 // -----------------------------------------------------------------------------
 bool DREAM3Dv5Wizard::isBookmarkBtnChecked()
 {
-  return true;
+  return bookmarkRadioBtn->isChecked();
 }
 
 
