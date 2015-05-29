@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,46 +37,33 @@
 #ifndef _VectorSegmentFeatures_H_
 #define _VectorSegmentFeatures_H_
 
-#include <QtCore/QString>
-
-///Boost Random Number generator stuff
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-
-typedef boost::uniform_int<int> NumberDistribution;
-typedef boost::mt19937 RandomNumberGenerator;
-typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
-#include "Reconstruction/ReconstructionConstants.h"
-
-
-class CompareFunctor;
 
 /**
- * @class VectorSegmentFeatures VectorSegmentFeatures.h DREAM3DLib/ReconstructionFilters/VectorSegmentFeatures.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The VectorSegmentFeatures class. See [Filter documentation](@ref vectorsegmentfeatures) for details.
  */
 class VectorSegmentFeatures : public SegmentFeatures
 {
     Q_OBJECT
   public:
+    typedef boost::uniform_int<int64_t> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+
     DREAM3D_SHARED_POINTERS(VectorSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(VectorSegmentFeatures)
     DREAM3D_TYPE_MACRO_SUPER(VectorSegmentFeatures, AbstractFilter)
 
     virtual ~VectorSegmentFeatures();
+
     DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -105,7 +92,6 @@ class VectorSegmentFeatures : public SegmentFeatures
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
     /**
@@ -130,19 +116,22 @@ class VectorSegmentFeatures : public SegmentFeatures
   protected:
     VectorSegmentFeatures();
 
-    virtual int64_t getSeed(size_t gnum);
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
+    /**
+     * @brief getSeed Reimplemented from @see SegmentFeatures class
+     */
+    virtual int64_t getSeed(int32_t gnum);
+
+    /**
+     * @brief determineGrouping Reimplemented from @see SegmentFeatures class
+     */
+    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
   private:
-    IDataArray::Pointer m_InputData;
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Vectors)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
 
-    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
-    ///filter is deleted
     boost::shared_ptr<NumberDistribution> m_Distribution;
     boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     boost::shared_ptr<Generator> m_NumberGenerator;
@@ -151,27 +140,24 @@ class VectorSegmentFeatures : public SegmentFeatures
     float angleTolerance;
 
     /**
-     * @brief randomizeGrainIds
-     * @param totalPoints
-     * @param totalFields
+     * @brief randomizeGrainIds Randomizes Feature Ids
+     * @param totalPoints Size of Feature Ids array to randomize
+     * @param totalFeatures Number of Features
      */
-    void randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures);
+    void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
 
     /**
-     * @brief initializeVoxelSeedGenerator
-     * @param totalPoints
+     * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
+     * @param rangeMin Minimum range for random number selection
+     * @param rangeMax Maximum range for random number selection
      */
-    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
+    void initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax);
 
     void dataCheck();
     void updateFeatureInstancePointers();
-
-    bool missingGoodVoxels;
 
     VectorSegmentFeatures(const VectorSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const VectorSegmentFeatures&); // Operator '=' Not Implemented
 };
 
 #endif /* VectorSegmentFeatures_H_ */
-
-

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -40,16 +40,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
-
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
+#include "Reconstruction/ReconstructionConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -58,7 +49,6 @@ SegmentFeatures::SegmentFeatures() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::DataContainerName)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -74,7 +64,6 @@ SegmentFeatures::~SegmentFeatures()
 void SegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-
   reader->closeFilterGroup();
 }
 
@@ -95,6 +84,8 @@ int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
 void SegmentFeatures::dataCheck()
 {
   setErrorCondition(0);
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
 }
 
 // -----------------------------------------------------------------------------
@@ -113,17 +104,31 @@ void SegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int64_t SegmentFeatures::getSeed(int32_t gnum)
+{
+  return -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool SegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
+{
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SegmentFeatures::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  size_t udims[3] =
-  { 0, 0, 0 };
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -133,15 +138,15 @@ void SegmentFeatures::execute()
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
-  size_t gnum = 1;
+  int32_t gnum = 1;
   int64_t seed = 0;
-  int64_t neighbor;
+  DimType neighbor = 0;
   bool good = 0;
-  DimType col, row, plane;
+  DimType col = 0, row = 0, plane = 0;
   size_t size = 0;
-  int64_t initialVoxelsListSize = 100000;
+  size_t initialVoxelsListSize = 100000;
   std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
-  DimType neighpoints[6];
+  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -152,40 +157,39 @@ void SegmentFeatures::execute()
   while (seed >= 0)
   {
     seed = getSeed(gnum);
-    if(seed >= 0)
+    if (seed >= 0)
     {
       size = 0;
       voxelslist[size] = seed;
       size++;
-      while(size > 0)
+      while (size > 0)
       {
-        size_t currentpoint = voxelslist[size - 1];
+        DimType currentpoint = voxelslist[size - 1];
         size -= 1;
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
-        for (int i = 0; i < 6; i++)
+        for (int32_t i = 0; i < 6; i++)
         {
           good = true;
           neighbor = currentpoint + neighpoints[i];
-
-          if(i == 0 && plane == 0) { good = false; }
-          if(i == 5 && plane == (dims[2] - 1)) { good = false; }
-          if(i == 1 && row == 0) { good = false; }
-          if(i == 4 && row == (dims[1] - 1)) { good = false; }
-          if(i == 2 && col == 0) { good = false; }
-          if(i == 3 && col == (dims[0] - 1)) { good = false; }
-          if(good == true)
+          if (i == 0 && plane == 0) { good = false; }
+          if (i == 5 && plane == (dims[2] - 1)) { good = false; }
+          if (i == 1 && row == 0) { good = false; }
+          if (i == 4 && row == (dims[1] - 1)) { good = false; }
+          if (i == 2 && col == 0) { good = false; }
+          if (i == 3 && col == (dims[0] - 1)) { good = false; }
+          if (good == true)
           {
-            if(determineGrouping(currentpoint, neighbor, gnum) == true)
+            if (determineGrouping(currentpoint, neighbor, gnum) == true)
             {
               voxelslist[size] = neighbor;
               size++;
-              if(size >= voxelslist.size())
+              if (size >= voxelslist.size())
               {
                 size = voxelslist.size();
                 voxelslist.resize(size + initialVoxelsListSize);
-                for(std::vector<int64_t>::size_type j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
+                for (std::vector<int64_t>::size_type j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
               }
             }
           }
@@ -194,9 +198,8 @@ void SegmentFeatures::execute()
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
       gnum++;
-
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
-      if(gnum % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
+      if (gnum % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
     }
     if(getCancel()) { break; }
   }
@@ -208,16 +211,36 @@ void SegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t SegmentFeatures::getSeed(size_t gnum)
+AbstractFilter::Pointer SegmentFeatures::newFilterInstance(bool copyFilterParameters)
 {
-  return -1;
+  SegmentFeatures::Pointer filter = SegmentFeatures::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
-{
-  return false;
-}
+const QString SegmentFeatures::getCompiledLibraryName()
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getHumanLabel()
+{ return "Segment Features"; }

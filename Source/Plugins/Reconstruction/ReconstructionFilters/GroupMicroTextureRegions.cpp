@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,30 +36,17 @@
 
 #include "GroupMicroTextureRegions.h"
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
 #include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
-
-
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
+#include "Reconstruction/ReconstructionConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -78,21 +65,19 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellParentIds(NULL),
   m_FeatureParentIds(NULL),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_Active(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+
+  avgCaxes[0] = 0.0f; avgCaxes[1] = 0.0f; avgCaxes[2] = 0.0f;
+  caxisTolerance = 0.0f;
 
   setupFilterParameters();
 }
@@ -109,28 +94,18 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-  //These are parameters that the super class needs
-  QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, false));
-
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Contiguous NeighborList Array", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("NonContiguous NeighborList Array", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), true, ""));
-
-  // These are specific to this class
+  FilterParameterVector parameters = getFilterParameters();
   parameters.push_front(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget, getUseRunningAverage(), false));
   parameters.push_front(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget, getCAxisTolerance(), false, "Degrees"));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVolumesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewCellFeatureAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("CellParentIds", "CellParentIdsArrayName", FilterParameterWidgetType::StringWidget, getCellParentIdsArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("FeatureParentIds", "FeatureParentIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureParentIdsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Parent Ids", "CellParentIdsArrayName", FilterParameterWidgetType::StringWidget, getCellParentIdsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Parent Ids", "FeatureParentIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureParentIdsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), true, ""));
   setFilterParameters(parameters);
 }
@@ -194,57 +169,63 @@ void GroupMicroTextureRegions::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer newCellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0) { return; }
 
-  QVector<size_t> dims(1, 1);
+  QVector<size_t> tDims(1, 0);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 1);
   // Cell Data
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellParentIdsArrayName() );
-  m_CellParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+
   tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), m_FeaturePhasesArrayPath.getAttributeMatrixName(), getFeatureParentIdsArrayName() );
-  m_FeatureParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if (m_UseRunningAverage == true)
-  {
-    m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVolumesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
-  dims[0] = 4;
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVolumesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getVolumesArrayPath()); }
+
+  cDims[0] = 4;
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getVolumesArrayPath()); }
 
   // New Feature Data
-  dims[0] = 1;
+  cDims[0] = 1;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getNewCellFeatureAttributeMatrixName(), getActiveArrayName() );
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
-//typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -257,84 +238,38 @@ void GroupMicroTextureRegions::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  GroupFeatures::preflight();
   setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::execute()
-{
-  setErrorCondition(0);
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  // Convert user defined tolerance to radians.
-  caxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
-
-  avgCaxes[0] = 0.0f;
-  avgCaxes[1] = 0.0f;
-  avgCaxes[2] = 0.0f;
-
-  // Tell the user we are starting the filter
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
-  GroupFeatures::execute();
-
-  size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
-  if (totalFeatures < 2)
-  {
-    setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "The number of Grouped Features was 0 or 1 which means no grouped features were detected. Is a grouping value set to high?", getErrorCondition());
-    return;
-  }
-
-  size_t totalPoints = static_cast<size_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-  for (size_t k = 0; k < totalPoints; k++)
-  {
-    int featurename = m_FeatureIds[k];
-    m_CellParentIds[k] = m_FeatureParentIds[featurename];
-  }
-
-  // By default we randomize grains
-  if (true == m_RandomizeParentIds)
-  {
-    randomizeFeatureIds(totalPoints, totalFeatures);
-  }
-
-  notifyStatusMessage(getHumanLabel(), "Characterizing MicroTexture Regions");
-  // characterize_micro_texture_regions();
-
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "GroupMicroTextureRegions Completed");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
+void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
   notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids");
   // Generate an even distribution of numbers between the min and max range
-  const size_t rangeMin = 0;
-  const size_t rangeMax = totalFeatures - 1;
+  const int32_t rangeMin = 0;
+  const int32_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-// Get a reference variable to the Generator object
+  // Get a reference variable to the Generator object
   Generator& numberGenerator = *m_NumberGenerator;
 
-  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds");
 
   int32_t* gid = rndNumbers->getPointer(0);
   gid[0] = 0;
-  for(size_t i = 1; i < totalFeatures; ++i)
+  for (int64_t i = 1; i < totalFeatures; ++i)
   {
     gid[i] = i;
   }
 
-  size_t r;
-  size_t temp;
+  int32_t r = 0;
+  int32_t temp;
+
   //--- Shuffle elements by randomly exchanging each with one other.
-  for (size_t i = 1; i < totalFeatures; i++)
+  for (int64_t i = 1; i < totalFeatures; i++)
   {
     r = numberGenerator(); // Random remaining position.
     if (r >= totalFeatures)
@@ -347,9 +282,9 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t t
   }
 
   // Now adjust all the Grain Id values for each Voxel
-  for(int64_t i = 0; i < totalPoints; ++i)
+  for (int64_t i = 0; i < totalPoints; ++i)
   {
-    m_CellParentIds[i] = gid[ m_CellParentIds[i] ];
+    m_CellParentIds[i] = gid[m_CellParentIds[i]];
     m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];
   }
 }
@@ -357,32 +292,32 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GroupMicroTextureRegions::getSeed(int newFid)
+int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
 {
   setErrorCondition(0);
 
-  size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  int32_t numfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
-  float c1[3];
-  unsigned int phase1;
+  float c1[3] = { 0.0f, 0.0f, 0.0f };
+  uint32_t phase1 = 0;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-  float caxis[3] = {0, 0, 1};
-  QuatF q1;
-  float g1[3][3];
-  float g1t[3][3];
+  float caxis[3] = { 0.0f, 0.0f, 1.0f };
+  QuatF q1 = QuaternionMathF::New();
+  float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float g1t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
   DREAM3D_RANDOMNG_NEW()
-  int seed = -1;
-  int randfeature = 0;
+  int32_t seed = -1;
+  int32_t randfeature = 0;
 
   // Precalculate some constants
-  size_t totalFMinus1 = numfeatures - 1;
+  int32_t totalFMinus1 = numfeatures - 1;
 
   size_t counter = 0;
-  randfeature = int(float(rg.genrand_res53()) * float(totalFMinus1));
+  randfeature = int32_t(float(rg.genrand_res53()) * float(totalFMinus1));
   while (seed == -1 && counter < numfeatures)
   {
-    if (randfeature > totalFMinus1) { randfeature = static_cast<int>( randfeature - numfeatures ); }
+    if (randfeature > totalFMinus1) { randfeature = randfeature - numfeatures; }
     if (m_FeatureParentIds[randfeature] == -1) { seed = randfeature; }
     randfeature++;
     counter++;
@@ -401,14 +336,13 @@ int GroupMicroTextureRegions::getSeed(int newFid)
       FOrientArrayType om(9);
       FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
       om.toGMatrix(g1);
-      //transpose the g matrix so when caxis is multiplied by it
-      //it will give the sample direction that the caxis is along
+      // transpose the g matrix so when caxis is multiplied by it
+      // it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);
       MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
-      //normalize so that the dot product can be taken below without
-      //dividing by the magnitudes (they would be 1)
+      // normalize so that the dot product can be taken below without
+      // dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c1);
-
       MatrixMath::Copy3x1(c1, avgCaxes);
       MatrixMath::Multiply3x1withConstant(avgCaxes, m_Volumes[seed]);
     }
@@ -419,21 +353,19 @@ int GroupMicroTextureRegions::getSeed(int newFid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neighborFeature, int newFid)
+bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid)
 {
-  //float angcur = 180.0f;
-  unsigned int phase1 = 0, phase2 = 0;
+  uint32_t phase1 = 0, phase2 = 0;
   float w = 0.0f;
-  float g1[3][3];
-  float g2[3][3];
-  float g1t[3][3];
-  float g2t[3][3];
-  float c1[3];
-  float c2[3];
-  float caxis[3] = {0, 0, 1};
+  float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float g2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float g1t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float g2t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float c1[3] = { 0.0f, 0.0f, 0.0f };
+  float c2[3] = { 0.0f, 0.0f, 0.0f };
+  float caxis[3] = {0.0f, 0.0f, 1.0f};
   QuatF q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
   QuatF q2 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
@@ -445,12 +377,12 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
       FOrientArrayType om(9);
       FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
       om.toGMatrix(g1);
-      //transpose the g matrix so when caxis is multiplied by it
-      //it will give the sample direction that the caxis is along
+      // transpose the g matrix so when caxis is multiplied by it
+      // it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);
       MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
-      //normalize so that the dot product can be taken below without
-      //dividing by the magnitudes (they would be 1)
+      // normalize so that the dot product can be taken below without
+      // dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c1);
     }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
@@ -460,12 +392,12 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
       FOrientArrayType om(9);
       FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
       om.toGMatrix(g2);
-      //transpose the g matrix so when caxis is multiplied by it
-      //it will give the sample direction that the caxis is along
+      // transpose the g matrix so when caxis is multiplied by it
+      // it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g2, g2t);
       MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
-      //normalize so that the dot product can be taken below without
-      //dividing by the magnitudes (they would be 1)
+      // normalize so that the dot product can be taken below without
+      // dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c2);
 
       if (m_UseRunningAverage == true) { w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2); }
@@ -490,20 +422,61 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
+void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax)
 {
-
-// The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
-// to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
-// total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
-// make sure that every voxel can be a seed point.
-//  const size_t rangeMin = 0;
-//  const size_t rangeMax = totalPoints - 1;
+  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+  // make sure that every voxel can be a seed point.
+  //  const size_t rangeMin = 0;
   m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
   m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
   m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
   m_TotalRandomNumbersGenerated = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  // Convert user defined tolerance to radians.
+  caxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+
+  avgCaxes[0] = 0.0f;
+  avgCaxes[1] = 0.0f;
+  avgCaxes[2] = 0.0f;
+
+  GroupFeatures::execute();
+
+  size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
+  if (totalFeatures < 2)
+  {
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", getErrorCondition());
+    return;
+  }
+
+  int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+  for (int64_t k = 0; k < totalPoints; k++)
+  {
+    int32_t featurename = m_FeatureIds[k];
+    m_CellParentIds[k] = m_FeatureParentIds[featurename];
+  }
+
+  // By default we randomize grains
+  if (true == m_RandomizeParentIds)
+  {
+    randomizeFeatureIds(totalPoints, totalFeatures);
+  }
+
+  // If there is an error set this to something negative and also set a message
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -525,13 +498,11 @@ AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFil
 const QString GroupMicroTextureRegions::getCompiledLibraryName()
 { return ReconstructionConstants::ReconstructionBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getGroupName()
 { return DREAM3D::FilterGroups::ReconstructionFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -539,10 +510,8 @@ const QString GroupMicroTextureRegions::getGroupName()
 const QString GroupMicroTextureRegions::getSubGroupName()
 {return DREAM3D::FilterSubGroups::GroupingFilters;}
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getHumanLabel()
 { return "Identify MicroTexture (C-Axis Misalignment)"; }
-

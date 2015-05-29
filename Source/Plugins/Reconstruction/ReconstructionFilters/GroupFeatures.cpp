@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -40,17 +40,6 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
-
-
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -62,6 +51,9 @@ GroupFeatures::GroupFeatures() :
   m_UseNonContiguousNeighbors(false),
   m_PatchGrouping(false)
 {
+  m_ContiguousNeighborList = NeighborList<int32_t>::NullPointer();
+  m_NonContiguousNeighborList = NeighborList<int32_t>::NullPointer();
+
   setupFilterParameters();
 }
 
@@ -78,14 +70,11 @@ GroupFeatures::~GroupFeatures()
 void GroupFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, true));
-  parameters.push_back(FilterParameter::New("NonContiguous NeighborList Array", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), false, ""));
-
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, false));
+  parameters.push_back(FilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), false, ""));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Contiguous NeighborList Array", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), true, ""));
-
+  parameters.push_back(FilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -122,14 +111,12 @@ void GroupFeatures::dataCheck()
 {
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 1);
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getContiguousNeighborListArrayPath(), dims);
+  QVector<size_t> cDims(1, 1);
+  m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getContiguousNeighborListArrayPath(), cDims);
 
   if(m_UseNonContiguousNeighbors == true)
   {
-    // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_NonContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNonContiguousNeighborListArrayPath(), dims);
+    m_NonContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getNonContiguousNeighborListArrayPath(), cDims);
   }
 }
 
@@ -149,50 +136,78 @@ void GroupFeatures::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int GroupFeatures::getSeed(int32_t newFid)
+{
+  return -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool GroupFeatures::determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid)
+{
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool GroupFeatures::growPatch(int32_t currentPatch)
+{
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool GroupFeatures::growGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid)
+{
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GroupFeatures::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  // But since a pointer is difficult to use operators with we will now create a
-  // reference variable to the pointer with the correct variable name that allows
-  // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *(m_ContiguousNeighborList.lock());
-  NeighborList<int>* nonContigNeighList = m_NonContiguousNeighborList.lock().get();
+  NeighborList<int32_t>& neighborlist = *(m_ContiguousNeighborList.lock());
+  NeighborList<int32_t>* nonContigNeighList = m_NonContiguousNeighborList.lock().get();
 
-  std::vector<int> grouplist;
+  std::vector<int32_t> grouplist;
 
-  int parentcount = 0;
-  int seed = 0;
-  int list1size = 0, list2size = 0, listsize = 0;
-  int neigh;
+  int32_t parentcount = 0;
+  int32_t seed = 0;
+  int32_t list1size = 0, list2size = 0, listsize = 0;
+  int32_t neigh = 0;
 
   while (seed >= 0)
   {
     parentcount++;
     seed = getSeed(parentcount);
-    if(seed >= 0)
+    if (seed >= 0)
     {
       grouplist.push_back(seed);
-      for (size_t j = 0; j < grouplist.size(); j++)
+      for (std::vector<int32_t>::size_type j = 0; j < grouplist.size(); j++)
       {
-        int firstfeature = grouplist[j];
-        list1size = int(neighborlist[firstfeature].size());
+        int32_t firstfeature = grouplist[j];
+        list1size = int32_t(neighborlist[firstfeature].size());
         if (m_UseNonContiguousNeighbors == true) { list2size = nonContigNeighList->getListSize(firstfeature); }
-        for (int k = 0; k < 2; k++)
+        for (int32_t k = 0; k < 2; k++)
         {
           if (m_PatchGrouping == true) { k = 1; }
           if (k == 0) { listsize = list1size; }
           else if (k == 1) { listsize = list2size; }
-          for (int l = 0; l < listsize; l++)
+          for (int32_t l = 0; l < listsize; l++)
           {
-            //int twin = 0;
             if (k == 0) { neigh = neighborlist[firstfeature][l]; }
             else if (k == 1) { neigh = nonContigNeighList->getListReference(firstfeature)[l]; }
             if (neigh != firstfeature)
             {
-              if(determineGrouping(firstfeature, neigh, parentcount) == true)
+              if (determineGrouping(firstfeature, neigh, parentcount) == true)
               {
                 if (m_PatchGrouping == false) { grouplist.push_back(neigh); }
               }
@@ -204,16 +219,16 @@ void GroupFeatures::execute()
       {
         if (growPatch(parentcount) == true)
         {
-          for (size_t j = 0; j < grouplist.size(); j++)
+          for (std::vector<int32_t>::size_type j = 0; j < grouplist.size(); j++)
           {
-            int firstfeature = grouplist[j];
-            listsize = int(neighborlist[firstfeature].size());
-            for (int l = 0; l < listsize; l++)
+            int32_t firstfeature = grouplist[j];
+            listsize = int32_t(neighborlist[firstfeature].size());
+            for (int32_t l = 0; l < listsize; l++)
             {
               neigh = neighborlist[firstfeature][l];
               if (neigh != firstfeature)
               {
-                if(growGrouping(firstfeature, neigh, parentcount) == true)
+                if (growGrouping(firstfeature, neigh, parentcount) == true)
                 {
                   grouplist.push_back(neigh);
                 }
@@ -227,39 +242,42 @@ void GroupFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GroupFeatures::getSeed(int newFid)
+AbstractFilter::Pointer GroupFeatures::newFilterInstance(bool copyFilterParameters)
 {
-  return -1;
+  GroupFeatures::Pointer filter = GroupFeatures::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GroupFeatures::determineGrouping(int referenceFeature, int neighborFeature, int newFid)
-{
-  return false;
-}
+const QString GroupFeatures::getCompiledLibraryName()
+{ return ReconstructionConstants::ReconstructionBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GroupFeatures::growPatch(int currentPatch)
-{
-  return false;
-}
+const QString GroupFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GroupFeatures::growGrouping(int referenceFeature, int neighborFeature, int newFid)
-{
-  return false;
-}
+const QString GroupFeatures::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GroupFeatures::getHumanLabel()
+{ return "Group Features"; }

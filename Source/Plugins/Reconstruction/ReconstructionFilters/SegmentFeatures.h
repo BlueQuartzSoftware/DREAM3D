@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,27 +34,18 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SEGMENTGRAINS_H_
-#define _SEGMENTGRAINS_H_
-
-#include <vector>
-#include <QtCore/QString>
-
+#ifndef _SegmentFeatures_H_
+#define _SegmentFeatures_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
 /**
- * @class SegmentFeatures SegmentFeatures.h DREAM3DLib/ReconstructionFilters/SegmentFeatures.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The SegmentFeatures class. This class serves as a superclass for other classes
+ * in the Reconstruction plugin.
  */
 class SegmentFeatures : public AbstractFilter
 {
@@ -65,12 +56,14 @@ class SegmentFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SegmentFeatures, AbstractFilter)
 
     virtual ~SegmentFeatures();
+
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const QString getHumanLabel() {return "Segment Features";}
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
+    virtual const QString getCompiledLibraryName();
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will write the options to a file
@@ -99,16 +92,27 @@ class SegmentFeatures : public AbstractFilter
   protected:
     SegmentFeatures();
 
-    virtual int64_t getSeed(size_t gnum);
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
+    /**
+     * @brief getSeed Initializes a new seed from which to start the burn algorithm
+     * @param gnum Feature Id to initialize seed
+     * @return Integer Seed index
+     */
+    virtual int64_t getSeed(int32_t gnum);
+
+    /**
+     * @brief determineGrouping Determines if a neighbor should be added to the growing seed
+     * @param referencepoint Point of growing seed
+     * @param neighborpoint Point to be compared for adding
+     * @param gnum Feature Id of growing seed
+     * @return Boolean check for whether the neighbor was added to the seed
+     */
+    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
   private:
-
     void dataCheck();
 
     SegmentFeatures(const SegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const SegmentFeatures&); // Operator '=' Not Implemented
 };
 
-#endif /* SEGMENTGRAINS_H_ */
-
+#endif /* SegmentFeatures_H_ */
