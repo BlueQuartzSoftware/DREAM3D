@@ -26,8 +26,8 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 HEDMAnalysisPlugin::HEDMAnalysisPlugin() :
-m_Version("Version Number"),                            // Initialize HEDMAnalysis's Version Number Here
-m_CompatibilityVersion("Compatibility Version Number"), // Initialize HEDMAnalysis's Compatibility Version Number Here
+m_Version(DREAM3DLib::Version::Package()),                            // Initialize HEDMAnalysis's Version Number Here
+m_CompatibilityVersion(DREAM3DLib::Version::Package()), // Initialize HEDMAnalysis's Compatibility Version Number Here
 m_Vendor("Vendor Name"),                                // Initialize HEDMAnalysis's Vendor Name Here
 m_URL("URL"),                                           // Initialize Company URL Here
 m_Location("Location"),                                 // Initialize Company Location Here
