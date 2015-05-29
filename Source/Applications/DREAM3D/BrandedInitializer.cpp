@@ -97,6 +97,55 @@ BrandedInitializer::~BrandedInitializer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void BrandedInitializer::initializeGlobalMenu()
+{
+  m_GlobalMenu = new QMenuBar();
+  m_GlobalMenu->setObjectName(QStringLiteral("m_GlobalMenu"));
+
+  m_MenuFile = new QMenu(m_GlobalMenu);
+  m_MenuFile->setObjectName(QStringLiteral("m_MenuFile"));
+  m_Menu_RecentFiles = new QMenu(m_MenuFile);
+  m_Menu_RecentFiles->setObjectName(QStringLiteral("m_Menu_RecentFiles"));
+  m_MenuHelp = new QMenu(m_GlobalMenu);
+  m_MenuHelp->setObjectName(QStringLiteral("m_MenuHelp"));
+
+  m_ActionNew = new QAction(this);
+  m_ActionNew->setObjectName(QStringLiteral("m_ActionNew"));
+  m_ActionOpen = new QAction(this);
+  m_ActionOpen->setObjectName(QStringLiteral("m_ActionOpen"));
+  m_ActionClearRecentFiles = new QAction(this);
+  m_ActionClearRecentFiles->setObjectName(QStringLiteral("m_ActionClearRecentFiles"));
+
+  m_ActionShowIndex = new QAction(this);
+  m_ActionShowIndex->setObjectName(QStringLiteral("m_ActionShowIndex"));
+  m_ActionLicense_Information = new QAction(this);
+  m_ActionLicense_Information->setObjectName(QStringLiteral("m_ActionLicense_Information"));
+  m_ActionAbout_DREAM3D = new QAction(this);
+  m_ActionAbout_DREAM3D->setObjectName(QStringLiteral("m_ActionAbout_DREAM3D"));
+  m_ActionCheck_For_Updates = new QAction(this);
+  m_ActionCheck_For_Updates->setObjectName(QStringLiteral("m_ActionCheck_For_Updates"));
+  m_ActionPlugin_Information = new QAction(this);
+  m_ActionPlugin_Information->setObjectName(QStringLiteral("m_ActionPlugin_Information"));
+
+  m_MenuFile->addAction(m_ActionNew);
+  m_MenuFile->addAction(m_ActionOpen);
+  m_MenuFile->addSeparator();
+  m_MenuFile->addAction(m_Menu_RecentFiles->menuAction());
+  m_Menu_RecentFiles->addSeparator();
+  m_Menu_RecentFiles->addAction(m_ActionClearRecentFiles);
+
+  m_MenuHelp->addAction(m_ActionShowIndex);
+  m_MenuHelp->addAction(m_ActionLicense_Information);
+  m_MenuHelp->addSeparator();
+  m_MenuHelp->addAction(m_ActionCheck_For_Updates);
+  m_MenuHelp->addSeparator();
+  m_MenuHelp->addAction(m_ActionAbout_DREAM3D);
+  m_MenuHelp->addAction(m_ActionPlugin_Information);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void delay(int seconds)
 {
   QTime dieTime = QTime::currentTime().addSecs(seconds);
