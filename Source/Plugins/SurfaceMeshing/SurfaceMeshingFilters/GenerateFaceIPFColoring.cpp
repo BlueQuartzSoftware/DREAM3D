@@ -194,10 +194,10 @@ GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
   m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
-  m_SurfaceMeshFaceIPFColors(NULL),
   m_FeatureEulerAngles(NULL),
   m_FeaturePhases(NULL),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_SurfaceMeshFaceIPFColors(NULL)
 {
   setupFilterParameters();
 }

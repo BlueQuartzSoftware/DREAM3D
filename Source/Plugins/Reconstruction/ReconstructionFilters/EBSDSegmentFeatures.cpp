@@ -60,12 +60,12 @@ EBSDSegmentFeatures::EBSDSegmentFeatures() :
   m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_FeatureIds(NULL),
   m_Quats(NULL),
   m_CellPhases(NULL),
   m_GoodVoxels(NULL),
+  m_CrystalStructures(NULL),
   m_Active(NULL),
-  m_CrystalStructures(NULL)
+  m_FeatureIds(NULL)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 

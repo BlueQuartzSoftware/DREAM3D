@@ -142,13 +142,13 @@ MergeColonies::MergeColonies() :
   m_IdentifyGlobAlpha(false),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
+  m_AvgQuats(NULL),
+  m_FeaturePhases(NULL),
+  m_CrystalStructures(NULL),
   m_CellParentIds(NULL),
   m_FeatureParentIds(NULL),
   m_GlobAlpha(NULL),
-  m_AvgQuats(NULL),
-  m_Active(NULL),
-  m_FeaturePhases(NULL),
-  m_CrystalStructures(NULL)
+  m_Active(NULL)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 

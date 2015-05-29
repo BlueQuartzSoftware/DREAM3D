@@ -66,15 +66,15 @@ MergeTwins::MergeTwins() :
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_CellParentIds(NULL),
-  m_FeatureParentIds(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_Active(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_Active(NULL),
+  m_CellParentIds(NULL),
+  m_FeatureParentIds(NULL)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 

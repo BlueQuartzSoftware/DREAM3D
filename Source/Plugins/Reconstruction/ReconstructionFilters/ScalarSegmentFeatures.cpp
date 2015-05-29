@@ -160,8 +160,8 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_FeatureIds(NULL),
   m_GoodVoxels(NULL),
+  m_FeatureIds(NULL),
   m_Active(NULL)
 {
   setupFilterParameters();
