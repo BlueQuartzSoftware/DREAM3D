@@ -4,7 +4,6 @@ Abaqus Hexahedron Writer {#abaqushexahedronwriter}
 ## Group (Subgroup) ##
 IO (Writers)
 
-
 ## Description ##
 This filter does the following...
 
