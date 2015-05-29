@@ -88,7 +88,8 @@ if( ${CMP_GENERATE_VERSION_STRING} )
     cmpVersionStringsFromGit( GENERATED_HEADER_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}"
                               GENERATED_SOURCE_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}"
                               NAMESPACE "${CMP_PROJECT_NAMESPACE}"
-                              cmpProjectName "${CMP_PROJECT_NAME}")
+                              cmpProjectName "${CMP_PROJECT_NAME}"
+                              EXPORT_MACRO "${CMP_PROJECT_NAMESPACE}_EXPORT")
 endif()
 
 cmp_IDE_GENERATED_PROPERTIES( "Generated"
