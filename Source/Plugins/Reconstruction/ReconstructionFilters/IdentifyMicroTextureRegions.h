@@ -158,6 +158,10 @@ class IdentifyMicroTextureRegions : public AbstractFilter
      */
     void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
 
+    /**
+     * @brief findMTRregions Determines the existing microtexture zones; CURRENTLY
+     * NOT IMPLEMENTED
+     */
     void findMTRregions();
 
     /**
@@ -175,6 +179,3 @@ class IdentifyMicroTextureRegions : public AbstractFilter
 };
 
 #endif /* IdentifyMicroTextureRegions_H_ */
-
-
-
