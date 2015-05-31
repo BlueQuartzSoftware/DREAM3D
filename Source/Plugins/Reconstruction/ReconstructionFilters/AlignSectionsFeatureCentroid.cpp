@@ -119,7 +119,7 @@ void AlignSectionsFeatureCentroid::dataCheck()
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, m_GoodVoxelsArrayPath.getDataContainerName());
-  if(getErrorCondition() >= 0) { return; }
+  if(getErrorCondition() < 0) { return; }
 
   if (m_ReferenceSlice > image->getZPoints())
   {
