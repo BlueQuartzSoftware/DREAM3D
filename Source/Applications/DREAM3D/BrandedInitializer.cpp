@@ -63,7 +63,7 @@
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 #include "QtSupportLib/ApplicationAboutBoxDialog.h"
 
-#include "DREAM3D/License/DREAM3DLicenseFiles.h"
+//#include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
 #include "AboutDREAM3D.h"
 #include "AboutPlugins.h"
@@ -91,6 +91,9 @@ BrandedInitializer::BrandedInitializer() :
   connect(m_ActionOpen, SIGNAL(triggered()), this, SLOT(on_m_ActionOpen_triggered()));
   connect(m_ActionClearRecentFiles, SIGNAL(triggered()), this, SLOT(on_m_ActionClearRecentFiles_triggered()));
   connect(m_ActionShowIndex, SIGNAL(triggered()), this, SLOT(on_m_ActionShowIndex_triggered()));
+  connect(m_ActionLicense_Information, SIGNAL(triggered()), this, SLOT(on_m_ActionLicense_Information_triggered()));
+  connect(m_ActionAbout_DREAM3D, SIGNAL(triggered()), this, SLOT(on_m_ActionAbout_DREAM3D_triggered()));
+  connect(m_ActionCheck_For_Updates, SIGNAL(triggered()), this, SLOT(on_m_ActionCheck_For_Updates_triggered()));
 }
 
 // -----------------------------------------------------------------------------
@@ -423,7 +426,6 @@ void BrandedInitializer::initializeGlobalMenu()
   m_MenuHelp->addAction(m_ActionLicense_Information);
   m_MenuHelp->addSeparator();
   m_MenuHelp->addAction(m_ActionCheck_For_Updates);
-  m_MenuHelp->addSeparator();
   m_MenuHelp->addAction(m_ActionAbout_DREAM3D);
 
   m_GlobalMenu->show();
@@ -581,12 +583,12 @@ void BrandedInitializer::on_m_ActionAbout_DREAM3D_triggered()
 // -----------------------------------------------------------------------------
 void BrandedInitializer::on_m_ActionLicense_Information_triggered()
 {
-  ApplicationAboutBoxDialog about(DREAM3D::LicenseList, NULL);
-  QString an = QCoreApplication::applicationName();
-  QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
-  about.setApplicationInfo(an, version);
-  about.exec();
+//  ApplicationAboutBoxDialog about(DREAM3D::LicenseList, NULL);
+//  QString an = QCoreApplication::applicationName();
+//  QString version("");
+//  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
+//  about.setApplicationInfo(an, version);
+//  about.exec();
 }
 
 // -----------------------------------------------------------------------------

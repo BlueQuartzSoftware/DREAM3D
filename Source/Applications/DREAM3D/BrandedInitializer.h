@@ -58,6 +58,7 @@ class IDREAM3DPlugin;
 class BrandedInitializer : public QObject
 {
     Q_OBJECT
+
   public:
     BrandedInitializer();
     virtual ~BrandedInitializer();
