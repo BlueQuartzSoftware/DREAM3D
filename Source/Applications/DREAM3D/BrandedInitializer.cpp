@@ -65,8 +65,6 @@
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 #include "QtSupportLib/ApplicationAboutBoxDialog.h"
 
-//#include "DREAM3D/License/DREAM3DLicenseFiles.h"
-
 #include "AboutDREAM3D.h"
 #include "AboutPlugins.h"
 #include "DREAM3D_UI.h"
@@ -401,8 +399,6 @@ void BrandedInitializer::initializeGlobalMenu()
 
   m_ActionShowIndex = new QAction("DREAM3D Help", this);
   m_ActionShowIndex->setObjectName(QStringLiteral("m_ActionShowIndex"));
-  m_ActionLicense_Information = new QAction("Show License", this);
-  m_ActionLicense_Information->setObjectName(QStringLiteral("m_ActionLicense_Information"));
   m_ActionAbout_DREAM3D = new QAction("About DREAM3D", this);
   m_ActionAbout_DREAM3D->setObjectName(QStringLiteral("m_ActionAbout_DREAM3D"));
   m_ActionCheck_For_Updates = new QAction("Check For Updates", this);
@@ -416,7 +412,6 @@ void BrandedInitializer::initializeGlobalMenu()
   m_Menu_RecentFiles->addAction(m_ActionClearRecentFiles);
 
   m_MenuHelp->addAction(m_ActionShowIndex);
-  m_MenuHelp->addAction(m_ActionLicense_Information);
   m_MenuHelp->addSeparator();
   m_MenuHelp->addAction(m_ActionCheck_For_Updates);
   m_MenuHelp->addAction(m_ActionAbout_DREAM3D);
@@ -435,7 +430,6 @@ void BrandedInitializer::initializeGlobalMenu()
   connect(m_ActionOpen, SIGNAL(triggered()), this, SLOT(on_m_ActionOpen_triggered()));
   connect(m_ActionClearRecentFiles, SIGNAL(triggered()), this, SLOT(on_m_ActionClearRecentFiles_triggered()));
   connect(m_ActionShowIndex, SIGNAL(triggered()), this, SLOT(on_m_ActionShowIndex_triggered()));
-  connect(m_ActionLicense_Information, SIGNAL(triggered()), this, SLOT(on_m_ActionLicense_Information_triggered()));
   connect(m_ActionAbout_DREAM3D, SIGNAL(triggered()), this, SLOT(on_m_ActionAbout_DREAM3D_triggered()));
   connect(m_ActionCheck_For_Updates, SIGNAL(triggered()), this, SLOT(on_m_ActionCheck_For_Updates_triggered()));
   connect(m_ActionExit, SIGNAL(triggered()), this, SLOT(on_m_ActionExit_triggered()));

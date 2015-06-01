@@ -104,7 +104,6 @@ class BrandedInitializer : public QObject
     QAction*                        m_ActionNew;
     QAction*                        m_ActionClearRecentFiles;
     QAction*                        m_ActionShowIndex;
-    QAction*                        m_ActionLicense_Information;
     QAction*                        m_ActionCheck_For_Updates;
     QAction*                        m_ActionAbout_DREAM3D;
     QAction*                        m_ActionPlugin_Information;
