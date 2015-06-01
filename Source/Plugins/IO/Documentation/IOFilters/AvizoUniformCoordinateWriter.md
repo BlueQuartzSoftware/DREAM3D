@@ -8,11 +8,35 @@ I/O Filters (Output)
 
 This filter writes out a native Avizo Uniform Coordinate data file.
 
+### Example Output ###
+
+
+	# AmiraMesh BINARY-LITTLE-ENDIAN 2.1
+	# Dimensions in x-, y-, and z-direction
+	define Lattice
+	define Coordinates
+	Parameters {
+	    DREAM3DParams {
+	        Author "DREAM3D",
+	         DateTime     
+	    }
+	    Units {
+	          Coordinates "microns"
+	    }
+	     Content "   int, uniform coordinates",
+	     # Bounding Box is xmin xmax ymin ymax zmin zmax
+	     BoundingBox      ,
+	 CoordType "uniform"
+    }
+	Lattice { int FeatureIds } = @1
+	# Data section follows
+	….. 
+
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Output File | Output File |
+| Output File | Amira Mesh .am |
 | Write Binary File | Boolean (On or Off) |
 
 ## Required DataContainers ##

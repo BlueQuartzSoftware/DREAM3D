@@ -9,25 +9,28 @@ IOFilters (Output)
 
 
 ## Description ##
-This filter writes an Abaqus file that is a surface mesh using S3 Elements
+This filter writes an Abaqus file that is a surface mesh using S3 Elements.
+There are 3 Sections to this INP File: Nodes, Elements and Sets of Elements for each grain.
+This file represents a triangular based mesh. The element type selected is TRI_ELEMENT_TYPE "SFM3D3" for the triangles.
+This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus.
+We have selected to use a 'shell' element type currently. No boundary elements are written.
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Feature Array Name | String |
+| Name             | Type | Description |
+|------------------|------|--------------------|
+| Surface Mesh Face Labels | String | Input used to create the output file |
+| Output Path | String | Path to folder for the created files |
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Type | Default Array Name | Description |
+|------|--------------------|-------------|
+| Int  | none           | The Geometry Type is image geometry |
 
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+None
 
 
 
