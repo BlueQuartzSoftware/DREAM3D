@@ -155,6 +155,8 @@ void QRecentFileList::writeList(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void QRecentFileList::readList(DREAM3DSettings& prefs)
 {
+  this->clear();
+
   QStringList list = prefs.value("Recent Files", QStringList());
 
   for (int i = 0; i < list.size(); i++)

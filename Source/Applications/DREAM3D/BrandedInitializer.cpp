@@ -41,6 +41,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
+#include <QtWidgets/QFileDialog>
 #include <QtWidgets/QApplication>
 #include <QtGui/QBitmap>
 #include <QtWidgets/QMessageBox>
@@ -55,9 +56,16 @@
 #include "DREAM3DLib/Plugin/PluginProxy.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 
 #include "QtSupportLib/QRecentFileList.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/ApplicationAboutBoxDialog.h"
 
+#include "DREAM3D/License/DREAM3DLicenseFiles.h"
+
+#include "AboutDREAM3D.h"
 #include "AboutPlugins.h"
 #include "DREAM3D_UI.h"
 
@@ -67,9 +75,22 @@
 BrandedInitializer::BrandedInitializer() :
   show_splash(true),
   Splash(NULL),
-  MainWindow(NULL)
+  MainWindow(NULL),
+  m_OpenDialogLastDirectory("")
 {
   initializeGlobalMenu();
+
+  QRecentFileList* recentsList = QRecentFileList::instance();
+
+  DREAM3DSettings prefs;
+  recentsList->readList(prefs);
+
+  connect(recentsList, SIGNAL(fileListChanged(const QString &)), this, SLOT(updateRecentFileList(const QString &)));
+
+  connect(m_ActionNew, SIGNAL(triggered()), this, SLOT(on_m_ActionNew_triggered()));
+  connect(m_ActionOpen, SIGNAL(triggered()), this, SLOT(on_m_ActionOpen_triggered()));
+  connect(m_ActionClearRecentFiles, SIGNAL(triggered()), this, SLOT(on_m_ActionClearRecentFiles_triggered()));
+  connect(m_ActionShowIndex, SIGNAL(triggered()), this, SLOT(on_m_ActionShowIndex_triggered()));
 }
 
 // -----------------------------------------------------------------------------
@@ -101,77 +122,6 @@ void delay(int seconds)
   {
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BrandedInitializer::initializeGlobalMenu()
-{
-  m_GlobalMenu = new QMenuBar(NULL);
-  m_GlobalMenu->setObjectName(QStringLiteral("m_GlobalMenu"));
-
-  m_MenuFile = new QMenu("File", m_GlobalMenu);
-  m_MenuFile->setObjectName(QStringLiteral("m_MenuFile"));
-  m_GlobalMenu->addMenu(m_MenuFile);
-  m_Menu_RecentFiles = new QMenu("Recent Files", m_GlobalMenu);
-  m_Menu_RecentFiles->setObjectName(QStringLiteral("m_Menu_RecentFiles"));
-  m_MenuFile->addMenu(m_Menu_RecentFiles);
-  m_MenuHelp = new QMenu("Help", m_GlobalMenu);
-  m_MenuHelp->setObjectName(QStringLiteral("m_MenuHelp"));
-  m_GlobalMenu->addMenu(m_MenuHelp);
-
-  m_ActionNew = new QAction("New...", this);
-  m_ActionNew->setObjectName(QStringLiteral("m_ActionNew"));
-  m_ActionOpen = new QAction("Open...", this);
-  m_ActionOpen->setObjectName(QStringLiteral("m_ActionOpen"));
-  m_ActionClearRecentFiles = new QAction("Clear Recent Files", this);
-  m_ActionClearRecentFiles->setObjectName(QStringLiteral("m_ActionClearRecentFiles"));
-
-  m_ActionShowIndex = new QAction("DREAM3D Help", this);
-  m_ActionShowIndex->setObjectName(QStringLiteral("m_ActionShowIndex"));
-  m_ActionLicense_Information = new QAction("Show License", this);
-  m_ActionLicense_Information->setObjectName(QStringLiteral("m_ActionLicense_Information"));
-  m_ActionAbout_DREAM3D = new QAction("About DREAM3D", this);
-  m_ActionAbout_DREAM3D->setObjectName(QStringLiteral("m_ActionAbout_DREAM3D"));
-  m_ActionCheck_For_Updates = new QAction("Check For Updates", this);
-  m_ActionCheck_For_Updates->setObjectName(QStringLiteral("m_ActionCheck_For_Updates"));
-  m_ActionPlugin_Information = new QAction("Plugin Information...", this);
-  m_ActionPlugin_Information->setObjectName(QStringLiteral("m_ActionPlugin_Information"));
-
-  m_MenuFile->addAction(m_ActionNew);
-  m_MenuFile->addAction(m_ActionOpen);
-  m_MenuFile->addSeparator();
-  m_MenuFile->addAction(m_Menu_RecentFiles->menuAction());
-  m_Menu_RecentFiles->addSeparator();
-  m_Menu_RecentFiles->addAction(m_ActionClearRecentFiles);
-
-  m_MenuHelp->addAction(m_ActionShowIndex);
-  m_MenuHelp->addAction(m_ActionLicense_Information);
-  m_MenuHelp->addSeparator();
-  m_MenuHelp->addAction(m_ActionCheck_For_Updates);
-  m_MenuHelp->addSeparator();
-  m_MenuHelp->addAction(m_ActionAbout_DREAM3D);
-  m_MenuHelp->addAction(m_ActionPlugin_Information);
-
-  m_GlobalMenu->show();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BrandedInitializer::on_m_ActionNew_triggered()
-{
-    PluginManager* pluginManager = PluginManager::Instance();
-    QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
-
-    // Create new DREAM3D instance
-    DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
-    newInstance->setLoadedPlugins(plugins);
-
-    // Show the new instance
-    newInstance->setAttribute(Qt::WA_DeleteOnClose);
-    newInstance->show();
 }
 
 // -----------------------------------------------------------------------------
@@ -428,5 +378,237 @@ QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
   return pluginManager->getPluginsVector();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::initializeGlobalMenu()
+{
+  m_GlobalMenu = new QMenuBar(NULL);
+  m_GlobalMenu->setObjectName(QStringLiteral("m_GlobalMenu"));
+
+  m_MenuFile = new QMenu("File", m_GlobalMenu);
+  m_MenuFile->setObjectName(QStringLiteral("m_MenuFile"));
+  m_GlobalMenu->addMenu(m_MenuFile);
+  m_Menu_RecentFiles = new QMenu("Recent Files", m_GlobalMenu);
+  m_Menu_RecentFiles->setObjectName(QStringLiteral("m_Menu_RecentFiles"));
+  m_MenuFile->addMenu(m_Menu_RecentFiles);
+  m_MenuHelp = new QMenu("Help", m_GlobalMenu);
+  m_MenuHelp->setObjectName(QStringLiteral("m_MenuHelp"));
+  m_GlobalMenu->addMenu(m_MenuHelp);
+
+  m_ActionNew = new QAction("New...", this);
+  m_ActionNew->setObjectName(QStringLiteral("m_ActionNew"));
+  m_ActionOpen = new QAction("Open...", this);
+  m_ActionOpen->setObjectName(QStringLiteral("m_ActionOpen"));
+  m_ActionClearRecentFiles = new QAction("Clear Recent Files", this);
+  m_ActionClearRecentFiles->setObjectName(QStringLiteral("m_ActionClearRecentFiles"));
+
+  m_ActionShowIndex = new QAction("DREAM3D Help", this);
+  m_ActionShowIndex->setObjectName(QStringLiteral("m_ActionShowIndex"));
+  m_ActionLicense_Information = new QAction("Show License", this);
+  m_ActionLicense_Information->setObjectName(QStringLiteral("m_ActionLicense_Information"));
+  m_ActionAbout_DREAM3D = new QAction("About DREAM3D", this);
+  m_ActionAbout_DREAM3D->setObjectName(QStringLiteral("m_ActionAbout_DREAM3D"));
+  m_ActionCheck_For_Updates = new QAction("Check For Updates", this);
+  m_ActionCheck_For_Updates->setObjectName(QStringLiteral("m_ActionCheck_For_Updates"));
+
+  m_MenuFile->addAction(m_ActionNew);
+  m_MenuFile->addAction(m_ActionOpen);
+  m_MenuFile->addSeparator();
+  m_MenuFile->addAction(m_Menu_RecentFiles->menuAction());
+  m_Menu_RecentFiles->addSeparator();
+  m_Menu_RecentFiles->addAction(m_ActionClearRecentFiles);
+
+  m_MenuHelp->addAction(m_ActionShowIndex);
+  m_MenuHelp->addAction(m_ActionLicense_Information);
+  m_MenuHelp->addSeparator();
+  m_MenuHelp->addAction(m_ActionCheck_For_Updates);
+  m_MenuHelp->addSeparator();
+  m_MenuHelp->addAction(m_ActionAbout_DREAM3D);
+
+  m_GlobalMenu->show();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D_UI* BrandedInitializer::getNewDREAM3DInstance()
+{
+  PluginManager* pluginManager = PluginManager::Instance();
+  QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
+
+  // Create new DREAM3D instance
+  DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
+  newInstance->setLoadedPlugins(plugins);
+
+  // Show the new instance
+  newInstance->setAttribute(Qt::WA_DeleteOnClose);
+  newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
+  return newInstance;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionNew_triggered()
+{
+  DREAM3D_UI* newInstance = getNewDREAM3DInstance();
+  newInstance->show();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionOpen_triggered()
+{
+  DREAM3D_UI* newInstance = getNewDREAM3DInstance();
+
+  QString proposedDir = m_OpenDialogLastDirectory;
+  QString filePath = QFileDialog::getOpenFileName(NULL, tr("Open Pipeline"),
+    proposedDir, tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
+  if (true == filePath.isEmpty())
+  {
+    delete newInstance;
+    return;
+  }
+
+  filePath = QDir::toNativeSeparators(filePath);
+  QFileInfo fi(filePath);
+
+  newInstance->openNewPipeline(filePath, true);
+
+  newInstance->show();
+
+  // Cache the last directory on old instance
+  m_OpenDialogLastDirectory = fi.path();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::updateRecentFileList(const QString &file)
+{
+  // Clear the Recent Items Menu
+  this->m_Menu_RecentFiles->clear();
+
+  // Get the list from the static object
+  QStringList files = QRecentFileList::instance()->fileList();
+  foreach (QString file, files)
+  {
+    QAction* action = new QAction(this->m_Menu_RecentFiles);
+    action->setText(QRecentFileList::instance()->parentAndFileName(file));
+    action->setData(file);
+    action->setVisible(true);
+    this->m_Menu_RecentFiles->addAction(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  }
+
+  this->m_Menu_RecentFiles->addSeparator();
+  this->m_Menu_RecentFiles->addAction(m_ActionClearRecentFiles);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::openRecentFile()
+{
+  QAction* action = qobject_cast<QAction*>(sender());
+
+  if (action)
+  {
+    QString filePath = action->data().toString();
+
+    DREAM3D_UI* newInstance = getNewDREAM3DInstance();
+    newInstance->openNewPipeline(filePath, true);
+
+    QRecentFileList* list = QRecentFileList::instance();
+
+    // Remove filepath from wherever it is in the list
+    list->removeFile(filePath);
+
+    // Add file path to the recent files list for both instances
+    if (list->fileList().size() >= 7)
+    {
+      list->popBack();
+    }
+    list->addFile(filePath);
+
+    newInstance->show();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionClearRecentFiles_triggered()
+{
+  // Clear the Recent Items Menu
+  this->m_Menu_RecentFiles->clear();
+
+  // Clear the actual list
+  QRecentFileList* recents = QRecentFileList::instance();
+  recents->clear();
+
+  // Write out the empty list
+  DREAM3DSettings prefs;
+  recents->writeList(prefs);
+
+  this->m_Menu_RecentFiles->addSeparator();
+  this->m_Menu_RecentFiles->addAction(m_ActionClearRecentFiles);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionShowIndex_triggered()
+{
+  // Generate help page
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
+  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionAbout_DREAM3D_triggered()
+{
+  AboutDREAM3D d(NULL);
+  d.exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionLicense_Information_triggered()
+{
+  ApplicationAboutBoxDialog about(DREAM3D::LicenseList, NULL);
+  QString an = QCoreApplication::applicationName();
+  QString version("");
+  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  about.setApplicationInfo(an, version);
+  about.exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionCheck_For_Updates_triggered()
+{
+  DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
+
+  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
+  d->setUpdateWebSite(Detail::UpdateWebSite);
+  d->setApplicationName("DREAM3D");
+
+  // Read from the DREAM3DSettings Pref file the information that we need
+  DREAM3DSettings prefs;
+  prefs.beginGroup(Detail::VersionCheckGroupName);
+  QDateTime dateTime = prefs.value(Detail::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
+  d->setLastCheckDateTime(dateTime);
+  prefs.endGroup();
+
+  // Now display the dialog box
+  d->exec();
+}
 
 

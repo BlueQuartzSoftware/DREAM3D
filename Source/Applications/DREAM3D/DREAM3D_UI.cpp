@@ -86,14 +86,6 @@
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
 
-namespace Detail
-{
-  static const QString VersionCheckGroupName("VersionCheck");
-  static const QString LastVersionCheck("LastVersionCheck");
-  static const QString WhenToCheck("WhenToCheck");
-  static const QString UpdateWebSite("http://dream3d.bluequartz.net/version.txt");
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -309,8 +301,11 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
       // Cache the last directory on new instance
       newInstance->setOpenDialogLastDirectory(fi.path());
 
+      // Remove filepath from wherever it is in the list
+      list->removeFile(filePath);
+
       // Add file path to the recent files list for both instances
-      if (list->fileList().size() == 7)
+      if (list->fileList().size() >= 7)
       {
         list->popBack();
       }
@@ -337,15 +332,18 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
   // The pipeline view is empty, so open the pipeline in the pipeline view
   else
   {
-    pipelineViewWidget->openPipeline(filePath, 0, setOpenedFilePath);
+    int err = pipelineViewWidget->openPipeline(filePath, 0, setOpenedFilePath);
     setOpenDialogLastDirectory(fi.path());
 
-    // Add file path to the recent files list for both instances
-    if (list->fileList().size() == 7)
+    if (err >= 0)
     {
-      list->popBack();
+      // Add file path to the recent files list for both instances
+      if (list->fileList().size() == 7)
+      {
+        list->popBack();
+      }
+      list->addFile(filePath);
     }
-    list->addFile(filePath);
   }
 }
 
@@ -719,6 +717,7 @@ void DREAM3D_UI::disconnectSignalsSlots()
 void DREAM3D_UI::connectSignalsSlots()
 {
   QRecentFileList* recentsList = QRecentFileList::instance();
+
   connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
@@ -1576,6 +1575,10 @@ void DREAM3D_UI::on_actionClearRecentFiles_triggered()
   // Clear the actual list
   QRecentFileList* recents = QRecentFileList::instance();
   recents->clear();
+
+  // Write out the empty list
+  DREAM3DSettings prefs;
+  recents->writeList(prefs);
 
   this->menu_RecentFiles->addSeparator();
   this->menu_RecentFiles->addAction(actionClearRecentFiles);

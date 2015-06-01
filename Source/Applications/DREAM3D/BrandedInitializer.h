@@ -69,8 +69,25 @@ class BrandedInitializer : public QObject
   protected:
     QVector<IDREAM3DPlugin*> loadPlugins();
 
+    DREAM3D_UI* getNewDREAM3DInstance();
+
   protected slots:
     void on_m_ActionNew_triggered();
+    void on_m_ActionOpen_triggered();
+    void on_m_ActionClearRecentFiles_triggered();
+    void on_m_ActionShowIndex_triggered();
+    void on_m_ActionCheck_For_Updates_triggered();
+    void on_m_ActionLicense_Information_triggered();
+    void on_m_ActionAbout_DREAM3D_triggered();
+
+    /**
+     * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+     * should be connected to the Signal QRecentFileList->fileListChanged
+     * @param file The newly added file.
+     */
+    void updateRecentFileList(const QString &file);
+
+    void openRecentFile();
 
   private:
     bool                            show_splash;
@@ -89,6 +106,7 @@ class BrandedInitializer : public QObject
     QAction*                        m_ActionCheck_For_Updates;
     QAction*                        m_ActionAbout_DREAM3D;
     QAction*                        m_ActionPlugin_Information;
+    QString                         m_OpenDialogLastDirectory;
 
     BrandedInitializer(const BrandedInitializer&); // Copy Constructor Not Implemented
     void operator=(const BrandedInitializer&); // Operator '=' Not Implemented

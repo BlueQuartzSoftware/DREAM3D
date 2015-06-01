@@ -115,6 +115,12 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
     void readList(DREAM3DSettings& prefs);
 
     /**
+     * @brief Removes a file from the list of recent files.
+     * @param file The file to remove
+     */
+    void removeFile(const QString& file);
+
+    /**
     * @brief Pops the last entry off the list of recent files
     */
     void popBack();
@@ -134,12 +140,6 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
     void fileListChanged(const QString& file);
 
   protected:
-
-    /**
-     * @brief Removes a file from the list of recent files.
-     * @param file The file to remove
-     */
-    void removeFile(const QString& file);
 
     /**
      * @brief Returns true if the list already contains the file.

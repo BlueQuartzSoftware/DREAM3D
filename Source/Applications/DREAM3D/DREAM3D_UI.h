@@ -57,6 +57,15 @@
 #include "QtSupportLib/DREAM3DSettings.h"
 
 
+namespace Detail
+{
+  static const QString VersionCheckGroupName("VersionCheck");
+  static const QString LastVersionCheck("LastVersionCheck");
+  static const QString WhenToCheck("WhenToCheck");
+  static const QString UpdateWebSite("http://dream3d.bluequartz.net/version.txt");
+}
+
+
 //-- UIC generated Header
 #include "ui_DREAM3D_UI.h"
 
@@ -90,7 +99,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   public:
     DREAM3D_UI(QWidget* parent = 0);
     virtual ~DREAM3D_UI();
-
 
     /**
      * @brief setLoadedPlugins This will set the plugins that have already been loaded by another mechanism. The plugins are NOT
@@ -146,6 +154,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   public slots:
 
+    void on_actionNew_triggered();
+    void on_actionOpen_triggered();
+
     /**
     * @brief setOpenedFilePath
     * @param filePath
@@ -158,13 +169,18 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void setStatusBarMessage(const QString &msg);
 
+    /**
+    * @brief openNewPipeline
+    * @param filePath
+    * @param setOpenedFilePath
+    */
+    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath);
+
   protected slots:
 
     /* Menu Slots */
 
     // File Menu
-    void on_actionNew_triggered();
-    void on_actionOpen_triggered();
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
     void on_actionExit_triggered();
@@ -212,13 +228,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
      */
     void openRecentFile();
-
-    /**
-    * @brief openNewPipeline
-    * @param filePath
-    * @param setOpenedFilePath
-    */
-    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath);
 
     void pipelineDidFinish();
 
