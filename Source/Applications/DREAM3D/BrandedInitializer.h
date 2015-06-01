@@ -80,6 +80,7 @@ class BrandedInitializer : public QObject
     void on_m_ActionCheck_For_Updates_triggered();
     void on_m_ActionLicense_Information_triggered();
     void on_m_ActionAbout_DREAM3D_triggered();
+    void on_m_ActionExit_triggered();
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -107,6 +108,8 @@ class BrandedInitializer : public QObject
     QAction*                        m_ActionCheck_For_Updates;
     QAction*                        m_ActionAbout_DREAM3D;
     QAction*                        m_ActionPlugin_Information;
+    QAction*                        m_ActionExit;
+
     QString                         m_OpenDialogLastDirectory;
 
     BrandedInitializer(const BrandedInitializer&); // Copy Constructor Not Implemented

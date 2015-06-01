@@ -94,6 +94,7 @@ BrandedInitializer::BrandedInitializer() :
   connect(m_ActionLicense_Information, SIGNAL(triggered()), this, SLOT(on_m_ActionLicense_Information_triggered()));
   connect(m_ActionAbout_DREAM3D, SIGNAL(triggered()), this, SLOT(on_m_ActionAbout_DREAM3D_triggered()));
   connect(m_ActionCheck_For_Updates, SIGNAL(triggered()), this, SLOT(on_m_ActionCheck_For_Updates_triggered()));
+  connect(m_ActionExit, SIGNAL(triggered()), this, SLOT(on_m_ActionExit_triggered()));
 }
 
 // -----------------------------------------------------------------------------
@@ -401,10 +402,14 @@ void BrandedInitializer::initializeGlobalMenu()
 
   m_ActionNew = new QAction("New...", this);
   m_ActionNew->setObjectName(QStringLiteral("m_ActionNew"));
+  m_ActionNew->setShortcut((QKeySequence(Qt::CTRL + Qt::Key_N)));
   m_ActionOpen = new QAction("Open...", this);
   m_ActionOpen->setObjectName(QStringLiteral("m_ActionOpen"));
+  m_ActionNew->setShortcut((QKeySequence(Qt::CTRL + Qt::Key_O)));
   m_ActionClearRecentFiles = new QAction("Clear Recent Files", this);
   m_ActionClearRecentFiles->setObjectName(QStringLiteral("m_ActionClearRecentFiles"));
+  m_ActionExit = new QAction("Exit DREAM3D", this);
+  m_ActionExit->setObjectName(QStringLiteral("m_ActionExit"));
 
   m_ActionShowIndex = new QAction("DREAM3D Help", this);
   m_ActionShowIndex->setObjectName(QStringLiteral("m_ActionShowIndex"));
@@ -427,6 +432,7 @@ void BrandedInitializer::initializeGlobalMenu()
   m_MenuHelp->addSeparator();
   m_MenuHelp->addAction(m_ActionCheck_For_Updates);
   m_MenuHelp->addAction(m_ActionAbout_DREAM3D);
+  m_MenuHelp->addAction(m_ActionExit);
 
   m_GlobalMenu->show();
 }
@@ -611,6 +617,19 @@ void BrandedInitializer::on_m_ActionCheck_For_Updates_triggered()
 
   // Now display the dialog box
   d->exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BrandedInitializer::on_m_ActionExit_triggered()
+{
+#if defined (Q_OS_WIN)
+  this->close();
+#else
+  qApp->closeAllWindows();
+  qApp->quit();
+#endif
 }
 
 
