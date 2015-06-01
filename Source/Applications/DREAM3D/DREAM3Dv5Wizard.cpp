@@ -46,6 +46,8 @@ DREAM3Dv5Wizard::DREAM3Dv5Wizard(QWidget* parent, Qt::WindowFlags flags) :
 QWizard(parent, flags)
 {
   setupUi(this);
+
+  setupGui();
 }
 
 // -----------------------------------------------------------------------------
@@ -54,6 +56,18 @@ QWizard(parent, flags)
 DREAM3Dv5Wizard::~DREAM3Dv5Wizard()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3Dv5Wizard::setupGui()
+{
+#if defined (Q_OS_MAC)
+  setWizardStyle(QWizard::MacStyle);
+#else
+  setWizardStyle(QWizard::ModernStyle);
+#endif
 }
 
 // -----------------------------------------------------------------------------

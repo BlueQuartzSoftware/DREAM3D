@@ -51,6 +51,8 @@ public:
   DREAM3Dv5Wizard(QWidget* parent = 0, Qt::WindowFlags flags = 0);
   virtual ~DREAM3Dv5Wizard();
 
+  void setupGui();
+
   bool isBookmarkBtnChecked();
 
   DREAM3Dv5Wizard(const DREAM3Dv5Wizard&); // Copy Constructor Not Implemented
