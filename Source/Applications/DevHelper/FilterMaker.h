@@ -90,7 +90,6 @@ protected slots:
   void on_filterName_textChanged(const QString& text);
   void on_filterParametersTable_itemChanged(QTableWidgetItem* item);
   void on_generateBtn_clicked();
-  void on_cancelBtn_clicked();
   void on_addFilterParameterBtn_clicked();
   void on_removeFilterParameterBtn_clicked();
   void on_errorString_linkActivated(const QString &link);
@@ -98,7 +97,6 @@ protected slots:
 
 signals:
   void generateBtnPressed();
-  void cancelBtnPressed();
   void updateStatusBar(QString message);
 
 private:
