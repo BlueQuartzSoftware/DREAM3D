@@ -548,7 +548,7 @@ void BrandedInitializer::openRecentFile()
 }
 
 // -----------------------------------------------------------------------------
-//
+// This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
 void BrandedInitializer::on_m_ActionClearRecentFiles_triggered()
 {
@@ -568,7 +568,7 @@ void BrandedInitializer::on_m_ActionClearRecentFiles_triggered()
 }
 
 // -----------------------------------------------------------------------------
-//
+// This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
 void BrandedInitializer::on_m_ActionShowIndex_triggered()
 {
@@ -578,7 +578,7 @@ void BrandedInitializer::on_m_ActionShowIndex_triggered()
 }
 
 // -----------------------------------------------------------------------------
-//
+// This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
 void BrandedInitializer::on_m_ActionAbout_DREAM3D_triggered()
 {
@@ -600,7 +600,7 @@ void BrandedInitializer::on_m_ActionLicense_Information_triggered()
 }
 
 // -----------------------------------------------------------------------------
-//
+//  This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
 void BrandedInitializer::on_m_ActionCheck_For_Updates_triggered()
 {
@@ -622,7 +622,7 @@ void BrandedInitializer::on_m_ActionCheck_For_Updates_triggered()
 }
 
 // -----------------------------------------------------------------------------
-//
+// This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
 void BrandedInitializer::on_m_ActionExit_triggered()
 {
