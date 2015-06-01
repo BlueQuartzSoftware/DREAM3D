@@ -59,6 +59,8 @@
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 
+#include "Applications/DREAM3D/DREAM3DConstants.h"
+
 #include "QtSupportLib/QRecentFileList.h"
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 #include "QtSupportLib/ApplicationAboutBoxDialog.h"
@@ -607,13 +609,13 @@ void BrandedInitializer::on_m_ActionCheck_For_Updates_triggered()
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
 
   d->setCurrentVersion((DREAM3DLib::Version::Complete()));
-  d->setUpdateWebSite(Detail::UpdateWebSite);
+  d->setUpdateWebSite(DREAM3D::UpdateWebsite::UpdateWebSite);
   d->setApplicationName("DREAM3D");
 
   // Read from the DREAM3DSettings Pref file the information that we need
   DREAM3DSettings prefs;
-  prefs.beginGroup(Detail::VersionCheckGroupName);
-  QDateTime dateTime = prefs.value(Detail::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
+  prefs.beginGroup(DREAM3D::UpdateWebsite::VersionCheckGroupName);
+  QDateTime dateTime = prefs.value(DREAM3D::UpdateWebsite::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
   d->setLastCheckDateTime(dateTime);
   prefs.endGroup();
 

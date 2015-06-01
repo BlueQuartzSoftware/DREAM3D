@@ -81,7 +81,7 @@ set(DREAM3D_SRCS
 #------------------------------------------------------------------
 # Headers that do NOT need to have moc run on them, i.e., non-QObject based headers
 set(DREAM3D_HDRS
-
+  ${DREAM3D_SOURCE_DIR}/DREAM3DConstants.h
 )
 
 #------------------------------------------------------------------

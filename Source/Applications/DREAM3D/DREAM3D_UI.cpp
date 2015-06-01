@@ -79,9 +79,10 @@
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
-#include "AboutDREAM3D.h"
-#include "AboutPlugins.h"
-#include "DREAM3Dv5Wizard.h"
+#include "Applications/DREAM3D/DREAM3DConstants.h"
+#include "Applications/DREAM3D/AboutDREAM3D.h"
+#include "Applications/DREAM3D/AboutPlugins.h"
+#include "Applications/DREAM3D/DREAM3Dv5Wizard.h"
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
@@ -625,7 +626,7 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
       connect(m_UpdateCheck.data(), SIGNAL( LatestVersion(UpdateCheckData*) ),
               this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
-      m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
+      m_UpdateCheck->checkVersion(DREAM3D::UpdateWebsite::UpdateWebSite);
     }
   }
 
@@ -1214,13 +1215,13 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
 
   d->setCurrentVersion((DREAM3DLib::Version::Complete()));
-  d->setUpdateWebSite(Detail::UpdateWebSite);
+  d->setUpdateWebSite(DREAM3D::UpdateWebsite::UpdateWebSite);
   d->setApplicationName("DREAM3D");
 
   // Read from the DREAM3DSettings Pref file the information that we need
   DREAM3DSettings prefs;
-  prefs.beginGroup(Detail::VersionCheckGroupName);
-  QDateTime dateTime = prefs.value(Detail::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
+  prefs.beginGroup(DREAM3D::UpdateWebsite::VersionCheckGroupName);
+  QDateTime dateTime = prefs.value(DREAM3D::UpdateWebsite::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
   d->setLastCheckDateTime(dateTime);
   prefs.endGroup();
 

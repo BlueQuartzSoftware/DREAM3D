@@ -57,15 +57,6 @@
 #include "QtSupportLib/DREAM3DSettings.h"
 
 
-namespace Detail
-{
-  static const QString VersionCheckGroupName("VersionCheck");
-  static const QString LastVersionCheck("LastVersionCheck");
-  static const QString WhenToCheck("WhenToCheck");
-  static const QString UpdateWebSite("http://dream3d.bluequartz.net/version.txt");
-}
-
-
 //-- UIC generated Header
 #include "ui_DREAM3D_UI.h"
 

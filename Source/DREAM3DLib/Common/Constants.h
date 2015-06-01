@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DREAM3D_CONSTANTS_H_
-#define _DREAM3D_CONSTANTS_H_
+#ifndef _DREAM3DLIB_CONSTANTS_H_
+#define _DREAM3DLIB_CONSTANTS_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
@@ -860,5 +860,5 @@ namespace IO
 }
 #endif
 
-#endif /* _DREAM3D_CONSTANTS_H_ */
+#endif /* _DREAM3DLIB_CONSTANTS_H_ */
 
