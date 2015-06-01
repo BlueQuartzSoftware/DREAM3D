@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -55,14 +55,18 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+
+  m_F1List = NeighborList<float>::NullPointer();
+  m_F1sptList = NeighborList<float>::NullPointer();
+  m_F7List = NeighborList<float>::NullPointer();
+  m_mPrimeList = NeighborList<float>::NullPointer();
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+
   setupFilterParameters();
 }
 
@@ -72,6 +76,7 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
 FindSlipTransmissionMetrics::~FindSlipTransmissionMetrics()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -79,18 +84,20 @@ void FindSlipTransmissionMetrics::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("F1 List Array Name", "F1ListArrayName", FilterParameterWidgetType::StringWidget, getF1ListArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("F1spt List Array Name", "F1sptListArrayName", FilterParameterWidgetType::StringWidget, getF1sptListArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("F7 List Array Name", "F7ListArrayName", FilterParameterWidgetType::StringWidget, getF7ListArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("mPrime List Array Name", "mPrimeListArrayName", FilterParameterWidgetType::StringWidget, getmPrimeListArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("F1 List", "F1ListArrayName", FilterParameterWidgetType::StringWidget, getF1ListArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("F1spt List", "F1sptListArrayName", FilterParameterWidgetType::StringWidget, getF1sptListArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("F7 List", "F7ListArrayName", FilterParameterWidgetType::StringWidget, getF7ListArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("mPrime List", "mPrimeListArrayName", FilterParameterWidgetType::StringWidget, getmPrimeListArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -130,33 +137,44 @@ int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 4);
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 4);
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
+
+  cDims[0] = 1;
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-//typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
+  m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getNeighborListArrayPath(), cDims);
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getNeighborListArrayPath()); }
 
   tempPath.update(m_NeighborListArrayPath.getDataContainerName(), m_NeighborListArrayPath.getAttributeMatrixName(), getF1ListArrayName() );
-  m_F1List = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_F1List = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
   tempPath.update(m_NeighborListArrayPath.getDataContainerName(), m_NeighborListArrayPath.getAttributeMatrixName(), getF1sptListArrayName() );
-  m_F1sptList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_F1sptList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
   tempPath.update(m_NeighborListArrayPath.getDataContainerName(), m_NeighborListArrayPath.getAttributeMatrixName(), getF7ListArrayName() );
-  m_F7List = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_F7List = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
   tempPath.update(m_NeighborListArrayPath.getDataContainerName(), m_NeighborListArrayPath.getAttributeMatrixName(), getmPrimeListArrayName() );
-  m_mPrimeList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_mPrimeList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -181,34 +199,32 @@ void FindSlipTransmissionMetrics::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
+  NeighborList<int32_t>& neighborlist = *(m_NeighborList.lock());
 
   std::vector<std::vector<float> > F1lists;
   std::vector<std::vector<float> > F1sptlists;
   std::vector<std::vector<float> > F7lists;
   std::vector<std::vector<float> > mPrimelists;
 
-  float mprime, F1, F1spt, F7;
-  int nname;
-  QuatF q1;
-  QuatF q2;
+  float mprime = 0.0f, F1 = 0.0f, F1spt = 0.0f, F7 = 0.0f;
+  int32_t nname;
+  QuatF q1 = QuaternionMathF::New();
+  QuatF q2 = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  float LD[3];
-  LD[0] = 0;
-  LD[1] = 0;
-  LD[2] = 1;
+  float LD[3] = { 0.0f, 0.0f, 1.0f };
 
   F1lists.resize(totalFeatures);
   F1sptlists.resize(totalFeatures);
   F7lists.resize(totalFeatures);
   mPrimelists.resize(totalFeatures);
-  for (int i = 1; i < totalFeatures; i++)
+
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     F1lists[i].assign(neighborlist[i].size(), 0.0f);
     F1sptlists[i].assign(neighborlist[i].size(), 0.0f);
@@ -217,10 +233,9 @@ void FindSlipTransmissionMetrics::execute()
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];
-
       QuaternionMathF::Copy(avgQuats[i], q1);
       QuaternionMathF::Copy(avgQuats[nname], q1);
-      if(m_CrystalStructures[m_FeaturePhases[i]] == m_CrystalStructures[m_FeaturePhases[nname]] && m_FeaturePhases[i] > 0)
+      if (m_CrystalStructures[m_FeaturePhases[i]] == m_CrystalStructures[m_FeaturePhases[nname]] && m_FeaturePhases[i] > 0)
       {
         m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getmPrime(q1, q2, LD, mprime);
         m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1(q1, q2, LD, true, F1);
@@ -229,10 +244,10 @@ void FindSlipTransmissionMetrics::execute()
       }
       else
       {
-        mprime = 0;
-        F1 = 0;
-        F1spt = 0;
-        F7 = 0;
+        mprime = 0.0f;
+        F1 = 0.0f;
+        F1spt = 0.0f;
+        F7 = 0.0f;
       }
       mPrimelists[i][j] = mprime;
       F1lists[i][j] = F1;
@@ -241,30 +256,30 @@ void FindSlipTransmissionMetrics::execute()
     }
   }
 
-  for (int64_t i = 1; i < totalFeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType f1L(new std::vector<float>);
     f1L->assign(F1lists[i].begin(), F1lists[i].end());
-    m_F1List.lock()->setList(static_cast<int>(i), f1L);
+    m_F1List.lock()->setList(static_cast<int32_t>(i), f1L);
 
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType f1sptL(new std::vector<float>);
     f1sptL->assign(F1sptlists[i].begin(), F1sptlists[i].end());
-    m_F1sptList.lock()->setList(static_cast<int>(i), f1sptL);
+    m_F1sptList.lock()->setList(static_cast<int32_t>(i), f1sptL);
 
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType f7L(new std::vector<float>);
     f7L->assign(F7lists[i].begin(), F7lists[i].end());
-    m_F7List.lock()->setList(static_cast<int>(i), f7L);
+    m_F7List.lock()->setList(static_cast<int32_t>(i), f7L);
 
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType mPrimeL(new std::vector<float>);
     mPrimeL->assign(mPrimelists[i].begin(), mPrimelists[i].end());
-    m_mPrimeList.lock()->setList(static_cast<int>(i), mPrimeL);
+    m_mPrimeList.lock()->setList(static_cast<int32_t>(i), mPrimeL);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -286,13 +301,11 @@ AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copy
 const QString FindSlipTransmissionMetrics::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSlipTransmissionMetrics::getGroupName()
 { return DREAM3D::FilterGroups::StatisticsFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -300,10 +313,8 @@ const QString FindSlipTransmissionMetrics::getGroupName()
 const QString FindSlipTransmissionMetrics::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSlipTransmissionMetrics::getHumanLabel()
 { return "Find Neighbor Slip Transmission Metrics"; }
-

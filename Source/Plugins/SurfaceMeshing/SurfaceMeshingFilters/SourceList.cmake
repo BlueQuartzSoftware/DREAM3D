@@ -12,11 +12,9 @@ START_FILTER_GROUP(${SurfaceMeshing_BINARY_DIR} "${_filterGroupName}" "Surface M
 
 set(_PublicFilters
   FindGBCD
-  #FindBoundaryAreas
   GenerateGeometryConnectivity
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
-  #GenerateFaceSchuhMisorientationColoring
   QuickSurfaceMesh
   ReverseTriangleWinding
   SharedFeatureFaceFilter
@@ -25,10 +23,6 @@ set(_PublicFilters
   TriangleDihedralAngleFilter
   TriangleNormalFilter
   LaplacianSmoothing
-# These filters require extensive updates to comply with the IGeometry design
-#  M3CSliceBySlice
-#  MovingFiniteElementSmoothing
-#  VerifyTriangleWinding
 )
 
 if(EIGEN_FOUND)
@@ -52,6 +46,12 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
+  FindBoundaryAreas
+  GenerateFaceSchuhMisorientationColoring
+  # These filters require extensive updates to comply with the IGeometry design
+  #M3CSliceBySlice
+  #MovingFiniteElementSmoothing
+  #VerifyTriangleWinding
 )
 
 #-----------------
@@ -67,7 +67,6 @@ endforeach()
 # These are files that need to be compiled into DREAM3DLib but are NOT filters
 ADD_DREAM3D_SUPPORT_MOC_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.h)
 ADD_DREAM3D_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.cpp)
-
 
 ADD_DREAM3D_SUPPORT_MOC_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.h)
 ADD_DREAM3D_SUPPORT_SOURCE(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.cpp)

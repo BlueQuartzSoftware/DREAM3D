@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -43,22 +43,21 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
+/**
+ * @brief The CalculateTwinBoundarySchmidFactorsImpl class implements a threaded algorithm that computes the
+ * Schmid factors across twin boundaries.
+ */
 class CalculateTwinBoundarySchmidFactorsImpl
 {
     int32_t* m_Labels;
@@ -84,116 +83,104 @@ class CalculateTwinBoundarySchmidFactorsImpl
 
     void generate(size_t start, size_t end) const
     {
-      int feature1, feature2, feature;
-      float normal[3];
-      float g1[3][3];
-      float schmid1, schmid2, schmid3;
-//     int plane =0;
-//     unsigned int phase1, phase2;
-      QuatF q1;
-      //   QuatF q2;
+      int32_t feature1 = 0, feature2 = 0, feature = 0;
+      float normal[3] = { 0.0f, 0.0f, 0.0f };
+      float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+      float schmid1 = 0.0f, schmid2 = 0.0f, schmid3 = 0.0f;
+      QuatF q1 = QuaternionMathF::New();
       QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-      float n[3], b[3];
-      float crystalLoading[3];
-      float cosPhi, cosLambda;
-//      float misq[5], sym_q[5], s_misq[5];
+      float n[3] = { 0.0f, 0.0f, 0.0f };
+      float b[3] = { 0.0f, 0.0f, 0.0f };
+      float crystalLoading[3] = { 0.0f, 0.0f, 0.0f };
+      float cosPhi = 0.0f, cosLambda = 0.0f;
 
       for (size_t i = start; i < end; i++)
       {
-        if(m_TwinBoundary[i] == true)
+        if (m_TwinBoundary[i] == true)
         {
           feature1 = m_Labels[2 * i];
           feature2 = m_Labels[2 * i + 1];
           normal[0] = m_Normals[3 * i];
           normal[1] = m_Normals[3 * i + 1];
           normal[2] = m_Normals[3 * i + 2];
-          schmid1 = 0, schmid2 = 0, schmid3 = 0;
-          //    plane = 0;
-          if(feature1 > feature2) { feature = feature1; }
+          schmid1 = 0.0f, schmid2 = 0.0f, schmid3 = 0.0f;
+          if (feature1 > feature2) { feature = feature1; }
           else { feature = feature2; }
 
           QuaternionMathF::Copy(quats[feature], q1);
-//          for(int m=0;m<5;m++)
-//          {
-//            q1[m]=m_Quats[5*feature+m];
-//          }
-          //calculate crystal direction parallel to normal
+          // calculate crystal direction parallel to normal
           FOrientArrayType om(9);
           FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
           om.toGMatrix(g1);
           MatrixMath::Multiply3x3with3x1(g1, normal, n);
-          //calculate crystal direction parallel to loading direction
+          // calculate crystal direction parallel to loading direction
           MatrixMath::Multiply3x3with3x1(g1, m_LoadDir, crystalLoading);
 
-          if(n[2] < 0) { n[0] = -n[0], n[1] = -n[1], n[2] = -n[2]; }
-          if(n[0] > 0 && n[1] > 0)
+          if (n[2] < 0.0f) { n[0] = -n[0], n[1] = -n[1], n[2] = -n[2]; }
+          if (n[0] > 0.0f && n[1] > 0.0f)
           {
-            //   plane = 1;
-            n[0] = 1, n[1] = 1, n[2] = 1;
-            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
-            b[0] = 1, b[1] = -1, b[2] = 0;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            n[0] = 1.0f, n[1] = 1.0f, n[2] = 1.0f;
+            cosPhi = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
+            b[0] = 1.0f, b[1] = -1.0f, b[2] = 0.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
-            b[0] = -1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = -1.0f, b[1] = 0.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
-            b[0] = 0, b[1] = -1, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = 0.0f, b[1] = -1.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
             m_TwinBoundarySchmidFactors[3 * i + 2] = schmid3;
           }
-          else if(n[0] > 0 && n[1] < 0)
+          else if (n[0] > 0.0f && n[1] < 0.0f)
           {
-            //       plane = 2;
-            n[0] = 1, n[1] = -1, n[2] = 1;
-            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
-            b[0] = 1, b[1] = 1, b[2] = 0;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            n[0] = 1.0f, n[1] = -1.0f, n[2] = 1.0f;
+            cosPhi = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
+            b[0] = 1.0f, b[1] = 1.0f, b[2] = 0.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
-            b[0] = 0, b[1] = 1, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = 0.0f, b[1] = 1.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
-            b[0] = -1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = -1.0f, b[1] = 0.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
             m_TwinBoundarySchmidFactors[3 * i + 2] = schmid3;
           }
-          else if(n[0] < 0 && n[1] > 0)
+          else if (n[0] < 0.0f && n[1] > 0.0f)
           {
-            //       plane = 3;
-            n[0] = -1, n[1] = 1, n[2] = 1;
-            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
-            b[0] = 1, b[1] = 1, b[2] = 0;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            n[0] = -1.0f, n[1] = 1.0f, n[2] = 1.0f;
+            cosPhi = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
+            b[0] = 1.0f, b[1] = 1.0f, b[2] = 0.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
-            b[0] = 1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = 1.0f, b[1] = 0.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
-            b[0] = 0, b[1] = -1, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = 0.0f, b[1] = -1.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
             m_TwinBoundarySchmidFactors[3 * i + 2] = schmid3;
           }
-          else if(n[0] < 0 && n[1] < 0)
+          else if (n[0] < 0.0f && n[1] < 0.0f)
           {
-            //     plane = 4;
-            n[0] = -1, n[1] = -1, n[2] = 1;
-            cosPhi = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
-            b[0] = 1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            n[0] = -1.0f, n[1] = -1.0f, n[2] = 1.0f;
+            cosPhi = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, n));
+            b[0] = 1.0f, b[1] = 0.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid1 = cosPhi * cosLambda;
-            b[0] = 0, b[1] = 1, b[2] = 1;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = 0.0f, b[1] = 1.0f, b[2] = 1.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid2 = cosPhi * cosLambda;
-            b[0] = 1, b[1] = -1, b[2] = 0;
-            cosLambda = fabs(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
+            b[0] = 1.0f, b[1] = -1.0f, b[2] = 0.0f;
+            cosLambda = fabsf(GeometryMath::CosThetaBetweenVectors(crystalLoading, b));
             schmid3 = cosPhi * cosLambda;
             m_TwinBoundarySchmidFactors[3 * i] = schmid1;
             m_TwinBoundarySchmidFactors[3 * i + 1] = schmid2;
@@ -202,9 +189,9 @@ class CalculateTwinBoundarySchmidFactorsImpl
         }
         else
         {
-          m_TwinBoundarySchmidFactors[3 * i] = 0;
-          m_TwinBoundarySchmidFactors[3 * i + 1] = 0;
-          m_TwinBoundarySchmidFactors[3 * i + 2] = 0;
+          m_TwinBoundarySchmidFactors[3 * i] = 0.0f;
+          m_TwinBoundarySchmidFactors[3 * i + 1] = 0.0f;
+          m_TwinBoundarySchmidFactors[3 * i + 2] = 0.0f;
         }
       }
     }
@@ -231,24 +218,20 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTwinBoundaryArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshTwinBoundary),
   m_SurfaceMeshTwinBoundarySchmidFactorsArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundarySchmidFactors),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceNormals(NULL),
-  m_SurfaceMeshTwinBoundaryArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundary),
   m_SurfaceMeshTwinBoundary(NULL),
   m_SurfaceMeshTwinBoundarySchmidFactors(NULL)
 {
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
   m_LoadingDir.z = 1.0f;
+
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+
   setupFilterParameters();
 }
 
@@ -258,6 +241,7 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
 FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -271,16 +255,19 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   parameters.push_back(FileSystemFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", FilterParameterWidgetType::OutputFileWidget, getTwinBoundarySchmidFactorsFile(), false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshTwinBoundary", "SurfaceMeshTwinBoundaryArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTwinBoundaryArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTwinBoundaryArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshTwinBoundarySchmidFactors", "SurfaceMeshTwinBoundarySchmidFactorsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTwinBoundarySchmidFactorsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Twin Boundary Schmid Factors", "SurfaceMeshTwinBoundarySchmidFactorsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTwinBoundarySchmidFactorsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -318,6 +305,7 @@ int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParameter
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -325,19 +313,25 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 {
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 4);
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 4);
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
+
+  cDims[0] = 1;
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-//typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -345,26 +339,35 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 2);
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceLabelsArrayPath()); }
 
-  dims[0] = 3;
-  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 3;
+  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshTwinBoundarySchmidFactorsArrayName() );
-  m_SurfaceMeshTwinBoundarySchmidFactorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceNormalsArrayPath()); }
+
+  tempPath.update(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), getSurfaceMeshFaceLabelsArrayPath().getAttributeMatrixName(), getSurfaceMeshTwinBoundarySchmidFactorsArrayName() );
+  m_SurfaceMeshTwinBoundarySchmidFactorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshTwinBoundarySchmidFactorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTwinBoundarySchmidFactors = m_SurfaceMeshTwinBoundarySchmidFactorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 1;
-  m_SurfaceMeshTwinBoundaryPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceMeshTwinBoundaryArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  cDims[0] = 1;
+  m_SurfaceMeshTwinBoundaryPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceMeshTwinBoundaryArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshTwinBoundaryPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTwinBoundary = m_SurfaceMeshTwinBoundaryPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshTwinBoundaryArrayPath()); }
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -399,7 +402,7 @@ void FindTwinBoundarySchmidFactors::execute()
 
   size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
-  float LoadingDir[3];
+  float LoadingDir[3] = { 0.0f, 0.0f, 0.0f };
   LoadingDir[0] = m_LoadingDir.x;
   LoadingDir[1] = m_LoadingDir.y;
   LoadingDir[2] = m_LoadingDir.z;
@@ -432,7 +435,7 @@ void FindTwinBoundarySchmidFactors::execute()
     outFile.close();
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindTwinBoundarySchmidFactors Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -454,13 +457,11 @@ AbstractFilter::Pointer FindTwinBoundarySchmidFactors::newFilterInstance(bool co
 const QString FindTwinBoundarySchmidFactors::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindTwinBoundarySchmidFactors::getGroupName()
 { return DREAM3D::FilterGroups::StatisticsFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -468,10 +469,8 @@ const QString FindTwinBoundarySchmidFactors::getGroupName()
 const QString FindTwinBoundarySchmidFactors::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindTwinBoundarySchmidFactors::getHumanLabel()
 { return "Find Twin Boundary Schmid Factors"; }
-

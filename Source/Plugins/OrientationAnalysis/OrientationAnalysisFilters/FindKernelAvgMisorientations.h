@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,23 +37,14 @@
 #ifndef _FindKernelAvgMisorientations_H_
 #define _FindKernelAvgMisorientations_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 /**
- * @class FindKernelAvgMisorientations FindKernelAvgMisorientations.h DREAM3DLib/GenericFilters/FindKernelAvgMisorientations.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindKernelAvgMisorientations class. See [Filter documentation](@ref findkernelavgmisorientations) for details.
  */
 class FindKernelAvgMisorientations : public AbstractFilter
 {
@@ -80,14 +71,14 @@ class FindKernelAvgMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
     Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(IntVec3_t, KernelSize)
+    Q_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-
-    DREAM3D_FILTER_PARAMETER(IntVec3_t, KernelSize)
-    Q_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize)
 
     virtual void setupFilterParameters();
     /**
@@ -115,7 +106,6 @@ class FindKernelAvgMisorientations : public AbstractFilter
     void preflightExecuted();
 
   protected:
-
     FindKernelAvgMisorientations();
 
   private:
@@ -123,10 +113,10 @@ class FindKernelAvgMisorientations : public AbstractFilter
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, KernelAverageMisorientations)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, KernelAverageMisorientations)
 
     void dataCheck();
 
@@ -135,8 +125,3 @@ class FindKernelAvgMisorientations : public AbstractFilter
 };
 
 #endif /* FindKernelAvgMisorientations_H_ */
-
-
-
-
-

@@ -33,14 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "ReadH5Ebsd.h"
 
-#include <limits>
-#include <vector>
-#include <sstream>
-
-#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/HKL/CtfFields.h"
@@ -48,27 +50,7 @@
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
-
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
-
-
-
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
 
 // -----------------------------------------------------------------------------
 //
@@ -104,6 +86,8 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_EulerTransformation.h = 0.0f;
   m_EulerTransformation.k = 0.0f;
   m_EulerTransformation.l = 1.0f;
+
+  m_MaterialNamesPtr = StringDataArray::NullPointer();
 
   setupFilterParameters();
 }
@@ -170,9 +154,9 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m)
+int32_t ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m)
 {
-  int err = 0;
+  int32_t err = 0;
   /* Sanity check what we are trying to load to make sure it can fit in our address space.
    * Note that this does not guarantee the user has enough left, just that the
    * size of the volume can fit in the address space of the program
@@ -182,7 +166,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer
 #else
   int64_t max = std::numeric_limits<int64_t>::max();
 #endif
-  if(dims[0] * dims[1] * dims[2] > max)
+  if (dims[0] * dims[1] * dims[2] > max)
   {
     err = -1;
     QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
@@ -191,7 +175,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer
     return err;
   }
 
-  if(dims[0] > max || dims[1] > max || dims[2] > max)
+  if (dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
     QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
@@ -203,13 +187,11 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer
   return err;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::readVolumeInfo()
 {
-
   m_DataArrayNames.clear(); // Remove all the data arrays
 
   QFileInfo fi(m_InputFile);
@@ -231,10 +213,10 @@ void ReadH5Ebsd::readVolumeInfo()
   {
     H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
     reader->setFileName(m_InputFile);
-    int err = reader->readVolumeInfo();
+    int32_t err = reader->readVolumeInfo();
     if (err < 0)
     {
-      QString ss = QObject::tr("%1: Error reading VolumeInfo from H5Ebsd File").arg(getHumanLabel());
+      QString ss = QObject::tr("Error reading VolumeInfo from H5Ebsd File");
       setErrorCondition(-1);
       notifyErrorMessage(getHumanLabel(), ss, -1);
       return;
@@ -254,7 +236,7 @@ void ReadH5Ebsd::readVolumeInfo()
     }
     else
     {
-      QString ss = QObject::tr("%1:  Original Data source could not be determined. It should be TSL, HKL or HEDM").arg(getHumanLabel());
+      QString ss = QObject::tr("Original Data source could not be determined. It should be TSL, HKL or HEDM");
       setErrorCondition(-1);
       notifyErrorMessage(getHumanLabel(), ss, -1);
       return;
@@ -294,20 +276,19 @@ void ReadH5Ebsd::readVolumeInfo()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
   m_DataArrayNames.clear(); // Remove all the data arrays
 
   H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
   QFileInfo fi(getInputFile());
-  if(fi.exists() == false)
+  if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file was not specified or was empty.");
     setErrorCondition(-10);
@@ -317,6 +298,7 @@ void ReadH5Ebsd::dataCheck()
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(NULL, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
@@ -332,23 +314,23 @@ void ReadH5Ebsd::dataCheck()
   H5EbsdVolumeReader::Pointer reader;
   QVector<QString> names;
 
-  int64_t dims[3] = {0, 0, 0};
-  float res[3] = {0, 0, 0};
-  int err = volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
-  // Need to
-  if(err < 0)
+  int64_t dims[3] = { 0, 0, 0 };
+  float res[3] = { 0.0f, 0.0f, 0.0f };
+  int32_t err = volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
+
+  if (err < 0)
   {
-    QString ss = QObject::tr("%1:  File counld not be read properly").arg(getHumanLabel());
+    QString ss = QObject::tr("File counld not be read properly");
     setErrorCondition(-11);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   QString manufacturer = volumeInfoReader->getManufacturer();
-  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     m_Manufacturer = Ebsd::TSL;
   }
-  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
     m_Manufacturer = Ebsd::HKL;
   }
@@ -380,7 +362,7 @@ void ReadH5Ebsd::dataCheck()
   }
   else
   {
-    QString ss = QObject::tr("%1:  Original Data source could not be determined. It should be TSL or HKL").arg(getHumanLabel());
+    QString ss = QObject::tr("Original Data source could not be determined. It should be TSL or HKL");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
@@ -391,10 +373,10 @@ void ReadH5Ebsd::dataCheck()
   m_DataArrayNames = reader->getDataArrayNames();
 
   QVector<size_t> cDims(1, 1);
-  for (qint32 i = 0; i < names.size(); ++i)
+  for (int32_t i = 0; i < names.size(); ++i)
   {
     // First check to see if the name is in our list of names to read.
-    if(m_SelectedArrayNames.find(names[i]) == m_SelectedArrayNames.end() ) { continue; }
+    if (m_SelectedArrayNames.find(names[i]) == m_SelectedArrayNames.end() ) { continue; }
     if (reader->getPointerType(names[i]) == Ebsd::Int32)
     {
       cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, cDims);
@@ -406,7 +388,7 @@ void ReadH5Ebsd::dataCheck()
   }
 
   // Only read these arrays if the user wants them
-  if(m_SelectedArrayNames.contains(DREAM3D::CellData::EulerAngles) )
+  if (m_SelectedArrayNames.contains(DREAM3D::CellData::EulerAngles) )
   {
     cDims[0] = 3;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
@@ -415,8 +397,8 @@ void ReadH5Ebsd::dataCheck()
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  // ONly read the phases if the user wants it.
-  if(m_SelectedArrayNames.contains(DREAM3D::CellData::Phases) )
+  // Only read the phases if the user wants it.
+  if (m_SelectedArrayNames.contains(DREAM3D::CellData::Phases) )
   {
     cDims[0] = 1;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName() );
@@ -427,7 +409,6 @@ void ReadH5Ebsd::dataCheck()
 
   // Now create the Ensemble arrays for the XTal Structures, Material Names and LatticeConstants
   cDims[0] = 1;
-  //typedef DataArray<unsigned int> XTalStructArrayType;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -442,7 +423,6 @@ void ReadH5Ebsd::dataCheck()
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
 
 // -----------------------------------------------------------------------------
@@ -453,8 +433,7 @@ void ReadH5Ebsd::preflight()
   setInPreflight(true);
   // Read the file to get the data arrays, size, meta data
   readVolumeInfo(); // This is specific to "readers" in general (I think), or at least those readers that need to show
-  // a structure to the user to allow them to select only specific parts of the file to read
-
+                    // a structure to the user to allow them to select only specific parts of the file to read
   // Now signal that any GUI widget is ready to read the information from this instance
   emit preflightAboutToExecute();
   // Let the GUI Widget (or anything else) update the parameters for this filter
@@ -473,7 +452,7 @@ void ReadH5Ebsd::execute()
   if(getErrorCondition() < 0) { return; }
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  int err = 0;
+  int32_t err = 0;
   setErrorCondition(err);
   QString manufacturer;
   // Get the Size and Resolution of the Volume
@@ -482,14 +461,14 @@ void ReadH5Ebsd::execute()
     volumeInfoReader->setFileName(m_InputFile);
     err = volumeInfoReader->readVolumeInfo();
     setErrorCondition(err);
-    int64_t dims[3];
-    float res[3];
+    int64_t dims[3] = { 0, 0, 0 };
+    float res[3] = { 0.0f, 0.0f, 0.0f };
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
 
     size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
     m->getGeometryAs<ImageGeom>()->setDimensions(dcDims);
     m->getGeometryAs<ImageGeom>()->setResolution(res);
-    //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
+    // Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
     dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
     m->getGeometryAs<ImageGeom>()->setDimensions(dcDims);
     manufacturer = volumeInfoReader->getManufacturer();
@@ -509,11 +488,11 @@ void ReadH5Ebsd::execute()
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
-  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     ebsdReader = initTSLEbsdVolumeReader();
   }
-  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
     ebsdReader = initHKLEbsdVolumeReader();
   }
@@ -528,13 +507,12 @@ void ReadH5Ebsd::execute()
   }
 
   // Sanity Check the Error Condition or the state of the EBSD Reader Object.
-  if(getErrorCondition() < 0 || NULL == ebsdReader.get())
+  if (getErrorCondition() < 0 || NULL == ebsdReader.get())
   {
     return;
   }
 
   // Initialize all the arrays with some default values
- // size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   {
     QString ss = QObject::tr("Reading Ebsd Data from file %1").arg(getInputFile());
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -544,7 +522,7 @@ void ReadH5Ebsd::execute()
   ebsdReader->readAllArrays(false);
   ebsdReader->setArraysToRead(m_SelectedArrayNames);
   err = ebsdReader->loadData(m->getGeometryAs<ImageGeom>()->getXPoints(), m->getGeometryAs<ImageGeom>()->getYPoints(), m->getGeometryAs<ImageGeom>()->getZPoints(), m_RefFrameZDir);
-  if(err < 0)
+  if (err < 0)
   {
     setErrorCondition(err);
     notifyErrorMessage(ebsdReader->getNameOfClass(), ebsdReader->getErrorMessage(), getErrorCondition());
@@ -553,11 +531,11 @@ void ReadH5Ebsd::execute()
   }
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
-  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  if (manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     copyTSLArrays(ebsdReader.get());
   }
-  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  else if (manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
     copyHKLArrays(ebsdReader.get());
   }
@@ -571,10 +549,10 @@ void ReadH5Ebsd::execute()
     return;
   }
 
-  if(m_UseTransformations == true)
+  if (m_UseTransformations == true)
   {
 
-    if(m_SampleTransformation.angle > 0)
+    if (m_SampleTransformation.angle > 0)
     {
       FloatVec3_t sampleAxis;
       sampleAxis.x = m_SampleTransformation.h;
@@ -597,7 +575,7 @@ void ReadH5Ebsd::execute()
         // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
         // tight loop. Your filter will slow down by 10X.
         bool propWasSet = rot_Sample->setProperty("RotationAngle", m_SampleTransformation.angle);
-        if(false == propWasSet)
+        if (false == propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAngle").arg(filtName);
           setErrorCondition(-109874);
@@ -606,7 +584,7 @@ void ReadH5Ebsd::execute()
         QVariant v;
         v.setValue(sampleAxis);
         propWasSet = rot_Sample->setProperty("RotationAxis", v);
-        if(false == propWasSet)
+        if (false == propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAxis").arg(filtName);
           setErrorCondition(-109873);
@@ -614,7 +592,7 @@ void ReadH5Ebsd::execute()
         }
         v.setValue(true);
         propWasSet = rot_Sample->setProperty("SliceBySlice", v);
-        if(false == propWasSet)
+        if (false == propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("SliceBySlice").arg(filtName);
           setErrorCondition(-109872);
@@ -624,7 +602,7 @@ void ReadH5Ebsd::execute()
         tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
         v.setValue(tempPath);
         propWasSet = rot_Sample->setProperty("CellAttributeMatrixPath", v);
-        if(false == propWasSet)
+        if (false == propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("CellAttributeMatrixName").arg(filtName);
           setErrorCondition(-109871);
@@ -640,7 +618,7 @@ void ReadH5Ebsd::execute()
       }
     }
 
-    if(m_EulerTransformation.angle > 0)
+    if (m_EulerTransformation.angle > 0)
     {
       FloatVec3_t eulerAxis;
       eulerAxis.x = m_EulerTransformation.h;
@@ -664,7 +642,7 @@ void ReadH5Ebsd::execute()
         // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
         // tight loop. Your filter will slow down by 10X.
         bool propWasSet = rot_Euler->setProperty("RotationAngle", m_EulerTransformation.angle);
-        if(false == propWasSet)
+        if (false == propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAngle").arg(filtName);
           setErrorCondition(-109874);
@@ -673,7 +651,7 @@ void ReadH5Ebsd::execute()
         QVariant v;
         v.setValue(eulerAxis);
         propWasSet = rot_Euler->setProperty("RotationAxis", v);
-        if(false == propWasSet)
+        if (false == propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAxis").arg(filtName);
           setErrorCondition(-109873);
@@ -683,7 +661,7 @@ void ReadH5Ebsd::execute()
         tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
         v.setValue(tempPath);
         propWasSet = rot_Euler->setProperty("CellEulerAnglesArrayPath", v);
-        if(false == propWasSet)
+        if (false == propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("CellEulerAnglesArrayPath").arg(filtName);
           setErrorCondition(-109872);
@@ -702,7 +680,7 @@ void ReadH5Ebsd::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -710,9 +688,9 @@ void ReadH5Ebsd::execute()
 // -----------------------------------------------------------------------------
 H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
 {
-  int err = 0;
+  int32_t err = 0;
   H5EbsdVolumeReader::Pointer ebsdReader = H5AngVolumeReader::New();
-  if(NULL == ebsdReader)
+  if (NULL == ebsdReader)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "Could not Create H5AngVolumeReader object.", -1);
@@ -720,7 +698,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
   }
   H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
   err = loadInfo<H5AngVolumeReader, AngPhase>(angReader);
-  if(err < 0)
+  if (err < 0)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
@@ -744,9 +722,9 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
 // -----------------------------------------------------------------------------
 H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
 {
-  int err = 0;
+  int32_t err = 0;
   H5EbsdVolumeReader::Pointer ebsdReader = H5CtfVolumeReader::New();
-  if(NULL == ebsdReader)
+  if (NULL == ebsdReader)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "Could not Create H5CtfVolumeReader object.", -1);
@@ -754,7 +732,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
   }
   H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
   err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader);
-  if(err < 0)
+  if (err < 0)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
@@ -782,7 +760,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   float* f1 = NULL;
   float* f2 = NULL;
   float* f3 = NULL;
-  int* phasePtr = NULL;
+  int32_t* phasePtr = NULL;
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
@@ -799,7 +777,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   QVector<size_t> cDims(1, 1);
   if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end() )
   {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
+    phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     cellAttrMatrix->addAttributeArray(DREAM3D::CellData::Phases, iArray);
@@ -884,7 +862,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   float* f1 = NULL;
   float* f2 = NULL;
   float* f3 = NULL;
-  int* phasePtr = NULL;
+  int32_t* phasePtr = NULL;
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
@@ -898,7 +876,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   QVector<size_t> cDims(1, 1);
-  phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
+  phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
   iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
   ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
   cellAttrMatrix->addAttributeArray(DREAM3D::CellData::Phases, iArray);
@@ -912,7 +890,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     cDims[0] = 3;
     fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
-    int* cellPhases = iArray->getPointer(0);
+    int32_t* cellPhases = iArray->getPointer(0);
 
     for (size_t i = 0; i < totalPoints; i++)
     {
@@ -928,7 +906,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   cDims[0] = 1;
   if (m_SelectedArrayNames.find(Ebsd::Ctf::Bands) != m_SelectedArrayNames.end() )
   {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
+    phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Bands);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     cellAttrMatrix->addAttributeArray(Ebsd::Ctf::Bands, iArray);
@@ -936,7 +914,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 
   if (m_SelectedArrayNames.find(Ebsd::Ctf::Error) != m_SelectedArrayNames.end() )
   {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Error));
+    phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Error));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Error);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     cellAttrMatrix->addAttributeArray(Ebsd::Ctf::Error, iArray);
@@ -952,7 +930,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 
   if (m_SelectedArrayNames.find(Ebsd::Ctf::BC) != m_SelectedArrayNames.end() )
   {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
+    phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::BC);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     cellAttrMatrix->addAttributeArray(Ebsd::Ctf::BC, iArray);
@@ -960,7 +938,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 
   if (m_SelectedArrayNames.find(Ebsd::Ctf::BS) != m_SelectedArrayNames.end() )
   {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
+    phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::BS);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     cellAttrMatrix->addAttributeArray(Ebsd::Ctf::BS, iArray);
@@ -1014,13 +992,11 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
 const QString ReadH5Ebsd::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -1028,10 +1004,8 @@ const QString ReadH5Ebsd::getGroupName()
 const QString ReadH5Ebsd::getSubGroupName()
 { return DREAM3D::FilterSubGroups::InputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getHumanLabel()
 { return "Read H5Ebsd File"; }
-

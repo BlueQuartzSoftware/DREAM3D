@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,38 +37,14 @@
 #ifndef _FindBoundaryStrengths_H_
 #define _FindBoundaryStrengths_H_
 
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-
-#include <cstddef>
-#include <vector>
-#include <QtCore/QString>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
- * @class FindBoundaryStrengths FindBoundaryStrengths.h DREAM3DLib/GenericFilters/FindBoundaryStrengths.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindBoundaryStrengths class. See [Filter documentation](@ref findboundarystrengths) for details.
  */
 class FindBoundaryStrengths : public AbstractFilter
 {
@@ -144,15 +120,12 @@ class FindBoundaryStrengths : public AbstractFilter
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF1s)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF1spts)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF7s)
@@ -166,8 +139,3 @@ class FindBoundaryStrengths : public AbstractFilter
 };
 
 #endif /* FindBoundaryStrengths_H_ */
-
-
-
-
-

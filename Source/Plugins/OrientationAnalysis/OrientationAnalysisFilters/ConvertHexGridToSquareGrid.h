@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,34 +36,16 @@
 #ifndef _ConvertHexGridToSquareGrid_H_
 #define _ConvertHexGridToSquareGrid_H_
 
-
-
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
-
-#include <QtCore/QVector>
-#include <QtCore/QString>
-
-
-#include "EbsdLib/EbsdConstants.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @class ConvertHexGridToSquareGrid ConvertHexGridToSquareGrid.h ConvertHexGridToSquareGrid/ConvertHexGridToSquareGrid.h
- * @brief This class is used to convert Hex grid TSL .ang files into Square grid
- * .ang files
- *
- * @author Dr. Michael Groeber, US Air Force Research Laboratories
- * @date July 23, 2012
- * @version 1.2
- *
+ * @brief The ConvertHexGridToSquareGrid class. See [Filter documentation](@ref converthexgridtosquaregrid) for details.
  */
 class ConvertHexGridToSquareGrid : public AbstractFilter
 {
@@ -76,19 +58,32 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
     virtual ~ConvertHexGridToSquareGrid();
 
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
 
     DREAM3D_INSTANCE_PROPERTY(float, XResolution)
+
     DREAM3D_INSTANCE_PROPERTY(float, YResolution)
 
     DREAM3D_FILTER_PARAMETER(QString, InputPath)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputPrefix)
 
     DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+
     DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
+
     DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+
     DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+
+    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
+
+    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
     DREAM3D_FILTER_PARAMETER(int, HexGridStack)
     Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
@@ -96,7 +91,7 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -124,12 +119,7 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
     */
     virtual void preflight();
 
-    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
-    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
-    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
-
   signals:
-
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
@@ -140,23 +130,17 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
 
     void dataCheck();
 
-    void generateFileList();
-
-
   private:
-    /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
-    * @param line The line to possibly modify
-    */
-    QString modifyAngHeaderLine(QString& buf);
 
-    QString int_to_string(int value);
-    QString float_to_string(float value);
+    /**
+     * @brief modifyAngHeaderLine Modifies a single line of the header section of the TSL .ang file if necessary
+     * @param buf The line to possibly modify
+     * @return
+     */
+    QString modifyAngHeaderLine(QString& buf);
 
     ConvertHexGridToSquareGrid(const ConvertHexGridToSquareGrid&); // Copy Constructor Not Implemented
     void operator=(const ConvertHexGridToSquareGrid&); // Operator '=' Not Implemented
 };
 
 #endif /* ConvertHexGridToSquareGrid_H_ */
-
-
-

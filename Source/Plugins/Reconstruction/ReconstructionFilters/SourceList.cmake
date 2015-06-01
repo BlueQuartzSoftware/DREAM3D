@@ -18,13 +18,9 @@ set(_PublicFilters
   AlignSectionsList
   EBSDSegmentFeatures
   CAxisSegmentFeatures
-  GroupMicroTextureRegions
-  IdentifyMicroTextureRegions
   MergeTwins
   MergeColonies
   ScalarSegmentFeatures
-  #SineParamsSegmentFeatures
-  VectorSegmentFeatures
 )
 
 #--------------
@@ -44,6 +40,10 @@ set(_PrivateFilters
   SegmentFeatures
   GroupFeatures
   AlignSections
+  GroupMicroTextureRegions
+  IdentifyMicroTextureRegions
+  SineParamsSegmentFeatures
+  VectorSegmentFeatures
 )
 
 #-----------------

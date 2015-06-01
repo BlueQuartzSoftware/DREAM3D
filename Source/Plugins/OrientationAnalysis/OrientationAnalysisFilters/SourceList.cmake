@@ -17,34 +17,25 @@ set(_PublicFilters
   ChangeAngleRepresentation
   WritePoleFigure
   WriteIPFStandardTriangle
-  WriteStatsGenOdfAngleFile
   ReadCtfData
   ConvertHexGridToSquareGrid
   ConvertOrientations
   EbsdToH5Ebsd
   FindAvgCAxes
   FindAvgOrientations
-  FindBasalLoadingFactor
   FindBoundaryStrengths
   FindCAxisLocations
-  FindDirectionalModuli
   FindFeatureNeighborCAxisMisalignments
   FindFeatureReferenceCAxisMisorientations
   FindFeatureReferenceMisorientations
   FindKernelAvgMisorientations
-  FindLocalAverageCAxisMisalignments
-  FindMicroTextureRegions
   FindMisorientations
-  FindModulusMismatch
-  FindOrientationFieldCurl
   FindSchmids
   FindSlipTransmissionMetrics
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
-  GenerateEulerColors
   GenerateIPFColors
   GenerateMisorientationColors
-  GenerateRodriguesColors
   NeighborCICorrelation
   NeighborOrientationCorrelation
   ReadH5Ebsd
@@ -68,6 +59,15 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
+  WriteStatsGenOdfAngleFile
+  FindBasalLoadingFactor
+  FindDirectionalModuli
+  FindLocalAverageCAxisMisalignments
+  FindMicroTextureRegions
+  FindModulusMismatch
+  FindOrientationFieldCurl
+  GenerateEulerColors
+  GenerateRodriguesColors
 )
 
 #-----------------

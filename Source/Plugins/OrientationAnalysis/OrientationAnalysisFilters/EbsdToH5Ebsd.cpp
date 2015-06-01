@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,32 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "EbsdToH5Ebsd.h"
 
-#include "H5Support/HDF5ScopedFileSentinel.h"
-#include "H5Support/QH5Utilities.h"
-
-
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/EbsdImporter.h"
-#include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/HKL/CtfFields.h"
-#include "EbsdLib/HKL/H5CtfImporter.h"
-#include "EbsdLib/TSL/AngConstants.h"
-#include "EbsdLib/TSL/AngFields.h"
-#include "EbsdLib/TSL/H5AngImporter.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
+
+#include "EbsdLib/HKL/H5CtfImporter.h"
+#include "EbsdLib/TSL/H5AngImporter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -69,7 +56,7 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_OutputFile(""),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_ZResolution(1.0),
+  m_ZResolution(1.0f),
   m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh),
   m_InputPath(""),
   m_FilePrefix(""),
@@ -95,7 +82,6 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::~EbsdToH5Ebsd()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +91,6 @@ void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget, "", false, "", "*.h5ebsd"));
-
   setFilterParameters(parameters);
 }
 
@@ -127,7 +112,6 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
   setPaddingDigits( reader->readValue("PaddingDigits", getPaddingDigits()) );
   setSampleTransformation( reader->readAxisAngle("SampleTransformation", getSampleTransformation(), -1) );
   setEulerTransformation( reader->readAxisAngle("EulerTransformation", getEulerTransformation(), -1) );
-
   reader->closeFilterGroup();
 }
 
@@ -162,16 +146,16 @@ void EbsdToH5Ebsd::dataCheck()
   setErrorCondition(0);
   QString ss;
 
-  if(m_OutputFile.isEmpty() == true)
+  if (m_OutputFile.isEmpty() == true)
   {
-    ss = QObject::tr("The output file must be set before executing this filter.");
+    ss = QObject::tr("The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -12);
     setErrorCondition(-12);
   }
 
-  if(m_InputPath.isEmpty() == true)
+  if (m_InputPath.isEmpty() == true)
   {
-    ss = QObject::tr("The Input Directory must be set before executing this filter.");
+    ss = QObject::tr("The Input Directory must be set");
     notifyErrorMessage(getHumanLabel(), ss, -13);
     setErrorCondition(-13);
   }
@@ -196,17 +180,17 @@ void EbsdToH5Ebsd::dataCheck()
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
     QFileInfo fi(fileList.front());
     QString ext = fi.suffix();
-    if(ext.compare(Ebsd::Ang::FileExt) == 0)
+    if (ext.compare(Ebsd::Ang::FileExt) == 0)
     {
-      //      ebsdFeatures = new AngFields;
+      //ebsdFeatures = new AngFields;
     }
-    else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
+    else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-      //       ebsdFeatures = new CtfFields;
+      //ebsdFeatures = new CtfFields;
     }
     else
     {
-      ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
+      ss = QObject::tr("The file extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
       notifyErrorMessage(getHumanLabel(), ss, -997);
       setErrorCondition(-997);
       return;
@@ -232,10 +216,14 @@ void EbsdToH5Ebsd::preflight()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::execute()
 {
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
   herr_t err = 0;
   hid_t fileId = -1;
 
-  if(m_OutputFile.isEmpty() == true)
+  if (m_OutputFile.isEmpty() == true)
   {
     QString ss = QObject::tr("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '%1'"
                              ". Please set the output file before running the importer. ").arg(m_OutputFile);
@@ -248,7 +236,7 @@ void EbsdToH5Ebsd::execute()
   QFileInfo fi(m_OutputFile);
   QString parentPath = fi.path();
   QDir dir;
-  if(!dir.mkpath(parentPath))
+  if (!dir.mkpath(parentPath))
   {
     QString ss;
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -258,10 +246,10 @@ void EbsdToH5Ebsd::execute()
 
   // Create File
   fileId = QH5Utilities::createFile(m_OutputFile);
-  if(fileId < 0)
+  if (fileId < 0)
   {
     err = -1;
-    QString ss = QObject::tr("The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.");
+    QString ss = QObject::tr("The output HDF5 file could not be created. Check permissions or if the file is in use by another program.");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -328,16 +316,15 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-//  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix)
-//      .arg(QString::number(m_ZStartIndex), m_PaddingDigits, '0')
-//      .arg(m_FileSuffix).arg(m_FileExtension);
+  //QString filename = QString("%1%2%3.%4").arg(m_FilePrefix)
+  //      .arg(QString::number(m_ZStartIndex), m_PaddingDigits, '0')
+  //      .arg(m_FileSuffix).arg(m_FileExtension);
 
   bool hasMissingFiles = false;
-
   const bool stackLowToHigh = true;
 
-//  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-//  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  //if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+  //else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
 
   // Now generate all the file names the user is asking for and populate the table
@@ -352,7 +339,7 @@ void EbsdToH5Ebsd::execute()
   // This list will grow to be the number of EBSD file formats we support
   QFileInfo fiExt(fileList.front());
   QString ext = fiExt.suffix();
-  if(ext.compare(Ebsd::Ang::FileExt) == 0)
+  if (ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
     if(err < 0)
@@ -365,7 +352,7 @@ void EbsdToH5Ebsd::execute()
     }
     fileImporter = H5AngImporter::New();
   }
-  else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
+  else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
     err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer);
     if(err < 0)
@@ -382,17 +369,17 @@ void EbsdToH5Ebsd::execute()
   {
     err = -1;
 
-    QString ss = QObject::tr("The File extension was not detected correctly");
+    QString ss = QObject::tr("The file extension was not detected correctly");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
 
     return;
   }
 
-  QVector<int> indices;
+  QVector<int32_t> indices;
   // Loop on Each EBSD File
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
-  int progress = 0;
+  int32_t progress = 0;
   int64_t z = m_ZStartIndex;
   int64_t xDim = 0, yDim = 0;
   float xRes = 0.0f, yRes = 0.0f;
@@ -421,14 +408,13 @@ void EbsdToH5Ebsd::execute()
    */
   int64_t biggestxDim = 0;
   int64_t biggestyDim = 0;
-  int totalSlicesImported = 0;
+  int32_t totalSlicesImported = 0;
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
     QString ebsdFName = *filepath;
-    progress = static_cast<int>( z - m_ZStartIndex );
-    progress = (int)(100.0f * (float)(progress) / total);
+    progress = static_cast<int32_t>( z - m_ZStartIndex );
+    progress = (int32_t)(100.0f * (float)(progress) / total);
     QString msg = "Converting File: " + ebsdFName;
-
 
     notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
     err = fileImporter->importFile(fileId, z, ebsdFName);
@@ -442,89 +428,72 @@ void EbsdToH5Ebsd::execute()
 
     fileImporter->getDims(xDim, yDim);
     fileImporter->getResolution(xRes, yRes);
-    if(xDim > biggestxDim) { biggestxDim = xDim; }
-    if(yDim > biggestyDim) { biggestyDim = yDim; }
+    if (xDim > biggestxDim) { biggestxDim = xDim; }
+    if (yDim > biggestyDim) { biggestyDim = yDim; }
 
-    if(err < 0)
+    if (err < 0)
     {
-
       QString ss = QObject::tr("Could not write dataset for slice to HDF5 file");
       setErrorCondition(-1);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
 
-    }
-    indices.push_back( static_cast<int>(z) );
+    indices.push_back( static_cast<int32_t>(z) );
     ++z;
-    if(getCancel() == true)
-    {
-      notifyStatusMessage(getHumanLabel(), "Conversion was Canceled");
-      return;
-    }
+    if (getCancel() == true) { return; }
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
-  if(err < 0)
+  if (err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Z Start Index Scalar to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   m_ZEndIndex = m_ZStartIndex + totalSlicesImported - 1;
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
-  if(err < 0)
+  if (err < 0)
   {
-
     QString ss = QObject::tr("Could not write the Z End Index Scalar to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
-  if(err < 0)
+  if (err < 0)
   {
-
     QString ss = QObject::tr("Could not write the XPoints Scalar to HDF5 file");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
-  if(err < 0)
+  if (err < 0)
   {
-
     QString ss = QObject::tr("Could not write the YPoints Scalar to HDF5 file");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
-  if(err < 0)
+  if (err < 0)
   {
-
     QString ss = QObject::tr("Could not write the XResolution Scalar to HDF5 file");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
-  if(err < 0)
+  if (err < 0)
   {
-
     QString ss = QObject::tr("Could not write the YResolution Scalar to HDF5 file");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
-  if(false == getCancel())
+  if (false == getCancel())
   {
     // Write an Index data set which contains all the z index values which
     // should help speed up the reading side of this file
@@ -533,8 +502,9 @@ void EbsdToH5Ebsd::execute()
   }
   err = QH5Utilities::closeFile(fileId);
   fileId = -1;
-  notifyStatusMessage(getHumanLabel(), "Import Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -568,13 +538,11 @@ AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameter
 const QString EbsdToH5Ebsd::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -582,10 +550,8 @@ const QString EbsdToH5Ebsd::getGroupName()
 const QString EbsdToH5Ebsd::getSubGroupName()
 { return DREAM3D::FilterSubGroups::InputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getHumanLabel()
 { return "Import Orientation File(s) to H5Ebsd"; }
-
