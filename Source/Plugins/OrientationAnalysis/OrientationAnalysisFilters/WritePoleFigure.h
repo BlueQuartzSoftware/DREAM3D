@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The WritePoleFigure class. See [Filter documentation](@ref writeipfstandardtriangle) for details.
+ * @brief The WritePoleFigure class. See [Filter documentation](@ref writepolefigure) for details.
  */
 class WritePoleFigure : public AbstractFilter
 {
