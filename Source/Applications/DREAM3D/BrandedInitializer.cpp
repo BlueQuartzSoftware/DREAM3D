@@ -78,23 +78,9 @@ BrandedInitializer::BrandedInitializer() :
   MainWindow(NULL),
   m_OpenDialogLastDirectory("")
 {
+#if defined (Q_OS_MAC)
   initializeGlobalMenu();
-
-  QRecentFileList* recentsList = QRecentFileList::instance();
-
-  DREAM3DSettings prefs;
-  recentsList->readList(prefs);
-
-  connect(recentsList, SIGNAL(fileListChanged(const QString &)), this, SLOT(updateRecentFileList(const QString &)));
-
-  connect(m_ActionNew, SIGNAL(triggered()), this, SLOT(on_m_ActionNew_triggered()));
-  connect(m_ActionOpen, SIGNAL(triggered()), this, SLOT(on_m_ActionOpen_triggered()));
-  connect(m_ActionClearRecentFiles, SIGNAL(triggered()), this, SLOT(on_m_ActionClearRecentFiles_triggered()));
-  connect(m_ActionShowIndex, SIGNAL(triggered()), this, SLOT(on_m_ActionShowIndex_triggered()));
-  connect(m_ActionLicense_Information, SIGNAL(triggered()), this, SLOT(on_m_ActionLicense_Information_triggered()));
-  connect(m_ActionAbout_DREAM3D, SIGNAL(triggered()), this, SLOT(on_m_ActionAbout_DREAM3D_triggered()));
-  connect(m_ActionCheck_For_Updates, SIGNAL(triggered()), this, SLOT(on_m_ActionCheck_For_Updates_triggered()));
-  connect(m_ActionExit, SIGNAL(triggered()), this, SLOT(on_m_ActionExit_triggered()));
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -435,6 +421,22 @@ void BrandedInitializer::initializeGlobalMenu()
   m_MenuHelp->addAction(m_ActionExit);
 
   m_GlobalMenu->show();
+
+  QRecentFileList* recentsList = QRecentFileList::instance();
+
+  DREAM3DSettings prefs;
+  recentsList->readList(prefs);
+
+  connect(recentsList, SIGNAL(fileListChanged(const QString &)), this, SLOT(updateRecentFileList(const QString &)));
+
+  connect(m_ActionNew, SIGNAL(triggered()), this, SLOT(on_m_ActionNew_triggered()));
+  connect(m_ActionOpen, SIGNAL(triggered()), this, SLOT(on_m_ActionOpen_triggered()));
+  connect(m_ActionClearRecentFiles, SIGNAL(triggered()), this, SLOT(on_m_ActionClearRecentFiles_triggered()));
+  connect(m_ActionShowIndex, SIGNAL(triggered()), this, SLOT(on_m_ActionShowIndex_triggered()));
+  connect(m_ActionLicense_Information, SIGNAL(triggered()), this, SLOT(on_m_ActionLicense_Information_triggered()));
+  connect(m_ActionAbout_DREAM3D, SIGNAL(triggered()), this, SLOT(on_m_ActionAbout_DREAM3D_triggered()));
+  connect(m_ActionCheck_For_Updates, SIGNAL(triggered()), this, SLOT(on_m_ActionCheck_For_Updates_triggered()));
+  connect(m_ActionExit, SIGNAL(triggered()), this, SLOT(on_m_ActionExit_triggered()));
 }
 
 // -----------------------------------------------------------------------------
@@ -624,12 +626,10 @@ void BrandedInitializer::on_m_ActionCheck_For_Updates_triggered()
 // -----------------------------------------------------------------------------
 void BrandedInitializer::on_m_ActionExit_triggered()
 {
-#if defined (Q_OS_WIN)
-  this->close();
-#else
+#if defined (Q_OS_MAC)
   qApp->closeAllWindows();
-  qApp->quit();
 #endif
+  qApp->quit();
 }
 
 
