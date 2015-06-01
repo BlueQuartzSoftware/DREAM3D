@@ -213,15 +213,6 @@ void FilterMaker::on_generateBtn_clicked()
 }
 
 // -----------------------------------------------------------------------------
-//  Called when the Cancel button is clicked.
-// -----------------------------------------------------------------------------
-void FilterMaker::on_cancelBtn_clicked()
-{
-  emit cancelBtnPressed();
-  this->close();
-}
-
-// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FilterMaker::on_addFilterParameterBtn_clicked()
