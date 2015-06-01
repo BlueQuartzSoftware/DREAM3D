@@ -44,6 +44,7 @@ set(DOCUMENTATION_SOURCE_FILES
 
 set(DOXYGEN_IMAGE_DIRS
   \"${PROJECT_SOURCE_DIR}/Images\"
+  \"${PROJECT_SOURCE_DIR}/Images/DevHelper\"
   \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/Images\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages\"
