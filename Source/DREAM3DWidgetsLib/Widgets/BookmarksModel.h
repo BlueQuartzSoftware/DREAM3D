@@ -71,7 +71,7 @@ public:
   QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  QModelIndex sibling(const QModelIndex &index);
+  virtual QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
 
   bool isEmpty();
 

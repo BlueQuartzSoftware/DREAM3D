@@ -295,7 +295,7 @@ QStringList BookmarksDockWidget::generateFilterListFromPipelineFile(QString path
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::on_bookmarksTreeView_clicked(const QModelIndex & index)
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -457,7 +457,7 @@ void BookmarksDockWidget::m_ActionNewFolder_triggered()
 
   QModelIndex parent = getSelectedParentTreeItem();
   QString parentName = model->index(parent.row(), Name, parent.parent()).data().toString();
-  
+
   QString name = "New Folder";
 
   addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", true, true, false);
@@ -468,7 +468,6 @@ void BookmarksDockWidget::m_ActionNewFolder_triggered()
 // -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionAddPipeline_triggered()
 {
-  BookmarksModel* model = BookmarksModel::Instance();
 
   QString proposedDir = m_OpenDialogLastDirectory;
   QList<QString> newPrefPaths;
@@ -756,7 +755,6 @@ void BookmarksDockWidget::writeSettings(DREAM3DSettings& prefs)
 
   prefs.setValue("BookmarksHeaderState", bookmarksTreeView->header()->saveState());
 
-  BookmarksModel* model = BookmarksModel::Instance();
   QJsonObject modelObj = bookmarksTreeView->toJsonObject();
 
   prefs.setValue("Bookmarks Model", modelObj);

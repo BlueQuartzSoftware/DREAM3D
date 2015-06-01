@@ -149,7 +149,7 @@ int BookmarksModel::columnCount(const QModelIndex &parent) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QModelIndex BookmarksModel::sibling(const QModelIndex &currentIndex)
+QModelIndex BookmarksModel::sibling(int row, int column, const QModelIndex &currentIndex) const
 {
   if (currentIndex.column() == Name)
   {
@@ -172,7 +172,7 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
   }
 
   BookmarksItem *item = getItem(index);
-  
+
   if (role == Qt::DisplayRole)
   {
     return item->data(index.column());

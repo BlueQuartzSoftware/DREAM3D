@@ -147,8 +147,8 @@ sss</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1011</width>
-             <height>562</height>
+             <width>1032</width>
+             <height>556</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -254,7 +254,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
      <x>0</x>
      <y>0</y>
      <width>1104</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -300,7 +300,6 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
      <string>Help</string>
     </property>
     <addaction name="actionShowIndex"/>
-    <addaction name="actionLicense_Information"/>
     <addaction name="separator"/>
     <addaction name="actionCheck_For_Updates"/>
     <addaction name="separator"/>

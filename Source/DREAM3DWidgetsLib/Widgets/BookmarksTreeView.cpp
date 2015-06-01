@@ -459,7 +459,7 @@ void BookmarksTreeView::collapseIndex(const QModelIndex & index)
   if (index.isValid())
   {
     BookmarksModel* model = BookmarksModel::Instance();
-    QModelIndex sibling = model->sibling(index);
+    QModelIndex sibling = model->sibling(0,0,index);
 
     QTreeView::collapse(index);
     model->setNeedsToBeExpanded(index, false);
@@ -473,7 +473,7 @@ void BookmarksTreeView::collapseIndex(const QModelIndex & index)
 void BookmarksTreeView::expandIndex(const QModelIndex & index)
 {
   BookmarksModel* model = BookmarksModel::Instance();
-  QModelIndex sibling = model->sibling(index);
+  QModelIndex sibling = model->sibling(0,0,index);
 
   QTreeView::expand(index);
   model->setNeedsToBeExpanded(index, true);
@@ -577,7 +577,7 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
 void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex)
 {
   int row = model->rowCount(parentIndex);
-  bool value = model->insertRow(row, parentIndex);
+  model->insertRow(row, parentIndex);
   QModelIndex nameIndex = model->index(row, Name, parentIndex);
   QModelIndex pathIndex = model->index(row, Path, parentIndex);
 

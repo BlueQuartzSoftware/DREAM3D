@@ -111,9 +111,7 @@ void BookmarksItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOp
 // -----------------------------------------------------------------------------
 void BookmarksItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  BookmarksModel* model = BookmarksModel::Instance();
+ // Place any painting code here
 
-  // Place any painting code here
-  
   QStyledItemDelegate::paint(painter, option, index);
 }

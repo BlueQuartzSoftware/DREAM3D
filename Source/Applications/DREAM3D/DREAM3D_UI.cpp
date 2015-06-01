@@ -77,12 +77,12 @@
 #include "DREAM3DWidgetsLib/Widgets/PrebuiltPipelinesDockWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 
-#include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 #include "Applications/DREAM3D/AboutDREAM3D.h"
 #include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3Dv5Wizard.h"
+
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
@@ -165,7 +165,7 @@ void DREAM3D_UI::updateFirstRun()
   DREAM3DSettings prefs;
   QString filePath = prefs.fileName();
   QFileInfo fi(filePath);
-  
+
   if (fi.exists() == false)
   {
     prefs.setValue("First Run", true);
@@ -1508,18 +1508,6 @@ void DREAM3D_UI::on_actionAbout_DREAM3D_triggered()
   d.exec();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionLicense_Information_triggered()
-{
-  ApplicationAboutBoxDialog about(DREAM3D::LicenseList, this);
-  QString an = QCoreApplication::applicationName();
-  QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
-  about.setApplicationInfo(an, version);
-  about.exec();
-}
 
 // -----------------------------------------------------------------------------
 //
