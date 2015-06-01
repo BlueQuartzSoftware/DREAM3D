@@ -26,11 +26,11 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 @PluginName@Plugin::@PluginName@Plugin() :
-m_Version("Version Number"),                            // Initialize @PluginName@'s Version Number Here
-m_CompatibilityVersion("Compatibility Version Number"), // Initialize @PluginName@'s Compatibility Version Number Here
+m_Version("0.1.0"),                            // Initialize @PluginName@'s Version Number Here
+m_CompatibilityVersion("0.1.0"), // Initialize @PluginName@'s Compatibility Version Number Here
 m_Vendor("Vendor Name"),                                // Initialize @PluginName@'s Vendor Name Here
 m_URL("URL"),                                           // Initialize Company URL Here
-m_Location("Location"),                                 // Initialize Company Location Here
+m_Location("Location"),                                 // Initialize @PluginName@ library Location Here
 m_Description("Description"),                           // Initialize @PluginName@'s Description Here
 m_Copyright("Copyright"),                               // Initialize @PluginName@'s Copyright Here
 m_Filters(QList<QString>()),                        // Initialize @PluginName@'s List of Dependencies Here

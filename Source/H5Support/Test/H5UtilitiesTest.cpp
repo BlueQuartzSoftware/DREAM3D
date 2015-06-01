@@ -488,7 +488,7 @@ void HDF5Darwin2GBWriteTest()
   hsize_t dims[2] = {dim0, dim1};
 
   herr_t err = QH5Lite::writePointerDataset(file_id, "data", rank, dims, data);
-  BOOST_ASSERT(err > -1);
+  DREAM3D_REQUIRE(err > -1);
 }
 #endif
 

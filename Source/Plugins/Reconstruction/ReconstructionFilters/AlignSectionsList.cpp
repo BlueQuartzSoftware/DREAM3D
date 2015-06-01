@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,22 +36,14 @@
 
 #include "AlignSectionsList.h"
 
-#include <QtCore/QtDebug>
-#include <fstream>
-#include <sstream>
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
-
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
-using namespace std;
+#include "Reconstruction/ReconstructionConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -60,7 +52,7 @@ AlignSectionsList::AlignSectionsList() :
   AlignSections(),
   m_InputFile("")
 {
-  //only setting up the child parameters because the parent constructor has already been called
+  // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
 }
 
@@ -76,7 +68,7 @@ AlignSectionsList::~AlignSectionsList()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::setupFilterParameters()
 {
-  //getting the current parameters that were set by the parent and adding to it before resetting it
+  // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_front(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
   setFilterParameters(parameters);
@@ -111,19 +103,21 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 void AlignSectionsList::dataCheck()
 {
   setErrorCondition(0);
+  QString ss;
 
-  if(true == m_InputFile.isEmpty())
+  QFileInfo fi(m_InputFile);
+  if (true == m_InputFile.isEmpty())
   {
-    QString ss = QObject::tr("The Input file name must be set before executing this filter.");
+    ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if (false == fi.exists())
+  {
+    ss = QObject::tr("The input file with name %1 does not exist").arg(m_InputFile);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -136,38 +130,21 @@ void AlignSectionsList::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  AlignSections::preflight();
   setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::execute()
-{
-  setErrorCondition(0);
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-
-  AlignSections::execute();
-
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Aligning Sections Complete");
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSectionsList::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
+void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  ifstream inFile;
+  std::ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -181,8 +158,8 @@ void AlignSectionsList::find_shifts(std::vector<int>& xshifts, std::vector<int>&
     static_cast<DimType>(udims[2]),
   };
 
-  int slice;
-  int newxshift, newyshift;
+  int64_t slice = 0;
+  int64_t newxshift = 0, newyshift = 0;
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     inFile >> slice >> newxshift >> newyshift;
@@ -191,6 +168,21 @@ void AlignSectionsList::find_shifts(std::vector<int>& xshifts, std::vector<int>&
   }
 
   inFile.close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsList::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  AlignSections::execute();
+
+  // If there is an error set this to something negative and also set a message
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -212,13 +204,11 @@ AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterPara
 const QString AlignSectionsList::getCompiledLibraryName()
 { return ReconstructionConstants::ReconstructionBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getGroupName()
 { return DREAM3D::FilterGroups::ReconstructionFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -226,10 +216,8 @@ const QString AlignSectionsList::getGroupName()
 const QString AlignSectionsList::getSubGroupName()
 {return DREAM3D::FilterSubGroups::AlignmentFilters;}
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getHumanLabel()
 { return "Align Sections (List)"; }
-

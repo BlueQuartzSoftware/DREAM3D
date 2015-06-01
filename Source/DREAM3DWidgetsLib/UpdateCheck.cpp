@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,6 +37,10 @@
 
 #include <QtCore/QDate>
 #include <QtCore/QSettings>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+
 
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
@@ -128,9 +132,18 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     QString message;
 
 
-    QByteArray bytes = reply->readAll();  // bytes
-    QString serverVersionStr(bytes); // string
-    serverVersionStr = serverVersionStr.trimmed();
+    QByteArray byteArray = reply->readAll();  // bytes
+ //   QString serverVersionStr(bytes); // string
+
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(byteArray, &parseError);
+
+    QJsonObject root = doc.object();
+
+    QJsonObject d3dJson = root["DREAM3D"].toObject();
+    QString serverVersionStr = d3dJson["Version"].toString();
+
+//    serverVersionStr = serverVersionStr.trimmed();
 
     QString appVersionStr = (DREAM3DLib::Version::Complete());
 

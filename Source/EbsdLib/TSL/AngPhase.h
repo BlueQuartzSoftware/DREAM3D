@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -177,14 +177,14 @@ class EbsdLib_EXPORT AngPhase
     void setLatticeConstantGamma(float a);
 
     //  void parsePhase(char* value, size_t start, size_t length);
-    void parseMaterialName(QList<QByteArray> tokens);
-    void parseFormula(QList<QByteArray> tokens);
-    void parseInfo(QList<QByteArray> tokens);
+    void parseMaterialName(QList<QByteArray>& tokens);
+    void parseFormula(QList<QByteArray>& tokens);
+    void parseInfo(QList<QByteArray>& tokens);
     //  void parseSymmetry(char* value, size_t start, size_t length);
-    void parseLatticeConstants(QList<QByteArray> tokens);
+    void parseLatticeConstants(QList<QByteArray>& tokens);
     //  void parseNumberFamilies(char* value, size_t start, size_t length);
-    void parseHKLFamilies(QList<QByteArray> tokens);
-    void parseCategories(QList<QByteArray> tokens);
+    void parseHKLFamilies(QList<QByteArray>& tokens);
+    void parseCategories(QList<QByteArray>& tokens);
 
     void printSelf(QTextStream& stream);
 

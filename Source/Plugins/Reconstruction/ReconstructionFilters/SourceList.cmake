@@ -23,7 +23,7 @@ set(_PublicFilters
   MergeTwins
   MergeColonies
   ScalarSegmentFeatures
-  SineParamsSegmentFeatures
+  #SineParamsSegmentFeatures
   VectorSegmentFeatures
 )
 

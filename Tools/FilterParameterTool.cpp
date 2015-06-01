@@ -988,7 +988,7 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    //CorrectInitializerList(filter, h, cpp);
+    CorrectInitializerList(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
@@ -1025,7 +1025,7 @@ int main(int argc, char* argv[])
   qRegisterMetaType<PipelineMessage>();
 
   //GenerateFilterParametersCode();
-  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
+  //ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
 
   return 0;
 }

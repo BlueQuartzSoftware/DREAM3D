@@ -65,18 +65,18 @@ class ReadAngDataPrivate;
 class ReadAngData : public AbstractFilter
 {
 
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
     Q_DECLARE_PRIVATE(ReadAngData)
 
-public:
-  DREAM3D_SHARED_POINTERS(ReadAngData)
+  public:
+    DREAM3D_SHARED_POINTERS(ReadAngData)
     DREAM3D_STATIC_NEW_MACRO(ReadAngData)
     DREAM3D_TYPE_MACRO_SUPER(ReadAngData, AbstractFilter)
 
     virtual ~ReadAngData();
 
 
-  DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
 
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
@@ -170,9 +170,9 @@ public:
     Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
 
-  signals:
+    signals:
 
-    void updateFilterParameters(AbstractFilter* filter);
+      void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();

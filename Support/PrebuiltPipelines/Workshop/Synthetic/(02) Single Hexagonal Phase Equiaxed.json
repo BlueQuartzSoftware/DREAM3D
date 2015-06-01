@@ -2,7 +2,7 @@
     "0": {
         "Filter_Human_Label": "Read DREAM3D Data File",
         "Filter_Name": "DataContainerReader",
-        "InputFile": "Data/CubicSingleEquiaxed.dream3d",
+        "InputFile": "Data/HexagonalSingleEquiaxed.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
                 {
@@ -265,15 +265,15 @@
         "UseGoodVoxels": 0
     },
     "7": {
-        "FilterVersion": "5.2.1387",
+        "FilterVersion": "5.2.1400",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/Output/CubicSingleEquiaxedOut.dream3d",
+        "OutputFile": "Data/Output/HexagonalSingleEquiaxedOut.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(01) Single Cubic Phase Equiaxed",
+        "Name": "(02) Single Hexagonal Phase Equiaxed",
         "Number_Filters": 8,
-        "Version": "5.2.1387"
+        "Version": "5.2.1400"
     }
 }
