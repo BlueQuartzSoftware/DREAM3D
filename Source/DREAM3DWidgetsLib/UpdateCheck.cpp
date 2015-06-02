@@ -52,6 +52,7 @@
 
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/AppVersion.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 
@@ -130,6 +131,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 
     // Example 2: Reading bytes form the reply
     QString message;
+    QTextStream outMsg(&message);
 
 
     QByteArray byteArray = reply->readAll();  // bytes
@@ -141,7 +143,9 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     QJsonObject root = doc.object();
 
     QJsonObject d3dJson = root["DREAM3D"].toObject();
-    QString serverVersionStr = d3dJson["Version"].toString();
+    QString serverVersionStr = d3dJson[DREAM3D::Settings::Version].toString();
+    QString releaseDate = d3dJson["Release Date"].toString();
+    QString releaseType = d3dJson["Release Type"].toString();
 
 //    serverVersionStr = serverVersionStr.trimmed();
 
@@ -181,7 +185,10 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     if (serverVersion > appVersion)
     {
       dataObj->setHasUpdate(true);
-      message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersionStr).append(". If you are ready to update you can go to the main download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+      outMsg << "<qt><b>There is an update available for " << appName;
+      outMsg  << ". The update is a " << releaseType << " and was released on " << releaseDate;
+      outMsg << ".</b><br /><br />  You are currently running version " << appVersionStr;
+      outMsg << ". If you are ready to update you can go to the main download <a href=\"http://dream3d.bluequartz.net\">website</a>.</qt>";
     }
     else
     {

@@ -141,6 +141,13 @@ COMPILE_TOOL(
     LINK_LIBRARIES Qt5::Core
 )
 
+
+# Now run the code to generate JSON file for the web server. This file holds all
+# the version information for the current release
+add_custom_command(TARGET CreateWebServerJson POST_BUILD
+                    COMMAND $<TARGET_FILE:CreateWebServerJson> ${DREAM3DProj_BINARY_DIR}/dream3d_version.json)
+add_dependencies(CreateWebServerJson DREAM3D)
+
 # Create a Command line tool for the DocsToPdf
 if(0)
     set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)
