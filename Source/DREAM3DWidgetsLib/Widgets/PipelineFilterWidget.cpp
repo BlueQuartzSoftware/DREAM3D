@@ -454,6 +454,12 @@ PipelineFilterWidget::~PipelineFilterWidget()
   m_Filter->setPreviousFilter(AbstractFilter::NullPointer());
   m_Filter->setNextFilter(AbstractFilter::NullPointer());
   m_Filter = AbstractFilter::NullPointer();
+
+  if (NULL != m_FilterInputWidget)
+  {
+    delete m_FilterInputWidget;
+    m_FilterInputWidget = NULL;
+  }
 }
 
 // -----------------------------------------------------------------------------
