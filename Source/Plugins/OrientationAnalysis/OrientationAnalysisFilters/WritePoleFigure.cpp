@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,33 +33,17 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "WritePoleFigure.h"
 
-#include <stdio.h>
-
-#include <iostream>
-
-#include <QtCore/QString>
-#include <QtCore/QFileInfo>
-#include <QtCore/QString>
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
-#include <QtGui/QPainter>
-#include <QtGui/QFont>
-#include <QtGui/QImage>
-#include <QtGui/QColor>
-
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
@@ -71,20 +55,10 @@
 #include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
 #include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
 #include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "QtSupportLib/PoleFigureImageUtilities.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-
-
-#define SET_DIRECTION(i, j, k)\
-  direction[0] = i; direction[1] = j; direction[2] = k;
-
-
-
-#define WRITE_EULERS_TEXT_FILE 1
 
 // -----------------------------------------------------------------------------
 //
@@ -127,8 +101,6 @@ WritePoleFigure::~WritePoleFigure()
 void WritePoleFigure::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
-  /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -138,23 +110,18 @@ void WritePoleFigure::setupFilterParameters()
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
-    //   choices.push_back("jpg");
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
 
-
-  /* For String input use this code */
   parameters.push_back(FilterParameter::New("Image Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), false));
-  /*   For an output path use this code*/
   parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
   parameters.push_back(FilterParameter::New("Image Size (Square)", "ImageSize", FilterParameterWidgetType::IntWidget, getImageSize(), false, "Pixels"));
-
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Lambert Image Size", "LambertSize", FilterParameterWidgetType::IntWidget, getLambertSize(), true, "Pixels"));
   parameters.push_back(FilterParameter::New("Number of Colors", "NumColors", FilterParameterWidgetType::IntWidget, getNumColors(), true));
   {
@@ -166,11 +133,9 @@ void WritePoleFigure::setupFilterParameters()
     choices.push_back("Horizontal");
     choices.push_back("Vertical");
     choices.push_back("Square");
-    //   choices.push_back("jpg");
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-
   setFilterParameters(parameters);
 }
 
@@ -221,15 +186,14 @@ void WritePoleFigure::dataCheck()
 {
   setErrorCondition(0);
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
   QDir path(getOutputPath());
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellPhasesArrayPath().getDataContainerName());
 
   if (m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Output directory must be set", getErrorCondition());
   }
   else if (path.exists() == false)
   {
@@ -237,47 +201,40 @@ void WritePoleFigure::dataCheck()
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if(m_CellEulerAnglesArrayName.isEmpty() == true)
-  {
-    setErrorCondition(-1004);
-    notifyErrorMessage(getHumanLabel(), "Input Euler Array name is empty", getErrorCondition());
-  }
-  else
-  {
-    QVector<size_t> dims(1, 3);
-    m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    dims[0] = 1;
-    m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() < 0) { return; }
+  QVector<DataArrayPath> dataArrayPaths;
 
-    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCellPhasesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  QVector<size_t> cDims(1, 3);
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellEulerAnglesArrayPath()); }
 
-    //typedef DataArray<unsigned int> XTalStructArrayType;
-    m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+  cDims[0] = 1;
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
-  QVector<size_t> dims(1, 1);
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(NULL != m_GoodVoxelsPtr.lock().get())
+  cDims[0] = 1;
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_GoodVoxelsPtr.lock().get())
   {
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
   }
   else
   {
     m_GoodVoxels = NULL;
   }
 
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -304,28 +261,75 @@ QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& conf
   return ops.generatePoleFigure(config);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString WritePoleFigure::generateImagePath(QString label)
+{
+  QString path = m_OutputPath + "/" + m_ImagePrefix + label;
+  if (m_ImageFormat == TifImageType)
+  {
+    path.append(".tif");
+  }
+  else if (m_ImageFormat == BmpImageType)
+  {
+    path.append(".bmp");
+  }
+  else if (m_ImageFormat == PngImageType)
+  {
+    path.append(".png");
+  }
+  else if (m_ImageFormat == JpgImageType)
+  {
+    path.append(".jpg");
+  }
+  path = QDir::toNativeSeparators(path);
+  QFileInfo fi(path);
+  QDir parent(fi.absolutePath());
+  if (parent.exists() == false)
+  {
+    parent.mkpath(fi.absolutePath());
+  }
+
+  return path;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WritePoleFigure::writeImage(QImage image, QString label)
+{
+  QString filename = generateImagePath(label);
+  QString ss = QObject::tr("Writing Image %1").arg(filename);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  bool saved = image.save(filename);
+  if (!saved)
+  {
+    setErrorCondition(-90011);
+    QString ss = QObject::tr("The Pole Figure image file '%1' was not saved.").arg(filename);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void WritePoleFigure::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellPhasesArrayPath.getDataContainerName());
 
-  /* Place all your code to execute your filter here. */
-  size_t dims[3];
+  size_t dims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QDir path(getOutputPath());
 
-  if(!path.mkpath(".") )
+  if (!path.mkpath(".") )
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(path.absolutePath());
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -341,18 +345,18 @@ void WritePoleFigure::execute()
   }
   // Find how many phases we have by getting the number of Crystal Structures
   size_t numPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-  int numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
+  size_t numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t count = 0;
   // Loop over all the voxels gathering the Eulers for a specific phase into an array
-  for(int phase = 1; phase < numPhases; ++phase)
+  for (size_t phase = 1; phase < numPhases; ++phase)
   {
     // First find out how many voxels we are going to have. This is probably faster to loop twice than to
     // keep allocating memory everytime we find one.
-    for(size_t i = 0; i < numPoints; ++i)
+    for (size_t i = 0; i < numPoints; ++i)
     {
       if (m_CellPhases[i] == phase)
       {
-        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        if (missingGoodVoxels == true || m_GoodVoxels[i] == true)
         {
           count++;
         }
@@ -365,11 +369,11 @@ void WritePoleFigure::execute()
 
     // Now loop through the eulers again and this time add them to the subEulers Array
     count = 0;
-    for(size_t i = 0; i < numPoints; ++i)
+    for (size_t i = 0; i < numPoints; ++i)
     {
       if (m_CellPhases[i] == phase)
       {
-        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        if (missingGoodVoxels == true || m_GoodVoxels[i] == true)
         {
           eu[count * 3] = m_CellEulerAngles[i * 3];
           eu[count * 3 + 1] = m_CellEulerAngles[i * 3 + 1];
@@ -379,8 +383,6 @@ void WritePoleFigure::execute()
       }
     }
     if (subEulers->getNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
-
-
 
     QVector<UInt8ArrayType::Pointer> figures;
 
@@ -393,10 +395,8 @@ void WritePoleFigure::execute()
     QString label("Phase_");
     label.append(QString::number(phase));
 
-    //QString filename = generateImagePath(label);
     QString ss = QObject::tr("Generating Pole Figures for Phase %1").arg(phase);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-
 
     switch(m_CrystalStructures[phase])
     {
@@ -445,68 +445,13 @@ void WritePoleFigure::execute()
     if (figures.size() == 3)
     {
       QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, getImageLayout());
-      writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
+      writeImage(combinedImage, label);
     }
-
-
   }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
-{
-  QString filename = generateImagePath(label);
-  QString ss = QObject::tr("Writing Image %1").arg(filename);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-  bool saved = image.save(filename);
-  if(!saved)
-  {
-    setErrorCondition(-90011);
-    QString ss = QObject::tr("The Pole Figure image file '%1' was not saved.").arg(filename);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString WritePoleFigure::generateImagePath( QString label)
-{
-  QString path = m_OutputPath + "/" + m_ImagePrefix + label;
-  if(m_ImageFormat == TifImageType)
-  {
-    path.append(".tif");
-  }
-  else if (m_ImageFormat == BmpImageType)
-  {
-    path.append(".bmp");
-  }
-  else if (m_ImageFormat == PngImageType)
-  {
-    path.append(".png");
-  }
-  else if (m_ImageFormat == JpgImageType)
-  {
-    path.append(".jpg");
-  }
-  path = QDir::toNativeSeparators(path);
-  QFileInfo fi(path);
-  QDir parent(fi.absolutePath());
-  if (parent.exists() == false)
-  {
-    parent.mkpath(fi.absolutePath());
-  }
-
-  return path;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -527,24 +472,20 @@ AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParame
 const QString WritePoleFigure::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getSubGroupName()
-{ return "Output"; }
-
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getHumanLabel()
 { return "Write Pole Figure Image"; }
-

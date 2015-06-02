@@ -326,6 +326,7 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
       dialog->setBookmarkName(nameIndex.data().toString());
       dialog->exec();
       delete dialog;
+      QString newPath = pathIndex.data().toString();
       bookmarksTreeView->blockSignals(false);
     }
     else
@@ -334,7 +335,7 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
       {
         // Set the itemHasError variable, and have the watcher monitor the file again
         model->setData(nameIndex, false, Qt::UserRole);
-        model->getFileSystemWatcher()->addPath(pathIndex.data().toString());
+        model->getFileSystemWatcher()->addPath(path);
       }
       emit pipelineFileActivated(pipelinePath, true);
     }

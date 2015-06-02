@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,26 +37,14 @@
 #ifndef _FindAvgOrientations_H_
 #define _FindAvgOrientations_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
- * @class FindAvgOrientations FindAvgOrientations.h DREAM3DLib/GenericFilters/FindAvgOrientations.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindAvgOrientations class. See [Filter documentation](@ref findavgorientations) for details.
  */
 class FindAvgOrientations : public AbstractFilter
 {
@@ -85,7 +73,6 @@ class FindAvgOrientations : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath AvgEulerAnglesArrayPath READ getAvgEulerAnglesArrayPath WRITE setAvgEulerAnglesArrayPath)
-
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -124,17 +111,14 @@ class FindAvgOrientations : public AbstractFilter
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
 
     void dataCheck();
 
@@ -142,7 +126,4 @@ class FindAvgOrientations : public AbstractFilter
     void operator=(const FindAvgOrientations&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDAVGORIENTATIONS_H_ */
-
-
-
+#endif /* FindAvgOrientations_H_ */

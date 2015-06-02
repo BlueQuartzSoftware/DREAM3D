@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,39 +37,15 @@
 #ifndef _FindSlipTransmissionMetrics_H_
 #define _FindSlipTransmissionMetrics_H_
 
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-
-#include <cstddef>
-#include <vector>
-#include <QtCore/QString>
-#include <iostream>
-#include <cmath>
-#include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
- * @class FindSlipTransmissionMetrics FindSlipTransmissionMetrics.h DREAM3DLib/GenericFilters/FindSlipTransmissionMetrics.h
- * @brief
- * @author
- * @date Mar 13, 2014
- * @version 4.2.4818
+ * @brief The FindSlipTransmissionMetrics class. See [Filter documentation](@ref findsliptransmissionmetrics) for details.
  */
 class FindSlipTransmissionMetrics : public AbstractFilter
 {
@@ -147,18 +123,16 @@ class FindSlipTransmissionMetrics : public AbstractFilter
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+
     NeighborList<float>::WeakPointer m_F1List;
     NeighborList<float>::WeakPointer m_F1sptList;
     NeighborList<float>::WeakPointer m_F7List;
     NeighborList<float>::WeakPointer m_mPrimeList;
-    NeighborList<int>::WeakPointer m_NeighborList;
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    NeighborList<int32_t>::WeakPointer m_NeighborList;
 
     void dataCheck();
 
@@ -167,6 +141,3 @@ class FindSlipTransmissionMetrics : public AbstractFilter
 };
 
 #endif /* FindSlipTransmissionMetrics_H_ */
-
-
-

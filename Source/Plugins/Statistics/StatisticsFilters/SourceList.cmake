@@ -11,27 +11,20 @@ START_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics")
 # List your public filters here
 
 set(_PublicFilters
-  #CorrelateValuesWithVectorDirection
   CalculateArrayHistogram
   FindAvgScalarValueForFeatures
-  #FindEllipsoidError
   FindEuclideanDistMap
-  #FindFeatureClustering
-  #FindFeatureHistogram
   FindLargestCrossSections
   FindNeighborhoods
   FindNeighbors
   FindNumFeatures
   FindShapes
   FindSizes
-  #FindSaltykovSizes
   FindSurfaceAreaToVolume
   FindBoundaryElementFractions
   FindVolFractions
   FitFeatureData
-  #FitCorrelatedFeatureData
   GenerateEnsembleStatistics
-  #QuiltCellData
 )
 
 #--------------
@@ -48,6 +41,13 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
+  CorrelateValuesWithVectorDirection
+  FindEllipsoidError
+  FindFeatureClustering
+  FindFeatureHistogram
+  FindSaltykovSizes
+  FitCorrelatedFeatureData
+  QuiltCellData
 )
 
 #-----------------

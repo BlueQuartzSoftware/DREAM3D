@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,28 +37,14 @@
 #ifndef _FindTwinBoundaries_H_
 #define _FindTwinBoundaries_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-
 
 /**
- * @class FindTwinBoundaries FindTwinBoundaries.h DREAM3DLib/GenericFilters/FindTwinBoundaries.h
- * @brief
- * @author Michael A Groeber (AFRL)
- * @author Joseph C Tucker (UES)
- * @date Jul 28, 2014
- * @version 5.1
+ * @brief The FindTwinBoundaries class. See [Filter documentation](@ref findtwinboundaries) for details.
  */
 class FindTwinBoundaries : public AbstractFilter
 {
@@ -72,8 +58,10 @@ class FindTwinBoundaries : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
     Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
+
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+
     DREAM3D_FILTER_PARAMETER(bool, FindCoherence)
     Q_PROPERTY(bool FindCoherence READ getFindCoherence WRITE setFindCoherence)
 
@@ -134,15 +122,13 @@ class FindTwinBoundaries : public AbstractFilter
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, SurfaceMeshTwinBoundary)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshTwinBoundaryIncoherence)
 
@@ -154,5 +140,3 @@ class FindTwinBoundaries : public AbstractFilter
 };
 
 #endif /* FindTwinBoundaries_H_ */
-
-

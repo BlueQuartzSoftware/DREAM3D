@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,41 +33,22 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "WriteIPFStandardTriangle.h"
 
-#include <stdio.h>
-
-#include <iostream>
-#include <QtCore/QString>
-
 #include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QString>
-#include <QtCore/QDebug>
 
 #include <QtGui/QPainter>
-#include <QtGui/QFont>
-#include <QtGui/QImage>
-#include <QtGui/QColor>
 
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/TSL/AngReader.h"
-
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-
-#include "QtSupportLib/PoleFigureImageUtilities.h"
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -76,8 +57,7 @@ WriteIPFStandardTriangle::WriteIPFStandardTriangle() :
   AbstractFilter(),
   m_OutputFile(""),
   m_ImageFormat(2),
-  m_ImageSize(512),
-  m_ColorCorrectionFactor(1.0)
+  m_ImageSize(512)
 {
   setupFilterParameters();
 }
@@ -95,7 +75,6 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -106,22 +85,10 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
-    //   choices.push_back("jpg");
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Image Size (Square)", "ImageSize", FilterParameterWidgetType::IntWidget, getImageSize(), false, "Pixels"));
-//  {
-//    FilterParameter::Pointer parameter = FilterParameter::New();
-//    parameter->setPropertyName("ColorCorrectionFactor");
-//    parameter->setHumanLabel("Color Correction Factor");
-//    parameter->setUnits("0 <= x < 1");
-//    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-//    //parameter->setValueType("float");
-//    parameters.push_back(parameter);
-//  }
-
-
   setFilterParameters(parameters);
 }
 
@@ -161,7 +128,7 @@ void WriteIPFStandardTriangle::dataCheck()
   QString ss;
   if (getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( ": The output file must be set before executing this filter.");
+    ss = QObject::tr( "The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
@@ -169,16 +136,15 @@ void WriteIPFStandardTriangle::dataCheck()
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist.");
+    ss = QObject::tr( "The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
-  if (m_ImageSize == 0)
+  if (m_ImageSize <= 0)
   {
     setErrorCondition(-1005);
-    notifyErrorMessage(getHumanLabel(), "The size of the image is Zero and must be a positive integer.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -186,30 +152,12 @@ void WriteIPFStandardTriangle::dataCheck()
 void WriteIPFStandardTriangle::preflight()
 {
   setInPreflight(true);
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::execute()
-{
-  int err = 0;
-  setErrorCondition(err);
-
-  QImage image = generateCubicHighTriangle();
-  writeImage(image);
-
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -224,13 +172,13 @@ QImage WriteIPFStandardTriangle::generateCubicHighTriangle()
 
   QImage image(getImageSize(), getImageSize(), QImage::Format_ARGB32_Premultiplied);
 
-  int xDim = getImageSize();
-  int yDim = getImageSize();
+  int32_t xDim = getImageSize();
+  int32_t yDim = getImageSize();
   size_t idx = 0;
 
-  for(int y = 0; y < yDim; ++y)
+  for (int32_t y = 0; y < yDim; ++y)
   {
-    for(int x = 0; x < xDim; ++x)
+    for (int32_t x = 0; x < xDim; ++x)
     {
       idx = (y * xDim) + x;
       image.setPixel(x, y, rgba[idx]);
@@ -247,14 +195,14 @@ QImage WriteIPFStandardTriangle::generateCubicHighTriangle()
 QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 {
   QSize imageSize(getImageSize(), getImageSize());
-  int fontHeight = 0;
-  int fontWidth = 0;
+  int32_t fontHeight = 0;
+  int32_t fontWidth = 0;
 
-  int fontScale = 24.0 / 256.0 * getImageSize(); // At 256 Pixel Image, we want to use 24 Point font
+  int32_t fontScale = 24 / 256 * getImageSize(); // At 256 Pixel Image, we want to use 24 Point font
   if (fontScale < 10) { fontScale = 10; } // Do not use fonts below 10Point.
 
 
-  QFont font("Ariel", fontScale, QFont::Bold);
+  QFont font("Arial", fontScale, QFont::Bold);
   {
     QPainter painter;
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
@@ -268,10 +216,9 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
     painter.end();
   }
 
-  int yMargin = 10;
-
-  int pImageWidth = imageSize.width() + yMargin;
-  int pImageHeight = imageSize.height() + fontHeight * 2;
+  int32_t yMargin = 10;
+  int32_t pImageWidth = imageSize.width() + yMargin;
+  int32_t pImageHeight = imageSize.height() + fontHeight * 2;
 
   QImage pImage(pImageWidth, pImageHeight, QImage::Format_ARGB32_Premultiplied);
   pImage.fill(0xFFFFFFFF); // All white background
@@ -335,7 +282,7 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
   }
 
   bool saved = image.save((m_OutputFile));
-  if(!saved)
+  if (!saved)
   {
     QString ss = QObject::tr("The Triangle image file '%1' was not saved.").arg(getOutputFile());
     setErrorCondition(-90011);
@@ -343,17 +290,27 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteIPFStandardTriangle::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  QImage image = generateCubicHighTriangle();
+  writeImage(image);
+
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * OutputFile
-  * ImageFormat
-  * ImageSize
-  */
   WriteIPFStandardTriangle::Pointer filter = WriteIPFStandardTriangle::New();
   if(true == copyFilterParameters)
   {
@@ -368,24 +325,20 @@ AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFil
 const QString WriteIPFStandardTriangle::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getSubGroupName()
-{ return "Output"; }
-
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getHumanLabel()
 { return "Write IPF Triangle Legend (Cubic m-3m)"; }
-

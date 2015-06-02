@@ -53,6 +53,8 @@ m_Watcher(NULL)
   vector.push_back("Name");
   vector.push_back("Path");
   rootItem = new BookmarksItem(vector);
+
+  connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateModel(const QModelIndex&, const QModelIndex&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -436,9 +438,9 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
   int rowPos = tempModel->rowCount(tempParent);
   tempModel->insertRow(rowPos, tempParent);
   QModelIndex newNameIndex = tempModel->index(rowPos, BookmarksItem::Name, tempParent);
-  tempModel->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+  tempModel->setData(newNameIndex, name, Qt::DisplayRole);
   QModelIndex newPathIndex = tempModel->index(rowPos, BookmarksItem::Path, tempParent);
-  tempModel->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
+  tempModel->setData(newPathIndex, path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -469,9 +471,9 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
   int rowPos = self->rowCount(newParent);
   self->insertRow(rowPos, newParent);
   QModelIndex newNameIndex = self->index(rowPos, BookmarksItem::Name, newParent);
-  self->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+  self->setData(newNameIndex, name, Qt::DisplayRole);
   QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, newParent);
-  self->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
+  self->setData(newPathIndex, path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -527,7 +529,7 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
   if (fi.isFile())
   {
     QString name = fi.baseName();
-    self->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+    self->setData(newNameIndex, name, Qt::DisplayRole);
   }
   else
   {
@@ -538,9 +540,8 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
   if (fi.isFile())
   {
     QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, specifiedParent);
-    self->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
+    self->setData(newPathIndex, path, Qt::DisplayRole);
     self->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
-    m_Watcher->addPath(path);
   }
   else
   {
@@ -635,6 +636,31 @@ QModelIndexList BookmarksModel::findIndexByPath(const QModelIndex &current, QStr
   }
 
   return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::updateModel(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  if (topLeft.isValid())
+  {
+    QString path = index(topLeft.row(), BookmarksItem::Path, topLeft.parent()).data().toString();
+    QFileInfo fi(path);
+    if (NULL != m_Watcher && path.isEmpty() == false && fi.exists())
+    {
+      m_Watcher->addPath(path);
+    }
+  }
+  else if (bottomRight.isValid())
+  {
+    QString path = index(bottomRight.row(), BookmarksItem::Path, bottomRight.parent()).data().toString();
+    QFileInfo fi(path);
+    if (NULL != m_Watcher && path.isEmpty() == false && fi.exists())
+    {
+      m_Watcher->addPath(path);
+    }
+  }
 }
 
 

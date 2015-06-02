@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,26 +37,14 @@
 #ifndef _FindSchmids_H_
 #define _FindSchmids_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
- * @class FindSchmids FindSchmids.h DREAM3DLib/GenericFilters/FindSchmids.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindSchmids class. See [Filter documentation](@ref findschmids) for details.
  */
 class FindSchmids : public AbstractFilter
 {
@@ -67,8 +55,6 @@ class FindSchmids : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSchmids, AbstractFilter)
 
     virtual ~FindSchmids();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
@@ -108,7 +94,6 @@ class FindSchmids : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, SlipDirection)
     Q_PROPERTY(FloatVec3_t SlipDirection READ getSlipDirection WRITE setSlipDirection)
-
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -153,19 +138,16 @@ class FindSchmids : public AbstractFilter
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
+
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Schmids)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Phis)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Lambdas)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Poles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SlipSystems)
-
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     void dataCheck();
 
@@ -173,9 +155,4 @@ class FindSchmids : public AbstractFilter
     void operator=(const FindSchmids&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDSCHMIDS_H_ */
-
-
-
-
-
+#endif /* FindSchmids_H_ */

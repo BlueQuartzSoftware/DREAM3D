@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -40,14 +40,11 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 
-
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
-
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -66,6 +63,7 @@ ConvertOrientations::ConvertOrientations() :
 ConvertOrientations::~ConvertOrientations()
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -100,6 +98,8 @@ void ConvertOrientations::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ConvertOrientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
@@ -132,7 +132,6 @@ void ConvertOrientations::dataCheck()
 {
   setErrorCondition(0);
 
-
   if(getInputType() == getOutputType())
   {
     QString ss = QObject::tr("Input and output orientation representation types must be different");
@@ -159,7 +158,7 @@ void ConvertOrientations::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   // Get the input data
-  QVector<int> componentCounts = OrientationConverter<float>::GetComponentCounts();
+  QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
   QVector<size_t> inputCDims(1, componentCounts[getInputType()]);
   m_InputOrientationsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getInputOrientationArrayPath(), inputCDims);
   if( NULL != m_InputOrientationsPtr.lock().get() )
@@ -173,8 +172,6 @@ void ConvertOrientations::dataCheck()
   m_OutputOrientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims);
   if( NULL != m_OutputOrientationsPtr.lock().get() )
   { m_OutputOrientations = m_OutputOrientationsPtr.lock()->getPointer(0); }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -208,7 +205,7 @@ void ConvertOrientations::execute()
   converters[3] = AxisAngleConverter<float>::New();
   converters[4] = RodriguesConverter<float>::New();
   converters[5] = HomochoricConverter<float>::New();
-//  converters[6] = CubochoricConverter<float>::New();
+  //converters[6] = CubochoricConverter<float>::New();
 
   QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
 
@@ -230,34 +227,6 @@ void ConvertOrientations::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ConvertOrientations::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ConvertOrientations::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConversionFilters; }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ConvertOrientations::getHumanLabel()
-{ return "Convert Orientation Representation"; }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterParameters)
 {
   ConvertOrientations::Pointer filter = ConvertOrientations::New();
@@ -268,3 +237,26 @@ AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterPa
   return filter;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertOrientations::getCompiledLibraryName()
+{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertOrientations::getGroupName()
+{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertOrientations::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ConversionFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertOrientations::getHumanLabel()
+{ return "Convert Orientation Representation"; }

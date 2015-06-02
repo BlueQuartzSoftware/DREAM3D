@@ -109,6 +109,7 @@ protected:
 
 protected slots:
   void updateRowState(const QString &path);
+  void updateModel(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
 private:
   BookmarksItem*            rootItem;
