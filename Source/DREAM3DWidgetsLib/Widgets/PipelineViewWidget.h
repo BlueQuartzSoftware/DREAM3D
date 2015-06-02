@@ -91,11 +91,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     PipelineFilterWidget* filterWidgetAt(int index);
 
     /**
-     * @brief clearWidgets
-     */
-    void clearWidgets();
-
-    /**
      * @brief getFilterPipeline
      * @return
      */
@@ -227,8 +222,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void setFilterBeingDragged(PipelineFilterWidget* w);
 
     /**
-     * @brief setFilterBeingDragged
-     * @param w
+     * @brief setStatusBar
+     * @param statusBar
      */
     void setStatusBar(QStatusBar* statusBar);
 
@@ -258,7 +253,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     /**
     * @brief Open pipeline to a file
     */
-    int openPipeline(const QString &filePath, int index);
+    int openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath);
 
     /**
      * @brief onCustomContextMenuRequested
@@ -284,13 +279,18 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     FilterPipeline::Pointer readPipelineFromFile(const QString& filePath);
 
+    /**
+    * @brief clearWidgets
+    */
+    void clearWidgets();
+
 
   signals:
     void addPlaceHolderFilter(QPoint p);
     void removePlaceHolderFilter();
     void preflightHasMessage(PipelineMessage msg);
 
-    void pipelineFileDropped(QString& file);
+    void pipelineFileDropped(QString& file, const bool &setOpenedFilePath);
     void pipelineHasErrorsSignal();
     void pipelineHasNoErrors();
     void pipelineIssuesCleared();

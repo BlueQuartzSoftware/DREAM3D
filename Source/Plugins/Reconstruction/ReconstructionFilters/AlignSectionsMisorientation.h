@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,27 +37,16 @@
 #ifndef _AlignSectionsMisorientation_H_
 #define _AlignSectionsMisorientation_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
-
 /**
- * @class AlignSectionsMisorientation AlignSectionsMisorientation.h DREAM3DLib/ReconstructionFilters/AlignSectionsMisorientation.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The AlignSectionsMisorientation class. See [Filter documentation](@ref alignsectionsmisorientation) for details.
  */
 class AlignSectionsMisorientation : public AlignSections
 {
@@ -92,7 +81,10 @@ class AlignSectionsMisorientation : public AlignSections
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
+
+    virtual void setupFilterParameters();
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -103,31 +95,25 @@ class AlignSectionsMisorientation : public AlignSections
   protected:
     AlignSectionsMisorientation();
 
-    virtual void find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts);
-
-    virtual void setupFilterParameters();
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    /**
+     * @brief find_shifts Reimplemented from @see AlignSections class
+     */
+    virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
-
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    unsigned long long int Seed;
+    uint64_t Seed;
 
     void dataCheck();
-
 
     AlignSectionsMisorientation(const AlignSectionsMisorientation&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsMisorientation&); // Operator '=' Not Implemented
 };
 
 #endif /* AlignSectionsMisorientation_H_ */
-
-
-

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -80,11 +80,11 @@ class DREAM3DLib_EXPORT PluginManager
      */
     QList<QString> getPluginNames();
 
-	/**
-	* @brief getPluginName Returns the plugin name for the given filter name
-	* @return
-	*/
-	QString getPluginName(QString filtName);
+    /**
+    * @brief getPluginName Returns the plugin name for the given filter name
+    * @return
+    */
+    QString getPluginName(QString filtName);
 
     /**
      * @brief getPluginList Returns the plugins list
@@ -92,6 +92,11 @@ class DREAM3DLib_EXPORT PluginManager
      */
     QVector<IDREAM3DPlugin*> getPluginsVector();
 
+    /**
+     * @brief findPlugin
+     * @param pluginName
+     * @return
+     */
     IDREAM3DPlugin* findPlugin(QString pluginName);
 
 

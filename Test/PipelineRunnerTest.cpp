@@ -74,7 +74,8 @@
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
@@ -134,8 +135,23 @@ void ExecutePipeline(const QString &pipelineFile)
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
+  QString ext = fi.completeSuffix();
+
   // Use the static method to read the Pipeline file and return a Filter Pipeline
-  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
+  FilterPipeline::Pointer pipeline;
+  if (ext == "ini" || ext == "txt")
+  {
+    pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
+  }
+  else if (ext == "dream3d")
+  {
+    pipeline = H5FilterParametersReader::ReadPipelineFromFile(pipelineFile);
+  }
+  else if (ext == "json")
+  {
+    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(pipelineFile);
+  }
+  
   if (NULL == pipeline.get())
   {
     std::cout << "An error occurred trying to read the pipeline file. Exiting now." << std::endl;

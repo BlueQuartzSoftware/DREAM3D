@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,27 +37,16 @@
 #ifndef _MergeTwins_H_
 #define _MergeTwins_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-
-#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
 /**
- * @class MergeTwins MergeTwins.h DREAM3DLib/ReconstructionFilters/MergeTwins.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The MergeTwins class. See [Filter documentation](@ref mergetwins) for details.
  */
 class MergeTwins : public GroupFeatures
 {
@@ -68,7 +57,7 @@ class MergeTwins : public GroupFeatures
     DREAM3D_TYPE_MACRO_SUPER(MergeTwins, AbstractFilter)
 
     virtual ~MergeTwins();
-    
+
     DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
@@ -106,7 +95,6 @@ class MergeTwins : public GroupFeatures
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -123,32 +111,34 @@ class MergeTwins : public GroupFeatures
     virtual void execute();
     virtual void preflight();
 
-#if 0
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-#endif // 0
-
-
   protected:
     MergeTwins();
 
-    virtual int getSeed(int newFid);
-    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
+    /**
+     * @brief getSeed Reimplemented from @see GroupFeatures class
+     */
+    virtual int32_t getSeed(int32_t newFid);
+
+    /**
+     * @brief determineGrouping Reimplemented from @see GroupFeatures class
+     */
+    virtual bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
+
+    /**
+     * @brief characterize_twins Characterizes twins; CURRENTLY NOT IMPLEMENTED
+     */
     void characterize_twins();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    unsigned long long int Seed;
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
+
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     float axisTolerance;
@@ -160,7 +150,4 @@ class MergeTwins : public GroupFeatures
     void operator=(const MergeTwins&); // Operator '=' Not Implemented
 };
 
-#endif /* MERGETWINS_H_ */
-
-
-
+#endif /* MergeTwins_H_ */

@@ -43,7 +43,6 @@ AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest SOURCES ${DREAM3DTest_SOURCE_
 AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
 
-
 QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
 set_source_files_properties(${RemoveArraysObserver_MOC} PROPERTIES HEADER_FILE_ONLY TRUE)
 AddDREAM3DUnitTest(TESTNAME MoveDataTest
@@ -82,17 +81,13 @@ set(PREBUILT_PIPELINE_NAMES
  "Reconstruction/(12) SmallIN100 Close Bad Data"
  "Reconstruction/(13) Image Initial Visualization"
  "Reconstruction/(14) Image Segmentation"
- "Reconstruction/(15) 12 Percent Full Reconstruction"
- "Reconstruction/(16) MicroTextureReconstruction"
- "Reconstruction/(17) Small IN100 Full Reconstruction"
+ "Reconstruction/(15) Small IN100 Full Reconstruction"
  "Statistics/(01) SmallIN100 Morphological Statistics"
  "Statistics/(02) SmallIN100 Export Statistics"
  "Statistics/(03) SmallIN100 Transfer Field Data"
  "Statistics/(04) SmallIN100 Field Threshold"
  "Statistics/(05) SmallIN100 Crystallographic Statistics"
- "Statistics/(06) 12 Percent Tension Crystallographic Statistics"
  "SurfaceMeshing/(01) SmallIN100 Quick Mesh"
- "SurfaceMeshing/(02) SmallIN100 Marching Cubes"
  "SurfaceMeshing/(03) SmallIN100 Smooth Mesh"
  "SurfaceMeshing/(04) SmallIN100 Mesh Statistics"
  "SurfaceMeshing/(05) SmallIN100 GBCD"
@@ -109,11 +104,12 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
 add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib DREAM3DLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER Test)
+add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
 
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
-  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 
@@ -122,11 +118,11 @@ set(PREBUILT_PIPELINES_DIR "TestPipelines")
 set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 set(PREBUILT_PIPELINE_NAMES
-  Test1
+  
 )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
-  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 

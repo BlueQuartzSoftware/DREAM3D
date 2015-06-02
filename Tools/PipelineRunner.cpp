@@ -66,7 +66,6 @@
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
@@ -168,7 +167,7 @@ int main (int argc, char  *argv[])
   QString ext = fi.completeSuffix();
 
   FilterPipeline::Pointer pipeline;
-  if (ext == "ini" || "txt")
+  if (ext == "ini" || ext == "txt")
   {
     pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
   }
@@ -192,7 +191,7 @@ int main (int argc, char  *argv[])
     return EXIT_FAILURE;
   }
 
-
+  std::cout << "Pipeline COunt: " << pipeline->size() << std::endl;
   Observer obs; // Create an Observer to report errors/progress from the executing pipeline
   pipeline->addMessageReceiver(&obs);
   // Preflight the pipeline

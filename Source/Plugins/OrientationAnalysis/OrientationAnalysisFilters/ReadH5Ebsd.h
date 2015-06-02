@@ -1,69 +1,53 @@
-
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #ifndef _ReadH5Ebsd_H_
 #define _ReadH5Ebsd_H_
-
-#include <vector>
-#include <QtCore/QString>
-
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/H5EbsdVolumeReader.h"
-#include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
+#include "EbsdLib/H5EbsdVolumeReader.h"
 
 class H5EbsdVolumeReader;
 
-
-
-
 /**
- * @class ReadH5Ebsd ReadH5Ebsd.h DREAM3DLib/ReconstructionFilters/ReadH5Ebsd.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The ReadH5Ebsd class. See [Filter documentation](@ref readh5ebsd) for details.
  */
 class ReadH5Ebsd : public AbstractFilter
 {
@@ -74,6 +58,7 @@ class ReadH5Ebsd : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter)
 
     virtual ~ReadH5Ebsd();
+
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
@@ -84,6 +69,7 @@ class ReadH5Ebsd : public AbstractFilter
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
@@ -108,7 +94,7 @@ class ReadH5Ebsd : public AbstractFilter
     // Not sure why these are here. We would be reading all of these from the file
     //
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
+    DREAM3D_INSTANCE_PROPERTY(int32_t, Manufacturer)
     DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
     DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
     //-------------------------------------------------------
@@ -147,28 +133,54 @@ class ReadH5Ebsd : public AbstractFilter
 
   protected:
     ReadH5Ebsd();
+
     void dataCheck();
 
-    int initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m);
-    void readVolumeInfo();
-
-    H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
-    H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
-
-    void copyTSLArrays(H5EbsdVolumeReader* ebsdReader);
-    void copyHKLArrays(H5EbsdVolumeReader* ebsdReader);
-
+    /**
+     * @brief initDataContainerDimsRes Initializes the dimensions to the correct size
+     * @param dims Data container dimensions
+     * @param m DataContainer instance pointer
+     * @return Integer error value
+     */
+    int32_t initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m);
 
     /**
-    * @brief This method reads the values for the phase type, crystal structure
+     * @brief readVolumeInfo Reads the dimension information
+     */
+    void readVolumeInfo();
+
+    /**
+     * @brief initTSLEbsdVolumeReader Initializes the H5EbsdVolumeReader to a H5AngReader pointer
+     * @return H5EbsdVolumeReader instance pointer
+     */
+    H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
+
+    /**
+     * @brief initHKLEbsdVolumeReader Initializes the H5EbsdVolumeReader to a H5CtfVolumeReader pointer
+     * @return H5EbsdVolumeReader instance pointer
+     */
+    H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
+
+    /**
+     * @brief copyTSLArrays Copies the read arrays into the data container structure (TSL variant)
+     * @param ebsdReader H5EbsdVolumeReader instance pointer
+     */
+    void copyTSLArrays(H5EbsdVolumeReader* ebsdReader);
+
+    /**
+     * @brief copyHKLArrays Copies the read arrays into the data container structure (HKL variant)
+     * @param ebsdReader H5EbsdVolumeReader instance pointer
+     */
+    void copyHKLArrays(H5EbsdVolumeReader* ebsdReader);
+
+    /**
+    * @brief loadInfo Reads the values for the phase type, crystal structure
     * and precipitate fractions from the EBSD file.
-    * @param reader The EbsdReader instance
-    * @param precipFractions Container to hold the precipitate fractions (out)
-    * @param crystalStructures Container to hold the crystal structures (out)
-    * @return Zero/Positive on Success - Negative on error.
+    * @param reader EbsdReader instance pointer
+    * @return Integer error value
     */
     template<typename EbsdReader, typename EbsdPhase>
-    int loadInfo(EbsdReader* reader)
+    int32_t loadInfo(EbsdReader* reader)
     {
       DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
       if(NULL == vdc) { return -1;}
@@ -191,7 +203,7 @@ class ReadH5Ebsd : public AbstractFilter
       QVector<size_t> tDims(1, phases.size() + 1);
       attrMatrix->resizeAttributeArrays(tDims);
 
-      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
+      DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
       StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
       QVector<size_t> cDims(1, 6);
       FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, getLatticeConstantsArrayName());
@@ -207,9 +219,9 @@ class ReadH5Ebsd : public AbstractFilter
       latticeConstants->setComponent(0, 4, 0.0f);
       latticeConstants->setComponent(0, 5, 0.0f);
 
-      for(size_t i = 0; i < phases.size(); i++)
+      for (size_t i = 0; i < phases.size(); i++)
       {
-        int phaseID = phases[i]->getPhaseIndex();
+        int32_t phaseID = phases[i]->getPhaseIndex();
         crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure() );
         materialNames->setValue(phaseID, phases[i]->getMaterialName());
         QVector<float> lc = phases[i]->getLatticeConstants();
@@ -220,7 +232,6 @@ class ReadH5Ebsd : public AbstractFilter
         latticeConstants->setComponent(phaseID, 3, lc[3]);
         latticeConstants->setComponent(phaseID, 4, lc[4]);
         latticeConstants->setComponent(phaseID, 5, lc[5]);
-
       }
 
 
@@ -240,17 +251,11 @@ class ReadH5Ebsd : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
-    StringDataArray::WeakPointer  m_MaterialNamesPtr;
 
-    int tempxpoints;
-    int tempypoints;
-    int totaltemppoints;
+    StringDataArray::WeakPointer  m_MaterialNamesPtr;
 
     ReadH5Ebsd(const ReadH5Ebsd&); // Copy Constructor Not Implemented
     void operator=(const ReadH5Ebsd&); // Operator '=' Not Implemented
 };
 
 #endif /* ReadH5Ebsd_H_ */
-
-
-

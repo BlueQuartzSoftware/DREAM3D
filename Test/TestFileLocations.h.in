@@ -82,7 +82,10 @@ namespace UnitTest
     const QString VtkOutputFile("@TEST_TEMP_DIR@/FindNeighborTest/FindNeighborTest.vtk");
   }
 
-
+  namespace DREAM3DSettingsTest
+  {
+    const QString TestFile("@TEST_TEMP_DIR@/DREAM3DSettingsTest/DREAM3DSettingsTest.json");
+  }
 
   namespace StatsDataTest
   {

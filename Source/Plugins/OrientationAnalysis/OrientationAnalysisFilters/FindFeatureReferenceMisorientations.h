@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,26 +37,14 @@
 #ifndef _FindFeatureReferenceMisorientations_H_
 #define _FindFeatureReferenceMisorientations_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
- * @class FindFeatureReferenceMisorientations FindFeatureReferenceMisorientations.h DREAM3DLib/GenericFilters/FindFeatureReferenceMisorientations.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindFeatureReferenceMisorientations class. See [Filter documentation](@ref findfeaturereferencemisorientations) for details.
  */
 class FindFeatureReferenceMisorientations : public AbstractFilter
 {
@@ -92,14 +80,14 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, FeatureReferenceMisorientationsArrayName)
     Q_PROPERTY(QString FeatureReferenceMisorientationsArrayName READ getFeatureReferenceMisorientationsArrayName WRITE setFeatureReferenceMisorientationsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(int, ReferenceOrientation)
+    Q_PROPERTY(int ReferenceOrientation READ getReferenceOrientation WRITE setReferenceOrientation)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-
-    DREAM3D_FILTER_PARAMETER(int, ReferenceOrientation)
-    Q_PROPERTY(int ReferenceOrientation READ getReferenceOrientation WRITE setReferenceOrientation)
 
     virtual void setupFilterParameters();
 
@@ -129,19 +117,16 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureReferenceMisorientations)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureAvgMisorientations)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureReferenceMisorientations)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureAvgMisorientations)
 
     void dataCheck();
 
@@ -150,8 +135,3 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
 };
 
 #endif /* FindFeatureReferenceMisorientations_H_ */
-
-
-
-
-

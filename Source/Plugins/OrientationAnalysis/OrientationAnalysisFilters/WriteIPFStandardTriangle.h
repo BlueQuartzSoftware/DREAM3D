@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,26 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _WriteIPFStandardTriangle_H_
 #define _WriteIPFStandardTriangle_H_
-
-#include <QtCore/QString>
-
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class WriteIPFStandardTriangle WriteIPFStandardTriangle.h /IOFilters/WriteIPFStandardTriangle.h
- * @brief This filter generates the IPF Color Triangle legend used for IPF color maps from
- * EBSD and other orientation data
- * @author Mike Jackson
- * @date Aug 12, 2013
- * @version 1.0
+ * @brief The WriteIPFStandardTriangle class. See [Filter documentation](@ref writeipfstandardtriangle) for details.
  */
 class WriteIPFStandardTriangle : public AbstractFilter
 {
@@ -64,14 +54,14 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
     virtual ~WriteIPFStandardTriangle();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+
     DREAM3D_FILTER_PARAMETER(int, ImageSize)
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
-    DREAM3D_INSTANCE_PROPERTY(float, ColorCorrectionFactor)
 
     enum ImageFormatType
     {
@@ -141,37 +131,30 @@ class WriteIPFStandardTriangle : public AbstractFilter
   protected:
     WriteIPFStandardTriangle();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
-    QString generateImagePath( QString label);
-
+    /**
+     * @brief writeImage Writes the generated IPF triangle to a file
+     * @param image Image to write
+     */
     void writeImage(QImage& image);
 
+    /**
+     * @brief generateCubicHighTriangle Generates the standard IPF triangle for a cubic symmetry
+     * @return QImage of cubic IPF triangle
+     */
     QImage generateCubicHighTriangle();
+
+    /**
+     * @brief overlayCubicHighText Overlays the legend of the IPF triangle
+     * @param image QImage of cubic IPF triangle
+     * @return
+     */
     QImage overlayCubicHighText(QImage image);
 
-
-    // These should go away
-    void findColor(float x1, float y1, float z1, unsigned char* rgb);
-    QImage generateCubicTriangle();
-
-
-
   private:
-
     WriteIPFStandardTriangle(const WriteIPFStandardTriangle&); // Copy Constructor Not Implemented
     void operator=(const WriteIPFStandardTriangle&); // Operator '=' Not Implemented
 };
 
 #endif /* _WriteIPFStandardTriangle_H_ */
-
-
-

@@ -44,6 +44,13 @@
 // #include <QtWidgets/QAction>
 
 #include "QtSupportLib/QtSupportLib.h"
+#include "QtSupportLib/DREAM3DSettings.h"
+
+enum AddType
+{
+  PREPEND,
+  APPEND
+};
 
 class QMenu;
 
@@ -93,19 +100,35 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
      * @brief Adds a file to the recent files
      * @param file The file to add to the list
      */
-    void addFile(const QString& file);
+    void addFile(const QString& file, AddType type = PREPEND);
 
     /**
      * @brief Writes the list of files to a preference file.
      * @param prefs The QSettings object to use.
      */
-    void writeList(QSettings& prefs);
+    void writeList(DREAM3DSettings& prefs);
 
     /**
      * @brief Reads the list of Recent Files from the preferences file
      * @param prefs The QSettins object to use
      */
-    void readList(QSettings& prefs);
+    void readList(DREAM3DSettings& prefs);
+
+    /**
+     * @brief Removes a file from the list of recent files.
+     * @param file The file to remove
+     */
+    void removeFile(const QString& file);
+
+    /**
+    * @brief Pops the last entry off the list of recent files
+    */
+    void popBack();
+
+    /**
+    * @brief Clears the list of recent files
+    */
+    void clear();
 
     /* ******************* Begin Qt Signals ********************************* */
   signals:
@@ -117,12 +140,6 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
     void fileListChanged(const QString& file);
 
   protected:
-
-    /**
-     * @brief Removes a file from the list of recent files.
-     * @param file The file to remove
-     */
-    void removeFile(const QString& file);
 
     /**
      * @brief Returns true if the list already contains the file.

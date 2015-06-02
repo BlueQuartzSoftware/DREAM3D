@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,24 +37,13 @@
 #ifndef _ALIGNSECTIONS_H_
 #define _ALIGNSECTIONS_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Reconstruction/ReconstructionConstants.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The AlignSections class. This class serves as a superclass for other classes
+ * in the Reconstruction plugin.
  */
 class AlignSections : public AbstractFilter
 {
@@ -65,21 +54,25 @@ class AlignSections : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
 
     virtual ~AlignSections();
+
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
+
     DREAM3D_INSTANCE_PROPERTY(bool, SubtractBackground)
     Q_PROPERTY(bool SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
     Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
-
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
-    virtual const QString getHumanLabel() { return "Align Sections"; }
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
+    virtual const QString getCompiledLibraryName();
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
 
@@ -110,10 +103,14 @@ class AlignSections : public AbstractFilter
   protected:
     AlignSections();
 
-    virtual void find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts);
+    /**
+     * @brief find_shifts Determines the x and y shifts to register a stacked 3D volume
+     * @param xshifts Vector of integer shifts in x direction
+     * @param yshifts Vector of integer shifts in y direction
+     */
+    virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
   private:
-
     void dataCheck();
 
     AlignSections(const AlignSections&); // Copy Constructor Not Implemented
@@ -121,4 +118,3 @@ class AlignSections : public AbstractFilter
 };
 
 #endif /* ALIGNSECTIONS_H_ */
-

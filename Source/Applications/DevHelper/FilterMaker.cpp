@@ -213,15 +213,6 @@ void FilterMaker::on_generateBtn_clicked()
 }
 
 // -----------------------------------------------------------------------------
-//  Called when the Cancel button is clicked.
-// -----------------------------------------------------------------------------
-void FilterMaker::on_cancelBtn_clicked()
-{
-  emit cancelBtnPressed();
-  this->close();
-}
-
-// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FilterMaker::on_addFilterParameterBtn_clicked()
@@ -540,33 +531,69 @@ void FilterMaker::updateSourceList()
   QString sourceListPath = pluginDir + "/" + pluginName + "Filters/SourceList.cmake";
   sourceListPath = QDir::toNativeSeparators(sourceListPath);
 
-  QFile file(sourceListPath);
-  if (file.open(QIODevice::ReadOnly))
-  {
-    QByteArray byteArray = file.readAll();
-    file.close();
+  QFile source(sourceListPath);
+  source.open(QFile::ReadOnly);
+  QString contents = source.readAll();
+  source.close();
 
-    QString fileData(byteArray);
-    QString str = "";
-    if (isPublic() == true)
+  QString namespaceStr = createNamespaceString();
+  // Check to make sure we don't already have this filter in the namespace
+  if (contents.contains(namespaceStr) == true)
+  {
+    return;
+  }
+  bool keepGoing = false;
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString searchString = "set(_PublicFilters";
+  if (!isPublic())
+  {
+    searchString = "set(_PrivateFilters";
+  }
+
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if (line.contains(searchString) && !keepGoing)
     {
-      str = "set(_PublicFilters";
+      outLines.push_back(line);
+      while (sourceLines.hasNext())
+      {
+        line = sourceLines.next();
+        if (line.contains(filterName) && !keepGoing)
+        {
+          outLines.push_back(line);
+          keepGoing = true;
+        }
+        else if (line.contains(")"))
+        {
+          // We never found the filter name so lets add it back in
+          if (!keepGoing)
+          {
+            outLines.push_back("  " + filterName);
+          }
+          outLines.push_back(line);
+          keepGoing = true;
+          break;
+        }
+        else
+        {
+          outLines.push_back(line);
+        }
+      }
     }
     else
     {
-      str = "set(_PrivateFilters";
+      outLines.push_back(line);
     }
+  }
 
-    int index = fileData.indexOf(str);
-    index = index + str.size();
-    fileData.insert(index, "\n  " + filterName);
-
-    file.remove();
-    if (file.open(QIODevice::WriteOnly))
-    {
-      file.write(fileData.toStdString().c_str());
-      file.close();
-    }
+  source.remove();
+  if (source.open(QIODevice::WriteOnly))
+  {
+    source.write(outLines.join("\n").toLatin1().data());
+    source.close();
   }
 }
 
@@ -581,27 +608,49 @@ void FilterMaker::updateTestLocations()
   QString testPath = pluginDir + "/Test/TestFileLocations.h.in";
   testPath = QDir::toNativeSeparators(testPath);
 
-  QFile file(testPath);
-  if (file.open(QIODevice::ReadOnly))
+  QFile source(testPath);
+  source.open(QFile::ReadOnly);
+  QString contents = source.readAll();
+  source.close();
+
+  QString namespaceStr = createNamespaceString();
+  // Check to make sure we don't already have this filter in the namespace
+  if (contents.contains(namespaceStr) == true)
   {
-    QByteArray byteArray = file.readAll();
-    file.close();
+    return;
+  }
 
-    QString fileData(byteArray);
-    QString str = "const QString DREAM3DProjDir(\"@DREAM3DProj_SOURCE_DIR@\");";
-    int index = fileData.indexOf(str);
-    index = index + str.size();
-    QString namespaceStr = createNamespaceString();
-    fileData.insert(index, namespaceStr);
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString searchString = "#endif";
 
-    file.remove();
-    if (file.open(QIODevice::WriteOnly))
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if (line.contains(searchString))
     {
-      file.write(fileData.toStdString().c_str());
-      file.close();
+      QString str("namespace UnitTest\n{");
+      QTextStream outStream(&str);
+      outStream << namespaceStr << "\n";
+      outStream << "}\n";
+      outLines.push_back(str);
+      outLines.push_back(line);
+    }
+    else
+    {
+      outLines.push_back(line);
     }
   }
+
+  source.remove();
+  if (source.open(QIODevice::WriteOnly))
+  {
+    source.write(outLines.join("\n").toLatin1().data());
+    source.close();
+  }
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -614,40 +663,34 @@ void FilterMaker::updateTestList()
   QString testPath = pluginDir + "/Test/CMakeLists.txt";
   testPath = QDir::toNativeSeparators(testPath);
 
-  QFile file(testPath);
-  if (file.open(QIODevice::ReadOnly))
+
+  QFile source(testPath);
+  source.open(QFile::ReadOnly);
+  QString contents = source.readAll();
+  source.close();
+
+
+  QString testCMakeCode;
+  QTextStream out(&testCMakeCode);
+  out << "AddDREAM3DUnitTest(TESTNAME " << filterName << "Test";
+  // Check to make sure we don't already have this filter in the namespace
+  if (contents.contains(testCMakeCode) == true)
   {
-    QByteArray byteArray = file.readAll();
-    file.close();
-
-    QString fileData(byteArray);
-    QString str = "set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support DREAM3DLib)";
-    int index = fileData.indexOf(str);
-    if (index == -1)
-    {
-      QString str2 = "configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in\n";
-      str2.append("               ");
-      str2.append("${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)");
-      int index2 = fileData.indexOf(str2);
-      index2 = index2 + str2.size();
-      QString addition = "\n\nset(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support DREAM3DLib)";
-      fileData.insert(index2, addition);
-    }
-
-    str = "set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support DREAM3DLib)";
-    index = fileData.indexOf(str);
-    index = index + str.size();
-    QString addition = "\n\nAddDREAM3DUnitTest(TESTNAME " + filterName + "Test SOURCES ";
-    addition.append("${${PROJECT_NAME}_SOURCE_DIR}/" + filterName + "Test.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})");
-    fileData.insert(index, addition);
-
-    file.remove();
-    if (file.open(QIODevice::WriteOnly))
-    {
-      file.write(fileData.toStdString().c_str());
-      file.close();
-    }
+    return;
   }
+
+  out << " SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/" << filterName << "Test.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)\n\n";
+
+  QStringList list = contents.split(QRegExp("\\n"));
+  list.push_back(testCMakeCode);
+
+  source.remove();
+  if (source.open(QIODevice::WriteOnly))
+  {
+    source.write(list.join("\n").toLatin1().data());
+    source.close();
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -657,7 +700,7 @@ QString FilterMaker::createNamespaceString()
 {
   QString filterName = this->filterName->text();
 
-  QString addition = "\n\n";
+  QString addition = "\n";
   addition.append("  namespace " + filterName + "Test");
   addition.append("\n  {\n");
   addition.append("   const QString TestFile1(\"@TEST_TEMP_DIR@/TestFile1.txt\");\n");

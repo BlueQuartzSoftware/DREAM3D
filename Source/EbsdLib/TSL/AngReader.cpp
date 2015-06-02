@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -208,16 +208,16 @@ int AngReader::readHeaderOnly()
   }
   QString origHeader;
   setOriginalHeader(origHeader);
+  QTextStream ostr(&origHeader);
   m_PhaseVector.clear();
 
   while (!in.atEnd() && false == getHeaderIsComplete())
   {
-    //::memset(buf, 0, kBufferSize);
     buf = in.readLine();
     parseHeaderLine(buf);
     if (getHeaderIsComplete() == false)
     {
-      origHeader.append(buf);
+      ostr << buf << "\n";
     }
   }
   // Update the Original Header variable
@@ -435,6 +435,14 @@ void AngReader::parseHeaderLine(QByteArray& buf)
 {
   bool ok = false;
 
+  // Check to see if we are reading a header or data line.
+  if (buf[0] != '#')
+  {
+    setHeaderIsComplete(true);
+    return;
+  }
+
+
   buf = buf.mid(1); // remove the '#' charater
   buf = buf.trimmed(); // remove leading/trailing white space
   buf = buf.simplified(); // remove multiple white space characters internal to the array
@@ -445,10 +453,10 @@ void AngReader::parseHeaderLine(QByteArray& buf)
   if(word.lastIndexOf(':') > 0) { word.chop(1); }
 
   // If the word is "Phase" then we need to construct a "Phase" class and
-  //  store all the meta data for the phase into that class. When we are done
-  //  parsing data for the phase then stick the Phase instance into the header
-  //  map or stick it into a vector<Phase::Pointer> and stick the vector into
-  //  the map under the "Phase" key
+  // store all the meta data for the phase into that class. When we are done
+  // parsing data for the phase then stick the Phase instance into the header
+  // map or stick it into a vector<Phase::Pointer> and stick the vector into
+  // the map under the "Phase" key
   if (word.compare(Ebsd::Ang::Phase) == 0)
   {
     m_CurrentPhase = AngPhase::New();

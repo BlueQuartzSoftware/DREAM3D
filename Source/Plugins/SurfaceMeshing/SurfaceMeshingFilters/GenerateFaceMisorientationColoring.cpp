@@ -153,10 +153,10 @@ GenerateFaceMisorientationColoring::GenerateFaceMisorientationColoring() :
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceMisorientationColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceMisorientationColors),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceMisorientationColors(NULL),
   m_AvgQuats(NULL),
   m_FeaturePhases(NULL),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_SurfaceMeshFaceMisorientationColors(NULL)
 {
   setupFilterParameters();
 }

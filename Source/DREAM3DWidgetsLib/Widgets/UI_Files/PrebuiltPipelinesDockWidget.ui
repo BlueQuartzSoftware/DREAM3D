@@ -54,7 +54,7 @@ padding-left: 5px;
      <number>0</number>
     </property>
     <item>
-     <widget class="FilterLibraryTreeWidget" name="filterLibraryTree">
+     <widget class="FilterLibraryTreeWidget" name="prebuiltsLibraryTree">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -95,6 +95,9 @@ padding-left: 5px;
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="dragDropMode">
+       <enum>QAbstractItemView::NoDragDrop</enum>
       </property>
       <property name="alternatingRowColors">
        <bool>true</bool>

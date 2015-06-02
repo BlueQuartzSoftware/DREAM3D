@@ -1,0 +1,205 @@
+/* ============================================================================
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _QDREAM3D_DOCUMENTS_DOCKWIDGET_H_
+#define _QDREAM3D_DOCUMENTS_DOCKWIDGET_H_
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QSettings>
+#include <QtCore/QString>
+#include <QtWidgets/QDockWidget>
+#include <QtWidgets/QTreeWidgetItem>
+
+#include "QtSupportLib/FileDragMessageBox.h"
+#include "QtSupportLib/DREAM3DSettings.h"
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Constants.h"
+
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
+#include "ui_BookmarksDockWidget.h"
+
+class QListWidget;
+class QTreeWidgetItem;
+class FilterListDockWidget;
+class FilterLibraryTreeWidget;
+class QSettings;
+class QAction;
+
+/**
+ * @brief The BookmarksDockWidget class
+ */
+class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private Ui::BookmarksDockWidget
+{
+
+    Q_OBJECT
+  public:
+    /**
+     * @brief BookmarksDockWidget
+     * @param parent
+     */
+    BookmarksDockWidget(QWidget* parent = NULL);
+    virtual ~BookmarksDockWidget();
+
+    DREAM3D_INSTANCE_PROPERTY(QAction*, RenameAction)
+    DREAM3D_INSTANCE_PROPERTY(QAction*, DeleteAction)
+
+    /**
+     * @brief setupGui
+     */
+    virtual void setupGui();
+
+    /**
+     * @brief connectFilterList
+     * @param filterListWidget
+     */
+    void connectFilterList(FilterListDockWidget* filterListWidget);
+
+    /**
+       @brief Delete a directory along with all of its contents.
+       @param dirName Path of directory to remove.
+       @return true on success; false on error.
+    */
+    static bool removeDir(const QString& dirName);
+
+    /**
+     * @brief getBookmarksTreeView
+     * @return
+     */
+    BookmarksTreeView* getBookmarksTreeView();
+
+    QModelIndex getSelectedParentTreeItem();
+
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+
+    /**
+    * @brief Writes the preferences to the users pref file
+    */
+    void writeSettings(DREAM3DSettings& prefs);
+
+    virtual QDir findV4FavoritesDirectory();
+
+  public slots:
+    //// Slots to catch signals from main menu or context menu
+    void m_ActionNewFolder_triggered();
+    void m_ActionAddPipeline_triggered();
+    void m_ActionUpdatePipeline_triggered();
+    void m_ActionLocateFile_triggered();
+    void m_ActionRemovePipeline_triggered();
+    void m_ActionRenamePipeline_triggered();
+    void m_ActionShowInFileSystem_triggered();
+
+  protected:
+    QStringList generateFilterListFromPipelineFile(QString path);
+    QString generateHtmlFilterListFromPipelineFile(QString path);
+
+    void populateFilterList(QStringList filterNames);
+    QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
+
+  protected slots:
+
+  /**
+  * @brief BookmarksDockWidget::addFavoriteTreeItem
+  * @param parent
+  * @param favoriteTitle
+  * @param icon
+  * @param favoritePath
+  * @param allowEditing
+  */
+  int addTreeItem(QModelIndex parent,
+    QString& favoriteTitle,
+    QIcon icon,
+    QString favoritePath,
+    bool allowEditing,
+    bool editState,
+    bool isExpanded);
+
+    //// Slots to catch signals from the QTreeWidget
+    void on_bookmarksTreeView_clicked(const QModelIndex & index);
+    void on_bookmarksTreeView_doubleClicked(const QModelIndex & index);
+    void on_bookmarksTreeView_currentIndexChanged(const QModelIndex & current, const QModelIndex & previous);
+
+    //void convertPipelines(QString newDirectory);
+
+  signals:
+
+    void fireWriteSettings();
+
+    /**
+     * @brief pipelineNeedsToBeSaved
+     * @param path The absolute path to the pipeline file
+     * @param name The name that the favorite will show up as in the GUI
+     */
+    void pipelineNeedsToBeSaved(const QString& path, const QString& name);
+
+    /**
+     * @brief filterListGenerated
+     * @param filterList
+     */
+    void filterListGenerated(const QStringList& filterList, bool sort);
+
+    /**
+    * @brief The signal is emitted when the user double clicks on a pipeline file
+    * @param filePath The absolute path to the pipeline file
+    * @param setOpenedFilePath A boolean that decides whether to cache the opened file path to use when re-saving.
+    */
+    void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath);
+
+    void updateStatusBar(const QString &msg);
+
+  private:
+    QString                 m_OpenDialogLastDirectory;
+
+    /**
+    * @brief serializeTreePath
+    * @param treePath
+    */
+    QList<QString> deserializeTreePath(QString treePath);
+
+    /**
+    * @brief writeSettings
+    */
+    void writeSettings();
+
+    BookmarksDockWidget(const BookmarksDockWidget&); // Copy Constructor Not Implemented
+    void operator=(const BookmarksDockWidget&); // Operator '=' Not Implemented
+
+
+};
+
+#endif

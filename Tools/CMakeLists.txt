@@ -53,7 +53,7 @@ function(COMPILE_TOOL)
     cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     if( ${D3DTOOL_DEFINITION} )
-    add_definitions(-D${DEFINITION})
+        add_definitions(-D${DEFINITION})
     endif()
 
     BuildToolBundle(
@@ -127,6 +127,18 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     LINK_LIBRARIES Qt5::Gui Qt5::Widgets
+)
+
+# --------------------------------------------------------------------
+COMPILE_TOOL(
+    TARGET CreateWebServerJson
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    LINK_LIBRARIES Qt5::Core
 )
 
 # Create a Command line tool for the DocsToPdf

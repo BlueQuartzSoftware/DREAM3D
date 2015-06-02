@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -209,6 +209,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   setErrorCondition(0);
 
   DataArrayPath tempPath;
+  QString ss;
 
   m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
   if( NULL != m_InDataPtr.lock())
@@ -232,20 +233,21 @@ void FindRelativeMotionBetweenSlices::dataCheck()
 
   if (image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
   {
+    ss = QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
     setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The Image Geometry is not 3D and cannot be run through this filter", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getPSize1() <= 0 || getPSize2() <= 0)
   {
-    QString ss = QObject::tr("The patch dimensions (%1, %2) must both be positive numbers").arg(getPSize1()).arg(getPSize2());
+    ss = QObject::tr("The patch dimensions (%1, %2) must both be positive numbers").arg(getPSize1()).arg(getPSize2());
     setErrorCondition(-5555);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getSSize1() <= 0 || getSSize2() <= 0)
   {
-    QString ss = QObject::tr("The search dimensions (%1, %2) must both be positive numbers").arg(getSSize1()).arg(getSSize2());
+    ss = QObject::tr("The search dimensions (%1, %2) must both be positive numbers").arg(getSSize1()).arg(getSSize2());
     setErrorCondition(-5555);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -254,7 +256,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   {
     if (getSliceStep() >= static_cast<int64_t>(image->getZPoints()))
     {
-      QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied slice step (%2)").arg(image->getZPoints()).arg(getSliceStep());
+      ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied slice step (%2)").arg(image->getZPoints()).arg(getSliceStep());
       setErrorCondition(-5556);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -264,7 +266,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   {
     if (getSliceStep() >= static_cast<int64_t>(image->getYPoints()))
     {
-      QString ss = QObject::tr("The Image Geometry Y extent (%1) is smaller than the supplied slice step (%2)").arg(image->getYPoints()).arg(getSliceStep());
+      ss = QObject::tr("The Image Geometry Y extent (%1) is smaller than the supplied slice step (%2)").arg(image->getYPoints()).arg(getSliceStep());
       setErrorCondition(-5556);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -274,7 +276,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   {
     if (getSliceStep() >= static_cast<int64_t>(image->getXPoints()))
     {
-      QString ss = QObject::tr("The Image Geometry X extent (%1) is smaller than the supplied slice step (%2)").arg(image->getXPoints()).arg(getSliceStep());
+      ss = QObject::tr("The Image Geometry X extent (%1) is smaller than the supplied slice step (%2)").arg(image->getXPoints()).arg(getSliceStep());
       setErrorCondition(-5556);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }

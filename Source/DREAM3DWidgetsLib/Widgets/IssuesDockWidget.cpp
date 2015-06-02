@@ -40,6 +40,7 @@
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QTableWidgetItem>
+#include <QtWidgets/QMainWindow>
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
@@ -225,4 +226,23 @@ QLabel* IssuesDockWidget::createHyperlinkLabel(PipelineMessage msg)
   hyperlinkLabel->setOpenExternalLinks(true);
 
   return hyperlinkLabel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IssuesDockWidget::writeSettings(DREAM3DSettings& prefs)
+{
+  prefs.setValue(objectName(), isHidden());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IssuesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+{
+  main->restoreDockWidget(this);
+
+  bool b = prefs.value(objectName(), false).toBool();
+  setHidden(b);
 }

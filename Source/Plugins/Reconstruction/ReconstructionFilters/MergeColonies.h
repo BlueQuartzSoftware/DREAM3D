@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,24 +37,16 @@
 #ifndef _MergeColonies_H_
 #define _MergeColonies_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
+
 /**
- * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The MergeColonies class. See [Filter documentation](@ref mergecolonies) for details.
  */
 class MergeColonies : public GroupFeatures
 {
@@ -65,6 +57,7 @@ class MergeColonies : public GroupFeatures
     DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
 
     virtual ~MergeColonies();
+
     DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
@@ -95,20 +88,22 @@ class MergeColonies : public GroupFeatures
     DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
+    DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
+    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
+
+    DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
+    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+
+    DREAM3D_FILTER_PARAMETER(bool, IdentifyGlobAlpha)
+    Q_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
-
-    DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
-    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
-    DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
-    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
-    DREAM3D_FILTER_PARAMETER(bool, IdentifyGlobAlpha)
-    Q_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha)
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -125,33 +120,48 @@ class MergeColonies : public GroupFeatures
     virtual void execute();
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     MergeColonies();
 
-    virtual int getSeed(int newFid);
-    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
+    /**
+     * @brief getSeed Reimplemented from @see GroupFeatures class
+     */
+    virtual int32_t getSeed(int32_t newFid);
 
+    /**
+     * @brief determineGrouping Reimplemented from @see GroupFeatures class
+     */
+    virtual bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
+
+    /**
+     * @brief check_for_burgers Checks the Burgers vector between two quaternions
+     * @param betaQuat Beta quaterion
+     * @param alphaQuat Alpha quaternion
+     * @return Boolean vector check
+     */
     bool check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
+
+    /**
+     * @brief characterize_colonies Characterizes colonies; CURRENTLY NOT IMPLEMENTED
+     */
     void characterize_colonies();
+
+    /**
+     * @brief identify_globAlpha Identifies regions of glob alpha
+     */
     void identify_globAlpha();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, GlobAlpha)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
@@ -164,7 +174,4 @@ class MergeColonies : public GroupFeatures
     void operator=(const MergeColonies&); // Operator '=' Not Implemented
 };
 
-#endif /* MERGECOLONIES_H_ */
-
-
-
+#endif /* MergeColonies_H_ */

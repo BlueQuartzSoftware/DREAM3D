@@ -47,7 +47,7 @@ Image / Rectilinear Grid
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | Cell     | Phases            | Int | (1) | Specifies the **Ensemble** of the **Cell** |
 | Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
 | Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble** (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4, Unknown=999) |
@@ -56,7 +56,7 @@ Image / Rectilinear Grid
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | Feature | Phases | Int | (1) | Specifies the phase of the **Feature** - Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
 
 ## License & Copyright ##

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,6 +37,7 @@
 #include "StatsGeneratorUI.h"
 
 #include <QtSupportLib/QRecentFileList.h>
+#include <QtSupportLib/DREAM3DSettings.h>
 #include "SGApplication.h"
 
 //-- Qt Headers
@@ -56,11 +57,11 @@ int main (int argc, char* argv[])
   app.setQuitOnLastWindowClosed( true );
 #endif //APPLE
 
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+//#if defined (Q_OS_MAC)
+//  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+//#else
+  DREAM3DSettings prefs;
+//#endif
   QRecentFileList::instance()->readList(prefs);
 
 

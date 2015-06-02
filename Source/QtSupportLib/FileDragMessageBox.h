@@ -59,11 +59,16 @@ class QtSupportLib_EXPORT FileDragMessageBox : public QDialog, private Ui::FileD
   public:
     FileDragMessageBox(QWidget* parent = 0);
 
+    bool didPressOkBtn();
+
     bool isExtractPipelineBtnChecked();
 
   protected slots:
     void on_okBtn_clicked();
     void on_cancelBtn_clicked();
+
+private:
+  bool okBtnPressed;
 };
 
 #endif /* _FileDragMessageBox_H */

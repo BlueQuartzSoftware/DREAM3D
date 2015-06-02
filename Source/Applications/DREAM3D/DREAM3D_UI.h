@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -44,17 +44,17 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QVector>
-#include <QtCore/QSettings>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QResizeEvent>
 #include <QtWidgets/QToolBar>
 
-
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
+#include "QtSupportLib/DREAM3DSettings.h"
 
 
 //-- UIC generated Header
@@ -63,7 +63,7 @@
 
 class IDREAM3DPlugin;
 class FilterLibraryDockWidget;
-class FavoritesDockWidget;
+class BookmarksDockWidget;
 class PrebuiltPipelinesDockWidget;
 class FilterListWidget;
 class DREAM3DUpdateCheckDialog;
@@ -91,7 +91,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     DREAM3D_UI(QWidget* parent = 0);
     virtual ~DREAM3D_UI();
 
-
     /**
      * @brief setLoadedPlugins This will set the plugins that have already been loaded by another mechanism. The plugins are NOT
      * deleted by this class and the unloading and clean up of the plugin pointers is the responsibility of the caller.
@@ -110,6 +109,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @param
     */
     PipelineViewWidget* getPipelineViewWidget();
+
+    /**
+    * @brief getBookmarksDockWidget
+    * @param
+    */
+    BookmarksDockWidget* getBookmarksDockWidget();
 
     /**
     * @brief setOpenedFilePath
@@ -132,7 +137,16 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void writeSettings();
 
+    /**
+    * @brief Checks if this the first run of DREAM3D v5.2
+    * and if so, displays an informative dialog box.
+    */
+    void checkFirstRun();
+
   public slots:
+
+    void on_actionNew_triggered();
+    void on_actionOpen_triggered();
 
     /**
     * @brief setOpenedFilePath
@@ -140,22 +154,33 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void setOpenedFilePath(const QString &filePath);
 
+    /**
+    * @brief setFilterBeingDragged
+    * @param w
+    */
+    void setStatusBarMessage(const QString &msg);
+
+    /**
+    * @brief openNewPipeline
+    * @param filePath
+    * @param setOpenedFilePath
+    */
+    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath);
+
   protected slots:
 
     /* Menu Slots */
 
     // File Menu
-    void on_actionNew_triggered();
-    void on_actionOpen_triggered();
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
     void on_actionExit_triggered();
 
     //Pipeline Menu
-//    void on_actionUpdatePipeline_triggered();
+//    void on_m_ActionUpdatePipeline_triggered();
 //    void on_actionSaveAsNewPipeline_triggered();
 //    void on_actionAppendToExistingPipeline_triggered();
-    void on_actionClearPipeline_triggered();
+    void clearPipeline();
 
     // Filter Menu
 //    void on_actionCopyCurrentFilter_triggered();
@@ -172,7 +197,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     // Help Menu
     void on_actionCheck_For_Updates_triggered();
-    void on_actionLicense_Information_triggered();
     void on_actionAbout_DREAM3D_triggered();
     void on_actionPlugin_Information_triggered();
     void on_actionShowIndex_triggered();
@@ -195,15 +219,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void openRecentFile();
 
-    /**
-     * @brief pipelineFileLoaded
-     * @param file
-     * @param format
-     * @param type
-     */
-    void pipelineFileLoaded(QString file, int index);
-
-
     void pipelineDidFinish();
 
     void processPipelineMessage(const PipelineMessage& msg);
@@ -215,7 +230,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_pipelineViewWidget_pipelineTitleUpdated(QString title);
     void on_pipelineViewWidget_pipelineIssuesCleared();
     void on_pipelineViewWidget_pipelineHasNoErrors();
-    void on_pipelineViewWidget_pipelineFileDropped(QString& file);
+    void on_pipelineViewWidget_pipelineFileDropped(QString& file, const bool &setOpenedFilePath);
 
     /**
     * @brief setFilterInputWidget
@@ -268,17 +283,52 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setupPipelineContextMenu();
 
     /**
-    * @brief 
+    * @brief
+    */
+    void initializeMenuActions();
+
+    /**
+    * @brief
+    */
+    void setupPipelineItemMenu();
+
+    /**
+    * @brief
+    */
+    void setupFolderMenu();
+
+    /**
+    * @brief
+    */
+    void setupDefaultMenu();
+
+    /**
+    * @brief
+    */
+    void setupPrebuiltsMenu();
+
+    /**
+    * @brief
+    */
+    void setupPipelineViewMenu();
+
+    /**
+    * @brief
     */
     void setupViewMenu();
 
     /**
-    * @brief 
+    * @brief
     */
     void connectSignalsSlots();
 
     /**
-    * @brief 
+    * @brief
+    */
+    void connectSignalsSlots(DREAM3D_UI* other);
+
+    /**
+    * @brief
     */
     void disconnectSignalsSlots();
 
@@ -302,13 +352,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      *
      * @param prefs
      */
-    void writeWindowSettings(QSettings& prefs);
-    void writeVersionCheckSettings(QSettings& prefs);
-    void writeSearchListSettings(QSettings& prefs, FilterListDockWidget* dw);
+    void writeWindowSettings(DREAM3DSettings& prefs);
+    void writeVersionCheckSettings(DREAM3DSettings& prefs);
 
-    void readWindowSettings(QSettings& prefs);
-    void readVersionSettings(QSettings& prefs);
-    void readSearchListSettings(QSettings& prefs, FilterListDockWidget* dw);
+    void readWindowSettings(DREAM3DSettings& prefs);
+    void readVersionSettings(DREAM3DSettings& prefs);
 
     void checkForUpdatesAtStartup();
 
@@ -322,14 +370,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param prefs
      * @param dw
      */
-    void readDockWidgetSettings(QSettings& prefs, QDockWidget* dw);
+    void readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
 
     /**
      * @brief writeDockWidgetSettings
      * @param prefs
      * @param dw
      */
-    void writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw);
+    void writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
 
 
     void makeStatusBarButton(QString text, QDockWidget* dockWidget, QToolButton* btn, int index);
@@ -372,6 +420,21 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     QString             m_OpenedFilePath;
     static QString    m_OpenDialogLastDirectory;
+
+    QAction* m_ActionAddPipeline;
+    QAction* m_ActionUpdatePipeline;
+    QAction* m_ActionRenamePipeline;
+    QAction* m_ActionLocateFile;
+    QAction* m_ActionAddToPipelineView;
+    QAction* m_ActionNewFolder;
+    QAction* m_ActionRemovePipeline;
+    QAction* m_ActionShowInFileSystem;
+    QAction* m_ActionClearPipeline;
+
+    /**
+    * @brief Updates the "first run" variable in the preferences file
+    */
+    void updateFirstRun();
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented
