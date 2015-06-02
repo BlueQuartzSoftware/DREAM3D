@@ -10,7 +10,7 @@ It is highly recommended that developers use DevHelper to create their plugins a
 
 ![DevHelper Main Window - PluginMaker](Images/DevHelper/DevHelper-image001.png)
 
-As you can see from the screenshot above, the PluginMaker tab of the DevHelper interface is quite simple.
+As you can see from the screenshot above, the **PluginMaker** tab of the DevHelper interface is quite simple.  This tab contains all the elements needed to create a new plugin.
 
 - There are two fields called **Plugin Name** and **Output Dir** where the user can input the name of the new plugin and the output directory where the new plugin will ultimately be generated.
 
@@ -21,3 +21,7 @@ As you can see from the screenshot above, the PluginMaker tab of the DevHelper i
 - Finally, the **Generate** button generates the new plugin and its files in the output directory specified.
 
 ![DevHelper Main Window - FilterMaker](Images/DevHelper/DevHelper-image002.png)
+
+The **FilterMaker** tab contains all the elements needed to create a new filter inside an existing plugin.
+
+- There are two fields called **Filter Name** and **Plugin Directory** where the user can input the name of the new filter and the top-level directory of the plugin where the filter will be stored.
