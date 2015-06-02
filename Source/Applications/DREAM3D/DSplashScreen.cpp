@@ -277,27 +277,29 @@ void DSplashScreen::drawContents(QPainter* painter)
 {
   Q_D(DSplashScreen);
   painter->setPen(d->currColor);
-  QRect r = rect().adjusted(50, 165, -50, -165);
-  if (Qt::mightBeRichText(d->currStatus))
-  {
-    QTextDocument doc;
-#ifdef QT_NO_TEXTHTMLPARSER
-    doc.setPlainText(d->currStatus);
-#else
-    doc.setHtml(d->currStatus);
-#endif
-    doc.setTextWidth(r.width());
-    QTextCursor cursor(&doc);
-    cursor.select(QTextCursor::Document);
-    QTextBlockFormat fmt;
-    fmt.setAlignment(Qt::Alignment(d->currAlign));
-    cursor.mergeBlockFormat(fmt);
-    painter->save();
-    painter->translate(r.topLeft());
-    doc.drawContents(painter);
-    painter->restore();
-  }
-  else
+  QRect r = rect();
+  r = rect().adjusted(50, r.height()/1.5, 0, 0);
+
+//  if (Qt::mightBeRichText(d->currStatus))
+//  {
+//    QTextDocument doc;
+//#ifdef QT_NO_TEXTHTMLPARSER
+//    doc.setPlainText(d->currStatus);
+//#else
+//    doc.setHtml(d->currStatus);
+//#endif
+//    doc.setTextWidth(r.width());
+//    QTextCursor cursor(&doc);
+//    cursor.select(QTextCursor::Document);
+//    QTextBlockFormat fmt;
+//    fmt.setAlignment(Qt::Alignment(d->currAlign));
+//    cursor.mergeBlockFormat(fmt);
+//    painter->save();
+//    painter->translate(r.topLeft());
+//    doc.drawContents(painter);
+//    painter->restore();
+//  }
+//  else
   {
     painter->drawText(r, d->currAlign, d->currStatus);
   }

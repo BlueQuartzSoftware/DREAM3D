@@ -35,60 +35,11 @@
 
 
 
-#ifndef _AboutDREAM3D_H_
-#define _AboutDREAM3D_H_
+#ifndef _DREAM3D_H_
+#define _DREAM3D_H_
 
-#include <QtCore/QObject>
-
-//-- UIC generated Header
-#include "ui_AboutDREAM3D.h"
-
-class AboutDREAM3D : public QDialog, private Ui::AboutDREAM3D
-{
-  Q_OBJECT
-
-  public:
-    AboutDREAM3D(QWidget* parent = 0);
-    virtual ~AboutDREAM3D();
+#define DREAM3D_EXPORT
 
 
-    /**
-     * @brief This will set the list of licenses that can be viewed by the
-     * about box. The list should contain values such as ":/SomeLicense.license" which
-     * are defined in a Qt resource file (*.qrc).
-     * @param files The QString list of files to allow the About Box to load.
-     */
-    void setLicenseFiles(QStringList files);
-
-  protected slots:
-    void on_licenseCombo_currentIndexChanged(int index);
-
-  protected:
-
-    /**
-     * @brief setupGui
-     */
-    void setupGui();
-
-    /**
-     * @brief Loads a file that is stored as a resource in the applications Qt resource
-     * system.
-     * @param qresourceFile The source file to load of the form ":/SomeFile.xxx"
-     */
-    void loadResourceFile(const QString qresourceFile);
-
-    /**
-     * @brief readVersions
-     */
-    void readVersions();
-
-  private:
-    QStringList m_licenseFiles;
-
-
-    AboutDREAM3D(const AboutDREAM3D&); // Copy Constructor Not Implemented
-    void operator=(const AboutDREAM3D&); // Operator '=' Not Implemented
-
-};
-#endif /* _AboutDREAM3D_H_ */
+#endif /* _DREAM3D_H_ */
 

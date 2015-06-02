@@ -64,6 +64,10 @@ set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_GENERATE_VERSION_STRING 1)
 include(${CMP_SOURCE_DIR}/cmpProject.cmake)
 
+cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${DREAM3D_SOURCE_DIR}/DREAM3D.h.in
+                            GENERATED_FILE_PATH ${DREAM3D_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
+
+
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
 # List the source files here
@@ -135,6 +139,9 @@ set(DREAM3D_PROJECT_SRCS
     ${DREAM3D_Generated_RC_SRCS}
     ${DREAM3D_Generated_UI_HDRS}
     ${DREAM3D_Generated_MOC_SRCS}
+    ${DREAM3D_BINARY_DIR}/DREAM3D.h
+    ${DREAM3D_BINARY_DIR}/DREAM3DVersion.h
+    ${DREAM3D_BINARY_DIR}/DREAM3DVersion.cpp
 )
 
 

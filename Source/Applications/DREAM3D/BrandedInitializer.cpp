@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -122,7 +122,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
 
   // Create and show the splash screen as the main window is being created.
-  QPixmap pixmap(":/branded_splash.png");
+  QPixmap pixmap(QLatin1String(":/branded_splash.png"));
   this->Splash = new DSplashScreen(pixmap);
   this->Splash->setMask(pixmap.createMaskFromColor(QColor(Qt::transparent)));
   this->Splash->show();

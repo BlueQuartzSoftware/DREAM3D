@@ -54,11 +54,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
-#include "DREAM3D/License/DREAM3DLicenseFiles.h"
+#include "Applications/DREAM3D/DREAM3D/License/DREAM3DLicenseFiles.h"
+#include "Applications/DREAM3D/DREAM3DVersion.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -67,7 +69,7 @@ AboutDREAM3D::AboutDREAM3D(QWidget* parent) :
 QDialog(parent)
 {
   setupUi(this);
-
+  setupGui();
   readVersions();
   setLicenseFiles(DREAM3D::LicenseList);
 }
@@ -77,6 +79,27 @@ QDialog(parent)
 // -----------------------------------------------------------------------------
 AboutDREAM3D::~AboutDREAM3D()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutDREAM3D::setupGui()
+{
+  QString str;
+  QTextStream out(&str);
+
+  out << "DREAM3D Version " << DREAM3D::Version::Package();
+  versionLabel->setText(str);
+  versionLabel->setFont(DREAM3DStyles::GetTitleFont());
+
+  str.clear();
+  out << "Built on " << DREAM3D::Version::BuildDate();
+  buildDateLabel->setText(str);
+
+  str.clear();
+  out << "From revision " << DREAM3D::Version::Revision();
+  revisionLabel->setText(str);
 }
 
 // -----------------------------------------------------------------------------
