@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,26 +37,14 @@
 #ifndef _NeighborOrientationCorrelation_H_
 #define _NeighborOrientationCorrelation_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
-
-
 /**
- * @class NeighborOrientationCorrelation NeighborOrientationCorrelation.h DREAM3DLib/ReconstructionFilters/NeighborOrientationCorrelation.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The NeighborOrientationCorrelation class. See [Filter documentation](@ref neighbororientationcorrelation) for details.
  */
 class NeighborOrientationCorrelation : public AbstractFilter
 {
@@ -70,8 +58,10 @@ class NeighborOrientationCorrelation : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+
     DREAM3D_FILTER_PARAMETER(float, MinConfidence)
     Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
+
     DREAM3D_FILTER_PARAMETER(int, Level)
     Q_PROPERTY(int Level READ getLevel WRITE setLevel)
 
@@ -90,7 +80,7 @@ class NeighborOrientationCorrelation : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -120,7 +110,7 @@ class NeighborOrientationCorrelation : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
     void dataCheck();
 
@@ -129,6 +119,3 @@ class NeighborOrientationCorrelation : public AbstractFilter
 };
 
 #endif /* NeighborOrientationCorrelation_H_ */
-
-
-

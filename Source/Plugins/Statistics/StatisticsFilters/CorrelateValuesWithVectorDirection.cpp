@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -49,14 +49,13 @@
 // -----------------------------------------------------------------------------
 CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   AbstractFilter(),
-  m_MaxCoord(sqrt(DREAM3D::Constants::k_2Pi)/2.0),
-  m_Dimension(72),
-  m_StepSize(sqrt(DREAM3D::Constants::k_2Pi)/72.0),
+  m_CorrelatedDataArrayPath("", "", ""),
   m_VectorDataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
   m_Logfile("CorrelateValuesWithVectorDirection.log"),
-  m_VectorDataArrayName(DREAM3D::CellData::VectorData),
   m_VectorData(NULL),
-  m_CorrelatedDataArrayPath("", "", "")
+  m_MaxCoord(sqrt(DREAM3D::Constants::k_2Pi)/2.0),
+  m_Dimension(72),
+  m_StepSize(sqrt(DREAM3D::Constants::k_2Pi)/72.0)
 {
 
   setupFilterParameters();

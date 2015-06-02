@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,22 +37,12 @@
 #ifndef _NeighborCICorrelation_H_
 #define _NeighborCICorrelation_H_
 
-#include <vector>
-#include <QtCore/QString>
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 /**
- * @class NeighborCICorrelation NeighborCICorrelation.h DREAM3DLib/ReconstructionFilters/NeighborCICorrelation.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The NeighborCICorrelation class. See [Filter documentation](@ref neighborcicorrelation) for details.
  */
 class NeighborCICorrelation : public AbstractFilter
 {
@@ -76,7 +66,7 @@ class NeighborCICorrelation : public AbstractFilter
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -101,17 +91,13 @@ class NeighborCICorrelation : public AbstractFilter
   protected:
     NeighborCICorrelation();
 
-
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
 
     void dataCheck();
-
 
     NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented
     void operator=(const NeighborCICorrelation&); // Operator '=' Not Implemented
 };
 
 #endif /* NeighborCICorrelation_H_ */
-
-

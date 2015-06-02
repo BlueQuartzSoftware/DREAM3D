@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,20 +36,12 @@
 #ifndef _GenerateMisorientationColors_H_
 #define _GenerateMisorientationColors_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class GenerateMisorientationColors GenerateMisorientationColors.h DREAM3DLib/GenericFilters/GenerateMisorientationColors.h
- * @brief This filter generates colors for each voxel based on the C. Schuh and S. Patala method
- * @author William Lenthe (University of California Santa Barbara)
- * @date Aug 30, 2013
- * @version 1.0
+ * @brief The GenerateMisorientationColors class. See [Filter documentation](@ref generateipfcolors) for details.
  */
 class GenerateMisorientationColors : public AbstractFilter
 {
@@ -61,17 +53,12 @@ class GenerateMisorientationColors : public AbstractFilter
 
     virtual ~GenerateMisorientationColors();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceAxis)
     Q_PROPERTY(FloatVec3_t ReferenceAxis READ getReferenceAxis WRITE setReferenceAxis)
+
     DREAM3D_FILTER_PARAMETER(float, ReferenceAngle)
     Q_PROPERTY(float ReferenceAngle READ getReferenceAngle WRITE setReferenceAngle)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
@@ -139,27 +126,18 @@ class GenerateMisorientationColors : public AbstractFilter
   protected:
     GenerateMisorientationColors();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, MisorientationColor)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, MisorientationColor)
 
     GenerateMisorientationColors(const GenerateMisorientationColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateMisorientationColors&); // Operator '=' Not Implemented
 };
 
 #endif /* _GenerateMisorientationColors_H_ */
-
-

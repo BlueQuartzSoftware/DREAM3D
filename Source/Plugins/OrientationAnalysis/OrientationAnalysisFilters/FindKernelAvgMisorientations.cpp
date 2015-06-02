@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -39,7 +39,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -53,15 +52,11 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations() :
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_KernelAverageMisorientations(NULL),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_KernelAverageMisorientations(NULL)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -86,14 +81,13 @@ void FindKernelAvgMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Kernel Radius", "KernelSize", FilterParameterWidgetType::IntVec3Widget, getKernelSize(), false, "Pixels"));
-
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Quaternions", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("KernelAverageMisorientations", "KernelAverageMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getKernelAverageMisorientationsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Kernel Average Misorientations", "KernelAverageMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getKernelAverageMisorientationsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -132,38 +126,41 @@ int FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getKernelAverageMisorientationsArrayName() );
-  m_KernelAverageMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+
+  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getKernelAverageMisorientationsArrayName() );
+  m_KernelAverageMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_KernelAverageMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_KernelAverageMisorientations = m_KernelAverageMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-//typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0] = 4;
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 4;
+  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-}
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getQuatsArrayPath()); }
 
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -189,18 +186,18 @@ void FindKernelAvgMisorientations::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  QuatF q1;
-  QuatF q2;
+  QuatF q1 = QuaternionMathF::New();
+  QuatF q2 = QuaternionMathF::New();
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  int numVoxel; // number of voxels in the feature...
-  int good = 0;
+  int32_t numVoxel = 0; // number of voxels in the feature...
+  bool good = false;
 
-  float w, totalmisorientation;
-  float n1, n2, n3;
-  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  size_t udims[3] = {0, 0, 0};
+  float w = 0.0f, totalmisorientation = 0.0f;
+  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  uint32_t phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  uint32_t phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -210,11 +207,11 @@ void FindKernelAvgMisorientations::execute()
   DimType xPoints = static_cast<DimType>(udims[0]);
   DimType yPoints = static_cast<DimType>(udims[1]);
   DimType zPoints = static_cast<DimType>(udims[2]);
-  DimType point;
+  DimType point = 0;
   size_t neighbor = 0;
-//  int m_KernelSize = 1;
-  DimType jStride;
-  DimType kStride;
+  DimType jStride = 0;
+  DimType kStride = 0;
+
   for (DimType col = 0; col < xPoints; col++)
   {
     for (DimType row = 0; row < yPoints; row++)
@@ -224,32 +221,32 @@ void FindKernelAvgMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
-          totalmisorientation = 0.0;
+          totalmisorientation = 0.0f;
           numVoxel = 0;
           QuaternionMathF::Copy(quats[point], q1);
           phase1 = m_CrystalStructures[m_CellPhases[point]];
-          for (int j = -m_KernelSize.z; j < m_KernelSize.z + 1; j++)
+          for (int32_t j = -m_KernelSize.z; j < m_KernelSize.z + 1; j++)
           {
             jStride = j * xPoints * yPoints;
-            for (int k = -m_KernelSize.y; k < m_KernelSize.y + 1; k++)
+            for (int32_t k = -m_KernelSize.y; k < m_KernelSize.y + 1; k++)
             {
               kStride = k * xPoints;
-              for (int l = -m_KernelSize.x; l < m_KernelSize.z + 1; l++)
+              for (int32_t l = -m_KernelSize.x; l < m_KernelSize.z + 1; l++)
               {
-                good = 1;
+                good = true;
                 neighbor = point + (jStride) + (kStride) + (l);
-                if(plane + j < 0) { good = 0; }
-                else if(plane + j > zPoints - 1) { good = 0; }
-                else if(row + k < 0) { good = 0; }
-                else if(row + k > yPoints - 1) { good = 0; }
-                else if(col + l < 0) { good = 0; }
-                else if(col + l > xPoints - 1) { good = 0; }
-                if(good == 1 && m_FeatureIds[point] == m_FeatureIds[neighbor])
+                if (plane + j < 0) { good = false; }
+                else if (plane + j > zPoints - 1) { good = false; }
+                else if (row + k < 0) { good = false; }
+                else if (row + k > yPoints - 1) { good = false; }
+                else if (col + l < 0) { good = false; }
+                else if (col + l > xPoints - 1) { good = false; }
+                if (good == true && m_FeatureIds[point] == m_FeatureIds[neighbor])
                 {
-                  w = 10000.0;
+                  w = std::numeric_limits<float>::max();
                   QuaternionMathF::Copy(quats[neighbor], q2);
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-                  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                  w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                   w = w * (180.0f / DREAM3D::Constants::k_Pi);
                   totalmisorientation = totalmisorientation + w;
                   numVoxel++;
@@ -258,20 +255,20 @@ void FindKernelAvgMisorientations::execute()
             }
           }
           m_KernelAverageMisorientations[point] = totalmisorientation / (float)numVoxel;
-          if(numVoxel == 0)
+          if (numVoxel == 0)
           {
-            m_KernelAverageMisorientations[point] = 0;
+            m_KernelAverageMisorientations[point] = 0.0f;
           }
         }
         if (m_FeatureIds[point] == 0 || m_CellPhases[point] == 0)
         {
-          m_KernelAverageMisorientations[point] = 0;
+          m_KernelAverageMisorientations[point] = 0.0f;
         }
       }
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindKernelAvgMisorientations Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -293,13 +290,11 @@ AbstractFilter::Pointer FindKernelAvgMisorientations::newFilterInstance(bool cop
 const QString FindKernelAvgMisorientations::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindKernelAvgMisorientations::getGroupName()
 { return DREAM3D::FilterGroups::StatisticsFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -307,10 +302,8 @@ const QString FindKernelAvgMisorientations::getGroupName()
 const QString FindKernelAvgMisorientations::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindKernelAvgMisorientations::getHumanLabel()
 { return "Find Kernel Average Misorientations"; }
-

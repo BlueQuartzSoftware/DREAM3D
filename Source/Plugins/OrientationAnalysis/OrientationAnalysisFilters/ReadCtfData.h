@@ -1,7 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
-* All rights reserved.
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -13,10 +11,9 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
-* BlueQuartz Software nor the names of its contributors may be used to endorse
-* or promote products derived from this software without specific prior written
-* permission.
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -29,23 +26,20 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-*  This code was written under United States Air Force Contract number
-*                           FA8650-07-D-5800
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _ReadCtfData_H_
 #define _ReadCtfData_H_
 
-#include <QtCore/QString>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QDateTime>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 #include "EbsdLib/HKL/CtfReader.h"
 
@@ -69,25 +63,21 @@ enum CTF_READ_FLAG
 class ReadCtfDataPrivate;
 
 /**
-* @class ReadCtfData ReadCtfData.h /FilterCategoryFilters/ReadCtfData.h
-* @brief
-* @author
-* @date
-* @version 1.0
-*/
+ * @brief The ReadCtfData class. See [Filter documentation](@ref readctfdata) for details.
+ */
 class ReadCtfData : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
     Q_DECLARE_PRIVATE(ReadCtfData)
 
-public:
-  DREAM3D_SHARED_POINTERS(ReadCtfData)
+  public:
+    DREAM3D_SHARED_POINTERS(ReadCtfData)
     DREAM3D_STATIC_NEW_MACRO(ReadCtfData)
     DREAM3D_TYPE_MACRO_SUPER(ReadCtfData, AbstractFilter)
 
     virtual ~ReadCtfData();
 
-  DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
@@ -100,6 +90,7 @@ public:
     Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
@@ -155,20 +146,26 @@ public:
   * @brief This function runs some sanity checks on the DataContainer and inputs
   * in an attempt to ensure the filter can process the inputs.
   */
-  virtual void preflight();
+    virtual void preflight();
 
-  /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
-  DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+
     DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+
     DREAM3D_PIMPL_PROPERTY_DECL(Ctf_Private_Data, Data)
+
     Q_PROPERTY(Ctf_Private_Data Data READ getData WRITE setData)
 
 public slots:
+  /**
+   * @brief flushCache Resets the cache file state
+   */
   void flushCache();
-
 
 signals:
   void updateFilterParameters(AbstractFilter* filter);
@@ -179,37 +176,29 @@ signals:
 protected:
   ReadCtfData();
 
-  /**
-  * @brief Checks for the appropriate parameter values and availability of
-  * arrays in the data container
-  * @param preflight
-  * @param voxels The number of voxels
-  * @param features The number of features
-  * @param ensembles The number of ensembles
-  */
   void dataCheck();
 
   /**
-  * @brief copyRawEbsdData This reads the Ang file and puts the data into the Voxel Data container
-   * @param reader
-   * @param tDims
-   * @param cDims
-   */
+  * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container
+  * @param reader CtfReader instance pointer
+  * @param tDims Tuple dimensions
+  * @param cDims Component dimensions
+  */
   void copyRawEbsdData(CtfReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
 
   /**
-  * @brief This method reads the values for the phase type, crystal structure
+  * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
   * and precipitate fractions from the EBSD file.
-  * @param reader The EbsdReader instance
-  * @return Zero/Positive on Success - Negative on error.
+  * @param reader CtfReader instance pointer
+  * @return Integer error value
   */
-  int loadMaterialInfo(CtfReader* reader);
+  int32_t loadMaterialInfo(CtfReader* reader);
 
   /**
-   * @brief readDataFile
-   * @param reader
-   * @param m
-   * @param dims
+   * @brief readDataFile Reads the Ctf file
+   * @param reader CtfReader instance pointer
+   * @param m DataContainer instance pointer
+   * @param tDims Tuple dimensions
    */
   void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, CTF_READ_FLAG flag);
 
@@ -217,19 +206,14 @@ private:
   QScopedPointer<ReadCtfDataPrivate> const d_ptr;
 
   DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
+  DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-    ReadCtfData(const ReadCtfData&); // Copy Constructor Not Implemented
+  ReadCtfData(const ReadCtfData&); // Copy Constructor Not Implemented
   void operator=(const ReadCtfData&); // Operator '=' Not Implemented
 };
 
 Q_DECLARE_METATYPE(Ctf_Private_Data)
 
 #endif /* _ReadCtfData_H_ */
-
-
-
-
-

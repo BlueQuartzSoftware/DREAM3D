@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,27 +37,15 @@
 #ifndef _FindFeatureNeighborCAxisMisalignments_H_
 #define _FindFeatureNeighborCAxisMisalignments_H_
 
-#include <vector>
-#include <string>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
- * @class FindFeatureNeighborCAxisMisalignments FindFeatureNeighborCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindFeatureNeighborCAxisMisalignments.h
- * @brief
- * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Jan 29, 2014
- * @version 5.0
+ * @brief The FindFeatureNeighborCAxisMisalignments class. See [Filter documentation](@ref findfeatureneighborcaxismisalignments) for details.
  */
 class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 {
@@ -96,7 +84,6 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
-
     /**
      * @brief setupFilterParameters
      */
@@ -125,20 +112,20 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
+
   protected:
     FindFeatureNeighborCAxisMisalignments();
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxisMisalignments)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    NeighborList<int>::WeakPointer m_NeighborList;
+
+    NeighborList<int32_t>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 
     void dataCheck();
@@ -147,7 +134,4 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     void operator=(const FindFeatureNeighborCAxisMisalignments&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_ */
-
-
-
+#endif /* FindFeatureNeighborCAxisMisalignments_H_ */

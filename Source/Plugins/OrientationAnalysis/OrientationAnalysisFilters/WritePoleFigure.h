@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,23 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _WritePoleFigure_H_
 #define _WritePoleFigure_H_
-
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class WritePoleFigure WritePoleFigure.h /IOFilters/WritePoleFigure.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The WritePoleFigure class. See [Filter documentation](@ref writepolefigure) for details.
  */
 class WritePoleFigure : public AbstractFilter
 {
@@ -61,21 +54,27 @@ class WritePoleFigure : public AbstractFilter
 
     virtual ~WritePoleFigure();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+
     DREAM3D_FILTER_PARAMETER(int, ImageSize)
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+
     DREAM3D_FILTER_PARAMETER(int, LambertSize)
     Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
+
     DREAM3D_FILTER_PARAMETER(int, NumColors)
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
+
     DREAM3D_FILTER_PARAMETER(int, ImageLayout)
     Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
+
     enum ImageFormatType
     {
       TifImageType = 0,
@@ -152,41 +151,21 @@ class WritePoleFigure : public AbstractFilter
   protected:
     WritePoleFigure();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
     /**
-     * @brief generateCubicPoleFigures
-     * @param eulers
+     * @brief generateImagePath Generates the path to write the image
+     * @param label Name of file
+     * @return Generated output path
      */
-    void generateCubicHighPoleFigures(FloatArrayType* eulers, int phaseIndex);
+    QString generateImagePath(QString label);
+
     /**
-     * @brief generateHexPoleFigures
-     * @param eulers
+     * @brief writeImage Writes the pole figure image to a file
+     * @param image Image to write
+     * @param label Name of file
      */
-    void generateHexHighPoleFigures(FloatArrayType* eulers, int phaseIndex);
-    /**
-     * @brief generateOrthoPoleFigures
-     * @param eulers
-     */
-    void generateOrthorhombicPoleFigures(FloatArrayType* eulers, int phaseIndex);
-
-    QString generateVtkPath( QString label);
-    void writeVtkFile(const QString filename,  DoubleArrayType* poleFigurePtr, int dimension);
-
-    QString generateImagePath( QString label);
-    void writeImage(const QString outputPath, QImage image, int dimension, QString label);
-
-
-    QImage createQImageFromRgbaArray(UInt8ArrayType* poleFigurePtr, int imageDimension, QString imageLabel, bool includeOverlay);
-    QImage paintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image);
+    void writeImage(QImage image, QString label);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
@@ -199,10 +178,3 @@ class WritePoleFigure : public AbstractFilter
 };
 
 #endif /* _WritePoleFigure_H_ */
-
-
-
-
-
-
-

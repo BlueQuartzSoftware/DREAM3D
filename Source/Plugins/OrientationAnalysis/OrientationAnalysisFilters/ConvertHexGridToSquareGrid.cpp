@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,28 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "ConvertHexGridToSquareGrid.h"
 
-#include <QtCore/QtDebug>
-#include <fstream>
-
-#include "H5Support/QH5Utilities.h"
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
-
-#include "EbsdLib/EbsdMacros.h"
-#include "EbsdLib/EbsdMath.h"
-#include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/TSL/AngConstants.h"
-#include "EbsdLib/TSL/AngReader.h"
-
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
+
+#include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/TSL/AngReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -64,19 +55,19 @@
 ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid() :
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_XResolution(1.0),
-  m_YResolution(1.0),
-  m_InputPath(),
-  m_OutputPath(),
+  m_XResolution(1.0f),
+  m_YResolution(1.0f),
+  m_InputPath(""),
+  m_OutputPath(""),
   m_OutputPrefix("Sqr_"),
-  m_FilePrefix(),
-  m_FileSuffix(),
+  m_FilePrefix(""),
+  m_FileSuffix(""),
   m_FileExtension("ang"),
   m_PaddingDigits(1),
-  m_HexGridStack(0), // this is just a dummy variable,
   m_NumCols(0),
   m_NumRows(0),
-  m_HeaderIsComplete(false)
+  m_HeaderIsComplete(false),
+  m_HexGridStack(0) // this is just a dummy variable
 {
   setupFilterParameters();
 }
@@ -95,7 +86,6 @@ void ConvertHexGridToSquareGrid::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Convert Hex Grid ANG Files", "HexGridStack", FilterParameterWidgetType::ConvertHexGridToSquareGridWidget, getHexGridStack(), false));
-
   setFilterParameters(parameters);
 }
 
@@ -146,20 +136,20 @@ int ConvertHexGridToSquareGrid::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGrid::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
   QString ss;
 
   if(m_OutputPath.isEmpty() == true)
   {
-    ss = QObject::tr("The Output Directory must be set before executing this filter.");
+    ss = QObject::tr("The output directory must be set");
     notifyErrorMessage(getHumanLabel(), ss, -12);
     setErrorCondition(-12);
   }
 
   if(m_InputPath.isEmpty() == true)
   {
-    ss = QObject::tr("The Input Directory must be set before executing this filter.");
+    ss = QObject::tr("The input directory must be set");
     notifyErrorMessage(getHumanLabel(), ss, -13);
     setErrorCondition(-13);
   }
@@ -177,7 +167,6 @@ void ConvertHexGridToSquareGrid::dataCheck()
     setErrorCondition(-11);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -196,219 +185,6 @@ void ConvertHexGridToSquareGrid::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::execute()
-{
-
-  herr_t err = 0;
-
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  bool hasMissingFiles = false;
-  bool stackLowToHigh = true;
-  // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
-                              hasMissingFiles, stackLowToHigh, m_InputPath,
-                              m_FilePrefix, m_FileSuffix, m_FileExtension,
-                              m_PaddingDigits);
-
-
-  QVector<int> indices;
-  // Loop on Each EBSD File
-  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
-  int progress = 0;
-  int64_t z = m_ZStartIndex;
-  /* There is a frailness about the z index and the file list. The programmer
-   * using this code MUST ensure that the list of files that is sent into this
-   * class is in the appropriate order to match up with the z index (slice index)
-   * otherwise the import will have subtle errors. The programmer is urged NOT to
-   * simply gather a list from the file system as those lists are sorted in such
-   * a way that if the number of digits appearing in the filename are NOT the same
-   * then the list will be wrong, ie, this example:
-   *
-   * slice_1.ang
-   * slice_2.ang
-   * ....
-   * slice_10.ang
-   *
-   * Most, if not ALL C++ libraries when asked for that list will return the list
-   * sorted like the following:
-   *
-   * slice_1.ang
-   * slice_10.ang
-   * slice_2.ang
-   *
-   * which is going to cause problems because the data is going to be placed
-   * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
-   */
-  // int totalSlicesImported = 0;
-  for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
-  {
-    QString ebsdFName = *filepath;
-    {
-      progress = static_cast<int>( z - m_ZStartIndex );
-      progress = (int)(100.0f * (float)(progress) / total);
-      QString msg = "Converting File: " + ebsdFName;
-      notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
-    }
-    if (getCancel() == true)
-    {
-      break;
-    }
-
-    // Write the Manufacturer of the OIM file here
-    // This list will grow to be the number of EBSD file formats we support
-    QFileInfo fi(ebsdFName);
-    QString ext = fi.suffix();
-    QString base = fi.baseName();
-    QDir path(getOutputPath());
-    if(ext.compare(Ebsd::Ang::FileExt) == 0)
-    {
-      AngReader reader;
-      reader.setFileName(ebsdFName);
-      reader.setReadHexGrid(true);
-      err = reader.readFile();
-      if(err < 0 && err != -600)
-      {
-        setErrorCondition(reader.getErrorCode());
-        notifyErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
-        return;
-      }
-      else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
-      {
-
-        QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);
-        setErrorCondition(-55000);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-      else
-      {
-        if (err == -600)
-        {
-          notifyWarningMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode() );
-        }
-        QString origHeader = reader.getOriginalHeader();
-        if (origHeader.isEmpty() == true)
-        {
-
-          QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
-          setErrorCondition(-55001);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        }
-
-        QTextStream in(&origHeader);
-
-        //QString newEbsdFName = path.absolutePath() + "/Sqr_" + base + "." + ext;
-        QString newEbsdFName = path.absolutePath() + "/" + getOutputPrefix() +  base + "." + ext;
-
-        if(newEbsdFName.compare(ebsdFName) == 0)
-        {
-          QString msg = QObject::tr("New ANG File is the same as the old Ang file. Overwriting is NOT allowed.");
-          setErrorCondition(-201);
-          notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
-          return;
-        }
-
-
-        QFile outFile(newEbsdFName);
-        if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-          QString msg = QObject::tr("ANG Square Output file could not be opened for writing: %1").arg(newEbsdFName);
-          setErrorCondition(-200);
-          notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
-          return;
-        }
-
-        QTextStream dStream(&outFile);
-
-        m_HeaderIsComplete = false;
-
-        float HexXStep = reader.getXStep();
-        float HexYStep = reader.getYStep();
-        int HexNumColsOdd = reader.getNumOddCols();
-        int HexNumColsEven = reader.getNumEvenCols();
-        int HexNumRows = reader.getNumRows();
-        m_NumCols = (HexNumColsOdd * HexXStep) / m_XResolution;
-        m_NumRows = (HexNumRows * HexYStep) / m_YResolution;
-        float xSqr, ySqr, xHex1, yHex1, xHex2, yHex2;
-        int point, point1, point2;
-        int row1, row2, col1, col2;
-        float dist1, dist2;
-        float* phi1 = reader.getPhi1Pointer();
-        float* PHI = reader.getPhiPointer();
-        float* phi2 = reader.getPhi2Pointer();
-        float* ci = reader.getConfidenceIndexPointer();
-        float* iq = reader.getImageQualityPointer();
-        float* semsig = reader.getSEMSignalPointer();
-        float* fit = reader.getFitPointer();
-        int* phase = reader.getPhaseDataPointer();
-        while (!in.atEnd())
-        {
-          QString buf = in.readLine();
-          QString line = modifyAngHeaderLine(buf);
-          if(m_HeaderIsComplete == false) { dStream << line << "\n" ; }
-        }
-        for(int j = 0; j < m_NumRows; j++)
-        {
-          for(int i = 0; i < m_NumCols; i++)
-          {
-            xSqr = float(i) * m_XResolution;
-            ySqr = float(j) * m_YResolution;
-            row1 = ySqr / (HexYStep);
-            yHex1 = row1 * HexYStep;
-            row2 = row1 + 1;
-            yHex2 = row2 * HexYStep;
-            if(row1 % 2 == 0)
-            {
-              col1 = xSqr / (HexXStep);
-              xHex1 = col1 * HexXStep;
-              point1 = ((row1 / 2) * HexNumColsEven) + ((row1 / 2) * HexNumColsOdd) + col1;
-              col2 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
-              xHex2 = col2 * HexXStep + (HexXStep / 2.0);
-              point2 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
-            }
-            else
-            {
-              col1 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
-              xHex1 = col1 * HexXStep + (HexXStep / 2.0);
-              point1 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col1;
-              col2 = xSqr / (HexXStep);
-              xHex2 = col2 * HexXStep;
-              point2 = (((row1 / 2) + 1) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
-            }
-            dist1 = ((xSqr - xHex1) * (xSqr - xHex1)) + ((ySqr - yHex1) * (ySqr - yHex1));
-            dist2 = ((xSqr - xHex2) * (xSqr - xHex2)) + ((ySqr - yHex2) * (ySqr - yHex2));
-            if(dist1 <= dist2 || row1 == (HexNumRows - 1)) {point = point1;}
-            else {point = point2;}
-            dStream << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << "\n";
-          }
-        }
-      }
-    }
-    else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
-    {
-      qDebug() << "Ctf files are not on a hexagonal grid and do not need to be converted." << "\n";
-    }
-    else
-    {
-      err = -1;
-
-      QString ss = QObject::tr("The File extension was not detected correctly");
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
-      return;
-    }
-
-  }
-
-  notifyStatusMessage(getHumanLabel(), "Import Complete");
-}
-
-// -----------------------------------------------------------------------------
-//  Modify the Header line of the ANG file if necessary
-// -----------------------------------------------------------------------------
 QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
 {
   QString line = "";
@@ -418,27 +194,27 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
     m_HeaderIsComplete = true;
     return line;
   }
-  else if(buf.at(0) == '#' && buf.size() == 1)
+  else if (buf.at(0) == '#' && buf.size() == 1)
   {
     line = buf;
     return line;
   }
   // Start at the first character and walk until you find another non-space character
   size_t i = 1;
-  while(buf.at(i) == ' ')
+  while (buf.at(i) == ' ')
   {
     ++i;
   }
   size_t wordStart = i;
-// size_t wordEnd = i + 1;
-  while(true)
+  //size_t wordEnd = i + 1;
+  while (true)
   {
     if (buf.at(i) == 45 || buf.at(i) == 95) { ++i; } // "-" or "_" character
     else if (buf.at(i) >= 65 && buf.at(i) <= 90) { ++i; } // Upper case alpha character
     else if (buf.at(i) >= 97 && buf.at(i) <= 122) {++i; } // Lower case alpha character
     else { break;}
   }
-// wordEnd = i;
+  //wordEnd = i;
 
   QString word( buf.mid(wordStart) );
 
@@ -454,7 +230,7 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
   }
   else if (buf.contains(Ebsd::Ang::XStep))
   {
-    line = "# " + Ebsd::Ang::XStep + ": " + QString::number( (double)m_XResolution);
+    line = "# " + Ebsd::Ang::XStep + ": " + QString::number((double)m_XResolution);
   }
   else if (buf.contains(Ebsd::Ang::YStep))
   {
@@ -479,6 +255,212 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
   return line;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  herr_t err = 0;
+  bool hasMissingFiles = false;
+  bool stackLowToHigh = true;
+  // Now generate all the file names the user is asking for and populate the table
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
+                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                              m_PaddingDigits);
+
+  // Loop on Each EBSD File
+  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
+  int32_t progress = 0;
+  int64_t z = m_ZStartIndex;
+  /* There is a frailness about the z index and the file list. The programmer
+   * using this code MUST ensure that the list of files that is sent into this
+   * class is in the appropriate order to match up with the z index (slice index)
+   * otherwise the import will have subtle errors. The programmer is urged NOT to
+   * simply gather a list from the file system as those lists are sorted in such
+   * a way that if the number of digits appearing in the filename are NOT the same
+   * then the list will be wrong, ie, this example:
+   *
+   * slice_1.ang
+   * slice_2.ang
+   * ....
+   * slice_10.ang
+   *
+   * Most, if not ALL C++ libraries when asked for that list will return the list
+   * sorted like the following:
+   *
+   * slice_1.ang
+   * slice_10.ang
+   * slice_2.ang
+   *
+   * which is going to cause problems because the data is going to be placed
+   * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
+   */
+  //int totalSlicesImported = 0;
+  for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
+  {
+    QString ebsdFName = *filepath;
+    {
+      progress = static_cast<int32_t>( z - m_ZStartIndex );
+      progress = (int32_t)(100.0f * (float)(progress) / total);
+      QString msg = "Converting File: " + ebsdFName;
+      notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
+    }
+    if (getCancel() == true)
+    {
+      break;
+    }
+
+    // Write the Manufacturer of the OIM file here
+    // This list will grow to be the number of EBSD file formats we support
+    QFileInfo fi(ebsdFName);
+    QString ext = fi.suffix();
+    QString base = fi.baseName();
+    QDir path(getOutputPath());
+    if (ext.compare(Ebsd::Ang::FileExt) == 0)
+    {
+      AngReader reader;
+      reader.setFileName(ebsdFName);
+      reader.setReadHexGrid(true);
+      err = reader.readFile();
+      if (err < 0 && err != -600)
+      {
+        setErrorCondition(reader.getErrorCode());
+        notifyErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
+        return;
+      }
+      else if (reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
+      {
+
+        QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);
+        setErrorCondition(-55000);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+      else
+      {
+        if (err == -600)
+        {
+          notifyWarningMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode() );
+        }
+        QString origHeader = reader.getOriginalHeader();
+        if (origHeader.isEmpty() == true)
+        {
+
+          QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
+          setErrorCondition(-55001);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+
+        QTextStream in(&origHeader);
+        //QString newEbsdFName = path.absolutePath() + "/Sqr_" + base + "." + ext;
+        QString newEbsdFName = path.absolutePath() + "/" + getOutputPrefix() +  base + "." + ext;
+
+        if (newEbsdFName.compare(ebsdFName) == 0)
+        {
+          QString msg = QObject::tr("New Ang File is the same as the old Ang file. Overwriting is NOT allowed.");
+          setErrorCondition(-201);
+          notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+          return;
+        }
+
+
+        QFile outFile(newEbsdFName);
+        if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+          QString msg = QObject::tr("Ang Square Output file could not be opened for writing: %1").arg(newEbsdFName);
+          setErrorCondition(-200);
+          notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+          return;
+        }
+
+        QTextStream dStream(&outFile);
+
+        m_HeaderIsComplete = false;
+
+        float HexXStep = reader.getXStep();
+        float HexYStep = reader.getYStep();
+        int32_t HexNumColsOdd = reader.getNumOddCols();
+        int32_t HexNumColsEven = reader.getNumEvenCols();
+        int32_t HexNumRows = reader.getNumRows();
+        m_NumCols = (HexNumColsOdd * HexXStep) / m_XResolution;
+        m_NumRows = (HexNumRows * HexYStep) / m_YResolution;
+        float xSqr = 0.0f, ySqr = 0.0f, xHex1 = 0.0f, yHex1 = 0.0f, xHex2 = 0.0f, yHex2 = 0.0f;
+        int32_t point = 0, point1 = 0, point2 = 0;
+        int32_t row1 = 0, row2 = 0, col1 = 0, col2 = 0;
+        float dist1 = 0.0f, dist2 = 0.0f;
+        float* phi1 = reader.getPhi1Pointer();
+        float* PHI = reader.getPhiPointer();
+        float* phi2 = reader.getPhi2Pointer();
+        float* ci = reader.getConfidenceIndexPointer();
+        float* iq = reader.getImageQualityPointer();
+        float* semsig = reader.getSEMSignalPointer();
+        float* fit = reader.getFitPointer();
+        int32_t* phase = reader.getPhaseDataPointer();
+        while (!in.atEnd())
+        {
+          QString buf = in.readLine();
+          QString line = modifyAngHeaderLine(buf);
+          if (m_HeaderIsComplete == false) { dStream << line << "\n" ; }
+        }
+        for (int32_t j = 0; j < m_NumRows; j++)
+        {
+          for (int32_t i = 0; i < m_NumCols; i++)
+          {
+            xSqr = float(i) * m_XResolution;
+            ySqr = float(j) * m_YResolution;
+            row1 = ySqr / (HexYStep);
+            yHex1 = row1 * HexYStep;
+            row2 = row1 + 1;
+            yHex2 = row2 * HexYStep;
+            if (row1 % 2 == 0)
+            {
+              col1 = xSqr / (HexXStep);
+              xHex1 = col1 * HexXStep;
+              point1 = ((row1 / 2) * HexNumColsEven) + ((row1 / 2) * HexNumColsOdd) + col1;
+              col2 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
+              xHex2 = col2 * HexXStep + (HexXStep / 2.0);
+              point2 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
+            }
+            else
+            {
+              col1 = (xSqr - (HexXStep / 2.0)) / (HexXStep);
+              xHex1 = col1 * HexXStep + (HexXStep / 2.0);
+              point1 = ((row1 / 2) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col1;
+              col2 = xSqr / (HexXStep);
+              xHex2 = col2 * HexXStep;
+              point2 = (((row1 / 2) + 1) * HexNumColsEven) + (((row1 / 2) + 1) * HexNumColsOdd) + col2;
+            }
+            dist1 = ((xSqr - xHex1) * (xSqr - xHex1)) + ((ySqr - yHex1) * (ySqr - yHex1));
+            dist2 = ((xSqr - xHex2) * (xSqr - xHex2)) + ((ySqr - yHex2) * (ySqr - yHex2));
+            if (dist1 <= dist2 || row1 == (HexNumRows - 1)) {point = point1;}
+            else {point = point2;}
+            dStream << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << "\n";
+          }
+        }
+      }
+    }
+    else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
+    {
+      qDebug() << "Ctf files are not on a hexagonal grid and do not need to be converted." << "\n";
+    }
+    else
+    {
+      err = -1;
+
+      QString ss = QObject::tr("The file extension was not detected correctly");
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+
+      return;
+    }
+  }
+  notifyStatusMessage(getHumanLabel(), "Complete");
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -513,17 +495,20 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
 const QString ConvertHexGridToSquareGrid::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertHexGridToSquareGrid::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertHexGridToSquareGrid::getHumanLabel()
 { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
-
