@@ -895,6 +895,8 @@ function(cmpGenerateBuildDate)
       endif()
 
       set(${GVS_PROJECT_NAME}_BUILD_DATE   ${VERSION_RUN_OUTPUT}  CACHE STRING "Complete Build Date String")
+      MARK_AS_ADVANCED(${GVS_PROJECT_NAME}_BUILD_DATE)
+
       #message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
     endif()
 
@@ -911,8 +913,8 @@ endfunction()
 #
 function(cmpVersionStringsFromGit)
     set(options)
-    set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH 
-                     NAMESPACE PROJECT_SOURCE_DIR PROJECT_VERSION_MAJOR 
+    set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
+                     NAMESPACE PROJECT_SOURCE_DIR PROJECT_VERSION_MAJOR
                      EXPORT_MACRO cmpProjectName)
     cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
