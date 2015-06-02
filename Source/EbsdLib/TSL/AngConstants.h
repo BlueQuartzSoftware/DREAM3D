@@ -322,6 +322,16 @@ namespace Ebsd
     const QString LatticeConstantGamma("Lattice Constant gamma");
   }
 
+  namespace AngFile
+  {
+    const QString Phases("Phases");
+    const QString EulerAngles("EulerAngles");
+    const QString CrystalStructures("CrystalStructures");
+    const QString MaterialName("MaterialName");
+    const QString LatticeConstants("LatticeConstants");
+    const QString BravaisLattice("BravaisLattice");
+  }
+
 }
 #endif
 
