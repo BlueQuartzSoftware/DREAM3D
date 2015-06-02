@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -130,8 +130,8 @@ class SineParamsSegmentFeatures : public SegmentFeatures
   protected:
     SineParamsSegmentFeatures();
 
-    virtual int64_t getSeed(size_t gnum);
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
+    virtual int64_t getSeed(int32_t gnum);
+    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
   private:
     IDataArray::Pointer m_InputData;
