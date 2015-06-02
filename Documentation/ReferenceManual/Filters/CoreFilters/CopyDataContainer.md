@@ -11,28 +11,16 @@ This filter copies a user chosen DataContainer to a new DataContainer with a use
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Input DataContainer | String or DataArrayPath |
+| Input DataContainer | String |
 
-## Required Arrays ##
+## Required ##
 
-
-
-
-## Created Arrays ##
+A DataContainer to copy.
 
 
+## Created ##
 
-
-## Authors ##
-
-**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software), William C. Lenthe (UCSB)
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
+A new DataContiner with the user defined name.
 
 
 ## License & Copyright ##

@@ -3,7 +3,7 @@ Copy Feature Array To Cell Array {#copyfeaturearraytocellarray}
 
 ## Group (Subgroup) ##
 
-Generic Filters (Memory/Management)
+Core Filters (Memory/Management)
 
 ## Description ##
 

@@ -1,11 +1,11 @@
-Rename Attribute Array {#copyattributematrix}
+Copy Attribute Matrix {#copyattributematrix}
 ==============================
 
 ## Group (Subgroup) ##
 Core Filters (Memory/Management)
 
 ## Description ##
-This filter copies a user chosen AttributeMatrx to a new AttributeMatrix with a user defined new name.
+This filter copies a user chosen AttributeMatrx to a new AttributeMatrix with a user defined new name to the same data container.
 
 ## Parameters ##
 
