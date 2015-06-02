@@ -53,6 +53,8 @@ m_Watcher(NULL)
   vector.push_back("Name");
   vector.push_back("Path");
   rootItem = new BookmarksItem(vector);
+
+  connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateModel(const QModelIndex&, const QModelIndex&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -540,7 +542,6 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
     QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, specifiedParent);
     self->setData(newPathIndex, path, Qt::DisplayRole);
     self->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
-    m_Watcher->addPath(path);
   }
   else
   {
@@ -635,6 +636,31 @@ QModelIndexList BookmarksModel::findIndexByPath(const QModelIndex &current, QStr
   }
 
   return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksModel::updateModel(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  if (topLeft.isValid())
+  {
+    QString path = index(topLeft.row(), BookmarksItem::Path, topLeft.parent()).data().toString();
+    QFileInfo fi(path);
+    if (NULL != m_Watcher && path.isEmpty() == false && fi.exists())
+    {
+      m_Watcher->addPath(path);
+    }
+  }
+  else if (bottomRight.isValid())
+  {
+    QString path = index(bottomRight.row(), BookmarksItem::Path, bottomRight.parent()).data().toString();
+    QFileInfo fi(path);
+    if (NULL != m_Watcher && path.isEmpty() == false && fi.exists())
+    {
+      m_Watcher->addPath(path);
+    }
+  }
 }
 
 
