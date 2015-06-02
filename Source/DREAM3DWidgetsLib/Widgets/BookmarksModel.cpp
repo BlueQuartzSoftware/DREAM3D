@@ -436,9 +436,9 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
   int rowPos = tempModel->rowCount(tempParent);
   tempModel->insertRow(rowPos, tempParent);
   QModelIndex newNameIndex = tempModel->index(rowPos, BookmarksItem::Name, tempParent);
-  tempModel->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+  tempModel->setData(newNameIndex, name, Qt::DisplayRole);
   QModelIndex newPathIndex = tempModel->index(rowPos, BookmarksItem::Path, tempParent);
-  tempModel->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
+  tempModel->setData(newPathIndex, path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -469,9 +469,9 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
   int rowPos = self->rowCount(newParent);
   self->insertRow(rowPos, newParent);
   QModelIndex newNameIndex = self->index(rowPos, BookmarksItem::Name, newParent);
-  self->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+  self->setData(newNameIndex, name, Qt::DisplayRole);
   QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, newParent);
-  self->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
+  self->setData(newPathIndex, path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -527,7 +527,7 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
   if (fi.isFile())
   {
     QString name = fi.baseName();
-    self->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+    self->setData(newNameIndex, name, Qt::DisplayRole);
   }
   else
   {
@@ -538,7 +538,7 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
   if (fi.isFile())
   {
     QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, specifiedParent);
-    self->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
+    self->setData(newPathIndex, path, Qt::DisplayRole);
     self->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
     m_Watcher->addPath(path);
   }
