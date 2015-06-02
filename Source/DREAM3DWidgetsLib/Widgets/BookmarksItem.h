@@ -44,22 +44,24 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-enum ColumnData
-{
-  Name,
-  Path
-};
 
-const QString topLevelString = "[Top Level]";
+
 
 class DREAM3DWidgetsLib_EXPORT BookmarksItem
 {
 public:
-  explicit BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent = 0);
-  ~BookmarksItem();
+  BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent = 0);
+  virtual ~BookmarksItem();
 
-  BookmarksItem *child(int number);
-  BookmarksItem *parent();
+  enum ColumnData
+  {
+    Name,
+    Path
+  };
+
+
+  BookmarksItem* child(int number);
+  BookmarksItem* parent();
 
   int childCount() const;
   int columnCount() const;
@@ -86,6 +88,8 @@ public:
   bool removeColumns(int position, int columns);
 
   int childNumber() const;
+
+  static QString TopLevelString();
 
 private:
   QList<BookmarksItem*>               m_ChildItems;

@@ -39,17 +39,24 @@
 
 #include "BookmarksItem.h"
 
+
+QString BookmarksItem::TopLevelString()
+{
+   return QString::fromLatin1("[Top Level]");
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 BookmarksItem::BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent) :
-m_ItemTooltip(""),
+m_ItemData(data),
+m_ParentItem(parent),
 m_ItemHasErrors(false),
+m_ItemTooltip(""),
+m_NeedsToBeExpanded(false),
 m_Icon(QIcon())
 {
-  m_ParentItem = parent;
-  m_ItemData = data;
-  m_NeedsToBeExpanded = false;
 }
 
 // -----------------------------------------------------------------------------

@@ -180,7 +180,7 @@ void BookmarksTreeView::showContextMenu(QModelIndex index, const QPoint& globalP
   }
   else
   {
-    QModelIndex actualIndex = model->index(index.row(), Path, index.parent());
+    QModelIndex actualIndex = model->index(index.row(), BookmarksItem::Path, index.parent());
     QString path = actualIndex.data().toString();
     if (path.isEmpty() == false)
     {
@@ -212,7 +212,7 @@ void BookmarksTreeView::mouseMoveEvent(QMouseEvent* event)
 
   if (event->buttons() & Qt::LeftButton)
   {
-    QModelIndex index = model->index(currentIndex().row(), Name, currentIndex().parent());
+    QModelIndex index = model->index(currentIndex().row(), BookmarksItem::Name, currentIndex().parent());
     bool itemHasErrors = model->data(index, Qt::UserRole).value<bool>();
     int distance = (event->pos() - m_StartPos).manhattanLength();
     if (distance >= QApplication::startDragDistance() && itemHasErrors == false)
@@ -233,7 +233,7 @@ void BookmarksTreeView::performDrag()
   if (m_IndexBeingDragged.isValid())
   {
     QMimeData* mimeData = new QMimeData;
-    QString path = model->index(m_IndexBeingDragged.row(), Path, m_IndexBeingDragged.parent()).data().toString();
+    QString path = model->index(m_IndexBeingDragged.row(), BookmarksItem::Path, m_IndexBeingDragged.parent()).data().toString();
     QString source = "Bookmarks";
     mimeData->setData("Source", source.toLatin1());
     mimeData->setText(path);
@@ -297,7 +297,7 @@ void BookmarksTreeView::dragMoveEvent(QDragMoveEvent* event)
       blockSignals(true);
       model->insertRow(topLevelPHPos, rootIndex());
       m_TopLevelItemPlaceholder = model->index(topLevelPHPos, 0, rootIndex());
-      model->setData(m_TopLevelItemPlaceholder, topLevelString, Qt::DisplayRole);
+      model->setData(m_TopLevelItemPlaceholder, BookmarksItem::TopLevelString(), Qt::DisplayRole);
       setCurrentIndex(m_TopLevelItemPlaceholder);
       blockSignals(false);
     }
@@ -345,7 +345,7 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
     QString source = QString::fromStdString(byteArray.toStdString());
     if (source == "Bookmarks")
     {
-      QModelIndex newParent = model->index(currentIndex().row(), Name, currentIndex().parent());
+      QModelIndex newParent = model->index(currentIndex().row(), BookmarksItem::Name, currentIndex().parent());
 
       if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true && newParent != m_IndexBeingDragged)
       {
@@ -367,7 +367,7 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
         {
           model->moveIndexInternally(m_IndexBeingDragged, oldParent, newParent);
           expand(newParent);
-          model->sort(Name, Qt::AscendingOrder);
+          model->sort(BookmarksItem::Name, Qt::AscendingOrder);
           event->accept();
           return;
         }
@@ -411,7 +411,7 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
       expand(parentIndex);
     }
 
-    model->sort(Name, Qt::AscendingOrder);
+    model->sort(BookmarksItem::Name, Qt::AscendingOrder);
     event->accept();
     return;
   }
@@ -499,7 +499,7 @@ QJsonObject BookmarksTreeView::toJsonObject()
   QJsonObject treeObj;
   for (int i = 0; i < rootItem->childCount(); i++)
   {
-    QModelIndex childIndex = model->index(i, Name, QModelIndex());
+    QModelIndex childIndex = model->index(i, BookmarksItem::Name, QModelIndex());
 
     QJsonObject childObj = wrapModel(childIndex);
     treeObj["Child " + QString::number(i + 1)] = childObj;
@@ -525,8 +525,8 @@ QJsonObject BookmarksTreeView::wrapModel(QModelIndex currentIndex)
     obj["Child " + QString::number(i + 1)] = childObj;
   }
 
-  QString name = model->index(currentIndex.row(), Name, model->parent(currentIndex)).data().toString();
-  QString path = model->index(currentIndex.row(), Path, model->parent(currentIndex)).data().toString();
+  QString name = model->index(currentIndex.row(), BookmarksItem::Name, model->parent(currentIndex)).data().toString();
+  QString path = model->index(currentIndex.row(), BookmarksItem::Path, model->parent(currentIndex)).data().toString();
 
   obj.insert("Name", name);
 
@@ -578,8 +578,8 @@ void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, Q
 {
   int row = model->rowCount(parentIndex);
   model->insertRow(row, parentIndex);
-  QModelIndex nameIndex = model->index(row, Name, parentIndex);
-  QModelIndex pathIndex = model->index(row, Path, parentIndex);
+  QModelIndex nameIndex = model->index(row, BookmarksItem::Name, parentIndex);
+  QModelIndex pathIndex = model->index(row, BookmarksItem::Path, parentIndex);
 
   QString name = object["Name"].toString();
   QString path = object["Path"].toString();

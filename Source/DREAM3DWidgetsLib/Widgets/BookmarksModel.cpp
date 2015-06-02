@@ -130,7 +130,7 @@ void BookmarksModel::updateRowState(const QString &path)
     QModelIndexList indexList = findIndexByPath(path);
     for (int i = 0; i < indexList.size(); i++)
     {
-      QModelIndex nameIndex = index(indexList[i].row(), Name, indexList[i].parent());
+      QModelIndex nameIndex = index(indexList[i].row(), BookmarksItem::Name, indexList[i].parent());
 
       // Set the itemHasError variable
       setData(nameIndex, true, Qt::UserRole);
@@ -151,13 +151,13 @@ int BookmarksModel::columnCount(const QModelIndex &parent) const
 // -----------------------------------------------------------------------------
 QModelIndex BookmarksModel::sibling(int row, int column, const QModelIndex &currentIndex) const
 {
-  if (currentIndex.column() == Name)
+  if (currentIndex.column() == BookmarksItem::Name)
   {
-    return index(currentIndex.row(), Path, currentIndex.parent());
+    return index(currentIndex.row(), BookmarksItem::Path, currentIndex.parent());
   }
   else
   {
-    return index(currentIndex.row(), Name, currentIndex.parent());
+    return index(currentIndex.row(), BookmarksItem::Name, currentIndex.parent());
   }
 }
 
@@ -205,7 +205,7 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
   }
   else if (role == Qt::ToolTipRole)
   {
-    QString tooltip = "'" + this->index(index.row(), Path, index.parent()).data().toString() + "' was not found on the file system.\nYou can either locate the file or delete the entry from the table.";
+    QString tooltip = "'" + this->index(index.row(), BookmarksItem::Path, index.parent()).data().toString() + "' was not found on the file system.\nYou can either locate the file or delete the entry from the table.";
 
     if (item->getItemHasErrors() == true)
     {
@@ -218,7 +218,7 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
   }
   else if (role == Qt::DecorationRole)
   {
-    QModelIndex nameIndex = this->index(index.row(), Name, index.parent());
+    QModelIndex nameIndex = this->index(index.row(), BookmarksItem::Name, index.parent());
     if (nameIndex == index)
     {
       BookmarksItem* item = getItem(index);
@@ -246,8 +246,8 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
   Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
 
   BookmarksItem* item = getItem(index);
-  QString name = item->data(Name).toString();
-  if (item->data(Path).toString().isEmpty())
+  QString name = item->data(BookmarksItem::Name).toString();
+  if (item->data(BookmarksItem::Path).toString().isEmpty())
   {
     // This is a node
     return (defaultFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
@@ -429,16 +429,16 @@ bool BookmarksModel::isEmpty()
 void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent,const QModelIndex &tempParent, BookmarksModel* tempModel)
 {
   // Get the name of the index
-  QString name = self->index(index.row(), Name, oldParent).data().toString();
-  QString path = self->index(index.row(), Path, oldParent).data().toString();
+  QString name = self->index(index.row(), BookmarksItem::Name, oldParent).data().toString();
+  QString path = self->index(index.row(), BookmarksItem::Path, oldParent).data().toString();
 
   // Copy the index to the temporary model
   int rowPos = tempModel->rowCount(tempParent);
   tempModel->insertRow(rowPos, tempParent);
-  QModelIndex newNameIndex = tempModel->index(rowPos, Name, tempParent);
-  tempModel->setData(newNameIndex, name, Qt::DisplayRole);
-  QModelIndex newPathIndex = tempModel->index(rowPos, Path, tempParent);
-  tempModel->setData(newPathIndex, path, Qt::DisplayRole);
+  QModelIndex newNameIndex = tempModel->index(rowPos, BookmarksItem::Name, tempParent);
+  tempModel->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+  QModelIndex newPathIndex = tempModel->index(rowPos, BookmarksItem::Path, tempParent);
+  tempModel->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -447,7 +447,7 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
     // This is a node, so recursively call this function
     for (int i = 0; i < self->rowCount(index); i++)
     {
-      copyIndexToTemp(index.child(i, Name), index, newNameIndex, tempModel);
+      copyIndexToTemp(index.child(i, BookmarksItem::Name), index, newNameIndex, tempModel);
     }
   }
   else
@@ -462,16 +462,16 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
 void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newParent, const QModelIndex &tempParent, BookmarksModel* tempModel)
 {
   // Get the name of the index
-  QString name = tempModel->index(tempIndex.row(), Name, tempParent).data().toString();
-  QString path = tempModel->index(tempIndex.row(), Path, tempParent).data().toString();
+  QString name = tempModel->index(tempIndex.row(), BookmarksItem::Name, tempParent).data().toString();
+  QString path = tempModel->index(tempIndex.row(), BookmarksItem::Path, tempParent).data().toString();
 
   // Copy the index to the new location
   int rowPos = self->rowCount(newParent);
   self->insertRow(rowPos, newParent);
-  QModelIndex newNameIndex = self->index(rowPos, Name, newParent);
-  self->setData(newNameIndex, name, Qt::DisplayRole);
-  QModelIndex newPathIndex = self->index(rowPos, Path, newParent);
-  self->setData(newPathIndex, path, Qt::DisplayRole);
+  QModelIndex newNameIndex = self->index(rowPos, BookmarksItem::Name, newParent);
+  self->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
+  QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, newParent);
+  self->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
 
   if (path.isEmpty())
   {
@@ -480,7 +480,7 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
     // This is a node, so recursively call this function
     for (int i = 0; i < tempModel->rowCount(tempIndex); i++)
     {
-      QModelIndex nextIndex = tempModel->index(i, Name, tempIndex);
+      QModelIndex nextIndex = tempModel->index(i, BookmarksItem::Name, tempIndex);
       copyTempToIndex(nextIndex, newNameIndex, tempIndex, tempModel);
     }
   }
@@ -503,7 +503,7 @@ void BookmarksModel::moveIndexInternally(const QModelIndex &index, QModelIndex &
   // Now copy the sub-tree to its new position
   for (int i = 0; i < tempModel->rowCount(QModelIndex()); i++)
   {
-    QModelIndex tempIndex = tempModel->index(i, Name, QModelIndex());
+    QModelIndex tempIndex = tempModel->index(i, BookmarksItem::Name, QModelIndex());
     copyTempToIndex(tempIndex, newParent, QModelIndex(), tempModel);
   }
 
@@ -522,12 +522,12 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
 
   int rowPos = self->rowCount(specifiedParent);
   self->insertRow(rowPos, specifiedParent);
-  QModelIndex newNameIndex = self->index(rowPos, Name, specifiedParent);
+  QModelIndex newNameIndex = self->index(rowPos, BookmarksItem::Name, specifiedParent);
 
   if (fi.isFile())
   {
     QString name = fi.baseName();
-    self->setData(newNameIndex, name, Qt::DisplayRole);
+    self->setData(newNameIndex, BookmarksItem::Name, Qt::DisplayRole);
   }
   else
   {
@@ -537,8 +537,8 @@ void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
 
   if (fi.isFile())
   {
-    QModelIndex newPathIndex = self->index(rowPos, Path, specifiedParent);
-    self->setData(newPathIndex, path, Qt::DisplayRole);
+    QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, specifiedParent);
+    self->setData(newPathIndex, BookmarksItem::Path, Qt::DisplayRole);
     self->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
     m_Watcher->addPath(path);
   }
@@ -573,7 +573,7 @@ QStringList BookmarksModel::getFilePaths(BookmarksItem* item)
   QStringList list;
   if (item != rootItem && item->childCount() <= 0)
   {
-    QString filePath = item->data(Path).toString();
+    QString filePath = item->data(BookmarksItem::Path).toString();
     if (filePath.isEmpty() == false)
     {
       list.append(filePath);
@@ -597,7 +597,7 @@ QModelIndexList BookmarksModel::findIndexByPath(QString filePath)
   QModelIndexList list;
   for (int i = 0; i < rootItem->childCount(); i++)
   {
-    QModelIndex child = index(i, Path, QModelIndex());
+    QModelIndex child = index(i, BookmarksItem::Path, QModelIndex());
     if (rowCount(child) <= 0 && child.data().toString() == filePath)
     {
       list.append(child);
@@ -618,12 +618,12 @@ QModelIndexList BookmarksModel::findIndexByPath(QString filePath)
 // -----------------------------------------------------------------------------
 QModelIndexList BookmarksModel::findIndexByPath(const QModelIndex &current, QString filePath)
 {
-  QModelIndex actual = index(current.row(), Name, current.parent());
+  QModelIndex actual = index(current.row(), BookmarksItem::Name, current.parent());
 
   QModelIndexList list;
   for (int i = 0; i < rowCount(actual); i++)
   {
-    QModelIndex pathIndex = index(i, Path, actual);
+    QModelIndex pathIndex = index(i, BookmarksItem::Path, actual);
 
     if (rowCount(pathIndex) <= 0 && pathIndex.data().toString() == filePath)
     {

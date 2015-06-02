@@ -196,7 +196,7 @@ void DREAM3D_UI::checkFirstRun()
       BookmarksModel* model = BookmarksModel::Instance();
 
       model->insertRow(0, QModelIndex());
-      QModelIndex nameIndex = model->index(0, Name, QModelIndex());
+      QModelIndex nameIndex = model->index(0, BookmarksItem::Name, QModelIndex());
       model->setData(nameIndex, "DREAM3D v4 Favorites", Qt::DisplayRole);
       model->setData(nameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
 

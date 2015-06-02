@@ -70,8 +70,8 @@ enum ErrorCodes {
 // -----------------------------------------------------------------------------
 BookmarksDockWidget::BookmarksDockWidget(QWidget* parent) :
   QDockWidget(parent),
-  m_DeleteAction(NULL),
   m_RenameAction(NULL),
+  m_DeleteAction(NULL),
   m_OpenDialogLastDirectory("")
 {
   setupUi(this);
@@ -305,8 +305,8 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
 {
   BookmarksModel* model = BookmarksModel::Instance();
 
-  QModelIndex nameIndex = model->index(index.row(), Name, index.parent());
-  QModelIndex pathIndex = model->index(index.row(), Path, index.parent());
+  QModelIndex nameIndex = model->index(index.row(), BookmarksItem::Name, index.parent());
+  QModelIndex pathIndex = model->index(index.row(), BookmarksItem::Path, index.parent());
 
   QString pipelinePath = pathIndex.data().toString();
   if (pipelinePath.isEmpty())
@@ -348,7 +348,7 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
 void BookmarksDockWidget::on_bookmarksTreeView_currentIndexChanged(const QModelIndex & current, const QModelIndex & previous)
 {
   BookmarksModel* model = BookmarksModel::Instance();
-  QString path = model->index(current.row(), Path, current.parent()).data().toString();
+  QString path = model->index(current.row(), BookmarksItem::Path, current.parent()).data().toString();
 
   if (m_DeleteAction != NULL)
   {
@@ -413,8 +413,8 @@ void BookmarksDockWidget::m_ActionLocateFile_triggered()
   BookmarksModel* model = BookmarksModel::Instance();
   QModelIndex current = getBookmarksTreeView()->currentIndex();
 
-  QModelIndex nameIndex = model->index(current.row(), Name, current.parent());
-  QModelIndex pathIndex = model->index(current.row(), Path, current.parent());
+  QModelIndex nameIndex = model->index(current.row(), BookmarksItem::Name, current.parent());
+  QModelIndex pathIndex = model->index(current.row(), BookmarksItem::Path, current.parent());
 
   QFileInfo fi(pathIndex.data().toString());
   QString restrictions;
@@ -456,7 +456,7 @@ void BookmarksDockWidget::m_ActionNewFolder_triggered()
   BookmarksModel* model = BookmarksModel::Instance();
 
   QModelIndex parent = getSelectedParentTreeItem();
-  QString parentName = model->index(parent.row(), Name, parent.parent()).data().toString();
+  QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
 
   QString name = "New Folder";
 
@@ -517,7 +517,7 @@ QModelIndex BookmarksDockWidget::getSelectedParentTreeItem()
 
   // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
   // selected an actual favorite item, get it's parent which MUST be a folder
-  if(index.isValid() && model->index(index.row(), Path, index.parent()).data().toString().isEmpty() == false)
+  if(index.isValid() && model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString().isEmpty() == false)
   {
     index = index.parent();
   }
@@ -558,13 +558,13 @@ int BookmarksDockWidget::addTreeItem(QModelIndex parent,
   // Add a new Item to the Tree
   int rowPos = model->rowCount(parent);
   model->insertRow(rowPos, parent);
-  QModelIndex nameIndex = model->index(rowPos, Name, parent);
+  QModelIndex nameIndex = model->index(rowPos, BookmarksItem::Name, parent);
   model->setData(nameIndex, favoriteTitle, Qt::DisplayRole);
-  QModelIndex pathIndex = model->index(rowPos, Path, parent);
+  QModelIndex pathIndex = model->index(rowPos, BookmarksItem::Path, parent);
   model->setData(pathIndex, favoritePath, Qt::DisplayRole);
   model->setData(nameIndex, icon, Qt::DecorationRole);
 
-  bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);
+  bookmarksTreeView->sortByColumn(BookmarksItem::Name, Qt::AscendingOrder);
   bookmarksTreeView->blockSignals(false);
 
   if (favoritePath.isEmpty())
@@ -606,8 +606,8 @@ void BookmarksDockWidget::m_ActionUpdatePipeline_triggered()
   // Lets get the name of the favorite
   QModelIndex index = bookmarksTreeView->currentIndex();
 
-  QString name = model->index(index.row(), Name, index.parent()).data().toString();
-  QString filePath = model->index(index.row(), Path, index.parent()).data().toString();
+  QString name = model->index(index.row(), BookmarksItem::Name, index.parent()).data().toString();
+  QString filePath = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
 
   emit pipelineNeedsToBeSaved(filePath, name);
 }
@@ -652,8 +652,8 @@ void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
   BookmarksModel* model = BookmarksModel::Instance();
 
   QModelIndex index = bookmarksTreeView->currentIndex();
-  QString name = model->index(index.row(), Name, index.parent()).data().toString();
-  QString path = model->index(index.row(), Path, index.parent()).data().toString();
+  QString name = model->index(index.row(), BookmarksItem::Name, index.parent()).data().toString();
+  QString path = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
 
   QMessageBox msgBox;
   msgBox.setText("Are you sure that you want to remove \"" + name + "\"?");
@@ -691,7 +691,7 @@ void BookmarksDockWidget::m_ActionShowInFileSystem_triggered()
   QModelIndex index = bookmarksTreeView->currentIndex();
   if(index.isValid())
   {
-    QString pipelinePath = model->index(index.row(), Path, index.parent()).data().toString();
+    QString pipelinePath = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
 
     QFileInfo pipelinePathInfo(pipelinePath);
     QString pipelinePathDir = pipelinePathInfo.path();
