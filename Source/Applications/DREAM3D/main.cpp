@@ -40,7 +40,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
 
-
 #include "BrandedInitializer.h"
 
 #ifdef Q_WS_X11

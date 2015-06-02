@@ -845,6 +845,61 @@ function(cmpReplaceFileIfDifferent)
 endfunction()
 
 
+#-------------------------------------------------------------------------------
+# This function will attempt to generate a build date/time string.
+#
+#-------------------------------------------------------------------------------
+function(cmpGenerateBuildDate)
+    set(oneValueArgs PROJECT_NAME )
+    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+    INCLUDE (${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
+
+    #message(STATUS "GVS_PROJECT_NAME: ${GVS_PROJECT_NAME}")
+
+    if( CMP_HAVE_TIME_GETTIMEOFDAY )
+      set( VERSION_COMPILE_FLAGS "-DHAVE_TIME_GETTIMEOFDAY")
+    endif()
+
+    if( CMP_HAVE_SYS_TIME_GETTIMEOFDAY )
+        set( VERSION_COMPILE_FLAGS "-DHAVE_SYS_TIME_GETTIMEOFDAY")
+    endif()
+
+    if(NOT CMP_HAVE_TIME_GETTIMEOFDAY AND NOT CMP_HAVE_SYS_TIME_GETTIMEOFDAY)
+      set(VERSION_BUILD_DATE "UNKNOWN")
+    
+      set(${GVS_PROJECT_NAME}_BUILD_DATE   ${VERSION_BUILD_DATE}  CACHE STRING "Complete Build Date String")
+
+    else()
+      # message(STATUS "Running version generation executable")
+      try_run(VERSION_RUN_RESULT VERSION_COMPILE_RESULT
+              ${CMAKE_CURRENT_BINARY_DIR} ${CMP_CORE_TESTS_SOURCE_DIR}/cmpGenerateVersionString.cpp
+              COMPILE_DEFINITIONS ${VERSION_COMPILE_FLAGS}
+              COMPILE_OUTPUT_VARIABLE VERSION_COMPILE_OUTPUT
+              RUN_OUTPUT_VARIABLE VERSION_RUN_OUTPUT )
+      set(VERSION_RUN_RESULT "1" CACHE INTERNAL "")
+
+
+      if(NOT VERSION_RUN_OUTPUT)
+          message(STATUS "VERSION_COMPILE_OUTPUT: ${VERSION_COMPILE_OUTPUT}")
+          message(STATUS "VERSION_RUN_OUTPUT: ${VERSION_RUN_OUTPUT}")
+          FILE(APPEND ${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
+              "Attempting to Generate a Version Number from a GetTimeofDay() function failed with the following output\n"
+              "----------- COMPILE OUTPUT ---------------------------------------------------\n"
+              "${VERSION_COMPILE_OUTPUT}\n"
+              "----------- RUN OUTPUT ---------------------------------------------------\n"
+              "${VERSION_RUN_OUTPUT}\n"
+              "--------------------------------------------------------------\n" )
+           message(FATAL_ERROR "The program to generate a version was not able to be run. Are we cross compiling? Do we have the GetTimeOfDay() function?")
+
+      endif()
+
+      set(${GVS_PROJECT_NAME}_BUILD_DATE   ${VERSION_RUN_OUTPUT}  CACHE STRING "Complete Build Date String")
+      #message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
+    endif()
+
+endfunction()
+
 
 
 #-------------------------------------------------------------------------------
@@ -870,6 +925,9 @@ function(cmpVersionStringsFromGit)
     endif()
 
 
+    cmpGenerateBuildDate(PROJECT_NAME ${GVS_cmpProjectName})
+    set(VERSION_BUILD_DATE ${${GVS_cmpProjectName}_BUILD_DATE})
+
     if(0)
       message(STATUS "--------------------------------------------")
       message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
@@ -878,6 +936,7 @@ function(cmpVersionStringsFromGit)
       message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
       message(STATUS "GVS_PROJECT_SOURCE_DIR: ${GVS_PROJECT_SOURCE_DIR}")
       message(STATUS "GVS_PROJECT_VERSION_MAJOR: ${GVS_PROJECT_VERSION_MAJOR}")
+      message(STATUS "${GVS_cmpProjectName}_BUILD_DATE: ${${GVS_cmpProjectName}_BUILD_DATE}")
     endif()
 
     # Find Git executable

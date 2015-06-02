@@ -17,28 +17,46 @@
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::Complete()
 { return QString("@VERSION_GEN_COMPLETE@");}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::Major()
 { return QString("@VERSION_GEN_VER_MAJOR@");}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::Minor()
 { return QString("@VERSION_GEN_VER_MINOR@");}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::Patch()
 { return QString("@VERSION_GEN_VER_PATCH@");}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @VERSION_GEN_NAMESPACE@::Version::Revision()
+{ return QString("@VERSION_GEN_VER_PATCH@");}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::Package()
 { return QString("@VERSION_GEN_VER_MAJOR@.@VERSION_GEN_VER_MINOR@");}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::PackageComplete()
 { return QString("@PROJECT_PREFIX@ Version @VERSION_GEN_COMPLETE@");}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString @VERSION_GEN_NAMESPACE@::Version::BuildDate()
+{ return QString("@VERSION_BUILD_DATE@");}

@@ -133,6 +133,26 @@ QFont DREAM3DStyles::GetCategoryFont()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QFont DREAM3DStyles::GetTitleFont()
+{
+  QFont categoryFont;
+  categoryFont.setBold(true);
+  categoryFont.setWeight(100);
+  categoryFont.setStyleStrategy(QFont::PreferAntialias);
+  categoryFont.setFamily(GetUIFont());
+
+#if defined (Q_OS_MAC)
+  categoryFont.setPointSize(16);
+#elif defined (Q_OS_WIN)
+  categoryFont.setPointSize(12);
+#endif
+
+  return categoryFont;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
 {
   //if (lineEdit->text().isEmpty())
@@ -157,5 +177,4 @@ void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
 void DREAM3DStyles::LineEditClearStyle(QLineEdit* lineEdit)
 {
   lineEdit->setStyleSheet("");
-
 }

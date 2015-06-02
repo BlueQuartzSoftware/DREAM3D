@@ -45,6 +45,8 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
+#include "QtSupportLib/DREAM3DSettings.h"
+
 #include "ui_IssuesDockWidget.h"
 
 class FilterListDockWidget;
@@ -59,8 +61,17 @@ class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IOb
     IssuesDockWidget(QWidget* parent = NULL);
     virtual ~IssuesDockWidget();
 
-
     QLabel* createHyperlinkLabel(PipelineMessage msg);
+
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+
+    /**
+    * @brief Writes the preferences to the users pref file
+    */
+    void writeSettings(DREAM3DSettings& prefs);
 
   public slots:
     void processPipelineMessage(const PipelineMessage& msg);
