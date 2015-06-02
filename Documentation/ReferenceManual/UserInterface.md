@@ -13,28 +13,49 @@ DREAM3D has 7 main areas of its user interface:
 
 ------
 
-![Overview of DREAM3D User Interface](Images/OverView-1.png)
+![Overview of DREAM3D User Interface](Images/OverView-DREAM3D.png)
 
 @image latex Images/OverView-1.png "Overview of DREAM3D user interface " width=6in
 
 ------
 
 ## 1. The Filter Library ##
-![](Images/OverView-2.png)
-The _Filter Library_ section organizes the filters of DREAM3D according to the plugin that they belong to. The user can expand a specific plugin group (and possibly a sub-group), and the filters associated with that plugin will be displayed.  This makes it easy to find filters based on the plugin that they are associated with.
+![](Images/OverView-FilterLibrary.png)
+The **Filter Library** section organizes the filters of DREAM3D according to the plugin that they belong to. The user can expand a specific plugin group (and possibly a sub-group), and the filters associated with that plugin will be displayed.  This makes it easy to find filters based on the plugin that they are associated with.
 
 --------------
 
 ## 2. The Filter List ##
-The _Filter List_ section organizes the filters of DREAM3D alphabetically by name.  
+![](Images/OverView-FilterList.png)
+The **Filter List** section organizes the filters of DREAM3D alphabetically by name.
+
+Using the search bar, the user can search for filters based on the name.  Clicking on the magnifying glass icon allows the user to pick between three different search algorithms.
+
+The **All Words** algorithm will search for filters with names that contain all the words in the search bar, in any order.
+
+The **Any Words** algorithm will search for filters with names that contain any of the words in the search bar, in any order.
+
+The **Exact Phrase** algorithm will search for filters with names that match the phrase that is written in the search bar.
 
 --------------
 
 ## 3. The Pipeline View ##
+![](Images/OverView-PipelineView.png)
+The **Pipeline View** section displays which filters are in the current pipeline, and in what order.
+
+If a filter object in the pipeline is colored red, that means that the filter has an error.  If this is the case, check the **Pipeline Error Table** to see the error message and error code.
+
+Click on a filter object to select it and populate the **Filter Input View** with its input information.
+
+Click the red X icon on a filter object to remove it from the pipeline.
 
 --------------
 
 ## 4. The Filter Input View ##
+
+--------------
+
+## 5. The Pipeline Error Table ##
 
 --------------
 
