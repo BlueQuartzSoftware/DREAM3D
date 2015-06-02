@@ -38,11 +38,13 @@ set(DOCUMENTATION_SOURCE_FILES
   \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/DownloadingExampleData.md\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/DevHelper.md\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox\"
 )
 
 set(DOXYGEN_IMAGE_DIRS
   \"${PROJECT_SOURCE_DIR}/Images\"
+  \"${PROJECT_SOURCE_DIR}/Images/DevHelper\"
   \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/Images\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages\"
