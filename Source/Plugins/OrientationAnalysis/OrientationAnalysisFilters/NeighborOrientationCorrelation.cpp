@@ -235,7 +235,7 @@ void NeighborOrientationCorrelation::execute()
     int64_t progressInt = 0;
     for (size_t i = 0; i < totalPoints; i++)
     {
-      if (i > prog)
+      if (DimType(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("|| Level %1 of %2: Processing Data %3%").arg(startLevel - currentLevel).arg(startLevel - m_Level).arg(progressInt);
@@ -332,7 +332,7 @@ void NeighborOrientationCorrelation::execute()
     progressInt = 0;
     for (size_t i = 0; i < totalPoints; i++)
     {
-      if (i > prog)
+      if (DimType(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("|| Level %1 of %2: Copying Data %3%").arg(startLevel - currentLevel).arg(startLevel - m_Level).arg(progressInt);

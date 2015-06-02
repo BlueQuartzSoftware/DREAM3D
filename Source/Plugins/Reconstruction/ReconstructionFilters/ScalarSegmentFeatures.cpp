@@ -67,7 +67,7 @@ class CompareFunctor
 class TSpecificCompareFunctorBool : public CompareFunctor
 {
   public:
-    TSpecificCompareFunctorBool(void* data, size_t length, bool tolerance, int32_t* featureIds) :
+    TSpecificCompareFunctorBool(void* data, int64_t length, bool tolerance, int32_t* featureIds) :
       m_Length(length),
       m_FeatureIds(featureIds)
     {
@@ -104,7 +104,7 @@ template<class T>
 class TSpecificCompareFunctor : public CompareFunctor
 {
   public:
-    TSpecificCompareFunctor(void* data, size_t length, T tolerance, int32_t* featureIds) :
+    TSpecificCompareFunctor(void* data, int64_t length, T tolerance, int32_t* featureIds) :
       m_Length(length),
       m_Tolerance(tolerance),
       m_FeatureIds(featureIds)
@@ -437,6 +437,7 @@ void ScalarSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+  int64_t inDataPoints = static_cast<int64_t>(m_InputDataPtr.lock()->getNumberOfTuples());
 
   QString dType = m_InputDataPtr.lock()->getTypeAsString();
   if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
@@ -445,47 +446,47 @@ void ScalarSegmentFeatures::execute()
   }
   else if (dType.compare("int8_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("bool") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int16_t") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int32_t") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int64_t") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("float") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("double") == 0)
   {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, m_InputDataPtr.lock()->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration

@@ -212,7 +212,7 @@ void NeighborCICorrelation::execute()
           }
         }
       }
-      if (i > prog)
+      if (DimType(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
@@ -230,7 +230,7 @@ void NeighborCICorrelation::execute()
     progressInt = 0;
     for (size_t i = 0; i < totalPoints; i++)
     {
-      if (i > prog)
+      if (DimType(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("|| Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
