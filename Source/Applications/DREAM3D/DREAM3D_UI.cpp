@@ -114,7 +114,8 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_ActionNewFolder(NULL),
   m_ActionRemovePipeline(NULL),
   m_ActionShowInFileSystem(NULL),
-  m_ActionClearPipeline(NULL)
+  m_ActionClearPipeline(NULL),
+  m_ActionCloseWindow(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
 
@@ -429,6 +430,14 @@ void DREAM3D_UI::on_actionExit_triggered()
   qApp->closeAllWindows();
   qApp->quit();
 #endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::m_ActionCloseWindow_triggered()
+{
+  this->close();
 }
 
 // -----------------------------------------------------------------------------
@@ -1030,6 +1039,17 @@ void DREAM3D_UI::initializeMenuActions()
 #endif
   connect(m_ActionShowInFileSystem, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
+
+#if defined(Q_OS_MAC)
+  /* m_ActionCloseWindow */
+  m_ActionCloseWindow = new QAction(this);
+  m_ActionCloseWindow->setObjectName(QString::fromUtf8("m_ActionCloseWindow"));
+  m_ActionCloseWindow->setText(QApplication::translate("DREAM3D_UI", "Close Window", 0));
+  QKeySequence m_ActionCloseWindowKeySeq(Qt::CTRL + Qt::Key_W);
+  m_ActionCloseWindow->setShortcut(m_ActionCloseWindowKeySeq);
+  connect(m_ActionCloseWindow, SIGNAL(triggered()),
+    bookmarksDockWidget, SLOT(m_ActionCloseWindow_triggered()));
+#endif
 }
 
 // -----------------------------------------------------------------------------

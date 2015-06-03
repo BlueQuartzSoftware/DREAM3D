@@ -175,6 +175,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
     void on_actionExit_triggered();
+    void m_ActionCloseWindow_triggered();
 
     //Pipeline Menu
 //    void on_m_ActionUpdatePipeline_triggered();
@@ -430,6 +431,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QAction* m_ActionRemovePipeline;
     QAction* m_ActionShowInFileSystem;
     QAction* m_ActionClearPipeline;
+    QAction* m_ActionCloseWindow;
 
     /**
     * @brief Updates the "first run" variable in the preferences file
