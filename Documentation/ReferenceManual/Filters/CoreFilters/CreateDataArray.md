@@ -2,11 +2,13 @@ Create Data Array {#createdataarray}
 =====
 
 ## Group (Subgroup) ##
-Core (Misc)
+Core Filters (Generation)
 
 
 ## Description ##
 This filter creates a DataArray of any primitive type with any number of components (1 Row x N Cols) and initialize all the values to a user settable value. The primitive type of the array to create is set using an integer constant. Code listing 1 shows the values:
+
+**Code Listing 1**
 
     static const int Int8 = 0;
     static const int UInt8 = 1;
@@ -20,7 +22,6 @@ This filter creates a DataArray of any primitive type with any number of compone
     static const int Double = 9;
     static const int Bool = 10;
     
-**Code Listing 1**
 
 ## Data Types ##
 
@@ -62,19 +63,6 @@ None
 | Type | Default Array Name |
 |--------|----------------------------|
 | Based on User Input  | User Settable  |
-
-
-
-## Authors ##
-
-**Copyright** 2015 BlueQuartz Software, LLC
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
 
 
 ## License & Copyright ##
