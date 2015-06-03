@@ -1040,6 +1040,7 @@ void DREAM3D_UI::initializeMenuActions()
   connect(m_ActionShowInFileSystem, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
 
+#if defined(Q_OS_MAC)
   /* m_ActionCloseWindow */
   m_ActionCloseWindow = new QAction(this);
   m_ActionCloseWindow->setObjectName(QString::fromUtf8("m_ActionCloseWindow"));
@@ -1049,6 +1050,7 @@ void DREAM3D_UI::initializeMenuActions()
   menuFile->addAction(m_ActionCloseWindow);
   connect(m_ActionCloseWindow, SIGNAL(triggered()),
     this, SLOT(m_ActionCloseWindow_triggered()));
+#endif
 }
 
 // -----------------------------------------------------------------------------
