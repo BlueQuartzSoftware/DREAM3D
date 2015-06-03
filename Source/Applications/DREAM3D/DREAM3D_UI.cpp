@@ -1002,7 +1002,7 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionClearPipeline->setObjectName(QString::fromUtf8("m_ActionClearPipeline"));
   m_ActionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0));
   menuPipeline->addAction(m_ActionClearPipeline);
-  QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Escape);
+  QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Backspace);
   m_ActionClearPipeline->setShortcut(actionClearKeySeq);
   connect(m_ActionClearPipeline, SIGNAL(triggered()),
     this, SLOT(clearPipeline()));
