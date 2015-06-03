@@ -79,6 +79,7 @@ FilterInputWidget::FilterInputWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 FilterInputWidget::~FilterInputWidget()
 {
+  
 }
 
 // -----------------------------------------------------------------------------
