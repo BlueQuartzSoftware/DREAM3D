@@ -215,11 +215,11 @@ class ReadEdaxH5Data : public AbstractFilter
 
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
 

@@ -179,6 +179,15 @@ namespace Ebsd
 
   } // End namespace Ctf
 
+  namespace CtfFile
+  {
+    const QString Phases("Phases");
+    const QString EulerAngles("EulerAngles");
+    const QString CrystalStructures("CrystalStructures");
+    const QString MaterialName("MaterialName");
+    const QString LatticeConstants("LatticeConstants");
+    const QString BravaisLattice("BravaisLattice");
+  }
 } // End Namespace Ebsd
 
 #endif /* _HKLConstants.h_  */
