@@ -2,8 +2,7 @@ Convert Data (Voxel Cell) {#convertdata}
 =====
 
 ## Group (Subgroup) ##
-Generic (Misc)
-
+Core Filters (Misc)
 
 
 ## Description ##
@@ -29,8 +28,8 @@ When converting data from signed values to unsigned values or vice-versa then th
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Input Array Name | String |  
-| Scalar Type      | Enumeration |  
+| Attribute Array Name | String |
+| Scalar Type      | Enumeration |
 | Output Array Name | String |
 
 ## Required Arrays ##
@@ -44,21 +43,9 @@ Volume DataContainer
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Variable  | Depends on User Selection | The converted array | other   |
-
-
-
-## Authors ##
-
-**Copyright** 2013 Michael A. Jackson (BlueQuartz Software)
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
+| Type | Default Array Name | Description |
+|------|--------------------|-------------|
+| Variable  | Depends on User Selection | The converted array |
 
 
 
