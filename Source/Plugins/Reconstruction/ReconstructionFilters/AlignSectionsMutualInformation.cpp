@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,26 +36,13 @@
 
 #include "AlignSectionsMutualInformation.h"
 
-#include <QtCore/QtDebug>
-#include <fstream>
-#include <sstream>
-
 #include "DREAM3DLib/Common/Constants.h"
-
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
+#include "Reconstruction/ReconstructionConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -68,24 +55,19 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   Seed = QDateTime::currentMSecsSinceEpoch();
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsVector();
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   featurecounts = NULL;
+  m_FeatureIds = NULL;
 
-  //only setting up the child parameters because the parent constructor has already been called
+  // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
 }
 
@@ -101,17 +83,16 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::setupFilterParameters()
 {
-  //getting the current parameters that were set by the parent and adding to it before resetting it
+  // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_front(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, getMisorientationTolerance(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,  getQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Quaternions", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,  getQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,  getCellPhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use GoodVoxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
-
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, false));
+  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -155,43 +136,38 @@ void AlignSectionsMutualInformation::dataCheck()
 {
   setErrorCondition(0);
 
-  INIT_DataArray(m_FeatureCounts, int);
+  INIT_DataArray(m_FeatureCounts, int32_t);
 
-  //Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
+  // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
   setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
 
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
-  {
-    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> dims(1, 4);
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 4);
+  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getQuatsArrayPath()); }
 
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getQuatsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  dims[0] = 1;
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray< int32_t>, AbstractFilter>(this,  getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 1;
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray< int32_t>, AbstractFilter>(this,  getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
   if(m_UseGoodVoxels == true)
   {
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
   }
 
-//typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -204,38 +180,19 @@ void AlignSectionsMutualInformation::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  AlignSections::preflight();
   setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::execute()
-{
-  setErrorCondition(0);
-
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  //Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
-
-  AlignSections::execute();
-
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Aligning Sections Complete");
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
+void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), "MI FeatureIds");
+  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), "_INTERNAL_USE_ONLY_MIFeatureIds");
   m_FeatureIds = p->getPointer(0);
 
   std::ofstream outFile;
@@ -244,7 +201,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std:
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
 
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -258,22 +215,22 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std:
     static_cast<DimType>(udims[2]),
   };
 
-  float disorientation = 0;
-  float mindisorientation = 100000000;
+  float disorientation = 0.0f;
+  float mindisorientation = std::numeric_limits<float>::max();
   float** mutualinfo12 = NULL;
   float* mutualinfo1 = NULL;
   float* mutualinfo2 = NULL;
-  int featurecount1, featurecount2;
-  int newxshift = 0;
-  int newyshift = 0;
-  int oldxshift = 0;
-  int oldyshift = 0;
-  float count = 0;
-  int slice = 0;
+  int32_t featurecount1 = 0, featurecount2 = 0;
+  int64_t newxshift = 0;
+  int64_t newyshift = 0;
+  int64_t oldxshift = 0;
+  int64_t oldyshift = 0;
+  float count = 0.0f;
+  DimType slice = 0;
 
-  int refgnum, curgnum;
-  int refposition = 0;
-  int curposition = 0;
+  int32_t refgnum = 0, curgnum = 0;
+  DimType refposition = 0;
+  DimType curposition = 0;
 
   form_features_sections();
 
@@ -281,25 +238,26 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std:
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-    misorients[a].assign(dims[1], 0.0);
+    misorients[a].assign(dims[1], 0.0f);
   }
+
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
-    //  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    mindisorientation = 100000000;
-    slice = static_cast<int>( (dims[2] - 1) - iter );
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    mindisorientation = std::numeric_limits<float>::max();
+    slice = (dims[2] - 1) - iter;
     featurecount1 = featurecounts[slice];
     featurecount2 = featurecounts[slice + 1];
     mutualinfo12 = new float *[featurecount1];
     mutualinfo1 = new float[featurecount1];
     mutualinfo2 = new float[featurecount2];
 
-    for (int a = 0; a < featurecount1; a++)
+    for (int32_t a = 0; a < featurecount1; a++)
     {
       mutualinfo1[a] = 0.0f;
       mutualinfo12[a] = new float[featurecount2];
-      for (int b = 0; b < featurecount2; b++)
+      for (int32_t b = 0; b < featurecount2; b++)
       {
         mutualinfo12[a][b] = 0.0f;
         mutualinfo2[b] = 0.0f;
@@ -320,26 +278,26 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std:
     {
       oldxshift = newxshift;
       oldyshift = newyshift;
-      for (int j = -3; j < 4; j++)
+      for (int32_t j = -3; j < 4; j++)
       {
-        for (int k = -3; k < 4; k++)
+        for (int32_t k = -3; k < 4; k++)
         {
           disorientation = 0;
           count = 0;
-          if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
+          if (misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] == 0 && abs(k + oldxshift) < (dims[0] / 2)
               && (j + oldyshift) < (dims[1] / 2))
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
               for (DimType n = 0; n < dims[0]; n = n + 4)
               {
-                if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
+                if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
-                  refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
-                  curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
+                  refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
+                  curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
                   refgnum = m_FeatureIds[refposition];
                   curgnum = m_FeatureIds[curposition];
-                  if(curgnum >= 0 && refgnum >= 0)
+                  if (curgnum >= 0 && refgnum >= 0)
                   {
                     mutualinfo12[curgnum][refgnum]++;
                     mutualinfo1[curgnum]++;
@@ -355,42 +313,42 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std:
                 }
               }
             }
-            float ha = 0;
-            float hb = 0;
-            float hab = 0;
-            for (int b = 0; b < featurecount1; b++)
+            float ha = 0.0f;
+            float hb = 0.0f;
+            float hab = 0.0f;
+            for (int32_t b = 0; b < featurecount1; b++)
             {
-              mutualinfo1[b] = mutualinfo1[b] / float(count);
-              if(mutualinfo1[b] != 0) { ha = ha + mutualinfo1[b] * log(mutualinfo1[b]); }
+              mutualinfo1[b] = mutualinfo1[b] / count;
+              if (mutualinfo1[b] != 0) { ha = ha + mutualinfo1[b] * logf(mutualinfo1[b]); }
             }
-            for (int c = 0; c < featurecount2; c++)
+            for (int32_t c = 0; c < featurecount2; c++)
             {
               mutualinfo2[c] = mutualinfo2[c] / float(count);
-              if(mutualinfo2[c] != 0) { hb = hb + mutualinfo2[c] * log(mutualinfo2[c]); }
+              if (mutualinfo2[c] != 0) { hb = hb + mutualinfo2[c] * logf(mutualinfo2[c]); }
             }
-            for (int b = 0; b < featurecount1; b++)
+            for (int32_t b = 0; b < featurecount1; b++)
             {
-              for (int c = 0; c < featurecount2; c++)
+              for (int32_t c = 0; c < featurecount2; c++)
               {
-                mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
-                if(mutualinfo12[b][c] != 0) { hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]); }
-                float value = 0;
-                if(mutualinfo1[b] > 0 && mutualinfo2[c] > 0) { value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c])); }
-                if(value != 0) { disorientation = disorientation + (mutualinfo12[b][c] * log(value)); }
+                mutualinfo12[b][c] = mutualinfo12[b][c] / count;
+                if (mutualinfo12[b][c] != 0) { hab = hab + mutualinfo12[b][c] * logf(mutualinfo12[b][c]); }
+                float value = 0.0f;
+                if (mutualinfo1[b] > 0 && mutualinfo2[c] > 0) { value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c])); }
+                if (value != 0) { disorientation = disorientation + (mutualinfo12[b][c] * logf(value)); }
               }
             }
-            for (int b = 0; b < featurecount1; b++)
+            for (int32_t b = 0; b < featurecount1; b++)
             {
-              for (int c = 0; c < featurecount2; c++)
+              for (int32_t c = 0; c < featurecount2; c++)
               {
-                mutualinfo12[b][c] = 0;
-                mutualinfo1[b] = 0;
-                mutualinfo2[c] = 0;
+                mutualinfo12[b][c] = 0.0f;
+                mutualinfo1[b] = 0.0f;
+                mutualinfo2[c] = 0.0f;
               }
             }
-            disorientation = static_cast<float>( 1.0 / disorientation );
-            misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
-            if(disorientation < mindisorientation)
+            disorientation = 1.0f / disorientation;
+            misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] = disorientation;
+            if (disorientation < mindisorientation)
             {
               newxshift = k + oldxshift;
               newyshift = j + oldyshift;
@@ -402,13 +360,13 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std:
     }
     xshifts[iter] = xshifts[iter - 1] + newxshift;
     yshifts[iter] = yshifts[iter - 1] + newyshift;
-    if(getWriteAlignmentShifts() == true)
+    if (getWriteAlignmentShifts() == true)
     {
       outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << "\n";
     }
     delete[] mutualinfo1;
     delete[] mutualinfo2;
-    for (int i = 0; i < featurecount1; i++)
+    for (int32_t i = 0; i < featurecount1; i++)
     {
       delete mutualinfo12[i];
     }
@@ -420,7 +378,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int>& xshifts, std:
 
   m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray(DREAM3D::CellData::FeatureIds);
 
-  if(getWriteAlignmentShifts() == true)
+  if (getWriteAlignmentShifts() == true)
   {
     outFile.close();
   }
@@ -434,7 +392,7 @@ void AlignSectionsMutualInformation::form_features_sections()
   DREAM3D_RANDOMNG_NEW()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -448,53 +406,49 @@ void AlignSectionsMutualInformation::form_features_sections()
     static_cast<DimType>(udims[2]),
   };
 
-  // int64_t totalPoints = m->totalPoints();
-
-
-  int point = 0;
-  int seed = 0;
-  int noseeds = 0;
-  int featurecount = 1;
-  int neighbor;
-  // int currentpoint;
-  QuatF q1;
-  QuatF q2;
+  DimType point = 0;
+  DimType seed = 0;
+  bool noseeds = false;
+  int32_t featurecount = 1;
+  DimType neighbor = 0;
+  QuatF q1 = QuaternionMathF::New();
+  QuatF q2 = QuaternionMathF::New();
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  //  float qs[5];
-  float w;
-  float n1;
-  float n2;
-  float n3;
+  float w = 0.0f;
+  float n1 = 0.0f;
+  float n2 = 0.0f;
+  float n3 = 0.0f;
   DimType randx = 0;
   DimType randy = 0;
-  DimType good = 0;
-  DimType x, y, z;
-  DimType col, row;
+  bool good = false;
+  DimType x = 0, y = 0, z = 0;
+  DimType col = 0, row = 0;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
   m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
 
-  std::vector<int> voxelslist(initialVoxelsListSize, -1);
-  DimType neighpoints[4];
+  std::vector<DimType> voxelslist(initialVoxelsListSize, -1);
+  DimType neighpoints[4] = { 0, 0, 0, 0 };
   neighpoints[0] = -dims[0];
   neighpoints[1] = -1;
   neighpoints[2] = 1;
   neighpoints[3] = dims[0];
 
-  unsigned int phase1, phase2;
+  uint32_t phase1 = 0, phase2 = 0;
+
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
-
     QString ss = QObject::tr("Aligning Sections - Identifying Features on Sections - %1 Percent Complete").arg(((float)slice / dims[2]) * 100);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     featurecount = 1;
-    noseeds = 0;
-    while (noseeds == 0)
+    noseeds = false;
+    while (noseeds == false)
     {
       seed = -1;
-      randx = int(float(rg.genrand_res53()) * float(dims[0]));
-      randy = int(float(rg.genrand_res53()) * float(dims[1]));
+      randx = DimType(float(rg.genrand_res53()) * float(dims[0]));
+      randy = DimType(float(rg.genrand_res53()) * float(dims[1]));
       for (DimType j = 0; j < dims[1]; ++j)
       {
         for (DimType i = 0; i < dims[0]; ++i)
@@ -502,19 +456,19 @@ void AlignSectionsMutualInformation::form_features_sections()
           x = randx + i;
           y = randy + j;
           z = slice;
-          if(x > dims[0] - 1) { x = x - dims[0]; }
-          if(y > dims[1] - 1) { y = y - dims[1]; }
-          point = static_cast<int>( (z * dims[0] * dims[1]) + (y * dims[0]) + x );
-          if((m_UseGoodVoxels == false || m_GoodVoxels[point] == true) && m_FeatureIds[point] == 0 && m_CellPhases[point] > 0)
+          if (x > dims[0] - 1) { x = x - dims[0]; }
+          if (y > dims[1] - 1) { y = y - dims[1]; }
+          point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
+          if ((m_UseGoodVoxels == false || m_GoodVoxels[point] == true) && m_FeatureIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
           }
-          if(seed > -1) { break; }
+          if (seed > -1) { break; }
         }
-        if(seed > -1) { break; }
+        if( seed > -1) { break; }
       }
-      if(seed == -1) { noseeds = 1; }
-      if(seed >= 0)
+      if (seed == -1) { noseeds = true; }
+      if (seed >= 0)
       {
         size = 0;
         m_FeatureIds[seed] = featurecount;
@@ -522,38 +476,38 @@ void AlignSectionsMutualInformation::form_features_sections()
         size++;
         for (size_t j = 0; j < size; ++j)
         {
-          int currentpoint = voxelslist[j];
+          DimType currentpoint = voxelslist[j];
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
           QuaternionMathF::Copy(quats[currentpoint], q1);
           phase1 = m_CrystalStructures[m_CellPhases[currentpoint]];
-          for (int i = 0; i < 4; i++)
+          for (int32_t i = 0; i < 4; i++)
           {
-            good = 1;
-            neighbor = static_cast<int>( currentpoint + neighpoints[i] );
-            if((i == 0) && row == 0) { good = 0; }
-            if((i == 3) && row == (dims[1] - 1)) { good = 0; }
-            if((i == 1) && col == 0) { good = 0; }
-            if((i == 2) && col == (dims[0] - 1)) { good = 0; }
-            if(good == 1 && m_FeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
+            good = true;
+            neighbor = currentpoint + neighpoints[i];
+            if ((i == 0) && row == 0) { good = false; }
+            if ((i == 3) && row == (dims[1] - 1)) { good = false; }
+            if ((i == 1) && col == 0) { good = false; }
+            if ((i == 2) && col == (dims[0] - 1)) { good = false; }
+            if (good == true && m_FeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
-              w = 10000.0f;
+              w = std::numeric_limits<float>::max();
               QuaternionMathF::Copy(quats[neighbor], q2);
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-              if(phase1 == phase2)
+              if (phase1 == phase2)
               {
                 w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               }
-              if(w < m_MisorientationTolerance)
+              if (w < m_MisorientationTolerance)
               {
                 m_FeatureIds[neighbor] = featurecount;
                 voxelslist[size] = neighbor;
                 size++;
-                if(size >= voxelslist.size())
+                if (std::vector<DimType>::size_type(size) >= voxelslist.size())
                 {
                   size = voxelslist.size();
                   voxelslist.resize(size + initialVoxelsListSize);
-                  for(std::vector<int>::size_type v = size; v < voxelslist.size(); ++v) { voxelslist[v] = -1; }
+                  for (std::vector<DimType>::size_type v = size; v < voxelslist.size(); ++v) { voxelslist[v] = -1; }
                 }
               }
             }
@@ -561,12 +515,29 @@ void AlignSectionsMutualInformation::form_features_sections()
         }
         voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
         featurecount++;
-
         voxelslist.assign(initialVoxelsListSize, -1);
       }
     }
     featurecounts[slice] = featurecount;
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  // Converting the user defined tolerance to radians.
+  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+
+  AlignSections::execute();
+
+  // If there is an error set this to something negative and also set a message
+  notifyStatusMessage(getHumanLabel(), "Aligning Sections Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -588,13 +559,11 @@ AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool c
 const QString AlignSectionsMutualInformation::getCompiledLibraryName()
 { return ReconstructionConstants::ReconstructionBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getGroupName()
 { return DREAM3D::FilterGroups::ReconstructionFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -602,10 +571,8 @@ const QString AlignSectionsMutualInformation::getGroupName()
 const QString AlignSectionsMutualInformation::getSubGroupName()
 {return DREAM3D::FilterSubGroups::AlignmentFilters;}
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getHumanLabel()
 { return "Align Sections (Mutual Information)"; }
-

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,46 +36,38 @@
 
 #include "ScalarSegmentFeatures.h"
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#include <QtCore/QDateTime>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-
-#define ERROR_TXT_OUT 1
-#define ERROR_TXT_OUT1 1
-
-
-
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
-
-
+#include "Reconstruction/ReconstructionConstants.h"
 
 /* from http://www.newty.de/fpt/functor.html */
-// base class
+/**
+ * @brief The CompareFunctor class serves as a functor superclass for specific implementations
+ * of performing scalar comparisons
+ */
 class CompareFunctor
 {
   public:
     virtual ~CompareFunctor() {}
 
-    virtual bool operator()(size_t index, size_t neighIndex, size_t gnum)  // call using operator
+    virtual bool operator()(int64_t index, int64_t neighIndex, int32_t gnum)  // call using () operator
     {
       return false;
     }
 };
 
+/**
+ * @brief The TSpecificCompareFunctorBool class extends @see CompareFunctor to compare boolean data
+ */
 class TSpecificCompareFunctorBool : public CompareFunctor
 {
   public:
-    TSpecificCompareFunctorBool(void* data, size_t length, bool tolerance, int32_t* featureIds) :
+    TSpecificCompareFunctorBool(void* data, int64_t length, bool tolerance, int32_t* featureIds) :
       m_Length(length),
       m_FeatureIds(featureIds)
     {
@@ -83,7 +75,7 @@ class TSpecificCompareFunctorBool : public CompareFunctor
     }
     virtual ~TSpecificCompareFunctorBool() {}
 
-    virtual bool operator()(size_t referencepoint, size_t neighborpoint, size_t gnum)
+    virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
     {
       // Sanity check the indices that are being passed in.
       if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
@@ -93,7 +85,6 @@ class TSpecificCompareFunctorBool : public CompareFunctor
         m_FeatureIds[neighborpoint] = gnum;
         return true;
       }
-
       return false;
     }
 
@@ -101,18 +92,19 @@ class TSpecificCompareFunctorBool : public CompareFunctor
     TSpecificCompareFunctorBool() {}
 
   private:
-    bool* m_Data;       // The data that is being compared
+    bool* m_Data; // The data that is being compared
     size_t m_Length; // Length of the Data Array
-
-    int32_t* m_FeatureIds; // The feature Ids
+    int32_t* m_FeatureIds; // The Feature Ids
 };
 
-
+/**
+ * @brief The TSpecificCompareFunctor class extens @see CompareFunctor to compare templated data
+ */
 template<class T>
 class TSpecificCompareFunctor : public CompareFunctor
 {
   public:
-    TSpecificCompareFunctor(void* data, size_t length, T tolerance, int32_t* featureIds) :
+    TSpecificCompareFunctor(void* data, int64_t length, T tolerance, int32_t* featureIds) :
       m_Length(length),
       m_Tolerance(tolerance),
       m_FeatureIds(featureIds)
@@ -121,7 +113,7 @@ class TSpecificCompareFunctor : public CompareFunctor
     }
     virtual ~TSpecificCompareFunctor() {}
 
-    virtual bool operator()(size_t referencepoint, size_t neighborpoint, size_t gnum)
+    virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
     {
       // Sanity check the indices that are being passed in.
       if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
@@ -149,10 +141,10 @@ class TSpecificCompareFunctor : public CompareFunctor
     TSpecificCompareFunctor() {}
 
   private:
-    T* m_Data;       // The data that is being compared
+    T* m_Data; // The data that is being compared
     size_t m_Length; // Length of the Data Array
     T      m_Tolerance; // The tolerance of the comparison
-    int32_t* m_FeatureIds; // The feature Ids
+    int32_t* m_FeatureIds; // The Feature Ids
 };
 
 // -----------------------------------------------------------------------------
@@ -160,7 +152,6 @@ class TSpecificCompareFunctor : public CompareFunctor
 // -----------------------------------------------------------------------------
 ScalarSegmentFeatures::ScalarSegmentFeatures() :
   SegmentFeatures(),
-//  m_Compare(NULL),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_ScalarArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_ScalarTolerance(5.0f),
@@ -169,11 +160,9 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_FeatureIds(NULL),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-  m_Active(NULL),
-  missingGoodVoxels(true)
+  m_FeatureIds(NULL),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -183,10 +172,6 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
 // -----------------------------------------------------------------------------
 ScalarSegmentFeatures::~ScalarSegmentFeatures()
 {
-//  if (m_Compare != NULL)
-//  {
-//    delete m_Compare;
-//  }
 }
 
 // -----------------------------------------------------------------------------
@@ -195,15 +180,14 @@ ScalarSegmentFeatures::~ScalarSegmentFeatures()
 void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Scalar Array Name", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getScalarArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Scalar Array To Segment", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getScalarArrayPath(), false));
   parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget, getScalarTolerance(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), false, ""));
-
+  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), false, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), true, ""));
   setFilterParameters(parameters);
@@ -262,33 +246,50 @@ void ScalarSegmentFeatures::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  //Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
+  // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_ScalarArrayPath.getDataContainerName());
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
 
-  ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> dims(1, 1);
+  QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), m_ScalarArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  m_InputDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getScalarArrayPath()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_InputDataPtr.lock().get() )
+  {
+    m_InputData = m_InputDataPtr.lock()->getVoidPointer(0);
+    if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
+    {
+      QString ss = QObject::tr("The selected array is not a scalar array. The number of components is %1").arg(m_InputDataPtr.lock()->getNumberOfComponents());
+      setErrorCondition(-999);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getScalarArrayPath()); }
+
   if(m_UseGoodVoxels == true)
   {
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
   }
+
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -301,152 +302,39 @@ void ScalarSegmentFeatures::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  SegmentFeatures::preflight();
   setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::execute()
-{
-  setErrorCondition(0);
-
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-
-  QVector<size_t> tDims(1, 1);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-  updateFeatureInstancePointers();
-  // This runs a subfilter
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-
-  QString dcName = m_ScalarArrayPath.getDataContainerName();
-  QString amName = m_ScalarArrayPath.getAttributeMatrixName();
-  QString daName = m_ScalarArrayPath.getDataArrayName();
-
-  m_InputData = getDataContainerArray()->getDataContainer(dcName)->getAttributeMatrix(amName)->getAttributeArray(daName);
-  if (NULL == m_InputData.get())
-  {
-
-    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_ScalarArrayPath.getDataArrayName());
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  // Tell the user we are starting the filter
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
-
-  for(int64_t i = 0; i < totalPoints; i++)
-  {
-    m_FeatureIds[i] = 0;
-  }
-
-  QString dType = m_InputData->getTypeAsString();
-  if(m_InputData->getNumberOfComponents() != 1)
-  {
-    m_Compare = boost::shared_ptr<CompareFunctor>(new CompareFunctor()); // The default CompareFunctor which ALWAYS returns false for the comparison
-  }
-  else if (dType.compare("int8_t") == 0)
-  {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("uint8_t") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("bool") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("int16_t") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("uint16_t") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("int32_t") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("uint32_t") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("int64_t") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("uint64_t") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("float") == 0)
-  {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-  else if (dType.compare("double") == 0)
-  {
-    m_Compare =  boost::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds));
-  }
-
-  // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
-  const size_t rangeMin = 0;
-  const size_t rangeMax = totalPoints - 1;
-  initializeVoxelSeedGenerator(rangeMin, rangeMax);
-
-  SegmentFeatures::execute();
-
-  size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
-  if (totalFeatures < 2)
-  {
-    setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?", getErrorCondition());
-    return;
-  }
-
-  // By default we randomize grains
-  if (true == m_RandomizeFeatureIds)
-  {
-    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
-    randomizeFeatureIds(totalPoints, totalFeatures);
-  }
-
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Completed");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
+void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
   notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
-  const size_t rangeMin = 1;
-  const size_t rangeMax = totalFeatures - 1;
+  const int64_t rangeMin = 1;
+  const int64_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
   // Get a reference variable to the Generator object
   Generator& numberGenerator = *m_NumberGenerator;
 
-  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
+  DataArray<int64_t>::Pointer rndNumbers = DataArray<int64_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds");
 
-  int32_t* gid = rndNumbers->getPointer(0);
+  int64_t* gid = rndNumbers->getPointer(0);
   gid[0] = 0;
-  for(size_t i = 1; i < totalFeatures; ++i)
+
+  for (int64_t i = 1; i < totalFeatures; ++i)
   {
     gid[i] = i;
   }
 
-  size_t r;
-  size_t temp;
+  int64_t r = 0;
+  int64_t temp = 0;
+
   //--- Shuffle elements by randomly exchanging each with one other.
-  for (size_t i = 1; i < totalFeatures; i++)
+  for (int64_t i = 1; i < totalFeatures; i++)
   {
     r = numberGenerator(); // Random remaining position.
     if (r >= totalFeatures)
@@ -459,29 +347,30 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t tota
   }
 
   // Now adjust all the Grain Id values for each Voxel
-  for(int64_t i = 0; i < totalPoints; ++i)
+  for (int64_t i = 0; i < totalPoints; ++i)
   {
-    m_FeatureIds[i] = gid[ m_FeatureIds[i] ];
+    m_FeatureIds[i] = gid[m_FeatureIds[i]];
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
+int64_t ScalarSegmentFeatures::getSeed(int32_t gnum)
 {
   setErrorCondition(0);
+
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  int seed = -1;
+  int64_t seed = -1;
   Generator& numberGenerator = *m_NumberGenerator;
-  while(seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)
+  while (seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)
   {
     // Get the next voxel index in the precomputed list of voxel seeds
-    size_t randpoint = numberGenerator();
+    int64_t randpoint = numberGenerator();
     m_TotalRandomNumbersGenerated++; // Increment this counter
-    if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
+    if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
       if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
       {
@@ -502,10 +391,9 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
+bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
 {
-
-  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
+  if (m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {
     CompareFunctor* func = m_Compare.get();
     return (*func)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
@@ -520,20 +408,111 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
+void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
-
   // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
   // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
   // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
   // make sure that every voxel can be a seed point.
-  //  const size_t rangeMin = 0;
-  //  const size_t rangeMax = totalPoints - 1;
   m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
   m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
   m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
   m_TotalRandomNumbersGenerated = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+
+  QVector<size_t> tDims(1, 1);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
+
+  int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+  int64_t inDataPoints = static_cast<int64_t>(m_InputDataPtr.lock()->getNumberOfTuples());
+
+  QString dType = m_InputDataPtr.lock()->getTypeAsString();
+  if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
+  {
+    m_Compare = boost::shared_ptr<CompareFunctor>(new CompareFunctor()); // The default CompareFunctor which ALWAYS returns false for the comparison
+  }
+  else if (dType.compare("int8_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("uint8_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("bool") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("int16_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("uint16_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("int32_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("uint32_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("int64_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("uint64_t") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("float") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+  else if (dType.compare("double") == 0)
+  {
+    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+  }
+
+  // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
+  const int64_t rangeMin = 0;
+  const int64_t rangeMax = totalPoints - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
+  SegmentFeatures::execute();
+
+  int64_t totalFeatures = static_cast<int64_t>(m_ActivePtr.lock()->getNumberOfTuples());
+  if (totalFeatures < 2)
+  {
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", getErrorCondition());
+    return;
+  }
+
+  // By default we randomize grains
+  if (true == m_RandomizeFeatureIds)
+  {
+    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
+    randomizeFeatureIds(totalPoints, totalFeatures);
+  }
+
+  // If there is an error set this to something negative and also set a message
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -555,24 +534,20 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
 const QString ScalarSegmentFeatures::getCompiledLibraryName()
 { return ReconstructionConstants::ReconstructionBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getGroupName()
 { return DREAM3D::FilterGroups::ReconstructionFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getSubGroupName()
-{return DREAM3D::FilterSubGroups::SegmentationFilters;}
-
+{ return DREAM3D::FilterSubGroups::SegmentationFilters;}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getHumanLabel()
 { return "Segment Features (Scalar)"; }
-

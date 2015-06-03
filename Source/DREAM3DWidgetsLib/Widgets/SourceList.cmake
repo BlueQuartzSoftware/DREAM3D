@@ -7,10 +7,9 @@ set(DREAM3DWidgetsLib_Widgets_UIS "")
 # --------------------------------------------------------------------
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
-    AddFavoriteWidget
+    BookmarksDockWidget
     DREAM3DUpdateCheckDialog
     DREAM3DUserManualDialog
-    FavoritesDockWidget
     FilterInputWidget
     FilterLibraryDockWidget
     FilterListDockWidget
@@ -41,6 +40,10 @@ set(DREAM3DWidgetsLib_Widgets_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterTreeWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItem.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksModel.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksTreeView.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItemDelegate.h
   )
 set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_Widgets_SRCS}
@@ -48,6 +51,10 @@ set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterTreeWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItem.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksModel.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksTreeView.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItemDelegate.cpp
   )
 
 

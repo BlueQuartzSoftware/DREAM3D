@@ -50,9 +50,17 @@
 #include <Eigen/src/Core/util/Macros.h>
 #endif
 
+
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+
+#include "QtSupportLib/DREAM3DStyles.h"
+
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
+#include "Applications/DREAM3D/DREAM3D/License/DREAM3DLicenseFiles.h"
+#include "Applications/DREAM3D/DREAM3DVersion.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -61,8 +69,9 @@ AboutDREAM3D::AboutDREAM3D(QWidget* parent) :
 QDialog(parent)
 {
   setupUi(this);
-
+  setupGui();
   readVersions();
+  setLicenseFiles(DREAM3D::LicenseList);
 }
 
 // -----------------------------------------------------------------------------
@@ -75,8 +84,76 @@ AboutDREAM3D::~AboutDREAM3D()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AboutDREAM3D::setupGui()
+{
+  QString str;
+  QTextStream out(&str);
+
+  out << "DREAM3D Version " << DREAM3D::Version::Package();
+  versionLabel->setText(str);
+  versionLabel->setFont(DREAM3DStyles::GetTitleFont());
+
+  str.clear();
+  out << "Built on " << DREAM3D::Version::BuildDate();
+  buildDateLabel->setText(str);
+
+  str.clear();
+  out << "From revision " << DREAM3D::Version::Revision();
+  revisionLabel->setText(str);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutDREAM3D::setLicenseFiles(QStringList files)
+{
+  m_licenseFiles = files;
+  licenseCombo->clear();
+  m_licenseFiles = files;
+  for (int i = 0; i < m_licenseFiles.size(); ++i)
+  {
+    QString s = m_licenseFiles[i];
+    s.remove(0, 2);
+    s.remove(".license", Qt::CaseSensitive);
+    licenseCombo->addItem(s);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutDREAM3D::on_licenseCombo_currentIndexChanged(int index)
+{
+  //qDebug() << "on_licenseCombo_action" << "\n";
+  QString resourceFile = m_licenseFiles[licenseCombo->currentIndex()];
+  loadResourceFile(resourceFile);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AboutDREAM3D::loadResourceFile(const QString qresourceFile)
+{
+  QFile inputFile(qresourceFile);
+  inputFile.open(QIODevice::ReadOnly);
+  QTextStream in(&inputFile);
+  QString line = in.readAll();
+  inputFile.close();
+
+//  appHelpText->append(line);
+  appHelpText->setHtml(line);
+  appHelpText->setUndoRedoEnabled(false);
+  appHelpText->setUndoRedoEnabled(true);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AboutDREAM3D::readVersions()
 {
+#if 0
   QTableWidgetItem* qtwi = new QTableWidgetItem(QString("Item"), QTableWidgetItem::Type);
   version->setHorizontalHeaderItem(0, qtwi);
   QTableWidgetItem* qtwi1 = new QTableWidgetItem(QString("Version"), QTableWidgetItem::Type);
@@ -86,11 +163,11 @@ void AboutDREAM3D::readVersions()
   version->setItem(1, 1, new QTableWidgetItem(BOOST_LIB_VERSION));
   version->setItem(2, 1, new QTableWidgetItem(QT_VERSION_STR));
 
-	QString strH5 = QString::number(H5_VERS_MAJOR);
-	strH5.append(".");
-	strH5.append(QString::number(H5_VERS_MINOR));
-	strH5.append(".");
-	strH5.append(QString::number(H5_VERS_RELEASE));
+  QString strH5 = QString::number(H5_VERS_MAJOR);
+  strH5.append(".");
+  strH5.append(QString::number(H5_VERS_MINOR));
+  strH5.append(".");
+  strH5.append(QString::number(H5_VERS_RELEASE));
 
   version->setItem(4, 1, new QTableWidgetItem(strH5));
 
@@ -113,5 +190,6 @@ void AboutDREAM3D::readVersions()
   version->setItem(3, 1, new QTableWidgetItem(QWT_VERSION_STR));
 
   labelVersion->setText(DREAM3DLib::Version::PackageComplete().toLatin1().data());
+#endif
 }
 

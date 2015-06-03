@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -76,7 +76,7 @@ AngPhase::~AngPhase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseMaterialName(QList<QByteArray> tokens)
+void AngPhase::parseMaterialName(QList<QByteArray>& tokens)
 {
   m_MaterialName.clear();
   for(int i = 1; i < tokens.size(); ++i)
@@ -88,7 +88,7 @@ void AngPhase::parseMaterialName(QList<QByteArray> tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseFormula(QList<QByteArray> tokens)
+void AngPhase::parseFormula(QList<QByteArray>& tokens)
 {
   m_Formula.clear();
   for(int i = 1; i < tokens.size(); ++i)
@@ -100,7 +100,7 @@ void AngPhase::parseFormula(QList<QByteArray> tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseInfo(QList<QByteArray> tokens)
+void AngPhase::parseInfo(QList<QByteArray>& tokens)
 {
   m_Info.clear();
   for(int i = 1; i < tokens.size(); ++i)
@@ -126,7 +126,7 @@ void AngPhase::parseInfo(QList<QByteArray> tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseLatticeConstants(QList<QByteArray> tokens)
+void AngPhase::parseLatticeConstants(QList<QByteArray>& tokens)
 {
   m_LatticeConstants.clear();
 
@@ -157,7 +157,7 @@ void AngPhase::parseLatticeConstants(QList<QByteArray> tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseHKLFamilies(QList<QByteArray> tokens)
+void AngPhase::parseHKLFamilies(QList<QByteArray>& tokens)
 {
   HKLFamily::Pointer family = HKLFamily::New();
 
@@ -179,7 +179,7 @@ void AngPhase::parseHKLFamilies(QList<QByteArray> tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseCategories(QList<QByteArray> tokens)
+void AngPhase::parseCategories(QList<QByteArray> &tokens)
 {
   m_Categories.clear();
   bool ok = false;

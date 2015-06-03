@@ -64,14 +64,14 @@
     },
     "1": {
         "CellAttributeMatrixName": "CellData",
-        "DataContainerName": "SyntheticVolume",
+        "DataContainerName": "SyntheticVolumeDataContainer",
         "Dimensions": {
             "x": 128,
             "y": 128,
             "z": 128
         },
         "EstimateNumberOfFeatures": 0,
-        "FilterVersion": "5.2.1387",
+        "FilterVersion": "5.2.1400",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
@@ -97,7 +97,7 @@
         }
     },
     "2": {
-        "FilterVersion": "5.2.1387",
+        "FilterVersion": "5.2.1400",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
@@ -118,7 +118,7 @@
         "FeatureIdsArrayName": "FeatureIds",
         "FeatureInputFile": "",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "5.2.1387",
+        "FilterVersion": "5.2.1400",
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
         "HaveFeatures": 0,
@@ -146,7 +146,7 @@
         "OutputCellAttributeMatrixPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "OutputCellEnsembleAttributeMatrixName": "CellEnsembleData",
         "OutputCellFeatureAttributeMatrixName": "CellFeatureData",
@@ -158,16 +158,16 @@
     "4": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "5.2.1387",
+        "FilterVersion": "5.2.1400",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -189,14 +189,14 @@
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "Phases",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "5.2.1387",
+        "FilterVersion": "5.2.1400",
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
         "InputStatsArrayPath": {
@@ -206,14 +206,14 @@
         },
         "MaxIterations": 100000,
         "NeighborListArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "NeighborList",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "NumFeaturesArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "NumFeatures",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "PhaseTypesArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
@@ -221,14 +221,14 @@
             "Data Container Name": "StatsGeneratorDataContainer"
         },
         "SharedSurfaceAreaListArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "SharedSurfaceAreaList",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "SurfaceFeaturesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "SurfaceFeatures",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "VolumesArrayName": "Volumes"
     },
@@ -236,26 +236,26 @@
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "CellIPFColorsArrayName": "IPFColor",
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
-            "Data Container Name": "SyntheticVolume"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "StatsGeneratorDataContainer"
         },
-        "FilterVersion": "5.2.1387",
+        "FilterVersion": "5.2.1400",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "CellData",
             "Data Array Name": "",
-            "Data Container Name": "StatsGeneratorDataContainer"
+            "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "ReferenceDir": {
             "x": 0,

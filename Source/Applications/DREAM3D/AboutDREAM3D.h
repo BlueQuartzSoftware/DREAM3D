@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -52,13 +52,43 @@ class AboutDREAM3D : public QDialog, private Ui::AboutDREAM3D
     virtual ~AboutDREAM3D();
 
 
+    /**
+     * @brief This will set the list of licenses that can be viewed by the
+     * about box. The list should contain values such as ":/SomeLicense.license" which
+     * are defined in a Qt resource file (*.qrc).
+     * @param files The QString list of files to allow the About Box to load.
+     */
+    void setLicenseFiles(QStringList files);
+
+  protected slots:
+    void on_licenseCombo_currentIndexChanged(int index);
+
   protected:
 
+    /**
+     * @brief setupGui
+     */
+    void setupGui();
+
+    /**
+     * @brief Loads a file that is stored as a resource in the applications Qt resource
+     * system.
+     * @param qresourceFile The source file to load of the form ":/SomeFile.xxx"
+     */
+    void loadResourceFile(const QString qresourceFile);
+
+    /**
+     * @brief readVersions
+     */
+    void readVersions();
 
   private:
+    QStringList m_licenseFiles;
+
+
     AboutDREAM3D(const AboutDREAM3D&); // Copy Constructor Not Implemented
     void operator=(const AboutDREAM3D&); // Operator '=' Not Implemented
-    void readVersions();
+
 };
 #endif /* _AboutDREAM3D_H_ */
 

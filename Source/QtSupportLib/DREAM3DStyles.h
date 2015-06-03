@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -53,7 +53,7 @@ class QtSupportLib_EXPORT DREAM3DStyles : public QObject
     static QFont GetHumanLabelFont();
     static QFont GetBrandingLabelFont();
     static QFont GetCategoryFont();
-
+    static QFont GetTitleFont();
     static void LineEditErrorStyle(QLineEdit* lineEdit);
     static void LineEditClearStyle(QLineEdit* lineEdit);
 

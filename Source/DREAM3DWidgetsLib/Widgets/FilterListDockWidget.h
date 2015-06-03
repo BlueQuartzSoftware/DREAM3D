@@ -45,6 +45,8 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
+#include "QtSupportLib/DREAM3DSettings.h"
+
 #include "ui_FilterListDockWidget.h"
 
 
@@ -62,6 +64,16 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
   QString deserializeString(QList<QString> list, char token);
 
 	void matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int &filterCount);
+
+  /**
+  * @brief Reads the preferences from the users pref file
+  */
+  void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+
+  /**
+  * @brief Writes the preferences to the users pref file
+  */
+  void writeSettings(DREAM3DSettings& prefs);
 
   public slots:
 

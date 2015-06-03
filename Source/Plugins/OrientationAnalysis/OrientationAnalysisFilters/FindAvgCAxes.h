@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,26 +37,14 @@
 #ifndef _FindAvgCAxes_H_
 #define _FindAvgCAxes_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 /**
- * @class FindAvgCAxes FindAvgCAxes.h DREAM3DLib/GenericFilters/FindAvgCAxes.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindAvgCAxes class. See [Filter documentation](@ref findavgcaxes) for details.
  */
 class FindAvgCAxes : public AbstractFilter
 {
@@ -67,6 +55,7 @@ class FindAvgCAxes : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindAvgCAxes, AbstractFilter)
 
     virtual ~FindAvgCAxes();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -116,12 +105,10 @@ class FindAvgCAxes : public AbstractFilter
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxes)
 
     void dataCheck();
@@ -130,7 +117,4 @@ class FindAvgCAxes : public AbstractFilter
     void operator=(const FindAvgCAxes&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDAvgCAxes_H_ */
-
-
-
+#endif /* FindAvgCAxes_H_ */

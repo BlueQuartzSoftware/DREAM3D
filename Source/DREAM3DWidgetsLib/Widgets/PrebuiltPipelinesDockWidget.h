@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -40,8 +40,10 @@
 #include <QtCore/QSettings>
 
 #include <QtWidgets/QDockWidget>
+#include <QtWidgets/QMainWindow>
 
 #include "QtSupportLib/FileDragMessageBox.h"
+#include "QtSupportLib/DREAM3DSettings.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -90,6 +92,16 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      */
     FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
 
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+
+    /**
+    * @brief Writes the preferences to the users pref file
+    */
+    void writeSettings(DREAM3DSettings& prefs);
+
 
   public slots:
     void actionShowInFileSystem_triggered();
@@ -105,19 +117,18 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
 
 
   protected slots:
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+    void on_prebuiltsLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
+    void on_prebuiltsLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
+    void on_prebuiltsLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
 
 
   signals:
 
     /**
-     * @brief The signal is emitted when the user double clicks on a pipeline file
+     * @brief The signal is emitted when a pipeline file needs to be loaded into the view at an index
      * @param filePath The absolute path to the pipeline file
-     * @param type Should the pipeline be appended, replaced, or prepended
      */
-    void pipelineFileActivated(const QString& filePath, int index);
+    void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath);
 
     /**
      * @brief filterListGenerated

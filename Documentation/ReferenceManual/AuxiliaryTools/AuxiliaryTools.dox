@@ -4,6 +4,8 @@
 
 @subpage statsgenerator 
 
+@subpage devhelper
+
 A discussion of the helper tool for generating uer defined statistics for building synthetic structures in DREAM.3D.
 
 

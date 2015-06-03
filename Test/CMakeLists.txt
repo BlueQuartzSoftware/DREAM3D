@@ -43,7 +43,6 @@ AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest SOURCES ${DREAM3DTest_SOURCE_
 AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
 
-
 QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
 set_source_files_properties(${RemoveArraysObserver_MOC} PROPERTIES HEADER_FILE_ONLY TRUE)
 AddDREAM3DUnitTest(TESTNAME MoveDataTest
@@ -119,7 +118,7 @@ set(PREBUILT_PIPELINES_DIR "TestPipelines")
 set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 set(PREBUILT_PIPELINE_NAMES
-  Test1
+  
 )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )

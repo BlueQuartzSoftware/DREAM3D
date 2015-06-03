@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -536,13 +536,28 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
   float curmiso1 = 0.0f, curmiso2 = 0.0f, curmiso3 = 0.0f;
   size_t curmisobin = 0, newmisobin = 0;
 
+
   curmiso1 = m_MisorientationLists[feature][3 * j];
   curmiso2 = m_MisorientationLists[feature][3 * j + 1];
   curmiso3 = m_MisorientationLists[feature][3 * j + 2];
-  curmisobin = m_OrientationOps[sym]->getMisoBin(FOrientArrayType(curmiso1, curmiso2, curmiso3));
+
+  FOrientArrayType rod(curmiso1, curmiso2, curmiso3, 0.0f);
+  float mag = sqrt(curmiso1*curmiso1 + curmiso2*curmiso2 + curmiso3*curmiso3);
+  if(mag == 0.0f)
+  {
+    rod[3] = std::numeric_limits<float>::infinity();
+  }
+  else
+  {
+    rod[3] = mag;
+    rod[0] = rod[0]/rod[3];
+    rod[1] = rod[1]/rod[3];
+    rod[2] = rod[2]/rod[3];
+  }
+
+  curmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   w = m_OrientationOps[sym]->getMisoQuat(q1, q2, n1, n2, n3);
 
-  FOrientArrayType rod(4);
   FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
   newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   mdfchange = mdfchange
@@ -569,10 +584,24 @@ void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j,
   curmiso1 = m_MisorientationLists[feature][3 * j];
   curmiso2 = m_MisorientationLists[feature][3 * j + 1];
   curmiso3 = m_MisorientationLists[feature][3 * j + 2];
-  curmisobin = m_OrientationOps[sym]->getMisoBin(FOrientArrayType(curmiso1, curmiso2, curmiso3));
+
+  FOrientArrayType rod(curmiso1, curmiso2, curmiso3, 0.0f);
+  float mag = sqrt(curmiso1*curmiso1 + curmiso2*curmiso2 + curmiso3*curmiso3);
+  if(mag == 0.0f)
+  {
+    rod[3] = std::numeric_limits<float>::infinity();
+  }
+  else
+  {
+    rod[3] = mag;
+    rod[0] = rod[0]/rod[3];
+    rod[1] = rod[1]/rod[3];
+    rod[2] = rod[2]/rod[3];
+  }
+
+  curmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   w = m_OrientationOps[sym]->getMisoQuat(q1, q2, n1, n2, n3);
 
-  FOrientArrayType rod(4);
   FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
   newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
   m_MisorientationLists[feature][3 * j] = miso1;

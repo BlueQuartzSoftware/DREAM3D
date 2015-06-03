@@ -1,7 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
-* All rights reserved.
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -13,10 +11,9 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
-* BlueQuartz Software nor the names of its contributors may be used to endorse
-* or promote products derived from this software without specific prior written
-* permission.
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -29,28 +26,25 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-*  This code was written under United States Air Force Contract number
-*                           FA8650-07-D-5800
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
 #ifndef _ReadEdaxH5Data_H_
 #define _ReadEdaxH5Data_H_
 
-#include <QtCore/QString>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QDateTime>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 #include "EbsdLib/TSL/AngPhase.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-
 
 class H5OIMReader;
 
@@ -58,12 +52,8 @@ class H5OIMReader;
 class ReadEdaxH5DataPrivate;
 
 /**
-* @class ReadOrientationData ReadOrientationData.h /FilterCategoryFilters/ReadOrientationData.h
-* @brief
-* @author
-* @date
-* @version 1.0
-*/
+ * @brief The ReadEdaxH5Data class. See [Filter documentation](@ref readedaxh5data) for details.
+ */
 class ReadEdaxH5Data : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
@@ -98,8 +88,8 @@ class ReadEdaxH5Data : public AbstractFilter
     Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -165,15 +155,20 @@ class ReadEdaxH5Data : public AbstractFilter
 
     /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+
     DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+
     DREAM3D_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
+
     Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
     DREAM3D_PIMPL_PROPERTY_DECL(QStringList, FileScanNames)
     Q_PROPERTY(QStringList FileScanNames READ getFileScanNames WRITE setFileScanNames)
+
     DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, PatternDims)
     Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
 
@@ -184,53 +179,47 @@ class ReadEdaxH5Data : public AbstractFilter
     void preflightExecuted();
 
   public slots:
+    /**
+     * @brief flushCache Resets the cache file state
+     */
     void flushCache();
 
   protected:
     ReadEdaxH5Data();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
     /**
-    * @brief copyRawEbsdData This reads the Ang file and puts the data into the Voxel Data container
-     * @param reader
-     * @param tDims
-     * @param cDims
-     */
+    * @brief copyRawEbsdData Reads the H5OIM file and puts the data into the data container
+    * @param reader H5OIMReader instance pointer
+    * @param tDims Tuple dimensions
+    * @param cDims Component dimensions
+    */
     void copyRawEbsdData(H5OIMReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
 
     /**
-    * @brief This method reads the values for the phase type, crystal structure
-    * and precipitate fractions from the EBSD file.
-    * @param reader The EbsdReader instance
-    * @return Zero/Positive on Success - Negative on error.
+    * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
+    * and precipitate fractions from the EBSD file
+    * @param reader H5OIMReader instance pointer
+    * @return Integer error value
     */
-    int loadMaterialInfo(H5OIMReader* reader);
+    int32_t loadMaterialInfo(H5OIMReader* reader);
 
     /**
-     * @brief readDataFile
-     * @param reader
-     * @param m
-     * @param dims
+     * @brief readDataFile Reads the H5OIM file
+     * @param reader H5OIMReader instance pointer
+     * @param m DataContainer instance pointer
+     * @param tDims Tuple dimensions
      */
     void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, ANG_READ_FLAG flag);
 
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
-
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
 
@@ -238,11 +227,4 @@ class ReadEdaxH5Data : public AbstractFilter
     void operator=(const ReadEdaxH5Data&); // Operator '=' Not Implemented
 };
 
-
-
 #endif /* _ReadEdaxH5Data_H_ */
-
-
-
-
-

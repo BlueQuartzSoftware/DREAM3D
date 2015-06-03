@@ -213,15 +213,6 @@ void FilterMaker::on_generateBtn_clicked()
 }
 
 // -----------------------------------------------------------------------------
-//  Called when the Cancel button is clicked.
-// -----------------------------------------------------------------------------
-void FilterMaker::on_cancelBtn_clicked()
-{
-  emit cancelBtnPressed();
-  this->close();
-}
-
-// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FilterMaker::on_addFilterParameterBtn_clicked()
@@ -561,7 +552,6 @@ void FilterMaker::updateSourceList()
     searchString = "set(_PrivateFilters";
   }
 
-  int index = 0;
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
@@ -635,7 +625,6 @@ void FilterMaker::updateTestLocations()
   QStringListIterator sourceLines(list);
   QString searchString = "#endif";
 
-  int index = 0;
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
@@ -680,7 +669,7 @@ void FilterMaker::updateTestList()
   QString contents = source.readAll();
   source.close();
 
-  
+
   QString testCMakeCode;
   QTextStream out(&testCMakeCode);
   out << "AddDREAM3DUnitTest(TESTNAME " << filterName << "Test";

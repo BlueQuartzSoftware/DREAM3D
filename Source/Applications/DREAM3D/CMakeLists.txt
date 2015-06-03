@@ -64,6 +64,10 @@ set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_GENERATE_VERSION_STRING 1)
 include(${CMP_SOURCE_DIR}/cmpProject.cmake)
 
+cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${DREAM3D_SOURCE_DIR}/DREAM3D.h.in
+                            GENERATED_FILE_PATH ${DREAM3D_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
+
+
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
 # List the source files here
@@ -75,12 +79,13 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/AboutDREAM3D.cpp
   ${DREAM3D_SOURCE_DIR}/AboutPlugins.cpp
   ${DREAM3D_SOURCE_DIR}/PluginDetails.cpp
+  ${DREAM3D_SOURCE_DIR}/DREAM3Dv5Wizard.cpp
   )
 
 #------------------------------------------------------------------
 # Headers that do NOT need to have moc run on them, i.e., non-QObject based headers
 set(DREAM3D_HDRS
-
+  ${DREAM3D_SOURCE_DIR}/DREAM3DConstants.h
 )
 
 #------------------------------------------------------------------
@@ -92,6 +97,7 @@ SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/AboutDREAM3D.h
   ${DREAM3D_SOURCE_DIR}/AboutPlugins.h
   ${DREAM3D_SOURCE_DIR}/PluginDetails.h
+  ${DREAM3D_SOURCE_DIR}/DREAM3Dv5Wizard.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS};${DREAM3D_MOC_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -101,6 +107,7 @@ SET(DREAM3D_UIS
   ${DREAM3D_SOURCE_DIR}/UI_Files/AboutDREAM3D.ui
   ${DREAM3D_SOURCE_DIR}/UI_Files/AboutPlugins.ui
   ${DREAM3D_SOURCE_DIR}/UI_Files/PluginDetails.ui
+  ${DREAM3D_SOURCE_DIR}/UI_Files/DREAM3Dv5Wizard.ui
 )
 cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 
@@ -132,6 +139,9 @@ set(DREAM3D_PROJECT_SRCS
     ${DREAM3D_Generated_RC_SRCS}
     ${DREAM3D_Generated_UI_HDRS}
     ${DREAM3D_Generated_MOC_SRCS}
+    ${DREAM3D_BINARY_DIR}/DREAM3D.h
+    ${DREAM3D_BINARY_DIR}/DREAM3DVersion.h
+    ${DREAM3D_BINARY_DIR}/DREAM3DVersion.cpp
 )
 
 
