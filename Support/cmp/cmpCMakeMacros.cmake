@@ -982,7 +982,13 @@ function(cmpVersionStringsFromGit)
 
         #-- Make sure that actually worked and if not just generate some dummy values
         if(DVERS STREQUAL "")
-            cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_GENERATED_SOURCE_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
+       		cmpGenerateVersionString( GENERATED_HEADER_FILE_PATH ${GVS_GENERATED_HEADER_FILE_PATH} 
+       							 GENERATED_SOURCE_FILE_PATH	${GVS_GENERATED_SOURCE_FILE_PATH} 
+       							 NAMESPACE 			   ${GVS_NAMESPACE} 
+       							 PROJECT_SOURCE_DIR    ${GVS_PROJECT_SOURCE_DIR}
+       							 PROJECT_VERSION_MAJOR ${GVS_PROJECT_VERSION_MAJOR}
+       							 EXPORT_MACRO   ${GVS_EXPORT_MACRO}
+       							 cmpProjectName ${GVS_cmpProjectName}  )
         else()
             string(STRIP ${DVERS} DVERS)
             string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
@@ -1024,7 +1030,6 @@ function(cmpVersionStringsFromGit)
 
         endif()
     else()
-        message(STATUS "NOT USING GIT!!!!!!!!!!!!!!!!!")
        cmpGenerateVersionString( GENERATED_HEADER_FILE_PATH ${GVS_GENERATED_HEADER_FILE_PATH} 
        							 GENERATED_SOURCE_FILE_PATH	${GVS_GENERATED_SOURCE_FILE_PATH} 
        							 NAMESPACE 			   ${GVS_NAMESPACE} 
