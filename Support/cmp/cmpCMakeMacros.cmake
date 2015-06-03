@@ -701,7 +701,26 @@ ENDmacro()
 #   ${CMP_PROJECT_NAME}_VER_PATCH
 #
 #-------------------------------------------------------------------------------
-macro(cmpGenerateVersionString GENERATED_HEADER_PATH GENERATED_SOURCE_PATH NAMESPACE cmpProjectName)
+
+function(cmpGenerateVersionString)    
+  set(options)
+    set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
+                     NAMESPACE PROJECT_SOURCE_DIR PROJECT_VERSION_MAJOR
+                     EXPORT_MACRO cmpProjectName)
+    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+    if(0)
+      message(STATUS "--------------------------------------------")
+      message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
+      message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
+      message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
+      message(STATUS "GVS_PROJECT_SOURCE_DIR: ${GVS_PROJECT_SOURCE_DIR}")
+      message(STATUS "GVS_PROJECT_VERSION_MAJOR: ${GVS_PROJECT_VERSION_MAJOR}")
+      message(STATUS "GVS_EXPORT_MACRO: ${GVS_EXPORT_MACRO}")
+      message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
+      message(STATUS "${GVS_cmpProjectName}_BUILD_DATE: ${${GVS_cmpProjectName}_BUILD_DATE}")
+    endif()
+
     INCLUDE (${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
 
     if( CMP_HAVE_TIME_GETTIMEOFDAY )
@@ -711,6 +730,13 @@ macro(cmpGenerateVersionString GENERATED_HEADER_PATH GENERATED_SOURCE_PATH NAMES
     if( CMP_HAVE_SYS_TIME_GETTIMEOFDAY )
         set( VERSION_COMPILE_FLAGS "-DHAVE_SYS_TIME_GETTIMEOFDAY")
     endif()
+
+    set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
+    set(VERSION_GEN_NAMESPACE_EXPORT "${GVS_EXPORT_MACRO}")
+    set(VERSION_GEN_NAME "${GVS_cmpProjectName}")
+
+    cmpGenerateBuildDate(PROJECT_NAME ${GVS_cmpProjectName})
+    set(VERSION_BUILD_DATE ${${GVS_cmpProjectName}_BUILD_DATE})
 
     if(NOT CMP_HAVE_TIME_GETTIMEOFDAY AND NOT CMP_HAVE_SYS_TIME_GETTIMEOFDAY)
       set(VERSION_GEN_VER_MAJOR "0")
@@ -753,20 +779,21 @@ macro(cmpGenerateVersionString GENERATED_HEADER_PATH GENERATED_SOURCE_PATH NAMES
       STRING(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_GEN_VER_PATCH "${VERSION_RUN_OUTPUT}")
 
       set(VERSION_GEN_COMPLETE ${VERSION_RUN_OUTPUT} )
-      set(VERSION_GEN_NAME "${cmpProjectName}")
-      set(VERSION_GEN_NAMESPACE "${NAMESPACE}")
-      set(${cmpProjectName}_VERSION   ${VERSION_RUN_OUTPUT}    CACHE STRING "Complete Version String")
-      set(${cmpProjectName}_VER_MAJOR ${VERSION_GEN_VER_MAJOR} CACHE STRING "Major Version String")
-      set(${cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "Minor Version String")
-      set(${cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "Patch Version String")
-      mark_as_advanced(${cmpProjectName}_VERSION ${cmpProjectName}_VER_MAJOR ${cmpProjectName}_VER_MINOR ${cmpProjectName}_VER_PATCH)
+      set(VERSION_GEN_NAME "${GVS_cmpProjectName}")
+      set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
+      set(${GVS_cmpProjectName}_VERSION   ${VERSION_RUN_OUTPUT}    CACHE STRING "Complete Version String")
+      set(${GVS_cmpProjectName}_VER_MAJOR ${VERSION_GEN_VER_MAJOR} CACHE STRING "Major Version String")
+      set(${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "Minor Version String")
+      set(${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "Patch Version String")
+      mark_as_advanced(${GVS_cmpProjectName}_VERSION ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
 
     endif()
-    set(PROJECT_PREFIX "${cmpProjectName}")
-    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GENERATED_HEADER_PATH}  )
-    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GENERATED_SOURCE_PATH}  )
+
+    set(PROJECT_PREFIX "${GVS_cmpProjectName}")
+    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}  )
+    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GVS_GENERATED_SOURCE_FILE_PATH}  )
     MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
-endmacro()
+endfunction()
 
 #-------------------------------------------------------------------------------
 # This function generates a file ONLY if the MD5 between the "to be" generated file
@@ -997,7 +1024,14 @@ function(cmpVersionStringsFromGit)
 
         endif()
     else()
-       cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_GENERATED_SOURCE_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName})
+        message(STATUS "NOT USING GIT!!!!!!!!!!!!!!!!!")
+       cmpGenerateVersionString( GENERATED_HEADER_FILE_PATH ${GVS_GENERATED_HEADER_FILE_PATH} 
+       							 GENERATED_SOURCE_FILE_PATH	${GVS_GENERATED_SOURCE_FILE_PATH} 
+       							 NAMESPACE 			   ${GVS_NAMESPACE} 
+       							 PROJECT_SOURCE_DIR    ${GVS_PROJECT_SOURCE_DIR}
+       							 PROJECT_VERSION_MAJOR ${GVS_PROJECT_VERSION_MAJOR}
+       							 EXPORT_MACRO   ${GVS_EXPORT_MACRO}
+       							 cmpProjectName ${GVS_cmpProjectName}  )
     endif()
 
 endfunction()
