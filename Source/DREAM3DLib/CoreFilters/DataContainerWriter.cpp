@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,23 +36,13 @@
 
 #include "DataContainerWriter.h"
 
-
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
-
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-
-#include "EbsdLib/EbsdConstants.h"
-
-
-#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 
 #ifdef _WIN32
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
@@ -151,7 +141,7 @@ void DataContainerWriter::dataCheck()
   if (m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-10000);
-    ss = QObject::tr("The output file must be set before executing this filter.");
+    ss = QObject::tr("The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
@@ -169,7 +159,7 @@ void DataContainerWriter::dataCheck()
   if(fi.baseName().compare("") == 0)
   {
     setErrorCondition(-10001);
-    ss = QObject::tr("The output file must have its actual filename set.");
+    ss = QObject::tr("The output file must have its actual filename set");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
@@ -182,9 +172,9 @@ void DataContainerWriter::dataCheck()
 
   if (dirInfo.isWritable() == false && parentPath.exists() == true)
   {
-	  setErrorCondition(-10002);
-	  ss = QObject::tr("The user does not have the proper permissions to write to the output file.");
-	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10002);
+    ss = QObject::tr("The user does not have the proper permissions to write to the output file.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -208,10 +198,7 @@ void DataContainerWriter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   int err = 0;
 
@@ -220,7 +207,7 @@ void DataContainerWriter::execute()
   QFileInfo fi(m_OutputFile);
   QString parentPath = fi.path();
   QDir dir;
-  if(!dir.mkpath(parentPath))
+  if (!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
     setErrorCondition(-11110);
@@ -231,7 +218,7 @@ void DataContainerWriter::execute()
   err = openFile(m_AppendToExisting); // Do NOT append to any existing file
   if (err < 0)
   {
-    QString ss = QObject::tr(": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[%1]").arg(m_OutputFile);
+    QString ss = QObject::tr("The HDF5 file could not be opened or created.\n The given filename was:\n\t[%1]").arg(m_OutputFile);
     setErrorCondition(-11112);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -250,7 +237,7 @@ void DataContainerWriter::execute()
   {
     QFileInfo ofFi(m_OutputFile);
     QString name = ofFi.baseName();
-    if(parentPath.isEmpty() == true)
+    if (parentPath.isEmpty() == true)
     {
       name = name + ".xdmf";
     }
@@ -271,7 +258,7 @@ void DataContainerWriter::execute()
   err = H5Utilities::createGroupsFromPath(DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), m_FileId);
   if (err < 0)
   {
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::StringConstants::DataContainerGroupName);
+    QString ss = QObject::tr("Error creating HDF5 Group '%1'").arg(DREAM3D::StringConstants::DataContainerGroupName);
     setErrorCondition(-60);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -280,14 +267,14 @@ void DataContainerWriter::execute()
   scopedFileSentinel.addGroupId(&dcaGid);
 
   QList<QString> dcNames = getDataContainerArray()->getDataContainerNames();
-  for(size_t iter = 0; iter < getDataContainerArray()->getNumDataContainers(); iter++)
+  for (size_t iter = 0; iter < getDataContainerArray()->getNumDataContainers(); iter++)
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcNames[iter]);
     IGeometry::Pointer geometry = dc->getGeometry();
     err = H5Utilities::createGroupsFromPath(dcNames[iter].toLatin1().data(), dcaGid);
     if (err < 0)
     {
-      QString ss = QObject::tr("Error creating HDF Group %1").arg(dcNames[iter]);
+      QString ss = QObject::tr("Error creating HDF5 Group '%1'").arg(dcNames[iter]);
       setErrorCondition(-60);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -301,13 +288,13 @@ void DataContainerWriter::execute()
     err = dc->writeAttributeMatricesToHDF5(dcGid);
     if (err < 0)
     {
-      notifyErrorMessage(getHumanLabel(), "Error Writing DataContainer Attribute Matrices", -803);
+      notifyErrorMessage(getHumanLabel(), "Error writing DataContainer AttributeMatrices", -803);
       return;
     }
     err = dc->writeMeshToHDF5(dcGid, m_WriteXdmfFile);
     if (err < 0)
     {
-      notifyErrorMessage(getHumanLabel(), "Error Writing DataContainer Mesh", -804);
+      notifyErrorMessage(getHumanLabel(), "Error writing DataContainer Geometry", -804);
       return;
     }
     if (m_WriteXdmfFile == true && geometry.get() != NULL)
@@ -317,7 +304,7 @@ void DataContainerWriter::execute()
       err = dc->writeXdmf(xdmfOut, hdfFileName);
       if (err < 0)
       {
-        notifyErrorMessage(getHumanLabel(), "Error Writing Xdmf File", -805);
+        notifyErrorMessage(getHumanLabel(), "Error writing Xdmf File", -805);
         return;
       }
     }
@@ -325,9 +312,9 @@ void DataContainerWriter::execute()
 
   // Write the Data ContainerBundles
   err = writeDataContainerBundles(m_FileId);
-  if(err < 0)
+  if (err < 0)
   {
-    QString ss = QObject::tr("Error writing the Data Container Bundles");
+    QString ss = QObject::tr("Error writing DataContainerBundles");
     setErrorCondition(-11113);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -354,7 +341,7 @@ int DataContainerWriter::writeDataContainerBundles(hid_t fileId)
   int err = QH5Utilities::createGroupsFromPath(DREAM3D::StringConstants::DataContainerBundleGroupName, m_FileId);
   if (err < 0)
   {
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
+    QString ss = QObject::tr("Error creating HDF5 Group '%1'").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
     setErrorCondition(-61);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
@@ -365,7 +352,7 @@ int DataContainerWriter::writeDataContainerBundles(hid_t fileId)
 
   QMap<QString, IDataContainerBundle::Pointer>& bundles = getDataContainerArray()->getDataContainerBundles();
   QMapIterator<QString, IDataContainerBundle::Pointer> iter(bundles);
-  while(iter.hasNext())
+  while (iter.hasNext())
   {
     iter.next();
     IDataContainerBundle::Pointer bundle = iter.value();
@@ -405,12 +392,10 @@ void DataContainerWriter::writeXdmfFooter(QTextStream& xdmf)
 // -----------------------------------------------------------------------------
 int DataContainerWriter::writePipeline()
 {
-
   // WRITE THE PIPELINE TO THE HDF5 FILE
   H5FilterParametersWriter::Pointer parametersWriter = H5FilterParametersWriter::New();
   hid_t pipelineGroupId = QH5Utilities::createGroup(m_FileId, DREAM3D::StringConstants::PipelineGroupName);
   parametersWriter->setGroupId(pipelineGroupId);
-
 
   // Now start walking BACKWARDS through the pipeline to find the first filter.
   AbstractFilter::Pointer previousFilter = getPreviousFilter().lock();
@@ -430,16 +415,16 @@ int DataContainerWriter::writePipeline()
   // Now starting with the first filter in the pipeline, start the actual writing
   AbstractFilter::Pointer currentFilter = previousFilter;
   int index = 0;
-  while(NULL != currentFilter.get())
+  while (NULL != currentFilter.get())
   {
     index = currentFilter->writeFilterParameters(parametersWriter.get(), index);
     currentFilter = currentFilter->getNextFilter().lock();
   }
 
   int err = QH5Lite::writeScalarAttribute(m_FileId, DREAM3D::StringConstants::PipelineGroupName, DREAM3D::Settings::NumFilters, index);
-  if(err < 0)
+  if (err < 0)
   {
-    QString ss = QObject::tr("Error Writing HDF5 Scalar Attribute '%1' on HDF5 Group '%2'").arg(DREAM3D::Settings::NumFilters).arg(DREAM3D::StringConstants::PipelineGroupName);
+    QString ss = QObject::tr("Error writing HDF5 scalar attribute '%1' on HDF5 Group '%2'").arg(DREAM3D::Settings::NumFilters).arg(DREAM3D::StringConstants::PipelineGroupName);
     setErrorCondition(-12324323);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition() );
   }
@@ -450,7 +435,7 @@ int DataContainerWriter::writePipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainerWriter::openFile(bool appendData)
+hid_t DataContainerWriter::openFile(bool appendData)
 {
   // Try to open a file to append data into
   if (APPEND_DATA_TRUE == appendData)
@@ -468,10 +453,10 @@ int DataContainerWriter::openFile(bool appendData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainerWriter::closeFile()
+herr_t DataContainerWriter::closeFile()
 {
   // Close the file when we are finished with it
-  if(m_FileId > 0)
+  if (m_FileId > 0)
   {
     return QH5Utilities::closeFile(m_FileId);
   }
@@ -483,10 +468,6 @@ int DataContainerWriter::closeFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer DataContainerWriter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * OutputFile
-  * WriteXdmfFile
-  */
   DataContainerWriter::Pointer filter = DataContainerWriter::New();
   if(true == copyFilterParameters)
   {
@@ -499,34 +480,22 @@ AbstractFilter::Pointer DataContainerWriter::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getGroupName()
-{
-  return DREAM3D::FilterGroups::IOFilters;
-}
-
+{ return DREAM3D::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::OutputFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getHumanLabel()
-{
-  return "Write DREAM3D Data File";
-}
-
+{ return "Write DREAM3D Data File"; }

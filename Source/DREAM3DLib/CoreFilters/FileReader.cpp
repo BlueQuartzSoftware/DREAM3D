@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,10 +36,7 @@
 
 #include "FileReader.h"
 
-#include <stdio.h>
-#include <string.h>
-
-
+#include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -49,22 +46,18 @@ FileReader::FileReader() :
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FileReader::~FileReader()
 {
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FileReader::dataCheck()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -73,7 +66,7 @@ void FileReader::dataCheck()
 int FileReader::readHeader()
 {
   setErrorCondition(-1);
-  notifyErrorMessage(getHumanLabel(),  "FileReader::readHeader() should be subclassed and functionality implemented.\nPlease notify dream3d@bluequartz.net", -1);
+  notifyErrorMessage(getHumanLabel(),  "FileReader should be subclassed and functionality implemented there", -1);
   return -1;
 }
 
@@ -83,10 +76,9 @@ int FileReader::readHeader()
 int FileReader::readFile()
 {
   setErrorCondition(-1);
-  notifyErrorMessage(getHumanLabel(), "FileReader::readFile() should be subclassed and functionality implemented\nPlease notify dream3d@bluequartz.net", -1);
+  notifyErrorMessage(getHumanLabel(), "FileReader should be subclassed and functionality implemented there", -1);
   return -1;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -94,7 +86,6 @@ int FileReader::readFile()
 void FileReader::execute()
 {
   int err = 0;
-
   err = readHeader();
   if(err < 0)
   {
@@ -105,6 +96,4 @@ void FileReader::execute()
   {
     return;
   }
-
 }
-

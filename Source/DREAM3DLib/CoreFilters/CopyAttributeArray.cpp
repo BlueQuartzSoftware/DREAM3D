@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,9 +36,9 @@
 
 #include "CopyAttributeArray.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -64,9 +64,8 @@ CopyAttributeArray::~CopyAttributeArray()
 void CopyAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Copy", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
-  parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
-
+  parameters.push_back(FilterParameter::New("Attribute Array To Copy", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
+  parameters.push_back(FilterParameter::New("New Attribute Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
   setFilterParameters(parameters);
 }
 
@@ -104,65 +103,30 @@ void CopyAttributeArray::dataCheck()
   if(m_NewArrayName.isEmpty() == true)
   {
     setErrorCondition(-11009);
-    QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
+    QString ss = QObject::tr("The new Attribute Array name must be set");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  if (m_SelectedArrayPath.isEmpty() == true)
+  QString daName = getSelectedArrayPath().getDataArrayName();
+
+  IDataArray::Pointer dataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
+  if(getErrorCondition() < 0) { return; }
+
+  DataArrayPath path(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), "");
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(path);
+
+  IDataArray::Pointer pNew = dataArray->deepCopy();
+  pNew->setName(m_NewArrayName); // Set the name of the array
+  int32_t err = attrMat->addAttributeArray(m_NewArrayName, pNew);
+
+  if (0 != err)
   {
-    setErrorCondition(-11010);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
+    setErrorCondition(err);
+    QString ss = QObject::tr("Attempt to copy Attribute Array '%1' to '%2' failed").arg(daName).arg(m_NewArrayName);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-  else
-  {
-    QString dcName = m_SelectedArrayPath.getDataContainerName();
-    QString amName = m_SelectedArrayPath.getAttributeMatrixName();
-    QString daName = m_SelectedArrayPath.getDataArrayName();
-
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-    if(NULL == dc.get())
-    {
-      setErrorCondition(-11007);
-      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-    if(NULL == attrMat.get())
-    {
-      setErrorCondition(-11008);
-      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    // We have the AttributeMatrix, now lets try to get the AttributeArray object and copy it if it exists
-    IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
-    if(NULL == dataArray.get() )
-    {
-      setErrorCondition(-11014);
-      QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-    IDataArray::Pointer p = attrMat->getAttributeArray(daName);
-    IDataArray::Pointer pNew = p->deepCopy();
-    pNew->setName(m_NewArrayName); // Set the name of the array
-    int err = attrMat->addAttributeArray(m_NewArrayName, pNew);
-
-    if(0 != err)
-    {
-      setErrorCondition(err);
-      QString ss = QObject::tr("Attempt to copy AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewArrayName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -183,13 +147,8 @@ void CopyAttributeArray::preflight()
 void CopyAttributeArray::execute()
 {
   setErrorCondition(0);
-
   dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
-
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -198,10 +157,6 @@ void CopyAttributeArray::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer CopyAttributeArray::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-   * SelectedArrayPath
-   * NewArrayName
-   */
   CopyAttributeArray::Pointer filter = CopyAttributeArray::New();
   if(true == copyFilterParameters)
   {
@@ -214,34 +169,22 @@ AbstractFilter::Pointer CopyAttributeArray::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeArray::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeArray::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeArray::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeArray::getHumanLabel()
-{
-  return "Copy Attribute Array";
-}
-
+{ return "Copy Attribute Array"; }

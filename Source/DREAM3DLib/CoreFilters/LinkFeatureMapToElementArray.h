@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,49 +34,40 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CreateFeatureArrayFromCellArray_H_
-#define _CreateFeatureArrayFromCellArray_H_
-
-#include <string>
-#include <set>
+#ifndef _LinkFeatureMapToElementArray_H_
+#define _LinkFeatureMapToElementArray_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class CreateFeatureArrayFromCellArray CreateFeatureArrayFromCellArray.h /FilterCategoryFilters/CreateFeatureArrayFromCellArray.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The LinkFeatureMapToElementArray class. See [Filter documentation](@ref linkfeaturemaptoelementarray) for details.
  */
-class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
+class DREAM3DLib_EXPORT LinkFeatureMapToElementArray : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CreateFeatureArrayFromCellArray)
-    DREAM3D_STATIC_NEW_MACRO(CreateFeatureArrayFromCellArray)
-    DREAM3D_TYPE_MACRO_SUPER(CreateFeatureArrayFromCellArray, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(LinkFeatureMapToElementArray)
+    DREAM3D_STATIC_NEW_MACRO(LinkFeatureMapToElementArray)
+    DREAM3D_TYPE_MACRO_SUPER(LinkFeatureMapToElementArray, AbstractFilter)
 
-    virtual ~CreateFeatureArrayFromCellArray();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    virtual ~LinkFeatureMapToElementArray();
+
+    DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -124,29 +115,22 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CreateFeatureArrayFromCellArray();
+    LinkFeatureMapToElementArray();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
-  private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    /**
+     * @brief updateFeatureInstancePointers Updates raw feature pointers
+     */
+    void updateFeatureInstancePointers();
 
-    CreateFeatureArrayFromCellArray(const CreateFeatureArrayFromCellArray&); // Copy Constructor Not Implemented
-    void operator=(const CreateFeatureArrayFromCellArray&); // Operator '=' Not Implemented
+  private:
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SelectedCellData)
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+
+    LinkFeatureMapToElementArray(const LinkFeatureMapToElementArray&); // Copy Constructor Not Implemented
+    void operator=(const LinkFeatureMapToElementArray&); // Operator '=' Not Implemented
 };
 
-
-#endif /* CREATEFIELDARRAYFROMCELLARRAY_H_ */
-
-
-
-
-
+#endif /* _LinkFeatureMapToElementArray_H_ */

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,10 +36,10 @@
 
 #include "RemoveArrays.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/DataContainerArrayProxyFilterParameter.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -63,14 +63,12 @@ RemoveArrays::~RemoveArrays()
 void RemoveArrays::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
-  parameter->setHumanLabel("Items to Delete");
+  parameter->setHumanLabel("Items To Delete");
   parameter->setPropertyName("DataArraysToRemove");
   parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
   parameter->setDefaultFlagValue(Qt::Unchecked);
   parameters.push_back(parameter);
-
   setFilterParameters(parameters);
 }
 
@@ -124,18 +122,90 @@ void RemoveArrays::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state)
+{
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainerProxy> containers = m_DataArraysToRemove.dataContainers.values();
+  QListIterator<DataContainerProxy> containerIter(containers);
+  QStringList dcList;
+  while (containerIter.hasNext())
+  {
+    DataContainerProxy dcProxy = containerIter.next();
+    dcList.push_back(dcProxy.name);
+    DataContainer::Pointer dcItem = dca->getDataContainer(dcProxy.name);
+    if (dcItem.get() == NULL)
+    {
+      setErrorCondition(-11007);
+      QString ss = QObject::tr("The DataContainer '%1' could not be removed because it was not found in the DataContainerArray").arg(dcProxy.name);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      continue;
+    }
+    // Check to see if the DataContainer is checked, if it is checked then we remove the entire DataContainer from
+    // the DataContainerArray
+    if (dcProxy.flag == state)
+    {
+      dca->removeDataContainer(dcProxy.name); // Remove it out
+      continue; // Continue to the next DataContainer
+    }
+    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
+    QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+    while (attrMatsIter.hasNext() )
+    {
+      attrMatsIter.next();
+      QString amName = attrMatsIter.key();
+      AttributeMatrix::Pointer amItem = dcItem->getAttributeMatrix(amName);
+      //assert(amItem.get() != NULL);
+      if (amItem.get() == NULL)
+      {
+        setErrorCondition(-11008);
+        QString ss = QObject::tr("The AttributeMatrix '%1' could not be removed because it was not found in DataContainer '%2'").arg(amName).arg(dcProxy.name);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        continue;
+      }
+      AttributeMatrixProxy attrProxy = attrMatsIter.value();
+      // Check to see if this AttributeMatrix is checked, if not then remove it from the DataContainer and go to the next loop
+      if (attrProxy.flag == state)
+      {
+        dcItem->removeAttributeMatrix(amName);
+        continue;
+      }
+      // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
+      QMap<QString, DataArrayProxy>& dataArrays = attrProxy.dataArrays;
+      QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
+      while (dataArraysIter.hasNext() )
+      {
+        dataArraysIter.next();
+        QString daName = dataArraysIter.key();
+        IDataArray::Pointer daItem = amItem->getAttributeArray(daName);
+        if (daItem.get() == NULL)
+        {
+          setErrorCondition(-11014);
+          QString ss = QObject::tr("The DataArray '%1' could not be removed because it was not found in AttributeMatrix '%2'").arg(daName).arg(amName);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          continue;
+        }
+        DataArrayProxy daProxy = dataArraysIter.value();
+        // Check to see if the user selected this item
+        if (daProxy.flag == state)
+        {
+          amItem->removeAttributeArray(daName);
+          continue;
+        }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RemoveArrays::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
-
+  setErrorCondition(0);
   // Simply running the preflight will do what we need it to.
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -156,112 +226,22 @@ AbstractFilter::Pointer RemoveArrays::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString RemoveArrays::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RemoveArrays::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RemoveArrays::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RemoveArrays::getHumanLabel()
-{
-  return "Delete Data";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state)
-{
-  // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DataArraysToRemove.dataContainers.values();
-  QListIterator<DataContainerProxy> containerIter(containers);
-  QStringList dcList;
-  while(containerIter.hasNext())
-  {
-    DataContainerProxy dcProxy = containerIter.next();
-    dcList.push_back(dcProxy.name);
-    DataContainer::Pointer dcItem = dca->getDataContainer(dcProxy.name);
-    if(dcItem.get() == NULL)
-    {
-      setErrorCondition(-11007);
-      QString ss = QObject::tr("The DataContainer '%1' could not be removed because it was not found in the DataContainerArray").arg(dcProxy.name);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      continue;
-    }
-    // Check to see if the DataContainer is checked, if it is checked then we remove the entire DataContainer from
-    // the DataContainerArray
-    if (dcProxy.flag == state)
-    {
-      dca->removeDataContainer(dcProxy.name); // Remove it out
-      continue; // Continue to the next DataContainer
-    }
-    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
-    QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-    while(attrMatsIter.hasNext() )
-    {
-      attrMatsIter.next();
-      QString amName = attrMatsIter.key();
-      AttributeMatrix::Pointer amItem = dcItem->getAttributeMatrix(amName);
-      //assert(amItem.get() != NULL);
-      if(amItem.get() == NULL)
-      {
-        setErrorCondition(-11008);
-        QString ss = QObject::tr("The AttributeMatrix '%1' could not be removed because it was not found in the DataContainer '%2'").arg(amName).arg(dcProxy.name);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        continue;
-      }
-      AttributeMatrixProxy attrProxy = attrMatsIter.value();
-      // Check to see if this AttributeMatrix is checked, if not then remove it from the DataContainer and go to the next loop
-      if(attrProxy.flag == state)
-      {
-        dcItem->removeAttributeMatrix(amName);
-        continue;
-      }
-      // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
-      QMap<QString, DataArrayProxy>& dataArrays = attrProxy.dataArrays;
-      QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
-      while(dataArraysIter.hasNext() )
-      {
-        dataArraysIter.next();
-        QString daName = dataArraysIter.key();
-        IDataArray::Pointer daItem = amItem->getAttributeArray(daName);
-        if(daItem.get() == NULL)
-        {
-          setErrorCondition(-11014);
-          QString ss = QObject::tr("A DataArray with the name '%1' could not be removed because it was not found in the AttributeMatrix '%2'").arg(daName).arg(amName);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-          continue;
-        }
-        DataArrayProxy daProxy = dataArraysIter.value();
-        // Check to see if the user selected this item
-        if(daProxy.flag == state)
-        {
-          amItem->removeAttributeArray(daName);
-          continue;
-        }
-      }
-    }
-  }
-}
-
-
+{ return "Delete Data"; }
