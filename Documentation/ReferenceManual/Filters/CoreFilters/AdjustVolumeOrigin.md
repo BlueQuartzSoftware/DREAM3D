@@ -2,7 +2,7 @@ Adjust Origin  {#adjustvolumeorigin}
 ==============================
 
 ## Group (Subgroup) ##
-Generic Filters (Spatial)
+Core Filters (Spatial)
 
 ## Description ##
 This filter changes the origin of the volume. For example if the current origin is
@@ -16,12 +16,14 @@ at (0,0,0) and the user would like the origin to be (10, 4, 8) then the user sho
 
 | Name    | Type      |  Notes |
 |---------|-----------|--------|
-|  Origin | 3 x Float |        |
+|  Origin | 3 x Float | Applied to x, y, and z for Image Geometry and node 1, node 2 and node 3 for Vertex Geometry       |
 | Apply to Voxel Volume | Bool | Should the new origin be applied to the Voxel Volume |
+| Data Container | String | Shown if Apply to Voxel Volume is checked |
 | Apply to SurfaceMesh Volume | Bool | Should the new origin be applied to the Surface Mesh |
+| Surface Data Container | String | Shown if Apply to Surface Mesh is checked |
 
 ## Required DataContainers ##
-Voxel: If being applied to the Voxel Volume
+Voxel: If being applied to the Voxel Volume  
 SurfaceMesh: If being applied to the SurfaceMesh
 
 ## Required Arrays ##
