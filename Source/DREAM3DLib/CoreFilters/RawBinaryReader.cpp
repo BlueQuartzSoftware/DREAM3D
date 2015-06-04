@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,30 +33,23 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "RawBinaryReader.h"
 
-#include <stdio.h>
-
-
-
 #include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-
-
 
 #define RBR_FILE_NOT_OPEN -1000
 #define RBR_FILE_TOO_SMALL -1010
 #define RBR_FILE_TOO_BIG -1020
 #define RBR_READ_EOF       -1030
 #define RBR_NO_ERROR       0
-
 
 namespace Detail
 {
@@ -86,11 +79,10 @@ namespace Detail
 
 #endif
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, size_t fileSize, int skipHeaderBytes)
+int32_t SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, size_t fileSize, int skipHeaderBytes)
 {
   if (fileSize - skipHeaderBytes < allocatedBytes)
   {
@@ -108,32 +100,26 @@ int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, size_t fileSiz
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, int skipHeaderBytes)
+int32_t readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, int32_t skipHeaderBytes)
 {
-  int err = 0;
+  int32_t err = 0;
   QFileInfo fi(filename);
   uint64_t fileSize = fi.size();
   size_t allocatedBytes = p->getSize() * sizeof(T);
   err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
-  if (err < 0)
-  {
-    return RBR_FILE_TOO_SMALL;
-  }
+  if (err < 0) { return RBR_FILE_TOO_SMALL; }
 
   FILE* f = fopen(filename.toLatin1().data(), "rb");
-  if (NULL == f)
-  {
-    return RBR_FILE_NOT_OPEN;
-  }
+  if (NULL == f) { return RBR_FILE_NOT_OPEN; }
 
   ScopedFileMonitor monitor(f);
   size_t numBytesToRead = p->getNumberOfTuples() * static_cast<size_t>(p->getNumberOfComponents()) * sizeof(T);
   size_t numRead = 0;
 
-  unsigned char* chunkptr = reinterpret_cast<unsigned char*>(p->getPointer(0));
+  uint8_t* chunkptr = reinterpret_cast<uint8_t*>(p->getPointer(0));
 
-  //Skip some header bytes by just reading those bytes into the pointer knowing that the next
+  // Skip some header bytes by just reading those bytes into the pointer knowing that the next
   // thing we are going to do it over write those bytes with the real data that we are after.
   if (skipHeaderBytes > 0)
   {
@@ -143,24 +129,21 @@ int readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
   // Now start reading the data in chunks if needed.
   size_t chunkSize = DEFAULT_BLOCKSIZE;
 
-  if(numBytesToRead < DEFAULT_BLOCKSIZE)
-  {
-    chunkSize = numBytesToRead;
-  }
+  if (numBytesToRead < DEFAULT_BLOCKSIZE) { chunkSize = numBytesToRead; }
 
   size_t master_counter = 0;
   size_t bytes_read = 0;
-  while(1)
+  while (1)
   {
-    bytes_read = fread(chunkptr, sizeof(unsigned char), chunkSize, f);
+    bytes_read = fread(chunkptr, sizeof(uint8_t), chunkSize, f);
     chunkptr = chunkptr + bytes_read;
     master_counter += bytes_read;
 
-    if( numBytesToRead - master_counter < chunkSize)
+    if (numBytesToRead - master_counter < chunkSize)
     {
       chunkSize = numBytesToRead - master_counter;
     }
-    if(master_counter >= numBytesToRead)
+    if (master_counter >= numBytesToRead)
     {
       break;
     }
@@ -191,13 +174,14 @@ RawBinaryReader::RawBinaryReader() :
   m_Dimensions.y = 0;
   m_Dimensions.z = 0;
 
-  m_Origin.x = 0.0;
-  m_Origin.y = 0.0;
-  m_Origin.z = 0.0;
+  m_Origin.x = 0.0f;
+  m_Origin.y = 0.0f;
+  m_Origin.z = 0.0f;
 
-  m_Resolution.x = 1.0;
-  m_Resolution.y = 1.0;
-  m_Resolution.z = 1.0;
+  m_Resolution.x = 1.0f;
+  m_Resolution.y = 1.0f;
+  m_Resolution.z = 1.0f;
+
   setupFilterParameters();
 }
 
@@ -214,8 +198,6 @@ RawBinaryReader::~RawBinaryReader()
 void RawBinaryReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
-
   parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.raw *.bin"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -256,7 +238,7 @@ void RawBinaryReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", FilterParameterWidgetType::IntWidget, getSkipHeaderBytes(), false));
   parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Add to Existing DataContainer & AttributeMatrix", "AddToExistingAttributeMatrix", FilterParameterWidgetType::BooleanWidget, getDataContainerName(), true));
+  parameters.push_back(FilterParameter::New("Add to Existing Data Container & Attribute Matrix", "AddToExistingAttributeMatrix", FilterParameterWidgetType::BooleanWidget, getDataContainerName(), true));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true));
   setFilterParameters(parameters);
@@ -320,7 +302,7 @@ void RawBinaryReader::dataCheck()
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("The input file must be set").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -331,30 +313,30 @@ void RawBinaryReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_OutputArrayName.isEmpty() == true)
+  if (m_OutputArrayName.isEmpty() == true)
   {
-    QString ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    QString ss = QObject::tr("The output array name must be set");
     setErrorCondition(-398);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_NumberOfComponents < 1)
   {
-    QString ss = QObject::tr("The number of components must be larger than Zero");
+    QString ss = QObject::tr("The number of components must be positive");
     setErrorCondition(-391);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_Dimensionality < 1)
   {
-    QString ss = QObject::tr("The dimensionality must be larger than Zero");
+    QString ss = QObject::tr("The dimensionality must be positive");
     setErrorCondition(-389);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (  m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
+  if (m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
   {
-    QString ss = QObject::tr("One of the dimensions has a size less than or Equal to Zero (0). The minimum size must be greater than One (1).");
+    QString ss = QObject::tr("One of the dimensions has a size less than or equal to zero. The minimum size must be postive");
     setErrorCondition(-390);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -365,95 +347,82 @@ void RawBinaryReader::dataCheck()
   if (getAddToExistingAttributeMatrix() )
   {
     m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
+    if(getErrorCondition() < 0) { return; }
 
-    attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -10000);
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
+    attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+    if(getErrorCondition() < 0) { return; }
   }
   else
   {
     m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
+    if(getErrorCondition() < 0) { return; }
 
     QVector<size_t> tDims(3, 0);
     tDims[0] = m_Dimensions.x;
     tDims[1] = m_Dimensions.y;
-    tDims[2] =  m_Dimensions.z;
+    tDims[2] = m_Dimensions.z;
     attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
+    if(getErrorCondition() < 0) { return; }
   }
 
   if (getInPreflight())
   {
     size_t allocatedBytes = 0;
-    IDataArray::Pointer p = IDataArray::NullPointer();
-    QVector<size_t> dims(1, m_NumberOfComponents);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
     if (m_ScalarType == Detail::Int8)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(int8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt8)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(uint8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int16)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int16_t>, AbstractFilter, int16_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int16_t>, AbstractFilter, int16_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(int16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt16)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint16_t>, AbstractFilter, uint16_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint16_t>, AbstractFilter, uint16_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(uint16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int32)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(int32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt32)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(uint32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int64)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int64_t>, AbstractFilter, int64_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int64_t>, AbstractFilter, int64_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(int64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt64)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint64_t>, AbstractFilter, uint64_t>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint64_t>, AbstractFilter, uint64_t>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(uint64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Float)
     {
-      attrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(float) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Double)
     {
-      attrMat->createAndAddAttributeArray<DataArray<double>, AbstractFilter, double>(this, m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<double>, AbstractFilter, double>(this, m_OutputArrayName, 0, cDims);
       allocatedBytes = sizeof(double) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
 
     // Sanity Check Allocated Bytes versus size of file
     uint64_t fileSize = fi.size();
-    int check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, m_SkipHeaderBytes);
+    int32_t check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, m_SkipHeaderBytes);
     if (check == -1)
     {
 
@@ -478,7 +447,6 @@ void RawBinaryReader::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -497,20 +465,14 @@ void RawBinaryReader::preflight()
 // -----------------------------------------------------------------------------
 void RawBinaryReader::execute()
 {
-  int err = 0;
-  QString ss;
+  int32_t err = 0;
   setErrorCondition(err);
-
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
+
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   ImageGeom::Pointer image = ImageGeom::CreateGeometry("BinaryImage");
   m->setGeometry(image);
-
-  setErrorCondition(0);
 
   // Get the total size of the array from the options
   size_t voxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
@@ -521,7 +483,7 @@ void RawBinaryReader::execute()
   }
   image->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
-  if(getAddToExistingAttributeMatrix() == false)
+  if (getAddToExistingAttributeMatrix() == false)
   {
     QVector<size_t> tDims(3, 0);
     tDims[0] = m_Dimensions.x;
@@ -533,8 +495,8 @@ void RawBinaryReader::execute()
   array = IDataArray::NullPointer();
   if (m_ScalarType == Detail::Int8)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<int8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -544,8 +506,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt8)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<uint8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -555,8 +517,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Int16)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<int16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -566,8 +528,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt16)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<uint16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -577,8 +539,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Int32)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<int32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -588,8 +550,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt32)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<uint32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -599,8 +561,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Int64)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<int64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -610,8 +572,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::UInt64)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<uint64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -621,8 +583,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Float)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     p->initializeWithValue(666.6666f);
     err = readBinaryFile<float>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
@@ -633,8 +595,8 @@ void RawBinaryReader::execute()
   }
   else if (m_ScalarType == Detail::Double)
   {
-    QVector<size_t> dims(1, m_NumberOfComponents);
-    DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+    QVector<size_t> cDims(1, m_NumberOfComponents);
+    DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, cDims, m_OutputArrayName);
     err = readBinaryFile<double>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
@@ -647,24 +609,24 @@ void RawBinaryReader::execute()
   {
     m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(array->getName(), array);
   }
-  else if(err == RBR_FILE_NOT_OPEN )
+  else if (err == RBR_FILE_NOT_OPEN )
   {
     setErrorCondition(RBR_FILE_NOT_OPEN);
-    notifyErrorMessage(getHumanLabel(), "RawBinaryReader was unable to open the specified file.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Unable to open the specified file", getErrorCondition());
   }
   else if (err == RBR_FILE_TOO_SMALL)
   {
     setErrorCondition(RBR_FILE_TOO_SMALL);
-    notifyErrorMessage(getHumanLabel(), "The file size is smaller than the allocated size.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The file size is smaller than the allocated size", getErrorCondition());
   }
   else if (err == RBR_FILE_TOO_BIG)
   {
-    notifyWarningMessage(getHumanLabel(), "The file size is larger than the allocated size.", RBR_FILE_TOO_BIG);
+    notifyWarningMessage(getHumanLabel(), "The file size is larger than the allocated size", RBR_FILE_TOO_BIG);
   }
-  else if(err == RBR_READ_EOF)
+  else if (err == RBR_READ_EOF)
   {
     setErrorCondition(RBR_READ_EOF);
-    notifyErrorMessage(getHumanLabel(), "RawBinaryReader read past the end of the specified file.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "RawBinaryReader read past the end of the specified file", getErrorCondition());
   }
 
   /* Let the GUI know we are done with this filter */
@@ -676,19 +638,6 @@ void RawBinaryReader::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RawBinaryReader::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ScalarType
-  * Endian
-  * Dimensionality
-  * NumberOfComponents
-  * Dimensions
-  * Origin
-  * Resolution
-  * OverRideOriginResolution
-  * SkipHeaderBytes
-  * OutputArrayName
-  * InputFile
-  */
   RawBinaryReader::Pointer filter = RawBinaryReader::New();
   if(true == copyFilterParameters)
   {
@@ -701,34 +650,22 @@ AbstractFilter::Pointer RawBinaryReader::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getGroupName()
-{
-  return DREAM3D::FilterGroups::IOFilters;
-}
-
+{ return DREAM3D::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::InputFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getHumanLabel()
-{
-  return "Raw Binary Reader";
-}
-
+{ return "Raw Binary Reader"; }

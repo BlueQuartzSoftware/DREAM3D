@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,15 +36,16 @@
 
 #include "MoveData.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 
-
-static const int k_MoveAttributeMatrix = 0;
-static const int k_MoveDataArray = 1;
-
-
+namespace
+{
+  static const int32_t k_MoveAttributeMatrix = 0;
+  static const int32_t k_MoveDataArray = 1;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -73,34 +74,24 @@ MoveData::~MoveData()
 void MoveData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-  parameter->setHumanLabel("What to Move");
+  parameter->setHumanLabel("Items To Move");
   parameter->setPropertyName("WhatToMove");
   parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   parameter->setDefaultValue(getWhatToMove()); // Just set the first index
-
   QVector<QString> choices;
   choices.push_back("Attribute Matrix");
-  choices.push_back("Data Array");
-
+  choices.push_back("Attribute Array");
   parameter->setChoices(choices);
   QStringList linkedProps;
   linkedProps << "DataContainerDestination" << "AttributeMatrixSource" << "AttributeMatrixDestination" << "DataArraySource";
   parameter->setLinkedProperties(linkedProps);
   parameter->setEditable(false);
   parameters.push_back(parameter);
-
   parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), false, "", 0));
-
   parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), false, "", 0));
-
-
-  parameters.push_back(FilterParameter::New("Data Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), false, "", 1));
-
+  parameters.push_back(FilterParameter::New("Attribute Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), false, "", 1));
   parameters.push_back(FilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixDestination(), false, "", 1));
-
-
   setFilterParameters(parameters);
 }
 
@@ -125,17 +116,12 @@ int MoveData::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  int val = getWhatToMove();
-  writer->writeValue("WhatToMove", val );
-  QString val2 = getDataContainerDestination();
-  writer->writeValue("DataContainerDestination", val2 );
-  DataArrayPath val3 = getAttributeMatrixSource();
-  writer->writeValue("AttributeMatrixSource", val3 );
-  DataArrayPath val4 = getAttributeMatrixDestination();
-  writer->writeValue("AttributeMatrixDestination", val4 );
-  DataArrayPath val5 = getDataArraySource();
-  writer->writeValue("DataArraySource", val5 );
-  writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(WhatToMove)
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerDestination)
+  DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixSource)
+  DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixDestination)
+  DREAM3D_FILTER_WRITE_PARAMETER(DataArraySource)
+  writer->closeFilterGroup(); // we want to return the next index that was just written to
   return ++index;
 }
 
@@ -149,34 +135,15 @@ void MoveData::dataCheck()
   DataArrayPath amDestPath = getAttributeMatrixDestination();
   DataArrayPath daSrcPath = getDataArraySource();
 
-  if( getWhatToMove() == k_MoveAttributeMatrix )
+  if (getWhatToMove() == k_MoveAttributeMatrix)
   {
-    DataContainer::Pointer amDestDataContainer = getDataContainerArray()->getDataContainer(getDataContainerDestination());
-    DataContainer::Pointer amSrcDataContainer = getDataContainerArray()->getDataContainer(amSrcPath);
-    AttributeMatrix::Pointer amSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(amSrcPath);
+    DataContainer::Pointer amDestDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerDestination());
+    DataContainer::Pointer amSrcDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, amSrcPath.getDataContainerName());
+    AttributeMatrix::Pointer amSrcAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, amSrcPath, -301);
 
-    if (NULL == amDestDataContainer.get())
-    {
-      setErrorCondition(-11011);
-      QString ss = QObject::tr("The destination Data Container for the specified Attribute Matrix was not found in the DataContainerArray");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-    else if (NULL == amSrcDataContainer.get())
-    {
-      setErrorCondition(-11012);
-      QString ss = QObject::tr("The source Data Container for the specified Attribute Matrix was not found in the DataContainerArray");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-    else if (NULL == amSrcAttributeMatrix.get())
-    {
-      setErrorCondition(-11013);
-      QString ss = QObject::tr("The specified Attribute Matrix was not found inside its Data Container");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-    else if(amSrcDataContainer->getName() == amDestDataContainer->getName())
+    if(getErrorCondition() < 0) { return; }
+
+    if (amSrcDataContainer->getName() == amDestDataContainer->getName())
     {
       QString ss = QObject::tr("The source and destination Data Container are the same.  Is this what you meant to do?");
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
@@ -186,27 +153,18 @@ void MoveData::dataCheck()
     amDestDataContainer->addAttributeMatrix(amSrcAttributeMatrix->getName(), amSrcAttributeMatrix);
     amSrcDataContainer->removeAttributeMatrix(amSrcAttributeMatrix->getName());
   }
-  else if( getWhatToMove() == k_MoveDataArray )
+  else if (getWhatToMove() == k_MoveDataArray )
   {
-    AttributeMatrix::Pointer daSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(daSrcPath);
+    AttributeMatrix::Pointer daSrcAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, daSrcPath, -301);
+    AttributeMatrix::Pointer daDestAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, amDestPath, -301);
     IDataArray::Pointer daSrcDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, daSrcPath);
 
-    if (getErrorCondition() < 0)
-    {
-      return;
-    }
-
-    AttributeMatrix::Pointer daDestAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, amDestPath, -11013);
-
-    if (getErrorCondition() < 0)
-    {
-      return;
-    }
+    if(getErrorCondition() < 0) { return; }
 
     if (daDestAttributeMatrix->getNumTuples() != daSrcDataArray->getNumberOfTuples())
     {
       setErrorCondition(-11019);
-      QString ss = QObject::tr("The number of tuples of source and destination do not match");
+      QString ss = QObject::tr("The number of tuples of source Attribute Array (%1) and destination Attribute Matrix (%2) do not match").arg(daSrcDataArray->getNumberOfTuples()).arg(daDestAttributeMatrix->getNumTuples());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
@@ -223,7 +181,7 @@ void MoveData::dataCheck()
   else
   {
     setErrorCondition(-11020);
-    QString ss = QObject::tr("Neither an Attribute Matrix nor a Data Array was selected to be moved.  Please contact the DREAM3D developers to resolve this issue");
+    QString ss = QObject::tr("Neither an Attribute Matrix nor an Attribute Array was selected to be moved");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -247,16 +205,11 @@ void MoveData::preflight()
 // -----------------------------------------------------------------------------
 void MoveData::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
-
+  setErrorCondition(0);
   // Simply running the preflight will do what we need it to.
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -277,34 +230,22 @@ AbstractFilter::Pointer MoveData::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters;}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MoveData::getHumanLabel()
-{
-  return "Move Data";
-}
-
+{ return "Move Data";}

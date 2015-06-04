@@ -445,17 +445,39 @@ void InsertAtoms::execute()
   // we don't have acces to the data yet
   int32_t numFeaturesIn = static_cast<int32_t>(m_AvgQuatsPtr.lock()->getNumberOfTuples());
   bool mismatchedFeatures = true;
+  int32_t largestFeature = 0;
   size_t numTuples = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
   for (size_t i = 0; i < numTuples; i++)
   {
-    if (m_SurfaceMeshFaceLabels[2 * i] == numFeaturesIn || m_SurfaceMeshFaceLabels[2 * i + 1] == numFeaturesIn)
+    if (m_SurfaceMeshFaceLabels[2 * i] > largestFeature)
     {
-      mismatchedFeatures = false;
-      break;
+      largestFeature = m_SurfaceMeshFaceLabels[2 * i];
+      if (largestFeature >= numFeaturesIn)
+      {
+        mismatchedFeatures = true;
+        break;
+      }
+    }
+    else if (m_SurfaceMeshFaceLabels[2 * i + 1] > largestFeature)
+    {
+      largestFeature = m_SurfaceMeshFaceLabels[2 * i + 1];
+      if (largestFeature >= numFeaturesIn)
+      {
+        mismatchedFeatures = true;
+        break;
+      }
     }
   }
 
   if (mismatchedFeatures == true)
+  {
+    QString ss = QObject::tr("The number of Features in the AvgQuats array (%1) is larger than the largest Feature Id in the SurfaceMeshFaceLabels array").arg(numFeaturesIn);
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  if (largestFeature != (numFeaturesIn - 1))
   {
     QString ss = QObject::tr("The number of Features in the AvgQuats array (%1) does not match the largest Feature Id in the SurfaceMeshFaceLabels array").arg(numFeaturesIn);
     setErrorCondition(-5555);

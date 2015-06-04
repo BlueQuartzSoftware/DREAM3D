@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,9 +36,9 @@
 
 #include "CopyAttributeMatrix.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -64,8 +64,8 @@ CopyAttributeMatrix::~CopyAttributeMatrix()
 void CopyAttributeMatrix::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("AttributeMatrix to Copy", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSelectedAttributeMatrixPath(), false));
-  parameters.push_back(FilterParameter::New("New AttributeMatrix Name", "NewAttributeMatrix", FilterParameterWidgetType::StringWidget, getNewAttributeMatrix(), false));
+  parameters.push_back(FilterParameter::New("Attribute Matrix To Copy", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSelectedAttributeMatrixPath(), false));
+  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrix", FilterParameterWidgetType::StringWidget, getNewAttributeMatrix(), false));
   setFilterParameters(parameters);
 }
 
@@ -100,47 +100,21 @@ void CopyAttributeMatrix::dataCheck()
 {
   setErrorCondition(0);
 
-  if(m_NewAttributeMatrix.isEmpty() == true)
+  if (m_NewAttributeMatrix.isEmpty() == true)
   {
     setErrorCondition(-11004);
-    QString ss = QObject::tr("The New Attribute Matrix name can not be empty. Please set a value.");
+    QString ss = QObject::tr("The new Attribute Matrix name must be set");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (m_SelectedAttributeMatrixPath.isEmpty() == true)
-  {
-    setErrorCondition(-11005);
-    QString ss = QObject::tr("The complete path to the Attribute Matrix can not be empty. Please set an appropriate path.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    QString dcName = m_SelectedAttributeMatrixPath.getDataContainerName();
-    QString amName = m_SelectedAttributeMatrixPath.getAttributeMatrixName();
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSelectedAttributeMatrixPath(), -301);
+  if(getErrorCondition() < 0 ) { return; }
 
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-    if(NULL == dc.get())
-    {
-      setErrorCondition(-11007);
-      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getSelectedAttributeMatrixPath().getDataContainerName());
 
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-    if(NULL == attrMat.get())
-    {
-      setErrorCondition(-11008);
-      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    AttributeMatrix::Pointer p = attrMat->deepCopy();
-    dc->addAttributeMatrix(getNewAttributeMatrix(), p );
-  }
+  AttributeMatrix::Pointer p = attrMat->deepCopy();
+  dc->addAttributeMatrix(getNewAttributeMatrix(), p );
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -161,12 +135,8 @@ void CopyAttributeMatrix::preflight()
 void CopyAttributeMatrix::execute()
 {
   setErrorCondition(0);
-
   dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -175,10 +145,6 @@ void CopyAttributeMatrix::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer CopyAttributeMatrix::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedAttributeMatrixPath
-  * NewAttributeMatrix
-  */
   CopyAttributeMatrix::Pointer filter = CopyAttributeMatrix::New();
   if(true == copyFilterParameters)
   {
@@ -191,34 +157,22 @@ AbstractFilter::Pointer CopyAttributeMatrix::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyAttributeMatrix::getHumanLabel()
-{
-  return "Copy Attribute Matrix";
-}
-
+{ return "Copy Attribute Matrix"; }

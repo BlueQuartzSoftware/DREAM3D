@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,24 +37,12 @@
 #ifndef _AdjustVolumeOrigin_H_
 #define _AdjustVolumeOrigin_H_
 
-#include <QtCore/QString>
-#include <set>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Geometry/ImageGeom.h"
-#include "DREAM3DLib/Geometry/VertexGeom.h"
-
 
 /**
- * @class AdjustVolumeOrigin AdjustVolumeOrigin.h /FilterCategoryFilters/AdjustVolumeOrigin.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The AdjustVolumeOrigin class. See [Filter documentation](@ref adjustvolumeorigin) for details.
  */
 class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
 {
@@ -65,15 +53,19 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AdjustVolumeOrigin, AbstractFilter)
 
     virtual ~AdjustVolumeOrigin();
+
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(bool, ApplyToVoxelVolume)
     Q_PROPERTY(bool ApplyToVoxelVolume READ getApplyToVoxelVolume WRITE setApplyToVoxelVolume)
+
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSurfaceMesh)
     Q_PROPERTY(bool ApplyToSurfaceMesh READ getApplyToSurfaceMesh WRITE setApplyToSurfaceMesh)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
@@ -131,18 +123,10 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
   protected:
     AdjustVolumeOrigin();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
     /**
-     * @brief updateSurfaceMesh This method does the actual updating of the meesh coordinates
+     * @brief updateSurfaceMesh Updates the mesh coordinates
      */
     void updateSurfaceMesh();
 
@@ -153,6 +137,3 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
 };
 
 #endif /* _AdjustVolumeOrigin_H_ */
-
-
-

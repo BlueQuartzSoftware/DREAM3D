@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,22 +37,12 @@
 #ifndef _CopyAttributeArray_H_
 #define _CopyAttributeArray_H_
 
-#include <QtCore/QString>
-#include <set>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class CopyAttributeArray CopyAttributeArray.h /FilterCategoryFilters/CopyAttributeArray.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The CopyAttributeArray class. See [Filter documentation](@ref copyattributearray) for details.
  */
 class DREAM3DLib_EXPORT CopyAttributeArray : public AbstractFilter
 {
@@ -124,14 +114,7 @@ class DREAM3DLib_EXPORT CopyAttributeArray : public AbstractFilter
   protected:
     CopyAttributeArray();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+
     void dataCheck();
 
   private:
@@ -141,5 +124,3 @@ class DREAM3DLib_EXPORT CopyAttributeArray : public AbstractFilter
 };
 
 #endif /* _CopyAttributeArray_H_ */
-
-

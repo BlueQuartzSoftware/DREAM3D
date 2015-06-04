@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,22 +37,16 @@
 #ifndef _DataContainerReader_H_
 #define _DataContainerReader_H_
 
-#include <QtCore/QString>
 #include <QtCore/QDateTime>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
-#include "DREAM3DLib/Common/Constants.h"
 
 /**
- * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
- * @brief
- *
- * @date Jul 17, 2012
- * @version 1.0
+ * @brief The DataContainerReader class. See [Filter documentation](@ref datacontainerreader) for details.
  */
 class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 {
@@ -108,40 +102,41 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void preflight();
 
     /**
-     * @brief readExistingPipelineFromFile This will read the existing pipeline that is stored in the file and store it
-     * in the class instance for later writing to another dream3d data file
-     * @param fileId
-     * @return
+     * @brief readExistingPipelineFromFile Reads the existing pipeline that is stored in the file and store it
+     * in the class instance for later writing to another DREAM.3D data file
+     * @param fileId HDF5 group Id for pipeline
+     * @return Integer error value
      */
     int readExistingPipelineFromFile(hid_t fileId);
 
     /**
-     * @brief writeExistingPipelineToFile
-     * @param writer
-     * @param index
-     * @return
+     * @brief writeExistingPipelineToFile Writes the filter parameters of the existing pipline to a
+     * DREAM.3D file
+     * @param writer AbstractFilterParametersWriter instance pointer
+     * @param index Group index
+     * @return Integer error value
      */
     int writeExistingPipelineToFile(AbstractFilterParametersWriter* writer, int index);
 
     /**
-     * @brief Reads the structure of the DataContainer Array from the hdf5 based .dream3d file. For this method to work
+     * @brief readDataContainerArrayStructure Reads the structure of the DataContainerArray from the HDF5 based .dream3d file. For this method to work
      * the member variable for the file path should have been set prior to calling this method.
-     * @param path The file path to the DREAm3D file
-     * @return
+     * @param path The file path to the DREAM.3D file
+     * @return DataContainerArrayProxy instance
      */
     DataContainerArrayProxy readDataContainerArrayStructure(const QString& path);
 
     /**
-     * @brief readDataContainerBundles Reads the data Container bundles from the HDF5 file
-     * @return
+     * @brief readDataContainerBundles Reads the DataContainerBundles from the HDF5 based .dream3d file
+     * @return Integer error value
      */
     int readDataContainerBundles(hid_t fileId, DataContainerArray::Pointer dca);
 
-	/**
-	* @brief syncProxies Combines the file and cached proxies if they are out-of-sync
-	* @return
-	*/
-	void syncProxies();
+  /**
+  * @brief syncProxies Combines the file and cached proxies if they are out-of-sync
+  * @return
+  */
+  void syncProxies();
 
 
   signals:
@@ -150,59 +145,24 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     void preflightAboutToExecute();
     void preflightExecuted();
 
-
   protected:
     DataContainerReader();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param volumes The number of volumes
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
+    /**
+     * @brief readData Reads the actual data from the HDF5 based .dream3d file
+     * @param preflight Boolean check for preflight status
+     * @param proxy DataContainerArrayProxy reference
+     * @param dca DataContainerArray instance pointer
+     */
     void readData(bool preflight, DataContainerArrayProxy& proxy, DataContainerArray::Pointer dca);
 
   private:
-
-    FilterPipeline::Pointer         m_PipelineFromFile;
-
-    /**
-     * @brief readDataContainers
-     * @param dcArrayGroupId
-     * @param proxy
-     * @param h5InternalPath
-     */
-    void readDataContainers(hid_t dcArrayGroupId, DataContainerArrayProxy& proxy, QString h5InternalPath);
-
-    /**
-     * @brief readAttributeMatrix
-     * @param containerId
-     * @param dataContainer
-     * @param h5InternalPath
-     */
-    void readAttributeMatrix(hid_t containerId, DataContainerProxy& dataContainer, QString h5InternalPath);
-
-    /**
-     * @brief readDataArrays
-     * @param attrMatGid
-     * @param attrMatrix
-     * @param h5InternalPath
-     */
-    void readDataArrays(hid_t attrMatGid, AttributeMatrixProxy& attrMatrix, QString h5InternalPath);
-
-
+    FilterPipeline::Pointer m_PipelineFromFile;
 
     DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
     void operator=(const DataContainerReader&); // Operator '=' Not Implemented
-
-
 };
 
-#endif /* _DATACONTAINER_READER_H_ */
-
-
-
+#endif /* _DataContainerReader_H_ */

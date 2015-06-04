@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,22 +37,12 @@
 #ifndef _RenameAttributeArray_H_
 #define _RenameAttributeArray_H_
 
-#include <QtCore/QString>
-#include <set>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class RenameAttributeArray RenameAttributeArray.h /FilterCategoryFilters/RenameAttributeArray.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The RenameAttributeArray class. See [Filter documentation](@ref renameattributearray) for details.
  */
 class DREAM3DLib_EXPORT RenameAttributeArray : public AbstractFilter
 {
@@ -124,14 +114,6 @@ class DREAM3DLib_EXPORT RenameAttributeArray : public AbstractFilter
   protected:
     RenameAttributeArray();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
@@ -141,5 +123,3 @@ class DREAM3DLib_EXPORT RenameAttributeArray : public AbstractFilter
 };
 
 #endif /* _RenameAttributeArray_H_ */
-
-

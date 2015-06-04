@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -61,9 +61,8 @@ FitFeatureData::FitFeatureData() :
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_BiasedFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
   m_NewEnsembleArrayArrayName(DREAM3D::EnsembleData::FitParameters),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_InDataArray(NULL),
   m_BiasedFeatures(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_NewEnsembleArray(NULL)
 {

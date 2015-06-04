@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "EmptyFilter.h"
+
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -58,7 +60,6 @@ EmptyFilter::~EmptyFilter()
 // -----------------------------------------------------------------------------
 void EmptyFilter::setupFilterParameters()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -67,7 +68,6 @@ void EmptyFilter::setupFilterParameters()
 void EmptyFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-
   reader->closeFilterGroup();
 }
 
@@ -78,8 +78,6 @@ int EmptyFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -89,13 +87,10 @@ int EmptyFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 void EmptyFilter::dataCheck()
 {
-
   QString ss = QObject::tr("This filter does nothing and was was inserted as a place holder for filter '%1' that does not exist anymore.").arg(getOriginalFilterName());
   setErrorCondition(-9999);
   notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -105,7 +100,6 @@ void EmptyFilter::preflight()
   setInPreflight(true);
   dataCheck();
 }
-
 
 // -----------------------------------------------------------------------------
 //
