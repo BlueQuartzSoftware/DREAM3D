@@ -208,7 +208,7 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
     QFileInfo fi(m_FileName);
     QString className = fi.baseName();
     QString filterName = className;
-    filterName = filterName.remove("Test");   // For the test files
+    //filterName = filterName.remove("Test");   // For the test files
     text.replace("@ClassName@", className);
     text.replace("@FilterName@", filterName);
     text.replace("@MD_FILE_NAME@", m_FileName);
