@@ -6,32 +6,21 @@ Core Filters (Memory/Management)
 
 
 ## Description ##
-This filter allows the user to move a data array from one attribute matrix to another compatible attribute matrix.  It also allows the user to move an attribute matrix from one data container to another data container.  Attribute matrices are compatible if the number of tuples are equal.
+This filter allows the user to move a data array from one attribute matrix to another compatible attribute matrix.  It also allows the user to move an attribute matrix from one data container to another data container.  The Attribute Matrix Source and Data Container Destination are displayed if Attribute Matrix is selected to move. The Attribute Array Source and Attribute Matrix Destination are displayed if  Attribute Array is selected to move. Attribute matrices are compatible if the number of tuples are equal.
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Input Attribute Matrix or Data Array | String or DataArrayPath |
+| Name             | Type | Comment |
+|------------------|------|-------------|
+| Input Attribute Matrix or Array | String | What to Move |
+| Attribute Matrix or Array Source|  String | Source of What to Move |
+| Data Container or Attribute Matrix Destination | String | Where to Move |
 
-## Required Arrays ##
-
+## Required Attribute Matrix or Array ##
+Selection of Attribute Matrix or Array to Move
 
 
 ## Created Arrays ##
-
-
-
-## Authors ##
-
-**Copyright** 2014 Joseph B. Kleingers (BlueQuartz Software), 2014 Michael A. Jackson (BlueQuartz Software)
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-
+None
 
 ## License & Copyright ##
 

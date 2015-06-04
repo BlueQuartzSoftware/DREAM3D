@@ -33,18 +33,6 @@ This filter does the following...
 | Int  | SomeName           | ....        | other   |
 
 
-
-## Authors ##
-
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-
-
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

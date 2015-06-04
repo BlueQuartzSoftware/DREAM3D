@@ -12,25 +12,24 @@ A **Cell** array is used as the index into the **Feature** map for each **Cell**
 | Name | Type |
 |------|------|
 | Cell Array Name | String |
+| Cell Feature Attribute Matrix Name| String |
+| Active Array | String |
 
 ## Required DataContainers ##
 Voxel
 
-## Required Arrays ##
+## Required Attribute Matrix ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| Cell Feature | *User Chosen* |  | Attribute Matrix will always be present, since the user may only chose from existing attribute matrices | N/A |
 
 
 ## Created Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | Active | | |
-
-
-
+| Type | Default Name |
+|------|--------------|
+| Feature | Active |
 
 
 ## License & Copyright ##

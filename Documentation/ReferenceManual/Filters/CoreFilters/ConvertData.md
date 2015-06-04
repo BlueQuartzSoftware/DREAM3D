@@ -23,7 +23,7 @@ Down casting can have undefined behavior depending on the primitive types involv
 
 **Signed/Unsigned Conversions**
 
-When converting data from signed values to unsigned values or vice-versa then there can also be undefined behavior. For example if the user were to convert a signed 4 byte integer array to an unsigned 4 byte integer array and the input array has negative values then the conversion rules are undefined and may differ from operating system to operating system.
+When converting data from signed values to unsigned values or vice-versa then there can also be undefined behavior. For example, if the user were to convert a signed 4 byte integer array to an unsigned 4 byte integer array and the input array has negative values then the conversion rules are undefined and may differ from operating system to operating system.
 
 ## Parameters ##
 | Name             | Type |
