@@ -43,7 +43,7 @@
 DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
   QApplication(argc, argv)
 {
-  m_DREAM3DWindowList;
+
 }
 
 // -----------------------------------------------------------------------------
