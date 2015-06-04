@@ -37,9 +37,10 @@
 #include "ComparisonSelectionTableModel.h"
 
 #include <QtCore/QDebug>
-#include <QApplication>
 #include <QtWidgets/QStyleOptionComboBox>
 #include <QtWidgets/QAbstractItemDelegate>
+
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "ComparisonSelectionItemDelegate.h"
 
@@ -163,7 +164,7 @@ QVariant ComparisonSelectionTableModel::data(const QModelIndex& index, qint32 ro
     QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
-    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
+    return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if (role == Qt::TextAlignmentRole)
   {

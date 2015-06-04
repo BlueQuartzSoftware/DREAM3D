@@ -600,22 +600,6 @@ int BookmarksDockWidget::addTreeItem(QModelIndex parent,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionUpdatePipeline_triggered()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  // Lets get the name of the favorite
-  QModelIndex index = bookmarksTreeView->currentIndex();
-
-  QString name = model->index(index.row(), BookmarksItem::Name, index.parent()).data().toString();
-  QString filePath = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
-
-  emit pipelineNeedsToBeSaved(filePath, name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 bool BookmarksDockWidget::removeDir(const QString& dirName)
 {
   bool result = true;

@@ -64,6 +64,8 @@
 #include "QtSupportLib/QRecentFileList.h"
 #include "QtSupportLib/HelpDialog.h"
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
 #include "DREAM3D/License/StatsGeneratorLicenseFiles.h"
 
 #include "SGApplication.h"
@@ -574,7 +576,7 @@ void StatsGeneratorUI::on_actionSaveAs_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_action_OpenDREAM3D_triggered()
 {
-  QString appPath = qApp->applicationDirPath();
+  QString appPath = dream3dApp->applicationDirPath();
 
   QDir appDir = QDir(appPath);
   QString s("file://");
@@ -1009,7 +1011,7 @@ QString StatsGeneratorUI::getFilePath()
 // -----------------------------------------------------------------------------
 QUrl StatsGeneratorUI::htmlHelpIndexFile()
 {
-  QString appPath = qApp->applicationDirPath();
+  QString appPath = dream3dApp->applicationDirPath();
 
   QDir helpDir = QDir(appPath);
   QString s("file://");

@@ -1,5 +1,8 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+* Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
+* All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -11,9 +14,10 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
-* without specific prior written permission.
+* Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
+* the US Air Force, BlueQuartz Software nor the names of its contributors may be
+* used to endorse or promote products derived from this software without specific
+* prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,121 +30,77 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
+*  This code was written under United States Air Force Contract number
+*                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-#include "HelpDialog.h"
-
-#include <iostream>
-
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
-#include <QtCore/QTextStream>
-#include <QtCore/QUrl>
-
-#include "Applications/DREAM3D/DREAM3DApplication.h"
+#include "DREAM3DApplication.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HelpDialog::HelpDialog(QWidget* parent) :
-  QDialog(parent)
+DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
+  QApplication(argc, argv)
 {
-  this->setupUi(this);
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HelpDialog::~HelpDialog()
+DREAM3DApplication::~DREAM3DApplication()
 {
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HelpDialog::setContentFile(QUrl sourceLocation)
+QList<QWidget*> DREAM3DApplication::getDREAM3DWindowList()
 {
-  QDir aPluginDir = QDir(dream3dApp->applicationDirPath());
-  QString aPluginDirStr = aPluginDir.absolutePath();
-  QString thePath;
-#if defined(Q_OS_WIN)
-  if (aPluginDir.cd("Help") )
-  {
-    thePath = aPluginDir.absolutePath();
-  }
-  else if (aPluginDir.cd("../Help") )
-  {
-    thePath = aPluginDir.absolutePath();
-  }
-#elif defined(Q_OS_MAC)
-  if (aPluginDir.dirName() == "MacOS")
-  {
-    aPluginDir.cdUp();
-    aPluginDir.cdUp();
-    aPluginDir.cdUp();
-  }
-  // aPluginDir.cd("Plugins");
-  thePath = aPluginDir.absolutePath() + "/Help";
-#else
-  if (aPluginDir.cd("Help"))
-  {
-    thePath = aPluginDir.absolutePath();
-  }
-#endif
-  thePath = QString("file:///").append(thePath).append("/").append(sourceLocation.toString());
-
-//  qDebug() << "Help File Path:" << thePath() << "\n";
-
-  helpBrowser->setSource(QUrl(thePath));
-  // Set the Home Page File
-  m_HomeUrl = QUrl(thePath);
-  this->show();
-}
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HelpDialog::on_backBtn_clicked()
-{
-  if (helpBrowser->isBackwardAvailable() )
-  {
-    helpBrowser->backward();
-  }
+  return m_DREAM3DWidgetList;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HelpDialog::on_forwardBtn_clicked()
+void DREAM3DApplication::registerDREAM3DWindow(QWidget* widget)
 {
-  if (helpBrowser->isForwardAvailable() )
+  m_DREAM3DWidgetList.push_back(widget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::unregisterDREAM3DWindow(QWidget* widget)
+{
+  m_DREAM3DWidgetList.removeAll(widget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::exitTriggered()
+{
+  bool shouldReallyClose = true;
+  for (int i = 0; i < m_DREAM3DWidgetList.size(); i++)
   {
-    helpBrowser->forward();
+    QWidget* dream3dWindow = m_DREAM3DWidgetList.at(i);
+    if (dream3dWindow->close() == false)
+    {
+      shouldReallyClose = false;
+    }
+  }
+
+  if (shouldReallyClose == true)
+  {
+    dream3dApp->quit();
   }
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HelpDialog::on_reloadBtn_clicked()
-{
-  helpBrowser->reload();
-}
-#endif
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HelpDialog::on_homeBtn_clicked()
-{
-  helpBrowser->setSource(m_HomeUrl);
-}
+
+
+

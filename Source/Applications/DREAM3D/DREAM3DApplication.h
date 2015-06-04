@@ -35,73 +35,36 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ApplicationFileInfo.h"
-
-#include <QtCore/QDir>
+#ifndef _DREAM3DApplication_H_
+#define _DREAM3DApplication_H_
 
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
 
-#include "Applications/DREAM3D/DREAM3DApplication.h"
+#define dream3dApp (static_cast<DREAM3DApplication *>(qApp))
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ApplicationFileInfo::ApplicationFileInfo()
+class DREAM3DApplication : public QApplication
 {
+  Q_OBJECT
 
-}
+public:
+  DREAM3DApplication(int & argc, char ** argv);
+  virtual ~DREAM3DApplication();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ApplicationFileInfo::~ApplicationFileInfo()
-{
+  QList<QWidget*> getDREAM3DWindowList();
 
-}
+  void registerDREAM3DWindow(QWidget* widget);
+  void unregisterDREAM3DWindow(QWidget* widget);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString ApplicationFileInfo::GenerateFileSystemPath(QString pathEnding)
-{
-  QString appPath = dream3dApp->applicationDirPath();
+protected slots:
+  void exitTriggered();
 
-  QDir dir = QDir(appPath);
+private:
+  QList<QWidget*>                   m_DREAM3DWidgetList;
 
-#if defined(Q_OS_WIN)
+  DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented
+  void operator=(const DREAM3DApplication&); // Operator '=' Not Implemented
+};
 
-#elif defined(Q_OS_MAC)
-  if (dir.dirName() == "MacOS")
-  {
-    dir.cdUp();
-    dir.cdUp();
-    dir.cdUp();
-  }
-#else
-  // We are on Linux - I think
-  QFileInfo fi(dir.absolutePath() + pathEnding);
-  if (fi.exists() == false)
-  {
-    // The help file does not exist at the default location because we are probably running from the build tree.
-    // Try up one more directory
-    dir.cdUp();
-  }
-#endif
-
-#if defined(Q_OS_WIN)
-  QFileInfo fi(dir.absolutePath() + pathEnding);
-  if (fi.exists() == false)
-  {
-    // The help file does not exist at the default location because we are probably running from visual studio.
-    // Try up one more directory
-    dir.cdUp();
-  }
-#endif
-
-  QString filePath = dir.absolutePath() + pathEnding;
-  filePath = QDir::toNativeSeparators(filePath);
-  return filePath;
-}
-
-
+#endif /* _DREAM3DApplication_H */
 

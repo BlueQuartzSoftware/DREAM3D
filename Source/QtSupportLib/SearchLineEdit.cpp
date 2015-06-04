@@ -16,6 +16,8 @@
 #include <QPaintEvent>
 #include <QDesktopWidget>
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
 /**
  * @brief execMenuAtWidget
  * @param menu
@@ -24,7 +26,7 @@
 static void execMenuAtWidget(QMenu* menu, QWidget* widget)
 {
   QPoint p;
-  QRect screen = qApp->desktop()->availableGeometry(widget);
+  QRect screen = dream3dApp->desktop()->availableGeometry(widget);
   QSize sh = menu->sizeHint();
   QRect rect = widget->rect();
   if (widget->isRightToLeft())

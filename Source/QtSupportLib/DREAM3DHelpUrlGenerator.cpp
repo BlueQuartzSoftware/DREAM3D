@@ -39,7 +39,7 @@
 #include <QtGui/QDesktopServices>
 #include <QtWidgets/QMessageBox>
 
-
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 namespace Detail
 {
@@ -67,7 +67,7 @@ DREAM3DHelpUrlGenerator::~DREAM3DHelpUrlGenerator()
 // -----------------------------------------------------------------------------
 QUrl DREAM3DHelpUrlGenerator::generateHTMLUrl(QString htmlName)
 {
-  QString appPath = qApp->applicationDirPath();
+  QString appPath = dream3dApp->applicationDirPath();
 
   QDir helpDir = QDir(appPath);
   QString s("file://");

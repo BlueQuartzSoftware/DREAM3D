@@ -48,7 +48,8 @@ set(DOXYGEN_IMAGE_DIRS
   \"${PROJECT_SOURCE_DIR}/Tutorials/Images\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images\"
-)
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images/DevHelper\"
+  )
 
 #-------------------------------------------------------------------------------
 # Read the list of Groups back into CMake
