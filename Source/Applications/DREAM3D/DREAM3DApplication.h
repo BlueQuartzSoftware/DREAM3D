@@ -39,10 +39,9 @@
 #define _DREAM3DApplication_H_
 
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
 
 #define dream3dApp (static_cast<DREAM3DApplication *>(qApp))
-
-class DREAM3D_UI;
 
 class DREAM3DApplication : public QApplication
 {
@@ -52,13 +51,16 @@ public:
   DREAM3DApplication(int & argc, char ** argv);
   virtual ~DREAM3DApplication();
 
-  QList<DREAM3D_UI*> getDREAM3DWindowList();
+  QList<QWidget*> getDREAM3DWindowList();
 
-  void registerDREAM3DWindow(DREAM3D_UI* window);
-  void unregisterDREAM3DWindow(DREAM3D_UI* window);
+  void registerDREAM3DWindow(QWidget* widget);
+  void unregisterDREAM3DWindow(QWidget* widget);
+
+protected slots:
+  void exitTriggered();
 
 private:
-  QList<DREAM3D_UI*>                   m_DREAM3DWindowList;
+  QList<QWidget*>                   m_DREAM3DWidgetList;
 
   DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented
   void operator=(const DREAM3DApplication&); // Operator '=' Not Implemented

@@ -187,6 +187,9 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   // Check if this is the first run of DREAM3D v5.2
   this->MainWindow->checkFirstRun();
 
+  // Register the DREAM3D window with the application
+  dream3dApp->registerDREAM3DWindow(this->MainWindow);
+
   return true;
 }
 

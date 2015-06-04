@@ -57,25 +57,55 @@ DREAM3DApplication::~DREAM3DApplication()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<DREAM3D_UI*> DREAM3DApplication::getDREAM3DWindowList()
+QList<QWidget*> DREAM3DApplication::getDREAM3DWindowList()
 {
-  return m_DREAM3DWindowList;
+  return m_DREAM3DWidgetList;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::registerDREAM3DWindow(DREAM3D_UI* window)
+void DREAM3DApplication::registerDREAM3DWindow(QWidget* widget)
 {
-  m_DREAM3DWindowList.push_back(window);
+  m_DREAM3DWidgetList.push_back(widget);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
+void DREAM3DApplication::unregisterDREAM3DWindow(QWidget* widget)
 {
-  m_DREAM3DWindowList.removeAll(window);
+  m_DREAM3DWidgetList.removeAll(widget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::exitTriggered()
+{
+  #if defined (Q_OS_WIN)
+    QWidget* window = qobject_cast<QWidget*>(sender());
+    if (NULL != window)
+    {
+      unregisterDREAM3DWindow(window);
+      window->close();
+    }
+  #else
+    bool shouldReallyClose = true;
+    for (int i = 0; i < m_DREAM3DWidgetList.size(); i++)
+    {
+      QWidget* dream3dWindow = m_DREAM3DWidgetList.at(i);
+      if (dream3dWindow->close() == false)
+      {
+        shouldReallyClose = false;
+      }
+    }
+
+    if (shouldReallyClose == true)
+    {
+      dream3dApp->quit();
+    }
+  #endif
 }
 
 
