@@ -282,6 +282,8 @@ void MultiEmmpmFilter::execute()
     arrayPath.setAttributeMatrixName(getOutputAttributeMatrixName());
     QString outName = getOutputArrayPrefix() + arrayPath.getDataArrayName();
     arrayPath.setDataArrayName(outName);
+    // Remove the array if it already exists
+    getDataContainerArray()->getAttributeMatrix(arrayPath)->removeAttributeArray(outName);
     setOutputDataArrayPath(arrayPath);
 
     QString prefix = QObject::tr("%1 (Array %2 of %3)").arg(msgPrefix).arg(i).arg(arrayNames.size());

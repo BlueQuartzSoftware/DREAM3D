@@ -41,7 +41,8 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 
-namespace {
+namespace
+{
   static const int32_t k_MoveAttributeMatrix = 0;
   static const int32_t k_MoveDataArray = 1;
 }
@@ -81,7 +82,6 @@ void MoveData::setupFilterParameters()
   QVector<QString> choices;
   choices.push_back("Attribute Matrix");
   choices.push_back("Attribute Array");
-
   parameter->setChoices(choices);
   QStringList linkedProps;
   linkedProps << "DataContainerDestination" << "AttributeMatrixSource" << "AttributeMatrixDestination" << "DataArraySource";

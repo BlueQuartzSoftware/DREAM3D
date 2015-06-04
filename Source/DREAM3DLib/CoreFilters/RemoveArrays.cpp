@@ -132,14 +132,9 @@ void RemoveArrays::removeSelectionsFromDataContainerArray(DataContainerArray* dc
   {
     DataContainerProxy dcProxy = containerIter.next();
     dcList.push_back(dcProxy.name);
-    DataContainer::Pointer dcItem = dca->getDataContainer(dcProxy.name);
-    if (dcItem.get() == NULL)
-    {
-      setErrorCondition(-11007);
-      QString ss = QObject::tr("The DataContainer '%1' could not be removed because it was not found in the DataContainerArray").arg(dcProxy.name);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      continue;
-    }
+    DataContainer::Pointer dcItem = dca->getPrereqDataContainer<AbstractFilter>(this, dcProxy.name);
+    if (getErrorCondition() < 0 || dcItem.get() == NULL) { continue; }
+
     // Check to see if the DataContainer is checked, if it is checked then we remove the entire DataContainer from
     // the DataContainerArray
     if (dcProxy.flag == state)

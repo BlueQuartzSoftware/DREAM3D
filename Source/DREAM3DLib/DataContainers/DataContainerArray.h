@@ -431,7 +431,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       {
         if(filter)
         {
-          filter->setErrorCondition(-90002);
+          filter->setErrorCondition(-999);
           ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -443,7 +443,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       {
         if(filter)
         {
-          filter->setErrorCondition(-90003);
+          filter->setErrorCondition(-307020);
           ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
