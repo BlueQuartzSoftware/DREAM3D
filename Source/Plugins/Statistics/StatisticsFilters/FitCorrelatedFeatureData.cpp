@@ -391,10 +391,6 @@ void FitCorrelatedFeatureData::execute()
   {
     binArray = binData<double>(boost::dynamic_pointer_cast<DoubleArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("bool") == 0)
-  {
-    binArray = binData<bool>(boost::dynamic_pointer_cast<BoolArrayType>(correlatedData), m_NumberOfCorrelatedBins);
-  }
 
   // fit the data
   dType = inputData->getTypeAsString();
