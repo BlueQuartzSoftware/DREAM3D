@@ -2,7 +2,7 @@ Read Ph File (Feature Ids) {#phreader}
 ======
 
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Input)
 
 
 ## Description ##
@@ -52,7 +52,7 @@ None
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 
 

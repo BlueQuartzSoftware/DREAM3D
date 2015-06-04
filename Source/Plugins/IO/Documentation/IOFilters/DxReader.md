@@ -5,9 +5,10 @@ I/O Filters (Input)
 
 ## Description ##
 
+This filter reads from a Dx file. This is a file in a format generated using the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
+An example of the format is shown below:
+
 ~~~~~~~~~~~~~~~
-This Filter Reads from a Dx file. This is a file in a format generated using the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
-An example of the format is show below:
 object 1 class gridpositions counts 6 5 4
 origin 0 0 0
 delta  1 0 0
@@ -48,8 +49,7 @@ component  "data"         value 3
 end
 ~~~~~~~~~~~~~~~
 
-_See: www.opendx.org for more information._
-
+_See: [the opendx site](http://www.opendx.org)_ for more information.
 
 ## Parameters ##
 
@@ -71,10 +71,7 @@ None
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-
-
-
+| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## License & Copyright ##
 

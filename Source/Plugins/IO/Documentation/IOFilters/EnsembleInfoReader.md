@@ -15,7 +15,7 @@ This filter reads in information about the Crystal Structure and Phases of
 
 **Crystal Structure**
 
-| String Name | Internal Value | Laue Name |  
+| String Name | Internal Value | Laue Name |
 | ------------|----------------|----------|
 | Hexagonal_High | 0 |  Hexagonal-High 6/mmm |
 | Cubic_High | 1 |  Cubic Cubic-High m3m |
@@ -32,7 +32,7 @@ This filter reads in information about the Crystal Structure and Phases of
 
 **Phase Type**
 
-| String Name | Internal Value | 
+| String Name | Internal Value |
 | ------------|----------------|
 | PrimaryPhase | 0 |
 | PrecipitatePhase | 1 |
@@ -79,8 +79,6 @@ None
 |------|--------------|-------------|---------|
 | Ensemble | CrystalStructures | Integer [See above for values] |  |
 | Ensemble | PhaseTypes        | Integer [See above for values] |  |
-
-
 
 
 ## License & Copyright ##

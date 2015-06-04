@@ -2,7 +2,7 @@ Read Eddy Current Data {#eddycurrentdatareader}
 ======
 
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Input)
 
 
 ## Description ##
@@ -15,6 +15,7 @@ I/O Filters
 | Input File | File Path |
 
 ## Required DataContainers ##
+Voxel
 
 ## Required Arrays ##
 None
