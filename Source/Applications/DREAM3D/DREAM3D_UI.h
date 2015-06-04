@@ -174,8 +174,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     // File Menu
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
-    void on_actionExit_triggered();
-    void m_ActionCloseWindow_triggered();
+
+    void closeWindow();
 
     //Pipeline Menu
 //    void on_m_ActionUpdatePipeline_triggered();
@@ -270,6 +270,16 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void pipelineStarted();
 
   protected:
+
+    /**
+     * @brief savePipeline Helper function that saves the pipeline
+     */
+    bool savePipeline();
+
+    /**
+     * @brief savePipelineAs Helper function that saves the pipeline
+     */
+    bool savePipelineAs();
 
     /**
      * @brief populateMenus This is a planned API that plugins would use to add Menus to the main application
@@ -432,6 +442,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QAction* m_ActionShowInFileSystem;
     QAction* m_ActionClearPipeline;
     QAction* m_ActionCloseWindow;
+    QAction* m_ActionExit;
 
     /**
     * @brief Updates the "first run" variable in the preferences file
