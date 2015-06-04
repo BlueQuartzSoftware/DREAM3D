@@ -115,6 +115,8 @@ void AboutPlugins::setupGui()
   }
 
   connect(pluginsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(displayDetailsWindow(QTableWidgetItem*)));
+
+  setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 // -----------------------------------------------------------------------------

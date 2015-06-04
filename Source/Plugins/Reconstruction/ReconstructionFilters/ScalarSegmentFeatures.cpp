@@ -93,7 +93,7 @@ class TSpecificCompareFunctorBool : public CompareFunctor
 
   private:
     bool* m_Data; // The data that is being compared
-    size_t m_Length; // Length of the Data Array
+    int64_t m_Length; // Length of the Data Array
     int32_t* m_FeatureIds; // The Feature Ids
 };
 

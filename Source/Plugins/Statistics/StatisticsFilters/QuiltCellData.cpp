@@ -240,7 +240,7 @@ void QuiltCellData::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3_t pSize, size_t xDim, size_t yDim, size_t zDim)
+float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3_t pSize, int64_t xDim, int64_t yDim, int64_t zDim)
 {
   float value = 0.0;
   DataArray<T>* cellArray = DataArray<T>::SafePointerDownCast(inputData.get());
@@ -342,6 +342,11 @@ void QuiltCellData::execute()
 
   QString dType = inputData->getTypeAsString();
 
+  int64_t dims[3] = { 0, 0, 0 };
+  dims[0] = static_cast<int64_t>(dcDims[0]);
+  dims[1] = static_cast<int64_t>(dcDims[1]);
+  dims[2] = static_cast<int64_t>(dcDims[2]);
+
   int64_t zStride = 0, yStride = 0;
   int64_t xc = 0, yc = 0, zc = 0;
   for(size_t k = 0; k < dc2Dims[2]; k++)
@@ -358,47 +363,47 @@ void QuiltCellData::execute()
         zc = 0;
         if (dType.compare("int8_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<int8_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int8_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("uint8_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<uint8_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint8_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("int16_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<int16_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int16_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("uint16_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<uint16_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint16_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("int32_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<int32_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int32_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("uint32_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<uint32_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint32_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("int64_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<int64_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int64_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("uint64_t") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<uint64_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint64_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("float") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<float>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<float>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("double") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<double>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<double>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
         else if (dType.compare("bool") == 0)
         {
-          m_OutputArray[zStride + yStride + i] = quiltData<bool>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<bool>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
       }
     }
