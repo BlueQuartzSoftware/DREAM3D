@@ -289,6 +289,11 @@ void PMFileGenerator::generateOutputWithFilterNames(QSet<QString> names)
         text.replace("@AddTestText@", replaceStr);		// Replace token for Test/CMakeLists.txt file
       }
     }
+    else
+    {
+      text.replace("\n  @Namespaces@\n", "");		// Replace token for Test/TestFileLocations.h.in file
+      text.replace("\n@AddTestText@\n", "");		// Replace token for Test/CMakeLists.txt file
+    }
 
     QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
     parentPath = QDir::toNativeSeparators(parentPath);
