@@ -273,6 +273,8 @@ void DREAM3DUpdateCheckDialog::setupGui()
 {
   latestVersion->setText("Not Checked");
   feedbackText->setText("");
+
+  setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 
