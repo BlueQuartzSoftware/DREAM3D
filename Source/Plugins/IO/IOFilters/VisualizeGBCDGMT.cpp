@@ -293,28 +293,28 @@ void VisualizeGBCDGMT::execute()
   float* gbcdLimits = gbcdLimitsArray->getPointer(0);
 
   //Original Ranges from Dave R.
-  //m_GBCDlimits[0] = 0.0;
-  //m_GBCDlimits[1] = cosf(1.0*m_pi);
-  //m_GBCDlimits[2] = 0.0;
-  //m_GBCDlimits[3] = 0.0;
-  //m_GBCDlimits[4] = cosf(1.0*m_pi);
-  //m_GBCDlimits[5] = 2.0*m_pi;
-  //m_GBCDlimits[6] = cosf(0.0);
-  //m_GBCDlimits[7] = 2.0*m_pi;
-  //m_GBCDlimits[8] = 2.0*m_pi;
-  //m_GBCDlimits[9] = cosf(0.0);
+  //m_GBCDlimits[0] = 0.0f;
+  //m_GBCDlimits[1] = cosf(1.0f*m_pi);
+  //m_GBCDlimits[2] = 0.0f;
+  //m_GBCDlimits[3] = 0.0f;
+  //m_GBCDlimits[4] = cosf(1.0f*m_pi);
+  //m_GBCDlimits[5] = 2.0f*m_pi;
+  //m_GBCDlimits[6] = cosf(0.0f);
+  //m_GBCDlimits[7] = 2.0f*m_pi;
+  //m_GBCDlimits[8] = 2.0f*m_pi;
+  //m_GBCDlimits[9] = cosf(0.0f);
 
   //Greg's Ranges
-  gbcdLimits[0] = 0.0;
-  gbcdLimits[1] = 0.0;
-  gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[5] = DREAM3D::Constants::k_Pi / 2.0;
-  gbcdLimits[6] = 1.0;
-  gbcdLimits[7] = DREAM3D::Constants::k_Pi / 2.0;
-  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
+  gbcdLimits[0] = 0.0f;
+  gbcdLimits[1] = 0.0f;
+  gbcdLimits[2] = 0.0f;
+  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[5] = DREAM3D::Constants::k_Pi / 2.0f;
+  gbcdLimits[6] = 1.0f;
+  gbcdLimits[7] = DREAM3D::Constants::k_Pi / 2.0f;
+  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0f);
 
   //get num components of GBCD
   QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
@@ -364,8 +364,8 @@ void VisualizeGBCDGMT::execute()
   int thetaPoints = 120;
   int phiPoints = 30;
   //int zpoints = 1;
-  float thetaRes = 360.0 / float(thetaPoints);
-  float phiRes = 90.0 / float(phiPoints);
+  float thetaRes = 360.0f / float(thetaPoints);
+  float phiRes = 90.0f / float(phiPoints);
   float theta, phi;
   float thetaRad, phiRad;
   float degToRad = DREAM3D::Constants::k_PiOver180;
