@@ -688,11 +688,34 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
   {
     QWidget* w = qobject_cast<QWidget*>(whoSent);
 
-    m_FilterWidgetLayout->removeWidget(w);
     if (m_SelectedFilterWidget == w)
     {
-      m_SelectedFilterWidget = NULL;
+      int index = m_FilterWidgetLayout->indexOf(w);
+      if (NULL != m_FilterWidgetLayout->itemAt(index - 1))
+      {
+        PipelineFilterWidget* widget = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(index - 1)->widget());
+        setSelectedFilterWidget(widget);
+      }
+      else if (NULL != m_FilterWidgetLayout->itemAt(index + 1))
+      {
+        PipelineFilterWidget* widget = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(index + 1)->widget());
+        if (NULL != widget)
+        {
+          setSelectedFilterWidget(widget);
+        }
+        else
+        {
+          m_SelectedFilterWidget = NULL;
+        }
+      }
+      else
+      {
+        m_SelectedFilterWidget = NULL;
+      }
     }
+
+    m_FilterWidgetLayout->removeWidget(w);
+
     if (w)
     {
       whoSent->getFilter()->setPreviousFilter(AbstractFilter::NullPointer());
