@@ -83,29 +83,20 @@ void DREAM3DApplication::unregisterDREAM3DWindow(QWidget* widget)
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::exitTriggered()
 {
-  #if defined (Q_OS_WIN)
-    QWidget* window = qobject_cast<QWidget*>(sender());
-    if (NULL != window)
+  bool shouldReallyClose = true;
+  for (int i = 0; i < m_DREAM3DWidgetList.size(); i++)
+  {
+    QWidget* dream3dWindow = m_DREAM3DWidgetList.at(i);
+    if (dream3dWindow->close() == false)
     {
-      unregisterDREAM3DWindow(window);
-      window->close();
+      shouldReallyClose = false;
     }
-  #else
-    bool shouldReallyClose = true;
-    for (int i = 0; i < m_DREAM3DWidgetList.size(); i++)
-    {
-      QWidget* dream3dWindow = m_DREAM3DWidgetList.at(i);
-      if (dream3dWindow->close() == false)
-      {
-        shouldReallyClose = false;
-      }
-    }
+  }
 
-    if (shouldReallyClose == true)
-    {
-      dream3dApp->quit();
-    }
-  #endif
+  if (shouldReallyClose == true)
+  {
+    dream3dApp->quit();
+  }
 }
 
 

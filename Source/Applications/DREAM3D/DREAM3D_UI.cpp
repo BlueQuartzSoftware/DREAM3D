@@ -1075,15 +1075,16 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionExit = new QAction(this);
   m_ActionExit->setObjectName(QString::fromUtf8("m_ActionExit"));
   m_ActionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
-
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_WIN)
+  connect(m_ActionExit, SIGNAL(triggered()),
+    this, SLOT(closeWindow()));
+#else
   QKeySequence m_ActionExitKeySeq(Qt::CTRL + Qt::Key_Q);
   m_ActionExit->setShortcut(m_ActionExitKeySeq);
-#endif
-
-  menuFile->addAction(m_ActionExit);
   connect(m_ActionExit, SIGNAL(triggered()),
     dream3dApp, SLOT(exitTriggered()));
+#endif
+  menuFile->addAction(m_ActionExit);
 }
 
 // -----------------------------------------------------------------------------
