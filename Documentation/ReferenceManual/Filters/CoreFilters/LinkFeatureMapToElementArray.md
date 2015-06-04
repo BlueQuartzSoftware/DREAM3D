@@ -1,4 +1,4 @@
-Link Feature Map To Cell Array {#linkfeaturemaptocellarray}
+Link Feature Map To Cell Array {#linkfeaturemaptoelementarray}
 ==============================
 
 ## Group (Subgroup) ##

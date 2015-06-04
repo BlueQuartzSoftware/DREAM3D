@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,25 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _ConvertData_H_
 #define _ConvertData_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
-
 
 /**
- * @class ConvertData ConvertData.h /IOFilters/ConvertData.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The ConvertData class. See [Filter documentation](@ref convertdata) for details.
  */
 class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
 {
@@ -63,14 +54,12 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
 
     virtual ~ConvertData();
 
-    typedef struct { int x; int y; int z; } Dimensions_t;
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, ScalarType)
     Q_PROPERTY(int ScalarType READ getScalarType WRITE setScalarType)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
@@ -128,24 +117,11 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
   protected:
     ConvertData();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
-    IDataArray::Pointer         array;
-
     ConvertData(const ConvertData&); // Copy Constructor Not Implemented
     void operator=(const ConvertData&); // Operator '=' Not Implemented
 };
 
 #endif /* _ConvertData_H_ */
-
-
-

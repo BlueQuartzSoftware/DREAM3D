@@ -53,6 +53,7 @@ class GenerateFeatureIds : public AbstractFilter
       tDims[1] = UnitTest::FeatureIdsTest::YSize;
       tDims[2] = UnitTest::FeatureIdsTest::ZSize;
       m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
+      m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray(m_FeatureIdsArrayName);
 
       dataCheck();
       // Set the default data into the FeatureIds
@@ -131,9 +132,9 @@ class CreateDataContainer : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(CreateDataContainer)
     DREAM3D_TYPE_MACRO_SUPER(CreateDataContainer, AbstractFilter)
 
-	DREAM3D_FILTER_PARAMETER(int64_t, XDim)
-	DREAM3D_FILTER_PARAMETER(int64_t, YDim)
-	DREAM3D_FILTER_PARAMETER(int64_t, ZDim)
+  DREAM3D_FILTER_PARAMETER(int64_t, XDim)
+  DREAM3D_FILTER_PARAMETER(int64_t, YDim)
+  DREAM3D_FILTER_PARAMETER(int64_t, ZDim)
 
 
     virtual ~CreateDataContainer() {}
@@ -183,13 +184,13 @@ class CreateDataContainer : public AbstractFilter
 
   protected:
     CreateDataContainer() :
-		AbstractFilter(),
-		m_XDim(0),
-		m_YDim(0),
-		m_ZDim(0)
-	{
+    AbstractFilter(),
+    m_XDim(0),
+    m_YDim(0),
+    m_ZDim(0)
+  {
 
-	}
+  }
 
     /**
     * @brief Checks for the appropriate parameter values and availability of

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,9 +36,9 @@
 
 #include "RenameAttributeArray.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -64,9 +64,8 @@ RenameAttributeArray::~RenameAttributeArray()
 void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
-  parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
-
+  parameters.push_back(FilterParameter::New("Attribute Array To Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
+  parameters.push_back(FilterParameter::New("New Attribute Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
   setFilterParameters(parameters);
 }
 
@@ -101,71 +100,43 @@ void RenameAttributeArray::dataCheck()
 {
   setErrorCondition(0);
 
-  if(m_NewArrayName.isEmpty() == true)
+  if (m_NewArrayName.isEmpty() == true)
   {
     setErrorCondition(-11009);
-    QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
+    QString ss = QObject::tr("The new Attribute Array name must be set");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  if (m_SelectedArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-11010);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-  else
-  {
-    QString dcName = m_SelectedArrayPath.getDataContainerName();
-    QString amName = m_SelectedArrayPath.getAttributeMatrixName();
-    QString daName = m_SelectedArrayPath.getDataArrayName();
+  QString daName = getSelectedArrayPath().getDataArrayName();
 
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-    if(NULL == dc.get())
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSelectedArrayPath(), -301);
+  if(getErrorCondition() < 0) { return; }
+
+  RenameErrorCodes code = attrMat->renameAttributeArray(daName, m_NewArrayName, false);
+  switch (code)
+  {
+    case OLD_DOES_NOT_EXIST:
     {
-      setErrorCondition(-11007);
-      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+      setErrorCondition(-11016);
+      QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-    if(NULL == attrMat.get())
+    case NEW_EXISTS:
     {
-      setErrorCondition(-11008);
-      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+      setErrorCondition(-11017);
+      QString ss = QObject::tr("A DataArray with the name '%1' already exists in the AttributeMatrix").arg(m_NewArrayName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-
-    RenameErrorCodes code = attrMat->renameAttributeArray(daName, m_NewArrayName, false);
-    switch(code)
+    case SUCCESS:
     {
-      case OLD_DOES_NOT_EXIST:
-      {
-        setErrorCondition(-11016);
-        QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-      case NEW_EXISTS:
-      {
-        setErrorCondition(-11017);
-        QString ss = QObject::tr("A DataArray with the name '%1' already exists in the AttributeMatrix").arg(m_NewArrayName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-      case SUCCESS:
-      {
-        setErrorCondition(0);
-        return;
-      }
+      setErrorCondition(0);
+      return;
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -186,12 +157,8 @@ void RenameAttributeArray::preflight()
 void RenameAttributeArray::execute()
 {
   setErrorCondition(0);
-
   dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -200,10 +167,6 @@ void RenameAttributeArray::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RenameAttributeArray::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-   * SelectedArrayPath
-   * NewArrayName
-   */
   RenameAttributeArray::Pointer filter = RenameAttributeArray::New();
   if(true == copyFilterParameters)
   {
@@ -216,34 +179,22 @@ AbstractFilter::Pointer RenameAttributeArray::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeArray::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeArray::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeArray::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameAttributeArray::getHumanLabel()
-{
-  return "Rename Attribute Array";
-}
-
+{ return "Rename Attribute Array"; }

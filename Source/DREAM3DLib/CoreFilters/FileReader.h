@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,20 +34,16 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FILEREADER_H_
-#define _FILEREADER_H_
-
-#include <vector>
-#include <QtCore/QString>
+#ifndef _FileReader_H_
+#define _FileReader_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 
-
-/*
- *
+/**
+ * @brief The FileReader class serves as a superclass for reader filters.
  */
 class DREAM3DLib_EXPORT FileReader : public AbstractFilter
 {
@@ -79,5 +75,4 @@ class DREAM3DLib_EXPORT FileReader : public AbstractFilter
     void operator=(const FileReader&); // Operator '=' Not Implemented
 };
 
-#endif /* FILEREADER_H_ */
-
+#endif /* FileReader_H_ */

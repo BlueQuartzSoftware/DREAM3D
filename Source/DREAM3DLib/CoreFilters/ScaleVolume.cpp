@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,13 +36,6 @@
 
 #include "ScaleVolume.h"
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-
-#include <limits>
-
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -50,8 +43,14 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+
 /**
- * @brief The CalculateCentroidsImpl class
+ * @brief The CalculateCentroidsImpl class implements a threaded algorithm that scales the
+ * positions of a set of nodes
  */
 class UpdateVerticesImpl
 {
@@ -84,8 +83,6 @@ class UpdateVerticesImpl
       generate(r.begin(), r.end());
     }
 #endif
-
-
 };
 
 // -----------------------------------------------------------------------------
@@ -120,15 +117,12 @@ void ScaleVolume::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Scaling Factor", "ScaleFactor", FilterParameterWidgetType::FloatVec3Widget, getScaleFactor(), false));
   QStringList linkedProps("DataContainerName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Voxel Volume", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, true));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply To Voxel Volume", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, true));
   parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), true));
-
-
   linkedProps.clear();
   linkedProps << "SurfaceDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, true));
   parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true));
-
   setFilterParameters(parameters);
 }
 
@@ -168,34 +162,15 @@ int ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void ScaleVolume::dataCheck()
 {
   setErrorCondition(0);
+
   if (m_ApplyToVoxelVolume == true)
   {
-    DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
-    ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(image.get() == NULL)
-    {
-      setErrorCondition(-384);
-      notifyErrorMessage(getHumanLabel(), "DataContainer missing ImageGeom (voxel) geometry", getErrorCondition());
-    }
+    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
-    VertexGeom::Pointer vertices = sm->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
-    if(vertices.get() == NULL)
-    {
-      setErrorCondition(-384);
-      notifyErrorMessage(getHumanLabel(), "DataContainer missing VertexGeom (nodes) geometry", getErrorCondition());
-    }
+    getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry2D, AbstractFilter>(this, getSurfaceDataContainerName());
   }
 }
 
@@ -215,64 +190,25 @@ void ScaleVolume::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScaleVolume::execute()
-{
-  setErrorCondition(0);
-  QString ss;
-
-  dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  if (m_ApplyToVoxelVolume == true)
-  {
-    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-
-    float resolution[3];
-    image->getResolution(resolution);
-    resolution[0] *= m_ScaleFactor.x;
-    resolution[1] *= m_ScaleFactor.y;
-    resolution[2] *= m_ScaleFactor.z;
-    image->setResolution(resolution);
-  }
-
-  if (m_ApplyToSurfaceMesh == true)
-  {
-    updateSurfaceMesh();
-  }
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ScaleVolume::updateSurfaceMesh()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
-
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
+  setErrorCondition(0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-  VertexGeom::Pointer nodesPtr = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName())->getGeometryAs<VertexGeom>();
-  float* nodes = nodesPtr->getVertexPointer(0);
+  IGeometry2D::Pointer geom2D = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName())->getGeometryAs<IGeometry2D>();
+  float* nodes = geom2D->getVertexPointer(0);
 
   // First get the min/max coords.
 
   float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
   float max[3] = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
 
-  size_t count = nodesPtr->getNumberOfVertices();
-  for (size_t i = 0; i < count; i++)
+  int64_t count = geom2D->getNumberOfVertices();
+  for (int64_t i = 0; i < count; i++)
   {
     if (nodes[3*i] > max[0])
     {
@@ -318,13 +254,38 @@ void ScaleVolume::updateSurfaceMesh()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ScaleVolume::execute()
+{
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  if (m_ApplyToVoxelVolume == true)
+  {
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+
+    float resolution[3] = { 0.0f, 0.0f, 0.0f };
+    image->getResolution(resolution);
+    resolution[0] *= m_ScaleFactor.x;
+    resolution[1] *= m_ScaleFactor.y;
+    resolution[2] *= m_ScaleFactor.z;
+    image->setResolution(resolution);
+  }
+
+  if (m_ApplyToSurfaceMesh == true)
+  {
+    updateSurfaceMesh();
+  }
+
+  notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AbstractFilter::Pointer ScaleVolume::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ApplyToVoxelVolume
-  * ApplyToSurfaceMesh
-  * ScaleFactor
-  */
   ScaleVolume::Pointer filter = ScaleVolume::New();
   if(true == copyFilterParameters)
   {
@@ -337,34 +298,22 @@ AbstractFilter::Pointer ScaleVolume::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::SpatialFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::SpatialFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScaleVolume::getHumanLabel()
-{
-  return "Change Scaling of Volume";
-}
-
+{ return "Change Scaling of Volume"; }

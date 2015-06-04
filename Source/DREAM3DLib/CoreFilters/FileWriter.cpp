@@ -33,14 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "FileWriter.h"
 
-
-
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
+#include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -49,7 +47,6 @@ FileWriter::FileWriter() :
   AbstractFilter(),
   m_OutputFile("")
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -57,7 +54,6 @@ FileWriter::FileWriter() :
 // -----------------------------------------------------------------------------
 FileWriter::~FileWriter()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -92,7 +88,7 @@ void FileWriter::execute()
   QFileInfo fi(m_OutputFile);
   QString parentPath = fi.path();
   QDir dir;
-  if(!dir.mkpath(parentPath))
+  if (!dir.mkpath(parentPath))
   {
     setErrorCondition(-200);
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
@@ -103,7 +99,7 @@ void FileWriter::execute()
   int err = writeHeader();
   if (err < 0)
   {
-    QString ss = QObject::tr("Error Writing the Header portion of the file");
+    QString ss = QObject::tr("Error writing the header portion of the file");
     setErrorCondition(err);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -111,7 +107,7 @@ void FileWriter::execute()
   err = writeFile();
   if (err < 0)
   {
-    QString ss = QObject::tr("Error Writing the data to the file");
+    QString ss = QObject::tr("Error writing the data to the file");
     setErrorCondition(err);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

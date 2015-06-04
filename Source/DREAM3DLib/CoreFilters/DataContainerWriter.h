@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,24 +37,12 @@
 #ifndef _DataContainerWriter_H_
 #define _DataContainerWriter_H_
 
-#include <QtCore/QString>
-#include <QtCore/QtDebug>
-
-#include <hdf5.h>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-
-
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @class DataContainerWriter DataContainerWriter.h /IOFiltersFilters/DataContainerWriter.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The DataContainerWriter class. See [Filter documentation](@ref datacontainerwriter) for details.
  */
 class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 {
@@ -68,7 +56,9 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+
     DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteXdmfFile)
     Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile)
 
@@ -117,26 +107,9 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
   signals:
-    /**
-     * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
-     * pushed from a user facing control such as the FilterParameter Widget
-     * @param filter The filter to push the values into
-     */
     void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged This signal can be emitted when any of the filter parameters are changed internally.
-     */
     void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before the dataCheck() is called. This can change if needed.
-     */
     void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after the dataCheck() is called. Typically. This can change if needed.
-     */
     void preflightExecuted();
 
   protected:
@@ -145,34 +118,48 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     void dataCheck();
 
     /**
-     * @brief Opens or Creates an HDF5 file to write data into
-     * @param append Should a new file be created or append data to a currenlty existing file
+     * @brief openFile Opens or creates an HDF5 file to write data into
+     * @param append Should a new file be created or append data to a currently existing file
      * @return
      */
-    int openFile(bool append = false);
+    hid_t openFile(bool append = false);
 
     /**
-     * @brief Closes the currently open file
+     * @brief closeFile Closes the currently open file
+     * @return Integer error value
+     */
+    herr_t closeFile();
+
+    /**
+     * @brief writePipeline Writes the existing pipeline to the HDF5 file
      * @return
      */
-    int closeFile();
-
     int writePipeline();
 
+    /**
+     * @brief writeDataContainerBundles Writes any existing DataContainerBundles to the HDF5 file
+     * @param fileId Group Id for the DataContainerBundles
+     * @return
+     */
     int writeDataContainerBundles(hid_t fileId);
 
+    /**
+     * @brief writeXdmfHeader Writes the Xdmf header
+     * @param out QTextStream for output
+     */
     void writeXdmfHeader(QTextStream& out);
+
+    /**
+     * @brief writeXdmfFooter Writes the Xdmf footer
+     * @param out QTextStream for output
+     */
     void writeXdmfFooter(QTextStream& out);
 
   private:
     hid_t m_FileId;
 
-
     DataContainerWriter(const DataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const DataContainerWriter&); // Operator '=' Not Implemented
-
 };
 
-#endif /* _DATACONTAINERWRITER_H_ */
-
-
+#endif /* _DataContainerWriter_H_ */

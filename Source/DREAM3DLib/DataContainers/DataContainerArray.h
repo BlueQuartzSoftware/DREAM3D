@@ -431,7 +431,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       {
         if(filter)
         {
-          filter->setErrorCondition(-90002);
+          filter->setErrorCondition(-999);
           ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -443,7 +443,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       {
         if(filter)
         {
-          filter->setErrorCondition(-90003);
+          filter->setErrorCondition(-307020);
           ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -455,8 +455,9 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     }
 
     /**
-     * @brief createNonPrereqArray This method will create a new DataArray in the AttributeMatrix. The condition for this
-     * method to work properly is the name of the attribute array is not empty
+     * @brief createNonPrereqArray This method will create a new DataArray in the AttributeMatrix. The conditions for this
+     * method to work properly include: a valid DataArrayPath is supplied, the name of the attribute array is not empty,
+     * and an array with the same name cannot already exist
      * @param filter The instance of the filter the filter that is requesting the new array
      * @param attributeArrayName The name of the AttributeArray to create
      * @param initValue The initial value of all the elements of the array
@@ -516,7 +517,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 
     /**
      * @brief validateNumberOfTuples This method will validate that all of the DataArray
-     * paths supplied are valid, return non-NULL DataArray pointers, and that all have the 
+     * paths supplied are valid, return non-NULL DataArray pointers, and that all have the
      * same number of tuples.  It will return false if and any of the checks fail, or
      * if the QVector of input paths has 0 or 1 element.
      * @param filter The filter calling the validation

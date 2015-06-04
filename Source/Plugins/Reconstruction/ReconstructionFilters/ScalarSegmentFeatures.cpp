@@ -161,6 +161,7 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_GoodVoxels(NULL),
+  m_InputData(NULL),
   m_FeatureIds(NULL),
   m_Active(NULL)
 {

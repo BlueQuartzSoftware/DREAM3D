@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -143,6 +143,7 @@ FindProjectedImageStatistics::FindProjectedImageStatistics() :
   m_ProjectedImageAvgArrayName(DREAM3D::CellData::ProjectedImageAvg),
   m_ProjectedImageStdArrayName(DREAM3D::CellData::ProjectedImageStd),
   m_ProjectedImageVarArrayName(DREAM3D::CellData::ProjectedImageVar),
+  m_InData(NULL),
   m_ProjectedImageMin(NULL),
   m_ProjectedImageMax(NULL),
   m_ProjectedImageAvg(NULL),

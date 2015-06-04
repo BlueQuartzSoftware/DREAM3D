@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,30 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _CreateDataArray_H_
 #define _CreateDataArray_H_
-
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-//#include "DREAM3DLib/FilterParameters/FilterParameter.h"
-
-
 
 /**
- * @class CreateDataArray CreateDataArray.h /IOFilters/CreateDataArray.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The CreateDataArray class. See [Filter documentation](@ref createdataarray) for details.
  */
 class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-  public: 
+  public:
 
     DREAM3D_SHARED_POINTERS(CreateDataArray)
     DREAM3D_STATIC_NEW_MACRO(CreateDataArray)
@@ -133,14 +124,6 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
   protected:
     CreateDataArray();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
@@ -153,14 +136,3 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
 };
 
 #endif /* _CreateDataArray_H_ */
-
-
-
-
-
-
-
-
-
-
-

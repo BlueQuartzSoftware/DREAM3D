@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -35,10 +35,10 @@
 
 
 #include "CopyDataContainer.h"
+
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -64,8 +64,8 @@ CopyDataContainer::~CopyDataContainer()
 void CopyDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("DataContainer to Copy", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), false));
-  parameters.push_back(FilterParameter::New("New DataContainer Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false));
+  parameters.push_back(FilterParameter::New("Data Container To Copy", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), false));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false));
   setFilterParameters(parameters);
 }
 
@@ -100,46 +100,19 @@ void CopyDataContainer::dataCheck()
 {
   setErrorCondition(0);
 
-  if(getSelectedDataContainerName().isEmpty() == true)
-  {
-    setErrorCondition(-11000);
-    QString ss = QObject::tr("The Selected Data Container name can not be empty. Please set a value.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  if(getNewDataContainerName().isEmpty() == true)
+  if (getNewDataContainerName().isEmpty() == true)
   {
     setErrorCondition(-11001);
-    QString ss = QObject::tr("The New Data Container name can not be empty. Please set a value.");
+    QString ss = QObject::tr("The new Data Container name must be set");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  //If either one of the strings are empty we can not go on.
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedDataContainerName());
+  if(getErrorCondition() < 0) { return; }
 
-  DataContainerArray::Pointer dca = getDataContainerArray();
-  if (NULL == dca.get() )
-  {
-    setErrorCondition(-11003);
-    QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  DataContainer::Pointer dc = dca->getDataContainer(getSelectedDataContainerName());
-  if(NULL == dc.get())
-  {
-    setErrorCondition(-11002);
-    QString ss = QObject::tr("The Selected Data Container was not found in the DataContainerArray. Are you sure it exists? The Spelling and Capitalization must also match.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   DataContainer::Pointer dcNew = dc->deepCopy();
   dcNew->setName(getNewDataContainerName());
-  dca->addDataContainer(dcNew);
+  getDataContainerArray()->addDataContainer(dcNew);
 }
 
 // -----------------------------------------------------------------------------
@@ -161,12 +134,8 @@ void CopyDataContainer::preflight()
 void CopyDataContainer::execute()
 {
   setErrorCondition(0);
-
   dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -175,10 +144,6 @@ void CopyDataContainer::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer CopyDataContainer::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedAttributeMatrixPath
-  * NewAttributeMatrix
-  */
   CopyDataContainer::Pointer filter = CopyDataContainer::New();
   if(true == copyFilterParameters)
   {
@@ -191,34 +156,22 @@ AbstractFilter::Pointer CopyDataContainer::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CopyDataContainer::getHumanLabel()
-{
-  return "Copy Data Container";
-}
-
+{ return "Copy Data Container"; }

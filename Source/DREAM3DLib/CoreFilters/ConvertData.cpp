@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,15 +34,12 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include "ConvertData.h"
+
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-
-
-#include "ConvertData.h"
-
-#include <stdio.h>
-
 
 namespace Detail
 {
@@ -64,10 +61,16 @@ namespace Detail
 
 namespace Detail
 {
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
   template<typename T>
+  /**
+   * @brief ConvertData Templated function that converts an IDataArray to a given primitive type
+   * @param ptr IDataArray instance pointer
+   * @param dims Component dimensions
+   * @param m DataContainer instance pointer
+   * @param scalarType Primitive type to convert to
+   * @param attributeMatrixName Name of target AttributeMatrix
+   * @param name Name of converted array
+   */
   void ConvertData(T* ptr, QVector<size_t> dims, DataContainer::Pointer m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
   {
     int voxels = ptr->getNumberOfTuples();
@@ -201,16 +204,12 @@ ConvertData::~ConvertData()
 void ConvertData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
-
-  /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   parameters.push_back(FilterParameter::New("Attribute Array Name", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
@@ -248,8 +247,6 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
   DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
@@ -264,49 +261,27 @@ void ConvertData::dataCheck()
 {
   setErrorCondition(0);
 
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
-//  if(getErrorCondition() < 0 || NULL == m) { return; }
-
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName(), false);
 
   QString ss;
-  if(m_SelectedCellArrayPath.isEmpty() == true)
+  if (m_OutputArrayName.isEmpty() == true)
   {
-    ss = QObject::tr("The Input Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
-    setErrorCondition(-397);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  if(m_OutputArrayName.isEmpty() == true)
-  {
-    ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    ss = QObject::tr("The output array name must be set");
     setErrorCondition(-398);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-// int numberOfComponents = 0;
   if (getInPreflight())
   {
-
     AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_SelectedCellArrayPath, -301);
-    if(getErrorCondition() < 0 || NULL == cellAttrMat.get() )
-    {
-      return;
-    }
+    if(getErrorCondition() < 0) { return; }
 
-    IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
-    //IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
-    if (NULL == p.get())
-    {
-      ss = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_SelectedCellArrayPath.getDataArrayName()).arg(m_SelectedCellArrayPath.getAttributeMatrixName());
-      setErrorCondition(-398);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
+    IDataArray::Pointer p = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath());
+    if(getErrorCondition() < 0) { return; }
 
-    //  numberOfComponents = p->getNumberOfComponents();
     QVector<size_t> dims = p->getComponentDimensions();
-    int64_t voxels = cellAttrMat->getNumTuples();
+    size_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
     {
       p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
@@ -351,7 +326,6 @@ DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<Abstr
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -365,19 +339,14 @@ void ConvertData::preflight()
   setInPreflight(false);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ConvertData::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedCellArrayPath.getDataContainerName());
 
@@ -404,11 +373,6 @@ void ConvertData::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ConvertData::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ScalarType
-  * OutputArrayName
-  * SelectedCellArrayName
-  */
   ConvertData::Pointer filter = ConvertData::New();
   if(true == copyFilterParameters)
   {
@@ -421,34 +385,22 @@ AbstractFilter::Pointer ConvertData::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MiscFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getHumanLabel()
-{
-  return "Convert Cell Data";
-}
-
+{ return "Convert Attribute Data Type"; }

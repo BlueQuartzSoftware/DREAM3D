@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,22 +37,12 @@
 #ifndef _RemoveArrays_H_
 #define _RemoveArrays_H_
 
-#include <QtCore/QString>
-#include <set>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class RemoveArrays RemoveArrays.h /FilterCategoryFilters/RemoveArrays.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The RemoveArrays class. See [Filter documentation](@ref removearrays) for details.
  */
 class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
 {
@@ -62,12 +52,10 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
-
     virtual ~RemoveArrays();
 
     DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataArraysToRemove)
     Q_PROPERTY(DataContainerArrayProxy DataArraysToRemove READ getDataArraysToRemove WRITE setDataArraysToRemove)
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -115,9 +103,10 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     virtual void preflight();
 
     /**
-     * @brief removeSelectionsFromDataContainerArray This function will attempt to remove those DataContainers, AttributeMatrices, and DataArrays selected by the user/programmer.
+     * @brief removeSelectionsFromDataContainerArray Attempts to remove those DataContainers, AttributeMatrices, and DataArrays selected by the user.
      * DataArray items that are flagged as selected by the user/programmer.
-     * @param dca, state
+     * @param dca DataContainerArray instance pointer
+     * @param state Flagged state of items in the DataContainerArray
      */
     void removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state);
 
@@ -130,22 +119,10 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
   protected:
     RemoveArrays();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
-
 
     RemoveArrays(const RemoveArrays&); // Copy Constructor Not Implemented
     void operator=(const RemoveArrays&); // Operator '=' Not Implemented
 };
 
 #endif /* _RemoveArrays_H_ */
-
-
-

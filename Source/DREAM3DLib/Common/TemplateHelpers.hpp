@@ -55,6 +55,10 @@ namespace TemplateHelpers
   {\
     templateName<uint64_t>(__VA_ARGS__);\
   }\
+  else if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(inputData))\
+  {\
+    templateName<bool>(__VA_ARGS__);\
+  }\
   else\
   {\
     observableObj->notifyErrorMessage(#templateName, "The input array was of unsupported type", TemplateHelpers::Errors::UnsupportedType);\

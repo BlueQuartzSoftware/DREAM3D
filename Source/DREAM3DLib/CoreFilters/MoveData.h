@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -37,22 +37,12 @@
 #ifndef _MoveData_H_
 #define _MoveData_H_
 
-#include <QtCore/QString>
-#include <set>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class MoveData MoveData.h /FilterCategoryFilters/MoveData.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The MoveData class. See [Filter documentation](@ref movedata) for details.
  */
 class DREAM3DLib_EXPORT MoveData : public AbstractFilter
 {
@@ -61,7 +51,6 @@ class DREAM3DLib_EXPORT MoveData : public AbstractFilter
     DREAM3D_SHARED_POINTERS(MoveData)
     DREAM3D_STATIC_NEW_MACRO(MoveData)
     DREAM3D_TYPE_MACRO_SUPER(MoveData, AbstractFilter)
-
 
     virtual ~MoveData();
 
@@ -134,20 +123,10 @@ class DREAM3DLib_EXPORT MoveData : public AbstractFilter
   protected:
     MoveData();
 
-    /**
-     * @brief Checks for the appropriate parameter values and availability of
-     * arrays in the data container
-     * @param preflight
-     * @param voxels The number of voxels
-     * @param features The number of features
-     * @param ensembles The number of ensembles
-     */
     void dataCheck();
-
 
     MoveData(const MoveData&); // Copy Constructor Not Implemented
     void operator=(const MoveData&); // Operator '=' Not Implemented
 };
 
 #endif /* _MoveData_H_ */
-
