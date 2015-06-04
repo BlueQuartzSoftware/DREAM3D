@@ -693,6 +693,16 @@ void PluginMaker::on_generateButton_clicked()
   QString pluginName = m_PluginName->text();
   QString pluginDir = m_OutputDir->text();
 
+  // Delete the old plugin folder, if it is there
+  QString pluginPath = pluginDir + "/" + pluginName;
+  pluginPath = QDir::toNativeSeparators(pluginPath);
+  QFileInfo fi(pluginPath);
+  if (fi.exists())
+  {
+    QDir dir(pluginPath);
+    dir.removeRecursively();
+  }
+
   pluginName = cleanName(pluginName);
 
   if (pluginName == "")
