@@ -285,34 +285,34 @@ void VisualizeGBCDPoleFigure::execute()
   float* gbcdLimits = gbcdLimitsArray->getPointer(0);
 
   //Original Ranges from Dave R.
-  //m_GBCDlimits[0] = 0.0;
-  //m_GBCDlimits[1] = cosf(1.0*m_pi);
-  //m_GBCDlimits[2] = 0.0;
-  //m_GBCDlimits[3] = 0.0;
-  //m_GBCDlimits[4] = cosf(1.0*m_pi);
-  //m_GBCDlimits[5] = 2.0*m_pi;
-  //m_GBCDlimits[6] = cosf(0.0);
-  //m_GBCDlimits[7] = 2.0*m_pi;
-  //m_GBCDlimits[8] = 2.0*m_pi;
-  //m_GBCDlimits[9] = cosf(0.0);
+  //m_GBCDlimits[0] = 0.0f;
+  //m_GBCDlimits[1] = cosf(1.0f*m_pi);
+  //m_GBCDlimits[2] = 0.0f;
+  //m_GBCDlimits[3] = 0.0f;
+  //m_GBCDlimits[4] = cosf(1.0f*m_pi);
+  //m_GBCDlimits[5] = 2.0f*m_pi;
+  //m_GBCDlimits[6] = cosf(0.0f);
+  //m_GBCDlimits[7] = 2.0f*m_pi;
+  //m_GBCDlimits[8] = 2.0f*m_pi;
+  //m_GBCDlimits[9] = cosf(0.0f);
 
   //Greg's Ranges
-  gbcdLimits[0] = 0.0;
-  gbcdLimits[1] = 0.0;
-  gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = 0.0;
-  gbcdLimits[4] = 0.0;
+  gbcdLimits[0] = 0.0f;
+  gbcdLimits[1] = 0.0f;
+  gbcdLimits[2] = 0.0f;
+  gbcdLimits[3] = 0.0f;
+  gbcdLimits[4] = 0.0f;
   gbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
-  gbcdLimits[6] = 1.0;
+  gbcdLimits[6] = 1.0f;
   gbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
-  gbcdLimits[8] = 1.0;
+  gbcdLimits[8] = 1.0f;
   gbcdLimits[9] = DREAM3D::Constants::k_2Pi;
 
   //reset the 3rd and 4th dimensions using the square grid approach
-  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
-  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
-  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_PiOver2);
-  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[3] = -sqrtf(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[4] = -sqrtf(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[8] = sqrtf(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[9] = sqrtf(DREAM3D::Constants::k_PiOver2);
 
   //get num components of GBCD
   QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
@@ -414,7 +414,7 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
             //convert to euler angle
             FOrientArrayType eu(mis_euler1, 3);
-            FOrientTransformsType::om2eu(FOrientArrayType(dg), eu);
+            FOrientTransformsType::om2eu(FOrientArrayType(dg2), eu);
             if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);
