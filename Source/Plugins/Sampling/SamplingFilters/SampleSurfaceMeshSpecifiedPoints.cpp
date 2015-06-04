@@ -4,7 +4,6 @@
 
 #include "SampleSurfaceMeshSpecifiedPoints.h"
 
-#include <QtCore/QString>
 #include <fstream>
 #include <sstream>
 
@@ -12,11 +11,8 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "Sampling/SamplingConstants.h"
-
-using namespace std;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +115,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -301, cDims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
 	  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -148,7 +144,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
 {
 	m_NumPoints = 0;
 
-	ifstream inFile;
+	std::ifstream inFile;
 	inFile.open(m_InputFilePath.toLatin1().data());
 
 	//get the number of points in the specified points file
@@ -201,7 +197,7 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
   /* Place all your code to execute your filter here. */
   SampleSurfaceMesh::execute();
 
-  ofstream outFile;
+  std::ofstream outFile;
   outFile.open(m_OutputFilePath.toLatin1().data());
   for (int64_t i = 0; i < m_NumPoints; i++)
   {
