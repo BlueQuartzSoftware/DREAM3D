@@ -15,7 +15,7 @@ file but with an .xdmf file extension.
 ### Example Output ###
 The HDF5 based .dream3d file is a binary file.
 
-The Xdmf file:     
+The Xdmf file (partial):     
 
 	<?xml version="1.0"?>
 	<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd"[]> 
