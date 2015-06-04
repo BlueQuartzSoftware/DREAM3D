@@ -37,12 +37,10 @@
 
 #include <QtCore/QTime>
 #include <QtCore/QPluginLoader>
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QApplication>
 #include <QtGui/QBitmap>
 #include <QtWidgets/QMessageBox>
 
@@ -60,6 +58,7 @@
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 
 #include "Applications/DREAM3D/DREAM3DConstants.h"
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "QtSupportLib/QRecentFileList.h"
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
@@ -198,9 +197,9 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 QVector<IDREAM3DPlugin*> BrandedInitializer::loadPlugins()
 {
   QStringList pluginDirs;
-  pluginDirs << qApp->applicationDirPath();
+  pluginDirs << dream3dApp->applicationDirPath();
 
-  QDir aPluginDir = QDir(qApp->applicationDirPath());
+  QDir aPluginDir = QDir(dream3dApp->applicationDirPath());
   qDebug() << "Loading DREAM3D Plugins....";
   QString thePath;
 
@@ -623,9 +622,9 @@ void BrandedInitializer::on_m_ActionCheck_For_Updates_triggered()
 void BrandedInitializer::on_m_ActionExit_triggered()
 {
 #if defined (Q_OS_MAC)
-  qApp->closeAllWindows();
+  dream3dApp->closeAllWindows();
 #endif
-  qApp->quit();
+  dream3dApp->quit();
 }
 
 

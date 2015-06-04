@@ -37,9 +37,10 @@
 #include "SGLogNormalTableModel.h"
 #include <iostream>
 
-#include <QApplication>
 #include <QtWidgets/QStyleOptionComboBox>
 #include <QtWidgets/QAbstractItemDelegate>
+
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "StatsGenerator/Delegates/SGLogNormalItemDelegate.h"
 
@@ -149,7 +150,7 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
     QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
-    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
+    return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if (role == Qt::TextAlignmentRole)
   {

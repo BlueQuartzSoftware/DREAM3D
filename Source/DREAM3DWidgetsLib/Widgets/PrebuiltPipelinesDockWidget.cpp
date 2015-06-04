@@ -53,6 +53,8 @@
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
 #include "FilterListDockWidget.h"
 
 
@@ -120,7 +122,7 @@ QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
 {
   QString dirName("PrebuiltPipelines");
 
-  QString appPath = qApp->applicationDirPath();
+  QString appPath = dream3dApp->applicationDirPath();
   QDir pipelinesDir = QDir(appPath);
 #if defined(Q_OS_WIN)
   QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);

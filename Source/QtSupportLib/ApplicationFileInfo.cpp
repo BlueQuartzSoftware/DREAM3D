@@ -41,6 +41,8 @@
 
 #include <QtWidgets/QApplication>
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -62,7 +64,7 @@ ApplicationFileInfo::~ApplicationFileInfo()
 // -----------------------------------------------------------------------------
 QString ApplicationFileInfo::GenerateFileSystemPath(QString pathEnding)
 {
-  QString appPath = qApp->applicationDirPath();
+  QString appPath = dream3dApp->applicationDirPath();
 
   QDir dir = QDir(appPath);
 

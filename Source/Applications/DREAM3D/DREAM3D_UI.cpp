@@ -47,7 +47,6 @@
 #include <QtCore/QProcess>
 #include <QtCore/QMimeData>
 #include <QtCore/QDirIterator>
-#include <QtWidgets/QApplication>
 #include <QtWidgets/QFileDialog>
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QListWidget>
@@ -82,6 +81,7 @@
 #include "Applications/DREAM3D/AboutDREAM3D.h"
 #include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3Dv5Wizard.h"
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 
 // Initialize private static member variable
@@ -147,7 +147,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   setWindowModified(false);
 
   // If all DREAM3D windows are closed, disable menus
-  connect(qApp, SIGNAL(lastWindowClosed()), this, SLOT(disableMenuItems()));
+  connect(dream3dApp, SIGNAL(lastWindowClosed()), this, SLOT(disableMenuItems()));
 }
 
 // -----------------------------------------------------------------------------
@@ -462,7 +462,7 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
   {
     // Restart DREAM3D
     QProcess::startDetached(QApplication::applicationFilePath());
-    qApp->quit();
+    dream3dApp->quit();
   }
 }
 

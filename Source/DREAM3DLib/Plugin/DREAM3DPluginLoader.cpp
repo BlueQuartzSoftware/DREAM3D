@@ -37,12 +37,11 @@
 
 // Qt Includes
 #include <QtCore/QtDebug>
-#include <QtCore/QCoreApplication>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
 
-
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
@@ -71,9 +70,9 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
   filterManager->RegisterKnownFilters(filterManager);
 
   QStringList m_PluginDirs;
-  m_PluginDirs << qApp->applicationDirPath();
+  m_PluginDirs << dream3dApp->applicationDirPath();
 
-  QDir aPluginDir = QDir(qApp->applicationDirPath());
+  QDir aPluginDir = QDir(dream3dApp->applicationDirPath());
   qDebug() << "Loading DREAM3D Plugins....";
   //qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;

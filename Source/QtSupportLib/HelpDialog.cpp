@@ -43,8 +43,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QTextStream>
 #include <QtCore/QUrl>
-#include <QtWidgets/QApplication>
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -67,7 +67,7 @@ HelpDialog::~HelpDialog()
 // -----------------------------------------------------------------------------
 void HelpDialog::setContentFile(QUrl sourceLocation)
 {
-  QDir aPluginDir = QDir(qApp->applicationDirPath());
+  QDir aPluginDir = QDir(dream3dApp->applicationDirPath());
   QString aPluginDirStr = aPluginDir.absolutePath();
   QString thePath;
 #if defined(Q_OS_WIN)

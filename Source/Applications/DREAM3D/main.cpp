@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
   DREAM3DApplication qtapp(argc, argv);
 
 #if defined (Q_OS_MAC)
-  qApp->setQuitOnLastWindowClosed(false);
+  dream3dApp->setQuitOnLastWindowClosed(false);
 #endif
 
   setlocale(LC_NUMERIC, "C");

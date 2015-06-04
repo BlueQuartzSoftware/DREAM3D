@@ -34,13 +34,12 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 
-
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
@@ -155,9 +154,9 @@ void loadPlugins(FilterManager *fm)
 
 
   QStringList m_PluginDirs;
-  m_PluginDirs << qApp->applicationDirPath();
+  m_PluginDirs << dream3dApp->applicationDirPath();
 
-  QDir aPluginDir = QDir(qApp->applicationDirPath());
+  QDir aPluginDir = QDir(dream3dApp->applicationDirPath());
   // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;
 
