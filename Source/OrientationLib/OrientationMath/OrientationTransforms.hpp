@@ -170,7 +170,7 @@ namespace Rotations
 {
   namespace Constants
   {
-    DREAM3D_ROTATION_CONVENTION( -1.0 )
+    DREAM3D_ROTATION_CONVENTION( 1.0 )
   }
 }
 

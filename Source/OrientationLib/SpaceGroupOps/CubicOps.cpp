@@ -318,7 +318,7 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   float sin_wmin_over_2 = 0.0;
 
   QuaternionMathF::Conjugate(q2, q2inv); // Computes the Conjugate of q2 and places the result in q2inv
-  QuaternionMathF::Multiply(q2inv, q1, qc);
+  QuaternionMathF::Multiply(q1, q2inv, qc);
   QuaternionMathF::ElementWiseAbs(qc);
 
   //if qc.x is smallest
@@ -739,7 +739,7 @@ FOrientArrayType CubicOps::randomizeEulerAngles(FOrientArrayType synea)
   FOrientArrayType quat(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
   q = quat.toQuaternion();
-  QuaternionMathF::Multiply(q, CubicQuatSym[symOp], qc);
+  QuaternionMathF::Multiply(CubicQuatSym[symOp], q, qc);
 
   quat.fromQuaternion(qc);
   OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
@@ -1636,7 +1636,7 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
 
   for (int j = 0; j < 24; j++)
   {
-    QuaternionMathF::Multiply(q1, CubicQuatSym[j], qc);
+    QuaternionMathF::Multiply(CubicQuatSym[j], q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);

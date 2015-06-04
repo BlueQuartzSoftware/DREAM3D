@@ -196,11 +196,11 @@ void TestQuat_t()
   q.y = 0.0f;
   q.z = 1.0f;
   q.w = 1.0f;
-  QuaternionMathF::Multiply(p, q, out);
+  QuaternionMathF::Multiply(q, p, out);
   QuaternionMathF::Conjugate(out);
   QuaternionMathF::Conjugate(p);
   QuaternionMathF::Conjugate(q);
-  QuaternionMathF::Multiply(q, p, out2);
+  QuaternionMathF::Multiply(p, q, out2);
   DREAM3D_REQUIRE_EQUAL(out.x, out2.x)
   DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
   DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
@@ -236,13 +236,13 @@ void TestQuat_t()
   q.z = 0.0f;
   q.w = 2.0f;
 
-  QuaternionMathF::Multiply(p, q, out);
+  QuaternionMathF::Multiply(q, p, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
   DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.z, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
 
-  QuaternionMathF::Multiply(q, p, out);
+  QuaternionMathF::Multiply(p, q, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
   DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.z, -1.0)

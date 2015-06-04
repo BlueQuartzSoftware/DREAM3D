@@ -141,10 +141,10 @@ float MonoclinicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   QuaternionMathF::Copy(q2, q2inv);
   QuaternionMathF::Conjugate(q2inv);
 
-  QuaternionMathF::Multiply(q2inv, q1, qr);
+  QuaternionMathF::Multiply(q1, q2inv, qr);
   for (int i = 0; i < numsym; i++)
   {
-    QuaternionMathF::Multiply(qr, quatsym[i], qc);
+	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
     if (qc.w < -1)
     {
       qc.w = -1;
@@ -320,7 +320,7 @@ FOrientArrayType MonoclinicOps::randomizeEulerAngles(FOrientArrayType synea)
   FOrientArrayType quat(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
   q = quat.toQuaternion();
-  QuaternionMathF::Multiply(q, MonoclinicQuatSym[symOp], qc);
+  QuaternionMathF::Multiply(MonoclinicQuatSym[symOp], q, qc);
 
   quat.fromQuaternion(qc);
   OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
@@ -624,7 +624,7 @@ DREAM3D::Rgb MonoclinicOps::generateIPFColor(double phi1, double phi, double phi
 
   for (int j = 0; j < 2; j++)
   {
-    QuaternionMathF::Multiply(q1, MonoclinicQuatSym[j], qc);
+	  QuaternionMathF::Multiply(MonoclinicQuatSym[j], q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);

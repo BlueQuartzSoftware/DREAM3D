@@ -81,7 +81,7 @@ class FindMisorientationVectorsImpl
           {
             QuaternionMathF::Copy(m_Quats[m_Neighbors[3 * i + j]], q2);
             QuaternionMathF::Conjugate(q2);
-            QuaternionMathF::Multiply(q2, q1, delq);
+			QuaternionMathF::Multiply(q1, q2, delq);
             m_OrientationOps[1]->getFZQuat(delq);
             QuaternionMathF::GetMisorientationVector(delq, misoVec);
             m_MisoVecs[3 * m_FaceIds[3 * i + j] + 0] = misoVec[0];
