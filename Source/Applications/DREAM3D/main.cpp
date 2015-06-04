@@ -35,12 +35,12 @@
 
 
 
-#include <QtWidgets/QApplication>
 #include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
 
 #include "BrandedInitializer.h"
+#include "DREAM3DApplication.h"
 
 #ifdef Q_WS_X11
 #include <QPlastiqueStyle>
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-  QApplication qtapp(argc, argv);
+  DREAM3DApplication qtapp(argc, argv);
 
 #if defined (Q_OS_MAC)
   qApp->setQuitOnLastWindowClosed(false);

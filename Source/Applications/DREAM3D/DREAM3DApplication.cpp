@@ -43,7 +43,7 @@
 DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
   QApplication(argc, argv)
 {
-
+  m_DREAM3DWindowList;
 }
 
 // -----------------------------------------------------------------------------
@@ -52,6 +52,30 @@ DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
 DREAM3DApplication::~DREAM3DApplication()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<DREAM3D_UI*> DREAM3DApplication::getDREAM3DWindowList()
+{
+  return m_DREAM3DWindowList;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::registerDREAM3DWindow(DREAM3D_UI* window)
+{
+  m_DREAM3DWindowList.push_back(window);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
+{
+  m_DREAM3DWindowList.removeAll(window);
 }
 
 
