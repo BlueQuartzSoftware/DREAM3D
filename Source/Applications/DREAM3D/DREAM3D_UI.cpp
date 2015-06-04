@@ -700,9 +700,6 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &)),
     this, SLOT(openNewPipeline(const QString&, const bool &)));
 
-  disconnect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
-    pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
-
   disconnect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
 
@@ -739,9 +736,6 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &)),
     this, SLOT(openNewPipeline(const QString&, const bool &)));
-
-  connect(bookmarksDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
-    pipelineViewWidget, SLOT(updateFavorite(const QString&, const QString&)));
 
   connect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
@@ -972,13 +966,6 @@ void DREAM3D_UI::initializeMenuActions()
   bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
   connect(m_ActionRenamePipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
-
-  /* m_ActionUpdatePipeline */
-  m_ActionUpdatePipeline = new QAction(this);
-  m_ActionUpdatePipeline->setObjectName(QString::fromUtf8("m_ActionUpdatePipeline"));
-  m_ActionUpdatePipeline->setText(QApplication::translate("DREAM3D_UI", "Update Bookmark", 0));
-  connect(m_ActionUpdatePipeline, SIGNAL(triggered()),
-    bookmarksDockWidget, SLOT(m_ActionUpdatePipeline_triggered()));
 
   {
     menuBookmarks->addSeparator();

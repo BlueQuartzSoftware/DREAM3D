@@ -238,14 +238,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void doAutoScroll();
 
     /**
-     * @brief savePipelineToFavorite Saves the pipeline to the file. If the file exists this function will <b>DELETE</b> the pipeline
-     * before saving this pipeline. MAKE SURE YOU UNDERSTAND THIS before using this function
-     * @param filePath The absolute path to the pipeline file
-     * @param name The name that will be used for display purposes
-     */
-    void updateFavorite(const QString& filePath, const QString& name, QSettings::Format = QSettings::IniFormat);
-
-    /**
     * @brief Write pipeline to a file
     */
     int writePipeline(QString filePath);
