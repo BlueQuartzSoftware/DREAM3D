@@ -39,13 +39,16 @@
    <item>
     <widget class="QComboBox" name="dataContainerList">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+      <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="toolTip">
       <string>This is the DataContainer selection</string>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
      </property>
      <item>
       <property name="text">
@@ -57,13 +60,16 @@
    <item>
     <widget class="QComboBox" name="attributeMatrixList">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+      <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="toolTip">
       <string>This is the AttributeMatrix selection</string>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
      </property>
      <item>
       <property name="text">
@@ -75,13 +81,16 @@
    <item>
     <widget class="QComboBox" name="attributeArrayList">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+      <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="toolTip">
       <string>This is the Data Array selection</string>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
      </property>
      <item>
       <property name="text">
