@@ -649,7 +649,7 @@ void GeometryMath::FindPlaneCoefficients(const float a[3], const float b[3], con
 // -----------------------------------------------------------------------------
 void GeometryMath::FindDistanceToTriangleCentroid(const float* a, const float* b, const float* c, const float* q, float& distance)
 {
-	float centroid[3];
+	float centroid[3] = { 0.0f, 0.0f, 0.0f };
 	centroid[0] = (a[0] + b[0] + c[0]) / 3.0f;
 	centroid[1] = (a[1] + b[1] + c[1]) / 3.0f;
 	centroid[2] = (a[2] + b[2] + c[2]) / 3.0f;
@@ -663,7 +663,7 @@ void GeometryMath::FindDistanceToTriangleCentroid(const float* a, const float* b
 void GeometryMath::FindDistanceFromPlane(const float* q, float n[3], float d, float& distance)
 {
 	distance = (q[0] * n[0]) + (q[1] * n[1]) + (q[2] * n[2]) - d;
-	distance /= sqrt((n[0] * n[0]) + (n[1] * n[1]) + (n[2] * n[2]));
+	distance /= sqrtf((n[0] * n[0]) + (n[1] * n[1]) + (n[2] * n[2]));
 }
 
 // -----------------------------------------------------------------------------
@@ -674,7 +674,7 @@ void GeometryMath::FindDistanceBetweenPoints(const float a[3], const float b[3],
   float dx = b[0] - a[0];
   float dy = b[1] - a[1];
   float dz = b[2] - a[2];
-  distance = sqrt((dx * dx) + (dy * dy) + (dz * dz));
+  distance = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
 }
 
 // -----------------------------------------------------------------------------
@@ -1000,15 +1000,15 @@ char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
 	float radius,
 	float& distToBoundary)
 {
-	float ray[3];  /* Ray */
-	float r[3];  /* Ray endpoint. */
-	float p[3];  /* Intersection point; not used. */
+	float ray[3] = { 0.0f, 0.0f, 0.0f };  /* Ray */
+	float r[3] = { 0.0f, 0.0f, 0.0f };  /* Ray endpoint. */
+	float p[3] = { 0.0f, 0.0f, 0.0f };  /* Intersection point; not used. */
 	int f, k = 0, crossings = 0;
 	char code = '?';
-	float a[3];
-	float b[3];
-	float c[3];
-	float n[3];
+	float a[3] = { 0.0f, 0.0f, 0.0f };
+	float b[3] = { 0.0f, 0.0f, 0.0f };
+	float c[3] = { 0.0f, 0.0f, 0.0f };
+	float n[3] = { 0.0f, 0.0f, 0.0f };
 	float d = 0.0f;
 	float closestTriangleDistance = std::numeric_limits<float>::max();
 	float distance = 0.0f;

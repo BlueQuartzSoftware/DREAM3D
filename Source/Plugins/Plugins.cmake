@@ -89,8 +89,6 @@ function(DREAM3D_ADD_PLUGINS)
         set(${d3dPlugin}_IMPORT_FILE ${d3dPlugin}_SOURCE_DIR/CMakeLists.txt)
       endif()
 
-message(STATUS "${d3dPlugin}_SOURCE_DIR: ${${d3dPlugin}_SOURCE_DIR}")
- message(STATUS "${d3dPlugin}_IMPORT_FILE: ${${d3dPlugin}_IMPORT_FILE}")
 
     # By this point we should have everything defined and ready to go...
       if(DEFINED ${d3dPlugin}_SOURCE_DIR AND DEFINED ${d3dPlugin}_IMPORT_FILE)
