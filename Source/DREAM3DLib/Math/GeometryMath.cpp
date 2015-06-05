@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -60,7 +60,7 @@ float GeometryMath::CosThetaBetweenVectors(const float a[3], const float b[3])
 {
   float norm1 = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
   float norm2 = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
-  if(norm1 == 0 || norm2 == 0)
+  if (norm1 == 0 || norm2 == 0)
   {
     return 1.0;
   }
@@ -84,7 +84,7 @@ float GeometryMath::AngleBetweenVectors(const float a[3], const float b[3])
 // -----------------------------------------------------------------------------
 bool GeometryMath::PointInBox(const float p[3], const float ll[3], const float ur[3])
 {
-  if((ll[0] <= p[0]) && (p[0] <= ur[0]) && (ll[1] <= p[1]) && (p[1] <= ur[1]) && (ll[2] <= p[2]) && (p[2] <= ur[2]))
+  if ((ll[0] <= p[0]) && (p[0] <= ur[0]) && (ll[1] <= p[1]) && (p[1] <= ur[1]) && (ll[2] <= p[2]) && (p[2] <= ur[2]))
   {
     return true;
   }
@@ -98,31 +98,31 @@ bool GeometryMath::PointInBox(const float p[3], const float ll[3], const float u
 //
 // -----------------------------------------------------------------------------
 bool GeometryMath::RayIntersectsBox(const float* p,
-                                    const float* q,
-                                    const float* ll,
-                                    const float* ur)
+  const float* q,
+  const float* ll,
+  const float* ur)
 {
-  if((ll[0] > p[0]) && (ll[0] > q[0]))
+  if ((ll[0] > p[0]) && (ll[0] > q[0]))
   {
     return false;
   }
-  else if((ur[0] < p[0]) && (ur[0] < q[0]))
+  else if ((ur[0] < p[0]) && (ur[0] < q[0]))
   {
     return false;
   }
-  else if((ll[1] > p[1]) && (ll[1] > q[1]))
+  else if ((ll[1] > p[1]) && (ll[1] > q[1]))
   {
     return false;
   }
-  else if((ur[1] < p[1]) && (ur[1] < q[1]))
+  else if ((ur[1] < p[1]) && (ur[1] < q[1]))
   {
     return false;
   }
-  else if((ll[2] > p[2]) && (ll[2] > q[2]))
+  else if ((ll[2] > p[2]) && (ll[2] > q[2]))
   {
     return false;
   }
-  else if((ur[2] < p[2]) && (ur[2] < q[2]))
+  else if ((ur[2] < p[2]) && (ur[2] < q[2]))
   {
     return false;
   }
@@ -133,9 +133,9 @@ bool GeometryMath::RayIntersectsBox(const float* p,
 //
 // -----------------------------------------------------------------------------
 float GeometryMath::LengthOfRayInBox(const float* p,
-                                     const float* q,
-                                     const float* ll,
-                                     const float* ur)
+  const float* q,
+  const float* ll,
+  const float* ur)
 {
   float length = 0.0;
   float frac = 0.0;
@@ -159,116 +159,116 @@ float GeometryMath::LengthOfRayInBox(const float* p,
   float c2z = ur[2];
 
   //clip ray by min x face of box
-  if(x1 < c1x && x2 > c1x)
+  if (x1 < c1x && x2 > c1x)
   {
     frac = ((c1x - x1) / delX);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(x1 > c1x && x2 < c1x)
+  else if (x1 > c1x && x2 < c1x)
   {
     frac = ((c1x - x2) / delX);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(x1 < c1x && x2 < c1x)
+  else if (x1 < c1x && x2 < c1x)
   {
     return 0.0;
   }
   //clip ray by min y face of box
-  if(y1 < c1y && y2 > c1y)
+  if (y1 < c1y && y2 > c1y)
   {
     frac = ((c1y - y1) / delY);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(y1 > c1y && y2 < c1y)
+  else if (y1 > c1y && y2 < c1y)
   {
     frac = ((c1y - y2) / delY);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(y1 < c1y && y2 < c1y)
+  else if (y1 < c1y && y2 < c1y)
   {
     return 0.0;
   }
   //clip ray by min z face of box
-  if(z1 < c1z && z2 > c1z)
+  if (z1 < c1z && z2 > c1z)
   {
     frac = ((c1z - z1) / delZ);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(z1 > c1z && z2 < c1z)
+  else if (z1 > c1z && z2 < c1z)
   {
     frac = ((c1z - z2) / delZ);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(z1 < c1z && z2 < c1z)
+  else if (z1 < c1z && z2 < c1z)
   {
     return 0.0;
   }
   //clip ray by max x face of box
-  if(x1 > c2x && x2 < c2x)
+  if (x1 > c2x && x2 < c2x)
   {
     frac = ((c2x - x1) / delX);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(x1 < c2x && x2 > c2x)
+  else if (x1 < c2x && x2 > c2x)
   {
     frac = ((c2x - x2) / delX);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(x1 > c2x && x2 > c2x)
+  else if (x1 > c2x && x2 > c2x)
   {
     return 0.0;
   }
   //clip ray by max y face of box
-  if(y1 > c2y && y2 < c2y)
+  if (y1 > c2y && y2 < c2y)
   {
     frac = ((c2y - y1) / delY);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(y1 < c2y && y2 > c2y)
+  else if (y1 < c2y && y2 > c2y)
   {
     frac = ((c2y - y2) / delY);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(y1 > c2y && y2 > c2y)
+  else if (y1 > c2y && y2 > c2y)
   {
     return 0.0;
   }
   //clip ray by max z face of box
-  if(z1 > c2z && z2 < c2z)
+  if (z1 > c2z && z2 < c2z)
   {
     frac = ((c2z - z1) / delZ);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(z1 < c2z && z2 > c2z)
+  else if (z1 < c2z && z2 > c2z)
   {
     frac = ((c2z - z2) / delZ);
     x1 = x1 + (frac * delX);
     y1 = y1 + (frac * delY);
     z1 = z1 + (frac * delZ);
   }
-  else if(z1 > c2z && z2 > c2z)
+  else if (z1 > c2z && z2 > c2z)
   {
     return 0.0;
   }
@@ -287,9 +287,6 @@ void GeometryMath::GenerateRandomRay(float length, float ray[3])
   float w, t;
 
   DREAM3D_RANDOMNG_NEW();
-
-// unsigned long long int m_Seed = QDateTime::currentMSecsSinceEpoch();
-// DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
   ray[2] = (2.0 * rg.genrand_real1()) - 1.0;
   t = (DREAM3D::Constants::k_2Pi * rg.genrand_real1());
@@ -315,31 +312,31 @@ void GeometryMath::FindBoundingBoxOfVertices(VertexGeom::Pointer verts, float* l
 
   float* v = verts->getVertexPointer(0);
   int64_t numVerts = verts->getNumberOfVertices();
-  for(int i = 0; i < numVerts; i++)
+  for (int i = 0; i < numVerts; i++)
   {
-    if(v[i] < ll[0])
+    if (v[i] < ll[0])
     {
       ll[0] = v[i];
     }
-    if(v[i] > ur[0])
+    if (v[i] > ur[0])
     {
       ur[0] = v[i];
     }
-    if(v[i+1] < ll[1])
+    if (v[i + 1] < ll[1])
     {
-      ll[1] = v[i+1];
+      ll[1] = v[i + 1];
     }
-    if(v[i+1] > ur[1])
+    if (v[i + 1] > ur[1])
     {
-      ur[1] = v[i+1];
+      ur[1] = v[i + 1];
     }
-    if(v[i+2] < ll[2])
+    if (v[i + 2] < ll[2])
     {
-      ll[2] = v[i+2];
+      ll[2] = v[i + 2];
     }
-    if(v[i+2] > ur[2])
+    if (v[i + 2] > ur[2])
     {
-      ur[2] = v[i+2];
+      ur[2] = v[i + 2];
     }
   }
 }
@@ -360,36 +357,36 @@ void GeometryMath::FindBoundingBoxOfFaces(TriangleGeom::Pointer faces, Int32Int3
 
   int numFaces = faceIds.ncells;
   int32_t* faceId = faceIds.cells;
-  for(int i = 0; i < numFaces; i++)
+  for (int i = 0; i < numFaces; i++)
   {
     FindBoundingBoxOfFace(faces, faceId[i], facell, faceur);
-    if(facell[0] < ll[0])
+    if (facell[0] < ll[0])
     {
       ll[0] = facell[0];
     }
-    if(facell[1] < ll[1])
+    if (facell[1] < ll[1])
     {
       ll[1] = facell[1];
     }
-    if(facell[2] < ll[2])
+    if (facell[2] < ll[2])
     {
       ll[2] = facell[2];
     }
-    if(faceur[0] > ur[0])
+    if (faceur[0] > ur[0])
     {
       ur[0] = faceur[0];
     }
-    if(faceur[1] > ur[1])
+    if (faceur[1] > ur[1])
     {
       ur[1] = faceur[1];
     }
-    if(faceur[2] > ur[2])
+    if (faceur[2] > ur[2])
     {
       ur[2] = faceur[2];
     }
   }
 
-  if(faceIds.ncells == 0)
+  if (faceIds.ncells == 0)
   {
     ll[0] = 0.0;
     ll[1] = 0.0;
@@ -416,36 +413,36 @@ void GeometryMath::FindBoundingBoxOfRotatedFaces(TriangleGeom::Pointer faces, In
 
   int numFaces = faceIds.ncells;
   int32_t* faceId = faceIds.cells;
-  for(int i = 0; i < numFaces; i++)
+  for (int i = 0; i < numFaces; i++)
   {
     FindBoundingBoxOfRotatedFace(faces, faceId[i], g, facell, faceur);
-    if(facell[0] < ll[0])
+    if (facell[0] < ll[0])
     {
       ll[0] = facell[0];
     }
-    if(facell[1] < ll[1])
+    if (facell[1] < ll[1])
     {
       ll[1] = facell[1];
     }
-    if(facell[2] < ll[2])
+    if (facell[2] < ll[2])
     {
       ll[2] = facell[2];
     }
-    if(faceur[0] > ur[0])
+    if (faceur[0] > ur[0])
     {
       ur[0] = faceur[0];
     }
-    if(faceur[1] > ur[1])
+    if (faceur[1] > ur[1])
     {
       ur[1] = faceur[1];
     }
-    if(faceur[2] > ur[2])
+    if (faceur[2] > ur[2])
     {
       ur[2] = faceur[2];
     }
   }
 
-  if(numFaces == 0)
+  if (numFaces == 0)
   {
     ll[0] = 0.0;
     ll[1] = 0.0;
@@ -470,51 +467,51 @@ void GeometryMath::FindBoundingBoxOfFace(TriangleGeom::Pointer faces, int faceId
   ur[1] = a[1];
   ll[2] = a[2];
   ur[2] = a[2];
-  if(b[0] < ll[0])
+  if (b[0] < ll[0])
   {
     ll[0] = b[0];
   }
-  if(b[0] > ur[0])
+  if (b[0] > ur[0])
   {
     ur[0] = b[0];
   }
-  if(b[1] < ll[1])
+  if (b[1] < ll[1])
   {
     ll[1] = b[1];
   }
-  if(b[1] > ur[1])
+  if (b[1] > ur[1])
   {
     ur[1] = b[1];
   }
-  if(b[2] < ll[2])
+  if (b[2] < ll[2])
   {
     ll[2] = b[2];
   }
-  if(b[2] > ur[2])
+  if (b[2] > ur[2])
   {
     ur[2] = b[2];
   }
-  if(c[0] < ll[0])
+  if (c[0] < ll[0])
   {
     ll[0] = c[0];
   }
-  if(c[0] > ur[0])
+  if (c[0] > ur[0])
   {
     ur[0] = c[0];
   }
-  if(c[1] < ll[1])
+  if (c[1] < ll[1])
   {
     ll[1] = c[1];
   }
-  if(c[1] > ur[1])
+  if (c[1] > ur[1])
   {
     ur[1] = c[1];
   }
-  if(c[2] < ll[2])
+  if (c[2] < ll[2])
   {
     ll[2] = c[2];
   }
-  if(c[2] > ur[2])
+  if (c[2] > ur[2])
   {
     ur[2] = c[2];
   }
@@ -548,51 +545,51 @@ void GeometryMath::FindBoundingBoxOfRotatedFace(TriangleGeom::Pointer faces, int
   ur[1] = p1r[1];
   ll[2] = p1r[2];
   ur[2] = p1r[2];
-  if(p2r[0] < ll[0])
+  if (p2r[0] < ll[0])
   {
     ll[0] = p2r[0];
   }
-  if(p2r[0] > ur[0])
+  if (p2r[0] > ur[0])
   {
     ur[0] = p2r[0];
   }
-  if(p2r[1] < ll[1])
+  if (p2r[1] < ll[1])
   {
     ll[1] = p2r[1];
   }
-  if(p2r[1] > ur[1])
+  if (p2r[1] > ur[1])
   {
     ur[1] = p2r[1];
   }
-  if(p2r[2] < ll[2])
+  if (p2r[2] < ll[2])
   {
     ll[2] = p2r[2];
   }
-  if(p2r[2] > ur[2])
+  if (p2r[2] > ur[2])
   {
     ur[2] = p2r[2];
   }
-  if(p3r[0] < ll[0])
+  if (p3r[0] < ll[0])
   {
     ll[0] = p3r[0];
   }
-  if(p3r[0] > ur[0])
+  if (p3r[0] > ur[0])
   {
     ur[0] = p3r[0];
   }
-  if(p3r[1] < ll[1])
+  if (p3r[1] < ll[1])
   {
     ll[1] = p3r[1];
   }
-  if(p3r[1] > ur[1])
+  if (p3r[1] > ur[1])
   {
     ur[1] = p3r[1];
   }
-  if(p3r[2] < ll[2])
+  if (p3r[2] < ll[2])
   {
     ll[2] = p3r[2];
   }
-  if(p3r[2] > ur[2])
+  if (p3r[2] > ur[2])
   {
     ur[2] = p3r[2];
   }
@@ -649,12 +646,12 @@ void GeometryMath::FindPlaneCoefficients(const float a[3], const float b[3], con
 // -----------------------------------------------------------------------------
 void GeometryMath::FindDistanceToTriangleCentroid(const float* a, const float* b, const float* c, const float* q, float& distance)
 {
-	float centroid[3] = { 0.0f, 0.0f, 0.0f };
-	centroid[0] = (a[0] + b[0] + c[0]) / 3.0f;
-	centroid[1] = (a[1] + b[1] + c[1]) / 3.0f;
-	centroid[2] = (a[2] + b[2] + c[2]) / 3.0f;
+  float centroid[3] = { 0.0f, 0.0f, 0.0f };
+  centroid[0] = (a[0] + b[0] + c[0]) / 3.0f;
+  centroid[1] = (a[1] + b[1] + c[1]) / 3.0f;
+  centroid[2] = (a[2] + b[2] + c[2]) / 3.0f;
 
-	FindDistanceBetweenPoints(centroid, q, distance);
+  FindDistanceBetweenPoints(centroid, q, distance);
 }
 
 // -----------------------------------------------------------------------------
@@ -662,8 +659,8 @@ void GeometryMath::FindDistanceToTriangleCentroid(const float* a, const float* b
 // -----------------------------------------------------------------------------
 void GeometryMath::FindDistanceFromPlane(const float* q, float n[3], float d, float& distance)
 {
-	distance = (q[0] * n[0]) + (q[1] * n[1]) + (q[2] * n[2]) - d;
-	distance /= sqrtf((n[0] * n[0]) + (n[1] * n[1]) + (n[2] * n[2]));
+  distance = (q[0] * n[0]) + (q[1] * n[1]) + (q[2] * n[2]) - d;
+  distance /= sqrtf((n[0] * n[0]) + (n[1] * n[1]) + (n[2] * n[2]));
 }
 
 // -----------------------------------------------------------------------------
@@ -715,23 +712,23 @@ char GeometryMath::RayIntersectsTriangle(const float* a, const float* b, const f
 
   code = RayIntersectsPlane(a, b, c, q, r, p, m);
 
-  if(code == '0')
+  if (code == '0')
   {
     return '0';
   }
-  else if(code == 'q')
+  else if (code == 'q')
   {
     return PointInTriangle3D(a, b, c, m, q);
   }
-  else if(code == 'r')
+  else if (code == 'r')
   {
     return PointInTriangle3D(a, b, c, m, r);
   }
-  else if(code == 'p')
+  else if (code == 'p')
   {
     return 'p';
   }
-  else if(code == '1')
+  else if (code == '1')
   {
     return RayCrossesTriangle(a, b, c, q, r);
   }
@@ -753,15 +750,15 @@ char GeometryMath::RayIntersectsPlane(const float* a, const float* b, const floa
   FindPlaneCoefficients(a, b, c, n, d);
 
   num = d - ((q[0] * n[0]) + (q[1] * n[1]) + (q[2] * n[2]));
-  rq[0] =  r[0] - q[0];
-  rq[1] =  r[1] - q[1];
-  rq[2] =  r[2] - q[2];
+  rq[0] = r[0] - q[0];
+  rq[1] = r[1] - q[1];
+  rq[2] = r[2] - q[2];
   denom = (rq[0] * n[0]) + (rq[1] * n[1]) + (rq[2] * n[2]);
   m = MatrixMath::FindIndexOfMaxVal3x1(n);
 
-  if(denom == 0.0)
+  if (denom == 0.0)
   {
-    if(num == 0.0)
+    if (num == 0.0)
     {
       return 'p';
     }
@@ -773,11 +770,11 @@ char GeometryMath::RayIntersectsPlane(const float* a, const float* b, const floa
   else
   {
     t = num / denom;
-    for(int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
       p[i] = q[i] + (t * (r[i] - q[i]));
     }
-    if(t > 0.0 && t < 1.0)
+    if (t > 0.0 && t < 1.0)
     {
       return '1';
     }
@@ -804,9 +801,9 @@ char GeometryMath::PointInTriangle3D(const float* a, const float* b, const float
   float pp[3], aP[3], bP[3], cP[3];
 
   int j = 0;
-  for(int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++)
   {
-    if(i != m)
+    if (i != m)
     {
       pp[j] = p[i];
       aP[j] = a[i];
@@ -829,23 +826,23 @@ char GeometryMath::PointInTriangle2D(const float* a, const float* b, const float
   FindTriangleArea(p, b, c, area1);
   FindTriangleArea(p, c, a, area2);
 
-  if((area0 == 0 && area1 > 0 && area2 > 0) || (area1 == 0 && area0 > 0 && area2 > 0) || (area2 == 0 && area0 > 0 && area1 > 0))
+  if ((area0 == 0 && area1 > 0 && area2 > 0) || (area1 == 0 && area0 > 0 && area2 > 0) || (area2 == 0 && area0 > 0 && area1 > 0))
   {
     return 'E';
   }
-  else if((area0 == 0 && area1 < 0 && area2 < 0) || (area1 == 0 && area0 < 0 && area2 < 0) || (area2 == 0 && area0 < 0 && area1 < 0))
+  else if ((area0 == 0 && area1 < 0 && area2 < 0) || (area1 == 0 && area0 < 0 && area2 < 0) || (area2 == 0 && area0 < 0 && area1 < 0))
   {
     return 'E';
   }
-  else if((area0 > 0 && area1 > 0 && area2 > 0) || (area0 < 0 && area1 < 0 && area2 < 0))
+  else if ((area0 > 0 && area1 > 0 && area2 > 0) || (area0 < 0 && area1 < 0 && area2 < 0))
   {
     return 'F';
   }
-  else if((area0 == 0 && area1 == 0 && area2 == 0))
+  else if ((area0 == 0 && area1 == 0 && area2 == 0))
   {
     return '?';
   }
-  else if((area0 == 0 && area1 == 0) || (area0 == 0 && area2 == 0) || (area1 == 0 && area2 == 0))
+  else if ((area0 == 0 && area1 == 0) || (area0 == 0 && area2 == 0) || (area1 == 0 && area2 == 0))
   {
     return 'V';
   }
@@ -866,23 +863,23 @@ char GeometryMath::RayCrossesTriangle(const float* a, const float* b, const floa
   FindTetrahedronVolume(q, b, c, r, vol1);
   FindTetrahedronVolume(q, c, a, r, vol2);
 
-  if((vol0 > 0 && vol1 > 0 && vol2 > 0) || (vol0 < 0 && vol1 < 0 && vol2 < 0))
+  if ((vol0 > 0 && vol1 > 0 && vol2 > 0) || (vol0 < 0 && vol1 < 0 && vol2 < 0))
   {
     return 'f';
   }
-  else if((vol0 > 0 || vol1 > 0 || vol2 > 0) && (vol0 < 0 || vol1 < 0 || vol2 < 0))
+  else if ((vol0 > 0 || vol1 > 0 || vol2 > 0) && (vol0 < 0 || vol1 < 0 || vol2 < 0))
   {
     return '0';
   }
-  else if((vol0 == 0 && vol1 == 0 && vol2 == 0))
+  else if ((vol0 == 0 && vol1 == 0 && vol2 == 0))
   {
     return '?';
   }
-  else if((vol0 == 0 && vol1 == 0) || (vol0 == 0 && vol2 == 0) || (vol1 == 0 && vol2 == 0))
+  else if ((vol0 == 0 && vol1 == 0) || (vol0 == 0 && vol2 == 0) || (vol1 == 0 && vol2 == 0))
   {
     return 'v';
   }
-  else if(vol0 == 0 || vol1 == 0 || vol2 == 0)
+  else if (vol0 == 0 || vol1 == 0 || vol2 == 0)
   {
     return 'e';
   }
@@ -896,12 +893,12 @@ char GeometryMath::RayCrossesTriangle(const float* a, const float* b, const floa
 //
 // -----------------------------------------------------------------------------
 char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
-                                     const Int32Int32DynamicListArray::ElementList& faceIds,
-                                     const VertexGeom::Pointer faceBBs,
-                                     const float* q,
-                                     const float* ll,
-                                     const float* ur,
-                                     float radius)
+  const Int32Int32DynamicListArray::ElementList& faceIds,
+  const VertexGeom::Pointer faceBBs,
+  const float* q,
+  const float* ll,
+  const float* ur,
+  float radius)
 {
   float ray[3];  /* Ray */
   float r[3];  /* Ray endpoint. */
@@ -913,7 +910,7 @@ char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
   float c[3];
 
   //* If query point is outside bounding box, finished. */
-  if(PointInBox(q, ll, ur) == false)
+  if (PointInBox(q, ll, ur) == false)
   {
     return 'o';
   }
@@ -926,7 +923,7 @@ char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
   p[2] = 0;
 
 LOOP:
-  while( k++ < numFaces )
+  while (k++ < numFaces)
   {
     crossings = 0;
 
@@ -936,13 +933,13 @@ LOOP:
     r[1] = q[1] + ray[1];
     r[2] = q[2] + ray[2];
 
-    for ( f = 0; f < numFaces; f++ )
+    for (f = 0; f < numFaces; f++)
     {
       /* Begin check each face */
       int32_t idx = 2 * faceId[f];
       float* v0 = faceBBs->getVertexPointer(idx);
-      float* v1 = faceBBs->getVertexPointer(idx+1);
-      if( RayIntersectsBox(q, r, v0, v1) == false )
+      float* v1 = faceBBs->getVertexPointer(idx + 1);
+      if (RayIntersectsBox(q, r, v0, v1) == false)
       {
         code = '0';
       }
@@ -953,19 +950,19 @@ LOOP:
       }
 
       /* If ray is degenerate, then goto outer while to generate another. */
-      if ( code == 'p' || code == 'v' || code == 'e' || code == '?')
+      if (code == 'p' || code == 'v' || code == 'e' || code == '?')
       {
         goto LOOP;
       }
 
       /* If ray hits face at interior point, increment crossings. */
-      else if ( code == 'f' )
+      else if (code == 'f')
       {
         crossings++;
       }
 
       /* If query endpoint q sits on a V/E/F, return that code. */
-      else if ( code == 'V' || code == 'E' || code == 'F' )
+      else if (code == 'V' || code == 'E' || code == 'F')
       {
         return(code);
       }
@@ -978,7 +975,7 @@ LOOP:
   } /* End while loop */
 
   /* q strictly interior to polyhedron if an odd number of crossings. */
-  if( ( crossings % 2 ) == 1 )
+  if ((crossings % 2) == 1)
   {
     return 'i';
   }
@@ -992,108 +989,108 @@ LOOP:
 //
 // -----------------------------------------------------------------------------
 char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
-	const Int32Int32DynamicListArray::ElementList& faceIds,
-	const VertexGeom::Pointer faceBBs,
-	const float* q,
-	const float* ll,
-	const float* ur,
-	float radius,
-	float& distToBoundary)
+  const Int32Int32DynamicListArray::ElementList& faceIds,
+  const VertexGeom::Pointer faceBBs,
+  const float* q,
+  const float* ll,
+  const float* ur,
+  float radius,
+  float& distToBoundary)
 {
-	float ray[3] = { 0.0f, 0.0f, 0.0f };  /* Ray */
-	float r[3] = { 0.0f, 0.0f, 0.0f };  /* Ray endpoint. */
-	float p[3] = { 0.0f, 0.0f, 0.0f };  /* Intersection point; not used. */
-	int f, k = 0, crossings = 0;
-	char code = '?';
-	float a[3] = { 0.0f, 0.0f, 0.0f };
-	float b[3] = { 0.0f, 0.0f, 0.0f };
-	float c[3] = { 0.0f, 0.0f, 0.0f };
-	float n[3] = { 0.0f, 0.0f, 0.0f };
-	float d = 0.0f;
-	float closestTriangleDistance = std::numeric_limits<float>::max();
-	float distance = 0.0f;
+  float ray[3] = { 0.0f, 0.0f, 0.0f };  /* Ray */
+  float r[3] = { 0.0f, 0.0f, 0.0f };  /* Ray endpoint. */
+  float p[3] = { 0.0f, 0.0f, 0.0f };  /* Intersection point; not used. */
+  int f, k = 0, crossings = 0;
+  char code = '?';
+  float a[3] = { 0.0f, 0.0f, 0.0f };
+  float b[3] = { 0.0f, 0.0f, 0.0f };
+  float c[3] = { 0.0f, 0.0f, 0.0f };
+  float n[3] = { 0.0f, 0.0f, 0.0f };
+  float d = 0.0f;
+  float closestTriangleDistance = std::numeric_limits<float>::max();
+  float distance = 0.0f;
 
-	//* If query point is outside bounding box, finished. */
-	if (PointInBox(q, ll, ur) == false)
-	{
-		return 'o';
-	}
+  //* If query point is outside bounding box, finished. */
+  if (PointInBox(q, ll, ur) == false)
+  {
+    return 'o';
+  }
 
-	int numFaces = faceIds.ncells;
-	int32_t* faceId = faceIds.cells;
+  int numFaces = faceIds.ncells;
+  int32_t* faceId = faceIds.cells;
 
-	p[0] = 0;
-	p[1] = 0;
-	p[2] = 0;
+  p[0] = 0;
+  p[1] = 0;
+  p[2] = 0;
 
 LOOP:
-	while (k++ < numFaces)
-	{
-		crossings = 0;
+  while (k++ < numFaces)
+  {
+    crossings = 0;
 
-		//Generate and add ray to point to find other end
-		GenerateRandomRay(radius, ray);
-		r[0] = q[0] + ray[0];
-		r[1] = q[1] + ray[1];
-		r[2] = q[2] + ray[2];
+    //Generate and add ray to point to find other end
+    GenerateRandomRay(radius, ray);
+    r[0] = q[0] + ray[0];
+    r[1] = q[1] + ray[1];
+    r[2] = q[2] + ray[2];
 
-		for (f = 0; f < numFaces; f++)
-		{
-			/* Begin check each face */
-			int32_t idx = 2 * faceId[f];
-			float* v0 = faceBBs->getVertexPointer(idx);
-			float* v1 = faceBBs->getVertexPointer(idx + 1);
-			faces->getVertCoordsAtTri(faceId[f], a, b, c);
-			FindDistanceToTriangleCentroid(a, b, c, q, distance);
-			if (distance < closestTriangleDistance)
-			{
-				closestTriangleDistance = distance;
-				FindPlaneCoefficients(a, b, c, n, d);
-				FindDistanceFromPlane(q, n, d, distance);
-				distToBoundary = fabs(distance);
-			}
-			if (RayIntersectsBox(q, r, v0, v1) == false)
-			{
-				code = '0';
-			}
-			else
-			{
-				code = RayIntersectsTriangle(a, b, c, q, r, p);
-			}
+    for (f = 0; f < numFaces; f++)
+    {
+      /* Begin check each face */
+      int32_t idx = 2 * faceId[f];
+      float* v0 = faceBBs->getVertexPointer(idx);
+      float* v1 = faceBBs->getVertexPointer(idx + 1);
+      faces->getVertCoordsAtTri(faceId[f], a, b, c);
+      FindDistanceToTriangleCentroid(a, b, c, q, distance);
+      if (distance < closestTriangleDistance)
+      {
+        closestTriangleDistance = distance;
+        FindPlaneCoefficients(a, b, c, n, d);
+        FindDistanceFromPlane(q, n, d, distance);
+        distToBoundary = fabs(distance);
+      }
+      if (RayIntersectsBox(q, r, v0, v1) == false)
+      {
+        code = '0';
+      }
+      else
+      {
+        code = RayIntersectsTriangle(a, b, c, q, r, p);
+      }
 
-			/* If ray is degenerate, then goto outer while to generate another. */
-			if (code == 'p' || code == 'v' || code == 'e' || code == '?')
-			{
-				goto LOOP;
-			}
+      /* If ray is degenerate, then goto outer while to generate another. */
+      if (code == 'p' || code == 'v' || code == 'e' || code == '?')
+      {
+        goto LOOP;
+      }
 
-			/* If ray hits face at interior point, increment crossings. */
-			else if (code == 'f')
-			{
-				crossings++;
-			}
+      /* If ray hits face at interior point, increment crossings. */
+      else if (code == 'f')
+      {
+        crossings++;
+      }
 
-			/* If query endpoint q sits on a V/E/F, return that code. */
-			else if (code == 'V' || code == 'E' || code == 'F')
-			{
-				return(code);
-			}
+      /* If query endpoint q sits on a V/E/F, return that code. */
+      else if (code == 'V' || code == 'E' || code == 'F')
+      {
+        return(code);
+      }
 
-		} /* End check each face */
+    } /* End check each face */
 
-		/* No degeneracies encountered: ray is generic, so finished. */
-		break;
+    /* No degeneracies encountered: ray is generic, so finished. */
+    break;
 
-	} /* End while loop */
+  } /* End while loop */
 
-	/* q strictly interior to polyhedron if an odd number of crossings. */
-	if ((crossings % 2) == 1)
-	{
-		return 'i';
-	}
-	else
-	{
-		return 'o';
-	}
+  /* q strictly interior to polyhedron if an odd number of crossings. */
+  if ((crossings % 2) == 1)
+  {
+    return 'i';
+  }
+  else
+  {
+    return 'o';
+  }
 }
 
