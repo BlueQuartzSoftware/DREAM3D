@@ -165,7 +165,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @param filePath
     * @param setOpenedFilePath
     */
-    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath);
+    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
 
   protected slots:
 

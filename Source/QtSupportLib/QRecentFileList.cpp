@@ -47,9 +47,10 @@
 //
 // -----------------------------------------------------------------------------
 QRecentFileList::QRecentFileList(QObject* parent) :
-  QObject(parent)
+  QObject(parent),
+  m_Watcher(new QFileSystemWatcher(this))
 {
-  //qDebug() << "QRecentFileList()" << "\n";
+  connect(m_Watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(removeFile(const QString &)));
 }
 
 // -----------------------------------------------------------------------------
@@ -57,7 +58,8 @@ QRecentFileList::QRecentFileList(QObject* parent) :
 // -----------------------------------------------------------------------------
 QRecentFileList::~QRecentFileList()
 {
-// qDebug() << "~QRecentFileList()" << "\n";
+  delete m_Watcher;
+  m_Watcher = NULL;
 }
 
 // -----------------------------------------------------------------------------
@@ -90,22 +92,29 @@ bool QRecentFileList::contains(const QString& file)
 // -----------------------------------------------------------------------------
 void QRecentFileList::addFile(const QString& file, AddType type)
 {
-  //qDebug() << "QRecentFileList::addFile()" << "\n";
-  //qDebug() << "recentFiles.count: " << recentFiles.count() << "\n";
   if (QFile::exists(file) == true)
   {
-    if (this->recentFiles.contains(file) == false)
+    // Remove the file from wherever it is in the list
+    removeFile(file);
+
+    if (recentFiles.size() == 7)
     {
-      if (type == APPEND)
-      {
-        this->recentFiles.append(file);
-      }
-      else if (type == PREPEND)
-      {
-        this->recentFiles.prepend(file);
-      }
-      emit fileListChanged(file); // Emit the signal so all the menus can update thier contents
+      recentFiles.pop_back();
     }
+
+    if (type == APPEND)
+    {
+      this->recentFiles.append(file);
+    }
+    else
+    {
+      this->recentFiles.prepend(file);
+    }
+
+    // Add the path to the watcher
+    bool wasAdded = m_Watcher->addPath(file);
+
+    emit fileListChanged(file); // Emit the signal so all the menus can update their contents
   }
 }
 
@@ -120,18 +129,14 @@ QStringList QRecentFileList::fileList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QRecentFileList::popBack()
-{
-  this->recentFiles.pop_back();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void QRecentFileList::removeFile(const QString& file)
 {
-  //qDebug() << "QRecentFileList::removeFile()" << "\n";
   this->recentFiles.removeAll(file);
+
+  // Remove the path from the watcher
+  m_Watcher->removePath(file);
+
+  emit fileListChanged(file); // Emit the signal so all the menus can update their contents
 }
 
 // -----------------------------------------------------------------------------
@@ -140,6 +145,8 @@ void QRecentFileList::removeFile(const QString& file)
 void QRecentFileList::clear()
 {
   this->recentFiles.clear();
+
+  emit fileListChanged(""); // Emit the signal so all the menus can update their contents
 }
 
 // -----------------------------------------------------------------------------

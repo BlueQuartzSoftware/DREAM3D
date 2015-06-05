@@ -483,7 +483,7 @@ void BrandedInitializer::on_m_ActionOpen_triggered()
   filePath = QDir::toNativeSeparators(filePath);
   QFileInfo fi(filePath);
 
-  newInstance->openNewPipeline(filePath, true);
+  newInstance->openNewPipeline(filePath, true, true);
 
   newInstance->show();
 
@@ -527,18 +527,10 @@ void BrandedInitializer::openRecentFile()
     QString filePath = action->data().toString();
 
     DREAM3D_UI* newInstance = getNewDREAM3DInstance();
-    newInstance->openNewPipeline(filePath, true);
-
-    QRecentFileList* list = QRecentFileList::instance();
-
-    // Remove filepath from wherever it is in the list
-    list->removeFile(filePath);
+    newInstance->openNewPipeline(filePath, true, true);
 
     // Add file path to the recent files list for both instances
-    if (list->fileList().size() >= 7)
-    {
-      list->popBack();
-    }
+    QRecentFileList* list = QRecentFileList::instance();
     list->addFile(filePath);
 
     newInstance->show();

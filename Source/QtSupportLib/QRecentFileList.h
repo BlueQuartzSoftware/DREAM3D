@@ -40,6 +40,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
+#include <QtCore/QFileSystemWatcher>
 // #include <QtCore/QList>
 // #include <QtWidgets/QAction>
 
@@ -115,20 +116,17 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
     void readList(DREAM3DSettings& prefs);
 
     /**
-     * @brief Removes a file from the list of recent files.
-     * @param file The file to remove
-     */
-    void removeFile(const QString& file);
-
-    /**
-    * @brief Pops the last entry off the list of recent files
-    */
-    void popBack();
-
-    /**
     * @brief Clears the list of recent files
     */
     void clear();
+
+  public slots:
+    
+    /**
+    * @brief Removes a file from the list of recent files.
+    * @param file The file to remove
+    */
+    void removeFile(const QString& file);
 
     /* ******************* Begin Qt Signals ********************************* */
   signals:
@@ -151,6 +149,8 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
     ~QRecentFileList();
 
     QStringList recentFiles;
+
+    QFileSystemWatcher* m_Watcher;
     // QList<QAction*> actions;
     // QMenu* recentFileMenu;
 

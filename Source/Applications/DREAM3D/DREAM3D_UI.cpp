@@ -269,7 +269,7 @@ void DREAM3D_UI::on_actionOpen_triggered()
   QFileInfo fi(filePath);
 
   // Open the new pipeline
-  openNewPipeline(filePath, true);
+  openNewPipeline(filePath, true, true);
 
   // Cache the last directory on old instance
   m_OpenDialogLastDirectory = fi.path();
@@ -278,7 +278,7 @@ void DREAM3D_UI::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath)
+void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles)
 {
   QFileInfo fi(filePath);
   QRecentFileList* list = QRecentFileList::instance();
@@ -307,15 +307,11 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
       // Cache the last directory on new instance
       newInstance->setOpenDialogLastDirectory(fi.path());
 
-      // Remove filepath from wherever it is in the list
-      list->removeFile(filePath);
-
-      // Add file path to the recent files list for both instances
-      if (list->fileList().size() >= 7)
+      if (addToRecentFiles == true)
       {
-        list->popBack();
+        // Add file to the recent files list
+        list->addFile(filePath);
       }
-      list->addFile(filePath);
 
       // Show the new instance
       newInstance->setAttribute(Qt::WA_DeleteOnClose);
@@ -346,12 +342,11 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
 
     if (err >= 0)
     {
-      // Add file path to the recent files list for both instances
-      if (list->fileList().size() == 7)
+      if (addToRecentFiles == true)
       {
-        list->popBack();
+        // Add file to the recent files list
+        list->addFile(filePath);
       }
-      list->addFile(filePath);
     }
   }
 }
@@ -385,6 +380,10 @@ bool DREAM3D_UI::savePipeline()
     QFileInfo prefFileInfo = QFileInfo(filePath);
     setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
     setWindowModified(false);
+
+    // Add file to the recent files list
+    QRecentFileList* list = QRecentFileList::instance();
+    list->addFile(filePath);
   }
 
   return true;
@@ -428,6 +427,10 @@ bool DREAM3D_UI::savePipelineAs()
     QFileInfo prefFileInfo = QFileInfo(filePath);
     setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
     setWindowModified(false);
+
+    // Add file to the recent files list
+    QRecentFileList* list = QRecentFileList::instance();
+    list->addFile(filePath);
 
     m_OpenedFilePath = filePath;
   }
@@ -713,11 +716,11 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
     pipelineViewWidget, SLOT(addFilter(const QString&)));
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
+    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
 
-  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &)));
+  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
+    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
 
   disconnect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
@@ -750,11 +753,11 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
+    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
 
-  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &)));
+  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
+    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
 
   connect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
