@@ -1,7 +1,0 @@
-  /*
-    setName( reader->readValue("Name", getName() ) );
-    setInputFile( reader->readValue("InputFile", getInputFile() ) );
-    setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-    setImageSize( reader->readValue("ImageSize", getImageSize() ) );
-    setImageDecimal( reader->readValue("ImageDecimal", getImageDecimal() ) );
-  */

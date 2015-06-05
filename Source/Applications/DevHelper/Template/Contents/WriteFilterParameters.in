@@ -1,7 +1,0 @@
-  /*
-    writer->writeValue("Name", getName() );
-    writer->writeValue("InputFile", getInputFile() );
-    writer->writeValue("OutputFile", getOutputFile() );
-    writer->writeValue("ImageSize", getImageSize() );
-    writer->writeValue("ImageDecimal", getImageDecimal() );
-  */

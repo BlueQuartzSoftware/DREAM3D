@@ -1,7 +1,6 @@
 /*
- * Your License or Copyright Information can go here
+ * Your License or Copyright can go here
  */
-
 
 #include "@PluginName@Plugin.h"
 
@@ -11,7 +10,6 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-
 
 #include "@PluginName@/moc_@PluginName@Plugin.cpp"
 
@@ -207,7 +205,6 @@ void @PluginName@Plugin::setLocation(QString filePath)
 // -----------------------------------------------------------------------------
 void @PluginName@Plugin::writeSettings(QSettings& prefs)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -215,7 +212,6 @@ void @PluginName@Plugin::writeSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 void @PluginName@Plugin::readSettings(QSettings& prefs)
 {
-
 }
 
 #include "@PluginName@Filters/RegisterKnownFilters.cpp"
