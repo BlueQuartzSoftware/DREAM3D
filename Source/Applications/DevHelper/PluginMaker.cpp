@@ -693,6 +693,16 @@ void PluginMaker::on_generateButton_clicked()
   QString pluginName = m_PluginName->text();
   QString pluginDir = m_OutputDir->text();
 
+  // Delete the old plugin folder, if it is there
+  QString pluginPath = pluginDir + "/" + pluginName;
+  pluginPath = QDir::toNativeSeparators(pluginPath);
+  QFileInfo fi(pluginPath);
+  if (fi.exists())
+  {
+    QDir dir(pluginPath);
+    dir.removeRecursively();
+  }
+
   pluginName = cleanName(pluginName);
 
   if (pluginName == "")
@@ -943,12 +953,23 @@ void PluginMaker::on_removeFilterBtn_clicked()
   {
     return;
   }
-  QString namecheck = ptr->text(0);
+  QString filePath = ptr->text(0);
+  QFileInfo fi(filePath);
+  QString namecheck = fi.baseName();
 
   for (int i = 0; i < m_FilterBundles.size(); i++)
   {
     if (m_FilterBundles[i].containsTreeWidgetItem(ptr))
     {
+      // Remove the entry from the TestFileLocations.h.in cache
+      QString pluginName = m_FilterBundles[i].getTestGenerator()->getPluginName();
+      if (namecheck == pluginName + "Filter")
+      {
+        namecheck = "@PluginName@Filter";
+      }
+
+      m_TestFileLocationNames.remove(namecheck);
+
       //Remove the TreeWidgetItems from the tree widget
       treeWidget->removeItemWidget(m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem(), 0);
       treeWidget->removeItemWidget(m_FilterBundles[i].getHGenerator()->getTreeWidgetItem(), 0);
@@ -969,14 +990,6 @@ void PluginMaker::on_removeFilterBtn_clicked()
 
       //Remove the instance of FilterBundler from the m_FilterBundles QVector
       m_FilterBundles.remove(i);
-
-    // Remove the entry from the TestFileLocations.h.in cache
-    QString pluginName = m_FilterBundles[i].getTestGenerator()->getPluginName();
-    if (namecheck == pluginName + "Filter")
-    {
-      namecheck = "@PluginName@Filter";
-    }
-    m_TestFileLocationNames.remove(namecheck);
     }
   }
 }

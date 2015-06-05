@@ -93,7 +93,7 @@ class TSpecificCompareFunctorBool : public CompareFunctor
 
   private:
     bool* m_Data; // The data that is being compared
-    size_t m_Length; // Length of the Data Array
+    int64_t m_Length; // Length of the Data Array
     int32_t* m_FeatureIds; // The Feature Ids
 };
 
@@ -161,6 +161,7 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_GoodVoxels(NULL),
+  m_InputData(NULL),
   m_FeatureIds(NULL),
   m_Active(NULL)
 {

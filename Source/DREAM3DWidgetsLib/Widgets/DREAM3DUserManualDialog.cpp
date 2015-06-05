@@ -62,6 +62,8 @@ DREAM3DUserManualDialog::DREAM3DUserManualDialog()
 
   setupUi(this);
   DREAM3DUserManualDialog::self = this;
+
+  self->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 // -----------------------------------------------------------------------------

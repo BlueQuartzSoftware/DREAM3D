@@ -1,4 +1,4 @@
-Copy Feature Array To Cell Array {#copyfeaturearraytocellarray}
+Copy Feature Array To Cell Array {#copyfeaturearraytoelementarray}
 ==============================
 
 ## Group (Subgroup) ##

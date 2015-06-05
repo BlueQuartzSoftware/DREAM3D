@@ -126,6 +126,7 @@ FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
   m_SelectedArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_Plane(0),
   m_MotionDirectionArrayName(DREAM3D::CellData::MotionDirection),
+  m_InData(NULL),
   m_MotionDirection(NULL)
 {
   setupFilterParameters();

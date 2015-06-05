@@ -18,13 +18,12 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 # List your public filters here
 
 set(_PublicFilters
-# Turn these into Core
   AdjustVolumeOrigin
   ConvertData
-  CopyFeatureArrayToCellArray
-  CreateFeatureArrayFromCellArray
+  CopyFeatureArrayToElementArray
+  CreateFeatureArrayFromElementArray
   ExtractComponentAsArray
-  LinkFeatureMapToCellArray
+  LinkFeatureMapToElementArray
   RemoveArrays
   RenameAttributeMatrix
   RenameAttributeArray

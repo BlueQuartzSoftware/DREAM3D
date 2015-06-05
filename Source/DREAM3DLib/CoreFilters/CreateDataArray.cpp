@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -41,14 +41,12 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 CreateDataArray::CreateDataArray() :
   AbstractFilter(),
-  m_AttributeMatrixPath(),
+  m_AttributeMatrixPath("", "", ""),
   m_ScalarType(0),
   m_NumberOfComponents(-1),
   m_OutputArrayName(""),
@@ -70,11 +68,8 @@ CreateDataArray::~CreateDataArray()
 void CreateDataArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
-  parameters.push_back(FilterParameter::New("Input Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("AttributeMatrix Path", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), false));
+  parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), false));
   parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), false));
-
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
@@ -95,10 +90,8 @@ void CreateDataArray::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-
   parameters.push_back(FilterParameter::New("Number Of Components", "NumberOfComponents", FilterParameterWidgetType::IntWidget, getNumberOfComponents(), false));
   parameters.push_back(FilterParameter::New("Initialization Value", "InitializationValue", FilterParameterWidgetType::DoubleWidget, getInitializationValue(), false));
-
   setFilterParameters(parameters);
 }
 
@@ -136,11 +129,11 @@ int CreateDataArray::writeFilterParameters(AbstractFilterParametersWriter* write
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void checkInitializationInt(AbstractFilter* filter, double initValue, int err)
+void checkInitializationInt(AbstractFilter* filter, double initValue, int32_t err)
 {
   filter->setErrorCondition(0);
   QString ss;
-  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "_INTERNAL_USE_ONLY_DO_NOT _USE"); // temporary for use of getTypeAsString()
   QString strType = var->getTypeAsString();
   strType.remove("_t");
 
@@ -159,11 +152,11 @@ void checkInitializationInt(AbstractFilter* filter, double initValue, int err)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, int err)
+void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, int32_t err)
 {
   filter->setErrorCondition(0);
   QString ss;
-  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "DO NOT USE"); // temporary for use of getTypeAsString()
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "_INTERNAL_USE_ONLY_DO_NOT _USE"); // temporary for use of getTypeAsString()
   QString strType = var->getTypeAsString();
 
   if (!(((initValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (initValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
@@ -228,7 +221,7 @@ void CreateDataArray::checkInitialization()
     default:
     {
       setErrorCondition(-4060);
-      QString ss = QObject::tr("Incorrect data scalar type.");
+      QString ss = QObject::tr("Incorrect data scalar type");
       break;
     }
   }
@@ -241,16 +234,12 @@ void CreateDataArray::dataCheck()
 {
   setErrorCondition(0);
   QString ss;
-  if(getAttributeMatrixPath().getDataContainerName().isEmpty() == true || getAttributeMatrixPath().getAttributeMatrixName().isEmpty() == true)
-  {
-    ss = QObject::tr("The AttributeMatrix Path has empty elements: DataContainer->'%1'  AttributeMatrix->'%2'").arg(getAttributeMatrixPath().getDataContainerName()).arg(getAttributeMatrixPath().getAttributeMatrixName());
-    setErrorCondition(-4000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
 
-  if(getScalarType() < 0 || getScalarType() > 10)
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getAttributeMatrixPath(), -301);
+
+  if (getScalarType() < 0 || getScalarType() > 10)
   {
-    ss = QObject::tr("The scalar type was invalid. Valid values range from 0 to 10.");
+    ss = QObject::tr("The scalar type was invalid. Valid values range from 0 to 10");
     setErrorCondition(-4002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -258,14 +247,14 @@ void CreateDataArray::dataCheck()
   if (getNumberOfComponents() <= 0)
   {
     setErrorCondition(-4003);
-    QString ss = QObject::tr("The Number of Components can not be zero or less. The current value is '%1'. Please set a value greater than zero.").arg(m_NumberOfComponents);
+    QString ss = QObject::tr("The number of components (%1) must be positive").arg(m_NumberOfComponents);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  if(getOutputArrayName().isEmpty() == true)
+  if (getOutputArrayName().isEmpty() == true)
   {
-    ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    ss = QObject::tr("The output Attribute Array name must be set");
     setErrorCondition(-4001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -280,7 +269,6 @@ void CreateDataArray::dataCheck()
 
   m_OutputArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromTypeEnum()(this, tempPath, cDims, getScalarType(), getInitializationValue());
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -300,15 +288,10 @@ void CreateDataArray::preflight()
 // -----------------------------------------------------------------------------
 void CreateDataArray::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
-
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  { return; }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -331,34 +314,22 @@ AbstractFilter::Pointer CreateDataArray::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString CreateDataArray::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CreateDataArray::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CreateDataArray::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::GenerationFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::GenerationFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CreateDataArray::getHumanLabel()
-{
-  return "Create Data Array";
-}
-
+{ return "Create Data Array"; }

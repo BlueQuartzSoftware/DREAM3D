@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -369,8 +369,19 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         }
         return attributeArray;
       }
-      createAndAddAttributeArray<ArrayType, Filter, T>(filter, attributeArrayName, initValue, compDims);
       IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
+      if (NULL == iDataArray.get())
+      {
+        createAndAddAttributeArray<ArrayType, Filter, T>(filter, attributeArrayName, initValue, compDims);
+      }
+      else if (filter)
+      {
+        filter->setErrorCondition(-10002);
+        ss = QObject::tr("An Attribute Array already exists with the name %1.").arg(attributeArrayName);
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        return attributeArray;
+      }
+      iDataArray = getAttributeArray(attributeArrayName);
       if(NULL == iDataArray && filter)
       {
         filter->setErrorCondition(-10003);

@@ -137,7 +137,7 @@ QFont DREAM3DStyles::GetTitleFont()
 {
   QFont categoryFont;
   categoryFont.setBold(true);
-  categoryFont.setWeight(100);
+  categoryFont.setWeight(99);
   categoryFont.setStyleStrategy(QFont::PreferAntialias);
   categoryFont.setFamily(GetUIFont());
 

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -189,7 +189,6 @@ void MinSize::execute()
     AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
     size_t numFeatures = featAttrMat->getNumTuples();
     bool unavailablePhase = true;
-
     for (size_t i = 0; i < numFeatures; i++)
     {
       if (m_FeaturePhases[i] == m_PhaseNumber)

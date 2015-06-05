@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,16 +34,16 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include "LinkFeatureMapToElementArray.h"
+
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
-#include "LinkFeatureMapToCellArray.h"
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LinkFeatureMapToCellArray::LinkFeatureMapToCellArray() :
+LinkFeatureMapToElementArray::LinkFeatureMapToElementArray() :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_SelectedCellArrayPath("", "", ""),
@@ -58,19 +58,19 @@ LinkFeatureMapToCellArray::LinkFeatureMapToCellArray() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LinkFeatureMapToCellArray::~LinkFeatureMapToCellArray()
+LinkFeatureMapToElementArray::~LinkFeatureMapToElementArray()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToCellArray::setupFilterParameters()
+void LinkFeatureMapToElementArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Element Array To Link", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), true, ""));
   setFilterParameters(parameters);
 }
@@ -78,7 +78,7 @@ void LinkFeatureMapToCellArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToCellArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void LinkFeatureMapToElementArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
@@ -90,7 +90,7 @@ void LinkFeatureMapToCellArray::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LinkFeatureMapToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int LinkFeatureMapToElementArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
@@ -104,55 +104,45 @@ int LinkFeatureMapToCellArray::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToCellArray::updateFeatureInstancePointers()
+void LinkFeatureMapToElementArray::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_Active = m_ActivePtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToCellArray::dataCheck()
+void LinkFeatureMapToElementArray::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m.get())
-  {
-    return;
-  }
-  QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
-  QVector<size_t> dims(1, 1);
-  m_SelectedCellDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> tDims(1, 0);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+
+  QVector<size_t> cDims(1, 1);
+  m_SelectedCellDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSelectedCellArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SelectedCellDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_SelectedCellData = m_SelectedCellDataPtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+  { m_SelectedCellData = m_SelectedCellDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(getErrorCondition() < 0) { return; }
 
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_Active = m_ActivePtr.lock()->getPointer(0);    /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+  { m_Active = m_ActivePtr.lock()->getPointer(0); }    /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToCellArray::preflight()
+void LinkFeatureMapToElementArray::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -165,24 +155,21 @@ void LinkFeatureMapToCellArray::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToCellArray::execute()
+void LinkFeatureMapToElementArray::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName());
-  int64_t totalPoints = m_SelectedCellDataPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_SelectedCellDataPtr.lock()->getNumberOfTuples();
 
-  int maxIndex = 0;
+  int32_t maxIndex = 0;
   std::vector<bool> active;
-  for(int64_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
-    int index = m_SelectedCellData[i];
-    if((index + 1) > maxIndex)
+    int32_t index = m_SelectedCellData[i];
+    if ((index + 1) > maxIndex)
     {
       active.resize(index + 1);
       active[index] = true;
@@ -194,7 +181,7 @@ void LinkFeatureMapToCellArray::execute()
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 
-  for(int i = 0; i < maxIndex; i++)
+  for (int32_t i = 0; i < maxIndex; i++)
   {
     m_Active[i] = active[i];
   }
@@ -205,12 +192,9 @@ void LinkFeatureMapToCellArray::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer LinkFeatureMapToCellArray::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer LinkFeatureMapToElementArray::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedCellDataArrayName
-  */
-  LinkFeatureMapToCellArray::Pointer filter = LinkFeatureMapToCellArray::New();
+  LinkFeatureMapToElementArray::Pointer filter = LinkFeatureMapToElementArray::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -221,35 +205,23 @@ AbstractFilter::Pointer LinkFeatureMapToCellArray::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToCellArray::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+const QString LinkFeatureMapToElementArray::getCompiledLibraryName()
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToCellArray::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+const QString LinkFeatureMapToElementArray::getGroupName()
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToCellArray::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+const QString LinkFeatureMapToElementArray::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToCellArray::getHumanLabel()
-{
-  return "Link Feature Attribute Matrix To Cell Attribute Array";
-}
-
+const QString LinkFeatureMapToElementArray::getHumanLabel()
+{ return "Link Feature Attribute Matrix To Element Attribute Array"; }\

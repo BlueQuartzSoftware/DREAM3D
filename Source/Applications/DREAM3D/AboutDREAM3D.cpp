@@ -100,6 +100,8 @@ void AboutDREAM3D::setupGui()
   str.clear();
   out << "From revision " << DREAM3D::Version::Revision();
   revisionLabel->setText(str);
+
+  setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 // -----------------------------------------------------------------------------

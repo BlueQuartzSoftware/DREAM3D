@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -151,7 +151,7 @@ void ExecutePipeline(const QString &pipelineFile)
   {
     pipeline = JsonFilterParametersReader::ReadPipelineFromFile(pipelineFile);
   }
-  
+
   if (NULL == pipeline.get())
   {
     std::cout << "An error occurred trying to read the pipeline file. Exiting now." << std::endl;
@@ -181,7 +181,71 @@ void ExecutePipeline(const QString &pipelineFile)
 
 }
 
+#define OVERWRITE_SOURCE_FILE 1
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeOutput(bool didReplace, QStringList& outLines, QString filename)
+{
+  if(didReplace == true)
+  {
+    QFileInfo fi2(filename);
+#if OVERWRITE_SOURCE_FILE
+    QFile hOut(filename);
+#else
+    QString tmpPath = "/tmp/" + fi2.fileName();
+    QFile hOut(tmpPath);
+#endif
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream( &hOut );
+    stream << outLines.join("\n");
+    hOut.close();
 
+    qDebug() << "Saved File " << fi2.absoluteFilePath();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AdjustOutputDirectory(const QString &pipelineFile)
+{
+
+  QString contents;
+
+  // Read the Source File
+  QFileInfo fi(pipelineFile);
+  QFile source(pipelineFile);
+  source.open(QFile::ReadOnly);
+  contents = source.readAll();
+  source.close();
+
+
+  QString searchString = QString::fromLatin1("Data/Output/");
+  QString replaceString = QString::fromLatin1("Data/zz_PipelineRunnerTest_Output/");
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) )
+    {
+      line = line.replace(searchString, replaceString);
+      outLines.push_back(line);
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+  QString outFile = getTestTempDirectory() + fi.fileName();
+
+  writeOutput(true, outLines, outFile);
+  return outFile;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -236,10 +300,12 @@ int main (int argc, char  *argv[])
   while (sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
-	pipelineFile = pipelineFile.trimmed();
+    pipelineFile = pipelineFile.trimmed();
     if(pipelineFile.isEmpty()) { continue; }
     try {
       QFileInfo fi(pipelineFile);
+
+      pipelineFile = AdjustOutputDirectory(pipelineFile);
 
       DREAM3D::unittest::CurrentMethod = fi.fileName().toStdString();
       DREAM3D::unittest::numTests++;

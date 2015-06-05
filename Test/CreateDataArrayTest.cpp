@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -138,6 +138,7 @@ int TestCreateDataArray()
 
     // Test 2 set a bool array with a non-zero value and compare to 1
     filter->setDataContainerArray(dca);
+    filter->getDataContainerArray()->getAttributeMatrix(path1)->removeAttributeArray(qv.toString());
     var.setValue(10);
     propWasSet = filter->setProperty("ScalarType", var); // bool
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)

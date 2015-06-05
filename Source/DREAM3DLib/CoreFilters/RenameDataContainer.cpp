@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -36,9 +36,9 @@
 
 #include "RenameDataContainer.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -64,8 +64,8 @@ RenameDataContainer::~RenameDataContainer()
 void RenameDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("DataContainer to Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), false));
-  parameters.push_back(FilterParameter::New("New DataContainer Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false));
+  parameters.push_back(FilterParameter::New("Data Container To Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), false));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false));
   setFilterParameters(parameters);
 }
 
@@ -100,28 +100,22 @@ void RenameDataContainer::dataCheck()
 {
   setErrorCondition(0);
 
-  if(getNewDataContainerName().isEmpty() == true)
+  if (getNewDataContainerName().isEmpty() == true)
   {
     setErrorCondition(-11001);
-    QString ss = QObject::tr("The New Data Container name can not be empty. Please set a value.");
+    QString ss = QObject::tr("The new Data Container name must be set");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  DataContainerArray::Pointer dca = getDataContainerArray();
-  if (NULL == dca.get() )
-  {
-    setErrorCondition(-11003);
-    QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedDataContainerName());
+  if(getErrorCondition() < 0) { return; }
 
-  bool check = dca->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName());
-  if(check == false)
+  bool check = getDataContainerArray()->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName());
+  if (check == false)
   {
     setErrorCondition(-11006);
-    QString ss = QObject::tr("Attempt to rename DataContainer '%1' to '%2' Failed.").arg(getSelectedDataContainerName()).arg(getNewDataContainerName());
+    QString ss = QObject::tr("Attempt to rename DataContainer '%1' to '%2' failed").arg(getSelectedDataContainerName()).arg(getNewDataContainerName());
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
@@ -145,12 +139,8 @@ void RenameDataContainer::preflight()
 void RenameDataContainer::execute()
 {
   setErrorCondition(0);
-
   dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -159,10 +149,6 @@ void RenameDataContainer::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RenameDataContainer::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedAttributeMatrixPath
-  * NewAttributeMatrix
-  */
   RenameDataContainer::Pointer filter = RenameDataContainer::New();
   if(true == copyFilterParameters)
   {
@@ -175,34 +161,22 @@ AbstractFilter::Pointer RenameDataContainer::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getCompiledLibraryName()
-{
-  return Core::CoreBaseName;
-}
-
+{ return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getGroupName()
-{
-  return DREAM3D::FilterGroups::CoreFilters;
-}
-
+{ return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getSubGroupName()
-{
-  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
-}
-
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RenameDataContainer::getHumanLabel()
-{
-  return "Rename Data Container";
-}
-
+{ return "Rename Data Container"; }

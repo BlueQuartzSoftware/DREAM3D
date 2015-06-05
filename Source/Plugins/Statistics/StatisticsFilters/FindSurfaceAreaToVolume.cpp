@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -152,23 +152,36 @@ void FindSurfaceAreaToVolume::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  // Validate that the selected NumCells array has tuples equal to the largest
+  // Validate that the selected InArray has tuples equal to the largest
   // Feature Id; the filter would not crash otherwise, but the user should
   // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
   // we don't have acces to the data yet
   int32_t numFeatures = static_cast<int32_t>(m_NumCellsPtr.lock()->getNumberOfTuples());
-  bool mismatchedFeatures = true;
+  bool mismatchedFeatures = false;
+  int32_t largestFeature = 0;
   size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   for (size_t i = 0; i < numTuples; i ++)
   {
-    if (m_FeatureIds[i] == numFeatures)
+    if (m_FeatureIds[i] > largestFeature)
     {
-      mismatchedFeatures = false;
-      break;
+      largestFeature = m_FeatureIds[i];
+      if (largestFeature >= numFeatures)
+      {
+        mismatchedFeatures = true;
+        break;
+      }
     }
   }
 
   if (mismatchedFeatures == true)
+  {
+    QString ss = QObject::tr("The number of Features in the NumCells array (%1) is larger than the largest Feature Id in the FeatureIds array").arg(numFeatures);
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  if (largestFeature != (numFeatures - 1))
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) does not match the largest Feature Id in the FeatureIds array").arg(numFeatures);
     setErrorCondition(-5555);

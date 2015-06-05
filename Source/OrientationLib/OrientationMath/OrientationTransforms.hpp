@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -162,7 +162,7 @@ namespace LambertParametersType
 #define DREAM3D_DEFAULT_ROATATION              DREAM3D_ACTIVE_ROTATION
 
 #define DREAM3D_ROTATION_CONVENTION(value)\
-  static const float epsijk = value##f;\
+  static const float epsijk = static_cast<float>(value);\
   static const double epsijkd = value;\
 
 
@@ -170,7 +170,7 @@ namespace Rotations
 {
   namespace Constants
   {
-    DREAM3D_ROTATION_CONVENTION( -1.0 )
+    DREAM3D_ROTATION_CONVENTION( DREAM3D_ACTIVE_ROTATION )
   }
 }
 

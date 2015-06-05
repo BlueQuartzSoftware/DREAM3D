@@ -189,7 +189,6 @@ void MinNeighbors::execute()
     AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
     size_t numFeatures = featAttrMat->getNumTuples();
     bool unavailablePhase = true;
-
     for (size_t i = 0; i < numFeatures; i++)
     {
       if (m_FeaturePhases[i] == m_PhaseNumber)

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -34,35 +34,25 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CopyFeatureArrayToCellArray_H_
-#define _CopyFeatureArrayToCellArray_H_
-
-#include <QtCore/QString>
-#include <set>
+#ifndef _CopyFeatureArrayToElementArray_H_
+#define _CopyFeatureArrayToElementArray_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class CopyFeatureArrayToCellArray CopyFeatureArrayToCellArray.h /FilterCategoryFilters/CopyFeatureArrayToCellArray.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The CopyFeatureArrayToElementArray class. See [Filter documentation](@ref copyfeaturearraytoelementArray) for details.
  */
-class DREAM3DLib_EXPORT CopyFeatureArrayToCellArray : public AbstractFilter
+class DREAM3DLib_EXPORT CopyFeatureArrayToElementArray : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CopyFeatureArrayToCellArray)
-    DREAM3D_STATIC_NEW_MACRO(CopyFeatureArrayToCellArray)
-    DREAM3D_TYPE_MACRO_SUPER(CopyFeatureArrayToCellArray, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CopyFeatureArrayToElementArray)
+    DREAM3D_STATIC_NEW_MACRO(CopyFeatureArrayToElementArray)
+    DREAM3D_TYPE_MACRO_SUPER(CopyFeatureArrayToElementArray, AbstractFilter)
 
-    virtual ~CopyFeatureArrayToCellArray();
+    virtual ~CopyFeatureArrayToElementArray();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
@@ -120,28 +110,16 @@ class DREAM3DLib_EXPORT CopyFeatureArrayToCellArray : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CopyFeatureArrayToCellArray();
+    CopyFeatureArrayToElementArray();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InArray)
 
-    CopyFeatureArrayToCellArray(const CopyFeatureArrayToCellArray&); // Copy Constructor Not Implemented
-    void operator=(const CopyFeatureArrayToCellArray&); // Operator '=' Not Implemented
+    CopyFeatureArrayToElementArray(const CopyFeatureArrayToElementArray&); // Copy Constructor Not Implemented
+    void operator=(const CopyFeatureArrayToElementArray&); // Operator '=' Not Implemented
 };
 
-#endif /* _CopyFeatureArrayToCellArray_H_ */
-
-
-
-
-
+#endif /* _CopyFeatureArrayToElementArray_H_ */

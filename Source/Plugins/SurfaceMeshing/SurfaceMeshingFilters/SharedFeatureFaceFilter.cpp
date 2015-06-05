@@ -218,7 +218,6 @@ void SharedFeatureFaceFilter::execute()
     }
     else
     {
-      // faceSizeMap[*faceId_64]++;
       iter.value()++;
       m_SurfaceMeshFeatureFaceIds[t] = faceIdMap[*faceId_64];
     }

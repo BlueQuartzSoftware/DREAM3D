@@ -350,37 +350,6 @@ FilterPipeline::Pointer PipelineViewWidget::getCopyOfFilterPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::updateFavorite(const QString& filePath, const QString& name, QSettings::Format format)
-{
-  //If the filePath already exists - delete it so that we get a clean write to the file
-  QFileInfo fi(filePath);
-  if (fi.exists() == true)
-  {
-    QFile f(filePath);
-    if (f.remove() == false)
-    {
-      QMessageBox::warning ( this, QString::fromLatin1("Favorite Update Error"),
-                             QString::fromLatin1("There was an error removing the existing favorite. The favorite was NOT updated.") );
-      return;
-    }
-  }
-
-  // Create a Pipeline Object and fill it with the filters from this View
-  FilterPipeline::Pointer pipeline = getFilterPipeline();
-  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, format, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
-  if (err < 0)
-  {
-    m_StatusBar->showMessage(tr("There was an error while updating the favorite '%1'.").arg(name));
-  }
-  else
-  {
-    m_StatusBar->showMessage(tr("Favorite '%1' has been updated successfully.").arg(name));
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int PipelineViewWidget::writePipeline(QString filePath)
 {
   QFileInfo fi(filePath);
@@ -688,11 +657,34 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
   {
     QWidget* w = qobject_cast<QWidget*>(whoSent);
 
-    m_FilterWidgetLayout->removeWidget(w);
     if (m_SelectedFilterWidget == w)
     {
-      m_SelectedFilterWidget = NULL;
+      int index = m_FilterWidgetLayout->indexOf(w);
+      if (NULL != m_FilterWidgetLayout->itemAt(index - 1))
+      {
+        PipelineFilterWidget* widget = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(index - 1)->widget());
+        setSelectedFilterWidget(widget);
+      }
+      else if (NULL != m_FilterWidgetLayout->itemAt(index + 1))
+      {
+        PipelineFilterWidget* widget = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(index + 1)->widget());
+        if (NULL != widget)
+        {
+          setSelectedFilterWidget(widget);
+        }
+        else
+        {
+          m_SelectedFilterWidget = NULL;
+        }
+      }
+      else
+      {
+        m_SelectedFilterWidget = NULL;
+      }
     }
+
+    m_FilterWidgetLayout->removeWidget(w);
+
     if (w)
     {
       whoSent->getFilter()->setPreviousFilter(AbstractFilter::NullPointer());
