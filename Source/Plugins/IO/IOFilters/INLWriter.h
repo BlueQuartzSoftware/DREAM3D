@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -64,9 +64,9 @@ class  INLWriter : public FileWriter
 
     virtual ~INLWriter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaterialNamesArrayName)
-    Q_PROPERTY(DataArrayPath MaterialNamesArrayName READ getMaterialNamesArrayName WRITE setMaterialNamesArrayName)
-      
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+    Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
@@ -121,7 +121,9 @@ class  INLWriter : public FileWriter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
-    StringDataArray::Pointer m_MaterialNames;
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+    StringDataArray::WeakPointer m_MaterialNamePtr;
 
     void dataCheck();
 

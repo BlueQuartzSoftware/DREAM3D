@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -66,7 +66,7 @@
 // -----------------------------------------------------------------------------
 INLWriter::INLWriter() :
   FileWriter(),
-  m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_MaterialNameArrayPath(DREAM3D::EnsembleData::MaterialName),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
@@ -105,7 +105,7 @@ void INLWriter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Required Ensemble Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Material Names", "MaterialNamesArrayName", FilterParameterWidgetType::DataArraySelectionWidget, getMaterialNamesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Material Names", "MaterialNameArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaterialNameArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Number of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
@@ -121,7 +121,7 @@ void INLWriter::readFilterParameters(AbstractFilterParametersReader* reader, int
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setNumFeaturesArrayPath(reader->readDataArrayPath("NumFeaturesArrayPath", getNumFeaturesArrayPath() ) );
-  setMaterialNamesArrayName(reader->readDataArrayPath("MaterialNamesArrayName", getMaterialNamesArrayName()));
+  setMaterialNameArrayPath(reader->readDataArrayPath("MaterialNameArrayPath", getMaterialNameArrayPath()));
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   reader->closeFilterGroup();
 }
@@ -139,7 +139,7 @@ int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaterialNamesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaterialNameArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -159,7 +159,6 @@ void INLWriter::dataCheck()
 
   if(getOutputFile().isEmpty() == true)
   {
-
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
@@ -169,34 +168,45 @@ void INLWriter::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getNumFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  m_MaterialNamePtr = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this,  getMaterialNameArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  //if( NULL != m_MaterialNamePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  //{ m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 
   dims[0] = 3;
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getCrystalStructuresArrayPath());
-  if(NULL != attrMat.get())
-  {
-    IDataArray::Pointer materialNamePtr = attrMat->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
-    StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
-    if (NULL == materialNames)
-    {
 
-      QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
-      notifyErrorMessage(getHumanLabel(), ss, -1111);
-      setErrorCondition(-1111);
-    }
-  }
+
+
+//  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getCrystalStructuresArrayPath());
+//  if(NULL != attrMat.get())
+//  {
+//    IDataArray::Pointer materialNamePtr = attrMat->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
+//    StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
+//    if (NULL == materialNames)
+//    {
+
+//      QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
+//      notifyErrorMessage(getHumanLabel(), ss, -1111);
+//      setErrorCondition(-1111);
+//    }
+//  }
 }
 
 // -----------------------------------------------------------------------------
@@ -321,18 +331,8 @@ int INLWriter::writeFile()
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
   fprintf(f, "#\r\n");
 
-  // IDataArray::Pointer pDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
-  IDataArray::Pointer materialNamePtr = getDataContainerArray()->getAttributeMatrix(getCrystalStructuresArrayPath())->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
-  StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
-  if (NULL == materialNames)
-  {
-    fclose(f);
+  StringDataArray* materialNames = m_MaterialNamePtr.lock().get();
 
-    QString ss = QObject::tr("The MaterialNames Ensemble Array was not in the Data Container");
-    notifyErrorMessage(getHumanLabel(), ss, -1111);
-    setErrorCondition(-1111);
-    return -1;
-  }
 
 #if 0
   -------------------------------------------- -
@@ -354,7 +354,7 @@ int INLWriter::writeFile()
 
 
   uint32_t symmetry = 0;
-  int32_t count = static_cast<int32_t>(materialNamePtr->getNumberOfTuples());
+  int32_t count = static_cast<int32_t>(materialNames->getNumberOfTuples());
   for(int32_t i = 1; i < count; ++i)
   {
     QString matName = materialNames->getValue(i);
