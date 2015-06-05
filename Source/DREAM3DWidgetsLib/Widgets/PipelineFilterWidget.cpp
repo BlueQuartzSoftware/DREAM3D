@@ -604,11 +604,11 @@ void PipelineFilterWidget::changeStyle()
 
   if(m_HasPreflightWarnings)
   {
-    ss << "border: 2px solid rgb(172, 168, 0);";
+    ss << "border: 3px solid rgb(172, 168, 0);";
   }
   else if(m_IsSelected == true )
   {
-    ss << "border: 2px solid purple;";
+    ss << "border: 3px solid MediumBlue;";
   }
   else
   {
