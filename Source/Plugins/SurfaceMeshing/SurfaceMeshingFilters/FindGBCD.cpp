@@ -604,8 +604,9 @@ void FindGBCD::execute()
   double MRDfactor = double(totalBins) / totalFaceArea;
   for(int i = 0; i < totalBins; i++)
   {
-    m_GBCD[2 * i + 0] *= MRDfactor;
-    m_GBCD[2 * i + 1] *= MRDfactor;
+	  m_GBCD[i] *= MRDfactor;
+	  //m_GBCD[2 * i + 0] *= MRDfactor;
+	  //m_GBCD[2 * i + 1] *= MRDfactor;
   }
 
   /* Let the GUI know we are done with this filter */
@@ -636,27 +637,27 @@ void FindGBCD::sizeGBCD(int faceChunkSize, int numMisoReps)
   m_HemiCheck = m_GbcdHemiCheckArray->getPointer(0);
 
   //Original Ranges from Dave R.
-  //m_GBCDlimits[0] = 0.0;
-  //m_GBCDlimits[1] = cosf(1.0*m_pi);
-  //m_GBCDlimits[2] = 0.0;
-  //m_GBCDlimits[3] = 0.0;
-  //m_GBCDlimits[4] = cosf(1.0*m_pi);
-  //m_GBCDlimits[5] = 2.0*m_pi;
-  //m_GBCDlimits[6] = cosf(0.0);
-  //m_GBCDlimits[7] = 2.0*m_pi;
-  //m_GBCDlimits[8] = 2.0*m_pi;
-  //m_GBCDlimits[9] = cosf(0.0);
+  //m_GBCDlimits[0] = 0.0f;
+  //m_GBCDlimits[1] = cosf(1.0f*m_pi);
+  //m_GBCDlimits[2] = 0.0f;
+  //m_GBCDlimits[3] = 0.0f;
+  //m_GBCDlimits[4] = cosf(1.0f*m_pi);
+  //m_GBCDlimits[5] = 2.0f*m_pi;
+  //m_GBCDlimits[6] = cosf(0.0f);
+  //m_GBCDlimits[7] = 2.0f*m_pi;
+  //m_GBCDlimits[8] = 2.0f*m_pi;
+  //m_GBCDlimits[9] = cosf(0.0f);
 
   //Greg's Ranges
-  m_GbcdLimits[0] = 0.0;
-  m_GbcdLimits[1] = 0.0;
-  m_GbcdLimits[2] = 0.0;
-  m_GbcdLimits[3] = 0.0;
-  m_GbcdLimits[4] = 0.0;
+  m_GbcdLimits[0] = 0.0f;
+  m_GbcdLimits[1] = 0.0f;
+  m_GbcdLimits[2] = 0.0f;
+  m_GbcdLimits[3] = 0.0f;
+  m_GbcdLimits[4] = 0.0f;
   m_GbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
-  m_GbcdLimits[6] = 1.0;
+  m_GbcdLimits[6] = 1.0f;
   m_GbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
-  m_GbcdLimits[8] = 1.0;
+  m_GbcdLimits[8] = 1.0f;
   m_GbcdLimits[9] = DREAM3D::Constants::k_2Pi;
 
   float binsize = m_GBCDRes * DREAM3D::Constants::k_PiOver180;
@@ -667,20 +668,20 @@ void FindGBCD::sizeGBCD(int faceChunkSize, int numMisoReps)
   m_GbcdDeltas[3] = binsize2;
   m_GbcdDeltas[4] = binsize;
 
-  m_GbcdSizes[0] = int(0.5 + (m_GbcdLimits[5] - m_GbcdLimits[0]) / m_GbcdDeltas[0]);
-  m_GbcdSizes[1] = int(0.5 + (m_GbcdLimits[6] - m_GbcdLimits[1]) / m_GbcdDeltas[1]);
-  m_GbcdSizes[2] = int(0.5 + (m_GbcdLimits[7] - m_GbcdLimits[2]) / m_GbcdDeltas[2]);
-  m_GbcdSizes[3] = int(0.5 + (m_GbcdLimits[8] - m_GbcdLimits[3]) / m_GbcdDeltas[3]);
-  m_GbcdSizes[4] = int(0.5 + (m_GbcdLimits[9] - m_GbcdLimits[4]) / m_GbcdDeltas[4]);
+  m_GbcdSizes[0] = int32_t(0.5 + (m_GbcdLimits[5] - m_GbcdLimits[0]) / m_GbcdDeltas[0]);
+  m_GbcdSizes[1] = int32_t(0.5 + (m_GbcdLimits[6] - m_GbcdLimits[1]) / m_GbcdDeltas[1]);
+  m_GbcdSizes[2] = int32_t(0.5 + (m_GbcdLimits[7] - m_GbcdLimits[2]) / m_GbcdDeltas[2]);
+  m_GbcdSizes[3] = int32_t(0.5 + (m_GbcdLimits[8] - m_GbcdLimits[3]) / m_GbcdDeltas[3]);
+  m_GbcdSizes[4] = int32_t(0.5 + (m_GbcdLimits[9] - m_GbcdLimits[4]) / m_GbcdDeltas[4]);
 
   //reset the 3rd and 4th dimensions using the square grid approach
   float totalNormalBins = m_GbcdSizes[3] * m_GbcdSizes[4];
-  m_GbcdSizes[3] = int(sqrt(totalNormalBins) + 0.5);
-  m_GbcdSizes[4] = int(sqrt(totalNormalBins) + 0.5);
-  m_GbcdLimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[8] = sqrt(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[9] = sqrt(DREAM3D::Constants::k_PiOver2);
+  m_GbcdSizes[3] = int32_t(sqrt(totalNormalBins) + 0.5);
+  m_GbcdSizes[4] = int32_t(sqrt(totalNormalBins) + 0.5);
+  m_GbcdLimits[3] = -sqrtf(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[4] = -sqrtf(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[8] = sqrtf(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[9] = sqrtf(DREAM3D::Constants::k_PiOver2);
   m_GbcdDeltas[3] = (m_GbcdLimits[8] - m_GbcdLimits[3]) / float(m_GbcdSizes[3]);
   m_GbcdDeltas[4] = (m_GbcdLimits[9] - m_GbcdLimits[4]) / float(m_GbcdSizes[4]);
 }

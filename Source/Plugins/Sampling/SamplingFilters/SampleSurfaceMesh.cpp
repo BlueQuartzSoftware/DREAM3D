@@ -77,6 +77,7 @@ class SampleSurfaceMeshImpl
     void checkPoints(size_t start, size_t end) const
     {
       float radius = 0.0f;
+	    float distToBoundary = 0.0f;
       int64_t numPoints = m_Points->getNumberOfVertices();
       FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower");
       FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right");
@@ -97,8 +98,8 @@ class SampleSurfaceMeshImpl
           point = m_Points->getVertexPointer(i);
           if (m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
           {
-            code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius);
-            if (code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_PolyIds[i] = iter; }
+            code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius, distToBoundary);
+            if (code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_PolyIds[i] = int(distToBoundary); }
           }
         }
       }

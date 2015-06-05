@@ -87,6 +87,7 @@ class InsertAtomsImpl
     void checkPoints(size_t start, size_t end) const
     {
       float radius = 0.0f;
+	  float distToBoundary = 0.0f;
       FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower_Left");
       FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right");
       FloatArrayType::Pointer ll_rotPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower_Left_Rotated");

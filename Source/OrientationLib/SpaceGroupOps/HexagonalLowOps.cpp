@@ -166,10 +166,10 @@ float HexagonalLowOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
   QuaternionMathF::Copy(q2, q2inv);
   QuaternionMathF::Conjugate(q2inv);
 
-  QuaternionMathF::Multiply(q2inv, q1, qr);
+  QuaternionMathF::Multiply(q1, q2inv, qr);
   for (int i = 0; i < numsym; i++)
   {
-    QuaternionMathF::Multiply(qr, quatsym[i], qc);
+	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
     if (qc.w < -1)
     {
       qc.w = -1;
@@ -393,7 +393,7 @@ FOrientArrayType HexagonalLowOps::randomizeEulerAngles(FOrientArrayType synea)
   FOrientArrayType quat(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
   q = quat.toQuaternion();
-  QuaternionMathF::Multiply(q, HexQuatSym[symOp], qc);
+  QuaternionMathF::Multiply(HexQuatSym[symOp], q, qc);
 
   quat.fromQuaternion(qc);
   OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
@@ -1235,7 +1235,7 @@ DREAM3D::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double p
 
   for (int j = 0; j < 6; j++)
   {
-    QuaternionMathF::Multiply(q1, HexQuatSym[j], qc);
+    QuaternionMathF::Multiply(HexQuatSym[j], q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
