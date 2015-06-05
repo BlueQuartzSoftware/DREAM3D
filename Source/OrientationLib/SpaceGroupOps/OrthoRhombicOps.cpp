@@ -151,7 +151,7 @@ float OrthoRhombicOps::_calcMisoQuat(const QuatF quatsym[4], int numsym,
   for (int i = 0; i < numsym; i++)
   {
 
-	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
+    QuaternionMathF::Multiply(quatsym[i], qr, qc);
     //MULT_QUAT(qr, quatsym[i], qc)
     if (qc.w < -1)
     {

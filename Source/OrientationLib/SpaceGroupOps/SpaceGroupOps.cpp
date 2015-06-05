@@ -121,7 +121,7 @@ float SpaceGroupOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   for (int i = 0; i < numsym; i++)
   {
 
-	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
+    QuaternionMathF::Multiply(quatsym[i], qr, qc);
     if (qc.w < -1)
     {
       qc.w = -1;
@@ -221,7 +221,7 @@ void SpaceGroupOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
 
   for(int i = 0; i < numsym; i++)
   {
-	  QuaternionMathF::Multiply(quatsym[i], q2, qc);
+    QuaternionMathF::Multiply(quatsym[i], q2, qc);
     if(qc.w < 0)
     {
       qc.x = -qc.x;
@@ -254,7 +254,7 @@ void SpaceGroupOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, 
 
   for(int i = 0; i < numsym; i++)
   {
-	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
+    QuaternionMathF::Multiply(quatsym[i], qr, qc);
     dist = 1 - (qc.w * qc.w);
     if(dist < smallestdist)
     {
