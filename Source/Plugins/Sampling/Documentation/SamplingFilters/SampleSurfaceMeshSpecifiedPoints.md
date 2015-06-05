@@ -12,7 +12,7 @@ This Filter 'samples' a triangulated surface mesh with a specified list of **Ver
 3. For each bounding box a **Vertex** falls in, check against that **Feature's** **Triangle** list to determine if the **Vertex** falls within that n-sided polyhedra (*Note:* if the surface mesh is conformal, then each **Vertex** will only belong to one **Feature**, but if not, the last **Feature** the **Vertex** is found to fall inside of will *own* the **Vertex**).
 4. Assign the **Feature** number that the **Vertex** falls within to the *Feature Ids* array in the new **Vertex** geometry.
 
-The filter will write out a file with the list of *FeatureIds* for the **Vertices**.  The filter also creates a new *DataContainer* to hold the **Vertex** geometry and the *FeatureIds* that live on them.
+The Filter will write out a file with the list of *FeatureIds* for the **Vertices**.  The Filter also creates a new *DataContainer* to hold the **Vertex** geometry and the *FeatureIds* that live on them.
 
 The format of the *Specified Points File* is as follows:
 

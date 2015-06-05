@@ -472,10 +472,10 @@ void VisualizeGBCDPoleFigure::execute()
             }
           }
         }
-		if (count > 0)
-		{
-			poleFigure[(k * xpoints) + l] = sum / float(count);
-		}
+		    if (count > 0)
+		    {
+			    poleFigure[(k * xpoints) + l] = sum / float(count);
+		    }
       }
     }
   }

@@ -169,7 +169,7 @@ float HexagonalLowOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
   QuaternionMathF::Multiply(q1, q2inv, qr);
   for (int i = 0; i < numsym; i++)
   {
-	QuaternionMathF::Multiply(quatsym[i], qr, qc);
+	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
     if (qc.w < -1)
     {
       qc.w = -1;

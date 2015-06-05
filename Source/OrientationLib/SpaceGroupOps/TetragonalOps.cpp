@@ -678,7 +678,7 @@ DREAM3D::Rgb TetragonalOps::generateIPFColor(double phi1, double phi, double phi
   for (int j = 0; j < 8; j++)
   {
     getQuatSymOp(j, q2);
-	QuaternionMathF::Multiply(q2, q1, qc);
+	  QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);

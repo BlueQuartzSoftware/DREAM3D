@@ -135,7 +135,7 @@ class CalculateTwinBoundaryImpl
           {
             int32_t nsym = m_OrientationOps[phase1]->getNumSymOps();
             QuaternionMathF::Conjugate(q2);
-			QuaternionMathF::Multiply(q1, q2, misq);
+			      QuaternionMathF::Multiply(q1, q2, misq);
             FOrientArrayType om(9);
             FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
             om.toGMatrix(g1);
@@ -146,7 +146,7 @@ class CalculateTwinBoundaryImpl
             {
               m_OrientationOps[phase1]->getQuatSymOp(j, sym_q);
               // calculate crystal direction parallel to normal
-			  QuaternionMathF::Multiply(misq, sym_q, s1_misq);
+			        QuaternionMathF::Multiply(misq, sym_q, s1_misq);
 
               if(m_FindCoherence) { OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm); }
 
@@ -155,7 +155,7 @@ class CalculateTwinBoundaryImpl
                 // calculate the symmetric misorienation
                 m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
                 QuaternionMathF::Conjugate(sym_q);
-				QuaternionMathF::Multiply(sym_q, s1_misq, s2_misq);
+				        QuaternionMathF::Multiply(sym_q, s1_misq, s2_misq);
 
                 FOrientArrayType ax(n1, n2, n3, w);
                 FOrientTransformsType::qu2ax(FOrientArrayType(s2_misq), ax);

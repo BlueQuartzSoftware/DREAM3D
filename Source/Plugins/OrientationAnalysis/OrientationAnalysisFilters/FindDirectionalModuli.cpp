@@ -302,7 +302,7 @@ void FindDirectionalModuli::execute()
     {
       //concatenate rotation with crystal orientation (determine rotation from crystal frame to sample loading direction)
       QuaternionMathF::Copy(avgQuats[i], q1);
-	  QuaternionMathF::Multiply(q1, q2, qTotal);
+	    QuaternionMathF::Multiply(q1, q2, qTotal);
 
       /*
       This method is straightforward but computationally very expensive/wasteful (since it computes the full rotated compliance matrix and we only need s'11)
