@@ -664,6 +664,7 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
       {
         PipelineFilterWidget* widget = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(index - 1)->widget());
         setSelectedFilterWidget(widget);
+        widget->setIsSelected(true);
       }
       else if (NULL != m_FilterWidgetLayout->itemAt(index + 1))
       {
@@ -671,6 +672,7 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
         if (NULL != widget)
         {
           setSelectedFilterWidget(widget);
+          widget->setIsSelected(true);
         }
         else
         {
@@ -723,6 +725,7 @@ void PipelineViewWidget::setSelectedFilterWidget(PipelineFilterWidget* w)
   {
     m_SelectedFilterWidget->setIsSelected(false);
   }
+
   m_SelectedFilterWidget = w;
 
   emit filterInputWidgetChanged(w->getFilterInputWidget());
