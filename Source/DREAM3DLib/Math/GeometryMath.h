@@ -195,13 +195,13 @@ class DREAM3DLib_EXPORT GeometryMath
 	  * @return
 	  */
 	  static char PointInPolyhedron(const TriangleGeom::Pointer faces,
-		const Int32Int32DynamicListArray::ElementList& faceIds,
-		const VertexGeom::Pointer faceBBs,
-		const float* q,
-		const float* ll,
-		const float* ur,
-		float radius,
-		float& distToBoundary);
+		                              const Int32Int32DynamicListArray::ElementList& faceIds,
+		                              const VertexGeom::Pointer faceBBs,
+		                              const float* q,
+		                              const float* ll,
+		                              const float* ur,
+		                              float radius,
+		                              float& distToBoundary);
 
 	/**
      * @brief Determines if a point is inside of a triangle defined by 3 points
