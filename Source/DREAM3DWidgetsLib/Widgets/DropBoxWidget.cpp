@@ -48,9 +48,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DropBoxWidget::DropBoxWidget(QWidget* parent)
+DropBoxWidget::DropBoxWidget(QWidget* parent) :
+QWidget(parent)
 {
-  setParent(parent);
   setupUi(this);
 
   setupGui();
@@ -75,7 +75,7 @@ void DropBoxWidget::setupGui()
 
     ss << "QFrame#frame{"
       << "color: rgb(127, 0, 63);"
-      << "border: 2px solid purple;"
+      << "border: 2px solid MediumBlue;"
       << "border-top-left-radius: 5px;"
       << "border-top-right-radius: 5px;"
       << "border-bottom-left-radius: 5px;"
@@ -90,7 +90,7 @@ void DropBoxWidget::setupGui()
     QTextStream ss(&labelStyle);
 
     ss << "QLabel#label{"
-      << "color: purple;"
+      << "color: MediumBlue;"
 
 #if defined(Q_OS_WIN)
       << "font: 9pt \"" << DREAM3DStyles::GetUIFont() << "\";"
