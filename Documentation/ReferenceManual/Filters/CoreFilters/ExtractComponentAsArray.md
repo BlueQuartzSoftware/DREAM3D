@@ -8,28 +8,23 @@ Core Filters (Memory/Management)
 This filter will create an attribute array from a single component of a user chosen array.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Component Number | Integer | The Component Number |
 
-| Name | Type |
-|------|------|
-| Array Path | String |
-| Component Number | int |
-| New Array Name | String |
-
-## Required DataContainers ##
-Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| *User Chosen* | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| Any  | None         | Any | (1) |  |
 
 
 ## Created Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| *User Chosen* | *User Defined* | | Array will have same values as its old counterpart |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any | User set | Any | Any | Single component array|
 
 
 

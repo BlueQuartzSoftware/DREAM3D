@@ -4,24 +4,20 @@ Rename Data Container {#renamedatacontainer}
 ## Group (Subgroup) ##
 Core Filters (Memory/Management)
 
-
 ## Description ##
 This filter renames a user chosen DataContainer to a user defined new name.
 
-
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Input DataContainer | String |
+None
+
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 None
 
-
-
 ## Created Arrays ##
 None
-
 
 ## License & Copyright ##
 

@@ -8,30 +8,20 @@ Core Filters (Memory/Management)
 This filter renames a user chosen array to a user defined new name.
 
 ## Parameters ##
+None
 
-| Name | Type |
-|------|------|
-| Array Name | String |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| *User Chosen* | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| Any | None | Any | Any | N/A |
 
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| *User Chosen* | *User Defined* | | Array will have same values as its old counterpart |
-
-
-
-
+None
 
 ## License & Copyright ##
 

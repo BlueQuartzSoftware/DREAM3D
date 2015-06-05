@@ -26,28 +26,24 @@ Down casting can have undefined behavior depending on the primitive types involv
 When converting data from signed values to unsigned values or vice-versa then there can also be undefined behavior. For example, if the user were to convert a signed 4 byte integer array to an unsigned 4 byte integer array and the input array has negative values then the conversion rules are undefined and may differ from operating system to operating system.
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Attribute Array Name | String |
-| Scalar Type      | Enumeration |
-| Output Array Name | String |
+| Name             | Type | Description |
+|------------------|------|--------------|
+| Scalar Type      | Enumeration | Convert to this data type |
+
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
-The array that is being converted must be available during runtime of the filter
-
-## Required Data Containers ##
-
-Volume DataContainer
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any  | None         | Any | (1) | Array to convert |
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description |
-|------|--------------------|-------------|
-| Variable  | Depends on User Selection | The converted array |
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Variable | User set | Variable | (1) | The converted array |
 
 ## License & Copyright ##
 

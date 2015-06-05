@@ -11,26 +11,19 @@ that the origin will NOT change with this filter.
 
 ## Parameters ##
 
-| Name    | Type      |  Notes |
+| Name    | Type      |  Description |
 |---------|-----------|--------|
-| Scaling Factor | 3 x Float | Applied to Res x, Res y, and Res z for Image Geometry and node 1, node 2 and node 3 for Vertex Geometry |
-| Apply to Voxel Volume | Bool | Should the new scaling be applied to the Voxel Volume |
-| Data Container | String | Shown if Apply to Voxel Volume is checked |
-| Apply to SurfaceMesh Volume | Bool | Should the new scaling be applied to the Surface Mesh |
-| Surface Data Container | String | Shown if Apply to Surface Mesh is checked |
+| Scaling Factor | 3 x Float | Applied to Res x, Res y, and Res z for Image Geometry and node 1, node 2 and node 3 for Surface Mesh Geometry |
+| Apply to Voxel Volume | Boolean | Should the new scaling be applied to the Voxel Volume |
+| Apply to SurfaceMesh Volume | Boolean | Should the new scaling be applied to the Surface Mesh |
 
-
-## Required DataContainers ##
-
-Voxel: If being applied to the Voxel Volume  
-SurfaceMesh: If being applied to the SurfaceMesh
+## Required Geometry ##
+Image / Rectilinear Grid and/or 2D Surface Mesh
 
 ## Required Arrays ##
-
 None
 
 ## Created Arrays ##
-
 None
 
 ## License & Copyright ##
