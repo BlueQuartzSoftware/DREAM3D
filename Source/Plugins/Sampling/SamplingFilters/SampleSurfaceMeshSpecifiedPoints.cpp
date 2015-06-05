@@ -20,8 +20,8 @@
 SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints() :
   m_InputFilePath(""),
   m_OutputFilePath(""),
-  m_NumPoints(0),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+  m_NumPoints(0)
 {
   setupFilterParameters();
 }
@@ -76,11 +76,11 @@ int SampleSurfaceMeshSpecifiedPoints::writeFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
-	setErrorCondition(0);
-	if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-	{
-		m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-	} /* Now assign the raw pointer to data from the DataArray<T> object */
+  setErrorCondition(0);
+  if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -93,15 +93,15 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 
   if (true == m_InputFilePath.isEmpty())
   {
-	  QString ss = QObject::tr("The Input file name must be set before executing this filter.");
-	  setErrorCondition(-1);
-	  notifyErrorMessage(getHumanLabel(), ss, -1);
+    QString ss = QObject::tr("The Input file name must be set before executing this filter.");
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
   }
   if (true == m_OutputFilePath.isEmpty())
   {
-	  QString ss = QObject::tr("The Output file name must be set before executing this filter.");
-	  setErrorCondition(-1);
-	  notifyErrorMessage(getHumanLabel(), ss, -1);
+    QString ss = QObject::tr("The Output file name must be set before executing this filter.");
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
   }
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
@@ -119,7 +119,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
-	  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -143,28 +143,28 @@ void SampleSurfaceMeshSpecifiedPoints::preflight()
 // -----------------------------------------------------------------------------
 VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
 {
-	m_NumPoints = 0;
+  m_NumPoints = 0;
 
-	std::ifstream inFile;
-	inFile.open(m_InputFilePath.toLatin1().data());
+  std::ifstream inFile;
+  inFile.open(m_InputFilePath.toLatin1().data());
 
-	//get the number of points in the specified points file
-	inFile >> m_NumPoints;
+  //get the number of points in the specified points file
+  inFile >> m_NumPoints;
 
-	DataContainer::Pointer v = getDataContainerArray()->getDataContainer("SpecifiedPoints");
-	VertexGeom::Pointer points = VertexGeom::CreateGeometry(m_NumPoints, "Points");
+  DataContainer::Pointer v = getDataContainerArray()->getDataContainer("SpecifiedPoints");
+  VertexGeom::Pointer points = VertexGeom::CreateGeometry(m_NumPoints, "Points");
 
-	float coords[3] = { 0.0f, 0.0f, 0.0f };
+  float coords[3] = { 0.0f, 0.0f, 0.0f };
 
-	for (int64_t i = 0; i < m_NumPoints; i++)
-	{
-		inFile >> coords[0] >> coords[1] >> coords[2];
-		points->setCoords(i, coords);
-	}
+  for (int64_t i = 0; i < m_NumPoints; i++)
+  {
+    inFile >> coords[0] >> coords[1] >> coords[2];
+    points->setCoords(i, coords);
+  }
 
-	v->setGeometry(points);
+  v->setGeometry(points);
 
-	return points;
+  return points;
 }
 
 // -----------------------------------------------------------------------------
@@ -172,15 +172,15 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::assign_points(Int32ArrayType::Pointer iArray)
 {
-	QVector<size_t> tDims(1, m_NumPoints);
-	getDataContainerArray()->getDataContainer("SpecifiedPoints")->getAttributeMatrix("SpecifiedPointsData")->resizeAttributeArrays(tDims);
-	updateVertexInstancePointers();
+  QVector<size_t> tDims(1, m_NumPoints);
+  getDataContainerArray()->getDataContainer("SpecifiedPoints")->getAttributeMatrix("SpecifiedPointsData")->resizeAttributeArrays(tDims);
+  updateVertexInstancePointers();
 
-	int32_t* ids = iArray->getPointer(0);
-	for (int64_t i = 0; i < m_NumPoints; i++)
-	{
-		m_FeatureIds[i] = ids[i];
-	}
+  int32_t* ids = iArray->getPointer(0);
+  for (int64_t i = 0; i < m_NumPoints; i++)
+  {
+    m_FeatureIds[i] = ids[i];
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +202,7 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
   outFile.open(m_OutputFilePath.toLatin1().data());
   for (int64_t i = 0; i < m_NumPoints; i++)
   {
-	  outFile << m_FeatureIds[i] << std::endl;
+    outFile << m_FeatureIds[i] << std::endl;
   }
 
 
@@ -256,7 +256,7 @@ const QString SampleSurfaceMeshSpecifiedPoints::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getGroupName()
 {
-	return DREAM3D::FilterGroups::SamplingFilters;
+  return DREAM3D::FilterGroups::SamplingFilters;
 }
 
 // -----------------------------------------------------------------------------
