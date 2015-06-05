@@ -105,6 +105,7 @@ void INLWriter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Required Ensemble Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Material Names", "MaterialNamesArrayName", FilterParameterWidgetType::DataArraySelectionWidget, getMaterialNamesArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Number of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
@@ -120,6 +121,7 @@ void INLWriter::readFilterParameters(AbstractFilterParametersReader* reader, int
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setNumFeaturesArrayPath(reader->readDataArrayPath("NumFeaturesArrayPath", getNumFeaturesArrayPath() ) );
+  setMaterialNamesArrayName(reader->readDataArrayPath("MaterialNamesArrayName", getMaterialNamesArrayName()));
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   reader->closeFilterGroup();
 }
@@ -137,6 +139,7 @@ int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaterialNamesArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -64,8 +64,9 @@ class  INLWriter : public FileWriter
 
     virtual ~INLWriter();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNamesArrayName)
-
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaterialNamesArrayName)
+    Q_PROPERTY(DataArrayPath MaterialNamesArrayName READ getMaterialNamesArrayName WRITE setMaterialNamesArrayName)
+      
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
