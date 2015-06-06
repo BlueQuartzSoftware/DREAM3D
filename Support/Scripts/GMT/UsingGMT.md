@@ -59,9 +59,14 @@ Make sure you have the "convert" program installed. If you have a recent LaTeX p
 + Make sure the GMT environment is setup completely
 + Execute the following:
 
-	./DrawStereograms number_of_files Stereo_file_name 5d rainbow [Lo] [Hi] [step] stereo  HEX
+
+		./DrawStereograms [number_of_files] [Stereo_file_name] 5d rainbow [Lo] [Hi] [step] stereo  HEX|CUBIC
+		
+
+### Example ###
+
+		./Draw_stereograms 1 gbcd_Mg_9bins_gmt_ 5d rainbow  0.79   9.71  0.89
 	
-	./Draw_stereograms 1 gbcd_Mg_9bins_gmt_ 5d rainbow  0.79   9.71  0.89
 
 Note the actual input file is named *gbcd_Mg_9bins_gmt_1.dat* but we are using a substring of that file name as the argument to the script
 
