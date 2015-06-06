@@ -55,7 +55,7 @@ function(CopyQt5RunTimeLibraries)
 
     foreach(qtlib ${P_LIBRARIES})
       set(TYPE "")
-      if( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+      if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
           set(TYPE "d")
       else()
 

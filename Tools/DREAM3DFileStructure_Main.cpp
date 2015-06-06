@@ -23,7 +23,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/DataContainers/DataContainerArray.h"
 
 #include "DREAM3DFileStructure.h"

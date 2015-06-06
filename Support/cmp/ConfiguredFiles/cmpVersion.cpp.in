@@ -6,20 +6,20 @@
 
 /* Definition of version number for @VERSION_GEN_NAME@ */
 #define @VERSION_GEN_NAME@_PACKAGE_NAME     "@PROJECT_PREFIX@"
-#define @VERSION_GEN_NAME@_PACKAGE_COMPLETE "@PROJECT_PREFIX@ Version @VERSION_GEN_COMPLETE@"
-#define @VERSION_GEN_NAME@_COMPLETE         "@VERSION_GEN_COMPLETE@"
+#define @VERSION_GEN_NAME@_PACKAGE_COMPLETE "@PROJECT_PREFIX@ Version @VERSION_GEN_VER_MAJOR@.@VERSION_GEN_VER_MINOR@.@VERSION_GEN_VER_PATCH@.@VERSION_GEN_VER_REVISION@"
+#define @VERSION_GEN_NAME@_COMPLETE         "@VERSION_GEN_VER_MAJOR@.@VERSION_GEN_VER_MINOR@.@VERSION_GEN_VER_PATCH@.@VERSION_GEN_VER_REVISION@"
 #define @VERSION_GEN_NAME@_VER_MAJOR        "@VERSION_GEN_VER_MAJOR@"
 #define @VERSION_GEN_NAME@_VER_MINOR        "@VERSION_GEN_VER_MINOR@"
 #define @VERSION_GEN_NAME@_VER_PATCH        "@VERSION_GEN_VER_PATCH@"
 #define @VERSION_GEN_NAME@_VER_REVISION     "@VERSION_GEN_VER_REVISION@"
 
-#include "@CMP_VERSION_HEADER_FILE_NAME@"
+#include "@VERSION_GEN_HEADER_FILE_NAME@"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::Complete()
-{ return QString("@VERSION_GEN_COMPLETE@");}
+{ return QString("@VERSION_GEN_VER_MAJOR@.@VERSION_GEN_VER_MINOR@.@VERSION_GEN_VER_PATCH@.@VERSION_GEN_VER_REVISION@");}
 
 // -----------------------------------------------------------------------------
 //
@@ -56,7 +56,7 @@ QString @VERSION_GEN_NAMESPACE@::Version::Package()
 //
 // -----------------------------------------------------------------------------
 QString @VERSION_GEN_NAMESPACE@::Version::PackageComplete()
-{ return QString("@PROJECT_PREFIX@ Version @VERSION_GEN_COMPLETE@");}
+{ return QString("@PROJECT_PREFIX@ Version @VERSION_GEN_VER_MAJOR@.@VERSION_GEN_VER_MINOR@.@VERSION_GEN_VER_PATCH@.@VERSION_GEN_VER_REVISION@");}
 
 // -----------------------------------------------------------------------------
 //

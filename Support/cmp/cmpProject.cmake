@@ -57,17 +57,6 @@ if(NOT DEFINED CMP_PLUGIN_SEARCHDIR_FILE)
     set(CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
 endif()
 
-if(NOT DEFINED CMP_VERSION_MAJOR)
-    set(CMP_VERSION "1")
-endif()
-if(NOT DEFINED CMP_VERSION_MINOR)
-    set(CMP_VERSION "0")
-endif()
-
-#message(STATUS "CMP_HEADER_DIR: ${CMP_HEADER_DIR}")
-#message(STATUS "CMP_CONFIGURATION_FILE_NAME: ${CMP_CONFIGURATION_FILE_NAME}")
-#message(STATUS "CMP_TYPES_FILE_NAME: ${CMP_TYPES_FILE_NAME}")
-
 get_filename_component(CMP_CONFIGURATION_HEADER_GUARD ${CMP_CONFIGURATION_FILE_NAME} NAME_WE)
 get_filename_component(CMP_TYPES_HEADER_GUARD ${CMP_TYPES_FILE_NAME} NAME_WE)
 get_filename_component(CMP_VERSION_HEADER_GUARD ${CMP_VERSION_HEADER_FILE_NAME} NAME_WE)
@@ -85,11 +74,15 @@ cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${CMP_CONFIGURED_FILES_SOU
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
 if( ${CMP_GENERATE_VERSION_STRING} )
-    cmpVersionStringsFromGit( GENERATED_HEADER_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}"
-                              GENERATED_SOURCE_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}"
-                              NAMESPACE "${CMP_PROJECT_NAMESPACE}"
-                              cmpProjectName "${CMP_PROJECT_NAME}"
-                              EXPORT_MACRO "${CMP_PROJECT_NAMESPACE}_EXPORT")
+        # Find Git executable
+    Find_package(Git)
+
+    cmpRevisionString( GENERATED_HEADER_FILE_PATH "${CMP_VERSION_HEADER_FILE_NAME}"
+                            GENERATED_SOURCE_FILE_PATH "${CMP_VERSION_SOURCE_FILE_NAME}"
+                            NAMESPACE "${CMP_PROJECT_NAMESPACE}"
+                            PROJECT_NAME "${PROJECT_NAME}"
+                            EXPORT_MACRO "${CMP_PROJECT_NAMESPACE}_EXPORT")
+   
 endif()
 
 cmp_IDE_GENERATED_PROPERTIES( "Generated"

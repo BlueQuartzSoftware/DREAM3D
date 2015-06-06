@@ -58,7 +58,7 @@
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"

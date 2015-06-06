@@ -704,95 +704,41 @@ ENDmacro()
 
 function(cmpGenerateVersionString)    
   set(options)
-    set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
-                     NAMESPACE PROJECT_SOURCE_DIR PROJECT_VERSION_MAJOR
-                     EXPORT_MACRO cmpProjectName)
-    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+  set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
+                   NAMESPACE PROJECT_NAME EXPORT_MACRO )
+  cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    if(0)
-      message(STATUS "--------------------------------------------")
-      message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
-      message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
-      message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
-      message(STATUS "GVS_PROJECT_SOURCE_DIR: ${GVS_PROJECT_SOURCE_DIR}")
-      message(STATUS "GVS_PROJECT_VERSION_MAJOR: ${GVS_PROJECT_VERSION_MAJOR}")
-      message(STATUS "GVS_EXPORT_MACRO: ${GVS_EXPORT_MACRO}")
-      message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
-      message(STATUS "${GVS_cmpProjectName}_BUILD_DATE: ${${GVS_cmpProjectName}_BUILD_DATE}")
-    endif()
+  if(0)
+    message(STATUS "--------------------------------------------")
+    message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
+    message(STATUS "GVS_PROJECT_NAME: ${GVS_PROJECT_NAME}")
+    message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
+    message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
+    message(STATUS "GVS_PROJECT_SOURCE_DIR: ${GVS_PROJECT_SOURCE_DIR}")
+    message(STATUS "GVS_PROJECT_VERSION_MAJOR: ${GVS_PROJECT_VERSION_MAJOR}")
+    message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
+  endif()
 
-    INCLUDE (${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
+  set(PROJECT_PREFIX "${GVS_PROJECT_NAME}")
+  set(VERSION_GEN_NAME "${GVS_PROJECT_NAME}")
+  set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
+  set(VERSION_GEN_NAMESPACE_EXPORT "${GVS_EXPORT_MACRO}")
+  set(VERSION_GEN_VER_MAJOR  ${${GVS_PROJECT_NAME}_VERSION_MAJOR})
+  set(VERSION_GEN_VER_MINOR  ${${GVS_PROJECT_NAME}_VERSION_MINOR})
+  set(VERSION_GEN_VER_PATCH "0")
+  set(VERSION_GEN_VER_REVISION "0")
+  set(VERSION_BUILD_DATE ${${GVS_PROJECT_NAME}_BUILD_DATE})
+  set(VERSION_GEN_HEADER_FILE_NAME ${GVS_GENERATED_HEADER_FILE_PATH})
 
-    if( CMP_HAVE_TIME_GETTIMEOFDAY )
-      set( VERSION_COMPILE_FLAGS "-DHAVE_TIME_GETTIMEOFDAY")
-    endif()
+  set(${GVS_PROJECT_NAME}_VERSION_PATCH "${VERSION_GEN_VER_PATCH}" PARENT_SCOPE)
+  set(${GVS_PROJECT_NAME}_VERSION_TWEAK "${VERSION_GEN_VER_REVISION}" PARENT_SCOPE)
 
-    if( CMP_HAVE_SYS_TIME_GETTIMEOFDAY )
-        set( VERSION_COMPILE_FLAGS "-DHAVE_SYS_TIME_GETTIMEOFDAY")
-    endif()
+  cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${${GVS_PROJECT_NAME}_BINARY_DIR}/${GVS_GENERATED_HEADER_FILE_PATH}
+                                CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in )
 
-    set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
-    set(VERSION_GEN_NAMESPACE_EXPORT "${GVS_EXPORT_MACRO}")
-    set(VERSION_GEN_NAME "${GVS_cmpProjectName}")
+  cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${${GVS_PROJECT_NAME}_BINARY_DIR}/${GVS_GENERATED_SOURCE_FILE_PATH}
+                                CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in )
 
-    cmpGenerateBuildDate(PROJECT_NAME ${GVS_cmpProjectName})
-    set(VERSION_BUILD_DATE ${${GVS_cmpProjectName}_BUILD_DATE})
-
-    if(NOT CMP_HAVE_TIME_GETTIMEOFDAY AND NOT CMP_HAVE_SYS_TIME_GETTIMEOFDAY)
-      set(VERSION_GEN_VER_MAJOR "0")
-      set(VERSION_GEN_VER_MINOR "0")
-      set(VERSION_GEN_VER_PATCH "1")
-      set(VERSION_GEN_COMPLETE "0.0.1" )
-      set(VERSION_GEN_NAME "${CMP_PROJECT_NAME}")
-      set(VERSION_GEN_NAMESPACE "${NAMESPACE}")
-      set(${cmpProjectName}_VERSION   ${VERSION_GEN_COMPLETE}  CACHE STRING "Complete Version String")
-      set(${cmpProjectName}_VER_MAJOR ${VERSION_GEN_VER_MAJOR} CACHE STRING "Major Version String")
-      set(${cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "Minor Version String")
-      set(${cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "Patch Version String")
-    else()
-      # message(STATUS "Running version generation executable")
-      try_run(VERSION_RUN_RESULT VERSION_COMPILE_RESULT
-              ${CMAKE_CURRENT_BINARY_DIR} ${CMP_CORE_TESTS_SOURCE_DIR}/cmpGenerateVersionString.cpp
-              COMPILE_DEFINITIONS ${VERSION_COMPILE_FLAGS}
-              COMPILE_OUTPUT_VARIABLE VERSION_COMPILE_OUTPUT
-              RUN_OUTPUT_VARIABLE VERSION_RUN_OUTPUT )
-      set(VERSION_RUN_RESULT "1" CACHE INTERNAL "")
-
-
-      if(NOT VERSION_RUN_OUTPUT)
-          message(STATUS "VERSION_COMPILE_OUTPUT: ${VERSION_COMPILE_OUTPUT}")
-          message(STATUS "VERSION_RUN_OUTPUT: ${VERSION_RUN_OUTPUT}")
-          FILE(APPEND ${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
-              "Attempting to Generate a Version Number from a GetTimeofDay() function failed with the following output\n"
-              "----------- COMPILE OUTPUT ---------------------------------------------------\n"
-              "${VERSION_COMPILE_OUTPUT}\n"
-              "----------- RUN OUTPUT ---------------------------------------------------\n"
-              "${VERSION_RUN_OUTPUT}\n"
-              "--------------------------------------------------------------\n" )
-           message(FATAL_ERROR "The program to generate a version was not able to be run. Are we cross compiling? Do we have the GetTimeOfDay() function?")
-
-      endif()
-
-      # and now the version string given by qmake
-      STRING(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" VERSION_GEN_VER_MAJOR "${VERSION_RUN_OUTPUT}")
-      STRING(REGEX REPLACE "^[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" VERSION_GEN_VER_MINOR "${VERSION_RUN_OUTPUT}")
-      STRING(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_GEN_VER_PATCH "${VERSION_RUN_OUTPUT}")
-
-      set(VERSION_GEN_COMPLETE ${VERSION_RUN_OUTPUT} )
-      set(VERSION_GEN_NAME "${GVS_cmpProjectName}")
-      set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
-      set(${GVS_cmpProjectName}_VERSION   ${VERSION_RUN_OUTPUT}    CACHE STRING "Complete Version String")
-      set(${GVS_cmpProjectName}_VER_MAJOR ${VERSION_GEN_VER_MAJOR} CACHE STRING "Major Version String")
-      set(${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "Minor Version String")
-      set(${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "Patch Version String")
-      mark_as_advanced(${GVS_cmpProjectName}_VERSION ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
-
-    endif()
-
-    set(PROJECT_PREFIX "${GVS_cmpProjectName}")
-    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}  )
-    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GVS_GENERATED_SOURCE_FILE_PATH}  )
-    MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
 endfunction()
 
 #-------------------------------------------------------------------------------
@@ -827,8 +773,8 @@ function(cmpConfigureFileWithMD5Check)
         endif()
         file(REMOVE ${GVS_GENERATED_FILE_PATH}_tmp)
     else()
-       # message(STATUS "  File does NOT Exist, Generating one...")
-        configure_file(${GVS_CONFIGURED_TEMPLATE_PATH} ${GVS_GENERATED_FILE_PATH} )
+      # message(STATUS "  File does NOT Exist, Generating one...")
+      configure_file(${GVS_CONFIGURED_TEMPLATE_PATH} ${GVS_GENERATED_FILE_PATH} )
     endif()
 
 endfunction()
@@ -877,55 +823,27 @@ endfunction()
 #
 #-------------------------------------------------------------------------------
 function(cmpGenerateBuildDate)
-    set(oneValueArgs PROJECT_NAME )
-    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+  set(oneValueArgs PROJECT_NAME )
+  cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    INCLUDE (${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
-
-    #message(STATUS "GVS_PROJECT_NAME: ${GVS_PROJECT_NAME}")
-
-    if( CMP_HAVE_TIME_GETTIMEOFDAY )
-      set( VERSION_COMPILE_FLAGS "-DHAVE_TIME_GETTIMEOFDAY")
-    endif()
-
-    if( CMP_HAVE_SYS_TIME_GETTIMEOFDAY )
-        set( VERSION_COMPILE_FLAGS "-DHAVE_SYS_TIME_GETTIMEOFDAY")
-    endif()
-
-    if(NOT CMP_HAVE_TIME_GETTIMEOFDAY AND NOT CMP_HAVE_SYS_TIME_GETTIMEOFDAY)
-      set(VERSION_BUILD_DATE "UNKNOWN")
-    
-      set(${GVS_PROJECT_NAME}_BUILD_DATE   ${VERSION_BUILD_DATE}  CACHE STRING "Complete Build Date String")
-
-    else()
-      # message(STATUS "Running version generation executable")
-      try_run(VERSION_RUN_RESULT VERSION_COMPILE_RESULT
-              ${CMAKE_CURRENT_BINARY_DIR} ${CMP_CORE_TESTS_SOURCE_DIR}/cmpGenerateVersionString.cpp
-              COMPILE_DEFINITIONS ${VERSION_COMPILE_FLAGS}
-              COMPILE_OUTPUT_VARIABLE VERSION_COMPILE_OUTPUT
-              RUN_OUTPUT_VARIABLE VERSION_RUN_OUTPUT )
-      set(VERSION_RUN_RESULT "1" CACHE INTERNAL "")
-
-
-      if(NOT VERSION_RUN_OUTPUT)
-          message(STATUS "VERSION_COMPILE_OUTPUT: ${VERSION_COMPILE_OUTPUT}")
-          message(STATUS "VERSION_RUN_OUTPUT: ${VERSION_RUN_OUTPUT}")
-          FILE(APPEND ${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
-              "Attempting to Generate a Version Number from a GetTimeofDay() function failed with the following output\n"
-              "----------- COMPILE OUTPUT ---------------------------------------------------\n"
-              "${VERSION_COMPILE_OUTPUT}\n"
-              "----------- RUN OUTPUT ---------------------------------------------------\n"
-              "${VERSION_RUN_OUTPUT}\n"
-              "--------------------------------------------------------------\n" )
-           message(FATAL_ERROR "The program to generate a version was not able to be run. Are we cross compiling? Do we have the GetTimeOfDay() function?")
-
-      endif()
-
-      set(${GVS_PROJECT_NAME}_BUILD_DATE   ${VERSION_RUN_OUTPUT}  CACHE STRING "Complete Build Date String")
-      MARK_AS_ADVANCED(${GVS_PROJECT_NAME}_BUILD_DATE)
-
+  IF (WIN32)
+      EXECUTE_PROCESS(COMMAND "cmd" " /C date /T" OUTPUT_VARIABLE RESULT)
+      string(REPLACE  " " ";" RESULT ${RESULT})
+      list(GET RESULT 1 RESULT)
+      string(REPLACE "/" ";" RESULT ${RESULT})
+      list(GET RESULT 2 YEAR)
+      list(GET RESULT 0 MONTH)
+      list(GET RESULT 1 DAY)
+      set(${GVS_PROJECT_NAME}_BUILD_DATE "${YEAR}/${MONTH}/${DAY}" PARENT_SCOPE)
       #message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
-    endif()
+  ELSEIF(UNIX)
+      EXECUTE_PROCESS(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE RESULT)
+      string(REGEX REPLACE "(..)/(..)/..(..).*" "\\1/\\2/\\3" RESULT ${RESULT})
+      set(${GVS_PROJECT_NAME}_BUILD_DATE "${RESULT}" PARENT_SCOPE)
+  ELSE (WIN32)
+      MESSAGE(SEND_ERROR "date for this operating system not implemented")
+      set(${GVS_PROJECT_NAME}_BUILD_DATE "NO_DATE" PARENT_SCOPE)
+  ENDIF (WIN32)
 
 endfunction()
 
@@ -937,114 +855,112 @@ endfunction()
 # which should return the latest tag, the number commits since that tag and the
 # SHA1 of that commit. If we fail to find git then we fall back to a manually
 # entered version number.
-#
-function(cmpVersionStringsFromGit)
-    set(options)
-    set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
-                     NAMESPACE PROJECT_SOURCE_DIR PROJECT_VERSION_MAJOR
-                     EXPORT_MACRO cmpProjectName)
-    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+function(cmpGitRevisionString)
+  set(options)
+  set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
+                   NAMESPACE PROJECT_NAME EXPORT_MACRO )
+  cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    if("${GVS_PROJECT_SOURCE_DIR}" STREQUAL "")
-      set(GVS_PROJECT_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR})
-    endif()
+  if(0)
+    message(STATUS "--------------------------------------------")
+    message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
+    message(STATUS "GVS_PROJECT_NAME: ${GVS_PROJECT_NAME}")
+    message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
+    message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
+    message(STATUS "GVS_PROJECT_SOURCE_DIR: ${GVS_PROJECT_SOURCE_DIR}")
+    message(STATUS "GVS_PROJECT_VERSION_MAJOR: ${GVS_PROJECT_VERSION_MAJOR}")
+    message(STATUS "GVS_EXPORT_MACRO: ${GVS_EXPORT_MACRO}")
+    message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
+  endif()
 
-    if("${GVS_PROJECT_VERSION_MAJOR}" STREQUAL "")
-      set(GVS_PROJECT_VERSION_MAJOR ${CMP_VERSION_MAJOR})
-    endif()
+
+  # Run 'git describe' to get our tag offset
+  execute_process(COMMAND ${GIT_EXECUTABLE} describe
+                  OUTPUT_VARIABLE DVERS
+                  RESULT_VARIABLE did_run
+                  ERROR_VARIABLE git_error
+                  WORKING_DIRECTORY ${${GVS_PROJECT_NAME}_SOURCE_DIR} )
+
+  # message(STATUS "DVERS: ${DVERS}")
+  set(PROJECT_PREFIX "${GVS_PROJECT_NAME}")
+  set(VERSION_GEN_NAME "${GVS_PROJECT_NAME}")
+  set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
+  set(VERSION_GEN_NAMESPACE_EXPORT "${GVS_EXPORT_MACRO}")
+  set(VERSION_GEN_VER_MAJOR  ${${GVS_PROJECT_NAME}_VERSION_MAJOR})
+  set(VERSION_GEN_VER_MINOR  ${${GVS_PROJECT_NAME}_VERSION_MINOR})
+  set(VERSION_GEN_VER_PATCH "0")
+  set(VERSION_GEN_VER_REVISION "0")
+  set(VERSION_BUILD_DATE ${${GVS_PROJECT_NAME}_BUILD_DATE})
+  set(VERSION_GEN_HEADER_FILE_NAME ${GVS_GENERATED_HEADER_FILE_PATH})
+
+  #-- Make sure that actually worked and if not just generate some dummy values
+  if(DVERS STREQUAL "")
+    message(STATUS "DVERS was Empty. Generating Default version strings")
+  else()
+    string(STRIP ${DVERS} DVERS)
+    string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
+
+    list(GET VERSION_LIST 1 VERSION_GEN_VER_PATCH)
+    list(GET VERSION_LIST 2 VERSION_GEN_VER_REVISION)
+
+    string(SUBSTRING ${VERSION_GEN_VER_REVISION} 1 -1 VERSION_GEN_VER_REVISION)
+
+  endif()
+
+  set(${GVS_PROJECT_NAME}_VERSION_PATCH "${VERSION_GEN_VER_PATCH}" PARENT_SCOPE)
+  set(${GVS_PROJECT_NAME}_VERSION_TWEAK "${VERSION_GEN_VER_REVISION}" PARENT_SCOPE)
 
 
-    cmpGenerateBuildDate(PROJECT_NAME ${GVS_cmpProjectName})
-    set(VERSION_BUILD_DATE ${${GVS_cmpProjectName}_BUILD_DATE})
+  cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${${GVS_PROJECT_NAME}_BINARY_DIR}/${GVS_GENERATED_HEADER_FILE_PATH}
+                                CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in )
 
-    if(0)
-      message(STATUS "--------------------------------------------")
-      message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
-      message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
-      message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
-      message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
-      message(STATUS "GVS_PROJECT_SOURCE_DIR: ${GVS_PROJECT_SOURCE_DIR}")
-      message(STATUS "GVS_PROJECT_VERSION_MAJOR: ${GVS_PROJECT_VERSION_MAJOR}")
-      message(STATUS "${GVS_cmpProjectName}_BUILD_DATE: ${${GVS_cmpProjectName}_BUILD_DATE}")
-    endif()
+  cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${${GVS_PROJECT_NAME}_BINARY_DIR}/${GVS_GENERATED_SOURCE_FILE_PATH}
+                                CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in )
+endfunction()
 
-    # Find Git executable
-    Find_package(Git)
-    # Run 'git describe' to get our tag offset
-    if(GIT_FOUND)
-        execute_process(COMMAND ${GIT_EXECUTABLE} describe
-        OUTPUT_VARIABLE DVERS
-        RESULT_VARIABLE did_run
-        ERROR_VARIABLE git_error
-        WORKING_DIRECTORY ${GVS_PROJECT_SOURCE_DIR} )
 
-        # message(STATUS "DVERS: ${DVERS}")
+#-------------------------------------------------------------------------------
+# 
+# 
+# 
+function(cmpRevisionString)
+  set(options)
+  set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
+                   NAMESPACE PROJECT_NAME EXPORT_MACRO )
+  cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+  
+  # Generate our Build date in the Form of YYYY/MM/DD
+  cmpGenerateBuildDate(PROJECT_NAME ${GVS_PROJECT_NAME})
 
-        #-- Make sure that actually worked and if not just generate some dummy values
-        if(DVERS STREQUAL "")
-       		cmpGenerateVersionString( GENERATED_HEADER_FILE_PATH ${GVS_GENERATED_HEADER_FILE_PATH} 
-       							 GENERATED_SOURCE_FILE_PATH	${GVS_GENERATED_SOURCE_FILE_PATH} 
-       							 NAMESPACE 			   ${GVS_NAMESPACE} 
-       							 PROJECT_SOURCE_DIR    ${GVS_PROJECT_SOURCE_DIR}
-       							 PROJECT_VERSION_MAJOR ${GVS_PROJECT_VERSION_MAJOR}
-       							 EXPORT_MACRO   ${GVS_EXPORT_MACRO}
-       							 cmpProjectName ${GVS_cmpProjectName}  )
-        else()
-            string(STRIP ${DVERS} DVERS)
-            string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
-               # message(STATUS "VERSION_LIST: ${VERSION_LIST}")
-               # list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
-            set(VERSION_GEN_VER_MAJOR ${GVS_PROJECT_VERSION_MAJOR})
-            list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
-            list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
+  if(GIT_FOUND)
+    cmpGitRevisionString( GENERATED_HEADER_FILE_PATH "${GVS_GENERATED_HEADER_FILE_PATH}"
+                          GENERATED_SOURCE_FILE_PATH "${GVS_GENERATED_SOURCE_FILE_PATH}"
+                          NAMESPACE "${GVS_NAMESPACE}"
+                          PROJECT_NAME "${GVS_PROJECT_NAME}"
+                          EXPORT_MACRO "${GVS_EXPORT_MACRO}")
+  else()
+    cmpGenerateVersionString( GENERATED_HEADER_FILE_PATH "${GVS_GENERATED_HEADER_FILE_PATH}"
+                              GENERATED_SOURCE_FILE_PATH "${GVS_GENERATED_SOURCE_FILE_PATH}"
+                              NAMESPACE "${GVS_NAMESPACE}"
+                              PROJECT_NAME "${GVS_PROJECT_NAME}"
+                              EXPORT_MACRO "${GVS_EXPORT_MACRO}")
+  endif()
 
-            set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
-            set(VERSION_GEN_NAMESPACE_EXPORT "${GVS_EXPORT_MACRO}")
-            set(VERSION_GEN_NAME "${GVS_cmpProjectName}")
-              #  message(STATUS "VERSION_GEN_VER_MAJOR: ${VERSION_GEN_VER_MAJOR}")
-              #  message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
-              #  message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
-            string(SUBSTRING ${VERSION_GEN_VER_PATCH} 1 -1 VERSION_GEN_VER_PATCH)
+  # We have to "set" our variable into the parent scope. What a pain. Pass by reference would be really nice about now
+  set(${GVS_PROJECT_NAME}_VERSION_PATCH "${${GVS_PROJECT_NAME}_VERSION_PATCH}" PARENT_SCOPE)
+  set(${GVS_PROJECT_NAME}_VERSION_TWEAK "${${GVS_PROJECT_NAME}_VERSION_TWEAK}" PARENT_SCOPE)
+  set(${GVS_PROJECT_NAME}_BUILD_DATE "${${GVS_PROJECT_NAME}_BUILD_DATE}" PARENT_SCOPE)
 
-            set(${GVS_cmpProjectName}_VER_MAJOR ${GVS_PROJECT_VERSION_MAJOR} CACHE STRING "" FORCE)
-            set(${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
-            set(${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "" FORCE)
-            set(VERSION_GEN_COMPLETE "${VERSION_GEN_VER_MAJOR}.${VERSION_GEN_VER_MINOR}.${VERSION_GEN_VER_PATCH}" )
-               # message(STATUS "VERSION_GEN_COMPLETE: ${VERSION_GEN_COMPLETE}")
-              #  message(STATUS "${GVS_cmpProjectName}_VER_MAJOR: ${${GVS_cmpProjectName}_VER_MAJOR}")
-               # message(STATUS "${GVS_cmpProjectName}_VER_MINOR: ${${GVS_cmpProjectName}_VER_MINOR}")
-               # message(STATUS "${GVS_cmpProjectName}_VER_PATCH: ${${GVS_cmpProjectName}_VER_PATCH}")
-
-            set(${GVS_cmpProjectName}_VERSION "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
-               # message(STATUS "${GVS_cmpProjectName}_VERSION: ${${GVS_cmpProjectName}_VERSION}")
-            mark_as_advanced(${GVS_cmpProjectName}_VERSION ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
-            set(PROJECT_PREFIX "${GVS_cmpProjectName}")
-
-            cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_HEADER_FILE_PATH}
-                                         CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in )
-
-            cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_SOURCE_FILE_PATH}
-                                         CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in )
-
-            # MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
-
-        endif()
-    else()
-       cmpGenerateVersionString( GENERATED_HEADER_FILE_PATH ${GVS_GENERATED_HEADER_FILE_PATH} 
-       							 GENERATED_SOURCE_FILE_PATH	${GVS_GENERATED_SOURCE_FILE_PATH} 
-       							 NAMESPACE 			   ${GVS_NAMESPACE} 
-       							 PROJECT_SOURCE_DIR    ${GVS_PROJECT_SOURCE_DIR}
-       							 PROJECT_VERSION_MAJOR ${GVS_PROJECT_VERSION_MAJOR}
-       							 EXPORT_MACRO   ${GVS_EXPORT_MACRO}
-       							 cmpProjectName ${GVS_cmpProjectName}  )
-    endif()
-
+#  message(STATUS "${GVS_PROJECT_NAME}_VERSION_MAJOR: ${${GVS_PROJECT_NAME}_VERSION_MAJOR}")
+#  message(STATUS "${GVS_PROJECT_NAME}_VERSION_MINOR: ${${GVS_PROJECT_NAME}_VERSION_MINOR}")
+#  message(STATUS "${GVS_PROJECT_NAME}_VERSION_PATCH: ${${GVS_PROJECT_NAME}_VERSION_PATCH}")
+#  message(STATUS "${GVS_PROJECT_NAME}_VERSION_TWEAK: ${${GVS_PROJECT_NAME}_VERSION_TWEAK}")
+#  message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
 endfunction()
 
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files
-#
 function(COMPILE_TOOL)
     set(options)
     set(oneValueArgs TARGET DEBUG_EXTENSION BINARY_DIR COMPONENT INSTALL_DEST DEFINITION)
@@ -1073,7 +989,10 @@ endfunction()
 
 
 
-
+#-------------------------------------------------------------------------------
+#
+#
+#
 function(echo_target_property tgt prop)
   # v for value, d for defined, s for set
   get_property(v TARGET ${tgt} PROPERTY ${prop})

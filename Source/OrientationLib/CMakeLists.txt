@@ -11,16 +11,7 @@
 #// This code was partly written under US Air Force Contract FA8650-07-D-5800
 #///////////////////////////////////////////////////////////////////////////////
 # set project's name
-PROJECT( OrientationLib )
-cmake_minimum_required(VERSION 3.1.0)
-
-if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
-  # cmake ignore that policy
-  cmake_policy(SET CMP0048 OLD)
-  # CMake 3.0 introduces some OS X RPath policies
-  cmake_policy(SET CMP0042 OLD)
-endif()
+PROJECT(OrientationLib VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
 
 if(NOT DEFINED DREAM3DProj_BINARY_DIR)
 
@@ -169,8 +160,8 @@ set(OrientationLib_PROJECT_SRCS
     ${OrientationLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
     ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_CONFIGURATION_FILE_NAME}
     ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_TYPES_FILE_NAME}
-    ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_VERSION_HEADER_FILE_NAME}
-    ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_VERSION_SOURCE_FILE_NAME}
+    ${OrientationLib_BINARY_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
+    ${OrientationLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
 

@@ -54,7 +54,7 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/CoreFilters/DataContainerWriter.h"

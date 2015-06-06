@@ -174,6 +174,9 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_GEN_HDRS}
   # -- Add in the miscellaneous resources (license, plugin info, ...)
   ${${PLUGIN_NAME}_Generated_RC_SRCS}
+  # -- Add in our Generated Version Files
+  ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
+  ${${PLUGIN_NAME}_BINARY_DIR}/ ${VERSION_SOURCE_FILE_NAME}
 )
 
 # --------------------------------------------------------------------

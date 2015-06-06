@@ -39,8 +39,8 @@ namespace UnitTest
     const QString TestDir("@TEST_TEMP_DIR@/H5LiteTest");
     const QString FileName("@TEST_TEMP_DIR@/H5Lite_Test.h5");
     const QString LargeFile("@TEST_TEMP_DIR@/H5Lite_LargeFile_Test.h5");
+    const QString VLengthFile("@TEST_TEMP_DIR@/H5Lite_VLength.h5");
   }
-
  
 }
 

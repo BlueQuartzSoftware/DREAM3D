@@ -3,16 +3,8 @@
 #  All rights reserved.
 #  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #///////////////////////////////////////////////////////////////////////////////
-project(QtSupportLib)
-cmake_minimum_required(VERSION 3.1.0)
+project(QtSupportLib VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
 
-if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
-  # cmake ignore that policy
-  cmake_policy(SET CMP0048 OLD)
-  # CMake 3.0 introduces some OS X RPath policies
-  cmake_policy(SET CMP0042 OLD)
-endif()
 
 if(NOT PROJECT_RESOURCES_DIR)
   set(PROJECT_RESOURCES_DIR ${QtSupportLib_SOURCE_DIR}/Resources)
@@ -190,12 +182,15 @@ QT5_WRAP_UI( QtSupportLib_Generated_UI_HDRS ${DREAM3D_QT_UI_FILES} )
 cmp_IDE_SOURCE_PROPERTIES( "Generated" "${QtSupportLib_Generated_UI_HDRS}" "${QtSupportLib_Generated_MOC_SRCS};${QtSupportLib_Generated_RC_SRCS}" "0")
 
 set(Project_SRCS ${Project_SRCS}
-        ${QtSupportLib_SRCS}
-        ${QtSupportLib_HDRS}
-        ${QtSupportLib_NO_MOC_HDRS}
-        ${QtSupportLib_Generated_UI_HDRS}
-        ${QtSupportLib_Generated_MOC_SRCS}
-        )
+  ${QtSupportLib_SRCS}
+  ${QtSupportLib_HDRS}
+  ${QtSupportLib_NO_MOC_HDRS}
+  ${QtSupportLib_Generated_UI_HDRS}
+  ${QtSupportLib_Generated_MOC_SRCS}
+  # -- Add in our Generated Version Files
+  ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
+  ${${PLUGIN_NAME}_BINARY_DIR}/ ${VERSION_SOURCE_FILE_NAME}
+)
 
 include_directories(${QtSupportLib_SOURCE_DIR}/..)
 include_directories(${QtSupportLib_BINARY_DIR})

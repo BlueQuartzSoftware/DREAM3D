@@ -15,20 +15,21 @@ if(NOT "${DREAM3D_SDK}" STREQUAL "")
   message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
 endif()
 
-project(DREAM3DProj)
-cmake_minimum_required(VERSION 3.1.0)
-
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
-  # cmake ignore that policy
-  cmake_policy(SET CMP0048 OLD)
+  # CMake 3.0 introduces VERSION variables for each Project. 
+  cmake_policy(SET CMP0048 NEW)
   # CMake 3.0 introduces some OS X RPath policies
   cmake_policy(SET CMP0042 OLD)
-
   # CMake 3.1 introduces if() policies on dereferencing variables in quotes
   cmake_policy(SET CMP0054 NEW)
 endif()
 
+cmake_minimum_required(VERSION 3.1.0)
+
+#------------------------------------------------------------------------------
+# Create the Top level Project
+# 
+project(DREAM3DProj VERSION 5.2.0.0)
 
 include(CMakeParseArguments)
 
@@ -66,6 +67,7 @@ set(DREAM3D_DOCUMENTATION_DIR ${PROJECT_SOURCE_DIR}/Documentation)
 set(DREAM3D_SUPPORT_DIR ${PROJECT_SOURCE_DIR}/Support)
 
 set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Support/cmp)
+set(CMP_CONFIGURED_FILES_SOURCE_DIR ${CMP_SOURCE_DIR}/ConfiguredFiles)
 INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 set(CMP_ENABLE_PLUGINS "1")
 set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/DREAM3D_PluginList.txt)
@@ -80,6 +82,16 @@ if(UNIX AND NOT APPLE)
     set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
 endif()
 
+#------------------------------------------------------------------------------
+# Find the Git Package for Versioning. It should be ok if Git is NOT found
+Find_package(Git)
+
+cmpRevisionString( GENERATED_HEADER_FILE_PATH "D3DFileNotUsed.h"
+                        GENERATED_SOURCE_FILE_PATH "D3DFileNotUsed.cpp"
+                        NAMESPACE "DREAM3DProj"
+                        PROJECT_NAME "${PROJECT_NAME}"
+                        EXPORT_MACRO "DREAM3DProj_EXPORT")
+
 # --------------------------------------------------------------------
 #
 if("${DREAM3D_DATA_DIR}" STREQUAL "")
@@ -93,17 +105,6 @@ endif()
 # --------------------------------------------------------------------
 # This is set to "1" so that our test files are deleted at the end of the tests
 set(DREAM3D_REMOVE_TEST_FILES "1")
-
-# --------------------------------------------------------------------
-# In order to increment the version of DREAM3D simply adjust these variables.
-# we are using a 3 part Version scheme commonly found in software development. The
-# example would be Version 2.1.6543 which translates to Version [major].[minor].[patch].
-# The Major version is set here in the CMake file. We will use Git
-# to figure out the "patch" leve of the version by using "git describe" which will
-# calculate how many commits since the last "tag" was applied to the repository.
-# this basically gives us an always incrementing number for the patch level
-# and we can set the Major and Minor versions as we see fit.
-set(CMP_VERSION_MAJOR "5.2")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module

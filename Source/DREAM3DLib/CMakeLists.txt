@@ -12,16 +12,8 @@
 #///////////////////////////////////////////////////////////////////////////////
 
 # set project's name
-PROJECT( DREAM3DLib )
-cmake_minimum_required(VERSION 3.1.0)
+PROJECT( DREAM3DLib VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
 
-if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-    # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
-    # cmake ignore that policy
-    cmake_policy(SET CMP0048 OLD)
-    # CMake 3.0 introduces some OS X RPath policies
-    cmake_policy(SET CMP0042 OLD)
-endif()
 
 set(DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 if(BUILD_SHARED_LIBS)
@@ -41,8 +33,8 @@ set(PROJECT_INSTALL_HEADERS 0)
 set(CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
 set(CMP_CONFIGURATION_FILE_NAME "DREAM3DConfiguration.h")
 set(CMP_TYPES_FILE_NAME "DREAM3DLibTypes.h")
-set(CMP_VERSION_HEADER_FILE_NAME "DREAM3DVersion.h")
-set(CMP_VERSION_SOURCE_FILE_NAME "DREAM3DVersion.cpp")
+set(CMP_VERSION_HEADER_FILE_NAME "DREAM3DLibVersion.h")
+set(CMP_VERSION_SOURCE_FILE_NAME "DREAM3DLibVersion.cpp")
 set(CMP_TOP_HEADER_FILE "DREAM3DLib.h")
 set(CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
 set(CMP_PROJECT_NAME "${PROJECT_NAME}")

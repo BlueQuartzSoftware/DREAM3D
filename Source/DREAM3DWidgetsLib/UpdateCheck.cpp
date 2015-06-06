@@ -50,7 +50,7 @@
 #include <QtNetwork/QNetworkReply>
 
 
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/Common/AppVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 

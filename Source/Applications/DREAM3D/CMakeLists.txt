@@ -9,8 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
-PROJECT( DREAM3D )
-cmake_minimum_required(VERSION 3.1.0)
+PROJECT( DREAM3D VERSION 5.2)
 
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY

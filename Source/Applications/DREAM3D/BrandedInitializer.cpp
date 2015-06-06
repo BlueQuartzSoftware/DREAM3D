@@ -48,7 +48,7 @@
 #include "DSplashScreen.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DLib/Plugin/PluginManager.h"
 #include "DREAM3DLib/Plugin/PluginProxy.h"

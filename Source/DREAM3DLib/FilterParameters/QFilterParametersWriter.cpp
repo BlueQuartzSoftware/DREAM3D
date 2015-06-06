@@ -38,7 +38,7 @@
 #include <QtCore/QFileInfo>
 
 
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 
 #include <QtCore/QStringListIterator>
 // -----------------------------------------------------------------------------

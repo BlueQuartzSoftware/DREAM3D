@@ -42,7 +42,7 @@
 #include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/DataContainerArray.h"

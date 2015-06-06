@@ -53,7 +53,7 @@
 
 #include "EbsdLib/TSL/AngReader.h"
 
-#include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #define kBufferSize 1024

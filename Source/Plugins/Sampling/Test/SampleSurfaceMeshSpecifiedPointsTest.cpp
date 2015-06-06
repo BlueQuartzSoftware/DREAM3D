@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -66,17 +66,17 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestFilterAvailability()
 {
-	// Now instantiate the SampleSurfaceMeshSpecifiedPoints Filter from the FilterManager
-	QString filtName = "SampleSurfaceMeshSpecifiedPoints";
-	FilterManager* fm = FilterManager::Instance();
-	IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-	if (NULL == filterFactory.get())
-	{
-		std::stringstream ss;
-		ss << "The SampleSurfaceMeshSpecifiedPointsTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Sampling Plugin";
-		DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-	}
-	return 0;
+  // Now instantiate the SampleSurfaceMeshSpecifiedPoints Filter from the FilterManager
+  QString filtName = "SampleSurfaceMeshSpecifiedPoints";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get())
+  {
+    std::stringstream ss;
+    ss << "The SampleSurfaceMeshSpecifiedPointsTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Sampling Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -102,9 +102,6 @@ int SampleSurfaceMeshSpecifiedPointsTest()
   * lots of examples in the DREAM3D/Test folder to look at.
   */
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  int foo = -1;
-  DREAM3D_REQUIRE_EQUAL(foo, 0)
 
   return EXIT_SUCCESS;
 }
