@@ -702,7 +702,7 @@ ENDmacro()
 #
 #-------------------------------------------------------------------------------
 
-function(cmpGenerateVersionString)    
+function(cmpGenerateVersionString)
   set(options)
   set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
                    NAMESPACE PROJECT_NAME EXPORT_MACRO )
@@ -837,9 +837,13 @@ function(cmpGenerateBuildDate)
       set(${GVS_PROJECT_NAME}_BUILD_DATE "${YEAR}/${MONTH}/${DAY}" PARENT_SCOPE)
       #message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
   ELSEIF(UNIX)
-      EXECUTE_PROCESS(COMMAND "date" "+%Y/%m/%d" OUTPUT_VARIABLE RESULT)
-      #string(REGEX REPLACE "(..)/(..)/..(..).*" "\\1/\\2/\\3" RESULT ${RESULT})
-      set(${GVS_PROJECT_NAME}_BUILD_DATE "${RESULT}" PARENT_SCOPE)
+      EXECUTE_PROCESS(COMMAND "date" "+%Y/%m/%d/" OUTPUT_VARIABLE RESULT)
+      string(REPLACE "/" ";" RESULT ${RESULT})
+      list(GET RESULT 0 YEAR)
+      list(GET RESULT 1 MONTH)
+      list(GET RESULT 2 DAY)
+      set(${GVS_PROJECT_NAME}_BUILD_DATE "${YEAR}/${MONTH}/${DAY}" PARENT_SCOPE)
+      #message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
   ELSE (WIN32)
       MESSAGE(SEND_ERROR "date for this operating system not implemented")
       set(${GVS_PROJECT_NAME}_BUILD_DATE "NO_DATE" PARENT_SCOPE)
@@ -920,15 +924,15 @@ endfunction()
 
 
 #-------------------------------------------------------------------------------
-# 
-# 
-# 
+#
+#
+#
 function(cmpRevisionString)
   set(options)
   set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH
                    NAMESPACE PROJECT_NAME EXPORT_MACRO )
   cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-  
+
   # Generate our Build date in the Form of YYYY/MM/DD
   cmpGenerateBuildDate(PROJECT_NAME ${GVS_PROJECT_NAME})
 
