@@ -49,7 +49,7 @@ public:
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
     const QString& widgetType, const QVariant& defaultValue,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
   virtual ~DataContainerReaderFilterParameter();

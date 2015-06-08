@@ -288,14 +288,14 @@ void FindEuclideanDistMap::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "NearestNeighborsArrayName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Store the Nearest Boundary Cells", "SaveNearestNeighbors", getSaveNearestNeighbors(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", FilterParameterWidgetType::BooleanWidget, getCalcOnlyManhattanDist(), false, ""));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getGBEuclideanDistancesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Triple Line Euclidean Distances", "TJEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getTJEuclideanDistancesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Quadruple Point Euclidean Distances", "QPEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getQPEuclideanDistancesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Nearest Neighbors", "NearestNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNearestNeighborsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", FilterParameterWidgetType::BooleanWidget, getCalcOnlyManhattanDist(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getGBEuclideanDistancesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Triple Line Euclidean Distances", "TJEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getTJEuclideanDistancesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Quadruple Point Euclidean Distances", "QPEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getQPEuclideanDistancesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Nearest Neighbors", "NearestNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNearestNeighborsArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

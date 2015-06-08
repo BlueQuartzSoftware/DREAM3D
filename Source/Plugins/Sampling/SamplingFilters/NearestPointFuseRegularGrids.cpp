@@ -66,8 +66,8 @@ NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids()
 void NearestPointFuseRegularGrids::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Reference Cell Attribute Matrix", "ReferenceCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getReferenceCellAttributeMatrixPath(), false));
-  parameters.push_back(FilterParameter::New("Sampling Cell Attribute Matrix", "SamplingCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSamplingCellAttributeMatrixPath(), false));
+  parameters.push_back(FilterParameter::New("Reference Cell Attribute Matrix", "ReferenceCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getReferenceCellAttributeMatrixPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Sampling Cell Attribute Matrix", "SamplingCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSamplingCellAttributeMatrixPath(), FilterParameter::Uncategorized));
   setFilterParameters(parameters);
 }
 

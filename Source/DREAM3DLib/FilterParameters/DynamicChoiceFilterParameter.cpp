@@ -56,14 +56,14 @@ DynamicChoiceFilterParameter::Pointer DynamicChoiceFilterParameter::New(const QS
   const QString& propertyName,
   const QVariant& defaultValue,
   const QString& listProperty,
-  bool advanced, int groupIndex)
+  Category category, int groupIndex)
 {
   DynamicChoiceFilterParameter::Pointer ptr = DynamicChoiceFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(FilterParameterWidgetType::DynamicChoiceWidget);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
   ptr->setListProperty(listProperty);
   ptr->setGroupIndex(groupIndex);

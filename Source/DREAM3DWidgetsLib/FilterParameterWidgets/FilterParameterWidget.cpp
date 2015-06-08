@@ -125,7 +125,7 @@ void FilterParameterWidget::fadeWidget(QWidget* widget, bool in)
             this, SLOT(hide()));
   }
   QColor color = DREAM3D::Defaults::BasicColor;
-  if(getFilterParameter()->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  //if(getFilterParameter()->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
   m_FaderWidget->setStartColor(color);
   m_FaderWidget->start();
 }

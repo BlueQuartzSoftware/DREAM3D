@@ -54,14 +54,14 @@ PreflightUpdatedValue::~PreflightUpdatedValue()
 // -----------------------------------------------------------------------------
 PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName,
   const QString& widgetType, const QVariant& defaultValue,
-  bool advanced, int groupIndex)
+  Category category, int groupIndex)
 {
   PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
   ptr->setGroupIndex(groupIndex);
   if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)

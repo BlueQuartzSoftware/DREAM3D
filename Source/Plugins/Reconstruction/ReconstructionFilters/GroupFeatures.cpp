@@ -74,7 +74,7 @@ void GroupFeatures::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), false, ""));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

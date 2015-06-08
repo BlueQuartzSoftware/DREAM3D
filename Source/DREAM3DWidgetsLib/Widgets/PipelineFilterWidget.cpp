@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -195,7 +195,7 @@ void PipelineFilterWidget::layoutWidgets()
   ss << "{\n";
   ss << "font-weight: bold\n";
   ss << "}";
-  
+
   QGroupBox* parametersGroupBox = new QGroupBox("Parameters", this);
   QVBoxLayout* pLayout = new QVBoxLayout(parametersGroupBox);
   parametersGroupBox->setStyleSheet(groupBoxStyle);
@@ -244,7 +244,21 @@ void PipelineFilterWidget::layoutWidgets()
     m_FilterParameterWidgets.push_back(w);
 
     // Determine which layout to add the widget into
-    if(option->getAdvanced() == true)
+    if(option->getCategory() == FilterParameter::Parameter)
+    {
+      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
+      //m_AdvVerticalLayout->addWidget(w);
+      pLayout->addWidget(w);
+      m_AdvParameterCount++;
+    }
+    else if(option->getCategory() == FilterParameter::RequiredArray)
+    {
+      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
+      //m_AdvVerticalLayout->addWidget(w);
+      rLayout->addWidget(w);
+      m_AdvParameterCount++;
+    }
+    if(option->getCategory() == FilterParameter::CreatedArray)
     {
       w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
       //m_AdvVerticalLayout->addWidget(w);
@@ -255,7 +269,7 @@ void PipelineFilterWidget::layoutWidgets()
     {
       w->setParent(m_BasicInputsWidget);
       //m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
-      rLayout->addWidget(w);
+      pLayout->addWidget(w);
       m_BasicParameterCount++;
     }
 

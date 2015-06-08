@@ -47,8 +47,8 @@ public:
     DREAM3D_TYPE_MACRO_SUPER(FileListInfoFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const FileListInfo_t& defaultValue,
-    bool advanced = false);
+                      const FileListInfo_t& defaultValue,
+                      Category category);
 
   virtual ~FileListInfoFilterParameter();
 

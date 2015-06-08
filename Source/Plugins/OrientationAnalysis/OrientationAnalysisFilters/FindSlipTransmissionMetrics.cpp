@@ -83,16 +83,16 @@ FindSlipTransmissionMetrics::~FindSlipTransmissionMetrics()
 void FindSlipTransmissionMetrics::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("F1 List", "F1ListArrayName", FilterParameterWidgetType::StringWidget, getF1ListArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("F1spt List", "F1sptListArrayName", FilterParameterWidgetType::StringWidget, getF1sptListArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("F7 List", "F7ListArrayName", FilterParameterWidgetType::StringWidget, getF7ListArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("mPrime List", "mPrimeListArrayName", FilterParameterWidgetType::StringWidget, getmPrimeListArrayName(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("F1 List", "F1ListArrayName", FilterParameterWidgetType::StringWidget, getF1ListArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("F1spt List", "F1sptListArrayName", FilterParameterWidgetType::StringWidget, getF1sptListArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("F7 List", "F7ListArrayName", FilterParameterWidgetType::StringWidget, getF7ListArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("mPrime List", "mPrimeListArrayName", FilterParameterWidgetType::StringWidget, getmPrimeListArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

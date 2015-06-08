@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -68,10 +69,10 @@ ExtractComponentAsArray::~ExtractComponentAsArray()
 void ExtractComponentAsArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Multi-Component Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
-  parameters.push_back(FilterParameter::New("Component Number to Extract", "CompNumber", FilterParameterWidgetType::IntWidget, getCompNumber(), false));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("New Scalar Array Name", "NewArrayArrayName", FilterParameterWidgetType::StringWidget, getNewArrayArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("MultiComponent Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Component Number to Extract", "CompNumber", FilterParameterWidgetType::IntWidget, getCompNumber(), FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("New Scalar Array Name", "NewArrayArrayName", FilterParameterWidgetType::StringWidget, getNewArrayArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

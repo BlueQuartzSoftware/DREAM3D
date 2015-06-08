@@ -21,6 +21,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -75,7 +76,7 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("R Max", "RMax", FilterParameterWidgetType::DoubleWidget, getRMax()));
   parameters.push_back(FilterParameter::New("EM Loop Delay", "EMLoopDelay", FilterParameterWidgetType::IntWidget, getEMLoopDelay()));
 
-  parameters.push_back(FilterParameter::New("Output Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  parameters.push_back(SeparatorFilterParameter::New("Output Data", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Created Data Array", "OutputDataArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getOutputDataArrayPath()));
 
   setFilterParameters(parameters);

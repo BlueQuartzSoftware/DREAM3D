@@ -81,16 +81,16 @@ LaplacianSmoothing::~LaplacianSmoothing()
 void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget, getIterationSteps(), false));
-  parameters.push_back(FilterParameter::New("Default Lambda", "Lambda", FilterParameterWidgetType::DoubleWidget, getLambda(), false));
-  parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget, getTripleLineLambda(), false));
-  parameters.push_back(FilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget, getQuadPointLambda(), false));
-  parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget, getSurfacePointLambda(), false));
-  parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceTripleLineLambda(), false));
-  parameters.push_back(FilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceQuadPointLambda(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget, getIterationSteps(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Default Lambda", "Lambda", FilterParameterWidgetType::DoubleWidget, getLambda(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget, getTripleLineLambda(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget, getQuadPointLambda(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget, getSurfacePointLambda(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceTripleLineLambda(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceQuadPointLambda(), FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

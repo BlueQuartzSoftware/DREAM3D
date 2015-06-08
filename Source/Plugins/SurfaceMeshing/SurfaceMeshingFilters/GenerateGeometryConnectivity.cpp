@@ -66,10 +66,10 @@ GenerateGeometryConnectivity::~GenerateGeometryConnectivity()
 void GenerateGeometryConnectivity::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget, getGenerateVertexTriangleLists(), false));
-  parameters.push_back(FilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget, getGenerateTriangleNeighbors(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget, getGenerateVertexTriangleLists(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget, getGenerateTriangleNeighbors(), FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

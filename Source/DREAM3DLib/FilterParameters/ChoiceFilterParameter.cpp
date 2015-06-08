@@ -56,7 +56,7 @@ ChoiceFilterParameter::~ChoiceFilterParameter()
 ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
   QVector<QString> choices,
   bool editable,
-  bool advanced, int groupIndex)
+  Category category, int groupIndex)
 
 {
   ChoiceFilterParameter::Pointer ptr = ChoiceFilterParameter::New();
@@ -64,7 +64,7 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
   ptr->setChoices(choices);
   ptr->setEditable(editable);

@@ -76,9 +76,9 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false, "", "*.vtk", "VTK Rectilinear Grid"));
-  parameters.push_back(FilterParameter::New("Cell AttributeMatrix to Write", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSelectedAttributeMatrixPath(), false));
-  parameters.push_back(FilterParameter::New("Write Binary File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Uncategorized, "", "*.vtk", "VTK Rectilinear Grid"));
+  parameters.push_back(FilterParameter::New("Cell AttributeMatrix to Write", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSelectedAttributeMatrixPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Write Binary File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), FilterParameter::Uncategorized));
   setFilterParameters(parameters);
 }
 

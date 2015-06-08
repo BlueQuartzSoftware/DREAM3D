@@ -145,7 +145,7 @@ FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices()
 void FindRelativeMotionBetweenSlices::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Track Motion", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Cell Array To Track Motion", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::Uncategorized));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -163,8 +163,8 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Search Distance 1 (Voxels)", "SSize1", FilterParameterWidgetType::IntWidget, getSSize1(), false));
   parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget, getSSize2(), false));
   parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget, getSliceStep(), false));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Motion Direction", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, getMotionDirectionArrayName(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Motion Direction", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, getMotionDirectionArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

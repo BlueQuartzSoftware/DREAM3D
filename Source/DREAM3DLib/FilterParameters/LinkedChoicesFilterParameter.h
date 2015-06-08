@@ -54,7 +54,7 @@ public:
     const QVariant& defaultValue,
     QVector<QString> choices,
     QStringList linkedProperties,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
   virtual ~LinkedChoicesFilterParameter();

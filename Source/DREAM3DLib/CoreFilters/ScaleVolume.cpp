@@ -115,14 +115,14 @@ ScaleVolume::~ScaleVolume()
 void ScaleVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Scaling Factor", "ScaleFactor", FilterParameterWidgetType::FloatVec3Widget, getScaleFactor(), false));
+  parameters.push_back(FilterParameter::New("Scaling Factor", "ScaleFactor", FilterParameterWidgetType::FloatVec3Widget, getScaleFactor(), FilterParameter::Uncategorized));
   QStringList linkedProps("DataContainerName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply To Voxel Volume", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, true));
-  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), true));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply To Voxel Volume", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::Uncategorized));
   linkedProps.clear();
   linkedProps << "SurfaceDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, true));
-  parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::Uncategorized));
   setFilterParameters(parameters);
 }
 

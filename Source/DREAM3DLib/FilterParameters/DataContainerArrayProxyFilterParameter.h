@@ -49,7 +49,7 @@ public:
     static Pointer New(const QString& humanLabel, const QString& propertyName,
     const QString& widgetType, const QVariant& defaultValue,
     DataContainerArrayProxy proxy, Qt::CheckState defState,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
   virtual ~DataContainerArrayProxyFilterParameter();

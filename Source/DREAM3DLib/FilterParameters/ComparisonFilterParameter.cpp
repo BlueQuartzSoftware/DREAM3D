@@ -55,7 +55,7 @@ ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString&
   const QString& widgetType, const QVariant& defaultValue,
   QVector<QString> choices,
   bool showOperators,
-  bool advanced, int groupIndex)
+  Category category, int groupIndex)
 
 {
   ComparisonFilterParameter::Pointer ptr = ComparisonFilterParameter::New();
@@ -63,7 +63,7 @@ ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString&
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
   ptr->setChoices(choices);
   ptr->setShowOperators(showOperators);

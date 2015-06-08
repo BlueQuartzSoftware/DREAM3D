@@ -86,17 +86,17 @@ FindBoundaryStrengths::~FindBoundaryStrengths()
 void FindBoundaryStrengths::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Loading", "Loading", FilterParameterWidgetType::FloatVec3Widget, getLoading(), false, "XYZ"));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("F1s", "SurfaceMeshF1sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshF1sArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("F1spts", "SurfaceMeshF1sptsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshF1sptsArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("F7s", "SurfaceMeshF7sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshF7sArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("mPrimes", "SurfaceMeshmPrimesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshmPrimesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Loading", "Loading", FilterParameterWidgetType::FloatVec3Widget, getLoading(), FilterParameter::Uncategorized, "XYZ"));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("F1s", "SurfaceMeshF1sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshF1sArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("F1spts", "SurfaceMeshF1sptsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshF1sptsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("F7s", "SurfaceMeshF7sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshF7sArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("mPrimes", "SurfaceMeshmPrimesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshmPrimesArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

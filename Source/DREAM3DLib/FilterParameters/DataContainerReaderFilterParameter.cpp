@@ -58,14 +58,14 @@ DataContainerReaderFilterParameter::~DataContainerReaderFilterParameter()
 // -----------------------------------------------------------------------------
 DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::New(const QString& humanLabel, const QString& propertyName,
   const QString& widgetType, const QVariant& defaultValue,
-  bool advanced, int groupIndex)
+  Category category, int groupIndex)
 {
   DataContainerReaderFilterParameter::Pointer ptr = DataContainerReaderFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(ptr->getInputFileProperty());
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
   ptr->setGroupIndex(groupIndex);
   ptr->setFileExtension(".dream3d");

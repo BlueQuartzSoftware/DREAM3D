@@ -50,7 +50,7 @@ public:
     const QString& widgetType, const QVariant& defaultValue,
     QVector<QString> choices,
     bool showOperators,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
 

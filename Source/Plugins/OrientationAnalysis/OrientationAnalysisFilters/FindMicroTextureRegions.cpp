@@ -72,12 +72,12 @@ FindMicroTextureRegions::~FindMicroTextureRegions()
 void FindMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", FilterParameterWidgetType::StringWidget, getMicroTextureRegionNumCellsArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", FilterParameterWidgetType::StringWidget, getMicroTextureRegionFractionOccupiedArrayName(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", FilterParameterWidgetType::StringWidget, getMicroTextureRegionNumCellsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", FilterParameterWidgetType::StringWidget, getMicroTextureRegionFractionOccupiedArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

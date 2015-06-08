@@ -80,8 +80,8 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    DREAM3D_FILTER_PARAMETER(bool, OverRideOriginResolution)
-    Q_PROPERTY(bool OverRideOriginResolution READ getOverRideOriginResolution WRITE setOverRideOriginResolution)
+    DREAM3D_FILTER_PARAMETER(bool, OverrideOriginResolution)
+    Q_PROPERTY(bool OverrideOriginResolution READ getOverrideOriginResolution WRITE setOverrideOriginResolution)
 
     DREAM3D_FILTER_PARAMETER(int, SkipHeaderBytes)
     Q_PROPERTY(int SkipHeaderBytes READ getSkipHeaderBytes WRITE setSkipHeaderBytes)

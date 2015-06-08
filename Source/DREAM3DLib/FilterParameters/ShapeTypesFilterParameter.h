@@ -50,7 +50,7 @@ public:
     const QString& widgetType, const QVariant& defaultValue,
     const QString& phaseTypeCountProperty,
     const QString& phaseTypeArrayPathProperty,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
   virtual ~ShapeTypesFilterParameter();

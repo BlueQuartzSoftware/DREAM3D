@@ -34,45 +34,32 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "LinkedChoicesFilterParameter.h"
+#include "SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LinkedChoicesFilterParameter::LinkedChoicesFilterParameter() :
-ChoiceFilterParameter()
-{
-  setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-LinkedChoicesFilterParameter::~LinkedChoicesFilterParameter()
+SeparatorFilterParameter::SeparatorFilterParameter() :
+FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue,
-  QVector<QString> choices,
-  QStringList linkedProperties,
-  Category category, int groupIndex)
+SeparatorFilterParameter::~SeparatorFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SeparatorFilterParameter::Pointer SeparatorFilterParameter::New(const QString& humanLabel, FilterParameter::Category category)
 {
-  LinkedChoicesFilterParameter::Pointer ptr = LinkedChoicesFilterParameter::New();
+  SeparatorFilterParameter::Pointer ptr = SeparatorFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-  ptr->setDefaultValue(defaultValue);
+  ptr->setPropertyName("");
+  ptr->setWidgetType(FilterParameterWidgetType::SeparatorWidget);
+  ptr->setReadOnly(true);
   ptr->setCategory(category);
-  ptr->setChoices(choices);
-  ptr->setLinkedProperties(linkedProperties);
-  ptr->setEditable(false);
-  ptr->setGroupIndex(groupIndex);
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
+  ptr->setDefaultValue(QString(""));
   return ptr;
 }

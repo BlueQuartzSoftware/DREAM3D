@@ -54,7 +54,7 @@ FileListInfoFilterParameter::~FileListInfoFilterParameter()
 // -----------------------------------------------------------------------------
 FileListInfoFilterParameter::Pointer FileListInfoFilterParameter::New(const QString& humanLabel, const QString& propertyName,
   const FileListInfo_t& defaultValue,
-  bool advanced)
+  FilterParameter::Category category)
 {
 
   FileListInfoFilterParameter::Pointer ptr = FileListInfoFilterParameter::New();
@@ -64,7 +64,7 @@ FileListInfoFilterParameter::Pointer FileListInfoFilterParameter::New(const QStr
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
 
   return ptr;

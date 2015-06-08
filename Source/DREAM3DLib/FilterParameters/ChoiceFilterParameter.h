@@ -50,7 +50,7 @@ public:
     const QVariant& defaultValue,
     QVector<QString> choices,
     bool editable,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
   virtual ~ChoiceFilterParameter();

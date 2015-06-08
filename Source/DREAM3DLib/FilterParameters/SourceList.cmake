@@ -37,6 +37,7 @@ set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataContainerReaderFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/MultiDataArraySelectionFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicTableFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/SeparatorFilterParameter.h
 )
 
 set(DREAM3DLib_FilterParameters_SRCS
@@ -66,6 +67,7 @@ set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataContainerReaderFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/MultiDataArraySelectionFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicTableFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/SeparatorFilterParameter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/FilterParameters" "${DREAM3DLib_FilterParameters_HDRS}" "${DREAM3DLib_FilterParameters_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

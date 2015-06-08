@@ -80,12 +80,12 @@ FindFeatureReferenceCAxisMisorientations::~FindFeatureReferenceCAxisMisorientati
 void FindFeatureReferenceCAxisMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Quaternions", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Cell Quaternions", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Avgerage C-Axes", "AvgCAxesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgCAxesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Average C-Axis Misorientations", "FeatureAvgCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureAvgCAxisMisorientationsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Feature Stdev C-Axis Misorientations", "FeatureStdevCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureStdevCAxisMisorientationsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Feature Reference C-Axis Misorientations", "FeatureReferenceCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureReferenceCAxisMisorientationsArrayName(), true, ""));
