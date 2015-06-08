@@ -365,6 +365,10 @@ void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int in
 
   // Blank the attribute array choice, because we don't want to choose for them
   attributeArrayList->setCurrentIndex(-1);
+
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
 }
 
 
