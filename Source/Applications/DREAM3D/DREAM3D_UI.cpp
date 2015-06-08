@@ -976,7 +976,7 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionAddPipeline->setObjectName(QString::fromUtf8("m_ActionAddPipeline"));
   m_ActionAddPipeline->setText(QApplication::translate("DREAM3D_UI", "Add Bookmark", 0));
   menuBookmarks->addAction(m_ActionAddPipeline);
-  QKeySequence m_ActionAddPipelineKeySeq(Qt::CTRL + Qt::Key_Plus);
+  QKeySequence m_ActionAddPipelineKeySeq(Qt::CTRL + Qt::Key_B);
   m_ActionAddPipeline->setShortcut(m_ActionAddPipelineKeySeq);
   connect(m_ActionAddPipeline, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionAddPipeline_triggered()));
@@ -1010,7 +1010,7 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionNewFolder->setObjectName(QString::fromUtf8("m_ActionNewFolder"));
   m_ActionNewFolder->setText(QApplication::translate("DREAM3D_UI", "New Folder", 0));
   menuBookmarks->addAction(m_ActionNewFolder);
-  QKeySequence m_ActionNewFolderKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_Plus);
+  QKeySequence m_ActionNewFolderKeySeq(Qt::CTRL + Qt::Key_F);
   m_ActionNewFolder->setShortcut(m_ActionNewFolderKeySeq);
   connect(m_ActionNewFolder, SIGNAL(triggered()),
     bookmarksDockWidget, SLOT(m_ActionNewFolder_triggered()));

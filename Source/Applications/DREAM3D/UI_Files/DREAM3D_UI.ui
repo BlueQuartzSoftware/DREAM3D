@@ -147,8 +147,8 @@ sss</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1032</width>
-             <height>556</height>
+             <width>1011</width>
+             <height>562</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -254,7 +254,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
      <x>0</x>
      <y>0</y>
      <width>1104</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -439,7 +439,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
     <string>DREAM3D Help</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+I</string>
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionLicense_Information">
@@ -458,6 +458,9 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
   <action name="actionCheck_For_Updates">
    <property name="text">
     <string>Check For Updates</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
    </property>
   </action>
   <action name="actionExit">
@@ -515,7 +518,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
   </action>
   <action name="actionPlugin_Information">
    <property name="text">
-    <string>Plugin Information...</string>
+    <string>Plugin Information</string>
    </property>
    <property name="iconText">
     <string>Plugin Information</string>
