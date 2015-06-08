@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -72,13 +73,13 @@ SharedFeatureFaceFilter::~SharedFeatureFaceFilter()
 void SharedFeatureFaceFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Face Feature Attribute Matrix Name", "FaceFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceFeatureAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFeatureFaceIdsArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFeatureFaceLabelsArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Feature Face Number of Triangles", "SurfaceMeshFeatureFaceNumTrianglesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFeatureFaceNumTrianglesArrayName(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Face Feature Attribute Matrix Name", "FaceFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFeatureFaceIdsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFeatureFaceLabelsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Face Number of Triangles", "SurfaceMeshFeatureFaceNumTrianglesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshFeatureFaceNumTrianglesArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

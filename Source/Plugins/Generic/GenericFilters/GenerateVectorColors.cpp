@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -40,6 +40,8 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -74,14 +76,14 @@ GenerateVectorColors::~GenerateVectorColors()
 void GenerateVectorColors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Vector Array Name", "VectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorsArrayPath(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Vector Array Name", "VectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorsArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Optional Information", FilterParameter::Uncategorized));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Element Vector Colors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, getCellVectorColorsArrayName(), true, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Element Vector Colors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, getCellVectorColorsArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

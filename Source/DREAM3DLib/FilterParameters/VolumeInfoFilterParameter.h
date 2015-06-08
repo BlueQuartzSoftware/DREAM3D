@@ -48,7 +48,7 @@ public:
 
     static Pointer New(const QString& humanLabel, const QString& dimsProperty,
     const QString& widgetType, const IntVec3_t& defaultValue,
-    bool advanced = false,
+    Category category,
     const QString& units = QString(""),
     const QString& resProperty = QString(""),
     int groupIndex = -1);

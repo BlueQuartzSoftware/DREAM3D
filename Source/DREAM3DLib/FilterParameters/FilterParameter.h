@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -169,9 +169,9 @@ typedef struct
 
   bool readJson(QJsonObject &json)
   {
-    if (json["v11"].isDouble() && json["v12"].isDouble() && json["v13"].isDouble() && json["v14"].isDouble() 
-      && json["v15"].isDouble() && json["v16"].isDouble() && json["v22"].isDouble() && json["v23"].isDouble() 
-      && json["v24"].isDouble() && json["v25"].isDouble() && json["v26"].isDouble() && json["v33"].isDouble() 
+    if (json["v11"].isDouble() && json["v12"].isDouble() && json["v13"].isDouble() && json["v14"].isDouble()
+      && json["v15"].isDouble() && json["v16"].isDouble() && json["v22"].isDouble() && json["v23"].isDouble()
+      && json["v24"].isDouble() && json["v25"].isDouble() && json["v26"].isDouble() && json["v33"].isDouble()
       && json["v34"].isDouble() && json["v35"].isDouble() && json["v36"].isDouble() && json["v44"].isDouble()
       && json["v45"].isDouble() && json["v46"].isDouble() && json["v55"].isDouble() && json["v56"].isDouble()
       && json["v66"].isDouble())
@@ -441,6 +441,14 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_STATIC_NEW_MACRO(FilterParameter)
     DREAM3D_TYPE_MACRO(FilterParameter)
 
+    enum Category
+    {
+      Parameter = 0,
+      RequiredArray = 1,
+      CreatedArray = 2,
+      Uncategorized = 3
+    };
+
     /**
      * @brief Creates a new Filter Parameter from the arguments. This is good for a general filter parameter that is needed.
      * @param humanLabel What is displayed to the user in the GUI
@@ -458,74 +466,74 @@ class DREAM3DLib_EXPORT FilterParameter
      */
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QVariant& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec3_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec4_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec21_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const Float2ndOrderPoly_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const Float3rdOrderPoly_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const Float4thOrderPoly_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const IntVec3_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const DataArrayPath& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const AxisAngleInput_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const UInt32Vector_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const UInt32Vector_t& defaultValue,
-                       bool advanced = false,
+                       Category category,
                        const QString& units = QString(""),
                        int groupIndex = -1);
 
@@ -536,7 +544,7 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)
     DREAM3D_INSTANCE_STRING_PROPERTY(WidgetType)
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QVariant, DefaultValue)
-    DREAM3D_INSTANCE_PROPERTY(bool, Advanced)
+    DREAM3D_INSTANCE_PROPERTY(Category, Category)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
     DREAM3D_INSTANCE_PROPERTY(int, GroupIndex)

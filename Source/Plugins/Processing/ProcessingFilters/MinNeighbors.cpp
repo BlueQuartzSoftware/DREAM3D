@@ -40,6 +40,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -75,15 +76,15 @@ MinNeighbors::~MinNeighbors()
 void MinNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", FilterParameterWidgetType::IntWidget, getMinNumNeighbors(), false));
+  parameters.push_back(FilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", FilterParameterWidgetType::IntWidget, getMinNumNeighbors(), FilterParameter::Uncategorized));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Phase Index", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Number Of Neighbors", "NumNeighborsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumNeighborsArrayPath(), true, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Phase Index", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Number Of Neighbors", "NumNeighborsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumNeighborsArrayPath(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

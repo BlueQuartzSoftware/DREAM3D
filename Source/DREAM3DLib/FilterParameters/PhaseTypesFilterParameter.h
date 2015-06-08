@@ -52,7 +52,7 @@ public:
     const QString& phaseTYpeDataProperty,
     const QString& attributeMatrixProperty,
     const DataArrayPath attributeMatrixDefault,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
   virtual ~PhaseTypesFilterParameter();

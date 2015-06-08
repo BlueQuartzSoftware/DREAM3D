@@ -73,8 +73,8 @@ LammpsFileWriter::~LammpsFileWriter()
 void LammpsFileWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Lammps File", "LammpsFile", FilterParameterWidgetType::OutputFileWidget, getLammpsFile(), false));
-  parameters.push_back(FileSystemFilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getVertexDataContainerName(), true));
+  parameters.push_back(FileSystemFilterParameter::New("Lammps File", "LammpsFile", FilterParameterWidgetType::OutputFileWidget, getLammpsFile(), FilterParameter::Uncategorized));
+  parameters.push_back(FileSystemFilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getVertexDataContainerName(), FilterParameter::Uncategorized));
 
   setFilterParameters(parameters);
 }

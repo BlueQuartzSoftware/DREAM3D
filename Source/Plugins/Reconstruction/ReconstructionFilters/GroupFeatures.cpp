@@ -40,6 +40,8 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -71,10 +73,10 @@ void GroupFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), true, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "NonContiguousNeighborListArrayPath", FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

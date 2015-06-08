@@ -44,6 +44,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -80,8 +81,8 @@ SurfaceMeshToNodesTrianglesEdges::~SurfaceMeshToNodesTrianglesEdges()
 void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Output Nodes File", "OutputNodesFile", FilterParameterWidgetType::OutputFileWidget, getOutputNodesFile(), false));
-  parameters.push_back(FileSystemFilterParameter::New("Output Triangles File", "OutputTrianglesFile", FilterParameterWidgetType::OutputFileWidget, getOutputTrianglesFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output Nodes File", "OutputNodesFile", FilterParameterWidgetType::OutputFileWidget, getOutputNodesFile(), FilterParameter::Uncategorized));
+  parameters.push_back(FileSystemFilterParameter::New("Output Triangles File", "OutputTrianglesFile", FilterParameterWidgetType::OutputFileWidget, getOutputTrianglesFile(), FilterParameter::Uncategorized));
 #if WRITE_EDGES_FILE
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
@@ -93,9 +94,9 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
   }
 #endif
 
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

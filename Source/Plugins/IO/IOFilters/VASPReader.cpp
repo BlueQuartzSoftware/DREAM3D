@@ -43,6 +43,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
 #include "IO/IOConstants.h"
@@ -76,12 +77,12 @@ VASPReader::~VASPReader()
 void VASPReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*"));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
-  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", FilterParameterWidgetType::StringWidget, getAtomVelocitiesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("AtomTypes", "AtomTypesArrayName", FilterParameterWidgetType::StringWidget, getAtomTypesArrayName(), true, ""));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Uncategorized, "", "*"));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", FilterParameterWidgetType::StringWidget, getAtomVelocitiesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("AtomTypes", "AtomTypesArrayName", FilterParameterWidgetType::StringWidget, getAtomTypesArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -69,12 +70,12 @@ FindBoundaryAreas::~FindBoundaryAreas()
 void FindBoundaryAreas::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Triangle Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTriangleAreasArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Face Feature Ids", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Face Feature Attribute Matrix Name", "FaceFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceFeatureAttributeMatrixPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Boundary Areas Array Name", "SurfaceMeshBoundaryAreasArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshBoundaryAreasArrayName(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Triangle Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Face Feature Ids", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Face Feature Attribute Matrix Name", "FaceFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceFeatureAttributeMatrixPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Boundary Areas Array Name", "SurfaceMeshBoundaryAreasArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshBoundaryAreasArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

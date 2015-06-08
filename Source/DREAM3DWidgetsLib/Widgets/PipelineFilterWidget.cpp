@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -48,7 +48,9 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QDrag>
+
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QGroupBox>
 
 
 #include "QtSupportLib/DREAM3DStyles.h"
@@ -187,6 +189,29 @@ void PipelineFilterWidget::layoutWidgets()
   basicname = QString::fromUtf8("verticalLayout1") + m_Filter->getNameOfClass();
   m_BasicVerticalLayout->setObjectName(basicname);
 
+  QString groupBoxStyle;
+  QTextStream ss(&groupBoxStyle);
+  ss << "QGroupBox\n";
+  ss << "{\n";
+  ss << "font-weight: bold\n";
+  ss << "}";
+
+  QGroupBox* parametersGroupBox = new QGroupBox("Parameters", this);
+  QVBoxLayout* pLayout = new QVBoxLayout(parametersGroupBox);
+  parametersGroupBox->setStyleSheet(groupBoxStyle);
+
+  QGroupBox* requiredGroupBox = new QGroupBox("Required Arrays", this);
+  QVBoxLayout* rLayout = new QVBoxLayout(requiredGroupBox);
+  requiredGroupBox->setStyleSheet(groupBoxStyle);
+
+  QGroupBox* createdGroupBox = new QGroupBox("Created Arrays", this);
+  QVBoxLayout* cLayout = new QVBoxLayout(createdGroupBox);
+  createdGroupBox->setStyleSheet(groupBoxStyle);
+
+  m_BasicVerticalLayout->addWidget(parametersGroupBox);
+  m_BasicVerticalLayout->addWidget(requiredGroupBox);
+  m_BasicVerticalLayout->addWidget(createdGroupBox);
+
   m_AdvancedInputWidget = new QWidget(this);
   QString advname = QString::fromUtf8("advancedInputsScrollWidget2_") + m_Filter->getNameOfClass();
   m_AdvancedInputWidget->setObjectName(advname);
@@ -219,16 +244,32 @@ void PipelineFilterWidget::layoutWidgets()
     m_FilterParameterWidgets.push_back(w);
 
     // Determine which layout to add the widget into
-    if(option->getAdvanced() == true)
+    if(option->getCategory() == FilterParameter::Parameter)
     {
       w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
-      m_AdvVerticalLayout->addWidget(w);
+      //m_AdvVerticalLayout->addWidget(w);
+      pLayout->addWidget(w);
+      m_AdvParameterCount++;
+    }
+    else if(option->getCategory() == FilterParameter::RequiredArray)
+    {
+      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
+      //m_AdvVerticalLayout->addWidget(w);
+      rLayout->addWidget(w);
+      m_AdvParameterCount++;
+    }
+    if(option->getCategory() == FilterParameter::CreatedArray)
+    {
+      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
+      //m_AdvVerticalLayout->addWidget(w);
+      cLayout->addWidget(w);
       m_AdvParameterCount++;
     }
     else
     {
       w->setParent(m_BasicInputsWidget);
-      m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
+      //m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
+      pLayout->addWidget(w);
       m_BasicParameterCount++;
     }
 

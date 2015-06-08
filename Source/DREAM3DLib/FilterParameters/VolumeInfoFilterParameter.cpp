@@ -56,7 +56,7 @@ VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
 // -----------------------------------------------------------------------------
 VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty,
   const QString& widgetType, const IntVec3_t& defaultValue,
-  bool advanced,
+  Category category,
   const QString& units,
   const QString& resProperty, int groupIndex)
 {
@@ -67,7 +67,7 @@ VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString&
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setDimensionsProperty(dimsProperty);
   ptr->setResolutionProperty(resProperty);

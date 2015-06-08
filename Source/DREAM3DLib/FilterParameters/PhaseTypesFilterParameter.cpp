@@ -58,7 +58,7 @@ PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString&
   const QString& phaseTypeDataProperty,
   const QString& attributeMatrixProperty,
   const DataArrayPath attributeMatrixDefault,
-  bool advanced,
+  Category category,
   int groupIndex)
 {
   PhaseTypesFilterParameter::Pointer ptr = PhaseTypesFilterParameter::New();
@@ -66,7 +66,7 @@ PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString&
   ptr->setPropertyName(PhaseTypesArrayName);
   ptr->setWidgetType(FilterParameterWidgetType::PhaseTypeSelectionWidget);
 
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
   ptr->setGroupIndex(groupIndex);
 

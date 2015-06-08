@@ -48,6 +48,7 @@
 #include "DREAM3DLib/DataArrays/DynamicListArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
@@ -77,7 +78,7 @@ class SampleSurfaceMeshImpl
     void checkPoints(size_t start, size_t end) const
     {
       float radius = 0.0f;
-	    float distToBoundary = 0.0f;
+      float distToBoundary = 0.0f;
       int64_t numPoints = m_Points->getNumberOfVertices();
       FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower");
       FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right");
@@ -140,8 +141,8 @@ SampleSurfaceMesh::~SampleSurfaceMesh()
 void SampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

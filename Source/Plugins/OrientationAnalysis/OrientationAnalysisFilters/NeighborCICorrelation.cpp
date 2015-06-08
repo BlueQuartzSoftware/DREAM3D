@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -69,10 +70,10 @@ NeighborCICorrelation::~NeighborCICorrelation()
 void NeighborCICorrelation::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Confidence Index", "MinConfidence", FilterParameterWidgetType::DoubleWidget, getMinConfidence(), false));
-  parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget, getLoop(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getConfidenceIndexArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Minimum Confidence Index", "MinConfidence", FilterParameterWidgetType::DoubleWidget, getMinConfidence(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget, getLoop(), FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getConfidenceIndexArrayPath(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

@@ -56,7 +56,7 @@ FileSystemFilterParameter::~FileSystemFilterParameter()
 // -----------------------------------------------------------------------------
 FileSystemFilterParameter::Pointer FileSystemFilterParameter::New(const QString& humanLabel, const QString& propertyName,
   const QString& widgetType, const QVariant& defaultValue,
-  bool advanced,
+  Category category,
   const QString& units,
   const QString& fileExtension,
   const QString& fileType, int groupIndex)
@@ -66,7 +66,7 @@ FileSystemFilterParameter::Pointer FileSystemFilterParameter::New(const QString&
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);

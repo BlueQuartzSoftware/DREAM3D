@@ -76,10 +76,10 @@ NodesTrianglesToStl::~NodesTrianglesToStl()
 void NodesTrianglesToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget, getNodesFile(), false));
-  parameters.push_back(FileSystemFilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget, getTrianglesFile(), false));
-  parameters.push_back(FileSystemFilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget, getOutputStlDirectory(), false));
-  parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget, getOutputStlPrefix(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget, getNodesFile(), FilterParameter::Uncategorized));
+  parameters.push_back(FileSystemFilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget, getTrianglesFile(), FilterParameter::Uncategorized));
+  parameters.push_back(FileSystemFilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget, getOutputStlDirectory(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget, getOutputStlPrefix(), FilterParameter::Uncategorized));
 
 
   setFilterParameters(parameters);

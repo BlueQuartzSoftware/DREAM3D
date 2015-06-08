@@ -41,6 +41,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/StatisticsConstants.h"
 
@@ -78,20 +79,20 @@ CalculateArrayHistogram::~CalculateArrayHistogram()
 void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Selected Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
-  parameters.push_back(FilterParameter::New("Number of Bins", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), false));
+  parameters.push_back(FilterParameter::New("Selected Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Number of Bins", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), FilterParameter::Uncategorized));
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Min Value", "MinRange", FilterParameterWidgetType::DoubleWidget, getMinRange(), false));
-  parameters.push_back(FilterParameter::New("Max Value", "MaxRange", FilterParameterWidgetType::DoubleWidget, getMaxRange(), false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Min Value", "MinRange", FilterParameterWidgetType::DoubleWidget, getMinRange(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Max Value", "MaxRange", FilterParameterWidgetType::DoubleWidget, getMaxRange(), FilterParameter::Uncategorized));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false, ""));
-  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), false, ""));
-  parameters.push_back(FilterParameter::New("Histogram", "NewDataArrayName", FilterParameterWidgetType::StringWidget, getNewDataArrayName(), false, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Histogram", "NewDataArrayName", FilterParameterWidgetType::StringWidget, getNewDataArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

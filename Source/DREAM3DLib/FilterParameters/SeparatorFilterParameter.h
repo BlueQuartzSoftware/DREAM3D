@@ -1,6 +1,6 @@
 /* ============================================================================
-* Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -30,49 +30,32 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 *  This code was written under United States Air Force Contract number
-*                           FA8650-10-D-5210
+*                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "LinkedChoicesFilterParameter.h"
+#ifndef _SeparatorFilterParameter_H_
+#define _SeparatorFilterParameter_H_
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-LinkedChoicesFilterParameter::LinkedChoicesFilterParameter() :
-ChoiceFilterParameter()
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+
+class DREAM3DLib_EXPORT SeparatorFilterParameter : public FilterParameter
 {
-  setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-}
+public:
+  DREAM3D_SHARED_POINTERS(SeparatorFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(SeparatorFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(SeparatorFilterParameter, FilterParameter)
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-LinkedChoicesFilterParameter::~LinkedChoicesFilterParameter()
-{}
+    static Pointer New(const QString& humanLabel, FilterParameter::Category category);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue,
-  QVector<QString> choices,
-  QStringList linkedProperties,
-  Category category, int groupIndex)
-{
-  LinkedChoicesFilterParameter::Pointer ptr = LinkedChoicesFilterParameter::New();
-  ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-  ptr->setDefaultValue(defaultValue);
-  ptr->setCategory(category);
-  ptr->setChoices(choices);
-  ptr->setLinkedProperties(linkedProperties);
-  ptr->setEditable(false);
-  ptr->setGroupIndex(groupIndex);
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
-  return ptr;
-}
+  virtual ~SeparatorFilterParameter();
+
+protected:
+  SeparatorFilterParameter();
+
+private:
+  SeparatorFilterParameter(const SeparatorFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const SeparatorFilterParameter&); // Operator '=' Not Implemented
+};
+
+#endif /* _SeparatorFilterParameter_H_ */

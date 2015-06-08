@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -74,9 +75,9 @@ CorrelateValuesWithVectorDirection::~CorrelateValuesWithVectorDirection()
 void CorrelateValuesWithVectorDirection::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorDataArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCorrelatedDataArrayPath(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorDataArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCorrelatedDataArrayPath(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

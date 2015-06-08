@@ -88,10 +88,10 @@ void MoveData::setupFilterParameters()
   parameter->setLinkedProperties(linkedProps);
   parameter->setEditable(false);
   parameters.push_back(parameter);
-  parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), false, "", 0));
-  parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), false, "", 0));
-  parameters.push_back(FilterParameter::New("Attribute Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), false, "", 1));
-  parameters.push_back(FilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixDestination(), false, "", 1));
+  parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), FilterParameter::Uncategorized, "", 0));
+  parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), FilterParameter::Uncategorized, "", 0));
+  parameters.push_back(FilterParameter::New("Attribute Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), FilterParameter::Uncategorized, "", 1));
+  parameters.push_back(FilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixDestination(), FilterParameter::Uncategorized, "", 1));
   setFilterParameters(parameters);
 }
 

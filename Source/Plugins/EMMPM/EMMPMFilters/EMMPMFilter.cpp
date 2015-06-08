@@ -21,6 +21,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -56,27 +57,27 @@ void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Select Input Array", "InputDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputDataArrayPath()));
-  parameters.push_back(FilterParameter::New("Num Classes", "NumClasses", FilterParameterWidgetType::IntWidget, getNumClasses()));
-  parameters.push_back(FilterParameter::New("Exchange Energy", "ExchangeEnergy", FilterParameterWidgetType::DoubleWidget, getExchangeEnergy()));
-  parameters.push_back(FilterParameter::New("Histogram Loops (EM)", "HistogramLoops", FilterParameterWidgetType::IntWidget, getHistogramLoops()));
-  parameters.push_back(FilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", FilterParameterWidgetType::IntWidget, getSegmentationLoops()));
+  parameters.push_back(FilterParameter::New("Select Input Array", "InputDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputDataArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Num Classes", "NumClasses", FilterParameterWidgetType::IntWidget, getNumClasses(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Exchange Energy", "ExchangeEnergy", FilterParameterWidgetType::DoubleWidget, getExchangeEnergy(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Histogram Loops (EM)", "HistogramLoops", FilterParameterWidgetType::IntWidget, getHistogramLoops(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", FilterParameterWidgetType::IntWidget, getSegmentationLoops(), FilterParameter::Uncategorized));
 
-  parameters.push_back(FilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", FilterParameterWidgetType::BooleanWidget, getUseSimulatedAnnealing()));
+  parameters.push_back(FilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", FilterParameterWidgetType::BooleanWidget, getUseSimulatedAnnealing(), FilterParameter::Uncategorized));
 
   QStringList linkedProps("GradientPenalty");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Gradient Penalty (Beta E)", "GradientPenalty", FilterParameterWidgetType::DoubleWidget, getGradientPenalty()));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Gradient Penalty (Beta E)", "GradientPenalty", FilterParameterWidgetType::DoubleWidget, getGradientPenalty(), FilterParameter::Uncategorized));
 
   linkedProps.clear();
   linkedProps << "CurvaturePenalty" << "RMax" << "EMLoopDelay";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), linkedProps));
-  parameters.push_back(FilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", FilterParameterWidgetType::DoubleWidget, getCurvaturePenalty()));
-  parameters.push_back(FilterParameter::New("R Max", "RMax", FilterParameterWidgetType::DoubleWidget, getRMax()));
-  parameters.push_back(FilterParameter::New("EM Loop Delay", "EMLoopDelay", FilterParameterWidgetType::IntWidget, getEMLoopDelay()));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", FilterParameterWidgetType::DoubleWidget, getCurvaturePenalty(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("R Max", "RMax", FilterParameterWidgetType::DoubleWidget, getRMax(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("EM Loop Delay", "EMLoopDelay", FilterParameterWidgetType::IntWidget, getEMLoopDelay(), FilterParameter::Uncategorized));
 
-  parameters.push_back(FilterParameter::New("Output Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("Created Data Array", "OutputDataArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getOutputDataArrayPath()));
+  parameters.push_back(SeparatorFilterParameter::New("Output Data", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Created Data Array", "OutputDataArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getOutputDataArrayPath(), FilterParameter::Uncategorized));
 
   setFilterParameters(parameters);
 }

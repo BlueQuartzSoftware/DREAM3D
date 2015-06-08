@@ -48,6 +48,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -82,14 +83,14 @@ EddyCurrentDataReader::~EddyCurrentDataReader()
 void EddyCurrentDataReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.*"));
-  parameters.push_back(FilterParameter::New("Has Multiple Values", "HasMultipleValues", FilterParameterWidgetType::PreflightUpdatedValueWidget, getHasMultipleValues(), false, ""));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Uncategorized, "", "*.*"));
+  parameters.push_back(FilterParameter::New("Has Multiple Values", "HasMultipleValues", FilterParameterWidgetType::PreflightUpdatedValueWidget, getHasMultipleValues(), FilterParameter::Uncategorized, ""));
   parameters.back()->setReadOnly(true);
-  parameters.push_back(FilterParameter::New("Average Multiple Values", "AverageMultipleValues", FilterParameterWidgetType::BooleanWidget, getAverageMultipleValues(), false, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
-  parameters.push_back(FilterParameter::New("Meta Data Attribute Matrix", "MetaDataAttributeMatrixName", FilterParameterWidgetType::StringWidget, getMetaDataAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Average Multiple Values", "AverageMultipleValues", FilterParameterWidgetType::BooleanWidget, getAverageMultipleValues(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Meta Data Attribute Matrix", "MetaDataAttributeMatrixName", FilterParameterWidgetType::StringWidget, getMetaDataAttributeMatrixName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

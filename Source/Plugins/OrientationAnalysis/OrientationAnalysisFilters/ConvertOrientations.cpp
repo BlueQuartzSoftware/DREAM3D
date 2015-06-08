@@ -39,6 +39,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
@@ -71,8 +72,8 @@ void ConvertOrientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("Input Orientations", "InputOrientationArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputOrientationArrayPath(), false, "", 0));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Input Orientations", "InputOrientationArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputOrientationArrayPath(), FilterParameter::Uncategorized, "", 0));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Input Orientation Type");
@@ -83,7 +84,7 @@ void ConvertOrientations::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Output Orientation Array Name", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), false, "", 0));
+  parameters.push_back(FilterParameter::New("Output Orientation Array Name", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::Uncategorized, "", 0));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Orientation Type");

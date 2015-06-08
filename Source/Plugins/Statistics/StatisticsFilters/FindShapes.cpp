@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -86,16 +87,16 @@ FindShapes::~FindShapes()
 void FindShapes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayName", FilterParameterWidgetType::StringWidget, getOmega3sArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Axis Lengths", "AxisLengthsArrayName", FilterParameterWidgetType::StringWidget, getAxisLengthsArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getAxisEulerAnglesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayName", FilterParameterWidgetType::StringWidget, getAspectRatiosArrayName(), true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayName", FilterParameterWidgetType::StringWidget, getOmega3sArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Axis Lengths", "AxisLengthsArrayName", FilterParameterWidgetType::StringWidget, getAxisLengthsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getAxisEulerAnglesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayName", FilterParameterWidgetType::StringWidget, getAspectRatiosArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

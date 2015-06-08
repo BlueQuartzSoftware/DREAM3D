@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -42,7 +42,7 @@ FilterParameter::FilterParameter() :
   m_HumanLabel(""),
   m_PropertyName(""),
   m_WidgetType(""),
-  m_Advanced(false),
+  m_Category(Uncategorized),
   m_Units(""),
   m_ReadOnly(false),
   m_GroupIndex(-1)
@@ -53,7 +53,7 @@ FilterParameter::FilterParameter() :
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const QVariant& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -62,7 +62,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -78,7 +78,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const FloatVec3_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -89,7 +89,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -105,7 +105,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const FloatVec4_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -116,7 +116,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -131,7 +131,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const FloatVec21_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -142,7 +142,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -157,7 +157,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const Float2ndOrderPoly_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -168,7 +168,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -183,7 +183,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const Float3rdOrderPoly_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -194,7 +194,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -209,7 +209,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const Float4thOrderPoly_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -220,7 +220,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -235,7 +235,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const IntVec3_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -246,7 +246,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -261,7 +261,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const DataArrayPath& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
 
@@ -272,7 +272,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -287,7 +287,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const AxisAngleInput_t& defaultValue,
-                                              bool advanced,
+                                              Category category,
                                               const QString& units, int groupIndex)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -297,7 +297,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -312,7 +312,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const UInt32Vector_t& defaultValue,
-                                              bool advanced, const QString& units, int groupIndex)
+                                              Category category, const QString& units, int groupIndex)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -321,7 +321,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits(units);
   ptr->setGroupIndex(groupIndex);
 

@@ -49,7 +49,7 @@ public:
     static Pointer New(const QString& humanLabel, const QString& propertyName,
     const QVariant& defaultValue,
     QStringList conditionalProperties,
-    bool advanced = false,
+    Category category,
     int groupIndex = -1);
 
   virtual ~LinkedBooleanFilterParameter();

@@ -56,14 +56,14 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
   const QString& widgetType, const QVariant& defaultValue,
   const QString& phaseTypeCountProperty,
   const QString& phaseTypeArrayPathProperty,
-  bool advanced, int groupIndex)
+  Category category, int groupIndex)
 {
   ShapeTypesFilterParameter::Pointer ptr = ShapeTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
+  ptr->setCategory(category);
   ptr->setUnits("");
 
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
