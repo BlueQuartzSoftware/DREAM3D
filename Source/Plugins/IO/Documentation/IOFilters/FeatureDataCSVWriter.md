@@ -36,17 +36,15 @@ The csv file with Write Neighbor Data checked:
     8	1	-3.10085	0.678288	-2.69658	-0.32591	0.066789	0.226799	0.915361	2.51958	536	12	627	1	8.375
 
 
-	
-
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Output File | File Path |
-| Write Neighbor Data | Boolean (On of Off) |
+| Name | Type |Description |
+|------|------|------|
+| Output File | Select Push Button |Select a file with extension .csv |
+| Write Neighbor Data | Boolean | |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 None

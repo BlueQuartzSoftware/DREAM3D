@@ -8,7 +8,7 @@ I/O Filters (Output)
 ## Description ##
 
 This Filter writes to a Dx file. The file format is that used by the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
-For an example format, see the DXReader filter descriptions.
+For an example format, see the DXReader filter descriptions. Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.
 
 _See: www.opendx.org for more information._
 
@@ -44,27 +44,21 @@ The dx file with surface layer:
 	
 
 ## Parameters ##
-
-| Name | Type | Comment |
+| Name | Type | Description |
 |------|------|------|
-| Output File | Output File Path | file extension .dx |
-| Add Surface Layer | Boolean (On or Off) | This adds and "extra layer" of **Cells** around the outside of the structure and assigns them a *FeatureId* of *-3*. |
+| Output File | Select Push Button | Create a file with extension .dx |
+| Add Surface Layer | Boolean | This adds and "extra layer" of **Cells** around the outside of the structure and assigns them a *FeatureId* of *-3*. |
 
-
-## Required DataContainers ##
-
-Image Geometry Required
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeatureIds | Ids (int32) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 ## Created Arrays ##
 None
-
-
 
 ## License & Copyright ##
 

@@ -6,7 +6,7 @@ I/O Filters (Output)
 
 
 ## Description ##
-This Filter writes to a data file in a format used by Carnegie Mellon University.  See the [PhReader](PhReader.html "") filter description for example data format. 
+This Filter writes to a data file in a format used by Carnegie Mellon University.  See the [PhReader](PhReader.html "") filter description for example data format. Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. 
 
 ### Example Output ###
 **Example File (Partial)**
@@ -36,23 +36,20 @@ This Filter writes to a data file in a format used by Carnegie Mellon University
     …..
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------|------|
+| Output File | Select Push Button | Create a file with extension .ph |
 
-| Name | Type |
-|------|------|
-| Output File | ASCII File |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | FeatureIds | Ids (int32) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 ## Created Arrays ##
 None
-
 
 ## License & Copyright ##
 

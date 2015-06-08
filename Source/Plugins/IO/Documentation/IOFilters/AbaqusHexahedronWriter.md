@@ -119,16 +119,18 @@ The _sects.inp file:
 | Name             | Type | Description |
 |------------------|------|------------------------|
 | Output Path | String | Path to folder for the created files |
-| File Prefix | String | Prefix for the name of the 5 files |
-| Feature Ids | String | Input volume to be used to create the output files |
+| Output File Prefix | String | Prefix for the name of the 5 files |
 | Hour Glass Stiffness | Int | Only recommended if using C3D8R elements |
-| Job Name | String | Job Name if desired |
+| Job Name | String | Job Name, if desired |
+
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description |
-|------|--------------------|-------------|
-| Int  | none        | The array must be of the type int32 |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Feature  | None| int32 | (1) | Input volume to be used to create the output files |
 
 
 ## Created Arrays ##

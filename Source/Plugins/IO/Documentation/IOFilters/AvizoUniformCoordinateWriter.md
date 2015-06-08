@@ -6,7 +6,7 @@ I/O Filters (Output)
 
 ## Description ##
 
-This filter writes out a native Avizo Uniform Coordinate data file.
+This filter writes out a native Avizo Uniform Coordinate data file. Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.
 
 ### Example Output ###
 
@@ -33,20 +33,22 @@ This filter writes out a native Avizo Uniform Coordinate data file.
 	….. 
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Output File | Select Push Button | Amira Mesh .am file created|
+| Write Binary File | Boolean | binary file created |
 
-| Name | Type |
-|------|------|
-| Output File | Amira Mesh .am |
-| Write Binary File | Boolean (On or Off) |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image / Rectilinear Grid
+
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | FeatureIds | Ids (int32) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+
 
 ## Created Arrays ##
 None

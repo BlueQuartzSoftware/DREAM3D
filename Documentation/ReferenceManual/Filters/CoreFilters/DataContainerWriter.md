@@ -40,13 +40,14 @@ The Xdmf file (partial):
 
 ## Parameters ##
 
-| Name | Type |
+| Name | Type | Description |
 |------|------|
-| Output File | .dream3d |
-| Write Xdmf File | Boolean (On or Off) |
+| Output File | .dream3d | a dream3d file is created from the contents of memory |
+| Write Xdmf File (ParaView Compatible File) | Boolean | a xdmf file is created from the contents of memory, if checked |
+ 
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 None
