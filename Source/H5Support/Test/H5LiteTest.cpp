@@ -1315,7 +1315,7 @@ void writeVector (hid_t group, std::vector<std::string> const & v)
   hid_t datatype = H5Tcopy (H5T_C_S1);
   H5Tset_size (datatype, H5T_VARIABLE);
 
-  hid_t dataset = H5Dcreate (group, "files", datatype, dataspace, H5P_DEFAULT);
+  hid_t dataset = H5Dcreate(group, "files", datatype, dataspace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
   // 
   // Select the "memory" to be written out - just 1 record.
