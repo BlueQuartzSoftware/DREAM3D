@@ -246,9 +246,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     static QString            m_OpenDialogLastDirectory;
     AbstractFilter::Pointer   m_Filter;
     QVector<QWidget*>         m_FilterParameterWidgets;
-    QVBoxLayout*              m_BasicVerticalLayout;
+    QVBoxLayout*              m_VariablesVerticalLayout;
     QVBoxLayout*              m_CurrStrucVerticalLayout;
-    QWidget*                  m_BasicInputsWidget;
+    QWidget*                  m_VariablesWidget;
     QWidget*                  m_CurrentStructureWidget;
     IObserver*                m_Observer;
     QMap<QString, QWidget*>   m_PropertyToWidget;

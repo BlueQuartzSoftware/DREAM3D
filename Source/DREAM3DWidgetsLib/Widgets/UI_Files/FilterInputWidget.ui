@@ -73,9 +73,9 @@
         <property name="tabBarAutoHide">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="basicTab">
+        <widget class="QWidget" name="variablesTab">
          <attribute name="title">
-          <string>Basic</string>
+          <string>Variables</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <property name="leftMargin">
@@ -91,7 +91,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QScrollArea" name="basicScrollArea">
+           <widget class="QScrollArea" name="variablesScrollArea">
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
@@ -118,7 +118,7 @@
                <number>2</number>
               </property>
               <item>
-               <layout class="QGridLayout" name="basicInputsGrid"/>
+               <layout class="QGridLayout" name="variablesGrid"/>
               </item>
               <item>
                <spacer name="verticalSpacer">

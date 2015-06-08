@@ -125,14 +125,14 @@ void FilterInputWidget::on_filterHelpBtn_pressed()
 void FilterInputWidget::clearInputWidgets()
 {
   // Remove any existing input widgets
-  QLayoutItem* item = basicInputsGrid->itemAt(0);
+  QLayoutItem* item = variablesGrid->itemAt(0);
   if(item)
   {
     QWidget* w = item->widget();
     if(w)
     {
       w->setVisible(false);
-      basicInputsGrid->removeWidget(w);
+      variablesGrid->removeWidget(w);
     }
   }
   item = currentStructureGrid->itemAt(0);
@@ -167,7 +167,7 @@ void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
   clearInputWidgets();
-  basicInputsGrid->addWidget(w->getBasicInputsWidget());
+  variablesGrid->addWidget(w->getBasicInputsWidget());
   currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
   // Set the current index to the basic tab by default

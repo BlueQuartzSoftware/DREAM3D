@@ -94,9 +94,9 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
-  m_BasicVerticalLayout(NULL),
+  m_VariablesVerticalLayout(NULL),
   m_CurrStrucVerticalLayout(NULL),
-  m_BasicInputsWidget(NULL),
+  m_VariablesWidget(NULL),
   m_CurrentStructureWidget(NULL),
   m_Observer(NULL),
   m_ContextMenu(NULL),
@@ -113,7 +113,7 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
-  m_BasicInputsWidget(NULL),
+  m_VariablesWidget(NULL),
   m_Observer(observer),
   m_ContextMenu(new QMenu(this)),
   m_FilterInputWidget(NULL)
@@ -176,15 +176,15 @@ void PipelineFilterWidget::layoutWidgets()
   }
 
   // If the filter is valid then instantiate all the FilterParameterWidgets
-  // Create the Widget that will be placed into the Basic Inputs Scroll Area
-  m_BasicInputsWidget = new QWidget(this);
+  // Create the Widget that will be placed into the Variables Scroll Area
+  m_VariablesWidget = new QWidget(this);
 
-  QString basicname = QString::fromUtf8("basicInputsScrollWidget1_") + m_Filter->getNameOfClass();
-  m_BasicInputsWidget->setObjectName(basicname);
-  m_BasicInputsWidget->setGeometry(QRect(0, 0, 250, 267));
-  m_BasicVerticalLayout = new QVBoxLayout(m_BasicInputsWidget);
-  basicname = QString::fromUtf8("verticalLayout1") + m_Filter->getNameOfClass();
-  m_BasicVerticalLayout->setObjectName(basicname);
+  QString variablesName = QString::fromUtf8("variablesScrollWidget1_") + m_Filter->getNameOfClass();
+  m_VariablesWidget->setObjectName(variablesName);
+  m_VariablesWidget->setGeometry(QRect(0, 0, 250, 267));
+  m_VariablesVerticalLayout = new QVBoxLayout(m_VariablesWidget);
+  variablesName = QString::fromUtf8("verticalLayout1") + m_Filter->getNameOfClass();
+  m_VariablesVerticalLayout->setObjectName(variablesName);
 
   QString groupBoxStyle;
   QTextStream ss(&groupBoxStyle);
@@ -205,9 +205,9 @@ void PipelineFilterWidget::layoutWidgets()
   QVBoxLayout* cLayout = new QVBoxLayout(createdGroupBox);
   createdGroupBox->setStyleSheet(groupBoxStyle);
 
-  m_BasicVerticalLayout->addWidget(parametersGroupBox);
-  m_BasicVerticalLayout->addWidget(requiredGroupBox);
-  m_BasicVerticalLayout->addWidget(createdGroupBox);
+  m_VariablesVerticalLayout->addWidget(parametersGroupBox);
+  m_VariablesVerticalLayout->addWidget(requiredGroupBox);
+  m_VariablesVerticalLayout->addWidget(createdGroupBox);
 
   // Set the Name of the filter into the FilterWidget
   filterName->setText(m_Filter->getHumanLabel() );
@@ -229,25 +229,25 @@ void PipelineFilterWidget::layoutWidgets()
     if (NULL == w) { continue; }
     m_FilterParameterWidgets.push_back(w);
 
-    // Determine which layout to add the widget into
+    // Determine which group box to add the widget into
     if(option->getCategory() == FilterParameter::Parameter)
     {
-      w->setParent(m_BasicInputsWidget);// Set the parent for the widget
+      w->setParent(m_VariablesWidget);
       pLayout->addWidget(w);
     }
     else if(option->getCategory() == FilterParameter::RequiredArray)
     {
-      w->setParent(m_BasicInputsWidget);// Set the parent for the widget
+      w->setParent(m_VariablesWidget);
       rLayout->addWidget(w);
     }
     if(option->getCategory() == FilterParameter::CreatedArray)
     {
-      w->setParent(m_BasicInputsWidget);// Set the parent for the widget
+      w->setParent(m_VariablesWidget);
       cLayout->addWidget(w);
     }
     else
     {
-      w->setParent(m_BasicInputsWidget);
+      w->setParent(m_VariablesWidget);
       pLayout->addWidget(w);
     }
 
@@ -265,15 +265,11 @@ void PipelineFilterWidget::layoutWidgets()
   linkConditionalWidgets(filterParameters);
 
 
-  // Now layout the CurrenStructureWidget
+  // Now layout the Current Structure widget
   m_CurrentStructureWidget = new DataContainerArrayWidget(m_Filter.get(), this);
   QString curStructName = QString::fromUtf8("advancedInputsScrollWidget_CurrStructWidget");
   m_CurrentStructureWidget->setObjectName(curStructName);
   m_CurrentStructureWidget->setGeometry(QRect(0, 0, 250, 267));
-  //  m_CurrStrucVerticalLayout = new QVBoxLayout(m_CurrentStructureWidget);
-  //  curStructName = QString::fromUtf8("verticalLayout3");
-  //  m_CurrStrucVerticalLayout->setObjectName(curStructName);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -558,7 +554,7 @@ QVector<QWidget*>& PipelineFilterWidget::getFilterParameterWidgets()
 // -----------------------------------------------------------------------------
 QWidget* PipelineFilterWidget::getBasicInputsWidget()
 {
-  return m_BasicInputsWidget;
+  return m_VariablesWidget;
 }
 
 // -----------------------------------------------------------------------------
