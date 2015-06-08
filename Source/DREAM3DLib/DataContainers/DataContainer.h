@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -345,7 +345,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
         if (filter)
         {
           filter->setErrorCondition(-384);
-          QString ss = QObject::tr("Data Container Geometry is not compatible. The Geometry type is %1").arg(igeom->getGeometryTypeAsString());
+          QString ss = QObject::tr("Data Container Geometry is not compatible. The selected Geometry type is %1").arg(igeom->getGeometryTypeAsString());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return geom;
