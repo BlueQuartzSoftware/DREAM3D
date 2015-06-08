@@ -347,10 +347,11 @@ void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int inde
   // Select the first AttributeMatrix in the list
   if(attributeMatrixList->count() > 0)
   {
+    // Blank the attribute array choice, because we don't want to choose for them
+    attributeMatrixList->setCurrentIndex(-1);
+
     on_attributeMatrixList_currentIndexChanged(0);
-
   }
-
 }
 
 
