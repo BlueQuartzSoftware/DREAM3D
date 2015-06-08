@@ -95,10 +95,8 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
   m_BasicVerticalLayout(NULL),
-  m_AdvVerticalLayout(NULL),
   m_CurrStrucVerticalLayout(NULL),
   m_BasicInputsWidget(NULL),
-  m_AdvancedInputWidget(NULL),
   m_CurrentStructureWidget(NULL),
   m_Observer(NULL),
   m_ContextMenu(NULL),
@@ -116,7 +114,6 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
   m_BasicInputsWidget(NULL),
-  m_AdvancedInputWidget(NULL),
   m_Observer(observer),
   m_ContextMenu(new QMenu(this)),
   m_FilterInputWidget(NULL)
@@ -212,17 +209,6 @@ void PipelineFilterWidget::layoutWidgets()
   m_BasicVerticalLayout->addWidget(requiredGroupBox);
   m_BasicVerticalLayout->addWidget(createdGroupBox);
 
-  m_AdvancedInputWidget = new QWidget(this);
-  QString advname = QString::fromUtf8("advancedInputsScrollWidget2_") + m_Filter->getNameOfClass();
-  m_AdvancedInputWidget->setObjectName(advname);
-  m_AdvancedInputWidget->setGeometry(QRect(0, 0, 250, 267));
-  m_AdvVerticalLayout = new QVBoxLayout(m_AdvancedInputWidget);
-  advname = QString::fromUtf8("verticalLayout2") + m_Filter->getNameOfClass();
-  m_AdvVerticalLayout->setObjectName(advname);
-
-  m_BasicParameterCount = 0;
-  m_AdvParameterCount = 0;
-
   // Set the Name of the filter into the FilterWidget
   filterName->setText(m_Filter->getHumanLabel() );
 
@@ -246,31 +232,23 @@ void PipelineFilterWidget::layoutWidgets()
     // Determine which layout to add the widget into
     if(option->getCategory() == FilterParameter::Parameter)
     {
-      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
-      //m_AdvVerticalLayout->addWidget(w);
+      w->setParent(m_BasicInputsWidget);// Set the parent for the widget
       pLayout->addWidget(w);
-      m_AdvParameterCount++;
     }
     else if(option->getCategory() == FilterParameter::RequiredArray)
     {
-      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
-      //m_AdvVerticalLayout->addWidget(w);
+      w->setParent(m_BasicInputsWidget);// Set the parent for the widget
       rLayout->addWidget(w);
-      m_AdvParameterCount++;
     }
     if(option->getCategory() == FilterParameter::CreatedArray)
     {
-      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
-      //m_AdvVerticalLayout->addWidget(w);
+      w->setParent(m_BasicInputsWidget);// Set the parent for the widget
       cLayout->addWidget(w);
-      m_AdvParameterCount++;
     }
     else
     {
       w->setParent(m_BasicInputsWidget);
-      //m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
       pLayout->addWidget(w);
-      m_BasicParameterCount++;
     }
 
     // Connect up some signals and slots
@@ -581,14 +559,6 @@ QVector<QWidget*>& PipelineFilterWidget::getFilterParameterWidgets()
 QWidget* PipelineFilterWidget::getBasicInputsWidget()
 {
   return m_BasicInputsWidget;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QWidget* PipelineFilterWidget::getAdvancedInputsWidget()
-{
-  return m_AdvancedInputWidget;
 }
 
 // -----------------------------------------------------------------------------

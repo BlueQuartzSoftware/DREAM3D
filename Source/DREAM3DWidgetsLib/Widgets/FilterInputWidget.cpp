@@ -57,7 +57,6 @@
 enum TabIndices
 {
   BASIC_TAB,
-  ADVANCED_TAB,
   CURRENT_STRUCTURE_TAB,
   HELP_TAB
 };
@@ -136,17 +135,6 @@ void FilterInputWidget::clearInputWidgets()
       basicInputsGrid->removeWidget(w);
     }
   }
-  item = advInputsGrid->itemAt(0);
-  if(item)
-  {
-    QWidget* w = item->widget();
-    if(w)
-    {
-      w->setVisible(false);
-      advInputsGrid->removeWidget(w);
-    }
-  }
-
   item = currentStructureGrid->itemAt(0);
   if(item)
   {
@@ -169,7 +157,6 @@ void FilterInputWidget::clearInputWidgets()
 void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 {
   w->getBasicInputsWidget()->setParent(w);
-  w->getAdvancedInputsWidget()->setParent(w);
   clearInputWidgets();
 }
 
@@ -181,35 +168,12 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
   clearInputWidgets();
   basicInputsGrid->addWidget(w->getBasicInputsWidget());
-  advInputsGrid->addWidget(w->getAdvancedInputsWidget());
   currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
   // Set the current index to the basic tab by default
   tabWidget->setCurrentIndex(BASIC_TAB);
 
-  // First check to see if we even have advanced parameters and show/hide the buttons accordingly
-  bool showAdv = static_cast<bool>(w->getAdvParameterCount());
-  bool showBasic = static_cast<bool>(w->getBasicParameterCount());
-  // If we do NOT have any basic Parameters then disable the basic tab
-  if (showBasic == false)
-  {
-    tabWidget->setTabEnabled(BASIC_TAB, false);
-    tabWidget->setCurrentIndex(ADVANCED_TAB);
-  }
-
-  // If we do NOT have any advanced Parameters then disable the advanced tab
-  if (showAdv == false)
-  {
-    tabWidget->setTabEnabled(ADVANCED_TAB, false);
-
-    if (tabWidget->isTabEnabled(BASIC_TAB) == false)
-    {
-      tabWidget->setCurrentIndex(CURRENT_STRUCTURE_TAB);
-    }
-  }
-
   w->getBasicInputsWidget()->setVisible(true);
-  w->getAdvancedInputsWidget()->setVisible(true);
   w->getCurrentStructureWidget()->setVisible(true);
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on

@@ -102,7 +102,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     QVector<QWidget*>& getFilterParameterWidgets();
 
     QWidget* getBasicInputsWidget();
-    QWidget* getAdvancedInputsWidget();
     QWidget* getCurrentStructureWidget();
 
 
@@ -113,8 +112,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     void setContextMenuActions(QList<QAction*> list);
 
     DREAM3D_INSTANCE_PROPERTY(QString, BorderColorStyle)
-    DREAM3D_INSTANCE_PROPERTY(int, BasicParameterCount)
-    DREAM3D_INSTANCE_PROPERTY(int, AdvParameterCount)
 
   public slots:
 
@@ -250,10 +247,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     AbstractFilter::Pointer   m_Filter;
     QVector<QWidget*>         m_FilterParameterWidgets;
     QVBoxLayout*              m_BasicVerticalLayout;
-    QVBoxLayout*              m_AdvVerticalLayout;
     QVBoxLayout*              m_CurrStrucVerticalLayout;
     QWidget*                  m_BasicInputsWidget;
-    QWidget*                  m_AdvancedInputWidget;
     QWidget*                  m_CurrentStructureWidget;
     IObserver*                m_Observer;
     QMap<QString, QWidget*>   m_PropertyToWidget;
