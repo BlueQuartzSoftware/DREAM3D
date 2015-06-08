@@ -106,7 +106,7 @@ void WriteImages::setupFilterParameters()
   {
     QStringList linkedProps;
     linkedProps << "ImagePrefix";
-    parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, false));
+    parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, FilterParameter::Uncategorized));
   }
   parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), FilterParameter::Uncategorized));
   parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), FilterParameter::Uncategorized));

@@ -115,7 +115,7 @@ void WarpRegularGrid::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderBCoeff(), FilterParameter::Uncategorized, "", 2));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Uncategorized));
   setFilterParameters(parameters);

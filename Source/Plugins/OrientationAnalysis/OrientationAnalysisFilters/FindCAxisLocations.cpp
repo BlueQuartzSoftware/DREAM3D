@@ -77,7 +77,7 @@ void FindCAxisLocations::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Element Quaternions", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("C-Axis Locations", "CAxisLocationsArrayName", FilterParameterWidgetType::StringWidget, getCAxisLocationsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("C-Axis Locations", "CAxisLocationsArrayName", FilterParameterWidgetType::StringWidget, getCAxisLocationsArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

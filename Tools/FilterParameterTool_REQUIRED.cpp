@@ -197,7 +197,7 @@ QString createNewFilterInstance(QStringListIterator &sourceLines, QStringList &o
 // -----------------------------------------------------------------------------
 QString createSetupFilterParameters(QStringListIterator &sourceLines, QStringList &outLines, QString name, int index)
 {
-  //  parameters.push_back(FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  //  parameters.push_back(FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", FilterParameter::Uncategorized, ""));
   QString str;
   QTextStream out(&str);
   if(index == 0) {

@@ -109,7 +109,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   linkedProps << "InputStatsFile";
   parameters.push_back(SeparatorFilterParameter::New("Optional Information", FilterParameter::Uncategorized));
 
-  parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(FileSystemFilterParameter::New("Input Statistics File", "InputStatsFile", FilterParameterWidgetType::InputFileWidget, getInputStatsFile(), FilterParameter::Uncategorized, "", "*.dream3d"));
   parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), FilterParameter::Uncategorized, ""));
   parameters.back()->setReadOnly(true);

@@ -83,12 +83,12 @@ void CalculateArrayHistogram::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Number of Bins", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), FilterParameter::Uncategorized));
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Min Value", "MinRange", FilterParameterWidgetType::DoubleWidget, getMinRange(), FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Max Value", "MaxRange", FilterParameterWidgetType::DoubleWidget, getMaxRange(), FilterParameter::Uncategorized));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), FilterParameter::Uncategorized, ""));

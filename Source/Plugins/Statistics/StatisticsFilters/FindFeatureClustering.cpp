@@ -99,7 +99,7 @@ void FindFeatureClustering::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Phase Number", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), FilterParameter::Uncategorized, ""));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Uncategorized));
 
 
 

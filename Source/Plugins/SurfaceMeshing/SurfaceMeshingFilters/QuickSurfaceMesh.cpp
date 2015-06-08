@@ -86,7 +86,7 @@ void QuickSurfaceMesh::setupFilterParameters()
   QVector<FilterParameter::Pointer> parameters;
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath" << "FacePhasesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Transfer Phase Id", "TransferPhaseId", getTransferPhaseId(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Transfer Phase Id", "TransferPhaseId", getTransferPhaseId(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::Uncategorized, ""));

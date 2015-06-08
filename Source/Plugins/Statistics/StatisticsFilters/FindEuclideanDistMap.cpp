@@ -279,16 +279,16 @@ void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GBEuclideanDistancesArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Boundaries", "DoBoundaries", getDoBoundaries(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Boundaries", "DoBoundaries", getDoBoundaries(), linkedProps, FilterParameter::Uncategorized));
   linkedProps.clear();
   linkedProps << "TJEuclideanDistancesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Triple Lines", "DoTripleLines", getDoTripleLines(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Triple Lines", "DoTripleLines", getDoTripleLines(), linkedProps, FilterParameter::Uncategorized));
   linkedProps.clear();
   linkedProps << "QPEuclideanDistancesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Quadruple Points", "DoQuadPoints", getDoQuadPoints(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Quadruple Points", "DoQuadPoints", getDoQuadPoints(), linkedProps, FilterParameter::Uncategorized));
   linkedProps.clear();
   linkedProps << "NearestNeighborsArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store the Nearest Boundary Cells", "SaveNearestNeighbors", getSaveNearestNeighbors(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store the Nearest Boundary Cells", "SaveNearestNeighbors", getSaveNearestNeighbors(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", FilterParameterWidgetType::BooleanWidget, getCalcOnlyManhattanDist(), FilterParameter::Uncategorized, ""));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));

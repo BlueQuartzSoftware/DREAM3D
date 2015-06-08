@@ -103,7 +103,7 @@ void FindSchmids::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), FilterParameter::Uncategorized));
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
@@ -116,7 +116,7 @@ void FindSchmids::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Lambdas", "LambdasArrayName", FilterParameterWidgetType::StringWidget, getLambdasArrayName(), FilterParameter::Uncategorized, ""));
   QStringList linkedProps2;
   linkedProps2 << "SlipPlane" << "SlipDirection";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Slip Plane", "SlipPlane", FilterParameterWidgetType::FloatVec3Widget, getSlipPlane(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Slip Direction", "SlipDirection", FilterParameterWidgetType::FloatVec3Widget, getSlipDirection(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);

@@ -60,7 +60,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     }
   }
 
-  parameters.push_back(FilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", FilterParameterWidgetType::BooleanWidget, getUsePreviousMuSigma(), false));
+  parameters.push_back(FilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", FilterParameterWidgetType::BooleanWidget, getUsePreviousMuSigma(), FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Output ArrayName Prefix", "OutputArrayPrefix", FilterParameterWidgetType::StringWidget, getOutputArrayPrefix(), FilterParameter::Uncategorized));
 
   // Set the new parameters back into the class

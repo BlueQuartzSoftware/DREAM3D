@@ -39,7 +39,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include <QtCore/QFileInfo>
 
 /**
@@ -104,17 +104,17 @@ void GoldfeatherReader::setupFilterParameters()
   parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Uncategorized, "", "*.jg"));
 
 
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("SurfaceDataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("VertexAttributeMatrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("FaceAttributeMatrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature1s", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature2s", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection1s", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection2s", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeNormals", "SurfaceMeshNodeNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("SurfaceDataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("VertexAttributeMatrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("FaceAttributeMatrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature1s", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature2s", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection1s", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection2s", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshNodeNormals", "SurfaceMeshNodeNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

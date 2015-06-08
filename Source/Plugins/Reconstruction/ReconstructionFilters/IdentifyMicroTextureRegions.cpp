@@ -247,11 +247,11 @@ IdentifyMicroTextureRegions::~IdentifyMicroTextureRegions()
 void IdentifyMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget, getCAxisTolerance(), false, "Degrees"));
-  parameters.push_back(FilterParameter::New("Minimum MicroTextured Region Size (Diameter)", "MinMTRSize", FilterParameterWidgetType::DoubleWidget, getMinMTRSize(), false));
+  parameters.push_back(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget, getCAxisTolerance(), FilterParameter::Uncategorized, "Degrees"));
+  parameters.push_back(FilterParameter::New("Minimum MicroTextured Region Size (Diameter)", "MinMTRSize", FilterParameterWidgetType::DoubleWidget, getMinMTRSize(), FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Minimum Volume Fraction in MTR", "MinVolFrac", FilterParameterWidgetType::DoubleWidget, getMinVolFrac(), FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("C-Axis Locations", "CAxisLocationsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCAxisLocationsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("C-Axis Locations", "CAxisLocationsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCAxisLocationsArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));

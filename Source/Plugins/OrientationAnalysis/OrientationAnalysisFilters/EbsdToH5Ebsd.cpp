@@ -90,7 +90,7 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget, "", false, "", "*.h5ebsd"));
+  parameters.push_back(FileSystemFilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget, "", FilterParameter::Uncategorized));
   setFilterParameters(parameters);
 }
 

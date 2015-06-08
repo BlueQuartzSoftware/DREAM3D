@@ -82,7 +82,7 @@ void FindAvgCAxes::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Avgerage C-Axes", "AvgCAxesArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Avgerage C-Axes", "AvgCAxesArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxesArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
 }
 

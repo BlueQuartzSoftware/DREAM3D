@@ -97,7 +97,7 @@ void FindEllipsoidError::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", FilterParameterWidgetType::StringWidget, getEllipsoidErrorArrayName(), FilterParameter::Uncategorized, ""));
   QStringList linkedProps("IdealFeatureIdsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getIdealFeatureIdsArrayName(), FilterParameter::Uncategorized, ""));
 
   setFilterParameters(parameters);

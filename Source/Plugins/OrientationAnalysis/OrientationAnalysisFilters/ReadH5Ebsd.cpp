@@ -106,7 +106,7 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Read H5Ebsd File", "", FilterParameterWidgetType::ReadH5EbsdWidget, "", false, "", "*.h5ebsd"));
+  parameters.push_back(FileSystemFilterParameter::New("Read H5Ebsd File", "", FilterParameterWidgetType::ReadH5EbsdWidget, "", FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::Uncategorized, ""));

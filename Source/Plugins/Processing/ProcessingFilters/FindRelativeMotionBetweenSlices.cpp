@@ -159,11 +159,11 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Patch Size 1 (Voxels)", "PSize1", FilterParameterWidgetType::IntWidget, getPSize1(), false));
-  parameters.push_back(FilterParameter::New("Patch Size 2 (Voxels)", "PSize2", FilterParameterWidgetType::IntWidget, getPSize2(), false));
-  parameters.push_back(FilterParameter::New("Search Distance 1 (Voxels)", "SSize1", FilterParameterWidgetType::IntWidget, getSSize1(), false));
-  parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget, getSSize2(), false));
-  parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget, getSliceStep(), false));
+  parameters.push_back(FilterParameter::New("Patch Size 1 (Voxels)", "PSize1", FilterParameterWidgetType::IntWidget, getPSize1(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Patch Size 2 (Voxels)", "PSize2", FilterParameterWidgetType::IntWidget, getPSize2(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Search Distance 1 (Voxels)", "SSize1", FilterParameterWidgetType::IntWidget, getSSize1(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget, getSSize2(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget, getSliceStep(), FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Motion Direction", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, getMotionDirectionArrayName(), FilterParameter::Uncategorized, ""));
   setFilterParameters(parameters);
