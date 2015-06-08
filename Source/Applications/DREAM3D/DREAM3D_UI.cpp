@@ -1066,6 +1066,8 @@ void DREAM3D_UI::initializeMenuActions()
   m_ActionExit->setObjectName(QString::fromUtf8("m_ActionExit"));
   m_ActionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
 #if defined(Q_OS_WIN)
+  QKeySequence m_ActionCloseWindowKeySeq(Qt::ALT + Qt::Key_F4);
+  m_ActionExit->setShortcut(m_ActionCloseWindowKeySeq);
   connect(m_ActionExit, SIGNAL(triggered()),
     this, SLOT(closeWindow()));
 #else
