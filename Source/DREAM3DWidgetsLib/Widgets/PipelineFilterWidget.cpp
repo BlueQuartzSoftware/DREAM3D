@@ -48,7 +48,9 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QDrag>
+
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QGroupBox>
 
 
 #include "QtSupportLib/DREAM3DStyles.h"
@@ -187,6 +189,29 @@ void PipelineFilterWidget::layoutWidgets()
   basicname = QString::fromUtf8("verticalLayout1") + m_Filter->getNameOfClass();
   m_BasicVerticalLayout->setObjectName(basicname);
 
+  QString groupBoxStyle;
+  QTextStream ss(&groupBoxStyle);
+  ss << "QGroupBox\n";
+  ss << "{\n";
+  ss << "font-weight: bold\n";
+  ss << "}";
+  
+  QGroupBox* parametersGroupBox = new QGroupBox("Parameters", this);
+  QVBoxLayout* pLayout = new QVBoxLayout(parametersGroupBox);
+  parametersGroupBox->setStyleSheet(groupBoxStyle);
+
+  QGroupBox* requiredGroupBox = new QGroupBox("Required Arrays", this);
+  QVBoxLayout* rLayout = new QVBoxLayout(requiredGroupBox);
+  requiredGroupBox->setStyleSheet(groupBoxStyle);
+
+  QGroupBox* createdGroupBox = new QGroupBox("Created Arrays", this);
+  QVBoxLayout* cLayout = new QVBoxLayout(createdGroupBox);
+  createdGroupBox->setStyleSheet(groupBoxStyle);
+
+  m_BasicVerticalLayout->addWidget(parametersGroupBox);
+  m_BasicVerticalLayout->addWidget(requiredGroupBox);
+  m_BasicVerticalLayout->addWidget(createdGroupBox);
+
   m_AdvancedInputWidget = new QWidget(this);
   QString advname = QString::fromUtf8("advancedInputsScrollWidget2_") + m_Filter->getNameOfClass();
   m_AdvancedInputWidget->setObjectName(advname);
@@ -222,13 +247,15 @@ void PipelineFilterWidget::layoutWidgets()
     if(option->getAdvanced() == true)
     {
       w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
-      m_AdvVerticalLayout->addWidget(w);
+      //m_AdvVerticalLayout->addWidget(w);
+      cLayout->addWidget(w);
       m_AdvParameterCount++;
     }
     else
     {
       w->setParent(m_BasicInputsWidget);
-      m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
+      //m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
+      rLayout->addWidget(w);
       m_BasicParameterCount++;
     }
 
