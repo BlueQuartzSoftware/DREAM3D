@@ -44,6 +44,8 @@
 
 #include <QtCore/QDateTime>
 
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
