@@ -27,9 +27,6 @@ Not Applicable
 | Any | User set | Any | Any |Array will have same values as its old counterpart |
 
 
-
-
-
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

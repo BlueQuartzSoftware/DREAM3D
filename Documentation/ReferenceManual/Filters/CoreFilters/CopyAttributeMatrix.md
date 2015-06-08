@@ -8,7 +8,9 @@ Core Filters (Memory/Management)
 This filter copies a user chosen AttributeMatrx to a new AttributeMatrix with a user defined new name to the same data container.
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------| ----------- |
+| New Attribute Matrix Name | String | Name for the copied attribute matrix |
 
 ## Required Geometry ##
 Not Applicable

@@ -1,4 +1,4 @@
-Name of Filter {#movedata}
+Move Data {#movedata}
 =====
 
 ## Group (Subgroup) ##
@@ -9,18 +9,23 @@ Core Filters (Memory/Management)
 This filter allows the user to move a data array from one attribute matrix to another compatible attribute matrix.  It also allows the user to move an attribute matrix from one data container to another data container.  The Attribute Matrix Source and Data Container Destination are displayed if Attribute Matrix is selected to move. The Attribute Array Source and Attribute Matrix Destination are displayed if  Attribute Array is selected to move. Attribute matrices are compatible if the number of tuples are equal.
 
 ## Parameters ##
-| Name             | Type | Comment |
-|------------------|------|-------------|
-| Input Attribute Matrix or Array | String | What to Move |
-| Attribute Matrix or Array Source|  String | Source of What to Move |
-| Data Container or Attribute Matrix Destination | String | Where to Move |
+None
 
-## Required Attribute Matrix or Array ##
-Selection of Attribute Matrix or Array to Move
+## Required Geometry ##
+Not Applicable
+
+## Required Arrays ##
+
+
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any  | None         | Any | Any | Selection of Attribute Matrix or Array to Move |
 
 
 ## Created Arrays ##
-None
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any  | None         | Any | Any | Attribute Matrix or Array from selection |
 
 ## License & Copyright ##
 

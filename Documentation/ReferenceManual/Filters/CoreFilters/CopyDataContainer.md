@@ -9,19 +9,19 @@ Core Filters (Memory/Management)
 This filter copies a user chosen DataContainer to a new DataContainer with a user defined new name.
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Input DataContainer | String |
-
-## Required ##
-
-A DataContainer to copy.
+| Name | Type | Description |
+|------|------| ----------- |
+| New Data Container Name | String | Name for the copied data container |
 
 
-## Created ##
+## Required Geometry ##
+Not Applicable
 
-A new DataContiner with the user defined name.
+## Required Arrays ##
+None
 
+## Created Arrays ##
+None
 
 ## License & Copyright ##
 

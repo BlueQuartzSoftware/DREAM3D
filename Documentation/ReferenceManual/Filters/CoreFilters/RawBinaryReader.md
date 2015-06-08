@@ -16,12 +16,6 @@ This filter will error out and block the pipeline from running if the total numb
 
 The user can use an input file that is actually **Larger** than the number of bytes required by the filter and the filter will only read the first part of the file unless an amount of bytes to skip is set. See more input parameters farther down the documentation.
 
----
-
-![User Interface for Raw Binary Reader](RawBinaryReader-GUI.png)
-@image latex RawBinaryReader-GUI.png " " width=5in
-
----
 
 ### Scalar Type ###
 
@@ -98,11 +92,25 @@ Using this filter in combination with an existing pipeline that would already ha
 
 ## Parameters ##
 
-See above
+| Name | Type | Description |
+|------|------| ----------- |
+| Input File | Push Button | Select binary file |
+| Scalar Type | Enumeration | Data type |
+| Dimensionality | Integer | Number of dimensions |
+| Number Of Components | Integer |  |
+| Endian | Enumeration |  |
+| Dimensions | Integer | X,Y,Z |
+| Origin | Integer | X,Y,Z |
+| Resolution | Integer | X,Y,Z |
+| Over Ride Origin & Resolution | Boolean |  |
+| Skip Header Bytes | Integer | Number of bytes in the header |
+| Output Array Name | String | Created array name |
+| Add to Existing Data Container & Attribute Matrix | Boolean |  |
+| Data Container Name | String | |
+| Cell Attribute Matrix Name | String | |
 
-## Required DataContainers ##
-
-Voxel DataContainer
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
@@ -110,7 +118,9 @@ None
 
 ## Created Arrays ##
 
-Single Array based on the parameters of the filter
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any | User set | Any | Any | |
 
 
 

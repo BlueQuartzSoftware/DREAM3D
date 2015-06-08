@@ -11,26 +11,30 @@ This filter copies all the associated **Cells** to the **Feature** that they bel
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Cell Array Name | String |
+| Name | Type | Description |
+|------|------|---------------|
+| New Feature Array Name | String |  |
 
-## Required DataContainers ##
+## Required Geometry ##
+Not Applicable
 
-Voxel DataContainer
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| Feature  | None | Any | Any | Feature Array |
+
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell  | None | Any | Any | Element Feature Ids  |
 
 
 ## Created Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | *User Chosen* | | Array will have same name as its **Cell** counterpart |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Feature | *User Chosen* | |  |
 
 ## License & Copyright ##
 

@@ -23,7 +23,7 @@ This filter creates a DataArray of any primitive type with any number of compone
     static const int Bool = 10;
     
 
-## Data Types ##
+**Data Types** 
 
 | Type             | Size |        Range       |
 |------------------|------|--------------------|
@@ -44,25 +44,24 @@ must have a user entry or the default value will be used.
 
 ## Parameters ##
 
-| Name             | Type |
-|------------------|------|
-| AttributeMatrix | DataArrayPath |
-| Output DataArray Name | String |
-| Scalar Type | Integer |
+| Name             | Type | Description |
+|------------------|------|-------------|
+| Output Array Name | String | Name for created array |
+| Scalar Type | Integer | Data type for created array |
 | Number of Components | Integer |
-| Initialization Value | double |
+| Initialization Value | double | Fill value for array |
+
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
 None
-
-
 
 ## Created Arrays ##
 
-| Type | Default Array Name |
-|--------|----------------------------|
-| Based on User Input  | User Settable  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|----------------|
+| Any | None | User chosen | User chosen | |
 
 
 ## License & Copyright ##

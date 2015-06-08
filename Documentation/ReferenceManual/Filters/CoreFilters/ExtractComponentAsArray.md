@@ -10,24 +10,25 @@ This filter will create an attribute array from a single component of a user cho
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Component Number | Integer | The Component Number |
+| Component Number to Extract| Integer | The number of which component|
+| New Scalar Array Name| String |  Output name for one component array|
 
+
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | None         | Any | (1) |  |
+| Any  | None | Any | >1 | Multi-Component |
 
 
 ## Created Arrays ##
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | User set | Any | Any | Single component array|
-
-
-
+| Any | None | Any | (1) | Single component array|
 
 
 ## License & Copyright ##
