@@ -1353,6 +1353,132 @@ void TestVLength()
 
 }
 
+#if 0
+
+class WriteString
+{
+public:
+	WriteString(hid_t dataset, hid_t datatype, hid_t dataspace, hid_t memspace)
+		: m_dataset(dataset), m_datatype(datatype), m_dataspace(dataspace), m_memspace(memspace), m_pos() {}
+
+private:
+	hid_t m_dataset;
+	hid_t m_datatype;
+	hid_t m_dataspace;
+	hid_t m_memspace;
+	int m_pos;
+	//...
+
+public:
+	void operator ()(std::vector<std::string>::value_type const & v)
+	{
+		// Select the file position, 1 record at position 'pos'
+		hsize_t count[] = { 1 };
+		hsize_t offset[] = { m_pos++ };
+		H5Sselect_hyperslab(m_dataspace, H5S_SELECT_SET, offset, NULL, count, NULL);
+
+		const char * s = v.c_str();
+		H5Dwrite(m_dataset, m_datatype, m_memspace, m_dataspace, H5P_DEFAULT, &s);
+	}
+};
+
+// -----------------------------------------------------------------------------
+//  Use unit test framework
+// -----------------------------------------------------------------------------
+void TestVLengStringReadWrite()
+{
+
+	{
+		hid_t file_id = QH5Utilities::createFile(UnitTest::DataArrayTest::VLenStringFile);
+
+		std::vector<std::string> strings;
+		strings.push_back("Testing 1 2 3");
+		strings.push_back("String with a\n   newline");
+		strings.push_back("Some other String");
+		strings.push_back("Titanium");
+		strings.push_back("Nickel");
+
+		hsize_t  dims[1] = { strings.size() };
+		hid_t dataspace = H5Screate_simple(sizeof(dims) / sizeof(*dims)
+
+			hid_t memspace = H5Screate_simple(sizeof(dims) / sizeof(*dims), dims, NULL);
+
+		hid_t datatype = H5Tcopy(H5T_C_S1);
+		H5Tset_size(datatype, H5T_VARIABLE);
+
+		hid_t dataset = H5Dcreate(group, "VlenStrings", datatype, dataspace, H5P_DEFAULT);
+
+		// 
+		// Select the "memory" to be written out - just 1 record.
+		hsize_t offset[] = { 0 };
+		hsize_t count[] = { 1 };
+		H5Sselect_hyperslab(memspace, H5S_SELECT_SET, offset, NULL, count, NULL);
+
+		std::for_each(v.begin(), v.end(), WriteStrings(dataset, datatype, dataspace, memspace));
+
+		H5Dclose(dataset);
+		H5Sclose(dataspace);
+		H5Sclose(memspace);
+		H5Tclose(datatype);
+
+		QH5Utilities::closeFile(file_id);
+	}
+
+  {
+
+	  hid_t file_id = QH5Utilities::openFile(UnitTest::DataArrayTest::VLenStringFile, true);
+
+	  hid_t dset = H5Dopen(file, DATASET);
+
+	  /*
+	  * Get the datatype.
+	  */
+	  hid_t filetype = H5Dget_type(dset);
+
+	  /*
+	  * Get dataspace and allocate memory for read buffer.
+	  */
+	  hid_t space = H5Dget_space(dset);
+	  int ndims = H5Sget_simple_extent_dims(space, dims, NULL);
+	  char** rdata = (char **)malloc(dims[0] * sizeof(char *));
+
+	  /*
+	  * Create the memory datatype.
+	  */
+	  hid_t memtype = H5Tcopy(H5T_C_S1);
+	  herr_t status = H5Tset_size(memtype, H5T_VARIABLE);
+
+	  /*
+	  * Read the data.
+	  */
+	  status = H5Dread(dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, rdata);
+
+	  /*
+	  * Output the data to the screen.
+	  */
+	  for (int i = 0; i<dims[0]; i++)
+		  printf("%s[%d]: %s\n", DATASET, i, rdata[i]);
+
+	  /*
+	  * Close and release resources.  Note that H5Dvlen_reclaim works
+	  * for variable-length strings as well as variable-length arrays.
+	  * Also note that we must still free the array of pointers stored
+	  * in rdata, as H5Tvlen_reclaim only frees the data these point to.
+	  */
+	  status = H5Dvlen_reclaim(memtype, space, H5P_DEFAULT, rdata);
+	  free(rdata);
+	  status = H5Dclose(dset);
+	  status = H5Sclose(space);
+	  status = H5Tclose(filetype);
+	  status = H5Tclose(memtype);
+
+	  QH5Utilities::closeFile(file_id);
+  }
+
+}
+
+#endif
+
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
