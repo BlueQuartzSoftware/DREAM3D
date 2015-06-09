@@ -152,7 +152,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 
     QString appMajor = DREAM3DLib::Version::Major();
     QString appMinor = DREAM3DLib::Version::Minor();
-    QString appPatch = DREAM3DLib::Version::Complete();
+    QString appPatch = DREAM3DLib::Version::Patch();
 
     bool ok = false;
     AppVersion appVersion;
