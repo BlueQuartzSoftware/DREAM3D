@@ -49,7 +49,7 @@ public:
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new InputPathWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new InputPathWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 

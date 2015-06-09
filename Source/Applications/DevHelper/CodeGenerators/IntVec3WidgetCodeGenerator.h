@@ -49,7 +49,7 @@ public:
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new IntVec3WidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new IntVec3WidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 

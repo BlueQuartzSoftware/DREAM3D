@@ -49,7 +49,7 @@ public:
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new ThirdOrderPolynomialWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new ThirdOrderPolynomialWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
