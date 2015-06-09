@@ -77,15 +77,15 @@ FindNeighborhoods::~FindNeighborhoods()
 void FindNeighborhoods::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Multiples Of Average Diameter", "MultiplesOfAverage", FilterParameterWidgetType::DoubleWidget, getMultiplesOfAverage(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Multiples Of Average Diameter", "MultiplesOfAverage", FilterParameterWidgetType::DoubleWidget, getMultiplesOfAverage(), FilterParameter::Parameter));
 
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodsArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Neighborhood List", "NeighborhoodListArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodListArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
+
+
+  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Neighborhood List", "NeighborhoodListArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodListArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

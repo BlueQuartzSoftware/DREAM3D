@@ -70,11 +70,12 @@ FindVolFractions::~FindVolFractions()
 void FindVolFractions::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Element Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Volume Fractions", "VolFractionsArrayName", FilterParameterWidgetType::StringWidget, getVolFractionsArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Element Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Volume Fractions", "VolFractionsArrayName", FilterParameterWidgetType::StringWidget, getVolFractionsArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

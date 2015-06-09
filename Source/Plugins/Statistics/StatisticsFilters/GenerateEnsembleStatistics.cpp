@@ -146,7 +146,6 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 
   FilterParameterVector parameters;
 
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   // The AttributeMatrix that the PhaseTypes are going into
   //parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), FilterParameter::Uncategorized, ""));
 
@@ -158,9 +157,9 @@ void GenerateEnsembleStatistics::setupFilterParameters()
                                                              "PhaseTypeData",
                                                              "CellEnsembleAttributeMatrixPath",
                                                              getCellEnsembleAttributeMatrixPath(),
-                                                             FilterParameter::Uncategorized);
+                                                             FilterParameter::Parameter);
   parameters.push_back(phaseType_parameter);
-  parameters.push_back(FilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", FilterParameterWidgetType::DoubleWidget, getSizeCorrelationResolution(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", FilterParameterWidgetType::DoubleWidget, getSizeCorrelationResolution(), FilterParameter::Parameter));
 
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
@@ -169,7 +168,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 
   linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Radial Distribution Function", "RDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getRDFArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Radial Distribution Function", "RDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getRDFArrayPath(), FilterParameter::Parameter, ""));
   parameters.push_back(FilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaxMinRDFArrayPath(), FilterParameter::Uncategorized, ""));
   linkedProps.clear();
 
@@ -179,7 +178,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps << "Omega3DistributionFitType" << "Omega3sArrayPath";
   linkedProps << "NeighborhoodDistributionFitType" << "NeighborhoodsArrayPath";
   linkedProps << "CalculateAxisODF" << "AxisEulerAnglesArrayPath" << "SEPARATOR-2";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Morphological Statistics", "CalculateMorphologicalStats", getCalculateMorphologicalStats(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Morphological Statistics", "CalculateMorphologicalStats", getCalculateMorphologicalStats(), linkedProps, FilterParameter::Parameter));
 
 
   parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false, FilterParameter::Uncategorized));

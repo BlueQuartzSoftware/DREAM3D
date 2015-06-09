@@ -71,11 +71,11 @@ FindSurfaceAreaToVolume::~FindSurfaceAreaToVolume()
 void FindSurfaceAreaToVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Surface Area To Volume Ratio", "SurfaceAreaVolumeRatioArrayName", FilterParameterWidgetType::StringWidget, getSurfaceAreaVolumeRatioArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Surface Area To Volume Ratio", "SurfaceAreaVolumeRatioArrayName", FilterParameterWidgetType::StringWidget, getSurfaceAreaVolumeRatioArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

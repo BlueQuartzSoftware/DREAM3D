@@ -73,11 +73,13 @@ FindNumFeatures::~FindNumFeatures()
 void FindNumFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Feature Phases Array Path", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Number Of Features", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Feature Phases Array Path", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), FilterParameter::RequiredArray));
+
+
+  parameters.push_back(FilterParameter::New("Number Of Features", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), FilterParameter::CreatedArray));
+
   setFilterParameters(parameters);
 }
 

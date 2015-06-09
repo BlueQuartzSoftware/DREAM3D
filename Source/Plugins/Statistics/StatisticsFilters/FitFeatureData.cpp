@@ -83,7 +83,7 @@ FitFeatureData::~FitFeatureData()
 void FitFeatureData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), FilterParameter::Uncategorized));
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
@@ -94,17 +94,18 @@ void FitFeatureData::setupFilterParameters()
     choices.push_back("Log-Normal");
     choices.push_back("Power Law");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter));
 
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Fit Parameters", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), FilterParameter::RequiredArray));
+
+  parameters.push_back(FilterParameter::New("Fit Parameters", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 
