@@ -40,6 +40,11 @@
 
 int main(int argc, char* argv[])
 {
+  QCoreApplication::setApplicationName("DREAM3D_V5");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
   QApplication app(argc, argv);
 
   DevHelper* helper = new DevHelper;
