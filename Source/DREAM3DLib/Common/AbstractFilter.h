@@ -139,7 +139,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     // ------------------------------
     // Standard methods for this class the are commonly used by subclasses.
     // ------------------------------
-    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Package(); }
+    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Major() + DREAM3DLib::Version::Minor() + DREAM3DLib::Version::Patch(); }
 
     DREAM3D_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)
 
