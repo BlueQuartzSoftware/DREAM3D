@@ -2,7 +2,7 @@ SurfaceMeshToStl Filter {#surfacemeshtostl}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+I/O Filters (Output)
 
 ## Description ##
 This filter will write a binary STL File for each unique **Feature** or Region ID in the surface Mesh. The STL files
@@ -11,20 +11,21 @@ will be named with the [Grain_id].stl. The user can designate an optional prefix
 
 ## Parameters ##
 
-| Name | Type | Comment |
+| Name | Type | Description |
 |------|------|------|
-| Output STL Directory | Path to Directory | The path to the output directory where all of the individual STL files will be saved |
+| Output STL Directory | File Path | The path to the output directory where all of the individual STL files will be saved |
 | Stl File Prefix | String | Optional Prefix to use when creating the stl file name. |
+| Group Files By Phase | Boolean | Include SurfaceMeshFacePhases |
 
-## Required DataContainers ##
-SurfaceMesh
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| NodeArray | | The shared node (vertex) list |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| FaceArray | | The list of all triangles (faces) in the mesh |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| SurfaceMeshFaceLabels | None | The list of all triangles (faces) in the mesh | (2)   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| SurfaceMeshNodeType | None |The shared node (vertex) list | (2) | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 ## Created Arrays ##
 None

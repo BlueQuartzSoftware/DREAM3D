@@ -2,36 +2,29 @@ Write NonConformal Vtk PolyData from SurfaceMesh {#surfacemeshtononconformalvtk}
 ======
 
 ## Group (Subgroup) ##
-IO Filters (Output)
+I/O Filters (Output)
 
 ## Description ##
 
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Output Vtk File | Output File |
-| Write Binary Vtk File | Boolean (On or Off) |
+| Name | Type | Description |
+|------|------|-------------|
+| Output Vtk File | Output Path | Creates a .vtk file |
+| Write Binary Vtk File | Boolean | binary |
 
-## Required DataContainers ##
-SurfaceMesh
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| NodeArray Attribute | SurfaceMeshNodeType | The node types values |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Feature** Id Labels for each Face(Triangle) |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| NodeArray | | The shared node (vertex) list |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| FaceArray | | The list of all triangles (faces) in the mesh |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-
+| SurfaceMeshFaceLabels | None | The list of all triangles (faces) in the mesh | (2)   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| SurfaceMeshNodeType | None |The shared node (vertex) list | (2) | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 ## Created Arrays ##
 None
-
-
-
 
 ## License & Copyright ##
 

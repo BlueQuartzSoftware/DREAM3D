@@ -6,7 +6,7 @@ Visualize GBCD {#visualizegbcdpolefigure}
 __This filter is highly experimental and under heavy development. Future versions of DREAM3D may not have this filter or output completely different files. Please do not depend on this filter for long term research use.__
 
 ## Group (Subgroup) ##
-IO Filters
+I/O Filters (Output)
 
 ## Description ##
 
@@ -44,27 +44,22 @@ To generate this view in ParaView the user should load the .vtk file and then ap
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Misorientation Angle | Floating Point value in DEGREES |
-| Misorientation Axis | Floating point 1x3 vector that is the rotation axis |
-| Regular Grid File Path | Vtk Rectilinear Grid |
-|  Irregular grid  File Path | Vtk Point Data |
-| Irregular Grid Sphere Coords | Vtk Point Data |
-| GMT Plot file | .dat file |
+| Name | Type | Description |
+|------|------|-------------|
+| Crystal Structure | Enumeration | Chose from Hexagonal-High 6/mmm or Cubic-High m-3m |
+| Misorientation Angle | float | Floating Point value in DEGREES |
+| Misorientation Axis | float | Floating point 1x3 vector that is the rotation axis |
+| Regular Grid Pole Figure | File Path |  Vtk Rectilinear Grid |
 
 
-## Required DataContainers ##
-
-SurfaceMesh
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|--------|--------------------|----------------|----------------|----------------------------------------|
-| 5 Dimension GBCD Array | GBCDArray | The 5 parameter GBCD data | Currently stored as Ensemble data in the Surface Mesh Data Container | FindGBCD |
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| GBDC | None | 5 parameter GBCD data | (5) | Currently stored as Ensemble data in the Surface Mesh Data Container. Filters Known to Create Data: FindGBCD  |
 
 ## Created Arrays ##
 

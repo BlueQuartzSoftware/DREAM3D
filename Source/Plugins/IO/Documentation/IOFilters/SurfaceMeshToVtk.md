@@ -2,7 +2,7 @@ Write Vtk PolyData File (From SurfaceMesh) {#surfacemeshtovtk}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+I/O Filters (Output)
 
 ## Description ##
 This filter will create a "legacy" vtk file (.vtk) that contains the POINTS and POLYGONS, where each POLYGON is a triangle.
@@ -12,29 +12,22 @@ for this filter.
 __Write Binary Vtk File__ If this option is selected then the data portions of the file will be written in Big Endian
 binary format as stipulated by the VTK file format.
 
-- __Write Conformal Mesh__ If this is ___true___ then only a single triangle will be written which will be shared
-between 2 **Feature** (region) ids. If this is ___false___ then 2 triangles with opposite winding will be written and each
-will have a **Feature** ID assigned to it.
-
-
-
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Output Vtk File | Output File |
-| Write Binary Vtk File | Boolean (On or Off) |
-| Write Conformal Mesh | Boolean (On or Off) |
+| Name | Type | Description |
+|------|------|-------------|
+| Output Vtk File | Output Path | Creates a .vtk file |
+| Write Binary Vtk File | Boolean | Big Endian binary format |
 
-## Required DataContainers ##
-SurfaceMesh
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| NodeArray | | The shared node (vertex) list |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| FaceArray | | The list of all triangles (faces) in the mesh |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| SurfaceMeshFaceLabels | None | The list of all triangles (faces) in the mesh | (2)   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| SurfaceMeshNodeType | None |The shared node (vertex) list | (2) | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 ## Created Arrays ##
 None
