@@ -73,5 +73,25 @@
 #define UNUSED(x) ((void)(x));
 
 
+#define QCloseH5A(aid, err, retError)\
+  err = H5Aclose( attr_id );\
+  if (err<0) {qDebug() << "File: " << __FILE__ << "(" << __LINE__ << "): " << "Error Closing Attribute.";retErr = err;}
+
+#define QCloseH5D(did, err, retError)\
+  err = H5Dclose(did);\
+  if (err < 0) { qDebug()  << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error Closing Dataset: " << dsetName << " did=" << did << " retError=" << retError; retError = err;}
+
+#define QCloseH5S(sid, err, retError)\
+  err = H5Sclose(sid); \
+  if ( err < 0) {qDebug()  << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing Dataspace.";retErr = err;}
+
+#define QCloseH5T(tid, err, re)\
+  err = H5Tclose(tid);\
+  if (err < 0 ) {qDebug() << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing DataType"; re = err;}
+
+
+
+
+
 #endif /* _H5Functions_H_ */
 

@@ -216,6 +216,15 @@ class StringDataArray : public IDataArray
     }
 
     /**
+     * @brief getStringArray
+     * @return
+     */
+    virtual QVector<QString>& getStringArray()
+    {
+      return m_Array;
+    }
+
+    /**
     * @brief Returns the number of Tuples in the array.
     */
     virtual size_t getNumberOfTuples ()
@@ -475,35 +484,7 @@ class StringDataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
-
-      // Convert the QVector of Strings into a flat list of strings separated by NULL characters
-      // and write that flat array into the HDF5 file.
-      size_t max = 0;
-      for(int i = 0; i < m_Array.size(); ++i)
-      {
-        if ( static_cast<size_t>(m_Array[i].size()) > max) { max = m_Array[i].size(); }
-      }
-      max = max + 1; // make sure we are 1 greater than the largest to make sure it is null terminated
-
-      // QVector<size_t> tDims(1, m_Array.size());
-      QVector<size_t> cDims(1, max);
-
-      // We are going to encode the strings into a 2D matrix where the number of Rows is the number of tuples (number
-      // of strings in the string array) and the number of columns is the length of the largest string + 1. Yes this is
-      // a waste of some space but in order to read the data back into an attribute matrix the tuple dims and component
-      // dims need to match up.
-
-      Int8ArrayType::Pointer strPtr = Int8ArrayType::CreateArray(tDims, cDims, getName());
-      strPtr->initializeWithZeros();
-      int8_t* str = strPtr->getPointer(0);
-
-      for(int i = 0; i < m_Array.size(); ++i)
-      {
-        ::memcpy(str, m_Array[i].toStdString().c_str(), max);
-        str = str + max;
-      }
-
-      return H5DataArrayWriter::writeStringDataArray<Int8ArrayType>(parentId, strPtr.get(), tDims, getClassVersion(), getFullNameOfClass());
+      return H5DataArrayWriter::writeStringDataArray<StringDataArray>(parentId, this);
     }
 
     /**
@@ -530,6 +511,9 @@ class StringDataArray : public IDataArray
     {
       int err = 0;
       this->resize(0);
+
+      err = QH5Lite::readVectorOfStringDataset(parentId, getName(), m_Array);
+#if 0
       IDataArray::Pointer p = H5DataArrayReader::ReadStringDataArray(parentId, getName());
       if (p.get() == NULL)
       {
@@ -541,6 +525,7 @@ class StringDataArray : public IDataArray
       {
         m_Array.push_back( srcPtr->getValue(i) );
       }
+#endif
       return err;
     }
 

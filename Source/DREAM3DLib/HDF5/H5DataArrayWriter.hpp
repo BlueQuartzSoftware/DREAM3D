@@ -201,35 +201,20 @@ class H5DataArrayWriter
      * @return
      */
     template<class T>
-    static int writeStringDataArray(hid_t gid, T* dataArray, QVector<size_t> tDims,
-                                    int classVersion, const QString& fullNameOfClass)
+    static int writeStringDataArray(hid_t gid, T* dataArray)
     {
       int err = 0;
 
-      QVector<size_t> cDims = dataArray->getComponentDimensions();
-      hsize_t h5Rank = tDims.size() + cDims.size();
-
-      QVector<hsize_t> h5Dims(tDims.size() + cDims.size());
-      for (int i = 0; i < tDims.size(); i++)
+      std::vector<std::string> data(dataArray->getNumberOfTuples());
+      for(int i = 0; i < data.size(); i++)
       {
-        h5Dims[i] = tDims[i];
-      }
-      for(int i = 0; i < cDims.size(); i++)
-      {
-        h5Dims[i + tDims.size()] = cDims[i];
+        data[i] = dataArray->getValue(i).toStdString();
       }
 
-      if (QH5Lite::datasetExists(gid, dataArray->getName()) == false)
-      {
-        err = QH5Lite::writePointerDataset(gid, dataArray->getName(), h5Rank, h5Dims.data(), dataArray->getPointer(0));
-        if(err < 0)
-        {
-          return err;
-        }
-      }
-
+      err = H5Lite::writeVectorOfStringsDataset(gid, dataArray->getName().toStdString(), data);
+      QVector<size_t> tDims(1, dataArray->getNumberOfTuples());
+      QVector<size_t> cDims(1, 1);
       err = writeDataArrayAttributes<T>(gid, dataArray, tDims, cDims);
-
 
       return err;
     }
