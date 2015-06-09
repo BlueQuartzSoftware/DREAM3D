@@ -168,7 +168,7 @@ void DREAM3D_UI::updateFirstRun()
   QString filePath = prefs.fileName();
   QFileInfo fi(filePath);
 
-  if (fi.exists() == false)
+  if (prefs.contains("First Run") == false)
   {
     prefs.setValue("First Run", true);
   }
