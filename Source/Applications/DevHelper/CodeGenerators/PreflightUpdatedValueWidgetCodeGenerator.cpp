@@ -56,7 +56,7 @@ PreflightUpdatedValueWidgetCodeGenerator::~PreflightUpdatedValueWidgetCodeGenera
 // -----------------------------------------------------------------------------
 QString PreflightUpdatedValueWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::PreflightUpdatedValueWidget, get" + getPropertyName() + "(), false, \"\"));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::PreflightUpdatedValueWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
 }
 
 // -----------------------------------------------------------------------------

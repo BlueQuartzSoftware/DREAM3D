@@ -56,7 +56,7 @@ OutputFileWidgetCodeGenerator::~OutputFileWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString OutputFileWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::OutputFileWidget, get" + getPropertyName() + "(), false, \"\"));";
+  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::OutputFileWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
 }
 
 // -----------------------------------------------------------------------------

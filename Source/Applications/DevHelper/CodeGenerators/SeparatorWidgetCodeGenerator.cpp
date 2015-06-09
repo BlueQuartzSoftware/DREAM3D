@@ -56,7 +56,7 @@ SeparatorWidgetCodeGenerator::~SeparatorWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"\", FilterParameterWidgetType::SeparatorWidget, \"\", false));";
+  return "  parameters.push_back(SeparatorFilterParameter::New(\"" + getHumanLabel() + "\", " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

@@ -56,7 +56,7 @@ ThirdOrderPolynomialWidgetCodeGenerator::~ThirdOrderPolynomialWidgetCodeGenerato
 // -----------------------------------------------------------------------------
 QString ThirdOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ThirdOrderPolynomialWidget, get" + getPropertyName() + "(), false, \"\"));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ThirdOrderPolynomialWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
 }
 
 // -----------------------------------------------------------------------------

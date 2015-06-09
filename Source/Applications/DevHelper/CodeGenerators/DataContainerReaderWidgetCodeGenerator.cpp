@@ -66,6 +66,7 @@ QString DataContainerReaderWidgetCodeGenerator::generateSetupFilterParameters()
   ss << "    parameter->setWidgetType(FilterParameterWidgetType::DataContainerReaderWidget);\n";
   ss << "    parameter->setDefaultFlagValue(Qt::Checked);\n";
   ss << "    parameter->setInputFileProperty(\"InputFilePropertyName\");    // Set this property name, if needed\n";
+  ss << "    parameter->setCategory(" + getCategory() + ");\n";
   ss << "    parameters.push_back(parameter);\n";
   ss << "  }";
 

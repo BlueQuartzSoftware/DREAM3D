@@ -56,7 +56,7 @@ FourthOrderPolynomialWidgetCodeGenerator::~FourthOrderPolynomialWidgetCodeGenera
 // -----------------------------------------------------------------------------
 QString FourthOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::FourthOrderPolynomialWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::FourthOrderPolynomialWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

@@ -56,7 +56,7 @@ DataBundleSelectionWidgetCodeGenerator::~DataBundleSelectionWidgetCodeGenerator(
 // -----------------------------------------------------------------------------
 QString DataBundleSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataBundleSelectionWidget, get" + getPropertyName() + "(), true));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataBundleSelectionWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

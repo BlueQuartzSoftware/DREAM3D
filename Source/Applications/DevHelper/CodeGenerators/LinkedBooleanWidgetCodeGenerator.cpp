@@ -60,7 +60,7 @@ QString LinkedBooleanWidgetCodeGenerator::generateSetupFilterParameters()
   QTextStream ss(&contents);
 
   ss << "  // Please add a QStringList of linked property names to the second-to-last parameter.  It is generated as blank by default.\n";
-  ss << "  parameters.push_back(LinkedBooleanFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), QStringList(), true));";
+  ss << "  parameters.push_back(LinkedBooleanFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), QStringList(), " + getCategory() + "));";
 
   return contents;
 }

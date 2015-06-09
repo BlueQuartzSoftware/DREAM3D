@@ -56,7 +56,7 @@ InputPathWidgetCodeGenerator::~InputPathWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString InputPathWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputPathWidget, get" + getPropertyName() + "(), false, \"\", \"\"));";
+  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputPathWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\", \"\"));";
 }
 
 // -----------------------------------------------------------------------------

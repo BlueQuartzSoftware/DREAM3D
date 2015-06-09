@@ -66,6 +66,7 @@ QString ChoiceWidgetCodeGenerator::generateSetupFilterParameters()
   ss << "    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);\n";
   ss << "    QVector<QString> choices;          // Please add choices to the choices QVector to finish this widget\n";
   ss << "    parameter->setChoices(choices);\n";
+  ss << "    parameter->setCategory(" + getCategory() + ");\n";
   ss << "    parameters.push_back(parameter);\n";
   ss << "  }";
   

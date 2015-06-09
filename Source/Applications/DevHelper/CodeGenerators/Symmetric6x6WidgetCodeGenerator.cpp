@@ -56,7 +56,7 @@ Symmetric6x6WidgetCodeGenerator::~Symmetric6x6WidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString Symmetric6x6WidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::Symmetric6x6Widget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::Symmetric6x6Widget, get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

@@ -56,7 +56,7 @@ DataContainerArrayProxyWidgetCodeGenerator::~DataContainerArrayProxyWidgetCodeGe
 // -----------------------------------------------------------------------------
 QString DataContainerArrayProxyWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(DataContainerArrayProxyFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataContainerArrayProxyWidget, QVariant(), DataContainerArrayProxy(), Qt::Unchecked, false));";
+  return "  parameters.push_back(DataContainerArrayProxyFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataContainerArrayProxyWidget, QVariant(), DataContainerArrayProxy(), Qt::Unchecked, " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

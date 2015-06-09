@@ -74,6 +74,11 @@ void AddFilterParameter::setupGui()
     type->insertItem(i, typeList[i]);
   }
 
+  // Populate the category combo box
+  category->insertItem(0, "Parameter");
+  category->insertItem(1, "Required Arrays");
+  category->insertItem(2, "Created Arrays");
+
   errorString->setText("");
 
   // Update the "Add" button
