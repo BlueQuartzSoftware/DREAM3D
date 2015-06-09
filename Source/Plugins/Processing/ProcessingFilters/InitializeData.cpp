@@ -71,13 +71,13 @@ InitializeData::~InitializeData()
 void InitializeData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("X Min", "XMin", FilterParameterWidgetType::IntWidget, getXMin(), FilterParameter::Uncategorized, "Column"));
-  parameters.push_back(FilterParameter::New("Y Min", "YMin", FilterParameterWidgetType::IntWidget, getYMin(), FilterParameter::Uncategorized, "Row"));
-  parameters.push_back(FilterParameter::New("Z Min", "ZMin", FilterParameterWidgetType::IntWidget, getZMin(), FilterParameter::Uncategorized, "Plane"));
-  parameters.push_back(FilterParameter::New("X Max", "XMax", FilterParameterWidgetType::IntWidget, getXMax(), FilterParameter::Uncategorized, "Column"));
-  parameters.push_back(FilterParameter::New("Y Max", "YMax", FilterParameterWidgetType::IntWidget, getYMax(), FilterParameter::Uncategorized, "Row"));
-  parameters.push_back(FilterParameter::New("Z Max", "ZMax", FilterParameterWidgetType::IntWidget, getZMax(), FilterParameter::Uncategorized, "Plane"));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("X Min", "XMin", FilterParameterWidgetType::IntWidget, getXMin(), FilterParameter::Parameter, "Column"));
+  parameters.push_back(FilterParameter::New("Y Min", "YMin", FilterParameterWidgetType::IntWidget, getYMin(), FilterParameter::Parameter, "Row"));
+  parameters.push_back(FilterParameter::New("Z Min", "ZMin", FilterParameterWidgetType::IntWidget, getZMin(), FilterParameter::Parameter, "Plane"));
+  parameters.push_back(FilterParameter::New("X Max", "XMax", FilterParameterWidgetType::IntWidget, getXMax(), FilterParameter::Parameter, "Column"));
+  parameters.push_back(FilterParameter::New("Y Max", "YMax", FilterParameterWidgetType::IntWidget, getYMax(), FilterParameter::Parameter, "Row"));
+  parameters.push_back(FilterParameter::New("Z Max", "ZMax", FilterParameterWidgetType::IntWidget, getZMax(), FilterParameter::Parameter, "Plane"));
   setFilterParameters(parameters);
 }
 

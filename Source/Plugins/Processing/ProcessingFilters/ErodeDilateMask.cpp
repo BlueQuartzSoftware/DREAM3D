@@ -74,7 +74,7 @@ ErodeDilateMask::~ErodeDilateMask()
 void ErodeDilateMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Cell Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), FilterParameter::RequiredArray));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
@@ -84,12 +84,13 @@ void ErodeDilateMask::setupFilterParameters()
     choices.push_back("Dilate");
     choices.push_back("Erode");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Number of Iterations", "NumIterations", FilterParameterWidgetType::IntWidget, getNumIterations(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("X Direction", "XDirOn", FilterParameterWidgetType::BooleanWidget, getXDirOn(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget, getYDirOn(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget, getZDirOn(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Number of Iterations", "NumIterations", FilterParameterWidgetType::IntWidget, getNumIterations(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("X Direction", "XDirOn", FilterParameterWidgetType::BooleanWidget, getXDirOn(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget, getYDirOn(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget, getZDirOn(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 

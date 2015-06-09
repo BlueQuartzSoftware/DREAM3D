@@ -76,15 +76,15 @@ MinSize::~MinSize()
 void MinSize::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget, getMinAllowedFeatureSize(), FilterParameter::Uncategorized, "Pixels"));
+  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget, getMinAllowedFeatureSize(), FilterParameter::Parameter, "Pixels"));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Phase Index", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Phase Index", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 

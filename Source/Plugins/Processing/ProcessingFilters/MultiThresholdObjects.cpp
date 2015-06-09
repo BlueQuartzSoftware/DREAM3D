@@ -76,11 +76,11 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setPropertyName("SelectedThresholds");
     parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
     parameter->setShowOperators(true);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Output Array Name", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Output Array Name", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

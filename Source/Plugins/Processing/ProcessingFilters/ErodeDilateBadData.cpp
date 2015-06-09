@@ -84,15 +84,15 @@ void ErodeDilateBadData::setupFilterParameters()
     choices.push_back("Dilate");
     choices.push_back("Erode");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Number of Iterations", "NumIterations", FilterParameterWidgetType::IntWidget, getNumIterations(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("X Direction", "XDirOn", FilterParameterWidgetType::BooleanWidget, getXDirOn(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget, getYDirOn(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget, getZDirOn(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Replace Bad Data", "ReplaceBadData", FilterParameterWidgetType::BooleanWidget, getReplaceBadData(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Number of Iterations", "NumIterations", FilterParameterWidgetType::IntWidget, getNumIterations(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("X Direction", "XDirOn", FilterParameterWidgetType::BooleanWidget, getXDirOn(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget, getYDirOn(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget, getZDirOn(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Replace Bad Data", "ReplaceBadData", FilterParameterWidgetType::BooleanWidget, getReplaceBadData(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 

@@ -70,10 +70,10 @@ ErodeDilateCoordinationNumber::~ErodeDilateCoordinationNumber()
 void ErodeDilateCoordinationNumber::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Coordination Number to Consider", "CoordinationNumber", FilterParameterWidgetType::IntWidget, getCoordinationNumber(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget, getLoop(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Coordination Number to Consider", "CoordinationNumber", FilterParameterWidgetType::IntWidget, getCoordinationNumber(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget, getLoop(), FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 
