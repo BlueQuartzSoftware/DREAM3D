@@ -48,19 +48,29 @@
 
 #include "ui_FilterMaker.h"
 
-enum FPColumnIndex
-{
-  VAR_NAME,
-  HUMAN_NAME,
-  TYPE,
-  INIT_VALUE
-};
-
 class FilterMaker : public QWidget, public Ui::FilterMaker
 {
   Q_OBJECT
 
 public:
+
+  enum FPColumnIndex
+  {
+    VAR_NAME,
+    HUMAN_NAME,
+    TYPE,
+    CATEGORY,
+    INIT_VALUE
+  };
+
+  enum CodeChooserIndex
+  {
+    H_INDEX,
+    CPP_INDEX,
+    DOC_INDEX,
+    TEST_INDEX
+  };
+
   FilterMaker(QWidget* parent = 0);
   ~FilterMaker();
 

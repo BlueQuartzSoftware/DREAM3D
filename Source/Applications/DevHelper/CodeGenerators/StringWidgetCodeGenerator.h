@@ -47,7 +47,7 @@ class StringWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(StringWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
     Pointer sharedPtr(new StringWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
@@ -64,7 +64,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  StringWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  StringWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

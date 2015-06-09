@@ -54,12 +54,14 @@ public:
   QString getVariableName();
   QString getHumanName();
   QString getType();
+  QString getCategory();
   QList<QString> getTypeList();
   QString getInitValue();
 
   void setVariableName(QString varName);
   void setHumanName(QString humanName);
   void setType(QString type);
+  void setCategory(QString category);
   void setInitValue(QString initValue);
 
 protected:

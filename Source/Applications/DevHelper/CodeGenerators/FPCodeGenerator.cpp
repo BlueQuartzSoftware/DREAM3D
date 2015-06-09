@@ -39,11 +39,28 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FPCodeGenerator::FPCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
+FPCodeGenerator::FPCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
 m_PropertyName(propertyName),
 m_HumanLabel(humanLabel),
 m_InitValue(initValue)
-{}
+{
+  if (category == "Parameter")
+  {
+    m_Category = "FilterParameter::Parameter";
+  }
+  else if (category == "Required Arrays")
+  {
+    m_Category = "FilterParameter::RequiredArray";
+  }
+  else if (category == "Created Arrays")
+  {
+    m_Category = "FilterParameter::CreatedArray";
+  }
+  else
+  {
+    m_Category = "FilterParameter::Uncategorized";
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -65,6 +82,14 @@ QString FPCodeGenerator::getPropertyName()
 QString FPCodeGenerator::getHumanLabel()
 {
   return m_HumanLabel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FPCodeGenerator::getCategory()
+{
+  return m_Category;
 }
 
 // -----------------------------------------------------------------------------

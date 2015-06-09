@@ -47,7 +47,7 @@ class DataArraySelectionWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(DataArraySelectionWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
     Pointer sharedPtr(new DataArraySelectionWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
@@ -64,7 +64,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  DataArraySelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  DataArraySelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

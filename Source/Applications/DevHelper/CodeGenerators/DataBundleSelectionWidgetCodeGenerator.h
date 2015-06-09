@@ -47,7 +47,7 @@ class DataBundleSelectionWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(DataBundleSelectionWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
     Pointer sharedPtr(new DataBundleSelectionWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
@@ -64,7 +64,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  DataBundleSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  DataBundleSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

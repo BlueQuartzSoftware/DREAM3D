@@ -47,7 +47,7 @@ class FloatVec4WidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(FloatVec4WidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
     Pointer sharedPtr(new FloatVec4WidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
@@ -64,7 +64,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  FloatVec4WidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  FloatVec4WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

@@ -47,7 +47,7 @@ class SeparatorWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(SeparatorWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
     Pointer sharedPtr(new SeparatorWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
@@ -66,7 +66,7 @@ public:
   virtual QString generateInitializationList();
 
 protected:
-  SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

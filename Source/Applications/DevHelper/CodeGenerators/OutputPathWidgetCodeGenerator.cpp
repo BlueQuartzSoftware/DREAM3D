@@ -39,7 +39,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OutputPathWidgetCodeGenerator::OutputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
+OutputPathWidgetCodeGenerator::OutputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
 FPCodeGenerator(humanLabel, propertyName, initValue)
 {
 

@@ -47,7 +47,7 @@ class DataContainerReaderWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(DataContainerReaderWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
     Pointer sharedPtr(new DataContainerReaderWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
@@ -68,7 +68,7 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  DataContainerReaderWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  DataContainerReaderWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

@@ -155,10 +155,11 @@ void DevHelper::writeSettings()
   for (int i = 0; i < filterMaker->filterParametersTable->rowCount(); i++)
   {
     prefs.setArrayIndex(i);
-    prefs.setValue("Variable Name", filterMaker->filterParametersTable->item(i, VAR_NAME)->text());
-    prefs.setValue("Human Label", filterMaker->filterParametersTable->item(i, HUMAN_NAME)->text());
-    prefs.setValue("Type", filterMaker->filterParametersTable->item(i, TYPE)->text());
-    prefs.setValue("Initial Value", filterMaker->filterParametersTable->item(i, INIT_VALUE)->text());
+    prefs.setValue("Variable Name", filterMaker->filterParametersTable->item(i, FilterMaker::VAR_NAME)->text());
+    prefs.setValue("Human Label", filterMaker->filterParametersTable->item(i, FilterMaker::HUMAN_NAME)->text());
+    prefs.setValue("Type", filterMaker->filterParametersTable->item(i, FilterMaker::TYPE)->text());
+    prefs.setValue("Category", filterMaker->filterParametersTable->item(i, FilterMaker::CATEGORY)->text());
+    prefs.setValue("Initial Value", filterMaker->filterParametersTable->item(i, FilterMaker::INIT_VALUE)->text());
   }
   prefs.endArray();
   prefs.endGroup();
@@ -214,6 +215,7 @@ void DevHelper::readSettings()
     addFilterParameter.setVariableName(prefs.value("Variable Name").toString());
     addFilterParameter.setHumanName(prefs.value("Human Label").toString());
     addFilterParameter.setType(prefs.value("Type").toString());
+    addFilterParameter.setCategory(prefs.value("Category").toString());
     addFilterParameter.setInitValue(prefs.value("Initial Value").toString());
 
     filterMaker->addFilterParameterToTable(&addFilterParameter);

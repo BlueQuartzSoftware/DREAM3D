@@ -196,6 +196,14 @@ QString AddFilterParameter::getType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString AddFilterParameter::getCategory()
+{
+  return category->currentText();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QList<QString> AddFilterParameter::getTypeList()
 {
 #include "DREAM3DWidgetsLib/Filter_Parameter_TypeList.cpp"
@@ -231,6 +239,14 @@ void AddFilterParameter::setHumanName(QString humanName)
 void AddFilterParameter::setType(QString type)
 {
   this->type->setCurrentText(type);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::setCategory(QString category)
+{
+  this->category->setCurrentText(category);
 }
 
 // -----------------------------------------------------------------------------

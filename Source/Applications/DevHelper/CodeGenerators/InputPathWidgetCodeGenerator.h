@@ -47,7 +47,7 @@ class InputPathWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(InputPathWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
     Pointer sharedPtr(new InputPathWidgetCodeGenerator(humanLabel, propertyName, initValue));
     return sharedPtr;
@@ -66,7 +66,7 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  InputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  InputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 
