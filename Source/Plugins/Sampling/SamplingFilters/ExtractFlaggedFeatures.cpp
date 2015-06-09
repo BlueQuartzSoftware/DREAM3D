@@ -71,9 +71,9 @@ ExtractFlaggedFeatures::~ExtractFlaggedFeatures()
 void ExtractFlaggedFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFlaggedFeaturesArrayPath(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFlaggedFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 
