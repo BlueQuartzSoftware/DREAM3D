@@ -183,15 +183,22 @@ void PipelineFilterWidget::layoutWidgets()
   m_VariablesWidget->setObjectName(variablesName);
   m_VariablesWidget->setGeometry(QRect(0, 0, 250, 267));
   m_VariablesVerticalLayout = new QVBoxLayout(m_VariablesWidget);
+  m_VariablesVerticalLayout->setSpacing(30);
   variablesName = QString::fromUtf8("verticalLayout1") + m_Filter->getNameOfClass();
   m_VariablesVerticalLayout->setObjectName(variablesName);
 
   QString groupBoxStyle;
   QTextStream ss(&groupBoxStyle);
-  ss << "QGroupBox\n";
-  ss << "{\n";
-  ss << "font-weight: bold\n";
+  ss << "QGroupBox {";
+  ss << "    font-weight: bold;";
   ss << "}";
+  ss << "QGroupBox::title {";
+  ss << "    subcontrol-origin: margin;";
+  ss << "    subcontrol-position: top left;";
+  ss << "    padding: 0 5px;";
+  ss << "    font-weight: bold;";
+  ss << "}";
+
 
   QGroupBox* parametersGroupBox = new QGroupBox("Parameters", this);
   QVBoxLayout* pLayout = new QVBoxLayout(parametersGroupBox);
