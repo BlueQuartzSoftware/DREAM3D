@@ -145,7 +145,8 @@ COMPILE_TOOL(
 # Now run the code to generate JSON file for the web server. This file holds all
 # the version information for the current release
 add_custom_command(TARGET CreateWebServerJson POST_BUILD
-                    COMMAND $<TARGET_FILE:CreateWebServerJson> ${DREAM3DProj_BINARY_DIR}/dream3d_version.json)
+                    COMMAND $<TARGET_FILE:CreateWebServerJson> ${DREAM3DProj_BINARY_DIR}/dream3d_version.json
+                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_dependencies(CreateWebServerJson DREAM3D)
 
 # Create a Command line tool for the DocsToPdf

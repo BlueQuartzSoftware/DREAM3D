@@ -375,7 +375,7 @@ function(BuildToolBundle)
         set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
             "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_OptimizeTool.sh")
 
-        set(PROJECT_INSTALL_DIR "tools")
+        set(PROJECT_INSTALL_DIR "bin")
         configure_file("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.cmake.in"
                 "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
 
@@ -453,16 +453,20 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
 
     if(BUILD_SHARED_LIBS)
       if(APPLE)
-          OPTION (CMP_BUILD_WITH_INSTALL_NAME "Build Libraries with the install_name set to the installation prefix. This is good if you are going to run from the installation location" OFF)
-          if(CMP_BUILD_WITH_INSTALL_NAME)
-              SET_TARGET_PROPERTIES(${targetName}
-                 PROPERTIES
-                 LINK_FLAGS "-current_version ${${CMP_PROJECT_NAME}_VERSION} -compatibility_version ${${CMP_PROJECT_NAME}_VERSION}"
-                 INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-                 BUILD_WITH_INSTALL_RPATH ${CMP_BUILD_WITH_INSTALL_NAME}
-              )
-         endif(CMP_BUILD_WITH_INSTALL_NAME)
-     endif(APPLE)
+        # use, i.e. don't skip the full RPATH for the build tree
+        SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+        # when building, don't use the install RPATH already
+        # (but later on when installing)
+        SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+
+        SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+
+        # add the automatically determined parts of the RPATH
+        # which point to directories outside the build tree to the install RPATH
+        SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+    endif(APPLE)
 
     if(CMAKE_SYSTEM_NAME MATCHES "Linux")
       set(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
