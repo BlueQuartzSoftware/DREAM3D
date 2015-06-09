@@ -35,8 +35,8 @@ This filter writes out a native Avizo Uniform Coordinate data file. Values shoul
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Output File | Select Push Button | Amira Mesh .am file created|
-| Write Binary File | Boolean | binary file created |
+| Output File | File Path | Amira Mesh .am file created|
+| Write Binary File | Boolean | Binary file created, if checked |
 
 
 ## Required Geometry ##

@@ -19,6 +19,8 @@ This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Car
 
  More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html "SPParks Web Site")
 
+ Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.
+
 **Start Example Partial File**
 ~~~~~~~~~~~~~~~~~~~~~~~~~
     [LINE 1] -
@@ -43,19 +45,18 @@ This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Car
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Output File | String |
+| Name | Type | Description |
+|------|------|------|
+| Output File | File Path | Create a file with extension .spparks |
 
-## Required DataContainers ##
-
-Voxel DataContainer
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeatureIds | Ids (int32) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 ## Created Arrays ##
 

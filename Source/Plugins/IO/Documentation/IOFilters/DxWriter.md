@@ -46,7 +46,7 @@ The dx file with surface layer:
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | Select Push Button | Create a file with extension .dx |
+| Output File | File Path | Create a file with extension .dx |
 | Add Surface Layer | Boolean | This adds and "extra layer" of **Cells** around the outside of the structure and assigns them a *FeatureId* of *-3*. |
 
 ## Required Geometry ##

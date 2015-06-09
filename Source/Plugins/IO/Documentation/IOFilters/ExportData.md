@@ -8,7 +8,6 @@ IO Filters (Output)
 
 ## Description ##
 
-
 This filter writes an array to a file as ASCII representations. The file extension and the
 maximum tuples per line are entered. The file delimiter is selected from an enumerated
 list of values. The maximum number of tuples are selected by the user. For example,
@@ -57,22 +56,23 @@ Choice of delimiter is as follows:
 
 ## Parameters ##
 
-| Name             | Type |
-|------------------|------|
-| Output Path | Output File Path |
-| File Extension | String |
-| Maximum Tuples Per Line | Int > 0 |
-| Delimiter | Int |
-| Select/Deselect All | Boolean |
+| Name             | Type | Description |
+|------------------|------|------------|
+| Output Path | File Path | Create the file |
+| File Extension | String | |
+| Maximum Tuples Per Line | Int | Must be greater than 0 |
+| Delimiter | Enumeration | The delimeter separating the data|
+| Select/Deselect All | Boolean | Selection of all the arrays |
 
 
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description |
-|------|--------------------|-------------|
-| Any numeric array | None | One or more arrays can be selected  |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any numeric | None | Any numeric | Any | One or more arrays can be selected |
 
 ## License & Copyright ##
 

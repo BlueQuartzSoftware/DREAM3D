@@ -40,7 +40,7 @@ The csv file with Write Neighbor Data checked:
 
 | Name | Type |Description |
 |------|------|------|
-| Output File | Select Push Button |Select a file with extension .csv |
+| Output File | File Path |Select a file with extension .csv |
 | Write Neighbor Data | Boolean | |
 
 ## Required Geometry ##

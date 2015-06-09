@@ -38,7 +38,7 @@ This Filter writes to a data file in a format used by Carnegie Mellon University
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | Select Push Button | Create a file with extension .ph |
+| Output File | File Path | Create a file with extension .ph |
 
 ## Required Geometry ##
 Image / Rectilinear Grid

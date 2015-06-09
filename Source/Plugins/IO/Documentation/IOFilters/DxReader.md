@@ -54,7 +54,7 @@ _See: [the opendx site](http://www.opendx.org)_ for more information.
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Input File | Input File Push Button | .dx file|
+| Input File | File Path | .dx file|
 | Origin (XYZ) | int | The location in space coordinates of the (0,0,0) voxel |
 | Resolution (XYZ) | int | X, Y, Z Resolution of the data |
 | Volume Data Container | String | Output data container |
