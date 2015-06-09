@@ -506,11 +506,6 @@
         "UseGoodVoxels": 1
     },
     "9": {
-        "CellFeatureAttributeMatrixName": {
-            "Attribute Matrix Name": "CellFeatureData",
-            "Data Array Name": "",
-            "Data Container Name": "VolumeDataContainer"
-        },
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
@@ -521,7 +516,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FeaturePhasesArrayName": "Phases",
+        "FeaturePhasesArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "VolumeDataContainer"
+        },
         "FilterVersion": "5.2.1300.4e4405e",
         "Filter_Human_Label": "Find Feature Phases",
         "Filter_Name": "FindFeaturePhases"
