@@ -36,10 +36,13 @@ void WriteWebServerJSON(const QString& filePath)
 
   // Write our File Version and DREAM3D Version strings
   QJsonObject meta;
-  meta[DREAM3D::Settings::Version] = DREAM3DLib::Version::Package();
+
   meta["Release Date"] = QDate::currentDate().toString();
   meta["Release Type"] = "Release Candidate";
-
+  meta["Major"] = DREAM3DLib::Version::Major();
+  meta["Minor"] = DREAM3DLib::Version::Minor();
+  meta["Patch"] = DREAM3DLib::Version::Patch();
+  meta["Revision"] = DREAM3DLib::Version::Revision();
   QJsonObject m_Root;
   m_Root["DREAM3D"] = meta;
 

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -321,7 +321,17 @@ namespace H5Support_NAMESPACE
                                                           size_t size,
                                                           const char* data);
 
-
+      /**
+      * @brief
+      * @param loc_id
+      * @param dsetName
+      * @param size
+      * @param data
+      * @return
+      */
+      static H5Support_EXPORT herr_t writeVectorOfStringsDataset(hid_t loc_id,
+                                                                 const QString& dsetName,
+                                                                 const QVector<QString> &data);
       /**
        * @brief Writes an Attribute to an HDF5 Object
        * @param loc_id The Parent Location of the HDFobject that is getting the attribute
@@ -613,7 +623,16 @@ namespace H5Support_NAMESPACE
                                                        QString& data);
 
 
-
+      /**
+        * @brief
+        * @param loc_id
+        * @param dsetName
+        * @param data
+        * @return
+        */
+        static H5Support_EXPORT herr_t readVectorOfStringDataset(hid_t loc_id,
+                                                                 const QString& dsetName,
+                                                                 QVector<QString> &data);
       /**
        * @brief reads a null terminated string dataset into the supplied buffer. The buffer
        * should be already preallocated.
