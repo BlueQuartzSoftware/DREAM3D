@@ -2,7 +2,7 @@ Los Alamos FFT Writer {#losalamosfftwriter}
 =====
 
 ## Group (Subgroup) ##
-IOFilters (Output)
+I/O Filters (Output)
 
 
 ## Description ##
@@ -45,19 +45,21 @@ The output file:
 
 ## Parameters ##
 
+| Name             | Type | Description |
+|------------------|------|-------------|
+| Output File |  File Path  |
 
-| Name             | Type |
-|------------------|------|
-| Output File Path and Name |  String  |
 
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
+| Type | Default Name | Type | Componenet Dimensions | Description |
 |------|--------------------|-------------|---------|
-| Cell | FeaturesIds (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | CellEulerAngles | These are the angles used to determine the colors | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
-| Cell | CellPhases |  These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeaturesIds (ints) that specify to which **Feature** each **Cell** belongs. | Int | (1) |Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | CellEulerAngles | Float | (3) |These are the angles used to determine the colors. Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
+| Cell | CellPhases | Int | (1) |  These are used to determine which ensemble the **Cell** belongs to. Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
 
 ## Created Arrays ##
