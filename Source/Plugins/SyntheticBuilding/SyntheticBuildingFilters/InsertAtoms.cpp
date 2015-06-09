@@ -258,27 +258,27 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Lattice Constants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget, getLatticeConstants(), FilterParameter::Uncategorized, "Angstroms"));
+  parameters.push_back(FilterParameter::New("Lattice Constants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget, getLatticeConstants(), FilterParameter::Parameter, "Angstroms"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
     parameter->setPropertyName("Basis");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    //parameter->setValueType("int");
     QVector<QString> choices;
     choices.push_back("Simple Cubic");
     choices.push_back("Body Centered Cubic");
     choices.push_back("Face Centered Cubic");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Data Container Name", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix Name", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, getAtomFeatureLabelsArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("New Data Container Name", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix Name", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, getAtomFeatureLabelsArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 
