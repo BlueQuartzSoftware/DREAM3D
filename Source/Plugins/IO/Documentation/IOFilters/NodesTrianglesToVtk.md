@@ -2,7 +2,7 @@ Nodes & Triangles To Vtk File {#nodestrianglestovtk}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Output)
 
 ## Description ##
 This filter will convert a pair of triangle and nodes files commonly used by
@@ -40,16 +40,17 @@ the __grain id__ one for each **Feature** that the triangle borders.
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Nodes File | The input nodes file |
-| Triangles File | The input Triangles file |
-| Output VTK File | The output vtk PolyData file |
-| Binary VTK File | Write the Vtk file using binary instead of ASCII |
-| Conformal Mesh | Write a conformal mesh |
+| Name | Type | Description |
+|------|------|-------------|
+| Nodes File | File Path | The input nodes file |
+| Triangles File | File Path | The input Triangles file |
+| Output VTK File | File Path | The output vtk PolyData file |
+| Binary VTK File | Boolean | Write the Vtk file using binary instead of ASCII |
+| Conformal Mesh | Boolean | Write a conformal mesh |
 
-## Required DataContainers ##
-SurfaceMesh
+
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 None

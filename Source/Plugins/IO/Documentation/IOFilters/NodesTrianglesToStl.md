@@ -2,7 +2,7 @@ Nodes & Triangles To Stl File {#nodestrianglestostl}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Output)
 
 ## Description ##
 This filter will convert a pair of triangle and nodes files commonly used by CMU in their GBCD studies and output an STL File in Binary format for each unique **Feature** Id.
@@ -34,16 +34,17 @@ The triangles file format is as follows:
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Nodes File | The input nodes file |
-| Triangles File | The input triangles file |
-| Output STL Directory | The output Stl Directory |
-| Output STL File Prefix | The prefix that will be added before the id number |
+| Name | Type | Description |
+|------|------|-------------|
+| Nodes File | File Path | The input nodes file |
+| Triangles File | File Path | The input triangles file |
+| Output STL Directory | File Path |The output Stl Directory |
+| STL File Prefix | String | The prefix that will be added before the id number |
 
 
-## Required DataContainers ##
-SurfaceMesh
+## Required Geometry ##
+Not Applicable
+
 
 ## Required Arrays ##
 None

@@ -65,9 +65,8 @@ For example if you have a structure that has 2 phases that consist of a Cubic Pr
 |------|------|
 | Input Ensemble Info File | Input File |
 
-## Required DataContainers ##
-
-A DataContainer to create the AttributeMatrix and DataArray
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
