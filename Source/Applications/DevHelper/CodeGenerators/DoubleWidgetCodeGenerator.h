@@ -47,9 +47,9 @@ class DoubleWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(DoubleWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new DoubleWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new DoubleWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -62,7 +62,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  DoubleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  DoubleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

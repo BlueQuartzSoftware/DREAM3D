@@ -74,6 +74,11 @@ void AddFilterParameter::setupGui()
     type->insertItem(i, typeList[i]);
   }
 
+  // Populate the category combo box
+  category->insertItem(0, "Parameter");
+  category->insertItem(1, "Required Arrays");
+  category->insertItem(2, "Created Arrays");
+
   errorString->setText("");
 
   // Update the "Add" button
@@ -196,6 +201,14 @@ QString AddFilterParameter::getType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString AddFilterParameter::getCategory()
+{
+  return category->currentText();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QList<QString> AddFilterParameter::getTypeList()
 {
 #include "DREAM3DWidgetsLib/Filter_Parameter_TypeList.cpp"
@@ -231,6 +244,14 @@ void AddFilterParameter::setHumanName(QString humanName)
 void AddFilterParameter::setType(QString type)
 {
   this->type->setCurrentText(type);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddFilterParameter::setCategory(QString category)
+{
+  this->category->setCurrentText(category);
 }
 
 // -----------------------------------------------------------------------------

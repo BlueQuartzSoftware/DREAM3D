@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -79,20 +79,25 @@ CalculateArrayHistogram::~CalculateArrayHistogram()
 void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Selected Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Number of Bins", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), FilterParameter::Uncategorized));
+
+  /* Parameter */
+  parameters.push_back(FilterParameter::New("Number of Bins", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Min Value", "MinRange", FilterParameterWidgetType::DoubleWidget, getMinRange(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Max Value", "MaxRange", FilterParameterWidgetType::DoubleWidget, getMaxRange(), FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Min Value", "MinRange", FilterParameterWidgetType::DoubleWidget, getMinRange(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Max Value", "MaxRange", FilterParameterWidgetType::DoubleWidget, getMaxRange(), FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Histogram", "NewDataArrayName", FilterParameterWidgetType::StringWidget, getNewDataArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Parameter));
+
+  /* Required Arrays */
+  parameters.push_back(FilterParameter::New("Selected Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+
+  /* Created Arrays */
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Histogram", "NewDataArrayName", FilterParameterWidgetType::StringWidget, getNewDataArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

@@ -54,13 +54,14 @@ DynamicTableFilterParameter::~DynamicTableFilterParameter()
 // -----------------------------------------------------------------------------
 DynamicTableFilterParameter::Pointer DynamicTableFilterParameter::New(const QString& humanLabel, const QString& propertyName,
   const QString& widgetType, QStringList rHeaders, QStringList cHeaders,
-  std::vector<std::vector<double> > defaultTable, bool areRowsDynamic,
-  bool areColsDynamic, int minRowCount, int minColCount)
+  std::vector<std::vector<double> > defaultTable, FilterParameter::Category category, 
+  bool areRowsDynamic, bool areColsDynamic, int minRowCount, int minColCount)
 {
   DynamicTableFilterParameter::Pointer ptr = DynamicTableFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
+  ptr->setCategory(category);
   ptr->setRowHeaders(rHeaders);
   ptr->setColumnHeaders(cHeaders);
   ptr->setDefaultTable(defaultTable);

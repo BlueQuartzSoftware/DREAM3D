@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FileListInfoWidgetCodeGenerator::FileListInfoWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+FileListInfoWidgetCodeGenerator::FileListInfoWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ FileListInfoWidgetCodeGenerator::~FileListInfoWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString FileListInfoWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FileListInfoFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FileListInfoFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

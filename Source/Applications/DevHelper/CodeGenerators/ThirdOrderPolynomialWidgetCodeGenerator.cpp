@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ThirdOrderPolynomialWidgetCodeGenerator::ThirdOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+ThirdOrderPolynomialWidgetCodeGenerator::ThirdOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ ThirdOrderPolynomialWidgetCodeGenerator::~ThirdOrderPolynomialWidgetCodeGenerato
 // -----------------------------------------------------------------------------
 QString ThirdOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ThirdOrderPolynomialWidget, get" + getPropertyName() + "(), false, \"\"));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ThirdOrderPolynomialWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
 }
 
 // -----------------------------------------------------------------------------

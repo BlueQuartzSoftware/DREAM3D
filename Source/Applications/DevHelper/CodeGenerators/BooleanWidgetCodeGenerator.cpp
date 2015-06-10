@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BooleanWidgetCodeGenerator::BooleanWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+BooleanWidgetCodeGenerator::BooleanWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ BooleanWidgetCodeGenerator::~BooleanWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString BooleanWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::BooleanWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::BooleanWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

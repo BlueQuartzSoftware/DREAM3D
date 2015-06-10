@@ -52,14 +52,6 @@
 
 #include <iostream>
 
-enum CodeChooserIndex
-{
-  H_INDEX,
-  CPP_INDEX,
-  DOC_INDEX,
-  TEST_INDEX
-};
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -259,6 +251,7 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   QString varName = widget->getVariableName();
   QString humanName = widget->getHumanName();
   QString type = widget->getType();
+  QString category = widget->getCategory();
   QString initValue = widget->getInitValue();
 
   // Close the widget, since we have all the data that we need
@@ -267,6 +260,7 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
   QTableWidgetItem* varNameItem = new QTableWidgetItem(varName);
   QTableWidgetItem* humanNameItem = new QTableWidgetItem(humanName);
   QTableWidgetItem* typeItem = new QTableWidgetItem(type);
+  QTableWidgetItem* categoryItem = new QTableWidgetItem(category);
   QTableWidgetItem* initValueItem = new QTableWidgetItem(initValue);
 
   // Insert items
@@ -279,13 +273,15 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
     initValueItem->setFlags(Qt::NoItemFlags);
   }
 
-  // Block type cell from being edited
+  // Block type and category cells from being edited
   typeItem->setFlags(Qt::NoItemFlags);
+  categoryItem->setFlags(Qt::NoItemFlags);
 
   filterParametersTable->blockSignals(true);
   filterParametersTable->setItem(row, VAR_NAME, varNameItem);
   filterParametersTable->setItem(row, HUMAN_NAME, humanNameItem);
   filterParametersTable->setItem(row, TYPE, typeItem);
+  filterParametersTable->setItem(row, CATEGORY, categoryItem);
   filterParametersTable->setItem(row, INIT_VALUE, initValueItem);
   filterParametersTable->blockSignals(false);
 
@@ -480,9 +476,10 @@ QMap<QString, QString> FilterMaker::getFunctionContents()
     QString propertyName = filterParametersTable->item(row, VAR_NAME)->text();
     QString humanName = filterParametersTable->item(row, HUMAN_NAME)->text();
     QString type = filterParametersTable->item(row, TYPE)->text();
+    QString category = filterParametersTable->item(row, CATEGORY)->text();
     QString initValue = filterParametersTable->item(row, INIT_VALUE)->text();
 
-    FPCodeGenerator::Pointer generator = factory->create(humanName, propertyName, type, initValue);
+    FPCodeGenerator::Pointer generator = factory->create(humanName, propertyName, type, category, initValue);
     setupFPContents.append(generator->generateSetupFilterParameters() + "\n");
     readFPContents.append(generator->generateReadFilterParameters() + "\n");
     writeFPContents.append(generator->generateWriteFilterParameters() + "\n");

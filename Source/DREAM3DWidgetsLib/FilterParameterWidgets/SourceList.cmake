@@ -88,7 +88,7 @@ foreach(FPW ${DREAM3D_PARAMETER_WIDGETS})
     file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "else if (fpType == \"${FPW}\") {\n")
   endif()
 
-  file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "  ${FPW}CodeGenerator::Pointer ptr = ${FPW}CodeGenerator::New(humanLabel, propertyName, initValue);\n")
+  file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "  ${FPW}CodeGenerator::Pointer ptr = ${FPW}CodeGenerator::New(humanLabel, propertyName, fpCategory, initValue);\n")
       file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "  return ptr;\n}\n\n")
 
   set(loopCounter loopCounter+1)
@@ -113,7 +113,7 @@ foreach(FPW ${DREAM3D_PARAMETER_WIDGETS_NO_CODEGEN})
 endforeach()
 
 file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "else {\n")
-file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "  FPCodeGenerator::Pointer ptr = FPCodeGenerator::New(humanLabel, propertyName, initValue);\n")
+file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "  FPCodeGenerator::Pointer ptr = FPCodeGenerator::New(humanLabel, propertyName, fpCategory, initValue);\n")
 file(APPEND ${FILTER_PARAMETER_CODEGEN_FILE} "  return ptr;\n}\n\n")
 
 file(APPEND  ${FILTER_PARAMETER_TYPELIST_FILE} "qSort(list.begin(), list.end());\nreturn list;\n")

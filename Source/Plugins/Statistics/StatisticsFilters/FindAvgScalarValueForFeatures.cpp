@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -74,12 +74,14 @@ FindAvgScalarValueForFeatures::~FindAvgScalarValueForFeatures()
 void FindAvgScalarValueForFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Element Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayName", FilterParameterWidgetType::StringWidget, getNewFeatureArrayArrayName(), FilterParameter::Uncategorized, ""));
+
+  /* Required Arrays */
+  parameters.push_back(FilterParameter::New("Element Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+
+  /* Created Arrays */
+  parameters.push_back(FilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayName", FilterParameterWidgetType::StringWidget, getNewFeatureArrayArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

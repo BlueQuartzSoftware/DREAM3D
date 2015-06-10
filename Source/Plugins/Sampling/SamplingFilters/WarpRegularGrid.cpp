@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -105,19 +105,19 @@ void WarpRegularGrid::setupFilterParameters()
     linkedProps << "SecondOrderBCoeff" << "ThirdOrderBCoeff" << "FourthOrderBCoeff";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderACoeff(), FilterParameter::Uncategorized, "", 0));
-  parameters.push_back(FilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderBCoeff(), FilterParameter::Uncategorized, "", 0));
-  parameters.push_back(FilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderACoeff(), FilterParameter::Uncategorized, "", 1));
-  parameters.push_back(FilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderBCoeff(), FilterParameter::Uncategorized, "", 1));
-  parameters.push_back(FilterParameter::New("Fourth Order A Coefficients", "FourthOrderACoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderACoeff(), FilterParameter::Uncategorized, "", 2));
-  parameters.push_back(FilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderBCoeff(), FilterParameter::Uncategorized, "", 2));
+  parameters.push_back(FilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderACoeff(), FilterParameter::Parameter, "", 0));
+  parameters.push_back(FilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderBCoeff(), FilterParameter::Parameter, "", 0));
+  parameters.push_back(FilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderACoeff(), FilterParameter::Parameter, "", 1));
+  parameters.push_back(FilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderBCoeff(), FilterParameter::Parameter, "", 1));
+  parameters.push_back(FilterParameter::New("Fourth Order A Coefficients", "FourthOrderACoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderACoeff(), FilterParameter::Parameter, "", 2));
+  parameters.push_back(FilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderBCoeff(), FilterParameter::Parameter, "", 2));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 

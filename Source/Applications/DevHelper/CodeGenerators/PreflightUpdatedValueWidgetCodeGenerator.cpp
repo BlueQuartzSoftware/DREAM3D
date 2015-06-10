@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PreflightUpdatedValueWidgetCodeGenerator::PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+PreflightUpdatedValueWidgetCodeGenerator::PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ PreflightUpdatedValueWidgetCodeGenerator::~PreflightUpdatedValueWidgetCodeGenera
 // -----------------------------------------------------------------------------
 QString PreflightUpdatedValueWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::PreflightUpdatedValueWidget, get" + getPropertyName() + "(), false, \"\"));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::PreflightUpdatedValueWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
 }
 
 // -----------------------------------------------------------------------------

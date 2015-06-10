@@ -183,15 +183,22 @@ void PipelineFilterWidget::layoutWidgets()
   m_VariablesWidget->setObjectName(variablesName);
   m_VariablesWidget->setGeometry(QRect(0, 0, 250, 267));
   m_VariablesVerticalLayout = new QVBoxLayout(m_VariablesWidget);
+  m_VariablesVerticalLayout->setSpacing(30);
   variablesName = QString::fromUtf8("verticalLayout1") + m_Filter->getNameOfClass();
   m_VariablesVerticalLayout->setObjectName(variablesName);
 
   QString groupBoxStyle;
   QTextStream ss(&groupBoxStyle);
-  ss << "QGroupBox\n";
-  ss << "{\n";
-  ss << "font-weight: bold\n";
+  ss << "QGroupBox {";
+  ss << "    font-weight: bold;";
   ss << "}";
+  ss << "QGroupBox::title {";
+  ss << "    subcontrol-origin: margin;";
+  ss << "    subcontrol-position: top left;";
+  ss << "    padding: 0 5px;";
+  ss << "    font-weight: bold;";
+  ss << "}";
+
 
   QGroupBox* parametersGroupBox = new QGroupBox("Parameters", this);
   QVBoxLayout* pLayout = new QVBoxLayout(parametersGroupBox);
@@ -205,9 +212,9 @@ void PipelineFilterWidget::layoutWidgets()
   QVBoxLayout* cLayout = new QVBoxLayout(createdGroupBox);
   createdGroupBox->setStyleSheet(groupBoxStyle);
 
-  m_VariablesVerticalLayout->addWidget(parametersGroupBox);
-  m_VariablesVerticalLayout->addWidget(requiredGroupBox);
-  m_VariablesVerticalLayout->addWidget(createdGroupBox);
+  QGroupBox* noCategoryGroupBox = new QGroupBox("Uncategorized", this);
+  QVBoxLayout* nLayout = new QVBoxLayout(noCategoryGroupBox);
+  noCategoryGroupBox->setStyleSheet(groupBoxStyle);
 
   // Set the Name of the filter into the FilterWidget
   filterName->setText(m_Filter->getHumanLabel() );
@@ -240,7 +247,7 @@ void PipelineFilterWidget::layoutWidgets()
       w->setParent(m_VariablesWidget);
       rLayout->addWidget(w);
     }
-    if(option->getCategory() == FilterParameter::CreatedArray)
+    else if(option->getCategory() == FilterParameter::CreatedArray)
     {
       w->setParent(m_VariablesWidget);
       cLayout->addWidget(w);
@@ -248,7 +255,7 @@ void PipelineFilterWidget::layoutWidgets()
     else
     {
       w->setParent(m_VariablesWidget);
-      pLayout->addWidget(w);
+      nLayout->addWidget(w);
     }
 
     // Connect up some signals and slots
@@ -264,6 +271,45 @@ void PipelineFilterWidget::layoutWidgets()
   // Now link any boolean widgets to any conditional Widgets that they might control.
   linkConditionalWidgets(filterParameters);
 
+  // If there are widgets in the parameters group box, add it to the overall layout.  If not, remove the group box.
+  if (pLayout->isEmpty() == false)
+  {
+    m_VariablesVerticalLayout->addWidget(parametersGroupBox);
+  }
+  else
+  {
+    delete parametersGroupBox;
+  }
+
+  // If there are widgets in the required arrays group box, add it to the overall layout.  If not, remove the group box.
+  if (rLayout->isEmpty() == false)
+  {
+    m_VariablesVerticalLayout->addWidget(requiredGroupBox);
+  }
+  else
+  {
+    delete requiredGroupBox;
+  }
+
+  // If there are widgets in the created arrays group box, add it to the overall layout.  If not, remove the group box.
+  if (cLayout->isEmpty() == false)
+  {
+    m_VariablesVerticalLayout->addWidget(createdGroupBox);
+  }
+  else
+  {
+    delete createdGroupBox;
+  }
+
+  // If there are widgets in the uncategorized group box, add it to the overall layout.  If not, remove the group box.
+  if (nLayout->isEmpty() == false)
+  {
+    m_VariablesVerticalLayout->addWidget(noCategoryGroupBox);
+  }
+  else
+  {
+    delete noCategoryGroupBox;
+  }
 
   // Now layout the Current Structure widget
   m_CurrentStructureWidget = new DataContainerArrayWidget(m_Filter.get(), this);

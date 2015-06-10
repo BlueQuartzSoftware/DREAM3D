@@ -52,7 +52,7 @@ public:
     * @brief Creates a new instance for this code generator.
     * @return
     */
-    FPCodeGenerator::Pointer create(QString humanLabel, QString propertyName, QString fpType, QString initValue);
+    FPCodeGenerator::Pointer create(QString humanLabel, QString propertyName, QString fpType, QString fpCategory, QString initValue);
 
 protected:
   CodeGenFactory();

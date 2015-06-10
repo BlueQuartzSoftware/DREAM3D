@@ -47,9 +47,9 @@ class ThirdOrderPolynomialWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(ThirdOrderPolynomialWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new ThirdOrderPolynomialWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new ThirdOrderPolynomialWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -64,7 +64,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  ThirdOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  ThirdOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

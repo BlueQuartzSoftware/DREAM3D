@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -84,20 +84,24 @@ FindNeighbors::~FindNeighbors()
 void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Number Of Neighbors", "NumNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNumNeighborsArrayName(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayName", FilterParameterWidgetType::StringWidget, getNeighborListArrayName(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Neighbor Surface Area List", "SharedSurfaceAreaListArrayName", FilterParameterWidgetType::StringWidget, getSharedSurfaceAreaListArrayName(), FilterParameter::Uncategorized));
+
   QStringList linkedProps("BoundaryCellsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Boundary Cells Array", "StoreBoundaryCells", getStoreBoundaryCells(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellsArrayName(), FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Boundary Cells Array", "StoreBoundaryCells", getStoreBoundaryCells(), linkedProps, FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "SurfaceFeaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), linkedProps, FilterParameter::Parameter));
+
+  
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray));
+
+
+
+  parameters.push_back(FilterParameter::New("Number Of Neighbors", "NumNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNumNeighborsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayName", FilterParameterWidgetType::StringWidget, getNeighborListArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Neighbor Surface Area List", "SharedSurfaceAreaListArrayName", FilterParameterWidgetType::StringWidget, getSharedSurfaceAreaListArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

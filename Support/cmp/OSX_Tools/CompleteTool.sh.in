@@ -213,24 +213,51 @@ function UpdateFrameworkInstallName()
 # -----------------------------------------------------------------------------
 function UpdateDylibInstallName()
 {
-	printStatus "  |- UpdateDylibInstallName"
+	printStatus "  |- UpdateDylibInstallName | ${1} | ${2}"
 	if [[ -e ${1} ]]; then
 		#-- Copy the library using the current "install_name" as the path
 		printStatus "  |- Copying Library '${1}' into app bundle"
 		cp "${1}" "${LibPath}/."
 	    
-	    # Update the Executables link path to this library
-	    oldPath="${1}"
-	    libName=`basename ${oldPath}`
-	    newPath="${InstallNameLib}/${libName}" 
-	    #echo "   ${oldPath} \n   ${newPath}\n   ${2}"
-	    install_name_tool -change ${oldPath} ${newPath} ${2}
-	    
-	    # Update the install_name of the library itself
-	    install_name_tool -id ${newPath} "${LibPath}/${libName}"
-	    
-	    UpdateLibraryDependencies "${LibPath}/${libName}"
+    # Update the Executables link path to this library
+    oldPath="${1}"
+    libName=`basename ${oldPath}`
+    newPath="${InstallNameLib}/${libName}" 
+    #echo "   ${oldPath} \n   ${newPath}\n   ${2}"
+    install_name_tool -change ${oldPath} ${newPath} ${2}
+    
+    # Update the install_name of the library itself
+    install_name_tool -id ${newPath} "${LibPath}/${libName}"
+    
+    UpdateLibraryDependencies "${LibPath}/${libName}"
 	fi
+
+  pathToCopy=${BuildDir}/${1}
+  
+  isRPath=`expr "${1}" : '@rpath/'`
+  if [[ ! "$isRPath" = "0" ]]; then
+    base=`basename ${1}`
+    pathToCopy=${BuildDir}/${base}
+  fi
+
+  if [[ -e ${pathToCopy} ]]; then
+    #-- Copy the library from the current build directory as the path
+    printStatus "  |- Copying Library '${pathToCopy}' into app bundle"
+    cp "${pathToCopy}" "${LibPath}/."
+      
+    # Update the Executables link path to this library
+    oldPath="${1}"
+    libName=`basename ${oldPath}`
+    newPath="${InstallNameLib}/${libName}" 
+    echo "   ${oldPath} | ${newPath} | ${2}"
+    install_name_tool -change ${oldPath} ${newPath} ${2}
+    
+    # Update the install_name of the library itself
+    install_name_tool -id ${newPath} "${LibPath}/${libName}"
+    
+    UpdateLibraryDependencies "${LibPath}/${libName}"
+  fi
+
 }
 
 # -----------------------------------------------------------------------------
@@ -252,7 +279,7 @@ function UpdateExecutableDependencies()
     && "$isUsrLib" = "0" \
     && "$isEmbeddedPathExe" = "0" \
     && "$isEmbeddedPathLdr" = "0" ]]; then
-      printStatus "- UpdateExecutableDependencies"
+      printStatus "- UpdateExecutableDependencies | ${1} | ${2}"
       #printStatus "      ${1}"
       #printStatus "      ${2}"
       libName=`basename ${oldPath}`

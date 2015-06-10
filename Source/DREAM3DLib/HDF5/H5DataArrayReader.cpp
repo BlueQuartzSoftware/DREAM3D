@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -153,77 +153,48 @@ IDataArray::Pointer H5DataArrayReader::ReadStringDataArray(hid_t gid, const QStr
   if(err < 0)
   {
     qDebug() << "Error in getAttributeInfo method in readUserMetaData." ;
+    err = H5Tclose(typeId);
+    return ptr;
   }
-  else
-  {
-    QString classType;
-    int version = 0;
-    QVector<size_t> tDims;
-    QVector<size_t> cDims;
 
-    err = ReadRequiredAttributes(gid, name, classType, version, tDims, cDims);
-    if(err < 0)
+
+  QString classType;
+  int version = 0;
+  QVector<size_t> tDims;
+  QVector<size_t> cDims;
+
+  err = ReadRequiredAttributes(gid, name, classType, version, tDims, cDims);
+  if(err < 0)
+  {
+    err = H5Tclose(typeId);
+    return ptr;
+  }
+
+
+  //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
+  qint32 offset = 0;
+  for(qint32 i = 0; i < tDims.size(); i++)
+  {
+    if(dims.at(offset) != tDims.at(i))
     {
+      qDebug() << "Tuple Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << tDims.at(i);
+      err = H5Tclose(typeId);
       return ptr;
     }
-
-
-    //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
-    qint32 offset = 0;
-    for(qint32 i = 0; i < tDims.size(); i++)
-    {
-      if(dims.at(offset) != tDims.at(i))
-      {
-        qDebug() << "Tuple Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << tDims.at(i);
-        return ptr;
-      }
-      offset++;
-    }
-    for(qint32 i = 0; i < cDims.size(); i++)
-    {
-      if(dims.at(offset) != cDims.at(i))
-      {
-        qDebug() << "Component Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << cDims.at(i);
-        return ptr;
-      }
-      offset++;
-    }
-
-    if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE)
-        || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
-    {
-
-      ptr = StringDataArray::CreateArray(0, name);
-      StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
-
-      Int8ArrayType::Pointer bufPtr = Int8ArrayType::CreateArray(tDims, cDims, "INTERNAL_TEMP_STRING_MATRIX");
-      // Read the string matrix
-      err = QH5Lite::readPointerDataset(gid, name, bufPtr->getPointer(0) );
-
-      // the number of tuples is the number of strings
-      size_t size = bufPtr->getNumberOfTuples();
-      if (metaDataOnly == true)
-      {
-        ptr = StringDataArray::CreateArray(size, name, false);
-      }
-      else
-      {
-        for(size_t tuple = 0; tuple < size; tuple++)
-        {
-          const char* buf = reinterpret_cast<char*>(bufPtr->getTuplePointer(tuple));
-          QString value(buf);
-          strArray->resize(tuple + 1);
-          strArray->setValue(tuple, value);
-        }
-      }
-    }
+    offset++;
   }
+  // Strings are stored as variable length arrays so trying to match the component
+  // dimensions does not make sense.
+  StringDataArray::Pointer strTemp = StringDataArray::CreateArray(dims[0], name);
 
-  err = H5Tclose(typeId);
-  if (err < 0 )
+  err = QH5Lite::readVectorOfStringDataset(gid, name, strTemp->getStringArray());
+  if(err < 0)
   {
-    return IDataArray::NullPointer();
+    err = H5Tclose(typeId);
+    return ptr;
   }
+
+  ptr = strTemp;
 
   return ptr;
 }

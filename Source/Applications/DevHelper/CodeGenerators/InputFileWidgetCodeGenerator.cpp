@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InputFileWidgetCodeGenerator::InputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+InputFileWidgetCodeGenerator::InputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ InputFileWidgetCodeGenerator::~InputFileWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString InputFileWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputFileWidget, get" + getPropertyName() + "(), false, \"\", \"*.raw *.bin\"));";
+  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputFileWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\", \"*.raw *.bin\"));";
 }
 
 // -----------------------------------------------------------------------------

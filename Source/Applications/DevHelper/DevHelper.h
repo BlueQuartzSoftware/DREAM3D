@@ -41,6 +41,8 @@
 #include <QtCore/QObject>
 #include <QtWidgets/QWidget>
 
+#include "QtSupportLib/DREAM3DSettings.h"
+
 #include "ui_DevHelper.h"
 
 class DevHelper : public QMainWindow, public Ui::DevHelper
@@ -66,8 +68,8 @@ private:
   void closeEvent(QCloseEvent* event);
   void writeSettings();
   void readSettings();
-  void readWindowSettings(QSettings& prefs);
-  void writeWindowSettings(QSettings& prefs);
+  void readWindowSettings(DREAM3DSettings& prefs);
+  void writeWindowSettings(DREAM3DSettings& prefs);
 
   DevHelper(const DevHelper&);    // Copy Constructor Not Implemented
   void operator=(const DevHelper&);  // Operator '=' Not Implemented

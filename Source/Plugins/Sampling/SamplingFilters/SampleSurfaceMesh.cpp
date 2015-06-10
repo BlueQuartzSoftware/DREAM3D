@@ -141,8 +141,9 @@ SampleSurfaceMesh::~SampleSurfaceMesh()
 void SampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Surface Mesh Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", FilterParameter::RequiredArray, ""));
+
   setFilterParameters(parameters);
 }
 

@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayCreationWidgetCodeGenerator::DataArrayCreationWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+DataArrayCreationWidgetCodeGenerator::DataArrayCreationWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ DataArrayCreationWidgetCodeGenerator::~DataArrayCreationWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DataArrayCreationWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataArrayCreationWidget, get" + getPropertyName() + "(), false));";
+  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataArrayCreationWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InputPathWidgetCodeGenerator::InputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+InputPathWidgetCodeGenerator::InputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ InputPathWidgetCodeGenerator::~InputPathWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString InputPathWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputPathWidget, get" + getPropertyName() + "(), false, \"\", \"\"));";
+  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputPathWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\", \"\"));";
 }
 
 // -----------------------------------------------------------------------------

@@ -10,22 +10,15 @@
 # -----------------------------------------------------------------------------------
 
 message (STATUS "#------------ Starting OS X App Bundle Fixup --------------------------")
-cmake_minimum_required(VERSION 3.1)
 
 include (CMakeParseArguments)
 
 #-- Need this for link line stuff?
 if(COMMAND cmake_policy)
   cmake_policy(SET CMP0009 NEW)
+  cmake_policy(SET CMP0011 NEW)
 endif(COMMAND cmake_policy)
 
-if(0)
-  if (${CMAKE_VERSION} VERSION_GREATER 2.6.2)
-    if(COMMAND cmake_policy)
-      cmake_policy(SET CMP0011 NEW)
-    endif(COMMAND cmake_policy)
-  endif()
-endif()
 
 # gp_item_default_embedded_path item default_embedded_path_var
 #

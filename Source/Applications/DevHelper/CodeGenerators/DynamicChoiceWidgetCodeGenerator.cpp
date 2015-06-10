@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DynamicChoiceWidgetCodeGenerator::DynamicChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+DynamicChoiceWidgetCodeGenerator::DynamicChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -60,7 +60,7 @@ QString DynamicChoiceWidgetCodeGenerator::generateSetupFilterParameters()
   QTextStream ss(&contents);
 
   ss << "  // Fill in ListPropertyName string, if needed\n";
-  ss << "  parameters.push_back(DynamicChoiceFilterParameter::New(\"" + getHumanLabel() + "\",  \"" + getPropertyName() + "\", get" + getPropertyName() + "(), \"ListPropertyName\", false));";
+  ss << "  parameters.push_back(DynamicChoiceFilterParameter::New(\"" + getHumanLabel() + "\",  \"" + getPropertyName() + "\", get" + getPropertyName() + "(), \"ListPropertyName\", " + getCategory() + "));";
 
   return contents;
 }

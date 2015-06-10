@@ -47,9 +47,9 @@ class DataContainerArrayProxyWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(DataContainerArrayProxyWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new DataContainerArrayProxyWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new DataContainerArrayProxyWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -66,7 +66,7 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  DataContainerArrayProxyWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  DataContainerArrayProxyWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

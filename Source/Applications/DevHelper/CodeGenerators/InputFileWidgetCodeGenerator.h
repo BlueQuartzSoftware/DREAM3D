@@ -47,9 +47,9 @@ class InputFileWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(InputFileWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new InputFileWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new InputFileWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -66,7 +66,7 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  InputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  InputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

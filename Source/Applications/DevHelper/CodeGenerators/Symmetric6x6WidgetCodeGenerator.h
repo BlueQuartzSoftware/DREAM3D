@@ -47,9 +47,9 @@ class Symmetric6x6WidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(Symmetric6x6WidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new Symmetric6x6WidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new Symmetric6x6WidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -64,7 +64,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  Symmetric6x6WidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  Symmetric6x6WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

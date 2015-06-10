@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -75,15 +75,14 @@ FillBadData::~FillBadData()
 void FillBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", FilterParameterWidgetType::IntWidget, getMinAllowedDefectSize(), FilterParameter::Uncategorized, "Pixels"));
+  parameters.push_back(FilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", FilterParameterWidgetType::IntWidget, getMinAllowedDefectSize(), FilterParameter::Parameter, "Pixels"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects As New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Replace Bad Data", "ReplaceBadData", FilterParameterWidgetType::BooleanWidget, getReplaceBadData(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects As New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Replace Bad Data", "ReplaceBadData", FilterParameterWidgetType::BooleanWidget, getReplaceBadData(), FilterParameter::Parameter, ""));
 
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 

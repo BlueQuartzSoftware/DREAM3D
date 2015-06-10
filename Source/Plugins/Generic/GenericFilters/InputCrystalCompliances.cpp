@@ -95,11 +95,11 @@ InputCrystalCompliances::~InputCrystalCompliances()
 void InputCrystalCompliances::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Compliance Values", "Compliances", FilterParameterWidgetType::Symmetric6x6Widget, getCompliances(), FilterParameter::Uncategorized, "10^-11 Pa^-1"));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayName", FilterParameterWidgetType::StringWidget, getCrystalCompliancesArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Compliance Values", "Compliances", FilterParameterWidgetType::Symmetric6x6Widget, getCompliances(), FilterParameter::RequiredArray, "10^-11 Pa^-1"));
+  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayName", FilterParameterWidgetType::StringWidget, getCrystalCompliancesArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

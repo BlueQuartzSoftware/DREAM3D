@@ -47,9 +47,9 @@ class ComparisonSelectionWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(ComparisonSelectionWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new ComparisonSelectionWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new ComparisonSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -68,7 +68,7 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

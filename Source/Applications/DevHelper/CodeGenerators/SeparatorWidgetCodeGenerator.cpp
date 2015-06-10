@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SeparatorWidgetCodeGenerator::SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+SeparatorWidgetCodeGenerator::SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ SeparatorWidgetCodeGenerator::~SeparatorWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"\", FilterParameterWidgetType::SeparatorWidget, \"\", false));";
+  return "  parameters.push_back(SeparatorFilterParameter::New(\"" + getHumanLabel() + "\", " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

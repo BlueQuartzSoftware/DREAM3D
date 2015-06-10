@@ -60,9 +60,9 @@ class FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(FPCodeGenerator)
 
-  static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+  static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new FPCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new FPCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -85,15 +85,17 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  FPCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  FPCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
   QString getPropertyName();
   QString getHumanLabel();
+  QString getCategory();
   QString getInitValue();
 
 private:
   QString m_PropertyName;
   QString m_HumanLabel;
+  QString m_Category;
   QString m_InitValue;
 
   FPCodeGenerator(const FPCodeGenerator&); // Copy Constructor Not Implemented

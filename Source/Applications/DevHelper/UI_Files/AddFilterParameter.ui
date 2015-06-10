@@ -32,8 +32,8 @@
    <string>Add Filter Parameter</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2">
-    <widget class="QLineEdit" name="varName"/>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="humanName"/>
    </item>
    <item row="0" column="0">
     <widget class="QLabel" name="varNameLabel">
@@ -49,8 +49,21 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="QLineEdit" name="humanName"/>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="varName"/>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="category"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="categoryLabel">
+     <property name="text">
+      <string>Category:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="initValue"/>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="typeLabel">
@@ -59,10 +72,17 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="1">
     <widget class="QComboBox" name="type"/>
    </item>
-   <item row="4" column="2">
+   <item row="4" column="0">
+    <widget class="QLabel" name="initValueLabel">
+     <property name="text">
+      <string>Initial Value:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QFSDropLabel" name="errorString">
@@ -93,23 +113,13 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="initValueLabel">
-     <property name="text">
-      <string>Initial Value:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QLineEdit" name="initValue"/>
-   </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
    <class>QFSDropLabel</class>
    <extends>QLabel</extends>
-   <header>QtSupportLib/QFSDropLabel.h</header>
+   <header>QFSDropLabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -82,27 +82,29 @@ CropVolume::~CropVolume()
 void CropVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::Uncategorized));
 
   parameters.push_back(VolumeInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", FilterParameterWidgetType::VolumeDataContainerInfoWidget, getCurrentVolumeDataContainerDimensions(), FilterParameter::Uncategorized, "", "CurrentVolumeDataContainerResolutions"));
-  parameters.push_back(FilterParameter::New("X Min (Voxels)", "XMin", FilterParameterWidgetType::IntWidget, getXMin(), FilterParameter::Uncategorized, "Column"));
-  parameters.push_back(FilterParameter::New("Y Min (Voxels)", "YMin", FilterParameterWidgetType::IntWidget, getYMin(), FilterParameter::Uncategorized, "Row"));
-  parameters.push_back(FilterParameter::New("Z Min (Voxels)", "ZMin", FilterParameterWidgetType::IntWidget, getZMin(), FilterParameter::Uncategorized, "Plane"));
-  parameters.push_back(FilterParameter::New("X Max (Voxels)", "XMax", FilterParameterWidgetType::IntWidget, getXMax(), FilterParameter::Uncategorized, "Column"));
-  parameters.push_back(FilterParameter::New("Y Max (Voxels)", "YMax", FilterParameterWidgetType::IntWidget, getYMax(), FilterParameter::Uncategorized, "Row"));
-  parameters.push_back(FilterParameter::New("Z Max (Voxels)", "ZMax", FilterParameterWidgetType::IntWidget, getZMax(), FilterParameter::Uncategorized, "Plane"));
+  parameters.push_back(FilterParameter::New("X Min (Voxels)", "XMin", FilterParameterWidgetType::IntWidget, getXMin(), FilterParameter::Parameter, "Column"));
+  parameters.push_back(FilterParameter::New("Y Min (Voxels)", "YMin", FilterParameterWidgetType::IntWidget, getYMin(), FilterParameter::Parameter, "Row"));
+  parameters.push_back(FilterParameter::New("Z Min (Voxels)", "ZMin", FilterParameterWidgetType::IntWidget, getZMin(), FilterParameter::Parameter, "Plane"));
+  parameters.push_back(FilterParameter::New("X Max (Voxels)", "XMax", FilterParameterWidgetType::IntWidget, getXMax(), FilterParameter::Parameter, "Column"));
+  parameters.push_back(FilterParameter::New("Y Max (Voxels)", "YMax", FilterParameterWidgetType::IntWidget, getYMax(), FilterParameter::Parameter, "Row"));
+  parameters.push_back(FilterParameter::New("Z Max (Voxels)", "ZMax", FilterParameterWidgetType::IntWidget, getZMax(), FilterParameter::Parameter, "Plane"));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(FilterParameter::New("Update Origin", "UpdateOrigin", FilterParameterWidgetType::BooleanWidget, getUpdateOrigin(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Update Origin", "UpdateOrigin", FilterParameterWidgetType::BooleanWidget, getUpdateOrigin(), FilterParameter::Parameter));
+
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray));
+
   setFilterParameters(parameters);
 }
 

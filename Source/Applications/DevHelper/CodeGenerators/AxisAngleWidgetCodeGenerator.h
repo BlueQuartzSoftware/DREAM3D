@@ -47,9 +47,9 @@ class AxisAngleWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(AxisAngleWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new AxisAngleWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new AxisAngleWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -64,7 +64,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  AxisAngleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  AxisAngleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

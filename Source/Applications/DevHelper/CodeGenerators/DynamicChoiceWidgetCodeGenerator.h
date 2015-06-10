@@ -47,9 +47,9 @@ class DynamicChoiceWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(DynamicChoiceWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new DynamicChoiceWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new DynamicChoiceWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -66,7 +66,7 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  DynamicChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  DynamicChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

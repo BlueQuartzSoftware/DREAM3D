@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -72,12 +72,12 @@ FindBoundaryElementFractions::~FindBoundaryElementFractions()
 void FindBoundaryElementFractions::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Surface Cells", "BoundaryCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBoundaryCellsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellFractionsArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Surface Cells", "BoundaryCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellFractionsArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

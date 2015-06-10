@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -75,13 +75,14 @@ FindSizes::~FindSizes()
 void FindSizes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getEquivalentDiametersArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayName", FilterParameterWidgetType::StringWidget, getNumCellsArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getEquivalentDiametersArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayName", FilterParameterWidgetType::StringWidget, getNumCellsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  
   setFilterParameters(parameters);
 }
 

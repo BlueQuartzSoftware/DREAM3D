@@ -47,9 +47,9 @@ class FileListInfoWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(FileListInfoWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new FileListInfoWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new FileListInfoWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -66,7 +66,7 @@ public:
   virtual QString generateCPPIncludes();
 
 protected:
-  FileListInfoWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  FileListInfoWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

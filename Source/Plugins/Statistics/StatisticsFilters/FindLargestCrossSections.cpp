@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -72,6 +72,8 @@ FindLargestCrossSections::~FindLargestCrossSections()
 void FindLargestCrossSections::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
+  /* Parameters */
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -82,13 +84,16 @@ void FindLargestCrossSections::setupFilterParameters()
     choices.push_back("XZ");
     choices.push_back("YZ");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Largest Cross Sections", "LargestCrossSectionsArrayName", FilterParameterWidgetType::StringWidget, getLargestCrossSectionsArrayName(), FilterParameter::Uncategorized, ""));
+
+  /* Required Arrays */
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+
+  /* Created Arrays */
+  parameters.push_back(FilterParameter::New("Largest Cross Sections", "LargestCrossSectionsArrayName", FilterParameterWidgetType::StringWidget, getLargestCrossSectionsArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

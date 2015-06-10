@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -273,6 +273,67 @@ herr_t  H5Lite::writeStringDataset (hid_t loc_id,
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+herr_t H5Lite::writeVectorOfStringsDataset(hid_t loc_id,
+                                           const std::string& dsetName,
+                                           const std::vector<std::string> &data)
+{
+  hid_t sid = -1;
+  hid_t memspace = -1;
+  hid_t datatype = -1;
+  hid_t did = -1;
+  herr_t err = -1;
+  herr_t retErr = 0;
+
+  hsize_t  dims[1] = { data.size() };
+  if ( (sid = H5Screate_simple(sizeof(dims) / sizeof(*dims), dims, NULL)) >= 0)
+  {
+    dims[0] = 1;
+
+    if( (memspace = H5Screate_simple(sizeof(dims) / sizeof(*dims), dims, NULL) ) >= 0)
+    {
+
+      datatype = H5Tcopy(H5T_C_S1);
+      H5Tset_size(datatype, H5T_VARIABLE);
+
+      if ( (did = H5Dcreate(loc_id, dsetName.c_str(), datatype, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0)
+      {
+
+        //
+        // Select the "memory" to be written out - just 1 record.
+        hsize_t offset[] = { 0 };
+        hsize_t count[] = { 1 };
+        H5Sselect_hyperslab(memspace, H5S_SELECT_SET, offset, NULL, count, NULL);
+        hsize_t m_pos = 0;
+        for (std::vector < std::string>::size_type i = 0; i < data.size(); i++)
+        {
+          // Select the file position, 1 record at position 'pos'
+          hsize_t count[] = { 1 };
+          hsize_t offset[] = { m_pos++ };
+          H5Sselect_hyperslab(sid, H5S_SELECT_SET, offset, NULL, count, NULL);
+          std::string v = data[i];
+          const char * s = v.c_str();
+          err = H5Dwrite(did, datatype, memspace, sid, H5P_DEFAULT, &s);
+          if (err < 0 )
+          {
+            std::cout << "Error Writing String Data: " __FILE__ << "(" << __LINE__ << ")" << std::endl;
+            retErr = err;
+          }
+        }
+        CloseH5D(did, err, retErr);
+      }
+      H5Tclose(datatype);
+      CloseH5S(memspace, err, retErr);
+    }
+
+    CloseH5S(sid, err, retErr);
+
+  }
+  return retErr;
+}
+
+// -----------------------------------------------------------------------------
 //  Writes a string to a HDF5 dataset
 // -----------------------------------------------------------------------------
 herr_t H5Lite::writeStringDataset (hid_t loc_id, const std::string& dsetName, const std::string& data)
@@ -524,7 +585,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
                                  char* data)
 {
   hid_t did; // dataset id
-  hid_t tid; //type id
+  hid_t tid; // type id
   herr_t err = 0;
   herr_t retErr = 0;
 
@@ -549,7 +610,80 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
   return retErr;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+herr_t H5Lite::readVectorOfStringDataset(hid_t loc_id,
+                                         const std::string& dsetName,
+                                         std::vector<std::string> &data)
+{
 
+  hid_t did; // dataset id
+  hid_t tid; // type id
+  herr_t err = 0;
+  herr_t retErr = 0;
+
+
+  did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT);
+  if (did < 0)
+  {
+    std::cout << "H5Lite.cpp::readVectorOfStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
+    return -1;
+  }
+  /*
+  * Get the datatype.
+  */
+  tid = H5Dget_type(did);
+  if ( tid >= 0 )
+  {
+    hsize_t dims[1] = { 0 };
+    /*
+  * Get dataspace and allocate memory for read buffer.
+  */
+    hid_t sid = H5Dget_space(did);
+    int ndims = H5Sget_simple_extent_dims(sid, dims, NULL);
+    std::vector<char*> rdata(dims[0]);
+    for (int i = 0; i < dims[0]; i++)
+    {
+      rdata[i] = NULL;
+    }
+
+    /*
+  * Create the memory datatype.
+  */
+    hid_t memtype = H5Tcopy(H5T_C_S1);
+    herr_t status = H5Tset_size(memtype, H5T_VARIABLE);
+
+    /*
+  * Read the data.
+  */
+    status = H5Dread(did, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(rdata.front()));
+
+    /*
+  * copy the data into the vector of strings
+  */
+    for (int i = 0; i < dims[0]; i++) {
+      // printf("%s[%d]: %s\n", "VlenStrings", i, rdata[i].p);
+      std::string str = std::string(rdata[i]);
+      data.push_back(str);
+    }
+    /*
+    * Close and release resources.  Note that H5Dvlen_reclaim works
+    * for variable-length strings as well as variable-length arrays.
+    * Also note that we must still free the array of pointers stored
+    * in rdata, as H5Tvlen_reclaim only frees the data these point to.
+    */
+    status = H5Dvlen_reclaim(memtype, sid, H5P_DEFAULT, &(rdata.front()));
+    CloseH5S(sid, err, retErr);
+    CloseH5T(tid, err, retErr);
+    CloseH5T(memtype, err, retErr);
+  }
+
+  CloseH5D(did, err, retErr);
+
+
+  return retErr;
+}
 
 // -----------------------------------------------------------------------------
 //  Reads a string Attribute from the HDF file

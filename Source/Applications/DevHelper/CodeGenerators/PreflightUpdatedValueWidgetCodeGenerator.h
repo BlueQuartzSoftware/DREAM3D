@@ -47,9 +47,9 @@ class PreflightUpdatedValueWidgetCodeGenerator : public FPCodeGenerator
 public:
   DREAM3D_SHARED_POINTERS(PreflightUpdatedValueWidgetCodeGenerator)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString initValue)
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
   {
-    Pointer sharedPtr(new PreflightUpdatedValueWidgetCodeGenerator(humanLabel, propertyName, initValue));
+    Pointer sharedPtr(new PreflightUpdatedValueWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
     return sharedPtr;
   }
 
@@ -62,7 +62,7 @@ public:
   virtual QString generateFilterParameters();
 
 protected:
-  PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue);
+  PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
 private:
 

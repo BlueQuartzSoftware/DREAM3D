@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonSelectionWidgetCodeGenerator::ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+ComparisonSelectionWidgetCodeGenerator::ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -61,7 +61,7 @@ QString ComparisonSelectionWidgetCodeGenerator::generateSetupFilterParameters()
   
   ss << "\n";
   ss << "  // Please fill in the QVariant and QVector parameters to complete the setup\n";
-  ss << "  parameters.push_back(ComparisonFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ComparisonSelectionWidget, QVariant(), QVector<QString>(), true, false));\n";
+  ss << "  parameters.push_back(ComparisonFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ComparisonSelectionWidget, QVariant(), QVector<QString>(), true, " + getCategory() + "));\n";
   ss << "\n";
 
   return contents;

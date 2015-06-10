@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxyWidgetCodeGenerator::DataContainerArrayProxyWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+DataContainerArrayProxyWidgetCodeGenerator::DataContainerArrayProxyWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ DataContainerArrayProxyWidgetCodeGenerator::~DataContainerArrayProxyWidgetCodeGe
 // -----------------------------------------------------------------------------
 QString DataContainerArrayProxyWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(DataContainerArrayProxyFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataContainerArrayProxyWidget, QVariant(), DataContainerArrayProxy(), Qt::Unchecked, false));";
+  return "  parameters.push_back(DataContainerArrayProxyFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataContainerArrayProxyWidget, QVariant(), DataContainerArrayProxy(), Qt::Unchecked, " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

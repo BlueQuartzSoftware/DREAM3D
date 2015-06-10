@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -76,14 +76,15 @@ void FindBoundingBoxFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("PhasesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply Phase by Phase", "CalcByPhase", getCalcByPhase(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Feature Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Optional Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Feature Phases", "PhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getPhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayName", FilterParameterWidgetType::StringWidget, getBiasedFeaturesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply Phase by Phase", "CalcByPhase", getCalcByPhase(), linkedProps, FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Feature Phases", "PhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getPhasesArrayPath(), FilterParameter::Parameter, ""));
+
+  parameters.push_back(FilterParameter::New("Feature Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayName", FilterParameterWidgetType::StringWidget, getBiasedFeaturesArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

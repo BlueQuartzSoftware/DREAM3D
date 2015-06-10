@@ -143,32 +143,27 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     QJsonObject root = doc.object();
 
     QJsonObject d3dJson = root["DREAM3D"].toObject();
-    QString serverVersionStr = d3dJson[DREAM3D::Settings::Version].toString();
     QString releaseDate = d3dJson["Release Date"].toString();
     QString releaseType = d3dJson["Release Type"].toString();
 
-//    serverVersionStr = serverVersionStr.trimmed();
+    QString serverMajor = QString::number(d3dJson["Major"].toInt());
+    QString serverMinor = QString::number(d3dJson["Minor"].toInt());
+    QString serverPatch = QString::number(d3dJson["Patch"].toInt());
 
-    QString appVersionStr = (DREAM3DLib::Version::Complete());
-
-    QStringList serverVersionParts = serverVersionStr.split(QString("."));
-    QStringList appVersionParts = appVersionStr.split(QString("."));
-
-    appVersionStr = appVersionParts.at(0);
-    appVersionStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
-    serverVersionStr = serverVersionParts.at(0);
-    serverVersionStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
+    QString appMajor = DREAM3DLib::Version::Major();
+    QString appMinor = DREAM3DLib::Version::Minor();
+    QString appPatch = DREAM3DLib::Version::Patch();
 
     bool ok = false;
     AppVersion appVersion;
-    appVersion.setMajorNum( appVersionParts.at(0).toInt(&ok) );
-    appVersion.setMinorNum( appVersionParts.at(1).toInt(&ok) );
-    appVersion.setPatchNum( appVersionParts.at(2).toInt(&ok) );
+    appVersion.setMajorNum( appMajor.toInt(&ok) );
+    appVersion.setMinorNum( appMinor.toInt(&ok) );
+    appVersion.setPatchNum( appPatch.toInt(&ok) );
 
     AppVersion serverVersion;
-    serverVersion.setMajorNum( serverVersionParts.at(0).toInt(&ok) );
-    serverVersion.setMinorNum( serverVersionParts.at(1).toInt(&ok) );
-    serverVersion.setPatchNum( serverVersionParts.at(2).toInt(&ok) );
+    serverVersion.setMajorNum( serverMajor.toInt(&ok) );
+    serverVersion.setMinorNum( serverMinor.toInt(&ok) );
+    serverVersion.setPatchNum( serverPatch.toInt(&ok) );
 
     // If the server returned garbage values
     if ( serverVersion.getMajorNum() == 0 && serverVersion.getMinorNum() == 0 && serverVersion.getPatchNum() == 0 )
@@ -180,6 +175,9 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
       emit LatestVersion(dataObj);
       return;
     }
+
+    QString appVersionStr = appMajor + "." + appMinor + "." + appPatch;
+    QString serverVersionStr = serverMajor + "." + serverMinor + "." + serverPatch;
 
     // If the server returned a legitimate version, compare it with the app version
     if (serverVersion > appVersion)

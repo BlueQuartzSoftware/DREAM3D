@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -196,11 +196,11 @@ void TestQuat_t()
   q.y = 0.0f;
   q.z = 1.0f;
   q.w = 1.0f;
-  QuaternionMathF::Multiply(q, p, out);
+  QuaternionMathF::Multiply(p, q, out);
   QuaternionMathF::Conjugate(out);
   QuaternionMathF::Conjugate(p);
   QuaternionMathF::Conjugate(q);
-  QuaternionMathF::Multiply(p, q, out2);
+  QuaternionMathF::Multiply(q, p, out2);
   DREAM3D_REQUIRE_EQUAL(out.x, out2.x)
   DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
   DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
@@ -231,18 +231,19 @@ void TestQuat_t()
   p.y = 0.0f;
   p.z = 0.0f;
   p.w = 1.0f;
+
   q.x = 0.0f;
   q.y = 1.0f;
   q.z = 0.0f;
   q.w = 2.0f;
 
-  QuaternionMathF::Multiply(q, p, out);
+  QuaternionMathF::Multiply(p, q, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
   DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.z, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
 
-  QuaternionMathF::Multiply(p, q, out);
+  QuaternionMathF::Multiply(q, p, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
   DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.z, -1.0)

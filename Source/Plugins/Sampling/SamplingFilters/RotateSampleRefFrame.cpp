@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -185,12 +185,14 @@ void RotateSampleRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::Uncategorized));
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Rotation Axis");
     parameter->setPropertyName("RotationAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     parameter->setUnits("ijk");
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
   {
@@ -199,6 +201,7 @@ void RotateSampleRefFrame::setupFilterParameters()
     parameter->setPropertyName("RotationAngle");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     parameter->setUnits("Degrees");
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
