@@ -160,10 +160,6 @@ namespace Ebsd
       const unsigned int UnknownSymmetry = 999;
     }
 
-
-
-    const QString FileExt("ang");
-    const QString H5FileExt("h5");
     const QString TEMPIXPerUM(ANG_TEM_PIXPERUM);
     const QString XStar(ANG_X_STAR);
     const QString YStar(ANG_Y_STAR);
@@ -278,6 +274,8 @@ namespace Ebsd
   {
 // These are the Lower Case versions of the constants
     const QString FileExtLower("ang");
+    const QString FileExt("ang");
+    const QString H5FileExt("h5");
     const QString TEMPIXPerUMLower(ANG_TEM_PIXPERUM_LOWER);
     const QString XStarLower(ANG_X_STAR_LOWER);
     const QString YStarLower(ANG_Y_STAR_LOWER);
