@@ -146,7 +146,7 @@ FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices()
 void FindRelativeMotionBetweenSlices::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Track Motion", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -166,7 +166,10 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget, getSSize2(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget, getSliceStep(), FilterParameter::Parameter));
 
+  parameters.push_back(FilterParameter::New("Cell Array To Track Motion", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+
   parameters.push_back(FilterParameter::New("Motion Direction", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, getMotionDirectionArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

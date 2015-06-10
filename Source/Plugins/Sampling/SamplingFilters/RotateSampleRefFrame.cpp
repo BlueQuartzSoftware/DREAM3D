@@ -184,8 +184,8 @@ RotateSampleRefFrame::~RotateSampleRefFrame()
 void RotateSampleRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::Uncategorized));
 
+  /* Parameters */
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Rotation Axis");
@@ -204,6 +204,10 @@ void RotateSampleRefFrame::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
+
+  /* Required Arrays */
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
+
   setFilterParameters(parameters);
 }
 

@@ -72,9 +72,9 @@ void FindVolFractions::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(FilterParameter::New("Element Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
   parameters.push_back(FilterParameter::New("Volume Fractions", "VolFractionsArrayName", FilterParameterWidgetType::StringWidget, getVolFractionsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
