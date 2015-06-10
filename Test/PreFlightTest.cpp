@@ -426,7 +426,7 @@ void TestUncategorizedFilterParameters()
         {
           if(fp->getCategory() == FilterParameter::Uncategorized)
           {
-            qDebug() << "Filter: " << filter->getNameOfClass() << " Filter Parameter: " << fp->getPropertyName() << " IS NOT Categorized.";
+            qDebug() << "[]" << filter->getCompiledLibraryName() << "  Filter: " << filter->getNameOfClass() << " Filter Parameter: " << fp->getPropertyName() << " IS NOT Categorized.";
           }
         }
       }
