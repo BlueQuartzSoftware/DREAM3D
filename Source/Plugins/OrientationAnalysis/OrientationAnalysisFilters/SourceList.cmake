@@ -15,9 +15,6 @@ START_FILTER_GROUP(${OrientationAnalysis_BINARY_DIR} "${_filterGroupName}" "Orie
 set(_PublicFilters
   BadDataNeighborOrientationCheck
   ChangeAngleRepresentation
-  WritePoleFigure
-  WriteIPFStandardTriangle
-  ReadCtfData
   ConvertHexGridToSquareGrid
   ConvertOrientations
   EbsdToH5Ebsd
@@ -38,10 +35,13 @@ set(_PublicFilters
   GenerateMisorientationColors
   NeighborCICorrelation
   NeighborOrientationCorrelation
-  ReadH5Ebsd
   ReadAngData
+  ReadCtfData
   ReadEdaxH5Data
+  ReadH5Ebsd
   RotateEulerRefFrame
+  WriteIPFStandardTriangle
+  WritePoleFigure
 )
 
 
