@@ -61,9 +61,10 @@ For example if you have a structure that has 2 phases that consist of a Cubic Pr
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Input Ensemble Info File | Input File |
+| Name | Type | Description |
+|------|------|-------------|
+| Input Ensemble Info File | File Path | Read in the Crystal Structures and Phase Types |
+| Cell Ensemble Attribute Matrix | String | Name for created attribute matrix |
 
 ## Required Geometry ##
 Not Applicable
@@ -73,11 +74,10 @@ Not Applicable
 None
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Ensemble | CrystalStructures | Integer [See above for values] |  |
-| Ensemble | PhaseTypes        | Integer [See above for values] |  |
+| Type | Default Name | Type | Component Dimension | Description |
+|------|--------------|-------------|---------|--------------|
+| Ensemble | CrystalStructures | Integer [See above for values] | (1)  | |
+| Ensemble | PhaseTypes        | Integer [See above for values] | (1) | |
 
 
 ## License & Copyright ##
