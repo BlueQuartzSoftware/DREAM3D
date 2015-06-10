@@ -27,10 +27,10 @@ Triangle
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-|  | SurfaceMeshFaceLabels | Int32  | (2)   | The list of all triangles (faces) in the mesh |
-|  | SurfaceMeshFaceNormals | Double | (2) | |
-|  | SurfaceMeshFaceAreas | Double | (2) | |
-|  | FeatureEulerAngles | Float | (3) | |
+| Triangle | SurfaceMeshFaceLabels | Int32  | (2)   | The list of all triangles (faces) in the mesh |
+| Face | SurfaceMeshFaceNormals | Double | (2) | |
+| Face  | SurfaceMeshFaceAreas | Double | (2) | |
+| Feature  | FeatureEulerAngles | Float | (3) | |
 
 
 ## Created Arrays ##

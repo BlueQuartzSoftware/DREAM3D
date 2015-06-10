@@ -20,8 +20,9 @@ Triangle
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| SurfaceMeshFaceLabels | None | The list of all triangles (faces) in the mesh | (2)   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| SurfaceMeshNodeType | None |The shared node (vertex) list | (2) | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| Triangle | SurfaceMeshFaceLabels | int32  | (2)   | The list of all triangles (faces) in the mesh. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| Vertex | SurfaceMeshNodeType | int8 | (2) | The shared node (vertex) list. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+
 
 ## Created Arrays ##
 None

@@ -57,7 +57,7 @@ Triangle
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| GBDC | None | 5 parameter GBCD data | (5) | Currently stored as Ensemble data in the Surface Mesh Data Container. Filters Known to Create Data: FindGBCD  |
+| Ensemble | GBDC | Double | (5) | 5 parameter GBCD data. Currently stored as Ensemble data in the Surface Mesh Data Container. Filters Known to Create Data: FindGBCD  |
 
 
 ## Created Arrays ##

@@ -18,15 +18,16 @@ We have selected to use a 'shell' element type currently. No boundary elements a
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|--------------------|
-| Surface Mesh Face Labels | String | Input used to create the output file |
-| Output Path | String | Path to folder for the created files |
+| Output File | File Path | |
+
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description |
-|------|--------------------|-------------|
-| Int  | none           | The Geometry Type is image geometry |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Triangle  | SurfaceMeshFaceLabels | int32 | (2)   | The list of all triangles (faces) in the mesh. |
 
 ## Created Arrays ##
 
