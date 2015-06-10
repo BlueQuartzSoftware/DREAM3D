@@ -89,7 +89,7 @@ void VectorSegmentFeatures::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget, getAngleTolerance(), FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::Uncategorized, ""));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::Uncategorized, ""));
@@ -312,18 +312,6 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
     }
-    //else
-    //{
-    //  v2[0] *= -1;
-    //  v2[1] *= -1;
-    //  w = GeometryMath::CosThetaBetweenVectors(v1, v2);
-    //  w = acos(w);
-    //  if(w < angleTolerance)
-    //  {
-    //    group = true;
-    //    m_FeatureIds[neighborpoint] = gnum;
-    //  }
-    //}
   }
   return group;
 }
