@@ -75,7 +75,8 @@ DataContainerReader::~DataContainerReader()
 void DataContainerReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), FilterParameter::Parameter));
   {
     DataContainerReaderFilterParameter::Pointer parameter = DataContainerReaderFilterParameter::New();
     parameter->setHumanLabel("Select Arrays From Input File");
@@ -83,8 +84,10 @@ void DataContainerReader::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::DataContainerReaderWidget);
     parameter->setDefaultFlagValue(Qt::Checked);
     parameter->setInputFileProperty("InputFile");
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
+
   setFilterParameters(parameters);
 }
 

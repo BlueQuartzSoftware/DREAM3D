@@ -111,6 +111,7 @@ ChangeAngleRepresentation::~ChangeAngleRepresentation()
 void ChangeAngleRepresentation::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Conversion Type");
@@ -120,10 +121,12 @@ void ChangeAngleRepresentation::setupFilterParameters()
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Element Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Element Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
+
   setFilterParameters(parameters);
 }
 

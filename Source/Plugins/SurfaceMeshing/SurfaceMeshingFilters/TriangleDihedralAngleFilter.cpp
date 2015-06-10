@@ -143,10 +143,11 @@ TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter()
 void TriangleDihedralAngleFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix Name", "FaceAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleDihedralAnglesArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Face Attribute Matrix Name", "FaceAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleDihedralAnglesArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

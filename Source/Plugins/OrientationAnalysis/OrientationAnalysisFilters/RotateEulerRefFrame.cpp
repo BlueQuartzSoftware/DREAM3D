@@ -136,12 +136,14 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 void RotateEulerRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Rotation Axis");
     parameter->setPropertyName("RotationAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     parameter->setUnits("ijk");
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
   {
@@ -150,10 +152,12 @@ void RotateEulerRefFrame::setupFilterParameters()
     parameter->setPropertyName("RotationAngle");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     parameter->setUnits("Degrees");
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
+
   setFilterParameters(parameters);
 }
 

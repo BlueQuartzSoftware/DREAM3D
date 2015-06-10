@@ -94,6 +94,7 @@ VisualizeGBCDPoleFigure::~VisualizeGBCDPoleFigure()
 void VisualizeGBCDPoleFigure::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Crystal Structure");
@@ -113,13 +114,14 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
     //choices.push_back("Trigonal-Low -3");
     //choices.push_back("Trigonal-High -3m");
     option->setChoices(choices);
+    option->setCategory(FilterParameter::Parameter);
     parameters.push_back(option);
   }
-  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Parameter));
+  parameters.push_back(FileSystemFilterParameter::New("Regular Grid Pole Figure", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.vtk", "VTK File"));
 
-  parameters.push_back(FileSystemFilterParameter::New("Regular Grid Pole Figure", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Uncategorized, "", "*.vtk", "VTK File"));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), FilterParameter::RequiredArray, ""));
+
   setFilterParameters(parameters);
 }
 

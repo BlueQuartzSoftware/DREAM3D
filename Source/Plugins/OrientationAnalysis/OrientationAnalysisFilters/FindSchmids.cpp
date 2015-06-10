@@ -100,25 +100,27 @@ FindSchmids::~FindSchmids()
 void FindSchmids::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Schmids", "SchmidsArrayName", FilterParameterWidgetType::StringWidget, getSchmidsArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Slip Systems", "SlipSystemsArrayName", FilterParameterWidgetType::StringWidget, getSlipSystemsArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Poles", "PolesArrayName", FilterParameterWidgetType::StringWidget, getPolesArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Phis", "PhisArrayName", FilterParameterWidgetType::StringWidget, getPhisArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Lambdas", "LambdasArrayName", FilterParameterWidgetType::StringWidget, getLambdasArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, FilterParameter::Parameter));
   QStringList linkedProps2;
   linkedProps2 << "SlipPlane" << "SlipDirection";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Slip Plane", "SlipPlane", FilterParameterWidgetType::FloatVec3Widget, getSlipPlane(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Slip Direction", "SlipDirection", FilterParameterWidgetType::FloatVec3Widget, getSlipDirection(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Slip Plane", "SlipPlane", FilterParameterWidgetType::FloatVec3Widget, getSlipPlane(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Slip Direction", "SlipDirection", FilterParameterWidgetType::FloatVec3Widget, getSlipDirection(), FilterParameter::Parameter, ""));
+
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Schmids", "SchmidsArrayName", FilterParameterWidgetType::StringWidget, getSchmidsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Slip Systems", "SlipSystemsArrayName", FilterParameterWidgetType::StringWidget, getSlipSystemsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Poles", "PolesArrayName", FilterParameterWidgetType::StringWidget, getPolesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Phis", "PhisArrayName", FilterParameterWidgetType::StringWidget, getPhisArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Lambdas", "LambdasArrayName", FilterParameterWidgetType::StringWidget, getLambdasArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

@@ -72,8 +72,6 @@ void ConvertOrientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Input Orientations", "InputOrientationArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputOrientationArrayPath(), FilterParameter::Uncategorized, "", 0));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Input Orientation Type");
@@ -81,10 +79,10 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Output Orientation Array Name", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::Uncategorized, "", 0));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Orientation Type");
@@ -92,8 +90,13 @@ void ConvertOrientations::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
+
+  parameters.push_back(FilterParameter::New("Input Orientations", "InputOrientationArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputOrientationArrayPath(), FilterParameter::RequiredArray, "", 0));
+
+  parameters.push_back(FilterParameter::New("Output Orientation Array Name", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::CreatedArray, "", 0));
 
   setFilterParameters(parameters);
 }

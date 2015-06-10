@@ -91,6 +91,7 @@ VisualizeGBCDGMT::~VisualizeGBCDGMT()
 void VisualizeGBCDGMT::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Crystal Structure");
@@ -111,12 +112,15 @@ void VisualizeGBCDGMT::setupFilterParameters()
     //choices.push_back("Trigonal-Low -3");
     //choices.push_back("Trigonal-High -3m");
     option->setChoices(choices);
+    option->setCategory(FilterParameter::Parameter);
     parameters.push_back(option);
   }
-  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Uncategorized));
-  parameters.push_back(FileSystemFilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Uncategorized, "", "*.dat", "DAT File"));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Parameter));
+  parameters.push_back(FileSystemFilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.dat", "DAT File"));
+
+
+  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), FilterParameter::RequiredArray, ""));
+
   setFilterParameters(parameters);
 }
 

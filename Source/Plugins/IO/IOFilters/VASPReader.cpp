@@ -77,12 +77,14 @@ VASPReader::~VASPReader()
 void VASPReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Uncategorized, "", "*"));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", FilterParameterWidgetType::StringWidget, getAtomVelocitiesArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("AtomTypes", "AtomTypesArrayName", FilterParameterWidgetType::StringWidget, getAtomTypesArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*"));
+
+  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", FilterParameterWidgetType::StringWidget, getAtomVelocitiesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("AtomTypes", "AtomTypesArrayName", FilterParameterWidgetType::StringWidget, getAtomTypesArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

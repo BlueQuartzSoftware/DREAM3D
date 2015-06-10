@@ -74,24 +74,31 @@ MoveData::~MoveData()
 void MoveData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-  parameter->setHumanLabel("Items To Move");
-  parameter->setPropertyName("WhatToMove");
-  parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-  parameter->setDefaultValue(getWhatToMove()); // Just set the first index
-  QVector<QString> choices;
-  choices.push_back("Attribute Matrix");
-  choices.push_back("Attribute Array");
-  parameter->setChoices(choices);
+  
   QStringList linkedProps;
   linkedProps << "DataContainerDestination" << "AttributeMatrixSource" << "AttributeMatrixDestination" << "DataArraySource";
-  parameter->setLinkedProperties(linkedProps);
-  parameter->setEditable(false);
-  parameters.push_back(parameter);
-  parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), FilterParameter::Uncategorized, "", 0));
-  parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), FilterParameter::Uncategorized, "", 0));
-  parameters.push_back(FilterParameter::New("Attribute Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), FilterParameter::Uncategorized, "", 1));
-  parameters.push_back(FilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixDestination(), FilterParameter::Uncategorized, "", 1));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Items To Move");
+    parameter->setPropertyName("WhatToMove");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setDefaultValue(getWhatToMove()); // Just set the first index
+    QVector<QString> choices;
+    choices.push_back("Attribute Matrix");
+    choices.push_back("Attribute Array");
+    parameter->setChoices(choices);
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+ 
+  
+  parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), FilterParameter::RequiredArray, "", 0));
+  parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), FilterParameter::RequiredArray, "", 0));
+  parameters.push_back(FilterParameter::New("Attribute Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), FilterParameter::RequiredArray, "", 1));
+  parameters.push_back(FilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixDestination(), FilterParameter::RequiredArray, "", 1));
+
   setFilterParameters(parameters);
 }
 

@@ -64,8 +64,11 @@ RenameDataContainer::~RenameDataContainer()
 void RenameDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Data Container To Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Data Container To Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), FilterParameter::RequiredArray));
+
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray));
+
   setFilterParameters(parameters);
 }
 

@@ -64,8 +64,11 @@ RenameAttributeArray::~RenameAttributeArray()
 void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Attribute Array To Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Attribute Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Attribute Array To Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+
+  parameters.push_back(FilterParameter::New("New Attribute Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), FilterParameter::CreatedArray));
+
   setFilterParameters(parameters);
 }
 
