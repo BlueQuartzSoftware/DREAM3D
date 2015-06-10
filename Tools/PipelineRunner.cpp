@@ -111,6 +111,22 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
 int main (int argc, char  *argv[])
 {
 
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setApplicationName("PipelineRunner");
+
+  std::cout << "PipelineRunner Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
+
+
+  // Register all the filters including trying to load those from Plugins
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
+
+  // Send progress messages from PipelineBuilder to this object for display
+  QMetaObjectUtilities::RegisterMetaTypes();
+
   QString pipelineFile;
   try
   {
@@ -136,21 +152,7 @@ int main (int argc, char  *argv[])
     return EXIT_FAILURE;
   }
 
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("PipelineRunner");
 
-  std::cout << "PipelineRunner Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
-
-
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm);
-
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
 
 
   int err = 0;
@@ -184,7 +186,7 @@ int main (int argc, char  *argv[])
     std::cout << "Unsupported pipeline file type. Exiting now." << std::endl;
     return EXIT_FAILURE;
   }
-  
+
   if (NULL == pipeline.get())
   {
     std::cout << "An error occurred trying to read the pipeline file. Exiting now." << std::endl;
