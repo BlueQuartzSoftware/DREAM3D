@@ -21,17 +21,17 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature  | None         | Any | Any | Feature Array to Copy To Element Data |
+| Feature  | None         | Int32 | (1) | Feature Array to Copy To Element Data |
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell  | None         | Any | (1) | Element Feature Ids  |
+| Cell  | Element Feature Ids  | Any | (1) | Element Feature Ids  |
 
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell  | None         | Any | Any |   |
+| Cell  | New Element Array Name | Any | (1) | Element Array  |
 
 
 ## License & Copyright ##

@@ -23,18 +23,18 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature  | None | Any | Any | Feature Array |
+| Feature  | None | Int32 | (1) | Feature Array |
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell  | None | Any | Any | Element Feature Ids  |
+| Cell  | Element Feature Ids | Any | (1) |  |
 
 
 ## Created Arrays ##
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | *User Chosen* | |  |
+| Feature | New Feature Array Name | Any  | (1) |  |
 
 ## License & Copyright ##
 
