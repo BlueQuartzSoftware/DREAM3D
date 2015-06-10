@@ -87,21 +87,11 @@ class GoldfeatherReader : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "Goldfeather Reader"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
