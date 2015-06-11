@@ -15,6 +15,27 @@ This file represents a triangular based mesh. The element type selected is TRI_E
 This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus.
 We have selected to use a 'shell' element type currently. No boundary elements are written.
 
+### Example Output ###
+The .inp output file:     
+
+	*HEADING
+    ** File Created with DREAM3D Version 5.2.1591.1744ded
+    ** There are 3 Sections to this INP File: Nodes, Elements and Sets of Elements for each grain
+    ** This file represents a trianguglar based mesh. The element type selected is SFM3D3 for the triangles
+    ** This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus
+    ** We have selected to use a 'shell' element type currently. No boundary elements are written
+    **Number of Nodes: 346727     Number of Triangles: 757562   Number of Grains: 794
+    *PREPRINT,ECHO=NO,HISTORY=NO,MODEL=NO
+    *Node,NSET=NALL
+    1, -36.750000, 10.250000, -29.000004
+    2, -36.750000, 10.500000, -29.000004
+    3, -36.750000, 10.250000, -28.750004
+    4, -36.750000, 10.500000, -28.750004
+    5, -36.500000, 10.250000, -29.000004
+    6, -36.500000, 10.250000, -28.750004
+    7, -36.500000, 10.500000, -29.000004
+    …..
+
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|--------------------|

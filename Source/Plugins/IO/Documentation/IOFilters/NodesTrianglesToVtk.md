@@ -38,6 +38,32 @@ If the user selects to __disable__ the **Conformal Mesh** option then 2
 triangles will be written to the file and the scalar data will have 2 entries for
 the __grain id__ one for each **Feature** that the triangle borders.
 
+
+### Example Output ###
+The vtk ASCII output file:     
+
+    # vtk DataFile Version 2.0
+    Data set from DREAM.3D Surface Meshing Module
+    ASCII
+    DATASET POLYDATA
+    POINTS 346727 float
+    -36.750000 10.250000 -29.000000
+    -36.750000 10.500000 -29.000000
+    -36.750000 10.250000 -28.750000
+    -36.750000 10.500000 -28.750000
+    -36.500000 10.250000 -29.000000
+    -36.500000 10.250000 -28.750000
+    -36.500000 10.500000 -29.000000
+    -36.250000 10.250000 -29.000000
+    -36.250000 10.250000 -28.750000
+    -36.250000 10.500000 -29.000000
+    -36.000000 10.250000 -29.000000
+    -36.000000 10.250000 -28.750000
+    -36.000000 10.500000 -29.000000
+    -35.750000 10.250000 -29.000000
+    …..
+
+
 ## Parameters ##
 
 | Name | Type | Description |
