@@ -71,11 +71,12 @@ FindSaltykovSizes::~FindSaltykovSizes()
 void FindSaltykovSizes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getSaltykovEquivalentDiametersArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getSaltykovEquivalentDiametersArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

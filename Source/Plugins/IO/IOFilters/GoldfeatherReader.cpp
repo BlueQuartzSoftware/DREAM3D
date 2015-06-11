@@ -108,7 +108,6 @@ void GoldfeatherReader::setupFilterParameters()
   parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.jg"));
 
 
- // parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Surface DataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Vertex AttributeMatrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Face AttributeMatrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));

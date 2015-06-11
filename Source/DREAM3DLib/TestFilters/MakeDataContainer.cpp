@@ -81,12 +81,13 @@ MakeDataContainer::~MakeDataContainer()
 void MakeDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  /*##*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::Uncategorized, ""));
-  /*##*/parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getCellEulerAnglesArrayName(), FilterParameter::Uncategorized, ""));
-  /*##*/parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, getCellPhasesArrayName(), FilterParameter::Uncategorized, ""));
-  /*##*/parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, getCrystalStructuresArrayName(), FilterParameter::Uncategorized, ""));
-  /*##*/parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstantsArrayName", FilterParameterWidgetType::StringWidget, getLatticeConstantsArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, getCellPhasesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, getCrystalStructuresArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstantsArrayName", FilterParameterWidgetType::StringWidget, getLatticeConstantsArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

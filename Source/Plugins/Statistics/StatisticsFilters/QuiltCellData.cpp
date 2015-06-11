@@ -77,13 +77,16 @@ QuiltCellData::~QuiltCellData()
 void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Quilt Step", "QuiltStep", FilterParameterWidgetType::IntVec3Widget, getQuiltStep(), FilterParameter::Uncategorized, "Voxels"));
-  parameters.push_back(FilterParameter::New("Patch Size", "PatchSize", FilterParameterWidgetType::IntVec3Widget, getPatchSize(), FilterParameter::Uncategorized, "Voxels"));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget, getOutputDataContainerName(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Quilt Step", "QuiltStep", FilterParameterWidgetType::IntVec3Widget, getQuiltStep(), FilterParameter::Parameter, "Voxels"));
+  parameters.push_back(FilterParameter::New("Patch Size", "PatchSize", FilterParameterWidgetType::IntVec3Widget, getPatchSize(), FilterParameter::Parameter, "Voxels"));
+
+  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
+
+  parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget, getOutputDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), FilterParameter::CreatedArray));
+
   setFilterParameters(parameters);
 }
 

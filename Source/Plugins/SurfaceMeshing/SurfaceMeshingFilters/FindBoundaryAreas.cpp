@@ -70,12 +70,13 @@ FindBoundaryAreas::~FindBoundaryAreas()
 void FindBoundaryAreas::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Triangle Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Feature Ids", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Feature Attribute Matrix Name", "FaceFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceFeatureAttributeMatrixPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Boundary Areas Array Name", "SurfaceMeshBoundaryAreasArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshBoundaryAreasArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Triangle Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Face Feature Ids", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Face Feature Attribute Matrix Name", "FaceFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Boundary Areas Array Name", "SurfaceMeshBoundaryAreasArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshBoundaryAreasArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

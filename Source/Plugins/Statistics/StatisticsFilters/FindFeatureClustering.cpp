@@ -85,24 +85,21 @@ FindFeatureClustering::~FindFeatureClustering()
 void FindFeatureClustering::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Number Of Bins for RDF", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget, getClusteringListArrayName(), FilterParameter::Uncategorized));
-  //parameters.push_back(FilterParameter::New("Max and Min Distances Array Name", "MaxMinArrayName", FilterParameterWidgetType::StringWidget, getMaxMinArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), FilterParameter::Uncategorized, ""));
 
-  parameters.push_back(FilterParameter::New("Phase Number", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Number Of Bins for RDF", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Phase Number", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), FilterParameter::Parameter, ""));
+
+  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
-
-
+  parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget, getClusteringListArrayName(), FilterParameter::CreatedArray));
+  //parameters.push_back(FilterParameter::New("Max and Min Distances Array Name", "MaxMinArrayName", FilterParameterWidgetType::StringWidget, getMaxMinArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }

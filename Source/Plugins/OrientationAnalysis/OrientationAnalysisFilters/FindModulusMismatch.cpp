@@ -120,11 +120,12 @@ FindModulusMismatch::~FindModulusMismatch()
 void FindModulusMismatch::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Moduli", "ModuliArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getModuliArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("SurfaceMeshDeltaModulus", "SurfaceMeshDeltaModulusArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDeltaModulusArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Moduli", "ModuliArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getModuliArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("SurfaceMeshDeltaModulus", "SurfaceMeshDeltaModulusArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDeltaModulusArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

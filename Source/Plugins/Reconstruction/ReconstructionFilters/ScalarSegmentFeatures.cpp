@@ -182,7 +182,7 @@ ScalarSegmentFeatures::~ScalarSegmentFeatures()
 void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Scalar Array To Segment", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getScalarArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Scalar Array To Segment", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getScalarArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget, getScalarTolerance(), FilterParameter::RequiredArray));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::RequiredArray));

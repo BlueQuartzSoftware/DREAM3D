@@ -105,25 +105,23 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  QStringList linkedProps("UnbiasedLocalCAxisMisalignmentsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", getCalcUnbiasedAvg(), linkedProps, FilterParameter::Uncategorized));
-  linkedProps.clear();
-  linkedProps << "LocalCAxisMisalignmentsArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Local C-Axis Misalignments", "CalcBiasedAvg", getCalcBiasedAvg(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCAxisMisalignmentListArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("CellParentIds", "CellParentIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellParentIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgCAxisMisalignmentsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("FeatureParentIds", "FeatureParentIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureParentIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getNewCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCAxisMisalignmentListArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("CellParentIds", "CellParentIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellParentIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgCAxisMisalignmentsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("FeatureParentIds", "FeatureParentIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureParentIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getNewCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("NumFeaturesPerParent", "NumFeaturesPerParentArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesPerParentArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("UnbiasedLocalCAxisMisalignments", "UnbiasedLocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getUnbiasedLocalCAxisMisalignmentsArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("LocalCAxisMisalignments", "LocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getLocalCAxisMisalignmentsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("NumFeaturesPerParent", "NumFeaturesPerParentArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesPerParentArrayName(), FilterParameter::CreatedArray, ""));
+  QStringList linkedProps("LocalCAxisMisalignmentsArrayName");
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Local C-Axis Misalignments", "CalcBiasedAvg", getCalcBiasedAvg(), linkedProps, FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("LocalCAxisMisalignments", "LocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getLocalCAxisMisalignmentsArrayName(), FilterParameter::CreatedArray, ""));
+  linkedProps.clear();
+  linkedProps << "UnbiasedLocalCAxisMisalignmentsArrayName";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", getCalcUnbiasedAvg(), linkedProps, FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("UnbiasedLocalCAxisMisalignments", "UnbiasedLocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getUnbiasedLocalCAxisMisalignmentsArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }

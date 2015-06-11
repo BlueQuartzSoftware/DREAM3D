@@ -147,7 +147,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   FilterParameterVector parameters;
 
   // The AttributeMatrix that the PhaseTypes are going into
-  //parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), FilterParameter::Uncategorized, ""));
+  //parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), FilterParameter::RequiredArray, ""));
 
   // The user selects the appropriate phase types from the combo box menus that are presented to them. One for each tuple in the AttributeMatrix
   PhaseTypesFilterParameter::Pointer phaseType_parameter = PhaseTypesFilterParameter::New(
@@ -211,7 +211,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
-  //parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
+  //parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::RequiredArray, ""));
 
   //  linkedProps.clear();
   //  linkedProps << "RadialDistFunctionArrayPath";

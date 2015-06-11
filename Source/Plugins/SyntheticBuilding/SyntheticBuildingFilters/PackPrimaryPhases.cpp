@@ -348,8 +348,8 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FileSystemFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), FilterParameter::Parameter, "", "*.csv", "Comma Separated Data"));
 
 #if PPP_SHOW_DEBUG_OUTPUTS
-  parameters.push_back(FileSystemFilterParameter::New("Debug VTK File", "VtkOutputFile", FilterParameterWidgetType::InputFileWidget, getVtkOutputFile(), FilterParameter::Uncategorized, "", "*.vtk", "VTK File"));
-  parameters.push_back(FileSystemFilterParameter::New("Debug Error File", "ErrorOutputFile", FilterParameterWidgetType::InputFileWidget, getErrorOutputFile(), FilterParameter::Uncategorized, "", "*.txt", "Text File"));
+  parameters.push_back(FileSystemFilterParameter::New("Debug VTK File", "VtkOutputFile", FilterParameterWidgetType::InputFileWidget, getVtkOutputFile(), FilterParameter::Parameter, "", "*.vtk", "VTK File"));
+  parameters.push_back(FileSystemFilterParameter::New("Debug Error File", "ErrorOutputFile", FilterParameterWidgetType::InputFileWidget, getErrorOutputFile(), FilterParameter::Parameter, "", "*.txt", "Text File"));
 #endif
 
   setFilterParameters(parameters);

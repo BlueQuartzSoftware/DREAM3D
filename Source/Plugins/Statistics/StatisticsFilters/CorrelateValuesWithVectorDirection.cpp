@@ -75,9 +75,10 @@ CorrelateValuesWithVectorDirection::~CorrelateValuesWithVectorDirection()
 void CorrelateValuesWithVectorDirection::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorDataArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCorrelatedDataArrayPath(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorDataArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCorrelatedDataArrayPath(), FilterParameter::RequiredArray, ""));
+
   setFilterParameters(parameters);
 }
 

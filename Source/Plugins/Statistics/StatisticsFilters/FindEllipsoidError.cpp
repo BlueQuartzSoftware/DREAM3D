@@ -87,18 +87,18 @@ FindEllipsoidError::~FindEllipsoidError()
 void FindEllipsoidError::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("NumCells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Axis Eulers", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("AxisLengths", "AxisLengthsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisLengthsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", FilterParameterWidgetType::StringWidget, getEllipsoidErrorArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("NumCells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Axis Eulers", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("AxisLengths", "AxisLengthsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisLengthsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", FilterParameterWidgetType::StringWidget, getEllipsoidErrorArrayName(), FilterParameter::CreatedArray, ""));
   QStringList linkedProps("IdealFeatureIdsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getIdealFeatureIdsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getIdealFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
