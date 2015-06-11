@@ -469,11 +469,11 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
           connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
                   w, SLOT(setLinkedComboBoxState(int) ) );
 
-          ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
+          /*ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
           if(choiceWidget)
           {
             choiceWidget->widgetChanged(choiceWidget->getCurrentIndex(), false);
-          }
+          }*/
         }
       }
     }
