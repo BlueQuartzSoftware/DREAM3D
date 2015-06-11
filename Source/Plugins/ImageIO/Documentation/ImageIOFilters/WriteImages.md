@@ -16,38 +16,26 @@ An example filter to run would be the [Generate IPF Colors](generateipfcolors.ht
 
 ## Parameters ##
 
-| Name             | Type | Comment |
+| Name             | Type | Description |
 |------------------|------|---------|
-| Colors Array  | String | UInt8 array representing Grayscale, RGB  or RGBA Arrays |
-| Image Format     | Integer | 0=Tif, 1=bmp, 2=png |
+| Image Format     | Integer | 0=tif, 1=bmp, 2=png |
 | Plane     | Integer | 0=XY, 1=XZ, 2=YZ |
 | File Prefix | Boolean | True=Add the prefix, False=Do NOT add the prefix |
 | Image File Prefix | String | String prefix to add to every image in addition to the slice index |
-| OutputPath   | String | Where to save all the images. If the path does not exist, DREAM3D will try to create the path |
+| Output Path   | File Path | Where to save all the images. If the path does not exist, DREAM3D will try to create the path |
 
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| UInt8  | User Selected    | The user selects a Voxel Cell Array that represents RGB, Gray Scale or RGBA color values for each voxel. | The selected array should be a 1, 3, or 4 component UInt8 array |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| UInt8  | User Selected | UInt8 | Any | Select Color Data. The user selects a Voxel Cell Array that represents RGB, Gray Scale or RGBA color values for each voxel. The selected array should be a 1, 3, or 4 component UInt8 array. |
 
 ## Created Arrays ##
 
 None
-
-
-
-## Authors ##
-
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
 
 
 ## License & Copyright ##
