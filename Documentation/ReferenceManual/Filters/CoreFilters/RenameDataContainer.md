@@ -8,7 +8,9 @@ Core Filters (Memory/Management)
 This filter renames a user chosen DataContainer to a user defined new name.
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------| ----------- |
+| New Data Container Name| String | New Name |
 
 ## Required Geometry ##
 Not Applicable

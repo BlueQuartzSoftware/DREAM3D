@@ -8,7 +8,9 @@ Core Filters (Memory/Management)
 This filter renames a user chosen AttributeMatrx to a user defined new name.
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------| ----------- |
+| New Attribute Matrix Name| String | New Name |
 
 ## Required Geometry ##
 Not Applicable

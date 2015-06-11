@@ -37,13 +37,13 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | None         | Any | (1) | Array to convert |
+| Any  | Attribute Array Name | Any | (1) | Array to convert |
 
 ## Created Arrays ##
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Variable | User set | Variable | (1) | The converted array |
+| Variable | Output Array Name | Variable | (1) | The converted array |
 
 ## License & Copyright ##
 

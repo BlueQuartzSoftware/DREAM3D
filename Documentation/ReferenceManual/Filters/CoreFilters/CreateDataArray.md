@@ -48,7 +48,7 @@ must have a user entry or the default value will be used.
 |------------------|------|-------------|
 | Output Array Name | String | Name for created array |
 | Scalar Type | Integer | Data type for created array |
-| Number of Components | Integer |
+| Number of Components | Integer | Greater than 1 |
 | Initialization Value | double | Fill value for array |
 
 ## Required Geometry ##
@@ -61,7 +61,7 @@ None
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
-| Any | None | User chosen | User chosen | |
+| Any | None | User chosen | User chosen | Output Array Name |
 
 
 ## License & Copyright ##

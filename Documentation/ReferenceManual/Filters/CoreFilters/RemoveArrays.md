@@ -16,7 +16,7 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | None         | Any | Any | Array to be removed |
+| Any  | None         | Any | Any | Items To Delete |
 
 ## Created Arrays ##
 None

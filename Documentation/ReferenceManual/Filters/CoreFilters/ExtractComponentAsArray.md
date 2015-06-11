@@ -21,14 +21,14 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | None | Any | >1 | Multi-Component |
+| Any  | Multi-Component | Any | >1 | Multi-Component |
 
 
 ## Created Arrays ##
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | None | Any | (1) | Single component array|
+| Any | New Scalar Array Name | Any | (1) | Single component array|
 
 
 ## License & Copyright ##

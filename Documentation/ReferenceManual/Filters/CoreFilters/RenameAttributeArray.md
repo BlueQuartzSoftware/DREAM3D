@@ -8,7 +8,9 @@ Core Filters (Memory/Management)
 This filter renames a user chosen array to a user defined new name.
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------| ----------- |
+| New Attribute Array Name| String | New Name |
 
 ## Required Geometry ##
 Not Applicable
@@ -17,7 +19,7 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | None | Any | Any | N/A |
+| Any | None | Any | Any | Attribute Array To Rename |
 
 
 ## Created Arrays ##

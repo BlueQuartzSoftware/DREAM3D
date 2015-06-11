@@ -49,7 +49,7 @@ To generate this view in ParaView the user should load the .vtk file and then ap
 | Crystal Structure | Enumeration | Chose from Hexagonal-High 6/mmm or Cubic-High m-3m |
 | Misorientation Angle | float | Floating Point value in DEGREES |
 | Misorientation Axis | float | Floating point 1x3 vector that is the rotation axis |
-| Regular Grid Pole Figure | File Path |  Vtk Rectilinear Grid |
+| GMT Output File | File Path |  Regular Grid Pole Figure |
 
 
 ## Required Geometry ##

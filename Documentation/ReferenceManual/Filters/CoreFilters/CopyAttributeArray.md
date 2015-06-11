@@ -17,12 +17,12 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | None | Any | Any | N/A |
+| Any | Attribute Array To Copy | Any | Any | N/A |
 
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions | Description |
+| Type | New Attribute Array Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
 | Any | User set | Any | Any |Array will have same values as its old counterpart |
 

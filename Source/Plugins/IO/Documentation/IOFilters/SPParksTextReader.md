@@ -46,6 +46,7 @@ This Filter reads from a data file in a format used by [SPPARKS Kinetic Monte Ca
 | Input File | File Path | .spparks file|
 | Origin (XYZ) | int | The location in space coordinates of the (0,0,0) voxel |
 | Resolution (XYZ) | int | X, Y, Z Resolution of the data |
+| One Based Arrays | Boolean | |
 | Volume Data Container | String | Output data container, DataContainer |
 | Cell Attribute Matrix | String | Output attribute matrix, CellData |
 | FeatureIds | String | Output feature ids, Site Type |

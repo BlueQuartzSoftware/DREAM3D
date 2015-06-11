@@ -13,7 +13,7 @@ The user selects the .dream3d file to be read from Select File. Only the arrays 
 
 | Name | Type | Description |
 |------|------|--------------|
-| Select File | Push Button | Select .dream3d file to be read |
+| Select File | File Path | Select .dream3d file to be read |
 | Overwrite Existing DataContainers | Boolean | |
 
 ## Required Geometry ##

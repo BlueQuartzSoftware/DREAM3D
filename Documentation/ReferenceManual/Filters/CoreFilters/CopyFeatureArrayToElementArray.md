@@ -21,10 +21,7 @@ Not Applicable
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature  | None         | Int32 | (1) | Feature Array to Copy To Element Data |
-
-| Type | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+| Feature  | Feature Array To Copy To Element Data | Int32 | (1) | Feature Array to Copy To Element Data |
 | Cell  | Element Feature Ids  | Any | (1) | Element Feature Ids  |
 
 

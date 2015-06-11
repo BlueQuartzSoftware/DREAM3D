@@ -25,7 +25,7 @@ Not Applicable
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature  | None         | Any | Any | Active Array |
+| Feature  | Active | Any | (1) | Active Array |
 
 ## License & Copyright ##
 

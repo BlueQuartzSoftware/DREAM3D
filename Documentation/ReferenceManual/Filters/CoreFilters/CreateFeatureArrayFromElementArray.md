@@ -23,10 +23,7 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature  | None | Int32 | (1) | Feature Array |
-
-| Type | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+| Feature  | Element Array Name | Int32 | (1) | Feature Array |
 | Cell  | Element Feature Ids | Any | (1) |  |
 
 

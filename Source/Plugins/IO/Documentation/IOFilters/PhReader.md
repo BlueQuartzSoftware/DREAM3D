@@ -38,7 +38,7 @@ This Filter reads a custom data file used by Carnegie-Mellon Univ. The file form
 
 | Name | Type | Description |
 |------|------| ----------- |
-| Input File | File Path | .dx file|
+| Input File | File Path | .ph file|
 | Origin (XYZ) | int | The location in space coordinates of the (0,0,0) voxel |
 | Resolution (XYZ) | int | X, Y, Z Resolution of the data |
 | Volume Data Container | String | Output data container |

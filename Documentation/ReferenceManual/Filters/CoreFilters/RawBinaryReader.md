@@ -94,7 +94,7 @@ Using this filter in combination with an existing pipeline that would already ha
 
 | Name | Type | Description |
 |------|------| ----------- |
-| Input File | Push Button | Select binary file |
+| Input File | File Path | Select binary file |
 | Scalar Type | Enumeration | Data type |
 | Dimensionality | Integer | Number of dimensions |
 | Number Of Components | Integer |  |
