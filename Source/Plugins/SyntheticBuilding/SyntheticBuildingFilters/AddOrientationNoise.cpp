@@ -42,6 +42,7 @@
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -154,31 +155,34 @@ void  AddOrientationNoise::add_orientation_noise()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName());
 
+  FOrientArrayType om(9, 0.0);
+  FOrientArrayType ax(4, 0.0);
   float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float newg[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float rot[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  float w = 0.0f;
+  float nx = 0.0f;
+  float ny = 0.0f;
+  float nz = 0.0f;
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   for (size_t i = 0; i < totalPoints; ++i)
   {
     float ea1 = m_CellEulerAngles[3 * i + 0];
     float ea2 = m_CellEulerAngles[3 * i + 1];
     float ea3 = m_CellEulerAngles[3 * i + 2];
-    FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_CellEulerAngles[3 * i]), 3), om);
     om.toGMatrix(g);
-    n1 = static_cast<float>( rg.genrand_res53() );
-    n2 = static_cast<float>( rg.genrand_res53() );
-    n3 = static_cast<float>( rg.genrand_res53() );
+    nx = static_cast<float>( rg.genrand_res53() );
+    ny = static_cast<float>( rg.genrand_res53() );
+    nz = static_cast<float>( rg.genrand_res53() );
     w = static_cast<float>( rg.genrand_res53() );
     w = 2.0 * (w - 0.5);
-    w = (m_Magnitude * w);
-    OrientationMath::AxisAngletoMat(w, n1, n2, n3, rot);
+    w *= m_Magnitude;
+    ax.fromAxisAngle(nx, ny, nz, w);
+    FOrientTransformsType::ax2om(ax, om);
+    om.toGMatrix(rot);
     MatrixMath::Multiply3x3with3x3(g, rot, newg);
-    OrientationMath::MattoEuler(newg, ea1, ea2, ea3);
-    m_CellEulerAngles[3 * i + 0] = ea1;
-    m_CellEulerAngles[3 * i + 1] = ea2;
-    m_CellEulerAngles[3 * i + 2] = ea3;
+    FOrientTransformsType::om2eu(FOrientArrayType(newg), FOrientArrayType(&(m_CellEulerAngles[3 * i]), 3));
   }
 }
 

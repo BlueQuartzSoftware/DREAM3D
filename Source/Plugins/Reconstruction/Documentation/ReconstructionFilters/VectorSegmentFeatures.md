@@ -5,32 +5,39 @@ Segment Features (Vector) {#vectorsegmentfeatures}
 Reconstruction Filters (Segmentation)
 
 ## Description ##
-This filter groups together **Cells** that differ in some user defined scalar value by less than a user defined tolerance.  For example, if the user selected array was an 8bit image array, then the array would consist of integer values between *0* and *255*.  If the user then set a tolerance vlaue of 10, then the filter would identify all sets of contiguous **Cells** that have *grayscale* values with *10* of each other.
+This Filter segments the **Features** by grouping neighboring **Cells** that satisfy the *angle tolerance*, i.e., have angle between vectors less than the value set by the user. The process by which the **Features** are identified is given below and is a standard *burn algorithm*.
+
+1) Randomly select a **Cell**, add it to an empty list and set its *FeatureId* to the current **Feature**.
+2) Compare the **Cell** to each of its six (6) face-sharing neighbors (ie calculate the angle between vectors with each neighbor)
+3) Add each neighbor **Cell** that has an angle below the user defined tolerance to the list created in 1) and set the *FeatureId* of the neighbor **Cell** to the current **Feature**.
+4) Remove the current **Cell** from the list and move to the next **Cell** and repeat 2) and 3) - continue until no **Cells** are left in the list
+5) Increment the current **Feature** counter and repeat steps 1) through 4) - continue until no **Cells** remain unassigned in the dataset.
+
+The user has the option to *Use Mask Array*, which allows the user to set a boolean array for the **Cells** that remove **Cells** with a value of *false* from consideration in the above algorithm. This option is useful if the user has an array that either specifies the domain of the "sample" in the "image" or specifies if the orientation on the **Cell** is trusted/correct. 
+
+After all the **Features** have been identified, an **Attribute Matrix** is created for the **Features** and each **Feature** is flagged as *Active* in a boolean array in the matrix.
+
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Angle Tolerance | Float | Tolerance used to determine if neighboring **Cells** belong to the same **Feature** |
+| Use Mask Array | Boolean | Specifies whether to use a boolean array to exclude some **Cells** from the **Feature** identification process |
 
-| Name | Type |
-|------|------|
-| Input Cell Array Name | Unknown Type |
-| Scalar Tolerance | Double |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| Cell | None | Float | (3) | Vector array used during segmentation |
+| Cell | GoodVoxels | Boolean | (1) | Specifies if the **Cell** is to be considered during segmentation.  Array only required if *Use Mask Array* is set to *true* |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | GrainIds |  |
-| Feature | Active |  |
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Feature | Active | Boolean | (1) | Specifies if the **Feature** is still in the sample (1 if the **Feature** is in the sample and 0 if it is not). At the end of the filter, all **Features** will be "Active". |
 
 
 ## License & Copyright ##

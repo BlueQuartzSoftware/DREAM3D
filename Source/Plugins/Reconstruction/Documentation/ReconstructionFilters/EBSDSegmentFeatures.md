@@ -5,33 +5,40 @@ Segment Features (Misorientation) {#ebsdsegmentfeatures}
 Reconstruction Filters (Segmentation)
 
 ## Description ##
-This Filter segments the **Features** by grouping neighboring **Cells** that satisfy the _misorientation tolerance_, i.e., have _misorientation angle_ less than the value set by the user. The __Cell__  _GrainIds_ established by this filter are used by the other Filters.
+This Filter segments the **Features** by grouping neighboring **Cells** that satisfy the *misorientation tolerance*, i.e., have misorientation angle less than the value set by the user. The process by which the **Features** are identified is given below and is a standard *burn algorithm*.
 
+1) Randomly select a **Cell**, add it to an empty list and set its *FeatureId* to the current **Feature**.
+2) Compare the **Cell** to each of its six (6) face-sharing neighbors (ie calculate the misorientation with each neighbor)
+3) Add each neighbor **Cell** that has a misorientation below the user defined tolerance to the list created in 1) and set the *FeatureId* of the neighbor **Cell** to the current **Feature**.
+4) Remove the current **Cell** from the list and move to the next **Cell** and repeat 2) and 3) - continue until no **Cells** are left in the list
+5) Increment the current **Feature** counter and repeat steps 1) through 4) - continue until no **Cells** remain unassigned in the dataset.
+
+The user has the option to *Use Mask Array*, which allows the user to set a boolean array for the **Cells** that remove **Cells** with a value of *false* from consideration in the above algorithm. This option is useful if the user has an array that either specifies the domain of the "sample" in the "image" or specifies if the orientation on the **Cell** is trusted/correct. 
+
+After all the **Features** have been identified, an **Attribute Matrix** is created for the **Features** and each **Feature** is flagged as *Active* in a boolean array in the matrix.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Misorientation Tolerance | Float | Tolerance (in degrees) used to determine if neighboring **Cells** belong to the same **Feature** |
+| Use Mask Array | Boolean | Specifies whether to use a boolean array to exclude some **Cells** from the **Feature** identification process |
 
-| Name | Type | Comment |
-|------|------|------|
-| Misorientation Tolerance | Double | Value is in degress |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
-| Cell | GoodVoxels | Boolean values used to define "regions" to be aligned | Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions"  | Single Threshold (Cell Data) (Processing), Multi Threshold (Cell Data) (Processing) |
-| Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
+| Cell | Phases | Int | (1) | Specifies the **Ensemble** of the **Cell** |
+| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
+| Cell | GoodVoxels | Boolean | (1) | Specifies if the **Cell** is to be considered during segmentation.  Array only required if *Use Mask Array* is set to *true* |
+| Cell | Quats | Float | (4) | Specifies the orientation of the **Element** in quaternion representation |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. |  |
-| Feature | Active | Boolean value specifying if the **Feature** is still in the sample (1 if the **Feature** is in the sample and 0 if it is not) | At the end of the filter, all **Features** will be "Active" as the "Inactive" **Features** will have been removed.  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| Feature | Active | Boolean | (1) | Specifies if the **Feature** is still in the sample (1 if the **Feature** is in the sample and 0 if it is not). At the end of the filter, all **Features** will be "Active". |
 
 
 

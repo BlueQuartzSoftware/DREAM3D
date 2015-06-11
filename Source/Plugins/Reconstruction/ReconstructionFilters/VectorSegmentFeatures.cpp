@@ -85,18 +85,14 @@ VectorSegmentFeatures::~VectorSegmentFeatures()
 void VectorSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget, getAngleTolerance(), FilterParameter::Parameter));
-
   parameters.push_back(FilterParameter::New("Vector Array To Segment", "SelectedVectorArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedVectorArrayPath(), FilterParameter::RequiredArray));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::RequiredArray));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, ""));
-
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), FilterParameter::CreatedArray, ""));
-
   setFilterParameters(parameters);
 }
 
@@ -314,18 +310,6 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
     }
-    //else
-    //{
-    //  v2[0] *= -1;
-    //  v2[1] *= -1;
-    //  w = GeometryMath::CosThetaBetweenVectors(v1, v2);
-    //  w = acos(w);
-    //  if(w < angleTolerance)
-    //  {
-    //    group = true;
-    //    m_FeatureIds[neighborpoint] = gnum;
-    //  }
-    //}
   }
   return group;
 }
