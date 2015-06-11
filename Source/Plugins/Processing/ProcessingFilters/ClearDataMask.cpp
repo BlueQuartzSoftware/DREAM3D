@@ -66,7 +66,9 @@ ClearDataMask::~ClearDataMask()
 void ClearDataMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   parameters.push_back(FilterParameter::New("Element Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), FilterParameter::RequiredArray));
+
   setFilterParameters(parameters);
 }
 

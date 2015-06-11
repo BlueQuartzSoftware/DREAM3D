@@ -74,7 +74,7 @@ ErodeDilateMask::~ErodeDilateMask()
 void ErodeDilateMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), FilterParameter::RequiredArray));
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
@@ -91,6 +91,9 @@ void ErodeDilateMask::setupFilterParameters()
   parameters.push_back(FilterParameter::New("X Direction", "XDirOn", FilterParameterWidgetType::BooleanWidget, getXDirOn(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget, getYDirOn(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget, getZDirOn(), FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Cell Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), FilterParameter::RequiredArray));
+
   setFilterParameters(parameters);
 }
 

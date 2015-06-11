@@ -112,8 +112,9 @@ ReverseTriangleWinding::~ReverseTriangleWinding()
 void ReverseTriangleWinding::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::RequiredArray, ""));
+
   setFilterParameters(parameters);
 }
 

@@ -138,11 +138,13 @@ ReadStlToSurfaceMesh::~ReadStlToSurfaceMesh()
 void ReadStlToSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Stl File", "StlFilePath", FilterParameterWidgetType::InputFileWidget, getStlFilePath(), FilterParameter::Uncategorized, "", "*.stl", "STL File"));
-  parameters.push_back(FilterParameter::New("Data Container Name", "SurfaceMeshDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDataContainerName(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshTriangleNormals", "SurfaceMeshTriangleNormalsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleNormalsArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FileSystemFilterParameter::New("Stl File", "StlFilePath", FilterParameterWidgetType::InputFileWidget, getStlFilePath(), FilterParameter::Parameter, "", "*.stl", "STL File"));
+
+  parameters.push_back(FilterParameter::New("Data Container Name", "SurfaceMeshDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshTriangleNormals", "SurfaceMeshTriangleNormalsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleNormalsArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

@@ -78,11 +78,9 @@ void FindBoundingBoxFeatures::setupFilterParameters()
   QStringList linkedProps("PhasesArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply Phase by Phase", "CalcByPhase", getCalcByPhase(), linkedProps, FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Feature Phases", "PhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getPhasesArrayPath(), FilterParameter::Parameter, ""));
-
   parameters.push_back(FilterParameter::New("Feature Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
-
   parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "PhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getPhasesArrayPath(), FilterParameter::RequiredArray, ""));
 
   parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayName", FilterParameterWidgetType::StringWidget, getBiasedFeaturesArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);

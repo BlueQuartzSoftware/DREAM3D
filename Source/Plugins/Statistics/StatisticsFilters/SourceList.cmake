@@ -13,6 +13,7 @@ START_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics")
 set(_PublicFilters
   CalculateArrayHistogram
   FindAvgScalarValueForFeatures
+  FindBoundaryElementFractions
   FindEuclideanDistMap
   FindLargestCrossSections
   FindNeighborhoods
@@ -21,7 +22,6 @@ set(_PublicFilters
   FindShapes
   FindSizes
   FindSurfaceAreaToVolume
-  FindBoundaryElementFractions
   FindVolFractions
   FitFeatureData
   GenerateEnsembleStatistics

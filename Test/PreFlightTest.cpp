@@ -406,6 +406,41 @@ void TestUniqueHumanLabels()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TestUncategorizedFilterParameters()
+{
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+  FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
+  QMap<QString, AbstractFilter::Pointer> filterMap;
+  while (factoryMapIter != factories.constEnd())
+  {
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    if (factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+      if (filter.get() != NULL)
+      {
+        QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
+        foreach(FilterParameter::Pointer fp, parameters)
+        {
+          if(fp->getCategory() == FilterParameter::Uncategorized)
+          {
+            qDebug() << "[]" << filter->getCompiledLibraryName() << "  Filter: " << filter->getNameOfClass() << " Filter Parameter: " << fp->getPropertyName() << " IS NOT Categorized.";
+          }
+        }
+      }
+    }
+    factoryMapIter++;
+  }
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TestNewInstanceAvailable()
 {
   FilterManager* fm = FilterManager::Instance();
@@ -485,9 +520,9 @@ int main(int argc, char** argv)
   int err = EXIT_SUCCESS;
  DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
  DREAM3D_REGISTER_TEST( TestPreflight() )
- DREAM3D_REGISTER_TEST(TestUniqueHumanLabels())
+ DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )
  DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
-//  DREAM3D_REGISTER_TEST( PrintFilterInfo() )
+ DREAM3D_REGISTER_TEST( TestUncategorizedFilterParameters() )
   PRINT_TEST_SUMMARY();
 
 //  GenerateCopyCode();

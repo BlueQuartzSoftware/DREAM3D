@@ -11,10 +11,6 @@ START_FILTER_GROUP(${Processing_BINARY_DIR} "${_filterGroupName}" "Processing")
 # List your public filters here
 
 set(_PublicFilters
-  MinNeighbors
-  FlattenImage
-  MinSize
-  InitializeData
   ClearDataMask
   ErodeDilateBadData
   ErodeDilateCoordinationNumber
@@ -22,9 +18,13 @@ set(_PublicFilters
   FillBadData
   FindProjectedImageStatistics
   FindRelativeMotionBetweenSlices
-  RemoveFlaggedFeatures
+  FlattenImage
   IdentifySample
+  InitializeData
+  MinNeighbors
+  MinSize
   MultiThresholdObjects
+  RemoveFlaggedFeatures
 )
 
 #--------------

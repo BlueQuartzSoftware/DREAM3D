@@ -25,6 +25,7 @@ set(_PublicFilters
   FeatureDataCSVWriter
   FeatureInfoReader
   GBCDTriangleDumper
+  GoldfeatherReader
   INLWriter
   LammpsFileWriter
   LosAlamosFFTWriter
@@ -33,8 +34,8 @@ set(_PublicFilters
   PhReader
   PhWriter
   ReadStlToSurfaceMesh
-  SPParksWriter
   SPParksTextReader
+  SPParksWriter
   SurfaceMeshToNodesTrianglesEdges
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
@@ -42,10 +43,9 @@ set(_PublicFilters
   VASPReader
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
-  VtkStructuredPointsReader
   VtkRectilinearGridWriter
+  VtkStructuredPointsReader
   YSChoiAbaqusReader
-  GoldfeatherReader
 )
 
 

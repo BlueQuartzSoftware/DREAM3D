@@ -36,11 +36,15 @@
 
 #include "GoldfeatherReader.h"
 
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include <QtCore/QFileInfo>
+
+#include "IO/IOConstants.h"
+
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -101,20 +105,20 @@ void GoldfeatherReader::setupFilterParameters()
 //    ////parameter->setValueType("QString");
 //    parameters.push_back(parameter);
 //  }
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Uncategorized, "", "*.jg"));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.jg"));
 
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("SurfaceDataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("VertexAttributeMatrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("FaceAttributeMatrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature1s", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature2s", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection1s", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection2s", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeNormals", "SurfaceMeshNodeNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::Uncategorized, ""));
+ // parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Surface DataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Vertex AttributeMatrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face AttributeMatrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalCurvature 1 Array Name", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalCurvature 2 Array Name", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalDirection 1 Array Name", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalDirection 2 Array Name", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMesh NodeNormals", "SurfaceMeshNodeNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMesh FaceNormals", "SurfaceMeshFaceNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMesh FaceLabels", "SurfaceMeshFaceLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -389,4 +393,32 @@ AbstractFilter::Pointer GoldfeatherReader::newFilterInstance(bool copyFilterPara
   }
   return filter;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GoldfeatherReader::getCompiledLibraryName()
+{ return IOConstants::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GoldfeatherReader::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GoldfeatherReader::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GoldfeatherReader::getHumanLabel()
+{ return "Goldfeather Mesh Reader"; }
 

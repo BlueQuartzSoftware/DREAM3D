@@ -40,7 +40,7 @@ ResourcesPath="${ApplicationBundleName}/Contents/${ResourcesDirName}"
 
 BuildDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
 
-echo "Starting Fix up of Tool @osx_app_name@ to share the frameworks and thin to a single arch" 
+echo "Starting Fix up of Tool @osx_app_name@ to share the frameworks, libraries and plugins" 
 
 
 TmpDir="/tmp"
@@ -57,12 +57,19 @@ printStatus "Removing Previous Installation at ${ApplicationExe}"
 rm -rf "${ApplicationExe}"
 
 printStatus "Copying  ${BuildDir}/${ApplicationName} to ${InstallPrefix}/${ProjectBinaryDir}/"
-mkdir -p "${InstallPrefix}/${ProjectBinaryDir}/"
+if [[ ! -e ${InstallPrefix}/${ProjectBinaryDir} ]]; then
+  mkdir -p "${InstallPrefix}/${ProjectBinaryDir}/"
+fi
 cp "${BuildDir}/${ApplicationName}" "${InstallPrefix}/${ProjectBinaryDir}/."
 
 #-- Be sure the Resources, lib, frameworks and plugins directories are created
-mkdir -p "${LibPath}"
-mkdir -p "${FrameworkPath}"
+if [[ ! -e ${LibPath} ]]; then
+  mkdir -p "${LibPath}"
+fi
+
+if [[ ! -e ${FrameworkPath} ]]; then
+  mkdir -p "${FrameworkPath}"
+fi
 
 # -----------------------------------------------------------------------------
 # Put each Library on its own line, thus preserving spaces in the filename
@@ -82,12 +89,12 @@ function CorrectLinkedFrameworkInstallName()
 {
 	printStatus "      |-  CorrectLinkedFrameworkInstallName"
 	printStatus "          |- 1: ${1}"
-    printStatus "          |- 2: ${2}"
-    oldPath="${1}"
-    libName=`basename ${oldPath}`
-    frameworkName="${libName}.framework"
-    frameworkRootDir="${1%${frameworkName}*}"
-    frameworkBundle="${frameworkRootDir}${frameworkName}"
+  printStatus "          |- 2: ${2}"
+  oldPath="${1}"
+  libName=`basename ${oldPath}`
+  frameworkName="${libName}.framework"
+  frameworkRootDir="${1%${frameworkName}*}"
+  frameworkBundle="${frameworkRootDir}${frameworkName}"
 	newPath="${InstallNameFramework}/${1#${frameworkRootDir}*}" 
 	printStatus "          |- oldPath: ${oldPath}"
 	printStatus "          |- newPath: ${newPath}"
@@ -135,25 +142,25 @@ function CorrectLibraryDependency()
 # -----------------------------------------------------------------------------
 function UpdateLibraryDependencies()
 {
-	  printStatus "    |- UpdateLibraryDependencies ${1}"
-	  local libFile
-	  local libOutFile
-	  local i
-	  
-	  libFile="${1}"
-	  libOutFile="${TmpDir}/@osx_app_name@-library.out"
-	  otool -L "${1}" > "${libOutFile}"
-	  i=0
-	  exec 10<"${libOutFile}"
-	  while read -u 10 line
-	    do
-	    if [[ ${i} -gt 1 ]]; then
-	        CorrectLibraryDependency "${line}" "${1}"
-	        let i=i+1
-	    fi
-	    let i=i+1
-	  done
-	  exec 10<&-
+  printStatus "    |- UpdateLibraryDependencies ${1}"
+  local libFile
+  local libOutFile
+  local i
+  
+  libFile="${1}"
+  libOutFile="${TmpDir}/@osx_app_name@-library.out"
+  otool -L "${1}" > "${libOutFile}"
+  i=0
+  exec 10<"${libOutFile}"
+  while read -u 10 line
+    do
+    if [[ ${i} -gt 1 ]]; then
+        CorrectLibraryDependency "${line}" "${1}"
+        let i=i+1
+    fi
+    let i=i+1
+  done
+  exec 10<&-
 }
 
 # -----------------------------------------------------------------------------
@@ -163,47 +170,47 @@ function UpdateLibraryDependencies()
 # -----------------------------------------------------------------------------
 function UpdateFrameworkInstallName()
 {
-    printStatus "  |- UpdateFrameworkInstallName"
-    printStatus "     |  ${1}"
-    printStatus "     |  ${2}"
-    local frameworkBundle
-    local frameworkName
-    local frameworkRootDir
-    local libName
-    local frameworkRootPath
-    if [[ -e ${1} ]]; then
-        #-- Copy the Framework using the current "install_name" as the path
-        printStatus "     |  Copying Framework '${1}' into app bundle"
-        
-        libName=`basename ${1}`
-        
-        frameworkName="${libName}.framework"
-        frameworkRootDir="${1%${frameworkName}*}"
-        frameworkBundle="${frameworkRootDir}${frameworkName}"
-        frameworkRootPath=`dirname ${1#${frameworkRootDir}*}`
-        printStatus "     |  frameworkRootDir: ${frameworkRootDir}"
-        printStatus "     |  frameworkBundle: ${frameworkBundle}"
-        printStatus "     |  frameworkRootPath: ${frameworkRootPath}"
-        printStatus "     |  ${FrameworkPath}/${1#${frameworkRootDir}*}"
+  printStatus "  |- UpdateFrameworkInstallName"
+  printStatus "     |  ${1}"
+  printStatus "     |  ${2}"
+  local frameworkBundle
+  local frameworkName
+  local frameworkRootDir
+  local libName
+  local frameworkRootPath
+  if [[ -e ${1} ]]; then
+    #-- Copy the Framework using the current "install_name" as the path
+    printStatus "     |  Copying Framework '${1}' into app bundle"
 
-        mkdir -p "${FrameworkPath}/${frameworkRootPath}"
-        cp "${1}" "${FrameworkPath}/${frameworkRootPath}/"
-        
-        # Update the Executables link path to this library
-        oldPath="${1}"
-        libName=`basename ${oldPath}`
-        newPath="${InstallNameFramework}/${1#${frameworkRootDir}*}" 
-        printStatus "     | oldPath: ${oldPath}"
-        printStatus "     | newPath: ${newPath}"
-        printStatus "     | 2: ${2}"
-        install_name_tool -change ${oldPath} ${newPath} ${2}
-        
-        # Update the install_name of the library itself
-        install_name_tool -id ${newPath} "${FrameworkPath}/${1#${frameworkRootDir}*}"
-        
-        UpdateLibraryDependencies "${FrameworkPath}/${1#${frameworkRootDir}*}"
+    libName=`basename ${1}`
 
-    fi
+    frameworkName="${libName}.framework"
+    frameworkRootDir="${1%${frameworkName}*}"
+    frameworkBundle="${frameworkRootDir}${frameworkName}"
+    frameworkRootPath=`dirname ${1#${frameworkRootDir}*}`
+    printStatus "     |  frameworkRootDir: ${frameworkRootDir}"
+    printStatus "     |  frameworkBundle: ${frameworkBundle}"
+    printStatus "     |  frameworkRootPath: ${frameworkRootPath}"
+    printStatus "     |  ${FrameworkPath}/${1#${frameworkRootDir}*}"
+
+    mkdir -p "${FrameworkPath}/${frameworkRootPath}"
+    cp "${1}" "${FrameworkPath}/${frameworkRootPath}/"
+
+    # Update the Executables link path to this library
+    oldPath="${1}"
+    libName=`basename ${oldPath}`
+    newPath="${InstallNameFramework}/${1#${frameworkRootDir}*}" 
+    printStatus "     | oldPath: ${oldPath}"
+    printStatus "     | newPath: ${newPath}"
+    printStatus "     | 2: ${2}"
+    install_name_tool -change ${oldPath} ${newPath} ${2}
+
+    # Update the install_name of the library itself
+    install_name_tool -id ${newPath} "${FrameworkPath}/${1#${frameworkRootDir}*}"
+
+    UpdateLibraryDependencies "${FrameworkPath}/${1#${frameworkRootDir}*}"
+  fi
+
 }
 
 # -----------------------------------------------------------------------------
@@ -249,7 +256,7 @@ function UpdateDylibInstallName()
     oldPath="${1}"
     libName=`basename ${oldPath}`
     newPath="${InstallNameLib}/${libName}" 
-    echo "   ${oldPath} | ${newPath} | ${2}"
+#    echo "   ${oldPath} | ${newPath} | ${2}"
     install_name_tool -change ${oldPath} ${newPath} ${2}
     
     # Update the install_name of the library itself

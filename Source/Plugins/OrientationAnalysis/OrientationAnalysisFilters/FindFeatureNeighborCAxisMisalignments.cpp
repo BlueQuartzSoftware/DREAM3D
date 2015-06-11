@@ -85,16 +85,18 @@ FindFeatureNeighborCAxisMisalignments::~FindFeatureNeighborCAxisMisalignments()
 void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   QStringList linkedProps("AvgCAxisMisalignmentsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misalignment Per Feature", "FindAvgMisals", getFindAvgMisals(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("C-Axis Misalignment List", "CAxisMisalignmentListArrayName", FilterParameterWidgetType::StringWidget, getCAxisMisalignmentListArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Avgerage C-Axis Misalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxisMisalignmentsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misalignment Per Feature", "FindAvgMisals", getFindAvgMisals(), linkedProps, FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("C-Axis Misalignment List", "CAxisMisalignmentListArrayName", FilterParameterWidgetType::StringWidget, getCAxisMisalignmentListArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Avgerage C-Axis Misalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxisMisalignmentsArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

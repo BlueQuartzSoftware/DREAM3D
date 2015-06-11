@@ -77,8 +77,7 @@ WriteImages::~WriteImages()
 void WriteImages::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Select Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getColorsArrayPath(), FilterParameter::Uncategorized, ""));
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -89,6 +88,7 @@ void WriteImages::setupFilterParameters()
     choices.push_back("bmp");
     choices.push_back("png");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
   {
@@ -101,15 +101,20 @@ void WriteImages::setupFilterParameters()
     choices.push_back("XZ");
     choices.push_back("YZ");
     parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
   {
     QStringList linkedProps;
     linkedProps << "ImagePrefix";
-    parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, FilterParameter::Uncategorized));
+    parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, FilterParameter::Parameter));
   }
-  parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), FilterParameter::Uncategorized));
-  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Select Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getColorsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), FilterParameter::CreatedArray));
+
   setFilterParameters(parameters);
 }
 

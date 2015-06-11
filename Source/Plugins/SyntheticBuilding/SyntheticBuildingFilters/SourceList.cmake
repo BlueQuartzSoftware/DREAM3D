@@ -11,16 +11,16 @@ START_FILTER_GROUP(${SyntheticBuilding_BINARY_DIR} "${_filterGroupName}" "Synthe
 # List your public filters here
 
 set(_PublicFilters
-  PackPrimaryPhases
-  MatchCrystallography
-  JumbleOrientations
-  InsertPrecipitatePhases
-  InsertAtoms
-  EstablishMatrixPhase
   AddBadData
   AddOrientationNoise
-  InitializeSyntheticVolume
+  EstablishMatrixPhase
   EstablishShapeTypes
+  InitializeSyntheticVolume
+  InsertAtoms
+  InsertPrecipitatePhases
+  JumbleOrientations
+  MatchCrystallography
+  PackPrimaryPhases
 )
 
 #--------------

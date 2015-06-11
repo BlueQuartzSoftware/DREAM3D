@@ -69,10 +69,13 @@ ExtractComponentAsArray::~ExtractComponentAsArray()
 void ExtractComponentAsArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("MultiComponent Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Component Number to Extract", "CompNumber", FilterParameterWidgetType::IntWidget, getCompNumber(), FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Scalar Array Name", "NewArrayArrayName", FilterParameterWidgetType::StringWidget, getNewArrayArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Component Number to Extract", "CompNumber", FilterParameterWidgetType::IntWidget, getCompNumber(), FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("MultiComponent Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+
+  parameters.push_back(FilterParameter::New("New Scalar Array Name", "NewArrayArrayName", FilterParameterWidgetType::StringWidget, getNewArrayArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

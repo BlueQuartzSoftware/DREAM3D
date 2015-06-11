@@ -87,11 +87,15 @@ endfunction()
 # -- Create the Internal Symlinks to the Frameworks, lib and Plugin Directories
 # so that all the frameworks, plugins and libraries can be shared among the
 # applications on OS X.
-execute_process(
-  COMMAND mkdir "${CMAKE_INSTALL_PREFIX}/Frameworks"
-  COMMAND mkdir "${CMAKE_INSTALL_PREFIX}/Plugins"
-  COMMAND mkdir "${CMAKE_INSTALL_PREFIX}/lib"
-  )
+if(NOT EXISTS ${CMAKE_INSTALL_PREFIX}/Frameworks)
+  execute_process(COMMAND mkdir "${CMAKE_INSTALL_PREFIX}/Frameworks" )
+endif()
+if(NOT EXISTS ${CMAKE_INSTALL_PREFIX}/Plugins)
+  execute_process(COMMAND mkdir "${CMAKE_INSTALL_PREFIX}/Plugins" )
+endif()
+if(NOT EXISTS ${CMAKE_INSTALL_PREFIX}/lib)
+  execute_process(COMMAND mkdir "${CMAKE_INSTALL_PREFIX}/lib" )
+endif()
 
 execute_process(
   COMMAND ln -s ../../Frameworks Frameworks

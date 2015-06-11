@@ -47,8 +47,11 @@ MultiEmmpmFilter::~MultiEmmpmFilter()
 void MultiEmmpmFilter::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters[0] = MultiDataArraySelectionFilterParameter::New("Select Input Data Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::Uncategorized);
 
+  parameters.push_back(FilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", FilterParameterWidgetType::BooleanWidget, getUsePreviousMuSigma(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Output ArrayName Prefix", "OutputArrayPrefix", FilterParameterWidgetType::StringWidget, getOutputArrayPrefix(), FilterParameter::Parameter));
+
+  parameters[0] = MultiDataArraySelectionFilterParameter::New("Select Input Data Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::RequiredArray);
 
   // Look for the OutputDataArrayPath and replace with our OutputAttributeMatrixName instead
   for ( qint32 i = 0; i < parameters.size(); i++ )
@@ -56,12 +59,9 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("OutputDataArrayPath") == 0 )
     {
-        parameters[i] = FilterParameter::New("Output Attribute Matrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::Uncategorized);
+        parameters[i] = FilterParameter::New("Output Attribute Matrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
     }
   }
-
-  parameters.push_back(FilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", FilterParameterWidgetType::BooleanWidget, getUsePreviousMuSigma(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Output ArrayName Prefix", "OutputArrayPrefix", FilterParameterWidgetType::StringWidget, getOutputArrayPrefix(), FilterParameter::Uncategorized));
 
   // Set the new parameters back into the class
   setFilterParameters(parameters);

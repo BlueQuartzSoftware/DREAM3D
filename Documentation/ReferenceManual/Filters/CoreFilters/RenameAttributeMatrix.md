@@ -1,4 +1,4 @@
-Rename Attribute Array {#renameattributematrix}
+Rename Attribute Matrix {#renameattributematrix}
 ==============================
 
 ## Group (Subgroup) ##

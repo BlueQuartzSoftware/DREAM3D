@@ -161,15 +161,15 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(phaseType_parameter);
   parameters.push_back(FilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", FilterParameterWidgetType::DoubleWidget, getSizeCorrelationResolution(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::RequiredArray, ""));
 
   QStringList linkedProps;
 
   linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Radial Distribution Function", "RDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getRDFArrayPath(), FilterParameter::Parameter, ""));
-  parameters.push_back(FilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaxMinRDFArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Radial Distribution Function", "RDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getRDFArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaxMinRDFArrayPath(), FilterParameter::RequiredArray, ""));
   linkedProps.clear();
 
 
@@ -181,41 +181,36 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Morphological Statistics", "CalculateMorphologicalStats", getCalculateMorphologicalStats(), linkedProps, FilterParameter::Parameter));
 
 
-  parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(ChoiceFilterParameter::New("Aspect Ratio Distribution Fit Type", "AspectRatioDistributionFitType", getAspectRatioDistributionFitType(), choices, false, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAspectRatiosArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(ChoiceFilterParameter::New("Aspect Ratio Distribution Fit Type", "AspectRatioDistributionFitType", getAspectRatioDistributionFitType(), choices, false, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAspectRatiosArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(ChoiceFilterParameter::New("Omega3 Distribution Fit Type", "Omega3DistributionFitType", getOmega3DistributionFitType(), choices, false, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getOmega3sArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(ChoiceFilterParameter::New("Omega3 Distribution Fit Type", "Omega3DistributionFitType", getOmega3DistributionFitType(), choices, false, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getOmega3sArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(ChoiceFilterParameter::New("Neighborhood Distribution Fit Type", "NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType(), choices, false, FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborhoodsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(ChoiceFilterParameter::New("Neighborhood Distribution Fit Type", "NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType(), choices, false, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborhoodsArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(SeparatorFilterParameter::New("Axis ODF Input Data", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), FilterParameter::Uncategorized, ""));
-
-
+  parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
 
   linkedProps.clear();
   linkedProps << "CrystalStructuresArrayPath" << "SurfaceFeaturesArrayPath";
   linkedProps << "CalculateODF" << "VolumesArrayPath" << "FeatureEulerAnglesArrayPath";
   linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath";
   linkedProps << "SEPARATOR-0" << "SEPARATOR-1";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Crystallographic Statistics", "CalculateCrystallographicStats", getCalculateCrystallographicStats(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Crystallographic Statistics", "CalculateCrystallographicStats", getCalculateCrystallographicStats(), linkedProps, FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(SeparatorFilterParameter::New("ODF Input Data", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVolumesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Feature Euler Angles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVolumesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Euler Angles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(SeparatorFilterParameter::New("MDF Input Data", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
   //parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::Uncategorized, ""));
 
   //  linkedProps.clear();
@@ -223,11 +218,10 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 
   //  parameters.push_back(LinkedBooleanFilterParameter::New("Generate Radial Distribution Function", ""));
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   // The user types in an array name for the Phase Types
-  parameters.push_back(FilterParameter::New("Phase Types Array", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Phase Types Array", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), FilterParameter::CreatedArray, ""));
   // The user types in an array name for Statistics
-  parameters.push_back(FilterParameter::New("Created Statistics Array Name", "StatisticsArrayName", FilterParameterWidgetType::StringWidget, getStatisticsArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(FilterParameter::New("Created Statistics Array Name", "StatisticsArrayName", FilterParameterWidgetType::StringWidget, getStatisticsArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

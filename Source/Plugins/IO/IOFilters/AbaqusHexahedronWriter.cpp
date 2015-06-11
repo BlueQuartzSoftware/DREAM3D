@@ -75,11 +75,13 @@ AbaqusHexahedronWriter::~AbaqusHexahedronWriter()
 void AbaqusHexahedronWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Output File Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Hourglass Stiffness", "HourglassStiffness", FilterParameterWidgetType::IntWidget, getHourglassStiffness(), FilterParameter::Uncategorized, "", 0));
-  parameters.push_back(FilterParameter::New("Job Name", "JobName", FilterParameterWidgetType::StringWidget, getJobName(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Hourglass Stiffness", "HourglassStiffness", FilterParameterWidgetType::IntWidget, getHourglassStiffness(), FilterParameter::Parameter, "", 0));
+  parameters.push_back(FilterParameter::New("Job Name", "JobName", FilterParameterWidgetType::StringWidget, getJobName(), FilterParameter::Parameter));
+  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), FilterParameter::Parameter)); parameters.push_back(FilterParameter::New("Output File Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
+
   setFilterParameters(parameters);
 }
 

@@ -11,15 +11,15 @@ START_FILTER_GROUP(${Reconstruction_BINARY_DIR} "${_filterGroupName}" "Reconstru
 # List your public filters here
 
 set(_PublicFilters
-  AlignSectionsMisorientation
-  AlignSectionsMutualInformation
   AlignSectionsFeature
   AlignSectionsFeatureCentroid
   AlignSectionsList
-  EBSDSegmentFeatures
+  AlignSectionsMisorientation
+  AlignSectionsMutualInformation
   CAxisSegmentFeatures
-  MergeTwins
+  EBSDSegmentFeatures
   MergeColonies
+  MergeTwins
   ScalarSegmentFeatures
 )
 

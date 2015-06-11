@@ -93,14 +93,15 @@ FindDirectionalModuli::~FindDirectionalModuli()
 void FindDirectionalModuli::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Single Crystal Compliances", "CrystalCompliancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalCompliancesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("DirectionalModuli", "DirectionalModuliArrayName", FilterParameterWidgetType::StringWidget, getDirectionalModuliArrayName(), FilterParameter::Uncategorized, ""));
+
+  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Single Crystal Compliances", "CrystalCompliancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalCompliancesArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("DirectionalModuli", "DirectionalModuliArrayName", FilterParameterWidgetType::StringWidget, getDirectionalModuliArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }

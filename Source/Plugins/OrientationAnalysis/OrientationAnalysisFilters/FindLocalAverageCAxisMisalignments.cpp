@@ -104,6 +104,7 @@ FindLocalAverageCAxisMisalignments::~FindLocalAverageCAxisMisalignments()
 void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   QStringList linkedProps("UnbiasedLocalCAxisMisalignmentsArrayName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", getCalcUnbiasedAvg(), linkedProps, FilterParameter::Uncategorized));
   linkedProps.clear();
@@ -123,6 +124,7 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
   parameters.push_back(FilterParameter::New("NumFeaturesPerParent", "NumFeaturesPerParentArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesPerParentArrayName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("UnbiasedLocalCAxisMisalignments", "UnbiasedLocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getUnbiasedLocalCAxisMisalignmentsArrayName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("LocalCAxisMisalignments", "LocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getLocalCAxisMisalignmentsArrayName(), FilterParameter::Uncategorized, ""));
+
   setFilterParameters(parameters);
 }
 

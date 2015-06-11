@@ -98,34 +98,36 @@ FeatureFaceCurvatureFilter::~FeatureFaceCurvatureFilter()
 void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
-  parameters.push_back(FilterParameter::New("Neighborhood Ring Count", "NRing", FilterParameterWidgetType::IntWidget, getNRing(), FilterParameter::Uncategorized));
+
+  parameters.push_back(FilterParameter::New("Neighborhood Ring Count", "NRing", FilterParameterWidgetType::IntWidget, getNRing(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "SurfaceMeshPrincipalCurvature1sArrayName" << "SurfaceMeshPrincipalCurvature2sArrayName";
   linkedProps << "SurfaceMeshPrincipalDirection1sArrayName" << "SurfaceMeshPrincipalDirection2sArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors(), linkedProps, FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "SurfaceMeshGaussianCurvaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Gaussian Curvature", "ComputeGaussianCurvature", getComputeGaussianCurvature(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Gaussian Curvature", "ComputeGaussianCurvature", getComputeGaussianCurvature(), linkedProps, FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "SurfaceMeshMeanCurvaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Mean Curvature", "ComputeMeanCurvature", getComputeMeanCurvature(), linkedProps, FilterParameter::Uncategorized));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Mean Curvature", "ComputeMeanCurvature", getComputeMeanCurvature(), linkedProps, FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "SurfaceMeshFaceNormalsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", getUseNormalsForCurveFitting(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Edge Attribute Matrix Name", "EdgeAttributeMatrixName", FilterParameterWidgetType::StringWidget, getEdgeAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Principal Curvature 1s", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalCurvature1sArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Principal Curvature 2s", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalCurvature2sArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Principal Direction 1s", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalDirection1sArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Principal Direction 2s", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalDirection2sArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Gaussian Curvatures", "SurfaceMeshGaussianCurvaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshGaussianCurvaturesArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Mean Curvatures", "SurfaceMeshMeanCurvaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshMeanCurvaturesArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Unique Edges", "SurfaceMeshUniqueEdgesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshUniqueEdgesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", getUseNormalsForCurveFitting(), linkedProps, FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("Edge Attribute Matrix Name", "EdgeAttributeMatrixName", FilterParameterWidgetType::StringWidget, getEdgeAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Principal Curvature 1s", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalCurvature1sArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Principal Curvature 2s", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalCurvature2sArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Principal Direction 1s", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalDirection1sArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Principal Direction 2s", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshPrincipalDirection2sArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Gaussian Curvatures", "SurfaceMeshGaussianCurvaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshGaussianCurvaturesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Mean Curvatures", "SurfaceMeshMeanCurvaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshMeanCurvaturesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Unique Edges", "SurfaceMeshUniqueEdgesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshUniqueEdgesArrayName(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 

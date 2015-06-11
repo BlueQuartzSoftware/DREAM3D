@@ -12,9 +12,10 @@ START_FILTER_GROUP(${SurfaceMeshing_BINARY_DIR} "${_filterGroupName}" "Surface M
 
 set(_PublicFilters
   FindGBCD
-  GenerateGeometryConnectivity
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
+  GenerateGeometryConnectivity
+  LaplacianSmoothing
   QuickSurfaceMesh
   ReverseTriangleWinding
   SharedFeatureFaceFilter
@@ -22,7 +23,6 @@ set(_PublicFilters
   TriangleCentroidFilter
   TriangleDihedralAngleFilter
   TriangleNormalFilter
-  LaplacianSmoothing
 )
 
 if(EIGEN_FOUND)

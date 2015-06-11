@@ -96,7 +96,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
     chdir(aPluginDir.absolutePath().toLatin1().constData());
   }
-  if (aPluginDir.dirName() == "tools")
+  if (aPluginDir.dirName() == "bin")
   {
     aPluginDir.cdUp();
     // thePath = aPluginDir.absolutePath() + "/Plugins";

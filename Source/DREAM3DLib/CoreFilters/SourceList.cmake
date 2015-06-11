@@ -20,23 +20,23 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 set(_PublicFilters
   AdjustVolumeOrigin
   ConvertData
-  CopyFeatureArrayToElementArray
-  CreateFeatureArrayFromElementArray
-  ExtractComponentAsArray
-  LinkFeatureMapToElementArray
-  RemoveArrays
-  RenameAttributeMatrix
-  RenameAttributeArray
-  RenameDataContainer
-  ScaleVolume
-  DataContainerReader
-  DataContainerWriter
-  RawBinaryReader
   CopyAttributeArray
   CopyAttributeMatrix
   CopyDataContainer
-  MoveData
+  CopyFeatureArrayToElementArray
   CreateDataArray
+  CreateFeatureArrayFromElementArray
+  DataContainerReader
+  DataContainerWriter
+  ExtractComponentAsArray
+  LinkFeatureMapToElementArray
+  MoveData
+  RawBinaryReader
+  RemoveArrays
+  RenameAttributeArray
+  RenameAttributeMatrix
+  RenameDataContainer
+  ScaleVolume
 )
 
 

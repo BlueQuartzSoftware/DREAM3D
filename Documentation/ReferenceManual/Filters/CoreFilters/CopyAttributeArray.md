@@ -1,4 +1,4 @@
-Rename Attribute Array {#copyattributearray}
+Copy Attribute Array {#copyattributearray}
 ==============================
 
 ## Group (Subgroup) ##

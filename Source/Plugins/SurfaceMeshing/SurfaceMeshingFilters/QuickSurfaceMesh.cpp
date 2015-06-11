@@ -84,19 +84,21 @@ QuickSurfaceMesh::~QuickSurfaceMesh()
 void QuickSurfaceMesh::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
+
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath" << "FacePhasesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Transfer Phase Id", "TransferPhaseId", getTransferPhaseId(), linkedProps, FilterParameter::Uncategorized));
-  parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("New Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceDataContainerName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Labels", "FaceLabelsArrayName", FilterParameterWidgetType::StringWidget, getFaceLabelsArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Node Types", "NodeTypesArrayName", FilterParameterWidgetType::StringWidget, getNodeTypesArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Phases", "FacePhasesArrayName", FilterParameterWidgetType::StringWidget, getFacePhasesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Transfer Phase Id", "TransferPhaseId", getTransferPhaseId(), linkedProps, FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
+
+  parameters.push_back(FilterParameter::New("New Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Labels", "FaceLabelsArrayName", FilterParameterWidgetType::StringWidget, getFaceLabelsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Node Types", "NodeTypesArrayName", FilterParameterWidgetType::StringWidget, getNodeTypesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Phases", "FacePhasesArrayName", FilterParameterWidgetType::StringWidget, getFacePhasesArrayName(), FilterParameter::CreatedArray, ""));
+  
   setFilterParameters(parameters);
 }
 
