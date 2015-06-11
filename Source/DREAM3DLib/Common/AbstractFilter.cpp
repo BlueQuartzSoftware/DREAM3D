@@ -36,6 +36,9 @@
 
 #include "AbstractFilter.h"
 
+#include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "DREAM3DLib/Plugin/PluginManager.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -142,22 +145,15 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString& name)
   return contains;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry)
-{
-  m_CreatedArrayHelpIndexEntries.push_back(entry);
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-	BOOST_ASSERT(reader != NULL);
-	qDebug() << "AbstractFilter::readFilterParameters() -> Writing Filter Options" << "\n";
-	return;
+  BOOST_ASSERT(reader != NULL);
+  qDebug() << "AbstractFilter::readFilterParameters() -> Writing Filter Options" << "\n";
+  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -183,10 +179,10 @@ bool AbstractFilter::getCancel()
 // -----------------------------------------------------------------------------
 IDREAM3DPlugin* AbstractFilter::getPluginInstance()
 {
-	PluginManager* manager = PluginManager::Instance();
-	QString pluginName = manager->getPluginName(getNameOfClass());
-	IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);
-	return plugin;
+  PluginManager* manager = PluginManager::Instance();
+  QString pluginName = manager->getPluginName(getNameOfClass());
+  IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);
+  return plugin;
 }
 
 // -----------------------------------------------------------------------------
@@ -267,6 +263,17 @@ const QString AbstractFilter::getBrandingString()
 const QString AbstractFilter::getCompiledLibraryName()
 {
   return "DREAM3DLib";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractFilter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  DREAM3DLib::Version::Major() << "." << DREAM3DLib::Version::Minor() << "." << DREAM3DLib::Version::Patch();
+  return version;
 }
 
 // -----------------------------------------------------------------------------

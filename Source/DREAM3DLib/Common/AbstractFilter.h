@@ -42,18 +42,16 @@
 #include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
-#include <DREAM3DLib/Plugin/PluginManager.h>
 #include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
+
 
 class AbstractFilterParametersReader;
 class AbstractFilterParametersWriter;
-
+class IDREAM3DPlugin;
 
 /**
  * @class AbstractFilter AbstractFilter.h DREAM3DLib/Common/AbstractFilter.h
@@ -124,10 +122,10 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      */
     virtual void preflight();
 
-  /**
-  * @brief This method returns an instance of the filter's plugin
-  */
-  IDREAM3DPlugin* getPluginInstance();
+    /**
+    * @brief This method returns an instance of the filter's plugin
+    */
+    IDREAM3DPlugin* getPluginInstance();
 
     /**
      * @brief newFilterInstance
@@ -139,7 +137,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     // ------------------------------
     // Standard methods for this class the are commonly used by subclasses.
     // ------------------------------
-    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Major() + DREAM3DLib::Version::Minor() + DREAM3DLib::Version::Patch(); }
+    virtual const QString getFilterVersion();
 
     DREAM3D_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)
 
@@ -183,12 +181,6 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      */
     virtual bool doesPipelineContainFilterAfterThis(const QString& name);
 
-
-    // ------------------------------
-    // This pair of methods allows the automatic creation of documention index
-    // ------------------------------
-    DREAM3D_INSTANCE_PROPERTY(QVector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
-    void addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry);
 
     virtual void printValues(std::ostream& out) {}
 

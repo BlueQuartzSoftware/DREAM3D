@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"

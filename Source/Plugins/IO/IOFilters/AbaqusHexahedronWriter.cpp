@@ -43,6 +43,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 
 #include "IO/IOConstants.h"
 

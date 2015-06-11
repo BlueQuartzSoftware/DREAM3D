@@ -41,6 +41,7 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"

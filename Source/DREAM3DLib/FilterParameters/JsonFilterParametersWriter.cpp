@@ -40,6 +40,9 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonDocument>
 
+#include "DREAM3DLib/DREAM3DLibVersion.h"
+
+
 #include "JsonFilterParametersWriter.h"
 
 // -----------------------------------------------------------------------------

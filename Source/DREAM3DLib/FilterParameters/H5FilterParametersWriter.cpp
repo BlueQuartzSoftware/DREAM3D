@@ -41,6 +41,7 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersConstants.h"
 
 
