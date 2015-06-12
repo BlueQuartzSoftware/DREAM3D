@@ -645,6 +645,23 @@ void OrientationMath::EulerToAxisAngle(float ea1, float ea2, float ea3, float& w
   // Convert the Rodrigues to Axis Angle
   RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::MultiplyQuaternionVector(QuatF& inQuat, float* inVec, float* outVec)
+{
+  float g[3][3];
+  float gInv[3][3];
+
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::qu2om(FOrientArrayType(inQuat), om);
+  om.toGMatrix(g);
+
+  MatrixMath::Invert3x3(g, gInv);
+  MatrixMath::Multiply3x3with3x1(gInv, inVec, outVec);
+}
+
 #endif
 
 // -----------------------------------------------------------------------------
@@ -672,25 +689,6 @@ void OrientationMath::EulertoMatActive(float ea1, float ea2, float ea3, float g[
   g[2][1] = cp2 * sp;
   g[2][2] = cp;
 }
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OrientationMath::MultiplyQuaternionVector(QuatF& inQuat, float* inVec, float* outVec)
-{
-  float g[3][3];
-  float gInv[3][3];
-
-  FOrientArrayType om(9, 0.0f);
-  FOrientTransformsType::qu2om(FOrientArrayType(inQuat), om);
-  om.toGMatrix(g);
-
-  MatrixMath::Invert3x3(g, gInv);
-  MatrixMath::Multiply3x3with3x1(gInv, inVec, outVec);
-}
-
 
 // -----------------------------------------------------------------------------
 //

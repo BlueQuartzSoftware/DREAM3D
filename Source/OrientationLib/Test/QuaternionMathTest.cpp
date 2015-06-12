@@ -63,55 +63,6 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestVectorRotation()
-{
-  QuatF equat;
-
-  FOrientArrayType eu(DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2);
-  FOrientArrayType qu(4);
-  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
-
-  equat = qu.toQuaternion();
-
-  CubicOps cubic;
-  int nsym = cubic.getNumSymOps();
-  QuatF sym_q;
-  float xstl_norm[3] = {1.0, 0.0, 0.0};
-  // std::cout << "xstl_norm: " << xstl_norm[0] << ", " << xstl_norm[1] << ", " << xstl_norm[2]  << std::endl;
-  float s_xstl_norm_rot[3];
-  float s_xstl_norm_quat[3];
-  float delta[3];
-  for (int j = 0; j < nsym; j++)
-  {
-    cubic.getQuatSymOp(j, sym_q);
-    // std::cout << "sym_q: " << sym_q.w << ", <" << sym_q.x << ", " << sym_q.y << ", " << sym_q.z << ">"  << std::endl;
-    OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm_rot);
-    // std::cout << "Rotation Matrix: " << s_xstl_norm_rot[0] << ", " << s_xstl_norm_rot[1] << ", " << s_xstl_norm_rot[2]  << std::endl;
-    QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm_quat);
-    // std::cout << "Quaternion:      " << s_xstl_norm_quat[0] << ", " << s_xstl_norm_quat[1] << ", " << s_xstl_norm_quat[2]  << std::endl;
-
-    delta[0] = s_xstl_norm_rot[0] - s_xstl_norm_quat[0];
-    delta[1] = s_xstl_norm_rot[1] - s_xstl_norm_quat[1];
-    delta[2] = s_xstl_norm_rot[2] - s_xstl_norm_quat[2];
-
-    DREAM3D_REQUIRE(delta[0] >= -std::numeric_limits<float>::epsilon() && delta[0] <= std::numeric_limits<float>::epsilon())
-    DREAM3D_REQUIRE(delta[1] >= -std::numeric_limits<float>::epsilon() && delta[1] <= std::numeric_limits<float>::epsilon())
-    DREAM3D_REQUIRE(delta[2] >= -std::numeric_limits<float>::epsilon() && delta[2] <= std::numeric_limits<float>::epsilon())
-
-    // QuatF passive = OrientationMath::PassiveRotation(0.5, 0.5, 0.5, -0.5, 1, 0, 0);
-    // std::cout << "passive: " << passive.w << ", <" << passive.x << ", " << passive.y << ", " << passive.z << ">"  << std::endl;
-
-    // QuatF active = OrientationMath::ActiveRotation(0.5, 0.5, 0.5, -0.5, 1, 0, 0);
-    // std::cout << "active: " << active.w << ", <" << active.x << ", " << active.y << ", " << active.z << ">"  << std::endl;
-
-
-
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void TestQuat_t()
 {
   QuatF p = QuaternionMathF::New(1.0f, 0.0f, 0.0f, 1.0f);
@@ -292,10 +243,8 @@ int main(int argc, char* argv[])
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestQuat_t() )
-  DREAM3D_REGISTER_TEST( TestVectorRotation() )
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();
 
-  // TestVectorRotation();
   return err;
 }
