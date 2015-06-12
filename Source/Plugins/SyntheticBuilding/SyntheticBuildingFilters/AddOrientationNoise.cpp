@@ -167,9 +167,6 @@ void  AddOrientationNoise::add_orientation_noise()
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   for (size_t i = 0; i < totalPoints; ++i)
   {
-    float ea1 = m_CellEulerAngles[3 * i + 0];
-    float ea2 = m_CellEulerAngles[3 * i + 1];
-    float ea3 = m_CellEulerAngles[3 * i + 2];
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_CellEulerAngles[3 * i]), 3), om);
     om.toGMatrix(g);
     nx = static_cast<float>( rg.genrand_res53() );
@@ -182,7 +179,11 @@ void  AddOrientationNoise::add_orientation_noise()
     FOrientTransformsType::ax2om(ax, om);
     om.toGMatrix(rot);
     MatrixMath::Multiply3x3with3x3(g, rot, newg);
-    FOrientTransformsType::om2eu(FOrientArrayType(newg), FOrientArrayType(&(m_CellEulerAngles[3 * i]), 3));
+    FOrientArrayType eu(&(m_CellEulerAngles[3 * i]), 3);
+    FOrientTransformsType::om2eu(FOrientArrayType(newg), eu);
+    m_CellEulerAngles[3 * i] = eu[0];
+    m_CellEulerAngles[3 * i + 1] = eu[1];
+    m_CellEulerAngles[3 * i + 2] = eu[2];
   }
 }
 
