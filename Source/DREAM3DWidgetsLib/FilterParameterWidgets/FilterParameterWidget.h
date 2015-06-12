@@ -40,6 +40,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
+#include <QtCore/QTimer>
 
 #include <QtWidgets/QWidget>
 
@@ -85,12 +86,14 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QWidget
 
     void fadeWidget(QWidget* widget, bool in);
 
-
-  protected:
-
+  protected slots:
+    void showBorder();
+    void hideBorder();
 
   private:
-    QPointer<FaderWidget> m_FaderWidget;
+    QPointer<FaderWidget>         m_FaderWidget;
+
+    QTimer*                       m_Timer;
 
     FilterParameterWidget(const FilterParameterWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterParameterWidget&); // Operator '=' Not Implemented
