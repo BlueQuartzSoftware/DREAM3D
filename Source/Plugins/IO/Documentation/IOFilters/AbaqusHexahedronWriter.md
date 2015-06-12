@@ -130,7 +130,7 @@ Image / Rectilinear Grid
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature  | None| int32 | (1) | Input volume to be used to create the output files |
+| Feature  | None| Int | (1) | Input volume to be used to create the output files |
 
 
 ## Created Arrays ##

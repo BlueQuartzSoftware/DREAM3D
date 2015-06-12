@@ -3,7 +3,7 @@ Raw Binary Reader {#rawbinaryreader}
 
 ## Group (Subgroup) ##
 
-IO Filters
+IO Filters (Input)
 
 ## Description ##
 
@@ -21,8 +21,18 @@ The user can use an input file that is actually **Larger** than the number of by
 
 Computer data comes in 10 basic types on modern 32bit and 64 bit operating systems. We can break the data into either integer or floating point data. With each of those types the number of bits that represent the value determine its maximum and minimum value. For integer data the standard types are 8, 16, 32 & 64 bit or 1, 2, 4, 8 byte integers. For floating point values there are either 32 bit or 64 bit (4 or 8 bytes). With the integer types the values can be either signed or unsigned integers. If an integer is signed that means it can take on negative values. If an integer type is unsigned then it can only take positive values but will have twice the positive value range as a signed integer.
 
-![The types of data to select](RawBinaryReader-Types.png)
-@image latex RawBinaryReader-Types.png " " width=2in
+The types of data to select:
+
+    signed Int8
+    unsigned UInt8
+    signed Int16
+    unsigned UInt16
+    signed Int32
+    unsigned UInt32
+    signed Int64
+    unsigned UInt64
+    Float
+    Double
 
 ---
 

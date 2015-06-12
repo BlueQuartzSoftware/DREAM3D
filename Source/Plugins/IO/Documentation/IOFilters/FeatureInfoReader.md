@@ -37,7 +37,7 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
 |------|------|-------------|
 | Input Feature Info File | File Path |  |
 | Create Cell Level Arrays | Boolean | existing arrays overwritten  |
-| Renumber Features | Boolean |  |
+| Renumber Features | Boolean | Randomly shuffle the FeatureIds  |
 
 ## Required Geometry ##
 Not Applicable
@@ -46,7 +46,7 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs.| (1) | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | FeatureIds | Ids (int) that specify to which **Feature** each **Cell** belongs.| (1) | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 ## Created Arrays ##
 

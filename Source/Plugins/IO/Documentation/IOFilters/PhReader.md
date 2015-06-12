@@ -57,7 +57,7 @@ None
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (int32) that specify to which **Feature** each **Cell** belongs. | (1) |Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | FeatureIds | Ids (int) that specify to which **Feature** each **Cell** belongs. | (1) |Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 
 ## License & Copyright ##

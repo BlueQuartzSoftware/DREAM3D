@@ -9,28 +9,28 @@ This filter will convert a pair of triangle and nodes files commonly used by CMU
 
 The nodes file format is as follows:
 
-+  first line = number of nodes
-+  column 1 = node id, starts from zero.
-+  column 2 = node type,
-  + 2 = on the **Feature** boundary
-  + 3 = on the triple line,
-  + 4 = quadruple point or on quadruple line if 10 is added, eg + 12, 13, and 14, then they are on the surface of microstructure.
+    +  first line = number of nodes
+    +  column 1 = node id, starts from zero.
+    +  column 2 = node type,
+      + 2 = on the **Feature** boundary
+      + 3 = on the triple line,
+      + 4 = quadruple point or on quadruple line if 10 is added, eg + 12, 13, and 14, then they are on the surface of microstructure.
 
 For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring **Features**.
 
-+ 12 = on the **Feature** boundary trace area at the surface of microstructure
-+ 13 = on the **Feature** boundary trace line
-+ 14 = on the triple point, and so on
-  - column 3 to 5 = coordinates of nodes, x, y, and z
+    + 12 = on the **Feature** boundary trace area at the surface of microstructure
+    + 13 = on the **Feature** boundary trace line
+    + 14 = on the triple point, and so on
+      - column 3 to 5 = coordinates of nodes, x, y, and z
 
 
 The triangles file format is as follows:
 
--  first line = number of triangles
--  column 1 = triangle id, starts from zero
--  column 2 to 4 = node1, node2 and node3 of individual triangles
--  column 5 to 7 = edge1 (from node1 and node2), edge2 (from node2 and node3) and edge3 (from node3 and node1) of individual triangle
--  column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
+    -  first line = number of triangles
+    -  column 1 = triangle id, starts from zero
+    -  column 2 to 4 = node1, node2 and node3 of individual triangles
+    -  column 5 to 7 = edge1 (from node1 and node2), edge2 (from node2 and node3) and edge3 (from node3 and node1) of individual triangle
+    -  column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
 
 ## Parameters ##
 

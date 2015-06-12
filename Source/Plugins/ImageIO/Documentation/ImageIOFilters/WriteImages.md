@@ -31,7 +31,7 @@ Not Applicable
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| UInt8  | User Selected | UInt8 | Any | Select Color Data. The user selects a Voxel Cell Array that represents RGB, Gray Scale or RGBA color values for each voxel. The selected array should be a 1, 3, or 4 component UInt8 array. |
+| UInt8  | User Selected | UInt8 | Any | Select Color Data. The user selects a Voxel Cell Array that represents RGB, Gray Scale or RGBA color values for each voxel. The selected array should be a 1, 3, or 4 component array. It must be a Uint8 array |
 
 ## Created Arrays ##
 

@@ -46,7 +46,7 @@ This Filter reads from a data file in a format used by [SPPARKS Kinetic Monte Ca
 | Input File | File Path | .spparks file|
 | Origin (XYZ) | int | The location in space coordinates of the (0,0,0) voxel |
 | Resolution (XYZ) | int | X, Y, Z Resolution of the data |
-| One Based Arrays | Boolean | |
+| One Based Arrays | Boolean | Origin starts at (1,1,1) |
 | Volume Data Container | String | Output data container, DataContainer |
 | Cell Attribute Matrix | String | Output attribute matrix, CellData |
 | FeatureIds | String | Output feature ids, Site Type |
@@ -62,7 +62,7 @@ None
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds (Site Type) | Ids (int32) that specify to which **Feature** each **Cell** belongs. | (1) | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | FeatureIds (Site Type) | Ids (int) that specify to which **Feature** each **Cell** belongs. | (1) | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 
 ## License & Copyright ##

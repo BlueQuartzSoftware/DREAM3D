@@ -48,7 +48,7 @@ Triangle
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Triangle  | SurfaceMeshFaceLabels | int32 | (2)   | The list of all triangles (faces) in the mesh. |
+| Triangle  | SurfaceMeshFaceLabels | Int | (2)   | The list of all triangles (faces) in the mesh. |
 
 ## Created Arrays ##
 
