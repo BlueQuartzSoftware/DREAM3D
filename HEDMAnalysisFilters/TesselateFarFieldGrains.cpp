@@ -676,7 +676,6 @@ void  TesselateFarFieldGrains::load_features()
     float a = 0.0f, b = 0.0f, c = 0.0f, alpha = 0.0f, beta = 0.0f, gamma = 0.0f;
     float vol = 0.0f, eqRad = 0.0f;
     float conf = 0.0f;
-    float phi1 = 0.0f, PHI = 0.0f, phi2 = 0.0f;
     float dummy1 = 0.0f, dummy2 = 0.0f, dummy3 = 0.0f;
     float mat[3][3];
     float rt[3][3];
@@ -721,10 +720,8 @@ void  TesselateFarFieldGrains::load_features()
 
         m_FeaturePhases[currentFeature] = phase;
 
-        OrientationMath::MattoEuler(mat, phi1, PHI, phi2);
-        m_FeatureEulerAngles[3 * currentFeature + 0] = phi1;
-        m_FeatureEulerAngles[3 * currentFeature + 1] = PHI;
-        m_FeatureEulerAngles[3 * currentFeature + 2] = phi2;
+        FOrientArrayType eu(m_FeatureEulerAngles + (3 * i), 3);
+        FOrientTransformsType::om2eu(FOrientArrayType(mat), eu);
 
         alpha *= DREAM3D::Constants::k_PiOver180;
         beta *= DREAM3D::Constants::k_PiOver180;
@@ -849,11 +846,10 @@ void TesselateFarFieldGrains::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-    float phi1 = m_AxisEulerAngles[3 * i];
-    float PHI = m_AxisEulerAngles[3 * i + 1];
-    float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3];
-    OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+    FOrientArrayType om(9, 0.0);
+    FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
+    om.toGMatrix(ga);
     column = static_cast<DimType>( xc / xRes );
     row = static_cast<DimType>( yc / yRes );
     plane = static_cast<DimType>( zc / zRes );

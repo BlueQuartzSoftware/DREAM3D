@@ -147,6 +147,8 @@ set(${PLUGIN_NAME}_GEN_HDRS
    ${RegisterKnownFiltersFile}
    ${AllFilterParameterWidgetsHeaderFile}
    ${RegisterKnownFilterParameterWidgetsFile}
+  "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.h"
+  "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.cpp"
 )
 
 # --------------------------------------------------------------------

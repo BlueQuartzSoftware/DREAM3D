@@ -12,7 +12,7 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-
+#include "HEDMAnalysis/HEDMAnalysisVersion.h"
 #include "HEDMAnalysis/moc_HEDMAnalysisPlugin.cpp"
 
 namespace Detail
@@ -26,8 +26,8 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 HEDMAnalysisPlugin::HEDMAnalysisPlugin() :
-m_Version(DREAM3DLib::Version::Package()),                            // Initialize HEDMAnalysis's Version Number Here
-m_CompatibilityVersion(DREAM3DLib::Version::Package()), // Initialize HEDMAnalysis's Compatibility Version Number Here
+m_Version(HEDMAnalysis::Version::Package()),                            // Initialize HEDMAnalysis's Version Number Here
+m_CompatibilityVersion(HEDMAnalysis::Version::Package()), // Initialize HEDMAnalysis's Compatibility Version Number Here
 m_Vendor("Vendor Name"),                                // Initialize HEDMAnalysis's Vendor Name Here
 m_URL("URL"),                                           // Initialize Company URL Here
 m_Location("Location"),                                 // Initialize Company Location Here
