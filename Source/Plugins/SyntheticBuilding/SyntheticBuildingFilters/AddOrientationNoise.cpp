@@ -178,9 +178,6 @@ void  AddOrientationNoise::add_orientation_noise()
     MatrixMath::Multiply3x3with3x3(g, rot, newg);
     FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
     FOrientTransformsType::om2eu(FOrientArrayType(newg), eu);
-    m_CellEulerAngles[3 * i] = eu[0];
-    m_CellEulerAngles[3 * i + 1] = eu[1];
-    m_CellEulerAngles[3 * i + 2] = eu[2];
   }
 }
 
