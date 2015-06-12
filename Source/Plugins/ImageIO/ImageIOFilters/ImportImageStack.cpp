@@ -312,6 +312,7 @@ void ImportImageStack::execute()
     // This is the first image so we need to create our block of data to store the data
     if (z ==  m_InputFileListInfo.StartIndex)
     {
+      int format = image.format();
       m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size());
       if (image.format() == QImage::Format_Indexed8)
       {

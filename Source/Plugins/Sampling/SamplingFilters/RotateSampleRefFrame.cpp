@@ -130,9 +130,9 @@ class RotateSampleRefFrameImpl
             coordsNew[0] = rotMatrixInv[0][0] * coords[0] + rotMatrixInv[0][1] * coords[1] + rotMatrixInv[0][2] * coords[2];
             coordsNew[1] = rotMatrixInv[1][0] * coords[0] + rotMatrixInv[1][1] * coords[1] + rotMatrixInv[1][2] * coords[2];
             coordsNew[2] = rotMatrixInv[2][0] * coords[0] + rotMatrixInv[2][1] * coords[1] + rotMatrixInv[2][2] * coords[2];
-            colOld = coordsNew[0] / m_params->xRes;
-            rowOld = coordsNew[1] / m_params->yRes;
-            planeOld = coordsNew[2] / m_params->zRes;
+            colOld = static_cast<int64_t>(nearbyint(coordsNew[0] / m_params->xRes));
+            rowOld = static_cast<int64_t>(nearbyint(coordsNew[1] / m_params->yRes));
+            planeOld = static_cast<int64_t>(nearbyint(coordsNew[2] / m_params->zRes));
             if(m_SliceBySlice == true) { planeOld = k; }
             if(colOld >= 0 && colOld < m_params->xp && rowOld >= 0 && rowOld < m_params->yp && planeOld >= 0 && planeOld < m_params->zp)
             {
@@ -345,9 +345,9 @@ void RotateSampleRefFrame::preflight()
   if (fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
   if (fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
-  xpNew = static_cast<int64_t>(((xMax - xMin) / xResNew) + 1);
-  ypNew = static_cast<int64_t>(((yMax - yMin) / yResNew) + 1);
-  zpNew = static_cast<int64_t>(((zMax - zMin) / zResNew) + 1);
+  xpNew = static_cast<int64_t>(nearbyint((xMax - xMin) / xResNew) + 1);
+  ypNew = static_cast<int64_t>(nearbyint((yMax - yMin) / yResNew) + 1);
+  zpNew = static_cast<int64_t>(nearbyint((zMax - zMin) / zResNew) + 1);
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
@@ -455,9 +455,9 @@ void RotateSampleRefFrame::execute()
   if (fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis) { zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)); }
   if (fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis) { zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)); }
 
-  xpNew = static_cast<int64_t>(((xMax - xMin) / xResNew) + 1);
-  ypNew = static_cast<int64_t>(((yMax - yMin) / yResNew) + 1);
-  zpNew = static_cast<int64_t>(((zMax - zMin) / zResNew) + 1);
+  xpNew = static_cast<int64_t>(nearbyint((xMax - xMin) / xResNew) + 1);
+  ypNew = static_cast<int64_t>(nearbyint((yMax - yMin) / yResNew) + 1);
+  zpNew = static_cast<int64_t>(nearbyint((zMax - zMin) / zResNew) + 1);
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
