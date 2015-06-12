@@ -98,7 +98,6 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   QStringList linkedProps("EstimatedPrimaryFeatures");
   linkedProps << "InputStatsFile";
-  parameters.push_back(SeparatorFilterParameter::New("Optional Information", FilterParameter::Parameter));
   parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(FileSystemFilterParameter::New("Input Statistics File", "InputStatsFile", FilterParameterWidgetType::InputFileWidget, getInputStatsFile(), FilterParameter::Parameter, "", "*.dream3d"));
   FilterParameter::Pointer param = FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), FilterParameter::Parameter, "");

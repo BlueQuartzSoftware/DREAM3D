@@ -177,7 +177,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps << "AspectRatioDistributionFitType" << "AspectRatiosArrayPath";
   linkedProps << "Omega3DistributionFitType" << "Omega3sArrayPath";
   linkedProps << "NeighborhoodDistributionFitType" << "NeighborhoodsArrayPath";
-  linkedProps << "CalculateAxisODF" << "AxisEulerAnglesArrayPath" << "SEPARATOR-2";
+  linkedProps << "CalculateAxisODF" << "AxisEulerAnglesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Morphological Statistics", "CalculateMorphologicalStats", getCalculateMorphologicalStats(), linkedProps, FilterParameter::Parameter));
 
 
@@ -200,7 +200,6 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps << "CrystalStructuresArrayPath" << "SurfaceFeaturesArrayPath";
   linkedProps << "CalculateODF" << "VolumesArrayPath" << "FeatureEulerAnglesArrayPath";
   linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath";
-  linkedProps << "SEPARATOR-0" << "SEPARATOR-1";
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Crystallographic Statistics", "CalculateCrystallographicStats", getCalculateCrystallographicStats(), linkedProps, FilterParameter::Parameter));
 
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
