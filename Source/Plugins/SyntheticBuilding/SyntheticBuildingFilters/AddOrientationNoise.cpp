@@ -70,11 +70,8 @@ AddOrientationNoise::~AddOrientationNoise()
 void AddOrientationNoise::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FilterParameter::New("Magnitude of Orientation Noise", "Magnitude", FilterParameterWidgetType::DoubleWidget, getMagnitude(), FilterParameter::Parameter, "Degrees"));
-
   parameters.push_back(FilterParameter::New("Element Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
-
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -179,7 +176,7 @@ void  AddOrientationNoise::add_orientation_noise()
     FOrientTransformsType::ax2om(ax, om);
     om.toGMatrix(rot);
     MatrixMath::Multiply3x3with3x3(g, rot, newg);
-    FOrientArrayType eu(3, 0.0);
+    FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
     FOrientTransformsType::om2eu(FOrientArrayType(newg), eu);
     m_CellEulerAngles[3 * i] = eu[0];
     m_CellEulerAngles[3 * i + 1] = eu[1];
