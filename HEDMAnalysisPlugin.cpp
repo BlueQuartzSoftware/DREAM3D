@@ -12,8 +12,9 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-
 #include "HEDMAnalysis/HEDMAnalysisVersion.h"
+#include "HEDMAnalysis/moc_HEDMAnalysisPlugin.cpp"
+
 
 namespace Detail
 {
