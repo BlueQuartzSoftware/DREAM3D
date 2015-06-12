@@ -135,17 +135,17 @@ void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy( &(e1.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e1.size() );
 
-    QVector<float> e2(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(e2.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e2.size() );
+    QVector<float> e2(static_cast<int>(arrays[1]->getNumberOfTuples()));
+    ::memcpy( &(e2.front()), arrays[1]->getVoidPointer(0), sizeof(float)*e2.size() );
 
-    QVector<float> e3(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(e3.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e3.size() );
+    QVector<float> e3(static_cast<int>(arrays[2]->getNumberOfTuples()));
+    ::memcpy( &(e3.front()), arrays[2]->getVoidPointer(0), sizeof(float)*e3.size() );
 
-    QVector<float> weights(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(weights.front()), arrays[0]->getVoidPointer(0), sizeof(float)*weights.size() );
+    QVector<float> weights(static_cast<int>(arrays[4]->getNumberOfTuples()));
+    ::memcpy( &(weights.front()), arrays[4]->getVoidPointer(0), sizeof(float)*weights.size() );
 
-    QVector<float> sigmas(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(sigmas.front()), arrays[0]->getVoidPointer(0), sizeof(float)*sigmas.size() );
+    QVector<float> sigmas(static_cast<int>(arrays[3]->getNumberOfTuples()));
+    ::memcpy( &(sigmas.front()), arrays[3]->getVoidPointer(0), sizeof(float)*sigmas.size() );
 
     if(e1.size() > 0)
     {
@@ -177,17 +177,22 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
+  QVector<float> e1Rad = e1s;
+  QVector<float> e2Rad = e2s;
+  QVector<float> e3Rad = e3s;
+
   for(qint32 i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * M_PI / 180.0;
-    e2s[i] = e2s[i] * M_PI / 180.0;
-    e3s[i] = e3s[i] * M_PI / 180.0;
+    e1Rad[i] = e1Rad[i] * DREAM3D::Constants::k_PiOver180;
+    e2Rad[i] = e2Rad[i] * DREAM3D::Constants::k_PiOver180;
+    e3Rad[i] = e3Rad[i] * DREAM3D::Constants::k_PiOver180;
   }
+
   size_t numEntries = e1s.size();
 
   QVector<float> aodf;
   aodf.resize(OrthoRhombicOps::k_OdfSize);
-  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
+  Texture::CalculateOrthoRhombicODFData(e1Rad.data(), e2Rad.data(), e3Rad.data(),
                                         weights.data(), sigmas.data(), true,
                                         aodf.data(), numEntries);
   if (aodf.size() > 0)

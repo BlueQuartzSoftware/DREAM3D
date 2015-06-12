@@ -481,6 +481,39 @@ void FilterListDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* ite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterListDockWidget::keyPressEvent(QKeyEvent * event)
+{
+  if (searchInProgress() == true)
+  {
+    if (NULL == filterList || filterList->count() <= 0)
+    {
+      return;
+    }
+
+    QList<QListWidgetItem*> selectedList = filterList->selectedItems();
+
+    if (event->key() == Qt::Key_Down)
+    {
+      if (selectedList.size() == 0)
+      {
+        filterList->setItemSelected(filterList->item(0), true);
+        filterList->setFocus();
+      }
+    }
+    else if (event->key() == Qt::Key_Return)
+    {
+      if (selectedList.size() == 1)
+      {
+        QListWidgetItem* selectedItem = selectedList[0];
+        on_filterList_itemDoubleClicked(selectedItem);
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterListDockWidget::searchFieldsChanged(bool isChecked)
 {
   QAction* senderAction = qobject_cast<QAction*>(sender());
@@ -622,4 +655,25 @@ void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& pref
     list[0]->setChecked(true);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool FilterListDockWidget::searchInProgress()
+{
+  if (filterSearch->text().isEmpty())
+  {
+    return false;
+  }
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterListWidget* FilterListDockWidget::getFilterListWidget()
+{
+  return filterList;
+}
+
 

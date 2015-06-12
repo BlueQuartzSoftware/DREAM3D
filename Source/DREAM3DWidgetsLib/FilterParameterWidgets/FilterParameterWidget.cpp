@@ -1,5 +1,6 @@
 #include <FilterParameterWidget.h>
 
+#include <QtWidgets/QApplication>
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
@@ -14,7 +15,8 @@
 FilterParameterWidget::FilterParameterWidget(QWidget* parent) :
   QWidget(parent),
   m_Filter(NULL),
-  m_FilterParameter(NULL)
+  m_FilterParameter(NULL),
+  m_Timer(NULL)
 {
 
 }
@@ -25,7 +27,8 @@ FilterParameterWidget::FilterParameterWidget(QWidget* parent) :
 FilterParameterWidget::FilterParameterWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
   m_Filter(filter),
-  m_FilterParameter(parameter)
+  m_FilterParameter(parameter),
+  m_Timer(NULL)
 {
 
 }
@@ -117,6 +120,10 @@ void FilterParameterWidget::fadeWidget(QWidget* widget, bool in)
     m_FaderWidget->setFadeIn();
     connect(m_FaderWidget, SIGNAL(animationComplete() ),
             this, SLOT(show()));
+    connect(m_FaderWidget, SIGNAL(animationComplete()),
+      this, SLOT(showBorder()));
+
+    widget->setStyleSheet("border: 2px solid MediumBlue;");
   }
   else
   {
@@ -124,8 +131,30 @@ void FilterParameterWidget::fadeWidget(QWidget* widget, bool in)
     connect(m_FaderWidget, SIGNAL(animationComplete() ),
             this, SLOT(hide()));
   }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  //if(getFilterParameter()->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  m_FaderWidget->setStartColor(color);
+
+  m_FaderWidget->setStartColor(palette().color(QWidget::backgroundRole()));
   m_FaderWidget->start();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterParameterWidget::showBorder()
+{
+  if (NULL != m_Timer)
+  {
+    delete m_Timer;
+    m_Timer = NULL;
+  }
+  m_Timer = new QTimer(this);
+  connect(m_Timer, SIGNAL(timeout()), this, SLOT(hideBorder()));
+  m_Timer->start(4000);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterParameterWidget::hideBorder()
+{
+  setStyleSheet("");
 }

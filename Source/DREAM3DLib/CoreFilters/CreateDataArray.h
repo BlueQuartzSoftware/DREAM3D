@@ -55,18 +55,14 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
 
     virtual ~CreateDataArray();
 
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
-
     DREAM3D_FILTER_PARAMETER(int, ScalarType)
     Q_PROPERTY(int ScalarType READ getScalarType WRITE setScalarType)
 
     DREAM3D_FILTER_PARAMETER(int, NumberOfComponents)
     Q_PROPERTY(int NumberOfComponents READ getNumberOfComponents WRITE setNumberOfComponents)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
-    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewArray)
+    Q_PROPERTY(DataArrayPath NewArray READ getNewArray WRITE setNewArray)
 
     DREAM3D_FILTER_PARAMETER(double, InitializationValue)
     Q_PROPERTY(double InitializationValue READ getInitializationValue WRITE setInitializationValue)

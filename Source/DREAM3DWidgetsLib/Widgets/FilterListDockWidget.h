@@ -75,6 +75,16 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
   */
   void writeSettings(DREAM3DSettings& prefs);
 
+  /**
+  * @brief Returns true if a search is in progress, else returns false
+  */
+  bool searchInProgress();
+
+  /**
+  * @brief Returns the filter list widget
+  */
+  FilterListWidget* getFilterListWidget();
+
   public slots:
 
     /**
@@ -136,6 +146,11 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
 
 
   protected:
+
+    /**
+    * @brief Detect a key press
+    */
+    void keyPressEvent(QKeyEvent * event);
 
     /**
      * @brief setupGui Called to get everything in the GUI setup correctly

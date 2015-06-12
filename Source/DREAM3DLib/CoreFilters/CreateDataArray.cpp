@@ -46,10 +46,9 @@
 // -----------------------------------------------------------------------------
 CreateDataArray::CreateDataArray() :
   AbstractFilter(),
-  m_AttributeMatrixPath("", "", ""),
   m_ScalarType(0),
   m_NumberOfComponents(-1),
-  m_OutputArrayName(""),
+  m_NewArray("", "", ""),
   m_InitializationValue(0.0)
 {
   setupFilterParameters();
@@ -69,7 +68,6 @@ void CreateDataArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), FilterParameter::Parameter));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
@@ -94,7 +92,7 @@ void CreateDataArray::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Number Of Components", "NumberOfComponents", FilterParameterWidgetType::IntWidget, getNumberOfComponents(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Initialization Value", "InitializationValue", FilterParameterWidgetType::DoubleWidget, getInitializationValue(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Output Array", "NewArray", FilterParameterWidgetType::DataArrayCreationWidget, getNewArray(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
@@ -105,10 +103,9 @@ void CreateDataArray::setupFilterParameters()
 void CreateDataArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setAttributeMatrixPath(reader->readDataArrayPath("AttributeMatrixPath", getAttributeMatrixPath() ) );
   setScalarType( reader->readValue("ScalarType", getScalarType()) );
   setNumberOfComponents( reader->readValue("NumberOfComponents", getNumberOfComponents()) );
-  setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
+  setNewArray(reader->readDataArrayPath("NewArray", getNewArray()));
   setInitializationValue(reader->readValue("InitializationValue", getInitializationValue()));
   reader->closeFilterGroup();
 }
@@ -120,10 +117,9 @@ int CreateDataArray::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
   DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewArray)
   DREAM3D_FILTER_WRITE_PARAMETER(InitializationValue)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -237,41 +233,12 @@ void CreateDataArray::checkInitialization()
 void CreateDataArray::dataCheck()
 {
   setErrorCondition(0);
-  QString ss;
-
-  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getAttributeMatrixPath(), -301);
-
-  if (getScalarType() < 0 || getScalarType() > 10)
-  {
-    ss = QObject::tr("The scalar type was invalid. Valid values range from 0 to 10");
-    setErrorCondition(-4002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  if (getNumberOfComponents() <= 0)
-  {
-    setErrorCondition(-4003);
-    QString ss = QObject::tr("The number of components (%1) must be positive").arg(m_NumberOfComponents);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  if (getOutputArrayName().isEmpty() == true)
-  {
-    ss = QObject::tr("The output Attribute Array name must be set");
-    setErrorCondition(-4001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  if (getErrorCondition() < 0) { return; }
 
   checkInitialization(); // check the initialization value range for that data type
   if (getErrorCondition() < 0) { return; }
 
-  DataArrayPath tempPath = getAttributeMatrixPath();
   QVector<size_t> cDims(1, getNumberOfComponents());
-  tempPath.setDataArrayName(getOutputArrayName());
-
-  m_OutputArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromTypeEnum()(this, tempPath, cDims, getScalarType(), getInitializationValue());
+  m_OutputArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromTypeEnum()(this, getNewArray(), cDims, getScalarType(), getInitializationValue());
 }
 
 // -----------------------------------------------------------------------------
