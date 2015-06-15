@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LinkedBooleanWidget</class>
- <widget class="QWidget" name="LinkedBooleanWidget">
+ <widget class="QFrame" name="LinkedBooleanWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -85,8 +85,8 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-	DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedMultiArrayPaths)
-	Q_PROPERTY(QVector<DataArrayPath> SelectedMultiArrayPaths READ getSelectedMultiArrayPaths WRITE setSelectedMultiArrayPaths)
+  DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedMultiArrayPaths)
+  Q_PROPERTY(QVector<DataArrayPath> SelectedMultiArrayPaths READ getSelectedMultiArrayPaths WRITE setSelectedMultiArrayPaths)
 
     DREAM3D_FILTER_PARAMETER(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
@@ -119,6 +119,9 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, Bool1)
     Q_PROPERTY(bool Bool1 READ getBool1 WRITE setBool1)
+
+    DREAM3D_FILTER_PARAMETER(double, Double2)
+    Q_PROPERTY(double Double2 READ getDouble2 WRITE setDouble2)
 
     DREAM3D_FILTER_PARAMETER(bool, Bool2)
     Q_PROPERTY(bool Bool2 READ getBool2 WRITE setBool2)

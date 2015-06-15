@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MultiDataArraySelectionWidget</class>
- <widget class="QWidget" name="MultiDataArraySelectionWidget">
+ <widget class="QFrame" name="MultiDataArraySelectionWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

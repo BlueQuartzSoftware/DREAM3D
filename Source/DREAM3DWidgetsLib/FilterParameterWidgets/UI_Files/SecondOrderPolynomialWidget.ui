@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SecondOrderPolynomialWidget</class>
- <widget class="QWidget" name="SecondOrderPolynomialWidget">
+ <widget class="QFrame" name="SecondOrderPolynomialWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -38,6 +38,7 @@ class QtSupportLib_EXPORT FaderWidget : public QWidget
   public:
 
     FaderWidget(QWidget* parent);
+    virtual ~FaderWidget();
 
     QColor fadeColor() const { return startColor; }
     void setFadeColor(const QColor& newColor) { startColor = newColor; }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>UnknownWidget</class>
- <widget class="QWidget" name="UnknownWidget">
+ <widget class="QFrame" name="UnknownWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

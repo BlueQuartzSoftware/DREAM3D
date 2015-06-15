@@ -129,8 +129,9 @@ void GenericExample::setupFilterParameters()
 
   {
     QStringList linkedProps;
-    linkedProps << "Bool2";
+    linkedProps << "Bool2" << "Double2";
     parameters.push_back(LinkedBooleanFilterParameter::New("Bool1", "Bool1", getBool1(), linkedProps, FilterParameter::Parameter));
+    parameters.push_back(FilterParameter::New("Double 2", "Double2", FilterParameterWidgetType::DoubleWidget, getDouble2(), FilterParameter::Parameter));
   }
 
   {

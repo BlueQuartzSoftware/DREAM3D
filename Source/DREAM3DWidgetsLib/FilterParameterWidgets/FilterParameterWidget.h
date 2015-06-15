@@ -40,9 +40,10 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtCore/QTimer>
+
 
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QFrame>
 
 #include "QtSupportLib/FaderWidget.h"
 
@@ -53,15 +54,15 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-
 
 class AbstractFilter;
 class FilterParameter;
+class QPropertyAnimation;
+class QGraphicsOpacityEffect;
+class QTimer;
 
 
-
-class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QWidget
+class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QFrame
 {
     Q_OBJECT
   public:
@@ -85,6 +86,7 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QWidget
     void setLinkedComboBoxState(int groupId);
 
     void fadeWidget(QWidget* widget, bool in);
+    void animationFinished();
 
   protected slots:
     void showBorder();
@@ -93,7 +95,13 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QWidget
   private:
     QPointer<FaderWidget>         m_FaderWidget;
 
+    float startValue;
+    float endValue;
+    bool fadeIn;
     QTimer*                       m_Timer;
+    QPropertyAnimation* animation;
+    QGraphicsOpacityEffect* effect;
+
 
     FilterParameterWidget(const FilterParameterWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterParameterWidget&); // Operator '=' Not Implemented
