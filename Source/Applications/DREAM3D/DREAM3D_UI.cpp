@@ -183,12 +183,12 @@ void DREAM3D_UI::updateFirstRun()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::checkFirstRun()
 {
-  // Launch v5.2 dialog box if this is the first run of v5.2
+  // Launch v6.0 dialog box if this is the first run of v6.0
   DREAM3DSettings prefs;
   bool firstRun = prefs.value("First Run", true).toBool();
   if (firstRun == true)
   {
-    // This is the first run of DREAM3D v5.2, so we need to show the splash screen
+    // This is the first run of DREAM3D v6.0, so we need to show the v6.0 wizard
     DREAM3Dv5Wizard* wizard = new DREAM3Dv5Wizard(this, Qt::WindowTitleHint);
     wizard->exec();
 
