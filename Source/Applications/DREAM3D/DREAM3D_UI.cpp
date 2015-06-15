@@ -276,15 +276,32 @@ void DREAM3D_UI::on_actionOpen_triggered()
 }
 
 // -----------------------------------------------------------------------------
-//
+/* This is a slot that catches signals from BookmarksDockWidget
+   and PrebuiltPipelinesDockWidget */
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles)
+{
+  //if (pipelineViewWidget->filterCount() > 0)
+  //{
+  //  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, true);
+  //}
+  //else
+  //{
+  //  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, false);
+  //}
+
+  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles, const bool &newWindow)
 {
   QFileInfo fi(filePath);
   QRecentFileList* list = QRecentFileList::instance();
 
-  // If there are filters in the pipeline view, create a new window
-  if (pipelineViewWidget->filterCount() > 0)
+  if (newWindow == true)
   {
     PluginManager* pluginManager = PluginManager::Instance();
     QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
@@ -294,12 +311,7 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
     newInstance->setLoadedPlugins(plugins);
 
     // Read Pipeline
-    int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0, setOpenedFilePath);
-
-    if (setOpenedFilePath == false)
-    {
-      newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
-    }
+    int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0, setOpenedFilePath, true);
 
     // Set Current File Path
     if (err >= 0)
@@ -334,10 +346,9 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
       delete newInstance;
     }
   }
-  // The pipeline view is empty, so open the pipeline in the pipeline view
   else
   {
-    int err = pipelineViewWidget->openPipeline(filePath, 0, setOpenedFilePath);
+    int err = pipelineViewWidget->openPipeline(filePath, 0, setOpenedFilePath, true);
     setOpenDialogLastDirectory(fi.path());
 
     if (err >= 0)
@@ -1172,15 +1183,18 @@ void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file, const bool &setOpenedFilePath)
+void DREAM3D_UI::on_pipelineViewWidget_pipelineOpened(QString& file, const bool &setOpenedFilePath, const bool &changeTitle)
 {
   if (setOpenedFilePath == true)
   {
-    QFileInfo fi(file);
-
     m_OpenedFilePath = file;
-    on_pipelineViewWidget_pipelineTitleUpdated(fi.baseName());
     setWindowFilePath(file);
+  }
+
+  if (changeTitle == true)
+  {
+    QFileInfo fi(file);
+    setWindowTitle(QString("[*]") + fi.baseName() + " - DREAM3D");
     setWindowModified(false);
   }
   else
@@ -1195,14 +1209,6 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file, const 
 void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
 {
   setWindowModified(true);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_pipelineViewWidget_pipelineTitleUpdated(QString title)
-{
-  setWindowTitle(QString("[*]") + title + " - DREAM3D");
 }
 
 // -----------------------------------------------------------------------------
@@ -1388,15 +1394,7 @@ void DREAM3D_UI::openRecentFile()
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
     QString filePath = action->data().toString();
-    int err = getPipelineViewWidget()->openPipeline(filePath, 0, true);
-
-    if (err >= 0)
-    {
-      QFileInfo fileInfo(filePath);
-      setWindowTitle("[*]" + fileInfo.baseName() + " - DREAM3D");
-      setOpenedFilePath(filePath);
-      setWindowModified(false);
-    }
+    openNewPipeline(filePath, 0, true, true);
   }
 }
 

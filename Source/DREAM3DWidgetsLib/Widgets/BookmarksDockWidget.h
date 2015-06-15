@@ -177,6 +177,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     * @param filePath The absolute path to the pipeline file
     * @param setOpenedFilePath A boolean that decides whether to cache the opened file path to use when re-saving.
     * @param addToRecentFiles A boolean that decides whether to add filePath to the recents file list.
+    * @param newWindow A boolean that decides whether to open a new window.
     */
     void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
 

@@ -143,6 +143,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void checkFirstRun();
 
+    /**
+    * @brief openNewPipeline
+    * @param filePath
+    * @param setOpenedFilePath
+    */
+    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles, const bool &newWindow);
+
   public slots:
 
     void on_actionNew_triggered();
@@ -159,13 +166,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @param w
     */
     void setStatusBarMessage(const QString &msg);
-
-    /**
-    * @brief openNewPipeline
-    * @param filePath
-    * @param setOpenedFilePath
-    */
-    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
 
   protected slots:
 
@@ -228,10 +228,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief on_pipelineViewWidget_pipelineChanged AUTO HOOKUP by name
      */
     void on_pipelineViewWidget_pipelineChanged();
-    void on_pipelineViewWidget_pipelineTitleUpdated(QString title);
     void on_pipelineViewWidget_pipelineIssuesCleared();
     void on_pipelineViewWidget_pipelineHasNoErrors();
-    void on_pipelineViewWidget_pipelineFileDropped(QString& file, const bool &setOpenedFilePath);
+    void on_pipelineViewWidget_pipelineOpened(QString& file, const bool &setOpenedFilePath, const bool &changeTitle);
 
     /**
     * @brief setFilterInputWidget
@@ -253,6 +252,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief markDocumentAsDirty
     */
     void markDocumentAsDirty();
+
+    /**
+    * @brief openNewPipeline
+    * @param filePath
+    * @param setOpenedFilePath
+    */
+    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
 
 
     // Our Signals that we can emit custom for this class
