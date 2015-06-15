@@ -347,13 +347,15 @@ void WritePoleFigure::execute()
   {
     missingGoodVoxels = false;
   }
+
   // Find how many phases we have by getting the number of Crystal Structures
   size_t numPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   size_t numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
-  size_t count = 0;
+
   // Loop over all the voxels gathering the Eulers for a specific phase into an array
   for (size_t phase = 1; phase < numPhases; ++phase)
   {
+    size_t count = 0;
     // First find out how many voxels we are going to have. This is probably faster to loop twice than to
     // keep allocating memory everytime we find one.
     for (size_t i = 0; i < numPoints; ++i)
@@ -366,9 +368,9 @@ void WritePoleFigure::execute()
         }
       }
     }
-    size_t eulerCompDim = 3;
-    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 1, &eulerCompDim, "Eulers_Per_Phase");
-    subEulers->initializeWithValue(-1);
+    QVector<size_t> eulerCompDim(1, 3);
+    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, eulerCompDim, "Eulers_Per_Phase");
+    subEulers->initializeWithValue(std::numeric_limits<float>::signaling_NaN());
     float* eu = subEulers->getPointer(0);
 
     // Now loop through the eulers again and this time add them to the subEulers Array
