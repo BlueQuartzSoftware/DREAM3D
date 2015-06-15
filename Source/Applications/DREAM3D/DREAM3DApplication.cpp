@@ -37,6 +37,11 @@
 
 #include "DREAM3DApplication.h"
 
+#include "Applications/DREAM3D/DREAM3D_UI.h"
+
+#include <QtGui/QFileOpenEvent>
+#include <iostream>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -52,6 +57,29 @@ DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
 DREAM3DApplication::~DREAM3DApplication()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DREAM3DApplication::event(QEvent* event)
+{
+  if (event->type() == QEvent::FileOpen)
+  {
+    QFileOpenEvent* openEvent = static_cast<QFileOpenEvent*>(event);
+    QString filePath = openEvent->file();
+
+    // Create new DREAM3D_UI instance, and register it
+    DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
+    registerDREAM3DWindow(newInstance);
+
+    // Open the pipeline in a new window
+    newInstance->openNewPipeline(filePath, true, true, true);
+
+    return true;
+  }
+
+  return QApplication::event(event);
 }
 
 // -----------------------------------------------------------------------------

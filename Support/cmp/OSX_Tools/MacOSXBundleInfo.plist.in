@@ -4,6 +4,19 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+    <dict>
+        <key>CFBundleTypeName</key>
+        <string>JSON</string>
+        <key>LSHandlerRank</key>
+        <string>Alternate</string>
+        <key>LSItemContentTypes</key>
+        <array>
+            <string>public.json</string>
+        </array>
+    </dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
