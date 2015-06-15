@@ -48,8 +48,7 @@
 // -----------------------------------------------------------------------------
 InputCrystalCompliances::InputCrystalCompliances() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, ""),
-  m_CrystalCompliancesArrayName("Crystal Compliances"),
+  m_CrystalCompliancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, "Crystal Compliances"),
   m_CrystalCompliances(NULL)
 {
   m_Compliances.v11 = 1;
@@ -98,8 +97,7 @@ void InputCrystalCompliances::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Compliance Values", "Compliances", FilterParameterWidgetType::Symmetric6x6Widget, getCompliances(), FilterParameter::RequiredArray, "10^-11 Pa^-1"));
 
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayName", FilterParameterWidgetType::StringWidget, getCrystalCompliancesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getCrystalCompliancesArrayPath(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -109,9 +107,8 @@ void InputCrystalCompliances::setupFilterParameters()
 void InputCrystalCompliances::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setCompliances(reader->readFloatVec21("Compliances", getCompliances() ) );
-  setCrystalCompliancesArrayName(reader->readString("CrystalCompliancesArrayName", getCrystalCompliancesArrayName() ) );
+  setCrystalCompliancesArrayPath(reader->readDataArrayPath("CrystalCompliancesArrayPath", getCrystalCompliancesArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -122,9 +119,8 @@ int InputCrystalCompliances::writeFilterParameters(AbstractFilterParametersWrite
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(Compliances)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalCompliancesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalCompliancesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -136,12 +132,9 @@ void InputCrystalCompliances::dataCheck()
 {
   setErrorCondition(0);
 
-  DataArrayPath tempPath;
-
   // create compliances
   QVector<size_t> cDims(2, 6); // 6 by 6 array
-  tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getCrystalCompliancesArrayName() );
-  m_CrystalCompliancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
+  m_CrystalCompliancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getCrystalCompliancesArrayPath(), 0, cDims);
   if( NULL != m_CrystalCompliancesPtr.lock().get() )
   { m_CrystalCompliances = m_CrystalCompliancesPtr.lock()->getPointer(0); }
 }

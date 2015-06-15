@@ -48,10 +48,9 @@
 // -----------------------------------------------------------------------------
 FindBoundaryElementFractions::FindBoundaryElementFractions() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_BoundaryCellsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::BoundaryCells),
-  m_BoundaryCellFractionsArrayName(DREAM3D::FeatureData::SurfaceElementFractions),
+  m_BoundaryCellFractionsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceElementFractions),
   m_FeatureIds(NULL),
   m_BoundaryCells(NULL),
   m_BoundaryCellFractions(NULL)
@@ -76,8 +75,7 @@ void FindBoundaryElementFractions::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Surface Cells", "BoundaryCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(FilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayName", FilterParameterWidgetType::StringWidget, getBoundaryCellFractionsArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getBoundaryCellFractionsArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -86,8 +84,7 @@ void FindBoundaryElementFractions::setupFilterParameters()
 void FindBoundaryElementFractions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setBoundaryCellFractionsArrayName(reader->readString("BoundaryCellFractionsArrayName", getBoundaryCellFractionsArrayName() ) );
+  setBoundaryCellFractionsArrayPath(reader->readDataArrayPath("BoundaryCellFractionsArrayPath", getBoundaryCellFractionsArrayPath()));
   setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
@@ -100,8 +97,7 @@ int FindBoundaryElementFractions::writeFilterParameters(AbstractFilterParameters
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellFractionsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellFractionsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
@@ -114,7 +110,6 @@ int FindBoundaryElementFractions::writeFilterParameters(AbstractFilterParameters
 void FindBoundaryElementFractions::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -131,8 +126,7 @@ void FindBoundaryElementFractions::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getBoundaryCellFractionsArrayName() );
-  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBoundaryCellFractionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BoundaryCellFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

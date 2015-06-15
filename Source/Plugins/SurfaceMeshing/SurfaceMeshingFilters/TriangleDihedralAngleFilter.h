@@ -56,11 +56,8 @@ class TriangleDihedralAngleFilter : public SurfaceMeshFilter
 
     virtual ~TriangleDihedralAngleFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
-
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleDihedralAnglesArrayName)
-    Q_PROPERTY(QString SurfaceMeshTriangleDihedralAnglesArrayName READ getSurfaceMeshTriangleDihedralAnglesArrayName WRITE setSurfaceMeshTriangleDihedralAnglesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleDihedralAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

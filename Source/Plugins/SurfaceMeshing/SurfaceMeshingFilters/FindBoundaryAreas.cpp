@@ -46,10 +46,9 @@
 // -----------------------------------------------------------------------------
 FindBoundaryAreas::FindBoundaryAreas() :
   AbstractFilter(),
-  m_FaceFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, ""),
   m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFeatureFaceIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_SurfaceMeshBoundaryAreasArrayName("BoundaryAreas"),
+  m_SurfaceMeshBoundaryAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, "BoundaryAreas"),
   m_SurfaceMeshTriangleAreas(NULL),
   m_SurfaceMeshFeatureFaceIds(NULL),
   m_SurfaceMeshBoundaryAreas(NULL)
@@ -73,9 +72,8 @@ void FindBoundaryAreas::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Triangle Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Face Feature Ids", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Face Feature Attribute Matrix Name", "FaceFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(FilterParameter::New("Boundary Areas Array Name", "SurfaceMeshBoundaryAreasArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshBoundaryAreasArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Boundary Areas Array", "SurfaceMeshBoundaryAreasArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshBoundaryAreasArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -86,8 +84,7 @@ void FindBoundaryAreas::setupFilterParameters()
 void FindBoundaryAreas::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFaceFeatureAttributeMatrixPath(reader->readDataArrayPath("FaceFeatureAttributeMatrixPath", getFaceFeatureAttributeMatrixPath()));
-  setSurfaceMeshBoundaryAreasArrayName(reader->readString("SurfaceMeshBoundaryAreasArrayName", getSurfaceMeshBoundaryAreasArrayName() ) );
+  setSurfaceMeshBoundaryAreasArrayPath(reader->readDataArrayPath("SurfaceMeshBoundaryAreasArrayPath", getSurfaceMeshBoundaryAreasArrayPath()));
   setSurfaceMeshFeatureFaceIdsArrayPath(reader->readDataArrayPath("SurfaceMeshFeatureFaceIdsArrayPath", getSurfaceMeshFeatureFaceIdsArrayPath() ) );
   setSurfaceMeshTriangleAreasArrayPath(reader->readDataArrayPath("SurfaceMeshTriangleAreasArrayPath", getSurfaceMeshTriangleAreasArrayPath() ) );
   reader->closeFilterGroup();
@@ -100,10 +97,9 @@ int FindBoundaryAreas::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceFeatureAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshBoundaryAreasArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshBoundaryAreasArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -124,22 +120,7 @@ void FindBoundaryAreas::dataCheck()
   if( NULL != m_SurfaceMeshTriangleAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_FaceFeatureAttributeMatrixPath.isEmpty() == true)
-  {
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), "An Attribute Matrix from the DataContainer must be selected.", getErrorCondition());
-    return;
-  }
-  if(m_SurfaceMeshBoundaryAreasArrayName.isEmpty() == true)
-  {
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), "A name for the new array must be entered.", getErrorCondition());
-    return;
-  }
-
-  DataArrayPath tempPath;
-  tempPath.update(getFaceFeatureAttributeMatrixPath().getDataContainerName(), getFaceFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceMeshBoundaryAreasArrayName() );
-  m_SurfaceMeshBoundaryAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshBoundaryAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshBoundaryAreasArrayPath(), 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshBoundaryAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshBoundaryAreas = m_SurfaceMeshBoundaryAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

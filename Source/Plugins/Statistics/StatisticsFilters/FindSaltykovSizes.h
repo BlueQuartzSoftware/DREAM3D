@@ -63,14 +63,11 @@ class FindSaltykovSizes : public AbstractFilter
 
     virtual ~FindSaltykovSizes();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
     Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, SaltykovEquivalentDiametersArrayName)
-    Q_PROPERTY(QString SaltykovEquivalentDiametersArrayName READ getSaltykovEquivalentDiametersArrayName WRITE setSaltykovEquivalentDiametersArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SaltykovEquivalentDiametersArrayPath)
+    Q_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

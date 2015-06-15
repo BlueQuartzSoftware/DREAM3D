@@ -52,9 +52,8 @@
 // -----------------------------------------------------------------------------
 FindBasalLoadingFactor::FindBasalLoadingFactor() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_BasalLoadingFactorArrayName(DREAM3D::FeatureData::BasalLoadingFactor),
+  m_BasalLoadingFactorArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::BasalLoadingFactor),
   m_BasalLoadingFactor(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL)
@@ -83,9 +82,8 @@ void FindBasalLoadingFactor::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), FilterParameter::Parameter));
 
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(FilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayName", FilterParameterWidgetType::StringWidget, getBasalLoadingFactorArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getBasalLoadingFactorArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -93,8 +91,7 @@ void FindBasalLoadingFactor::setupFilterParameters()
 void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setBasalLoadingFactorArrayName(reader->readString("BasalLoadingFactorArrayName", getBasalLoadingFactorArrayName() ) );
+  setBasalLoadingFactorArrayPath(reader->readDataArrayPath("BasalLoadingFactorArrayPath", getBasalLoadingFactorArrayPath()));
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setLoadingDirection( reader->readFloatVec3("LoadingDirection", getLoadingDirection() ) );
   reader->closeFilterGroup();
@@ -107,8 +104,7 @@ int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(LoadingDirection)
   writer->closeFilterGroup();
@@ -120,7 +116,6 @@ int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 4);
@@ -129,8 +124,7 @@ void FindBasalLoadingFactor::dataCheck()
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getBasalLoadingFactorArrayName() );
-  m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBasalLoadingFactorArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BasalLoadingFactorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BasalLoadingFactor = m_BasalLoadingFactorPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

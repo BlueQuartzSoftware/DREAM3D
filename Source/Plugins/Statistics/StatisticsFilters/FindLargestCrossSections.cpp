@@ -49,10 +49,9 @@
 // -----------------------------------------------------------------------------
 FindLargestCrossSections::FindLargestCrossSections() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_Plane(0),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_LargestCrossSectionsArrayName(DREAM3D::FeatureData::LargestCrossSections),
+  m_LargestCrossSectionsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::LargestCrossSections),
   m_FeatureIds(NULL),
   m_LargestCrossSections(NULL)
 {
@@ -90,10 +89,10 @@ void FindLargestCrossSections::setupFilterParameters()
 
   /* Required Arrays */
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
   /* Created Arrays */
-  parameters.push_back(FilterParameter::New("Largest Cross Sections", "LargestCrossSectionsArrayName", FilterParameterWidgetType::StringWidget, getLargestCrossSectionsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Largest Cross Sections", "LargestCrossSectionsArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getLargestCrossSectionsArrayPath(), FilterParameter::CreatedArray, ""));
+
   setFilterParameters(parameters);
 }
 
@@ -101,8 +100,7 @@ void FindLargestCrossSections::setupFilterParameters()
 void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setLargestCrossSectionsArrayName(reader->readString("LargestCrossSectionsArrayName", getLargestCrossSectionsArrayName() ) );
+  setLargestCrossSectionsArrayPath(reader->readDataArrayPath("LargestCrossSectionsArrayPath", getLargestCrossSectionsArrayPath()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   reader->closeFilterGroup();
@@ -115,8 +113,7 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(LargestCrossSectionsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(LargestCrossSectionsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(Plane)
   writer->closeFilterGroup();
@@ -129,15 +126,13 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 void FindLargestCrossSections::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getLargestCrossSectionsArrayName() );
-  m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getLargestCrossSectionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_LargestCrossSectionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_LargestCrossSections = m_LargestCrossSectionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

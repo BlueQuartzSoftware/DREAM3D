@@ -56,11 +56,8 @@ class TriangleNormalFilter : public SurfaceMeshFilter
 
     virtual ~TriangleNormalFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
-
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleNormalsArrayName)
-    Q_PROPERTY(QString SurfaceMeshTriangleNormalsArrayName READ getSurfaceMeshTriangleNormalsArrayName WRITE setSurfaceMeshTriangleNormalsArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleNormalsArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
