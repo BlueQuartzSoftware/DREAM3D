@@ -10,15 +10,6 @@
     <height>45</height>
    </rect>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QWidget#DoubleWidget {
-	background-color: rgb(223, 183, 175);
-	border: 2px Solid;
-	border-color: rgb(169, 28, 31);
-	border-radius: 8px;
-}
-</string>
-  </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="leftMargin">
     <number>2</number>
