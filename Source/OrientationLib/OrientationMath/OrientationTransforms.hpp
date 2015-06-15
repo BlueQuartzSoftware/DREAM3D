@@ -909,7 +909,7 @@ class OrientationTransforms
     static void om2eu(const T& o, T& res)
     {
       K zeta = 0.0;
-      bool close = closeEnough(o[8], 1.0);
+      bool close = closeEnough(std::fabs(o[8]), 1.0);
       if(!close)
       {
         res[1] = acos(o[8]);
@@ -919,6 +919,7 @@ class OrientationTransforms
       }
       else
       {
+        close = closeEnough(o[8], 1.0);
         if (close)
         {
           res[0] = atan2( o[1], o[0]);

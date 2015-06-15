@@ -536,7 +536,7 @@ namespace Detail
             // 111 Family
             direction[0] = 0.0;
             direction[1] = 1.0;
-            direction[2] = 0;
+            direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 6), m_xyz111->getPointer(i * 6 + 3));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 6 + 3), -1);
@@ -644,7 +644,7 @@ DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double p
   for (int j = 0; j < 4; j++)
   {
     getQuatSymOp(j, q2);
-	  QuaternionMathF::Multiply(q2, q1, qc);
+    QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
