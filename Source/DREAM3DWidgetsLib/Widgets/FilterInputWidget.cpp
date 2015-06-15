@@ -220,5 +220,13 @@ void FilterInputWidget::fadeOutWidget(QWidget* widget)
   m_AdvFadedOut = true;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QWidget* FilterInputWidget::getVariablesTabContentsWidget()
+{
+  return variablesTabContents;
+}
+
 
 

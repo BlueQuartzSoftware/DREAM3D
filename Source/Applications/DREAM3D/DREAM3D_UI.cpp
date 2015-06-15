@@ -1446,8 +1446,19 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   // Save the preferences file NOW in case something happens
   writeSettings();
 
+  // Disable the Filter Input Widgets
+  for (int i = 0; i < pipelineViewWidget->filterCount(); i++)
+  {
+    PipelineFilterWidget* w = pipelineViewWidget->filterWidgetAt(i);
 
-  pipelineViewWidget->setEnabled(false);
+    if (NULL != w)
+    {
+      FilterInputWidget* input = w->getFilterInputWidget();
+      input->getVariablesTabContentsWidget()->setDisabled(true);
+    }
+  }
+
+  pipelineViewWidget->setAcceptDrops(false);
 
   // Move the FilterPipeline object into the thread that we just created.
   m_PipelineInFlight->moveToThread(m_WorkerThread);
@@ -1537,7 +1548,19 @@ void DREAM3D_UI::pipelineDidFinish()
   m_PipelineInFlight = FilterPipeline::NullPointer();// This _should_ remove all the filters and deallocate them
   startPipelineBtn->setText("Go");
   m_ProgressBar->setValue(0);
-  pipelineViewWidget->setEnabled(true);
+  
+  for (int i = 0; i < pipelineViewWidget->filterCount(); i++)
+  {
+    PipelineFilterWidget* w = pipelineViewWidget->filterWidgetAt(i);
+
+    if (NULL != w)
+    {
+      FilterInputWidget* input = w->getFilterInputWidget();
+      input->getVariablesTabContentsWidget()->setEnabled(true);
+    }
+  }
+
+  pipelineViewWidget->setAcceptDrops(true);
 }
 
 
