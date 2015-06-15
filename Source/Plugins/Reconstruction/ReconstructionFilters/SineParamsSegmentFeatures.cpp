@@ -91,9 +91,10 @@ void SineParamsSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Sine Parameters", "SineParamsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSineParamsArrayPath(), FilterParameter::RequiredArray));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::RequiredArray));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+
+  parameters.push_back(FilterParameter::New("Sine Parameters", "SineParamsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSineParamsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, ""));
 
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));

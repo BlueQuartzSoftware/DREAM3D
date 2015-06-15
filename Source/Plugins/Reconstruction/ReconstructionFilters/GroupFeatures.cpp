@@ -74,7 +74,8 @@ void GroupFeatures::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::RequiredArray));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::Parameter));
+
   parameters.push_back(FilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "NonContiguousNeighborListArrayPath", FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, ""));
 
