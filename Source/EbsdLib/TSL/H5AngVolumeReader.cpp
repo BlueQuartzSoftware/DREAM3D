@@ -228,7 +228,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
 
   int xstartspot = 0;
   int ystartspot = 0;
-
+  int numPhases = getNumPhases();
   err = readVolumeInfo();
   for (int slice = 0; slice < zpoints; ++slice)
   {
@@ -303,7 +303,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (NULL != phasePtr && m_PhaseData[index] < 1)
+        if (numPhases == 1 && NULL != phasePtr && m_PhaseData[index] < 1)
         {
           m_PhaseData[index] = 1;
         }
