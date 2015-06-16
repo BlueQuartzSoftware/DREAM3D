@@ -559,7 +559,7 @@ AbstractFilter::Pointer ReadMicData::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 const QString ReadMicData::getCompiledLibraryName()
 {
-  return HEDMAnalysis::HEDMAnalysisBaseName;
+  return HEDMAnalysisConstants::HEDMAnalysisBaseName;
 }
 
 

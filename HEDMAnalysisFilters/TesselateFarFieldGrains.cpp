@@ -1068,7 +1068,7 @@ AbstractFilter::Pointer TesselateFarFieldGrains::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString TesselateFarFieldGrains::getCompiledLibraryName()
-{ return HEDMAnalysis::HEDMAnalysisBaseName; }
+{ return HEDMAnalysisConstants::HEDMAnalysisBaseName; }
 
 
 // -----------------------------------------------------------------------------

@@ -12,16 +12,9 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
+#include "HEDMAnalysis/HEDMAnalysisConstants.h"
 #include "HEDMAnalysis/HEDMAnalysisVersion.h"
 #include "HEDMAnalysis/moc_HEDMAnalysisPlugin.cpp"
-
-
-namespace Detail
-{
-  const QString HEDMAnalysisPluginFile("HEDMAnalysisPlugin");
-  const QString HEDMAnalysisPluginDisplayName("HEDMAnalysis");
-  const QString HEDMAnalysisPluginBaseName("HEDMAnalysisPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -52,7 +45,7 @@ HEDMAnalysisPlugin::~HEDMAnalysisPlugin()
 // -----------------------------------------------------------------------------
 QString HEDMAnalysisPlugin::getPluginName()
 {
-  return (Detail::HEDMAnalysisPluginDisplayName);
+  return (HEDMAnalysisConstants::HEDMAnalysisPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

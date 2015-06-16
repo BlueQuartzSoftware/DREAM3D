@@ -9,10 +9,16 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace HEDMAnalysis {
+namespace HEDMAnalysisConstants
+{
   const QString HEDMAnalysisPluginFile("HEDMAnalysisPlugin");
   const QString HEDMAnalysisPluginDisplayName("HEDMAnalysisPlugin");
   const QString HEDMAnalysisBaseName("HEDMAnalysisPlugin");
+
+  namespace FilterGroups
+  {
+    const QString HEDMAnalysisFilters("HEDM Analysis");
+  }
 }
 
 /**
