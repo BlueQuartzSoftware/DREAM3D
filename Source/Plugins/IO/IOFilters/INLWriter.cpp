@@ -107,6 +107,7 @@ void INLWriter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Required Ensemble Information", FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Number of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Material Names", "MaterialNameArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaterialNameArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -182,31 +183,12 @@ void INLWriter::dataCheck()
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_MaterialNamePtr = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this,  getMaterialNameArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  //if( NULL != m_MaterialNamePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  //{ m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 
   dims[0] = 3;
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
-
-
-//  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getCrystalStructuresArrayPath());
-//  if(NULL != attrMat.get())
-//  {
-//    IDataArray::Pointer materialNamePtr = attrMat->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
-//    StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
-//    if (NULL == materialNames)
-//    {
-
-//      QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
-//      notifyErrorMessage(getHumanLabel(), ss, -1111);
-//      setErrorCondition(-1111);
-//    }
-//  }
 }
 
 // -----------------------------------------------------------------------------
