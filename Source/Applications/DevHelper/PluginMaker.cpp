@@ -783,10 +783,29 @@ QString PluginMaker::cleanName_filters(QString name)
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 {
-  //  QString pluginName = cleanName(m_PluginName->text());
-
-  emit updateStatusBar("Ready");
-
+  QString filePath = m_OutputDir->text();
+  QFileInfo fi(filePath);
+  if (m_PluginName->text().isEmpty() || m_OutputDir->text().isEmpty() || fi.exists() == false)
+  {
+    generateButton->setDisabled(true);
+    if (m_PluginName->text().isEmpty())
+    {
+      emit updateStatusBar("The plugin name has not been chosen.");
+    }
+    else if (m_OutputDir->text().isEmpty())
+    {
+      emit updateStatusBar("The output directory has not been selected.");
+    }
+    else
+    {
+      emit updateStatusBar("The currently selected output directory does not exist.");
+    }
+  }
+  else
+  {
+    generateButton->setEnabled(true);
+    emit updateStatusBar("Ready");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -794,7 +813,29 @@ void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_OutputDir_textChanged(const QString& text)
 {
-  emit updateStatusBar("Ready");
+  QString filePath = m_OutputDir->text();
+  QFileInfo fi(filePath);
+  if (m_PluginName->text().isEmpty() || m_OutputDir->text().isEmpty() || fi.exists() == false)
+  {
+    generateButton->setDisabled(true);
+    if (m_PluginName->text().isEmpty())
+    {
+      emit updateStatusBar("The plugin name has not been chosen.");
+    }
+    else if (m_OutputDir->text().isEmpty())
+    {
+      emit updateStatusBar("The output directory has not been selected.");
+    }
+    else
+    {
+      emit updateStatusBar("The currently selected output directory does not exist.");
+    }
+  }
+  else
+  {
+    generateButton->setEnabled(true);
+    emit updateStatusBar("Ready");
+  }
 }
 
 // -----------------------------------------------------------------------------
