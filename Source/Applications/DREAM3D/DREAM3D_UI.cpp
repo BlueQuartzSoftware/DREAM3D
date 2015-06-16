@@ -501,6 +501,8 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
 
   writeSettings();
   clearPipeline();
+  dream3dApp->unregisterDREAM3DWindow(this);
+
   event->accept();
 
   if (m_ShouldRestart == true)
