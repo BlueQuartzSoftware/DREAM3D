@@ -44,17 +44,9 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "moc_SurfaceMeshingPlugin.cpp"
 
-
-
-namespace Detail
-{
-  const QString SurfaceMeshingPluginFile("SurfaceMeshingPlugin");
-  const QString SurfaceMeshingPluginDisplayName("SurfaceMeshing");
-  const QString SurfaceMeshingPluginBaseName("SurfaceMeshingPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +76,7 @@ SurfaceMeshingPlugin::~SurfaceMeshingPlugin()
 // -----------------------------------------------------------------------------
 QString SurfaceMeshingPlugin::getPluginName()
 {
-  return (Detail::SurfaceMeshingPluginDisplayName);
+  return (SurfaceMeshingConstants::SurfaceMeshingPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

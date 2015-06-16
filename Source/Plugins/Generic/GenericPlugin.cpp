@@ -43,17 +43,9 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
-
+#include "Generic/GenericConstants.h"
 #include "Generic/moc_GenericPlugin.cpp"
 
-
-
-namespace Detail
-{
-  const QString GenericPluginFile("GenericPlugin");
-  const QString GenericPluginDisplayName("Generic");
-  const QString GenericPluginBaseName("GenericPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -83,7 +75,7 @@ GenericPlugin::~GenericPlugin()
 // -----------------------------------------------------------------------------
 QString GenericPlugin::getPluginName()
 {
-  return (Detail::GenericPluginDisplayName);
+  return (GenericConstants::GenericPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

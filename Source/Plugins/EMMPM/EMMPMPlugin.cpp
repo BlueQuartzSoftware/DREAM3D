@@ -13,18 +13,9 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "EMMPMConstants.h"
+#include "EMMPM/EMMPMConstants.h"
 
 #include "EMMPM/moc_EMMPMPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString EMMPMPluginFile("EMMPMPlugin");
-  const QString EMMPMPluginDisplayName("EMMPM");
-  const QString EMMPMPluginBaseName("EMMPMPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -54,7 +45,7 @@ EMMPMPlugin::~EMMPMPlugin()
 // -----------------------------------------------------------------------------
 QString EMMPMPlugin::getPluginName()
 {
-  return (Detail::EMMPMPluginDisplayName);
+  return (EMMPMConstants::EMMPMPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

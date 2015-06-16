@@ -43,19 +43,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
-
 #include "Reconstruction/ReconstructionConstants.h"
-
 #include "moc_ReconstructionPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString ReconstructionPluginFile("ReconstructionPlugin");
-  const QString ReconstructionPluginDisplayName("Reconstruction");
-  const QString ReconstructionPluginBaseName("ReconstructionPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -85,7 +74,7 @@ ReconstructionPlugin::~ReconstructionPlugin()
 // -----------------------------------------------------------------------------
 QString ReconstructionPlugin::getPluginName()
 {
-  return (Detail::ReconstructionPluginDisplayName);
+  return (ReconstructionConstants::ReconstructionPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------
