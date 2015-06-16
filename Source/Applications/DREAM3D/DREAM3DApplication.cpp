@@ -115,9 +115,12 @@ void DREAM3DApplication::exitTriggered()
   for (int i = 0; i < m_DREAM3DWidgetList.size(); i++)
   {
     QWidget* dream3dWindow = m_DREAM3DWidgetList.at(i);
-    if (dream3dWindow->close() == false)
+    if (NULL != dream3dWindow)
     {
-      shouldReallyClose = false;
+      if (dream3dWindow->close() == false)
+      {
+        shouldReallyClose = false;
+      }
     }
   }
 
