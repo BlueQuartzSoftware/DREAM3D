@@ -1305,5 +1305,21 @@ void PipelineViewWidget::handleFilterParameterChanged()
   emit filterParameterChanged();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::toRunningState()
+{
+  setAcceptDrops(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::toIdleState()
+{
+  setAcceptDrops(true);
+}
+
 
 

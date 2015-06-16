@@ -276,6 +276,16 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     */
     void clearWidgets();
 
+    /**
+    * @brief toRunningState
+    */
+    void toRunningState();
+
+    /**
+    * @brief toIdleState
+    */
+    void toIdleState();
+
 
   signals:
     void addPlaceHolderFilter(QPoint p);

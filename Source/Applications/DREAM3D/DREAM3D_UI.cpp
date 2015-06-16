@@ -1408,12 +1408,16 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   {
     qDebug() << "canceling from GUI...." << "\n";
     emit pipelineCanceled();
-    //    m_WorkerThread->wait(); // Wait until the thread is complete
-    //    if (m_WorkerThread->isFinished() == true)
-    //    {
-    //      delete m_WorkerThread;
-    //      m_WorkerThread = NULL;
-    //    }
+
+    // Enable the "Clear Pipeline" menu option
+    m_ActionClearPipeline->setEnabled(true);
+
+    // Enable FilterListDockWidget signals - resume adding filters
+    filterListDockWidget->blockSignals(false);
+
+    // Enable FilterLibraryDockWidget signals - resume adding filters
+    filterLibraryDockWidget->blockSignals(false);
+
     return;
   }
 
@@ -1446,19 +1450,32 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   // Save the preferences file NOW in case something happens
   writeSettings();
 
-  // Disable the Filter Input Widgets
+  // Connect signals and slots between DREAM3D_UI and each PipelineFilterWidget
   for (int i = 0; i < pipelineViewWidget->filterCount(); i++)
   {
     PipelineFilterWidget* w = pipelineViewWidget->filterWidgetAt(i);
 
     if (NULL != w)
     {
-      FilterInputWidget* input = w->getFilterInputWidget();
-      input->getVariablesTabContentsWidget()->setDisabled(true);
+      connect(this, SIGNAL(pipelineStarted()), w, SLOT(toRunningState()));
+      connect(this, SIGNAL(pipelineCanceled()), w, SLOT(toIdleState()));
+      connect(this, SIGNAL(pipelineFinished()), w, SLOT(toIdleState()));
     }
   }
 
-  pipelineViewWidget->setAcceptDrops(false);
+  // Connect signals and slots between DREAM3D_UI and PipelineViewWidget
+  connect(this, SIGNAL(pipelineStarted()), pipelineViewWidget, SLOT(toRunningState()));
+  connect(this, SIGNAL(pipelineCanceled()), pipelineViewWidget, SLOT(toIdleState()));
+  connect(this, SIGNAL(pipelineFinished()), pipelineViewWidget, SLOT(toIdleState()));
+
+  // Block FilterListDockWidget signals, so that we can't add filters to the view while running the pipeline
+  filterListDockWidget->blockSignals(true);
+
+  // Block FilterLibraryDockWidget signals, so that we can't add filters to the view while running the pipeline
+  filterLibraryDockWidget->blockSignals(true);
+
+  // Disable the "Clear Pipeline" menu option
+  m_ActionClearPipeline->setDisabled(true);
 
   // Move the FilterPipeline object into the thread that we just created.
   m_PipelineInFlight->moveToThread(m_WorkerThread);
@@ -1548,19 +1565,17 @@ void DREAM3D_UI::pipelineDidFinish()
   m_PipelineInFlight = FilterPipeline::NullPointer();// This _should_ remove all the filters and deallocate them
   startPipelineBtn->setText("Go");
   m_ProgressBar->setValue(0);
-  
-  for (int i = 0; i < pipelineViewWidget->filterCount(); i++)
-  {
-    PipelineFilterWidget* w = pipelineViewWidget->filterWidgetAt(i);
 
-    if (NULL != w)
-    {
-      FilterInputWidget* input = w->getFilterInputWidget();
-      input->getVariablesTabContentsWidget()->setEnabled(true);
-    }
-  }
+  // Enable the "Clear Pipeline" menu option
+  m_ActionClearPipeline->setEnabled(true);
 
-  pipelineViewWidget->setAcceptDrops(true);
+  // Re-enable FilterListDockWidget signals - resume adding filters
+  filterListDockWidget->blockSignals(false);
+
+  // Re-enable FilterLibraryDockWidget signals - resume adding filters
+  filterLibraryDockWidget->blockSignals(false);
+
+  emit pipelineFinished();
 }
 
 

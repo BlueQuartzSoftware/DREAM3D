@@ -892,4 +892,22 @@ FilterInputWidget* PipelineFilterWidget::getFilterInputWidget()
   return m_FilterInputWidget;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::toRunningState()
+{
+  m_FilterInputWidget->getVariablesTabContentsWidget()->setDisabled(true);
+  deleteBtn->setDisabled(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::toIdleState()
+{
+  m_FilterInputWidget->getVariablesTabContentsWidget()->setEnabled(true);
+  deleteBtn->setEnabled(true);
+}
+
 

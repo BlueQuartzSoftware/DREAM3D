@@ -165,6 +165,16 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     */
     void launchHelpForItem();
 
+    /**
+    * @brief toRunningState
+    */
+    void toRunningState();
+
+    /**
+    * @brief toIdleState
+    */
+    void toIdleState();
+
   protected slots:
     /**
      * @brief on_deleteBtn_clicked

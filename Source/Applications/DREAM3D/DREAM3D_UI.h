@@ -275,6 +275,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void pipelineStarted();
 
+    /**
+    * @brief pipelineFinished
+    */
+    void pipelineFinished();
+
   protected:
 
     /**
