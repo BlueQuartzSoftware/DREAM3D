@@ -133,7 +133,7 @@ void checkInitializationInt(AbstractFilter* filter, double initValue, int32_t er
 {
   filter->setErrorCondition(0);
   QString ss;
-  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "_INTERNAL_USE_ONLY_DO_NOT _USE"); // temporary for use of getTypeAsString()
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "_INTERNAL_USE_ONLY_DO_NOT_USE"); // temporary for use of getTypeAsString()
   QString strType = var->getTypeAsString();
   strType.remove("_t");
 
@@ -156,7 +156,7 @@ void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, in
 {
   filter->setErrorCondition(0);
   QString ss;
-  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "_INTERNAL_USE_ONLY_DO_NOT _USE"); // temporary for use of getTypeAsString()
+  typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "_INTERNAL_USE_ONLY_DO_NOT_USE"); // temporary for use of getTypeAsString()
   QString strType = var->getTypeAsString();
 
   if (!(((initValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (initValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
