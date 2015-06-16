@@ -79,6 +79,12 @@ PluginMaker::PluginMaker(QWidget* parent) :
 // -----------------------------------------------------------------------------
 void PluginMaker::setupGui()
 {
+  // Setup error string
+  errorString->setTextFormat(Qt::PlainText);
+  errorString->setTextInteractionFlags(Qt::NoTextInteraction);
+  errorString->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
+  errorString->setText("");
+
   // Stretch Factors
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
@@ -790,20 +796,21 @@ void PluginMaker::on_m_PluginName_textChanged(const QString& text)
     generateButton->setDisabled(true);
     if (m_PluginName->text().isEmpty())
     {
-      emit updateStatusBar("The plugin name has not been chosen.");
+      errorString->setText("The plugin name has not been chosen.");
     }
     else if (m_OutputDir->text().isEmpty())
     {
-      emit updateStatusBar("The output directory has not been selected.");
+      errorString->setText("The output directory has not been selected.");
     }
     else
     {
-      emit updateStatusBar("The currently selected output directory does not exist.");
+      errorString->setText("The currently selected output directory does not exist.");
     }
   }
   else
   {
     generateButton->setEnabled(true);
+    errorString->setText("");
     emit updateStatusBar("Ready");
   }
 }
@@ -820,20 +827,21 @@ void PluginMaker::on_m_OutputDir_textChanged(const QString& text)
     generateButton->setDisabled(true);
     if (m_PluginName->text().isEmpty())
     {
-      emit updateStatusBar("The plugin name has not been chosen.");
+      errorString->setText("The plugin name has not been chosen.  Please choose a plugin name.");
     }
     else if (m_OutputDir->text().isEmpty())
     {
-      emit updateStatusBar("The output directory has not been selected.");
+      errorString->setText("The output directory has not been selected.  Please select an output directory.");
     }
     else
     {
-      emit updateStatusBar("The currently selected output directory does not exist.");
+      errorString->setText("The currently selected output directory does not exist.");
     }
   }
   else
   {
     generateButton->setEnabled(true);
+    errorString->setText("");
     emit updateStatusBar("Ready");
   }
 }
