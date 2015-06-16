@@ -43,6 +43,7 @@
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/TimeUtilities.h"
 
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
@@ -208,23 +209,28 @@ void MatchCrystallography::dataCheck()
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this,  getSurfaceFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName());
   m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   cDims[0] = 3;
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getFeatureEulerAnglesArrayName());
   m_FeatureEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   cDims[0] = 4;
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAvgQuatsArrayName());
   m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   cDims[0] = 1;
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), cDims);
@@ -647,10 +653,25 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   badtrycount = 0;
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[ensem]) { numbins = 18 * 18 * 18; }
   if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[ensem]) { numbins = 36 * 36 * 12; }
+
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  uint64_t startMillis = millis;
+  int32_t lastIteration = 0;
   while (badtrycount < (m_MaxIterations / 10) && iterations < m_MaxIterations)
   {
-    //QString ss = QObject::tr("Matching Crystallography - Swapping/Switching Orientations - %1% Complete").arg(((float)iterations / float(1000 * totalFeatures)) * 100);
-    //notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
+    if (currentMillis - millis > 1000)
+    {
+      QString ss = QObject::tr("Swapping/Switching Orientations Iteration %1/%2").arg(iterations).arg(m_MaxIterations);
+      float timeDiff = ((float)iterations / (float)(currentMillis - startMillis));
+      float estimatedTime = (float)(m_MaxIterations - iterations) / timeDiff;
+
+      ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
+      millis = QDateTime::currentMSecsSinceEpoch();
+      lastIteration = iterations;
+    }
     currentodferror = 0;
     currentmdferror = 0;
     float* actualOdfPtr = actualodf->getPointer(0);
@@ -668,6 +689,8 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     iterations++;
     badtrycount++;
     random = static_cast<float>( rg.genrand_res53() );
+
+    if (getCancel() == true) { return; }
 
     if (random < 0.5) // SwapOutOrientation
     {
@@ -746,6 +769,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           }
         }
       }
+      if (getCancel() == true) { return; }
     }
     else // SwitchOrientation
     {
@@ -905,7 +929,11 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
         }
       }
     }
+    if (getCancel() == true) { return; }
   }
+
+  if (getCancel() == true) { return; }
+
   for (size_t i = 0; i < totalPoints; i++)
   {
     m_CellEulerAngles[3 * i] = m_FeatureEulerAngles[3 * m_FeatureIds[i]];

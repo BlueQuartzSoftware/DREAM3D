@@ -584,9 +584,6 @@ void InsertAtoms::execute()
     serial.checkPoints(0, numFeatures);
   }
 
-
-  notifyStatusMessage(getHumanLabel(), "Assigning Points");
-
   assign_points(points, inFeature);
 
   notifyStatusMessage(getHumanLabel(), "Complete");

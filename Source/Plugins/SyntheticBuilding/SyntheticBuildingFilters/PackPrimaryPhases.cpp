@@ -35,7 +35,6 @@
 
 
 #include "PackPrimaryPhases.h"
-//#include <algorithm>
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -61,7 +60,6 @@
 #include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
-
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -602,11 +600,11 @@ void PackPrimaryPhases::execute()
 
   if (m_HaveFeatures == false)
   {
-    notifyStatusMessage(getHumanLabel(), "Packing Features - Initializing Volume");
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Initializing Volume");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
     Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
     if(getErrorCondition() < 0) { return; }
-    notifyStatusMessage(getHumanLabel(), "Packing Features - Placing Features");
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Placing Features");
     place_features(featureOwnersPtr);
     if(getErrorCondition() < 0) { return; }
     if (getCancel() == true) { return; }
@@ -614,23 +612,23 @@ void PackPrimaryPhases::execute()
 
   if (m_HaveFeatures == true)
   {
-    notifyStatusMessage(getHumanLabel(), "Loading Features");
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Loading Features");
     load_features();
     if (getCancel() == true) { return; }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Assigning Voxels");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Assigning Voxels");
   assign_voxels();
   if(getErrorCondition() < 0) { return; }
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Assigning Gaps");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Assigning Gaps");
   assign_gaps_only();
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Cleaning Up Volume");
-  //  cleanup_features();
-  if (getCancel() == true) { return; }
+  //notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Cleaning Up Volume");
+  //cleanup_features();
+  //if (getCancel() == true) { return; }
 
   if (m_WriteGoalAttributes == true)
   {
@@ -960,7 +958,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       {
         if (gid % 100 == 0)
         {
-          QString ss = QObject::tr("Packing Features (1/2) - Generating Feature #%1").arg(gid);
+          QString ss = QObject::tr("Packing Features (1/2) || Generating Feature #%1").arg(gid);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         }
         if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()))
@@ -1008,7 +1006,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         change = (currentsizedisterror) - (oldsizedisterror);
         if (change > 0 || currentsizedisterror > (1.0f - (iter * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
         {
-          QString ss = QObject::tr("Packing Features (2/2) - Generating Feature #%1").arg(gid);
+          QString ss = QObject::tr("Packing Features (2/2) || Generating Feature #%1").arg(gid);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
           if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()) )
           {
@@ -1047,8 +1045,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     setErrorCondition(-1);
     return;
   }
-
-  notifyStatusMessage(getHumanLabel(), "Initializing Neighbor Distributions");
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -1161,16 +1157,9 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     move_feature(i, xc, yc, zc);
     fillingerror = check_fillingerror(i, -1000, featureOwnersPtr, exclusionOwnersPtr);
 
-    if (getCancel() == true)
-    {
-      QString ss = QObject::tr("Cancelled");
-      notifyErrorMessage(getHumanLabel(), ss, -1);
-      setErrorCondition(-1);
-      return;
-    }
+    if (getCancel() == true) { return; }
   }
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Determining Neighbors");
   progFeature = 0;
   progFeatureInc = static_cast<int32_t>(totalFeatures * 0.01f);
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
@@ -1185,10 +1174,10 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 1000)
     {
-      QString ss = QObject::tr("Determining Neighbors %1/%2").arg(i).arg(totalFeatures);
+      QString ss = QObject::tr("Determining Neighbors Feature %1/%2").arg(i).arg(totalFeatures);
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFeatures - i) / timeDiff;
-      ss = QObject::tr(" Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
+      ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
@@ -1225,13 +1214,13 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   for (int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
-    if (currentMillis - millis > 5000)
+    if (currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Swapping/Moving/Adding/Removing Features Iteration %1/%2").arg(iteration).arg(totalAdjustments);
       timeDiff = ((float)iteration / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
-      ss = QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
+      ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
@@ -1374,8 +1363,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       }
     }
   }
-
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Feature Adjustment Complete");
 
   if (m_VtkOutputFile.isEmpty() == false)
   {
@@ -2159,7 +2146,6 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::assign_voxels()
 {
-  notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
@@ -2358,7 +2344,6 @@ void PackPrimaryPhases::assign_voxels()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::assign_gaps_only()
 {
-  notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
@@ -2478,7 +2463,6 @@ void PackPrimaryPhases::assign_gaps_only()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::cleanup_features()
 {
-  notifyStatusMessage(getHumanLabel(), "Cleaning Up Features");
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
@@ -2832,7 +2816,7 @@ void PackPrimaryPhases::write_goal_attributes()
     if (((float)i / numTuples) * 100.0f > threshold)
     {
 
-      QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
+      QString ss = QObject::tr("Writing Feature Data || %1% Complete").arg(((float)i / numTuples) * 100);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
@@ -2890,4 +2874,3 @@ const QString PackPrimaryPhases::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString PackPrimaryPhases::getHumanLabel()
 { return "Pack Primary Phases"; }
-

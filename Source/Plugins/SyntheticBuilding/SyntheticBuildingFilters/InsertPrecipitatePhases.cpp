@@ -404,7 +404,7 @@ void InsertPrecipitatePhases::execute()
 
   if (m_HavePrecips == false)
   {
-    notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates");
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
     Int32ArrayType::Pointer exlusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
     exlusionZonesPtr->initializeWithZeros();
@@ -419,11 +419,11 @@ void InsertPrecipitatePhases::execute()
     if (getCancel() == true) { return; }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Assigning Voxels");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Assigning Voxels");
   assign_voxels();
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Filling Gaps");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Filling Gaps");
   assign_gaps();
   if (getCancel() == true) { return; }
 
@@ -442,7 +442,7 @@ void InsertPrecipitatePhases::execute()
   cellFeatureAttrMat->removeAttributeArray(m_NumCellsArrayName);
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "InsertPrecipitatePhases Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -518,10 +518,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     writeErrorFile = true;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
-      DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
@@ -664,7 +663,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       {
         if (currentnumfeatures % 100 == 0)
         {
-          QString ss = QObject::tr("Packing Precipitates - Generating Feature #%1").arg(currentnumfeatures);
+          QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         }
 
@@ -758,10 +757,16 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //boolean used to determine if current placement is acceptable if the precipitates are being treated as "hard"
   bool good = false;
 
+  int32_t progFeature = 0;
+  int32_t progPrecipInc = static_cast<int32_t>(numfeatures * 0.01f);
   for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
   {
-    QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    if (int32_t(i) > progFeature + progPrecipInc)
+    {
+      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      progFeature = i;
+    }
 
     m_Centroids[3 * i] = m_SizeX * 0.5;
     m_Centroids[3 * i + 1] = m_SizeY * 0.5;
@@ -868,8 +873,6 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
     }
   }
-
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
 
   if (m_MatchRDF == true)
   {
@@ -1864,7 +1867,6 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_voxels()
 {
-  notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -2039,7 +2041,6 @@ void InsertPrecipitatePhases::assign_voxels()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_gaps()
 {
-  notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
