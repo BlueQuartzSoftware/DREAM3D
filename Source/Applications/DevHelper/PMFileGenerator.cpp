@@ -193,7 +193,7 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
   QString pluginDir = getOutputDir();
   QString text = "";
 
-  if (pluginName.isEmpty() == true || pluginDir.isEmpty() == true)
+  if (pluginName.isEmpty() == true)
   {
     return text;
   }
