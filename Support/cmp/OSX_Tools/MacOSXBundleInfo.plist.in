@@ -5,18 +5,17 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
-	<array>
+  <array>
     <dict>
-        <key>CFBundleTypeName</key>
-        <string>JSON</string>
-        <key>LSHandlerRank</key>
-        <string>Alternate</string>
-        <key>LSItemContentTypes</key>
+        <key>CFBundleTypeExtensions</key>
         <array>
-            <string>public.json</string>
-        </array>
+              <string>json</string>
+              <string>dream3d</string>
+              <string>ini</string>
+              <string>txt</string>
+      </array>
     </dict>
-	</array>
+  </array>
 	<key>CFBundleExecutable</key>
 	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>

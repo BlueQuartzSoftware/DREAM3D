@@ -167,8 +167,8 @@ function(BuildQtAppBundle)
 
 #-- Make sure we have a proper bundle icon. This must occur AFTER the add_executable command
     if(APPLE)
-        ConfigureMacOSXBundlePlist( ${QAB_TARGET} ${QAB_DEBUG_EXTENSION} ${QAB_ICON_FILE}
-                                     "${QAB_VERSION_MAJOR}.${QAB_VERSION_MINOR}.${QAB_VERSION_PATCH}" )
+      ConfigureMacOSXBundlePlist( "${QAB_TARGET}" "${QAB_DEBUG_EXTENSION}" "${QAB_ICON_FILE}"
+                                     "${${QAB_TARGET}_VERSION_MAJOR}.${${QAB_TARGET}_VERSION_MINOR}.${${QAB_TARGET}_VERSION_PATCH}" )
     endif(APPLE)
 
 #-- Set the Debug Suffix for the application

@@ -1,7 +1,6 @@
 #--////////////////////////////////////////////////////////////////////////////
 #--
-#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+#--  Copyright (c) 2015 BlueQuartz Software, LLC
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
@@ -9,7 +8,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
-PROJECT( DREAM3D VERSION 5.2)
+PROJECT( DREAM3D VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH})
 
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
