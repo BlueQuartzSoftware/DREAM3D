@@ -435,8 +435,7 @@ bool DREAM3D_UI::savePipelineAs()
   if (err >= 0)
   {
     // Set window title and save flag
-    QFileInfo prefFileInfo = QFileInfo(filePath);
-    setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
+    setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
     setWindowModified(false);
 
     // Add file to the recent files list
@@ -452,6 +451,19 @@ bool DREAM3D_UI::savePipelineAs()
 
   // Cache the last directory
   m_OpenDialogLastDirectory = fi.path();
+
+  QMessageBox bookmarkMsgBox;
+  bookmarkMsgBox.setWindowTitle("Pipeline Saved");
+  bookmarkMsgBox.setText("The pipeline has been saved.");
+  bookmarkMsgBox.setInformativeText("Would you also like to bookmark this pipeline?");
+  bookmarkMsgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  bookmarkMsgBox.setDefaultButton(QMessageBox::Yes);
+  int ret = bookmarkMsgBox.exec();
+
+  if (ret == QMessageBox::Yes)
+  {
+    emit bookmarkNeedsToBeAdded(filePath, QModelIndex());
+  }
 
   return true;
 }
@@ -733,6 +745,9 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
     this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
 
+  disconnect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
+    bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
+
   disconnect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
 
@@ -769,6 +784,9 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
     this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
+
+  connect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
+    bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
 
   connect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));

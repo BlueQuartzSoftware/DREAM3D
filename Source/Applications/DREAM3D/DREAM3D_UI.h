@@ -263,6 +263,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     // Our Signals that we can emit custom for this class
   signals:
+
+    /**
+    * @brief bookmarkNeedsToBeAdded
+    */
+    void bookmarkNeedsToBeAdded(const QString &filePath, const QModelIndex &parent);
+
     void parentResized();
 
     /**

@@ -483,28 +483,36 @@ void BookmarksDockWidget::m_ActionAddPipeline_triggered()
   {
     QString newPrefPath = newPrefPaths[i];
     newPrefPath = QDir::toNativeSeparators(newPrefPath);
-    QFileInfo fi(newPrefPath);
-    QString fileTitle = fi.baseName();
-    int err = addTreeItem(parent, fileTitle, QIcon(":/text.png"), newPrefPath, true, false, false);
-    if (err >= 0)
-    {
-      emit updateStatusBar("The pipeline '" + fileTitle + "' has been added successfully.");
-      bookmarksTreeView->expand(parent);
-    }
-    else if (err == UNRECOGNIZED_EXT)
-    {
-      emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added, because the pipeline file extension was not recognized.");
-    }
-    else
-    {
-      emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added.  An unknown error has occurred.  Please contact the DREAM3D developers.");
-    }
+    addBookmark(newPrefPath, parent);
   }
 
   if (newPrefPaths.size() > 0)
   {
     // Cache the directory from the last path added
     m_OpenDialogLastDirectory = newPrefPaths[newPrefPaths.size() - 1];
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksDockWidget::addBookmark(const QString &filePath, const QModelIndex &parent)
+{
+  QFileInfo fi(filePath);
+  QString fileTitle = fi.baseName();
+  int err = addTreeItem(parent, fileTitle, QIcon(":/text.png"), filePath, true, false, false);
+  if (err >= 0)
+  {
+    emit updateStatusBar("The pipeline '" + fileTitle + "' has been added successfully.");
+    bookmarksTreeView->expand(parent);
+  }
+  else if (err == UNRECOGNIZED_EXT)
+  {
+    emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added, because the pipeline file extension was not recognized.");
+  }
+  else
+  {
+    emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added.  An unknown error has occurred.  Please contact the DREAM3D developers.");
   }
 }
 

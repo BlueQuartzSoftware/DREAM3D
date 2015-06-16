@@ -148,6 +148,13 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     bool editState,
     bool isExpanded);
 
+  /**
+  * @brief BookmarksDockWidget::addBookmark
+  * @param filePath
+  * @param parent
+  */
+  void addBookmark(const QString &filePath, const QModelIndex &parent);
+
     //// Slots to catch signals from the QTreeWidget
     void on_bookmarksTreeView_clicked(const QModelIndex & index);
     void on_bookmarksTreeView_doubleClicked(const QModelIndex & index);
