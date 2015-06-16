@@ -243,9 +243,9 @@ void RawBinaryReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Override Origin and Resolution", "OverrideOriginResolution", FilterParameterWidgetType::BooleanWidget, getOverrideOriginResolution(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Add to Existing Data Container and Attribute Matrix", "AddToExistingAttributeMatrix", FilterParameterWidgetType::BooleanWidget, getDataContainerName(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
