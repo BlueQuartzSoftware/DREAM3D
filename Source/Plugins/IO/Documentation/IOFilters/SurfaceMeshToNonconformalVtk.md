@@ -2,36 +2,35 @@ Write NonConformal Vtk PolyData from SurfaceMesh {#surfacemeshtononconformalvtk}
 ======
 
 ## Group (Subgroup) ##
-IO Filters (Output)
+I/O Filters (Output)
 
 ## Description ##
+This filter will create a "legacy" vtk file (.vtk) that contains the POINTS and POLYGONS, where each POLYGON is a triangle.
+In addition the NODE_TYPE will be written as POINT_DATA and the GRAIN_ID will be written as CELL_DATA. There are 2 options for this filter.
+
+__Write Binary Vtk File__ If this option is selected then the data portions of the file will be written in Big Endian
+binary format as stipulated by the VTK file format.
 
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Output Vtk File | Output File |
-| Write Binary Vtk File | Boolean (On or Off) |
+| Name | Type | Description |
+|------|------|-------------|
+| Output Vtk File | Output Path | Creates a .vtk file |
+| Write Binary Vtk File | Boolean | binary |
 
-## Required DataContainers ##
-SurfaceMesh
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| NodeArray Attribute | SurfaceMeshNodeType | The node types values |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Feature** Id Labels for each Face(Triangle) |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| NodeArray | | The shared node (vertex) list |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| FaceArray | | The list of all triangles (faces) in the mesh |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| Triangle | SurfaceMeshFaceLabels | int  | (2)   | The list of all triangles (faces) in the mesh. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| Vertex | SurfaceMeshNodeType | int | (1) | The shared node (vertex) list. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 
 ## Created Arrays ##
 None
-
-
-
 
 ## License & Copyright ##
 

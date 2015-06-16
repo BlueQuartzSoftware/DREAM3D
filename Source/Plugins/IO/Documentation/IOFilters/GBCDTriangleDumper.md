@@ -8,42 +8,34 @@ __This filter is highly experimental and under heavy development. Future version
 
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+I/O Filters (Misc)
 
 
 ## Description ##
-This filter does the following...
+This filter writes Grain Boundary Character Distribution (GBCD) triangles.
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Feature Array Name | String |
+| Name | Type | Description |
+|------|------|------|
+| Output File | File Path | GBCD Triangles File |
+
+
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Triangle | SurfaceMeshFaceLabels | Int  | (2)   | The list of all triangles (faces) in the mesh |
+| Face | SurfaceMeshFaceNormals | Double | (2) | |
+| Face  | SurfaceMeshFaceAreas | Double | (2) | |
+| Feature  | FeatureEulerAngles | Float | (3) | |
 
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
-
-
-## Authors ##
-
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-
+None
 
 ## License & Copyright ##
 

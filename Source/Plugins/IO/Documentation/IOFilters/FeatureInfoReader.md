@@ -33,28 +33,29 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Input Feature Info File | Input File |
-| Create Cell Level Arrays | Boolean (On or Off) |
+| Name | Type | Description |
+|------|------|-------------|
+| Input Feature Info File | File Path |  |
+| Create Cell Level Arrays | Boolean | existing arrays overwritten  |
+| Renumber Features | Boolean | Randomly shuffle the FeatureIds  |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | FeatureIds | Ids (int) that specify to which **Feature** each **Cell** belongs.| (1) | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 ## Created Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) | Only created if boolean is checked |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Only created if boolean is checked |
-| Feature | FeatureEulerAngles | Three (3) angles (floats) defining the orientation of each **Feature** in Bunge convention (Z-X-Z) |  |
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature** |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|----------|
+| Cell | CellEulerAngles | Float | (3)  |Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z). Only created if boolean is checked |
+| Cell | CellPhases | Int | (1) | Phase Id (int) specifying the phase of the **Cell**. Only created if boolean is checked |
+| Feature | FeatureEulerAngles | Float | (3) | Three (3) angles (floats) defining the orientation of each **Feature** in Bunge convention (Z-X-Z) |
+| Feature | FeaturePhases | Int | (1) | Phase Id (int) specifying the phase of the **Feature** |
 
 
 ## License & Copyright ##

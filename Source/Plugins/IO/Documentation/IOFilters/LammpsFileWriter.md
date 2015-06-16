@@ -21,13 +21,6 @@ IO Filters
 ## Created Arrays ##
 
 
-## Authors ##
-
-
-
-
-
-
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

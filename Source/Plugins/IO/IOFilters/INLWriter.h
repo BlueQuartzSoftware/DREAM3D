@@ -64,7 +64,8 @@ class  INLWriter : public FileWriter
 
     virtual ~INLWriter();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNamesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+    Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -120,7 +121,9 @@ class  INLWriter : public FileWriter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
-    StringDataArray::Pointer m_MaterialNames;
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+    StringDataArray::WeakPointer m_MaterialNamePtr;
 
     void dataCheck();
 

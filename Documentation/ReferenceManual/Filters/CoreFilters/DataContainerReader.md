@@ -6,27 +6,26 @@ I/O Filters (Input)
 
 ## Description ##
 
-The user is able to select which arrays from the DREAM3D data file to read. There are 3 types of arrays for each of the 3 types of DataContainer Objects in the file. Only the arrays that are selected by the user are read into memory.
+The user selects the .dream3d file to be read from Select File. Only the arrays that are selected by the user are read into memory. The Overwrite Existing Data Container check box is useful if the filter is placed in the middle of a pipeline.
+
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Input File | File Path |
-| Read Cell Data | Boolean (On or Off) |
-| Read Feature Data | Boolean (On or Off) |
-| Read Ensemble Data | Boolean (On or Off) |
+| Name | Type | Description |
+|------|------|--------------|
+| Select File | File Path | Select .dream3d file to be read |
+| Overwrite Existing DataContainers | Boolean | |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell/Feature/Ensemble | *User Chosen* |  | Array(s) will always be present in file, since the user may only chose from arrays found by the reader |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any | User set | Any | Any | Array(s) will always be present in file, since the user may only chose from arrays found by the reader. |
 
 
 

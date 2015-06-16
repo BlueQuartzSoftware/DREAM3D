@@ -8,30 +8,18 @@ Core Filters (Memory/Management)
 This filter renames a user chosen AttributeMatrx to a user defined new name.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| New Attribute Matrix Name| String | New Name |
 
-| Name | Type |
-|------|------|
-| Array Name | String |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| *User Chosen* | *User Chosen* |  | AttributeMatrx will always be present, since the user may only chose from existing arrays | N/A |
-
+None
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| *User Chosen* | *User Defined* | | AttributeMatrx will have same values as its old counterpart |
-
-
-
-
+None
 
 ## License & Copyright ##
 
