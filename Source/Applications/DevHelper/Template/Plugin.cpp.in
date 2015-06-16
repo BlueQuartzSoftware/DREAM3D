@@ -43,7 +43,7 @@ m_DidLoad(false)
 // -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getPluginName()
 {
-  return (Detail::@PluginName@PluginDisplayName);
+  return (@PluginName@Constants::@PluginName@PluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

@@ -14,7 +14,11 @@ namespace @PluginName@Constants
   const QString @PluginName@PluginFile("@PluginName@Plugin");
   const QString @PluginName@PluginDisplayName("@PluginName@Plugin");
   const QString @PluginName@BaseName("@PluginName@Plugin");
-  const QString @PluginName@HumanLabel("@PluginName@");
+
+  namespace FilterGroups
+  {
+  	const QString @PluginName@Filters("@PluginName@");
+  }
 }
 
 /**
