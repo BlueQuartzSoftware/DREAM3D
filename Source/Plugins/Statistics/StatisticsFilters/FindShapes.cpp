@@ -90,13 +90,13 @@ void FindShapes::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), FilterParameter::RequiredArray, ""));
 
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayName", FilterParameterWidgetType::StringWidget, getOmega3sArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Axis Lengths", "AxisLengthsArrayName", FilterParameterWidgetType::StringWidget, getAxisLengthsArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getAxisEulerAnglesArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayName", FilterParameterWidgetType::StringWidget, getAspectRatiosArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
