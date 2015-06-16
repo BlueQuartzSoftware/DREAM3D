@@ -423,6 +423,17 @@ void InsertPrecipitatePhases::execute()
   assign_gaps();
   if (getCancel() == true) { return; }
 
+  // At this point we are done reassigning values to all arrays, so we are safe to copy
+  // down the Feature phases to the cells ; the Feature phases are correct from the
+  // generate_precipitate() function, but the cell phases are best done after all
+  // assignment since cell values may be cleaned up after Feature generation
+  size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  for (size_t i = 0; i < numTuples; i++)
+  {
+    m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]];
+  }
+
+
   if (m_WriteGoalAttributes == true)
   {
     write_goal_attributes();
@@ -2140,7 +2151,6 @@ void InsertPrecipitatePhases::assign_gaps()
       if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
       {
         m_FeatureIds[j] = m_FeatureIds[neighbor];
-        m_CellPhases[j] = m_FeaturePhases[m_FeatureIds[neighbor]];
       }
     }
     if (iterationCounter >= 1)
@@ -2148,6 +2158,7 @@ void InsertPrecipitatePhases::assign_gaps()
       QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
+    if(getCancel() == true) { return; }
   }
 }
 

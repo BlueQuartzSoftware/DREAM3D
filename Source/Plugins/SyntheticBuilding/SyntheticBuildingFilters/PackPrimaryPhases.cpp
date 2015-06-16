@@ -915,14 +915,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
-  if (getCancel() == true)
-  {
-    std::cout << "PackPrimaryPhases: " << this << std::endl;
-    QString ss = QObject::tr("Cancelled");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return;
-  }
+  if (getCancel() == true) { return; }
 
   // generate the features and monitor the size distribution error while doing so. After features are generated, no new features can enter or leave the structure.
   Feature_t feature;
@@ -973,13 +966,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         iter = 0;
         gid++;
       }
-      if (getCancel() == true)
-      {
-        QString ss = QObject::tr("Cancelled");
-        notifyErrorMessage(getHumanLabel(), ss, -1);
-        setErrorCondition(-1);
-        return;
-      }
+      if (getCancel() == true) { return; }
     }
   }
 
@@ -1019,13 +1006,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
           iter = 0;
           gid++;
         }
-        if (getCancel() == true)
-        {
-          QString ss = QObject::tr("Cancelled");
-          notifyErrorMessage(getHumanLabel(), ss, -1);
-          setErrorCondition(-1);
-          return;
-        }
+        if (getCancel() == true) { return; }
       }
     }
   }
@@ -1036,13 +1017,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
 
-  if (getCancel() == true)
-  {
-    QString ss = QObject::tr("Cancelled");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return;
-  }
+  if (getCancel() == true) { return; }
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -1092,13 +1067,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
-  if (getCancel() == true)
-  {
-    QString ss = QObject::tr("Cancelled");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return;
-  }
+  if (getCancel() == true) { return; }
 
   columnlist.resize(totalFeatures);
   rowlist.resize(totalFeatures);
@@ -1226,13 +1195,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     }
 
 
-    if (getCancel() == true)
-    {
-      QString ss = QObject::tr("Cancelled");
-      notifyErrorMessage(getHumanLabel(), ss, -1);
-      setErrorCondition(-1);
-      return;
-    }
+    if (getCancel() == true) { return; }
 
     int32_t option = iteration % 2;
 
@@ -2319,13 +2282,7 @@ void PackPrimaryPhases::assign_voxels()
 
   // need to update pointers after resize, but do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
-  if (getCancel() == true)
-  {
-    QString ss = QObject::tr("Cancelled");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return;
-  }
+  if (getCancel() == true) { return; }
 
   for (size_t i = 0; i < totalPoints; i++)
   {
