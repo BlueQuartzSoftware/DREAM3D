@@ -171,7 +171,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285",
+        "FilterVersion": "5.2.1704",
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
         "GoodVoxelsArrayPath": {
@@ -203,7 +203,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285",
+        "FilterVersion": "5.2.1704",
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
         "Level": 2,
@@ -216,6 +216,146 @@
         }
     },
     "3": {
+        "DataArraysToRemove": {
+            "Data Containers": [
+                {
+                    "Attribute Matricies": [
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Confidence Index",
+                                    "Object Type": "float",
+                                    "Path": "VolumeDataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "EulerAngles",
+                                    "Object Type": "float",
+                                    "Path": "VolumeDataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "IPFColor",
+                                    "Object Type": "uint8_t",
+                                    "Path": "VolumeDataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Image Quality",
+                                    "Object Type": "float",
+                                    "Path": "VolumeDataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Phases",
+                                    "Object Type": "int32_t",
+                                    "Path": "VolumeDataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Quats",
+                                    "Object Type": "float",
+                                    "Path": "VolumeDataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "ThresholdArray",
+                                    "Object Type": "bool",
+                                    "Path": "VolumeDataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 0,
+                            "Name": "CellData",
+                            "Type": 3
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "CrystalStructures",
+                                    "Object Type": "uint32_t",
+                                    "Path": "VolumeDataContainer/CellEnsembleData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "LatticeConstants",
+                                    "Object Type": "float",
+                                    "Path": "VolumeDataContainer/CellEnsembleData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "MaterialName",
+                                    "Object Type": "StringDataArray",
+                                    "Path": "VolumeDataContainer/CellEnsembleData/",
+                                    "Tuple Dimensions": [
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 0,
+                            "Name": "CellEnsembleData",
+                            "Type": 11
+                        }
+                    ],
+                    "Flag": 0,
+                    "Name": "VolumeDataContainer",
+                    "Type": 0
+                }
+            ]
+        },
+        "FilterVersion": "5.2.1704",
+        "Filter_Human_Label": "Delete Data",
+        "Filter_Name": "RemoveArrays"
+    },
+    "4": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
@@ -232,12 +372,12 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1285",
+        "FilterVersion": "5.2.1704",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "CellData",
-            "Data Array Name": "",
+            "Data Array Name": "ThresholdArray",
             "Data Container Name": "VolumeDataContainer"
         },
         "ReferenceDir": {
@@ -245,18 +385,18 @@
             "y": 0,
             "z": 1
         },
-        "UseGoodVoxels": 0
+        "UseGoodVoxels": 1
     },
-    "4": {
-        "FilterVersion": "5.2.1285",
+    "5": {
+        "FilterVersion": "5.2.1704",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(06) Small IN100 Clean Up",
-        "Number_Filters": 5,
-        "Version": "5.2.1285"
+        "Name": "(06) SmallIN100 CleanUp",
+        "Number_Filters": 6,
+        "Version": "5.2"
     }
 }

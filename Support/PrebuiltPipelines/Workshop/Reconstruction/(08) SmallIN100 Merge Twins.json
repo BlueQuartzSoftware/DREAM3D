@@ -263,9 +263,9 @@
         "FilterVersion": "5.2.1285",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
-        "NeighborListArrayName": "NeighborList",
-        "NumNeighborsArrayName": "NumNeighbors",
-        "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList",
+        "NeighborListArrayName": "NeighborList2",
+        "NumNeighborsArrayName": "NumNeighbors2",
+        "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList2",
         "StoreBoundaryCells": 0,
         "StoreSurfaceFeatures": 0,
         "SurfaceFeaturesArrayName": "SurfaceFeatures"
@@ -280,6 +280,11 @@
         },
         "AxisTolerance": 3,
         "CellParentIdsArrayName": "ParentIds",
+        "ContiguousNeighborListArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "NeighborList2",
+            "Data Container Name": "VolumeDataContainer"
+        },
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
@@ -296,9 +301,16 @@
             "Data Array Name": "Phases",
             "Data Container Name": "VolumeDataContainer"
         },
+        "FilterVersion": "5.2.1300.4e4405e",
         "Filter_Human_Label": "Merge Twins",
         "Filter_Name": "MergeTwins",
-        "NewCellFeatureAttributeMatrixName": "NewCellFeatureData"
+        "NewCellFeatureAttributeMatrixName": "NewCellFeatureData",
+        "NonContiguousNeighborListArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "NeighborhoodList",
+            "Data Container Name": "DataContainer"
+        },
+        "UseNonContiguousNeighbors": 0
     },
     "5": {
         "FilterVersion": "5.2.1285",

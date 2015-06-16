@@ -457,6 +457,19 @@
                                         1
                                     ],
                                     "Flag": 2,
+                                    "Name": "NumNeighbors2",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
                                     "Name": "Omega3s",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
@@ -496,6 +509,19 @@
                                         1
                                     ],
                                     "Flag": 2,
+                                    "Name": "Shape Volumes",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
                                     "Name": "SharedSurfaceAreaList",
                                     "Object Type": "NeighborList<T>",
                                     "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
@@ -509,7 +535,7 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "Volumes",
+                                    "Name": "Size Volumes",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
@@ -558,9 +584,9 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "VolumeDataContainer"
         },
-        "FilterVersion": "5.2.1325.091b8ac",
-        "Filter_Human_Label": "Create Cell Array From Feature Array",
-        "Filter_Name": "CopyFeatureArrayToCellArray",
+        "FilterVersion": "5.2.1705",
+        "Filter_Human_Label": "Create Element Array From Feature Array",
+        "Filter_Name": "CopyFeatureArrayToElementArray",
         "SelectedFeatureArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "EquivalentDiameters",
@@ -568,7 +594,7 @@
         }
     },
     "2": {
-        "FilterVersion": "5.2.1325.091b8ac",
+        "FilterVersion": "5.2.1705",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -577,6 +603,6 @@
     "PipelineBuilder": {
         "Name": "(03) SmallIN100 Transfer Field Data",
         "Number_Filters": 3,
-        "Version": "5.2.1325.091b8ac"
+        "Version": "5.2"
     }
 }
