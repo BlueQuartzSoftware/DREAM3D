@@ -179,7 +179,7 @@ QT5_WRAP_UI( QtSupportLib_Generated_UI_HDRS ${DREAM3D_QT_UI_FILES} )
 
 # --------------------------------------------------------------------
 #-- Put the generated files into their own group for IDEs
-cmp_IDE_SOURCE_PROPERTIES( "Generated" "${QtSupportLib_Generated_UI_HDRS}" "${QtSupportLib_Generated_MOC_SRCS};${QtSupportLib_Generated_RC_SRCS}" "0")
+#cmp_IDE_SOURCE_PROPERTIES( "Generated" "${QtSupportLib_Generated_UI_HDRS}" "${QtSupportLib_Generated_MOC_SRCS};${QtSupportLib_Generated_RC_SRCS}" "0")
 
 set(Project_SRCS ${Project_SRCS}
   ${QtSupportLib_SRCS}
@@ -189,7 +189,7 @@ set(Project_SRCS ${Project_SRCS}
   ${QtSupportLib_Generated_MOC_SRCS}
   # -- Add in our Generated Version Files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
-  ${${PLUGIN_NAME}_BINARY_DIR}/ ${VERSION_SOURCE_FILE_NAME}
+  ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_SOURCE_FILE_NAME}
 )
 
 include_directories(${QtSupportLib_SOURCE_DIR}/..)
