@@ -2,8 +2,7 @@ Convert Data (Voxel Cell) {#convertdata}
 =====
 
 ## Group (Subgroup) ##
-Generic (Misc)
-
+Core Filters (Misc)
 
 
 ## Description ##
@@ -24,43 +23,27 @@ Down casting can have undefined behavior depending on the primitive types involv
 
 **Signed/Unsigned Conversions**
 
-When converting data from signed values to unsigned values or vice-versa then there can also be undefined behavior. For example if the user were to convert a signed 4 byte integer array to an unsigned 4 byte integer array and the input array has negative values then the conversion rules are undefined and may differ from operating system to operating system.
+When converting data from signed values to unsigned values or vice-versa then there can also be undefined behavior. For example, if the user were to convert a signed 4 byte integer array to an unsigned 4 byte integer array and the input array has negative values then the conversion rules are undefined and may differ from operating system to operating system.
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Input Array Name | String |  
-| Scalar Type      | Enumeration |  
-| Output Array Name | String |
+| Name             | Type | Description |
+|------------------|------|--------------|
+| Scalar Type      | Enumeration | Convert to this data type |
+
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
-The array that is being converted must be available during runtime of the filter
-
-## Required Data Containers ##
-
-Volume DataContainer
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any  | Attribute Array Name | Any | (1) | Array to convert |
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Variable  | Depends on User Selection | The converted array | other   |
-
-
-
-## Authors ##
-
-**Copyright** 2013 Michael A. Jackson (BlueQuartz Software)
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Variable | Output Array Name | Variable | (1) | The converted array |
 
 ## License & Copyright ##
 

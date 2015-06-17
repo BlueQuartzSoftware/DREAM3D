@@ -1,5 +1,13 @@
-project(DevHelper)
-cmake_minimum_required(VERSION 3.1.0)
+#--////////////////////////////////////////////////////////////////////////////
+#--
+#--  Copyright (c) 2015 BlueQuartz Software, LLC
+#--  All rights reserved.
+#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
+#--
+#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
+#--
+#--////////////////////////////////////////////////////////////////////////////
+PROJECT( DevHelper VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH})
 
 
 # --------------------------------------------------------------------

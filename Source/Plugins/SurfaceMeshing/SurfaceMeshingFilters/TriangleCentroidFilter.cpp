@@ -95,8 +95,7 @@ class CalculateCentroidsImpl
 // -----------------------------------------------------------------------------
 TriangleCentroidFilter::TriangleCentroidFilter() :
   SurfaceMeshFilter(),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
-  m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
+  m_SurfaceMeshTriangleCentroidsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceCentroids),
   m_SurfaceMeshTriangleCentroids(NULL)
 {
   setupFilterParameters();
@@ -116,9 +115,7 @@ void TriangleCentroidFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix Name", "FaceAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceAttributeMatrixName(), FilterParameter::RequiredArray, ""));
-
-  parameters.push_back(FilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleCentroidsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -129,8 +126,7 @@ void TriangleCentroidFilter::setupFilterParameters()
 void TriangleCentroidFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFaceAttributeMatrixName(reader->readDataArrayPath("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
-  setSurfaceMeshTriangleCentroidsArrayName(reader->readString("SurfaceMeshTriangleCentroidsArrayName", getSurfaceMeshTriangleCentroidsArrayName() ) );
+  setSurfaceMeshTriangleCentroidsArrayPath(reader->readDataArrayPath("SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -141,8 +137,7 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleCentroidsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleCentroidsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -153,17 +148,15 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 void TriangleCentroidFilter::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
-  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName());
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleCentroidsArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
   if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
 
   QVector<size_t> cDims(1, 3);
-  tempPath.update(getFaceAttributeMatrixName().getDataContainerName(), getFaceAttributeMatrixName().getAttributeMatrixName(), getSurfaceMeshTriangleCentroidsArrayName() );
-  m_SurfaceMeshTriangleCentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshTriangleCentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleCentroidsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleCentroidsPtr.lock()); }
@@ -193,7 +186,7 @@ void TriangleCentroidFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getFaceAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshTriangleCentroidsArrayPath().getDataContainerName());
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

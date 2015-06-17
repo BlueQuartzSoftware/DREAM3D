@@ -79,6 +79,12 @@ PluginMaker::PluginMaker(QWidget* parent) :
 // -----------------------------------------------------------------------------
 void PluginMaker::setupGui()
 {
+  // Setup error string
+  errorString->setTextFormat(Qt::PlainText);
+  errorString->setTextInteractionFlags(Qt::NoTextInteraction);
+  errorString->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
+  errorString->setText("");
+
   // Stretch Factors
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
@@ -783,10 +789,30 @@ QString PluginMaker::cleanName_filters(QString name)
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 {
-  //  QString pluginName = cleanName(m_PluginName->text());
-
-  emit updateStatusBar("Ready");
-
+  QString filePath = m_OutputDir->text();
+  QFileInfo fi(filePath);
+  if (m_PluginName->text().isEmpty() || m_OutputDir->text().isEmpty() || fi.exists() == false)
+  {
+    generateButton->setDisabled(true);
+    if (m_PluginName->text().isEmpty())
+    {
+      errorString->setText("The plugin name has not been chosen.");
+    }
+    else if (m_OutputDir->text().isEmpty())
+    {
+      errorString->setText("The output directory has not been selected.");
+    }
+    else
+    {
+      errorString->setText("The currently selected output directory does not exist.");
+    }
+  }
+  else
+  {
+    generateButton->setEnabled(true);
+    errorString->setText("");
+    emit updateStatusBar("Ready");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -794,7 +820,30 @@ void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_OutputDir_textChanged(const QString& text)
 {
-  emit updateStatusBar("Ready");
+  QString filePath = m_OutputDir->text();
+  QFileInfo fi(filePath);
+  if (m_PluginName->text().isEmpty() || m_OutputDir->text().isEmpty() || fi.exists() == false)
+  {
+    generateButton->setDisabled(true);
+    if (m_PluginName->text().isEmpty())
+    {
+      errorString->setText("The plugin name has not been chosen.  Please choose a plugin name.");
+    }
+    else if (m_OutputDir->text().isEmpty())
+    {
+      errorString->setText("The output directory has not been selected.  Please select an output directory.");
+    }
+    else
+    {
+      errorString->setText("The currently selected output directory does not exist.");
+    }
+  }
+  else
+  {
+    generateButton->setEnabled(true);
+    errorString->setText("");
+    emit updateStatusBar("Ready");
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -53,14 +53,11 @@ class FindNumFeatures : public AbstractFilter
 
     virtual ~FindNumFeatures();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
-    Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+    Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

@@ -161,16 +161,16 @@ namespace DREAM3D
   namespace FilterGroups
   {
     const DREAM3D_STRING GenericFilters("Generic");
-    const DREAM3D_STRING OrientationAnalysisFilters("OrientationAnalysis");
+    const DREAM3D_STRING OrientationAnalysisFilters("Orientation Analysis");
     const DREAM3D_STRING IOFilters("IO");
     const DREAM3D_STRING ProcessingFilters("Processing");
     const DREAM3D_STRING ReconstructionFilters("Reconstruction");
     const DREAM3D_STRING SamplingFilters("Sampling");
     const DREAM3D_STRING StatisticsFilters("Statistics");
     const DREAM3D_STRING CustomFilters("Custom");
-    const DREAM3D_STRING SyntheticBuildingFilters("SyntheticBuilding");
-    const DREAM3D_STRING SurfaceMeshingFilters("SurfaceMeshing");
-    const DREAM3D_STRING SolidMeshingFilters("SolidMeshing");
+    const DREAM3D_STRING SyntheticBuildingFilters("Synthetic Building");
+    const DREAM3D_STRING SurfaceMeshingFilters("Surface Meshing");
+    const DREAM3D_STRING SolidMeshingFilters("Solid Meshing");
     const DREAM3D_STRING TestFilters("Test");
     const DREAM3D_STRING CoreFilters("Core");
   }

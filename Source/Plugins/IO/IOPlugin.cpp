@@ -44,17 +44,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
-
+#include "IO/IOConstants.h"
 #include "IO/moc_IOPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString IOPluginFile("IOPlugin");
-  const QString IOPluginDisplayName("IO");
-  const QString IOPluginBaseName("IOPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +75,7 @@ IOPlugin::~IOPlugin()
 // -----------------------------------------------------------------------------
 QString IOPlugin::getPluginName()
 {
-  return (Detail::IOPluginDisplayName);
+  return (IOConstants::IOPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

@@ -44,17 +44,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
-
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/moc_OrientationAnalysisPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
-  const QString OrientationAnalysisPluginDisplayName("OrientationAnalysis");
-  const QString OrientationAnalysisPluginBaseName("OrientationAnalysisPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +75,7 @@ OrientationAnalysisPlugin::~OrientationAnalysisPlugin()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getPluginName()
 {
-  return (Detail::OrientationAnalysisPluginDisplayName);
+  return (OrientationAnalysisConstants::OrientationAnalysisPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

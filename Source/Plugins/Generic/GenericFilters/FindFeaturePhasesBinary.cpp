@@ -48,10 +48,9 @@
 // -----------------------------------------------------------------------------
 FindFeaturePhasesBinary::FindFeaturePhasesBinary() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_FeatureIds(NULL),
   m_GoodVoxels(NULL)
@@ -78,11 +77,8 @@ void FindFeaturePhasesBinary::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
-
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), FilterParameter::CreatedArray, ""));
-
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getFeaturePhasesArrayPath(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
@@ -94,8 +90,7 @@ void FindFeaturePhasesBinary::setupFilterParameters()
 void FindFeaturePhasesBinary::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setFeaturePhasesArrayName(reader->readString("FeaturePhasesArrayName", getFeaturePhasesArrayName() ) );
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() ) );
@@ -108,8 +103,7 @@ void FindFeaturePhasesBinary::readFilterParameters(AbstractFilterParametersReade
 int FindFeaturePhasesBinary::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
@@ -123,8 +117,6 @@ int FindFeaturePhasesBinary::writeFilterParameters(AbstractFilterParametersWrite
 void FindFeaturePhasesBinary::dataCheck()
 {
   setErrorCondition(0);
-
-  DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -143,14 +135,14 @@ void FindFeaturePhasesBinary::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getFeaturePhasesArrayName() );
-  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getFeaturePhasesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(1, 2);
-  getDataContainerArray()->getDataContainer(getCellFeatureAttributeMatrixName().getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  QString cellFeatureDataContainer = getFeaturePhasesArrayPath().getDataContainerName();
+  getDataContainerArray()->getDataContainer(cellFeatureDataContainer)->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
 }
 
 // -----------------------------------------------------------------------------

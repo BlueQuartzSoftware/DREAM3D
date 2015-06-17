@@ -3,7 +3,7 @@ Copy Feature Array To Cell Array {#copyfeaturearraytoelementarray}
 
 ## Group (Subgroup) ##
 
-Generic Filters (Memory/Management)
+Core Filters (Memory/Management)
 
 ## Description ##
 
@@ -11,26 +11,25 @@ This filter copies the values associated with a **Feature** to all the **Cells**
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Feature Array Name | String |
+| Name | Type | Description |
+|------|------| ----------- |
+| New Element Array Name | String | |
 
-## Required DataContainers ##
-
-Voxel DataContainer
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| Feature  | Feature Array To Copy To Element Data | Int | (1) | Feature Array to Copy To Element Data |
+| Cell  | Element Feature Ids  | Any | (1) | Element Feature Ids  |
 
 
 ## Created Arrays ##
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell  | New Element Array Name | Any | (1) | Element Array  |
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | *User Chosen* | | Array will have same name as its **Feature** counterpart |
 
 ## License & Copyright ##
 

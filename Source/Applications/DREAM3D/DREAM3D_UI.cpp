@@ -183,12 +183,12 @@ void DREAM3D_UI::updateFirstRun()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::checkFirstRun()
 {
-  // Launch v5.2 dialog box if this is the first run of v5.2
+  // Launch v6.0 dialog box if this is the first run of v6.0
   DREAM3DSettings prefs;
   bool firstRun = prefs.value("First Run", true).toBool();
   if (firstRun == true)
   {
-    // This is the first run of DREAM3D v5.2, so we need to show the splash screen
+    // This is the first run of DREAM3D v6.0, so we need to show the v6.0 wizard
     DREAM3Dv5Wizard* wizard = new DREAM3Dv5Wizard(this, Qt::WindowTitleHint);
     wizard->exec();
 
@@ -276,15 +276,32 @@ void DREAM3D_UI::on_actionOpen_triggered()
 }
 
 // -----------------------------------------------------------------------------
-//
+/* This is a slot that catches signals from BookmarksDockWidget
+   and PrebuiltPipelinesDockWidget */
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles)
+{
+  //if (pipelineViewWidget->filterCount() > 0)
+  //{
+  //  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, true);
+  //}
+  //else
+  //{
+  //  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, false);
+  //}
+
+  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles, const bool &newWindow)
 {
   QFileInfo fi(filePath);
   QRecentFileList* list = QRecentFileList::instance();
 
-  // If there are filters in the pipeline view, create a new window
-  if (pipelineViewWidget->filterCount() > 0)
+  if (newWindow == true)
   {
     PluginManager* pluginManager = PluginManager::Instance();
     QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
@@ -294,12 +311,7 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
     newInstance->setLoadedPlugins(plugins);
 
     // Read Pipeline
-    int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0, setOpenedFilePath);
-
-    if (setOpenedFilePath == false)
-    {
-      newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
-    }
+    int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0, setOpenedFilePath, true);
 
     // Set Current File Path
     if (err >= 0)
@@ -334,10 +346,9 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
       delete newInstance;
     }
   }
-  // The pipeline view is empty, so open the pipeline in the pipeline view
   else
   {
-    int err = pipelineViewWidget->openPipeline(filePath, 0, setOpenedFilePath);
+    int err = pipelineViewWidget->openPipeline(filePath, 0, setOpenedFilePath, true);
     setOpenDialogLastDirectory(fi.path());
 
     if (err >= 0)
@@ -424,8 +435,7 @@ bool DREAM3D_UI::savePipelineAs()
   if (err >= 0)
   {
     // Set window title and save flag
-    QFileInfo prefFileInfo = QFileInfo(filePath);
-    setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
+    setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
     setWindowModified(false);
 
     // Add file to the recent files list
@@ -441,6 +451,19 @@ bool DREAM3D_UI::savePipelineAs()
 
   // Cache the last directory
   m_OpenDialogLastDirectory = fi.path();
+
+  QMessageBox bookmarkMsgBox;
+  bookmarkMsgBox.setWindowTitle("Pipeline Saved");
+  bookmarkMsgBox.setText("The pipeline has been saved.");
+  bookmarkMsgBox.setInformativeText("Would you also like to bookmark this pipeline?");
+  bookmarkMsgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  bookmarkMsgBox.setDefaultButton(QMessageBox::Yes);
+  int ret = bookmarkMsgBox.exec();
+
+  if (ret == QMessageBox::Yes)
+  {
+    emit bookmarkNeedsToBeAdded(filePath, QModelIndex());
+  }
 
   return true;
 }
@@ -478,6 +501,8 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
 
   writeSettings();
   clearPipeline();
+  dream3dApp->unregisterDREAM3DWindow(this);
+
   event->accept();
 
   if (m_ShouldRestart == true)
@@ -722,6 +747,9 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
     this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
 
+  disconnect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
+    bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
+
   disconnect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
 
@@ -758,6 +786,9 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
     this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
+
+  connect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
+    bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
 
   connect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
@@ -1172,15 +1203,18 @@ void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file, const bool &setOpenedFilePath)
+void DREAM3D_UI::on_pipelineViewWidget_pipelineOpened(QString& file, const bool &setOpenedFilePath, const bool &changeTitle)
 {
   if (setOpenedFilePath == true)
   {
-    QFileInfo fi(file);
-
     m_OpenedFilePath = file;
-    on_pipelineViewWidget_pipelineTitleUpdated(fi.baseName());
     setWindowFilePath(file);
+  }
+
+  if (changeTitle == true)
+  {
+    QFileInfo fi(file);
+    setWindowTitle(QString("[*]") + fi.baseName() + " - DREAM3D");
     setWindowModified(false);
   }
   else
@@ -1195,14 +1229,6 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file, const 
 void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
 {
   setWindowModified(true);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_pipelineViewWidget_pipelineTitleUpdated(QString title)
-{
-  setWindowTitle(QString("[*]") + title + " - DREAM3D");
 }
 
 // -----------------------------------------------------------------------------
@@ -1388,15 +1414,7 @@ void DREAM3D_UI::openRecentFile()
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
     QString filePath = action->data().toString();
-    int err = getPipelineViewWidget()->openPipeline(filePath, 0, true);
-
-    if (err >= 0)
-    {
-      QFileInfo fileInfo(filePath);
-      setWindowTitle("[*]" + fileInfo.baseName() + " - DREAM3D");
-      setOpenedFilePath(filePath);
-      setWindowModified(false);
-    }
+    openNewPipeline(filePath, 0, true, true);
   }
 }
 
@@ -1410,12 +1428,16 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   {
     qDebug() << "canceling from GUI...." << "\n";
     emit pipelineCanceled();
-    //    m_WorkerThread->wait(); // Wait until the thread is complete
-    //    if (m_WorkerThread->isFinished() == true)
-    //    {
-    //      delete m_WorkerThread;
-    //      m_WorkerThread = NULL;
-    //    }
+
+    // Enable the "Clear Pipeline" menu option
+    m_ActionClearPipeline->setEnabled(true);
+
+    // Enable FilterListDockWidget signals - resume adding filters
+    filterListDockWidget->blockSignals(false);
+
+    // Enable FilterLibraryDockWidget signals - resume adding filters
+    filterLibraryDockWidget->blockSignals(false);
+
     return;
   }
 
@@ -1448,8 +1470,32 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   // Save the preferences file NOW in case something happens
   writeSettings();
 
+  // Connect signals and slots between DREAM3D_UI and each PipelineFilterWidget
+  for (int i = 0; i < pipelineViewWidget->filterCount(); i++)
+  {
+    PipelineFilterWidget* w = pipelineViewWidget->filterWidgetAt(i);
 
-  pipelineViewWidget->setEnabled(false);
+    if (NULL != w)
+    {
+      connect(this, SIGNAL(pipelineStarted()), w, SLOT(toRunningState()));
+      connect(this, SIGNAL(pipelineCanceled()), w, SLOT(toIdleState()));
+      connect(this, SIGNAL(pipelineFinished()), w, SLOT(toIdleState()));
+    }
+  }
+
+  // Connect signals and slots between DREAM3D_UI and PipelineViewWidget
+  connect(this, SIGNAL(pipelineStarted()), pipelineViewWidget, SLOT(toRunningState()));
+  connect(this, SIGNAL(pipelineCanceled()), pipelineViewWidget, SLOT(toIdleState()));
+  connect(this, SIGNAL(pipelineFinished()), pipelineViewWidget, SLOT(toIdleState()));
+
+  // Block FilterListDockWidget signals, so that we can't add filters to the view while running the pipeline
+  filterListDockWidget->blockSignals(true);
+
+  // Block FilterLibraryDockWidget signals, so that we can't add filters to the view while running the pipeline
+  filterLibraryDockWidget->blockSignals(true);
+
+  // Disable the "Clear Pipeline" menu option
+  m_ActionClearPipeline->setDisabled(true);
 
   // Move the FilterPipeline object into the thread that we just created.
   m_PipelineInFlight->moveToThread(m_WorkerThread);
@@ -1539,7 +1585,17 @@ void DREAM3D_UI::pipelineDidFinish()
   m_PipelineInFlight = FilterPipeline::NullPointer();// This _should_ remove all the filters and deallocate them
   startPipelineBtn->setText("Go");
   m_ProgressBar->setValue(0);
-  pipelineViewWidget->setEnabled(true);
+
+  // Enable the "Clear Pipeline" menu option
+  m_ActionClearPipeline->setEnabled(true);
+
+  // Re-enable FilterListDockWidget signals - resume adding filters
+  filterListDockWidget->blockSignals(false);
+
+  // Re-enable FilterLibraryDockWidget signals - resume adding filters
+  filterLibraryDockWidget->blockSignals(false);
+
+  emit pipelineFinished();
 }
 
 

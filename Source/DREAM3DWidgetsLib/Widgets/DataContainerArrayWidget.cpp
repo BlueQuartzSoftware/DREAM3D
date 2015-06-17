@@ -121,8 +121,8 @@ void DataContainerArrayWidget::removeNonExistantChildren(QStandardItem* parent, 
   for(int i = childCount - 1; i >= 0; i--)
   {
     QStandardItem* item = parent->child(i);
-    QStringList list = possibleNames.filter(item->text() );
-    if(list.size() == 0) // the name is in the model but NOT in the proxy so we need to remove it
+    int index = possibleNames.indexOf(item->text() );
+    if(index < 0) // the name is in the model but NOT in the proxy so we need to remove it
     {
       //qDebug() << "!! Removing " << item->text();
       parent->removeRow(i);

@@ -282,7 +282,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
       for (int i = 0; i < xpointsslice; i++)
       {
         index = static_cast<int>( (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot) );
-        if (NULL != phasePtr) {m_Phase[index] = phasePtr[readerIndex];} // Phase Add 1 to the phase number because .ctf files are zero based for phases
+        if (NULL != phasePtr) {m_Phase[index] = phasePtr[readerIndex];}
         if (NULL != xPtr) {m_X[index] = xPtr[readerIndex];}
         if (NULL != yPtr) {m_Y[index] = yPtr[readerIndex];}
         if (NULL != bandPtr) {m_Bands[index] = bandPtr[readerIndex];}
@@ -303,10 +303,10 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
          * even if there is only a single phase. The next if statement converts all zeros to ones
          * if there is a single phase in the OIM data.
          */
-        if(NULL != phasePtr && m_Phase[index] < 1)
-        {
-          m_Phase[index] = 1;
-        }
+//        if(NULL != phasePtr && m_Phase[index] < 1)
+//        {
+//          m_Phase[index] = 1;
+//        }
 
         ++readerIndex;
       }

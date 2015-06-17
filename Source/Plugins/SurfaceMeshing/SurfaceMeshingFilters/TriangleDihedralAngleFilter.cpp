@@ -123,8 +123,7 @@ class CalculateDihedralAnglesImpl
 // -----------------------------------------------------------------------------
 TriangleDihedralAngleFilter::TriangleDihedralAngleFilter() :
   SurfaceMeshFilter(),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
-  m_SurfaceMeshTriangleDihedralAnglesArrayName(DREAM3D::FaceData::SurfaceMeshFaceDihedralAngles),
+  m_SurfaceMeshTriangleDihedralAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceDihedralAngles),
   m_SurfaceMeshTriangleDihedralAngles(NULL)
 {
   setupFilterParameters();
@@ -144,9 +143,7 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix Name", "FaceAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceAttributeMatrixName(), FilterParameter::RequiredArray, ""));
-
-  parameters.push_back(FilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleDihedralAnglesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -157,8 +154,7 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
 void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFaceAttributeMatrixName(reader->readDataArrayPath("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
-  setSurfaceMeshTriangleDihedralAnglesArrayName(reader->readString("SurfaceMeshTriangleDihedralAnglesArrayName", getSurfaceMeshTriangleDihedralAnglesArrayName() ) );
+  setSurfaceMeshTriangleDihedralAnglesArrayPath(reader->readDataArrayPath("SurfaceMeshTriangleDihedralAnglesArrayPath", getSurfaceMeshTriangleDihedralAnglesArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -169,8 +165,7 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleDihedralAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleDihedralAnglesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -181,17 +176,15 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 void TriangleDihedralAngleFilter::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
-  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName());
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
   if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getFaceAttributeMatrixName().getDataContainerName(), getFaceAttributeMatrixName().getAttributeMatrixName(), getSurfaceMeshTriangleDihedralAnglesArrayName() );
-  m_SurfaceMeshTriangleDihedralAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshTriangleDihedralAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshTriangleDihedralAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleDihedralAngles = m_SurfaceMeshTriangleDihedralAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleDihedralAnglesPtr.lock()); }
@@ -221,7 +214,7 @@ void TriangleDihedralAngleFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getFaceAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

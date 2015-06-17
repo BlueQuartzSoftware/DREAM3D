@@ -341,7 +341,7 @@ class InsertPrecipitatePhases : public AbstractFilter
      */
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
-    std::vector<int> precipitatephases;
+    std::vector<int32_t> precipitatephases;
     std::vector<float> precipitatephasefractions;
 
   private:

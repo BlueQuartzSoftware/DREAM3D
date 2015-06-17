@@ -95,7 +95,6 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   QStringList linkedProps("EstimatedPrimaryFeatures");
   linkedProps << "InputStatsFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, FilterParameter::Parameter));
@@ -103,16 +102,13 @@ void InitializeSyntheticVolume::setupFilterParameters()
   FilterParameter::Pointer param = FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), FilterParameter::Parameter, "");
   param->setReadOnly(true);
   parameters.push_back(param);
-
   parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, ""));
-
   parameters.push_back(FilterParameter::New("Synthetic Volume Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), FilterParameter::Parameter, "Voxels"));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, "Microns"));
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, "Microns"));
-
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, "Length"));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, "Length"));
   setFilterParameters(parameters);
 }
 

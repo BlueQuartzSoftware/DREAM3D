@@ -177,7 +177,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   # -- Add in the miscellaneous resources (license, plugin info, ...)
   # -- Add in our Generated Version Files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
-  ${${PLUGIN_NAME}_BINARY_DIR}/ ${VERSION_SOURCE_FILE_NAME}
+  ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_SOURCE_FILE_NAME}
 )
 
 # --------------------------------------------------------------------

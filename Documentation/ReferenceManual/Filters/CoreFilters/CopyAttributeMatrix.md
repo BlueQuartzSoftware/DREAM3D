@@ -5,33 +5,21 @@ Copy Attribute Matrix {#copyattributematrix}
 Core Filters (Memory/Management)
 
 ## Description ##
-This filter copies a user chosen AttributeMatrx to a new AttributeMatrix with a user defined new name.
+This filter copies a user chosen AttributeMatrx to a new AttributeMatrix with a user defined new name to the same data container.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| New Attribute Matrix Name | String | Name for the copied attribute matrix |
 
-| Name | Type |
-|------|------|
-| AttributeMatrix Name | String |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| *User Chosen* | *User Chosen* |  | AttributeMatrx will always be present, since the user may only chose from existing arrays | N/A |
-
+None
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| *User Chosen* | *User Defined* | | AttributeMatrx will have same values as its old counterpart |
-
-
-
-
+None
 
 ## License & Copyright ##
 

@@ -44,16 +44,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
+#include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/moc_ImageIOPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString ImageIOPluginFile("ImageIOPlugin");
-  const QString ImageIOPluginDisplayName("ImageIO");
-  const QString ImageIOPluginBaseName("ImageIOPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -82,7 +74,7 @@ ImageIOPlugin::~ImageIOPlugin()
 // -----------------------------------------------------------------------------
 QString ImageIOPlugin::getPluginName()
 {
-  return (Detail::ImageIOPluginDisplayName);
+  return (ImageIOConstants::ImageIOPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

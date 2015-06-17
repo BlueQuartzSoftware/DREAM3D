@@ -110,13 +110,9 @@ int TestCreateDataArray()
     propWasSet = filter->setProperty("NumberOfComponents", var); // 1 component
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    DataArrayPath path1 = DataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::AttributeMatrixName, "");
+    DataArrayPath path1 = DataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::AttributeMatrixName, "testArray");
     var.setValue(path1);
-    propWasSet = filter->setProperty("AttributeMatrixPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-    QVariant qv("testArray");
-    propWasSet = filter->setProperty("OutputArrayName", qv); // array name
+    propWasSet = filter->setProperty("NewArray", var); // array path
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     var.setValue(-5);
@@ -138,7 +134,7 @@ int TestCreateDataArray()
 
     // Test 2 set a bool array with a non-zero value and compare to 1
     filter->setDataContainerArray(dca);
-    filter->getDataContainerArray()->getAttributeMatrix(path1)->removeAttributeArray(qv.toString());
+    filter->getDataContainerArray()->getAttributeMatrix(path1)->removeAttributeArray(path1.getDataArrayName());
     var.setValue(10);
     propWasSet = filter->setProperty("ScalarType", var); // bool
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)

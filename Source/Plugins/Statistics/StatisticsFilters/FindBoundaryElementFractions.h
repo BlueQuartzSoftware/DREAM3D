@@ -54,17 +54,14 @@ class FindBoundaryElementFractions : public AbstractFilter
 
     virtual ~FindBoundaryElementFractions();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
     Q_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, BoundaryCellFractionsArrayName)
-    Q_PROPERTY(QString BoundaryCellFractionsArrayName READ getBoundaryCellFractionsArrayName WRITE setBoundaryCellFractionsArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, BoundaryCellFractionsArrayPath)
+    Q_PROPERTY(DataArrayPath BoundaryCellFractionsArrayPath READ getBoundaryCellFractionsArrayPath WRITE setBoundaryCellFractionsArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

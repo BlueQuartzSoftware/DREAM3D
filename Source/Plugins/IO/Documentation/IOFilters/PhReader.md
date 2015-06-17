@@ -2,7 +2,7 @@ Read Ph File (Feature Ids) {#phreader}
 ======
 
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Input)
 
 
 ## Description ##
@@ -36,25 +36,28 @@ This Filter reads a custom data file used by Carnegie-Mellon Univ. The file form
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Input File | File Path |
-| Resolution | X, Y, Z Resolution of the data |
-| Origin     | The location in space coordinates of the (0,0,0) voxel |
+| Name | Type | Description |
+|------|------| ----------- |
+| Input File | File Path | .ph file|
+| Origin (XYZ) | int | The location in space coordinates of the (0,0,0) voxel |
+| Resolution (XYZ) | int | X, Y, Z Resolution of the data |
+| Volume Data Container | String | Output data container |
+| Cell Attribute Matrix | String | Output attribute matrix |
+| FeatureIds | String | Output feature ids |
 
-## Required DataContainers ##
-Voxel
+
+## Required Geometry ##
+Image / Rectilinear Grid
+
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | FeatureIds | Ids (int) that specify to which **Feature** each **Cell** belongs. | (1) |Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 
 ## License & Copyright ##

@@ -98,7 +98,6 @@ void FindFeatureClustering::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
   parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget, getClusteringListArrayName(), FilterParameter::CreatedArray));
-  //parameters.push_back(FilterParameter::New("Max and Min Distances Array Name", "MaxMinArrayName", FilterParameterWidgetType::StringWidget, getMaxMinArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);

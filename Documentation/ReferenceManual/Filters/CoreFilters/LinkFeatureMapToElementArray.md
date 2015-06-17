@@ -1,4 +1,4 @@
-Link Feature Map To Cell Array {#linkfeaturemaptoelementarray}
+Link Feature Map To Element Array {#linkfeaturemaptoelementarray}
 ==============================
 
 ## Group (Subgroup) ##
@@ -9,29 +9,23 @@ A **Cell** array is used as the index into the **Feature** map for each **Cell**
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Cell Array Name | String |
+| Name | Type | Description |
+|------|------|--------------|
+| Feature Attribute Matrix Name| String | Cell Feature Attribute Matrix Name |
+| Active | String | Active Array |
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
-
+| Cell  | None         | Any | (1) | Element Array To Link |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | Active | | |
-
-
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Feature  | Active | Any | (1) | Active Array |
 
 ## License & Copyright ##
 

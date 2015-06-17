@@ -66,6 +66,8 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
 
     bool eventFilter(QObject* o, QEvent* e);
 
+    QWidget* getVariablesTabContentsWidget();
+
   protected:
 
   public slots :

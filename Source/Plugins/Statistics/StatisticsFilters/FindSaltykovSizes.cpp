@@ -50,9 +50,8 @@
 // -----------------------------------------------------------------------------
 FindSaltykovSizes::FindSaltykovSizes() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_EquivalentDiametersArrayPath(DREAM3D::FeatureData::EquivalentDiameters),
-  m_SaltykovEquivalentDiametersArrayName(DREAM3D::FeatureData::SaltykovEquivalentDiameters),
+  m_SaltykovEquivalentDiametersArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SaltykovEquivalentDiameters),
   m_EquivalentDiameters(NULL),
   m_SaltykovEquivalentDiameters(NULL)
 {
@@ -72,10 +71,9 @@ void FindSaltykovSizes::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(FilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getSaltykovEquivalentDiametersArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSaltykovEquivalentDiametersArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -85,9 +83,8 @@ void FindSaltykovSizes::setupFilterParameters()
 void FindSaltykovSizes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
-  setSaltykovEquivalentDiametersArrayName(reader->readString("SaltykovEquivalentDiametersArrayName", getSaltykovEquivalentDiametersArrayName() ) );
+  setSaltykovEquivalentDiametersArrayPath(reader->readDataArrayPath("SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -98,9 +95,8 @@ int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -110,15 +106,13 @@ int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getSaltykovEquivalentDiametersArrayName() );
-  m_SaltykovEquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SaltykovEquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getSaltykovEquivalentDiametersArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SaltykovEquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SaltykovEquivalentDiameters = m_SaltykovEquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

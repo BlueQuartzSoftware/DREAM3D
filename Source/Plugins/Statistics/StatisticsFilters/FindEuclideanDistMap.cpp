@@ -69,10 +69,6 @@ class FindEuclideanMap
     int32_t mapType;
 
   public:
-    /**
-     * @brief
-     * @param datacontainer
-     */
     FindEuclideanMap(DataContainer::Pointer datacontainer, int32_t* fIds, int32_t* nearNeighs, bool calcManhattanOnly, float* gbDists, float* tjDists, float* qpDists, int32_t type) :
       m(datacontainer),
       m_FeatureIds(fIds),

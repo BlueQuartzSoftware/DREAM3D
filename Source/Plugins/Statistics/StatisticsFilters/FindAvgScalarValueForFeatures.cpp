@@ -49,10 +49,9 @@
 // -----------------------------------------------------------------------------
 FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, ""),
   m_SelectedCellArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_NewFeatureArrayArrayName(DREAM3D::FeatureData::ScalarAverages),
+  m_NewFeatureArrayArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::ScalarAverages),
   m_InDataArray(NULL),
   m_FeatureIds(NULL),
   m_NewFeatureArray(NULL)
@@ -78,10 +77,9 @@ void FindAvgScalarValueForFeatures::setupFilterParameters()
   /* Required Arrays */
   parameters.push_back(FilterParameter::New("Element Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, ""));
 
   /* Created Arrays */
-  parameters.push_back(FilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayName", FilterParameterWidgetType::StringWidget, getNewFeatureArrayArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getNewFeatureArrayArrayPath(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -91,8 +89,7 @@ void FindAvgScalarValueForFeatures::setupFilterParameters()
 void FindAvgScalarValueForFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setNewFeatureArrayArrayName(reader->readString("NewFeatureArrayArrayName", getNewFeatureArrayArrayName() ) );
+  setNewFeatureArrayArrayPath(reader->readDataArrayPath("NewFeatureArrayArrayPath", getNewFeatureArrayArrayPath()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   reader->closeFilterGroup();
@@ -105,8 +102,7 @@ int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParameter
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewFeatureArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewFeatureArrayArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   writer->closeFilterGroup();
@@ -119,7 +115,6 @@ int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParameter
 void FindAvgScalarValueForFeatures::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -127,8 +122,7 @@ void FindAvgScalarValueForFeatures::dataCheck()
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getNewFeatureArrayArrayName() );
-  m_NewFeatureArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NewFeatureArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getNewFeatureArrayArrayPath(), 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewFeatureArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewFeatureArray = m_NewFeatureArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

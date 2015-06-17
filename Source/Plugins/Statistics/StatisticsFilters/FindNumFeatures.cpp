@@ -51,9 +51,8 @@
 // -----------------------------------------------------------------------------
 FindNumFeatures::FindNumFeatures() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
+  m_NumFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
   m_FeaturePhases(NULL),
   m_NumFeatures(NULL)
 {
@@ -76,8 +75,7 @@ void FindNumFeatures::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Feature Phases Array Path", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("Number Of Features", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Number Of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getNumFeaturesArrayPath(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
@@ -88,9 +86,8 @@ void FindNumFeatures::setupFilterParameters()
 void FindNumFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNumFeaturesArrayName(reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
+  setNumFeaturesArrayPath(reader->readDataArrayPath("NumFeaturesArrayPath", getNumFeaturesArrayPath()));
   setFeaturePhasesArrayPath( reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setCellEnsembleAttributeMatrixPath(reader->readDataArrayPath("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -101,9 +98,8 @@ int FindNumFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -114,15 +110,13 @@ int FindNumFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
 void FindNumFeatures::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayPath, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getNumFeaturesArrayName() );
-  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getNumFeaturesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

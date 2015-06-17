@@ -2,32 +2,28 @@ Scale Volume {#scalevolume}
 ==============================
 
 ## Group (Subgroup) ##
-Generic Filters (Spatial)
+Core Filters (Spatial)
 
 ## Description ##
 This filter scales the Volume by the factors entered by the user. For example if a volume has a range
-of 10 to 30 in the X direction and the user enters a **ScaleFactor** for X of 3, then the new range will be 10 to 90. Note
-that the origin will NOT change with this filter.
+of 10 to 30 in the X direction and the user enters a **ScaleFactor** for X of 3, then the new range will be 30 to 90. Note
+that the origin will NOT change with this filter. 
 
 ## Parameters ##
 
-| Name    | Type      |  Notes |
+| Name    | Type      |  Description |
 |---------|-----------|--------|
-| Scaling | 3 x Float | Scale Factor     |
-| Apply to Voxel Volume | Bool | Should the new scaling be applied to the Voxel Volume |
-| Apply to SurfaceMesh Volume | Bool | Should the new scaling be applied to the Surface Mesh |
+| Scaling Factor | 3 x Float | Applied to Res x, Res y, and Res z for Image Geometry and node 1, node 2 and node 3 for Surface Mesh Geometry |
+| Apply to Voxel Volume | Boolean | Should the new scaling be applied to the Voxel Volume |
+| Apply to SurfaceMesh Volume | Boolean | Should the new scaling be applied to the Surface Mesh |
 
-## Required DataContainers ##
-
-Voxel: If being applied to the Voxel Volume
-SurfaceMesh: If being applied to the SurfaceMesh
+## Required Geometry ##
+Image / Rectilinear Grid and/or 2D Surface Mesh
 
 ## Required Arrays ##
-
 None
 
 ## Created Arrays ##
-
 None
 
 ## License & Copyright ##

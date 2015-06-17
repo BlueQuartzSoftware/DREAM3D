@@ -54,9 +54,6 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
 
     virtual ~FindAvgScalarValueForFeatures();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
@@ -68,8 +65,8 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, NewFeatureArrayArrayName)
-    Q_PROPERTY(QString NewFeatureArrayArrayName READ getNewFeatureArrayArrayName WRITE setNewFeatureArrayArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewFeatureArrayArrayPath)
+    Q_PROPERTY(DataArrayPath NewFeatureArrayArrayPath READ getNewFeatureArrayArrayPath WRITE setNewFeatureArrayArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

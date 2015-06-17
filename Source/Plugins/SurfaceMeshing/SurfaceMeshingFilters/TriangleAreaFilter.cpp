@@ -110,8 +110,7 @@ class CalculateAreasImpl
 // -----------------------------------------------------------------------------
 TriangleAreaFilter::TriangleAreaFilter() :
   SurfaceMeshFilter(),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, ""),
-  m_SurfaceMeshTriangleAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
+  m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshTriangleAreas(NULL)
 {
   setupFilterParameters();
@@ -131,9 +130,7 @@ void TriangleAreaFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix Name", "FaceAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getFaceAttributeMatrixName(), FilterParameter::RequiredArray, ""));
-
-  parameters.push_back(FilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleAreasArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -144,8 +141,7 @@ void TriangleAreaFilter::setupFilterParameters()
 void TriangleAreaFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFaceAttributeMatrixName(reader->readDataArrayPath("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
-  setSurfaceMeshTriangleAreasArrayName(reader->readString("SurfaceMeshTriangleAreasArrayName", getSurfaceMeshTriangleAreasArrayName() ) );
+  setSurfaceMeshTriangleAreasArrayPath(reader->readDataArrayPath("SurfaceMeshTriangleAreasArrayPath", getSurfaceMeshTriangleAreasArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -156,8 +152,7 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -168,17 +163,15 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void TriangleAreaFilter::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
-  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceAttributeMatrixName().getDataContainerName());
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleAreasArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
   if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getFaceAttributeMatrixName().getDataContainerName(), getFaceAttributeMatrixName().getAttributeMatrixName(), getSurfaceMeshTriangleAreasArrayName() );
-  m_SurfaceMeshTriangleAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshTriangleAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleAreasArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshTriangleAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleAreasPtr.lock()); }
@@ -208,7 +201,7 @@ void TriangleAreaFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getFaceAttributeMatrixName().getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshTriangleAreasArrayPath().getDataContainerName());
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

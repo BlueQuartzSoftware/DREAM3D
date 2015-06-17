@@ -63,10 +63,6 @@ class FindBoundaryAreas : public AbstractFilter
 
     virtual ~FindBoundaryAreas();
 
-    //required attribute matrix
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceFeatureAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath FaceFeatureAttributeMatrixPath READ getFaceFeatureAttributeMatrixPath WRITE setFaceFeatureAttributeMatrixPath)
-
     //required arrays
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
@@ -74,9 +70,9 @@ class FindBoundaryAreas : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
 
-    //created array name
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshBoundaryAreasArrayName)
-    Q_PROPERTY(QString SurfaceMeshBoundaryAreasArrayName READ getSurfaceMeshBoundaryAreasArrayName WRITE setSurfaceMeshBoundaryAreasArrayName)
+    //created array path
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshBoundaryAreasArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshBoundaryAreasArrayPath READ getSurfaceMeshBoundaryAreasArrayPath WRITE setSurfaceMeshBoundaryAreasArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

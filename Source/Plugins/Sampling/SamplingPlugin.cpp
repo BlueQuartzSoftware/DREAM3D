@@ -12,17 +12,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
-
+#include "Sampling/SamplingConstants.h"
 #include "moc_SamplingPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString SamplingPluginFile("SamplingPlugin");
-  const QString SamplingPluginDisplayName("Sampling");
-  const QString SamplingPluginBaseName("SamplingPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -52,7 +43,7 @@ SamplingPlugin::~SamplingPlugin()
 // -----------------------------------------------------------------------------
 QString SamplingPlugin::getPluginName()
 {
-  return (Detail::SamplingPluginDisplayName);
+  return (SamplingConstants::SamplingPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

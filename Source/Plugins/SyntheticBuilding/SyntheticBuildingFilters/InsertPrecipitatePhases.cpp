@@ -141,10 +141,8 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 void InsertPrecipitatePhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget, getPeriodicBoundaries(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Match Radial Distribution Function", "MatchRDF", FilterParameterWidgetType::BooleanWidget, getMatchRDF(), FilterParameter::Parameter));
-
   parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputShapeTypesArrayPath(), FilterParameter::RequiredArray));
@@ -153,7 +151,6 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Boundary Cells", "BoundaryCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Number of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
-
   QStringList linkedProps("PrecipInputFile");
   parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Precipitates", "HavePrecips", getHavePrecips(), linkedProps, FilterParameter::CreatedArray));
   parameters.push_back(FileSystemFilterParameter::New("Precipitate Input File", "PrecipInputFile", FilterParameterWidgetType::InputFileWidget, getPrecipInputFile(), FilterParameter::CreatedArray, "", "*.txt", "Text File"));
@@ -161,7 +158,6 @@ void InsertPrecipitatePhases::setupFilterParameters()
   linkedProps << "CsvOutputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), linkedProps, FilterParameter::CreatedArray));
   parameters.push_back(FileSystemFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), FilterParameter::CreatedArray, "", "*.csv", "Comma Separated Data"));
-
   setFilterParameters(parameters);
 }
 
@@ -404,7 +400,7 @@ void InsertPrecipitatePhases::execute()
 
   if (m_HavePrecips == false)
   {
-    notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates");
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
     Int32ArrayType::Pointer exlusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
     exlusionZonesPtr->initializeWithZeros();
@@ -419,13 +415,24 @@ void InsertPrecipitatePhases::execute()
     if (getCancel() == true) { return; }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Assigning Voxels");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Assigning Voxels");
   assign_voxels();
   if (getCancel() == true) { return; }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Filling Gaps");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Filling Gaps");
   assign_gaps();
   if (getCancel() == true) { return; }
+
+  // At this point we are done reassigning values to all arrays, so we are safe to copy
+  // down the Feature phases to the cells ; the Feature phases are correct from the
+  // generate_precipitate() function, but the cell phases are best done after all
+  // assignment since cell values may be cleaned up after Feature generation
+  size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  for (size_t i = 0; i < numTuples; i++)
+  {
+    m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]];
+  }
+
 
   if (m_WriteGoalAttributes == true)
   {
@@ -442,7 +449,7 @@ void InsertPrecipitatePhases::execute()
   cellFeatureAttrMat->removeAttributeArray(m_NumCellsArrayName);
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "InsertPrecipitatePhases Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -518,10 +525,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     writeErrorFile = true;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
-      DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
@@ -664,7 +670,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       {
         if (currentnumfeatures % 100 == 0)
         {
-          QString ss = QObject::tr("Packing Precipitates - Generating Feature #%1").arg(currentnumfeatures);
+          QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         }
 
@@ -758,10 +764,16 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //boolean used to determine if current placement is acceptable if the precipitates are being treated as "hard"
   bool good = false;
 
+  int32_t progFeature = 0;
+  int32_t progPrecipInc = static_cast<int32_t>(numfeatures * 0.01f);
   for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
   {
-    QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    if (int32_t(i) > progFeature + progPrecipInc)
+    {
+      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      progFeature = i;
+    }
 
     m_Centroids[3 * i] = m_SizeX * 0.5;
     m_Centroids[3 * i + 1] = m_SizeY * 0.5;
@@ -868,8 +880,6 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
     }
   }
-
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
 
   if (m_MatchRDF == true)
   {
@@ -1864,7 +1874,6 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_voxels()
 {
-  notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -2039,7 +2048,6 @@ void InsertPrecipitatePhases::assign_voxels()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_gaps()
 {
-  notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
@@ -2143,7 +2151,6 @@ void InsertPrecipitatePhases::assign_gaps()
       if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
       {
         m_FeatureIds[j] = m_FeatureIds[neighbor];
-        m_CellPhases[j] = m_FeaturePhases[m_FeatureIds[neighbor]];
       }
     }
     if (iterationCounter >= 1)
@@ -2151,6 +2158,7 @@ void InsertPrecipitatePhases::assign_gaps()
       QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
+    if(getCancel() == true) { return; }
   }
 }
 

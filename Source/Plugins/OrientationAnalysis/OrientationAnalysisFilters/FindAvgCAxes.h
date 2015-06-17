@@ -56,17 +56,14 @@ class FindAvgCAxes : public AbstractFilter
 
     virtual ~FindAvgCAxes();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, AvgCAxesArrayName)
-    Q_PROPERTY(QString AvgCAxesArrayName READ getAvgCAxesArrayName WRITE setAvgCAxesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
+    Q_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

@@ -1,14 +1,13 @@
 #--////////////////////////////////////////////////////////////////////////////
 #--
-#--  Copyright (c) 2009, 2010 Michael A. Jackson. BlueQuartz Software
+#--  Copyright (c) 2015 BlueQuartz Software, LLC
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-project(StatsGenerator)
-cmake_minimum_required(VERSION 3.1.0)
+PROJECT( StatsGenerator VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH})
 
 # Set the GUI type for different platforms
 SET(GUI_TYPE )

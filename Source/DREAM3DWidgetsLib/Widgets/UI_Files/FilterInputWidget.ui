@@ -98,13 +98,13 @@
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_2">
+            <widget class="QWidget" name="variablesTabContents">
              <property name="geometry">
               <rect>
                <x>0</x>
                <y>0</y>
                <width>750</width>
-               <height>321</height>
+               <height>329</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">

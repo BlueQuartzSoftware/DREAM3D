@@ -54,14 +54,11 @@ class  InputCrystalCompliances : public AbstractFilter
 
     virtual ~InputCrystalCompliances();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(FloatVec21_t, Compliances)
     Q_PROPERTY(FloatVec21_t Compliances READ getCompliances WRITE setCompliances)
 
-    DREAM3D_FILTER_PARAMETER(QString, CrystalCompliancesArrayName)
-    Q_PROPERTY(QString CrystalCompliancesArrayName READ getCrystalCompliancesArrayName WRITE setCrystalCompliancesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalCompliancesArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalCompliancesArrayPath READ getCrystalCompliancesArrayPath WRITE setCrystalCompliancesArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

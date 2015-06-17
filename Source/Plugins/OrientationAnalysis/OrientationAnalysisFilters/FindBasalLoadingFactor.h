@@ -62,14 +62,12 @@ class FindBasalLoadingFactor : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindBasalLoadingFactor, AbstractFilter)
 
     virtual ~FindBasalLoadingFactor();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, BasalLoadingFactorArrayName)
-    Q_PROPERTY(QString BasalLoadingFactorArrayName READ getBasalLoadingFactorArrayName WRITE setBasalLoadingFactorArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, BasalLoadingFactorArrayPath)
+    Q_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

@@ -2,7 +2,7 @@ Vtk Structured Points Reader  {#vtkstructuredpointsreader}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+I/O Filters (Input)
 
 ## Description ##
 
@@ -38,22 +38,26 @@ then create a new AttributeMatrix inside the new Data Container.
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Input Vtk File | Input File |
-| DataContainer Name | String |
-| Attribute Matrix Name | String |
+| Name | Type | Description |
+|------|------|-------------|
+| Input Vtk File | File Path | |
+| Read Point Data | Boolean | |
+| Read Cell Data | Boolean |  |
+| PointData Data Container | String | |
+| Vertex Attribute Matrix | String | |
+| CellData Data Container | String | |
+| Cell Attribute Matrix | String | |
 
-## Required DataContainers ##
-None. This filter will create one
+
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-None. This filter will create data arrays
+None
 
 
 ## Created Arrays ##
-One data array for each data set attribute in the vtk file.
-
+None
 
 
 ## License & Copyright ##

@@ -56,6 +56,9 @@ public:
   void registerDREAM3DWindow(QWidget* widget);
   void unregisterDREAM3DWindow(QWidget* widget);
 
+protected:
+  bool event(QEvent* event);
+
 protected slots:
   void exitTriggered();
 

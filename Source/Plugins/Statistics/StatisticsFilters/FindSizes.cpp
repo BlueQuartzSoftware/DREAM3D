@@ -78,10 +78,10 @@ void FindSizes::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
 
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getEquivalentDiametersArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayName", FilterParameterWidgetType::StringWidget, getNumCellsArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   
   setFilterParameters(parameters);
 }

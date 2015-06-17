@@ -29,7 +29,8 @@
 //
 // -----------------------------------------------------------------------------
 FaderWidget::FaderWidget(QWidget* parent)
-  : QWidget(parent)
+  : QWidget(parent),
+    timer(NULL)
 {
   if (parent)
   { startColor = Qt::white; /* parent->palette().window().color();*/ }
@@ -46,6 +47,17 @@ FaderWidget::FaderWidget(QWidget* parent)
 
   setAttribute(Qt::WA_DeleteOnClose);
   if(parent) { resize(parent->size()); }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FaderWidget::~FaderWidget()
+{
+  if(timer)
+  {
+    delete timer;
+  }
 }
 
 // -----------------------------------------------------------------------------

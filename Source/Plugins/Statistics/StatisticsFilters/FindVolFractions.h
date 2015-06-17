@@ -53,14 +53,11 @@ class FindVolFractions : public AbstractFilter
 
     virtual ~FindVolFractions();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, VolFractionsArrayName)
-    Q_PROPERTY(QString VolFractionsArrayName READ getVolFractionsArrayName WRITE setVolFractionsArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, VolFractionsArrayPath)
+    Q_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

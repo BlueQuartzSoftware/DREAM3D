@@ -148,6 +148,13 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     bool editState,
     bool isExpanded);
 
+  /**
+  * @brief BookmarksDockWidget::addBookmark
+  * @param filePath
+  * @param parent
+  */
+  void addBookmark(const QString &filePath, const QModelIndex &parent);
+
     //// Slots to catch signals from the QTreeWidget
     void on_bookmarksTreeView_clicked(const QModelIndex & index);
     void on_bookmarksTreeView_doubleClicked(const QModelIndex & index);
@@ -177,6 +184,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     * @param filePath The absolute path to the pipeline file
     * @param setOpenedFilePath A boolean that decides whether to cache the opened file path to use when re-saving.
     * @param addToRecentFiles A boolean that decides whether to add filePath to the recents file list.
+    * @param newWindow A boolean that decides whether to open a new window.
     */
     void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
 

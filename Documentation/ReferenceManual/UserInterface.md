@@ -91,21 +91,22 @@ When the pipeline is correct, has no errors, and is ready to run, press the **Go
 
 ## 4. The Filter Input View ##
 
-![The Filter Input View - Basic Tab](Images/OverView-FilterInputView1.png)
+![The Filter Input View - Variables Tab](Images/OverView-FilterInputView1.png)
 
 ### Overview ###
 The **Filter Input View** contains all the inputs for the selected filter.
 
-There are three sections: **Basic**, **Advanced**, and **Current Structure**.
+There are two sections: **Variables** and **Current Structure**.
 
-### Basic and Advanced ###
-The **Basic** and **Advanced** tabs contain filter inputs, such as a field for an output path or a series of combo boxes to select an attribute array path.
+### Variables ###
+The **Variables** tab contains filter inputs, such as a field for an output path or a series of combo boxes to select an attribute array path.
 
 ![The Filter Input View - Current Structure Tab](Images/OverView-FilterInputView2.png)
 
 ### Current Structure ###
 The **Current Structure** tab contains the current data container array structure.
 
+### Viewing A Filter's Help Page ###
 To view the help page for the displayed filter, press the **?** icon.
 
 --------------

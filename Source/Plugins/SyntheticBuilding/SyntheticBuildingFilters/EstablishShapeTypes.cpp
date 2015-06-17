@@ -70,15 +70,12 @@ EstablishShapeTypes::~EstablishShapeTypes()
 void EstablishShapeTypes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, ""));
-
   parameters.push_back(FilterParameter::New("Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget, getShapeTypesArrayName(), FilterParameter::CreatedArray, ""));
   ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New(
                                                          "Shape Types", "ShapeTypeData", FilterParameterWidgetType::ShapeTypeSelectionWidget,
                                                          "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", FilterParameter::CreatedArray);
   parameters.push_back(sType_parameter);
-
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

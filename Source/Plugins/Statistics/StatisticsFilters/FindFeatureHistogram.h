@@ -66,8 +66,6 @@ class FindFeatureHistogram : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindFeatureHistogram, AbstractFilter)
 
     virtual ~FindFeatureHistogram();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
@@ -89,8 +87,8 @@ class FindFeatureHistogram : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
-    Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
+    Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

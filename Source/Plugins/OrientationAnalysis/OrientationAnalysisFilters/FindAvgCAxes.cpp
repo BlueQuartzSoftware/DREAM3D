@@ -51,10 +51,9 @@
 // -----------------------------------------------------------------------------
 FindAvgCAxes::FindAvgCAxes() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
+  m_AvgCAxesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgCAxes),
   m_FeatureIds(NULL),
   m_Quats(NULL),
   m_AvgCAxes(NULL)
@@ -81,8 +80,7 @@ void FindAvgCAxes::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Element Quaternions", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
 
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Average C-Axes", "AvgCAxesArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Average C-Axes", "AvgCAxesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getAvgCAxesArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -93,8 +91,7 @@ void FindAvgCAxes::setupFilterParameters()
 void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setAvgCAxesArrayName(reader->readString("AvgCAxesArrayName", getAvgCAxesArrayName() ) );
+  setAvgCAxesArrayPath(reader->readDataArrayPath("AvgCAxesArrayPath", getAvgCAxesArrayPath()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
   reader->closeFilterGroup();
@@ -107,8 +104,7 @@ int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   writer->closeFilterGroup();
@@ -121,7 +117,6 @@ int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void FindAvgCAxes::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -138,8 +133,7 @@ void FindAvgCAxes::dataCheck()
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
 
   cDims[0] = 3;
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAvgCAxesArrayName() );
-  m_AvgCAxesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AvgCAxesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgCAxesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgCAxesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

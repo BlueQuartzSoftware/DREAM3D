@@ -44,16 +44,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
+#include "Statistics/StatisticsConstants.h"
 #include "moc_StatisticsPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString StatisticsPluginFile("StatisticsPlugin");
-  const QString StatisticsPluginDisplayName("Statistics");
-  const QString StatisticsPluginBaseName("StatisticsPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -83,7 +75,7 @@ StatisticsPlugin::~StatisticsPlugin()
 // -----------------------------------------------------------------------------
 QString StatisticsPlugin::getPluginName()
 {
-  return (Detail::StatisticsPluginDisplayName);
+  return (StatisticsConstants::StatisticsPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

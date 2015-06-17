@@ -55,13 +55,12 @@
 // -----------------------------------------------------------------------------
 FitFeatureData::FitFeatureData() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, ""),
   m_SelectedFeatureArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, ""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_RemoveBiasedFeatures(false),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_BiasedFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
-  m_NewEnsembleArrayArrayName(DREAM3D::EnsembleData::FitParameters),
+  m_NewEnsembleArrayArray(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, DREAM3D::EnsembleData::FitParameters),
   m_InDataArray(NULL),
   m_BiasedFeatures(NULL),
   m_FeaturePhases(NULL),
@@ -104,8 +103,7 @@ void FitFeatureData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("Fit Parameters", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Fit Parameters", "NewEnsembleArrayArray", FilterParameterWidgetType::DataArrayCreationWidget, getNewEnsembleArrayArray(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -116,8 +114,7 @@ void FitFeatureData::setupFilterParameters()
 void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
-  setNewEnsembleArrayArrayName(reader->readString("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() ) );
+  setNewEnsembleArrayArray(reader->readDataArrayPath("NewEnsembleArrayArray", getNewEnsembleArrayArray()));
   setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
@@ -133,8 +130,7 @@ int FitFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArray)
   DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
@@ -150,7 +146,6 @@ int FitFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer
 void FitFeatureData::dataCheck()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -166,10 +161,9 @@ void FitFeatureData::dataCheck()
   else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
   else if (m_DistributionType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
 
-  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit");
+  getNewEnsembleArrayArray().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit"));
   cDims[0] = numComp;
-  tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
-  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getNewEnsembleArrayArray(), 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

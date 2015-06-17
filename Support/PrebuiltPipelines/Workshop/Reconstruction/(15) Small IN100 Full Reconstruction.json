@@ -94,9 +94,9 @@
         "FilterVersion": "5.2.1300.4e4405e",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
-        "NeighborListArrayName": "NeighborList",
-        "NumNeighborsArrayName": "NumNeighbors",
-        "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList",
+        "NeighborListArrayName": "NeighborList2",
+        "NumNeighborsArrayName": "NumNeighbors2",
+        "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList2",
         "StoreBoundaryCells": 0,
         "StoreSurfaceFeatures": 0,
         "SurfaceFeaturesArrayName": "SurfaceFeatures"
@@ -113,7 +113,7 @@
         "CellParentIdsArrayName": "ParentIds",
         "ContiguousNeighborListArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
-            "Data Array Name": "NeighborList",
+            "Data Array Name": "NeighborList2",
             "Data Container Name": "VolumeDataContainer"
         },
         "CrystalStructuresArrayPath": {

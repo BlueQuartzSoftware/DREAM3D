@@ -44,17 +44,8 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "moc_SyntheticBuildingPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString SyntheticBuildingPluginFile("SyntheticBuildingPlugin");
-  const QString SyntheticBuildingPluginDisplayName("SyntheticBuilding");
-  const QString SyntheticBuildingPluginBaseName("SyntheticBuildingPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +75,7 @@ SyntheticBuildingPlugin::~SyntheticBuildingPlugin()
 // -----------------------------------------------------------------------------
 QString SyntheticBuildingPlugin::getPluginName()
 {
-  return (Detail::SyntheticBuildingPluginDisplayName);
+  return (SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

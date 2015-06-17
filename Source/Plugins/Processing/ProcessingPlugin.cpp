@@ -44,16 +44,8 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 
+#include "Processing/ProcessingConstants.h"
 #include "moc_ProcessingPlugin.cpp"
-
-
-
-namespace Detail
-{
-  const QString ProcessingPluginFile("ProcessingPlugin");
-  const QString ProcessingPluginDisplayName("Processing");
-  const QString ProcessingPluginBaseName("ProcessingPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -83,7 +75,7 @@ ProcessingPlugin::~ProcessingPlugin()
 // -----------------------------------------------------------------------------
 QString ProcessingPlugin::getPluginName()
 {
-  return (Detail::ProcessingPluginDisplayName);
+  return (ProcessingConstants::ProcessingPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

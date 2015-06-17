@@ -11,14 +11,8 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
+#include "@PluginName@/@PluginName@Constants.h"
 #include "@PluginName@/moc_@PluginName@Plugin.cpp"
-
-namespace Detail
-{
-  const QString @PluginName@PluginFile("@PluginName@Plugin");
-  const QString @PluginName@PluginDisplayName("@PluginName@");
-  const QString @PluginName@PluginBaseName("@PluginName@Plugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -49,7 +43,7 @@ m_DidLoad(false)
 // -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getPluginName()
 {
-  return (Detail::@PluginName@PluginDisplayName);
+  return (@PluginName@Constants::@PluginName@PluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

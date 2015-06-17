@@ -3,7 +3,7 @@ Raw Binary Reader {#rawbinaryreader}
 
 ## Group (Subgroup) ##
 
-IO Filters
+IO Filters (Input)
 
 ## Description ##
 
@@ -16,19 +16,23 @@ This filter will error out and block the pipeline from running if the total numb
 
 The user can use an input file that is actually **Larger** than the number of bytes required by the filter and the filter will only read the first part of the file unless an amount of bytes to skip is set. See more input parameters farther down the documentation.
 
----
-
-![User Interface for Raw Binary Reader](RawBinaryReader-GUI.png)
-@image latex RawBinaryReader-GUI.png " " width=5in
-
----
 
 ### Scalar Type ###
 
 Computer data comes in 10 basic types on modern 32bit and 64 bit operating systems. We can break the data into either integer or floating point data. With each of those types the number of bits that represent the value determine its maximum and minimum value. For integer data the standard types are 8, 16, 32 & 64 bit or 1, 2, 4, 8 byte integers. For floating point values there are either 32 bit or 64 bit (4 or 8 bytes). With the integer types the values can be either signed or unsigned integers. If an integer is signed that means it can take on negative values. If an integer type is unsigned then it can only take positive values but will have twice the positive value range as a signed integer.
 
-![The types of data to select](RawBinaryReader-Types.png)
-@image latex RawBinaryReader-Types.png " " width=2in
+The types of data to select:
+
+    signed Int8
+    unsigned UInt8
+    signed Int16
+    unsigned UInt16
+    signed Int32
+    unsigned UInt32
+    signed Int64
+    unsigned UInt64
+    Float
+    Double
 
 ---
 
@@ -98,11 +102,25 @@ Using this filter in combination with an existing pipeline that would already ha
 
 ## Parameters ##
 
-See above
+| Name | Type | Description |
+|------|------| ----------- |
+| Input File | File Path | Select binary file |
+| Scalar Type | Enumeration | Data type |
+| Dimensionality | Integer | Number of dimensions |
+| Number Of Components | Integer |  |
+| Endian | Enumeration |  |
+| Dimensions | Integer | X,Y,Z |
+| Origin | Integer | X,Y,Z |
+| Resolution | Integer | X,Y,Z |
+| Over Ride Origin & Resolution | Boolean |  |
+| Skip Header Bytes | Integer | Number of bytes in the header |
+| Output Array Name | String | Created array name |
+| Add to Existing Data Container & Attribute Matrix | Boolean |  |
+| Data Container Name | String | |
+| Cell Attribute Matrix Name | String | |
 
-## Required DataContainers ##
-
-Voxel DataContainer
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
 
@@ -110,7 +128,9 @@ None
 
 ## Created Arrays ##
 
-Single Array based on the parameters of the filter
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any | User set | Any | Any | |
 
 
 

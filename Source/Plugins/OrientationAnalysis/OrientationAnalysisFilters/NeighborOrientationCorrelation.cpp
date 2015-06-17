@@ -305,15 +305,15 @@ void NeighborOrientationCorrelation::execute()
         for (int32_t j = 0; j < 6; j++)
         {
           best = 0;
-          good = 1;
+          good = true;
           neighbor = DimType(i) + neighpoints[j];
-          if (j == 0 && plane == 0) { good = 0; }
-          if (j == 5 && plane == (dims[2] - 1)) { good = 0; }
-          if (j == 1 && row == 0) { good = 0; }
-          if (j == 4 && row == (dims[1] - 1)) { good = 0; }
-          if (j == 2 && column == 0) { good = 0; }
-          if (j == 3 && column == (dims[0] - 1)) { good = 0; }
-          if (good == 1)
+          if (j == 0 && plane == 0) { good = false; }
+          if (j == 5 && plane == (dims[2] - 1)) { good = false; }
+          if (j == 1 && row == 0) { good = false; }
+          if (j == 4 && row == (dims[1] - 1)) { good = false; }
+          if (j == 2 && column == 0) { good = false; }
+          if (j == 3 && column == (dims[0] - 1)) { good = false; }
+          if (good == true)
           {
             if (neighborSimCount[j] > best)
             {
@@ -328,7 +328,7 @@ void NeighborOrientationCorrelation::execute()
     QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
-    if (getCancel()) { break; }
+    if (getCancel()) { return; }
 
     progIncrement = static_cast<DimType>(totalPoints / 100);
     prog = 1;

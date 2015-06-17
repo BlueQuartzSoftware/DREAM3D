@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>DynamicTableWidget</class>
- <widget class="QWidget" name="DynamicTableWidget">
+ <widget class="QFrame" name="DynamicTableWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

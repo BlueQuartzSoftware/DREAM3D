@@ -56,11 +56,8 @@ class TriangleCentroidFilter : public SurfaceMeshFilter
 
     virtual ~TriangleCentroidFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
-
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleCentroidsArrayName)
-    Q_PROPERTY(QString SurfaceMeshTriangleCentroidsArrayName READ getSurfaceMeshTriangleCentroidsArrayName WRITE setSurfaceMeshTriangleCentroidsArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

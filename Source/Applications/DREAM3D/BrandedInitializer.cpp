@@ -163,14 +163,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
     if (!filePath.isEmpty())
     {
       QFileInfo fi(filePath);
-      int err = this->MainWindow->getPipelineViewWidget()->openPipeline(filePath, 0, true);
-
-      // If the pipeline was read correctly, change the title
-      if (err >= 0)
-      {
-        this->MainWindow->setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
-        this->MainWindow->setWindowModified(false);
-      }
+      this->MainWindow->openNewPipeline(filePath, 0, true, true);
     }
   }
 
@@ -483,7 +476,7 @@ void BrandedInitializer::on_m_ActionOpen_triggered()
   filePath = QDir::toNativeSeparators(filePath);
   QFileInfo fi(filePath);
 
-  newInstance->openNewPipeline(filePath, true, true);
+  newInstance->openNewPipeline(filePath, true, true, true);
 
   newInstance->show();
 
@@ -527,7 +520,7 @@ void BrandedInitializer::openRecentFile()
     QString filePath = action->data().toString();
 
     DREAM3D_UI* newInstance = getNewDREAM3DInstance();
-    newInstance->openNewPipeline(filePath, true, true);
+    newInstance->openNewPipeline(filePath, true, true, false);
 
     // Add file path to the recent files list for both instances
     QRecentFileList* list = QRecentFileList::instance();
