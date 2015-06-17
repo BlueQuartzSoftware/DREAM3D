@@ -76,7 +76,7 @@ void DataContainerReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Overwrite Existing Data Containers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), FilterParameter::Parameter));
   {
     DataContainerReaderFilterParameter::Pointer parameter = DataContainerReaderFilterParameter::New();
     parameter->setHumanLabel("Select Arrays From Input File");
@@ -134,31 +134,31 @@ void DataContainerReader::dataCheck()
   QString ss;
   if (getInputFile().isEmpty() == true)
   {
-    ss = QObject::tr("The input file must be set").arg(ClassName());
+    ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
-    ss = QObject::tr("The input file does not exist.");
+    ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
-  DataContainerArray::Pointer dca = getDataContainerArray();
-
-  // Create a new DataContainerArray to read the file data into
-  DataContainerArray::Pointer tempDCA = DataContainerArray::New();
-  // Read either the structure or all the data depending on the preflight status
-  readData(getInPreflight(), m_InputFileDataContainerArrayProxy, tempDCA);
-  //  qDebug() << " Reading Structure from " << getInputFile();
-  //  qDebug() << "  Count Data Containers= " << m_InputFileDataContainerArrayProxy.list.count();
 
   if(getErrorCondition())
   {
     // something has gone wrong and errors were logged alread so just return
     return;
   }
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  // Create a new DataContainerArray to read the file data into
+  DataContainerArray::Pointer tempDCA = DataContainerArray::New();
+
+  // Read either the structure or all the data depending on the preflight status
+  readData(getInPreflight(), m_InputFileDataContainerArrayProxy, tempDCA);
+
   QList<DataContainer::Pointer>& tempContainers = tempDCA->getDataContainers();
   QListIterator<DataContainer::Pointer> iter(tempContainers);
   while (iter.hasNext())
