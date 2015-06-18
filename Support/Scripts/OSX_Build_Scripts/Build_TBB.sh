@@ -32,7 +32,7 @@ fi
 
 
 
-SDK_INSTALL=/Users/Shared/Toolkits
+SDK_INSTALL=/Users/Shared/DREAM3D_SDK
 
 cd $SDK_INSTALL
 
