@@ -409,10 +409,7 @@ font-size: 12px;
             </size>
            </property>
            <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/MaxCutOff_Eqn.png</pixmap>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;x&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;(μ + max * σ)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -428,10 +425,10 @@ font-size: 12px;
             </size>
            </property>
            <property name="text">
-            <string/>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;x&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;(μ + min * σ)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="pixmap">
-            <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/MinCutOff_Eqn.png</pixmap>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -529,7 +526,7 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
+            <width>75</width>
             <height>38</height>
            </rect>
           </property>
@@ -637,8 +634,6 @@ font-size: 12px;
   <tabstop>distributionTypeCombo</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

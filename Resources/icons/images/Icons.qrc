@@ -81,9 +81,6 @@
   <file>DREAM3D.png</file>
 
   <!-- These are needed for Stats Generator  -->
-  <file>MaxCutOff_Eqn.png</file>
-  <file>MinCutOff_Eqn.png</file>
-
   <file>cube_molecule_add.png</file>
   <file>cube_molecule_delete.png</file>
   <file>cube_molecule_view.png</file>
