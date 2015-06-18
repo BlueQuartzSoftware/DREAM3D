@@ -165,6 +165,10 @@ QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue
       QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
       return byteArray;
     }
+    else
+    {
+      return value;
+    }
   }
   
   return m_Stack.top()->group.value(key).toVariant();
