@@ -95,6 +95,12 @@ private:
   void closeFile();
   void writeToFile();
 
+  enum MultiValueLabels
+  {
+    Value,
+    Type
+  };
+
   DREAM3DSettings(const DREAM3DSettings&);    // Copy Constructor Not Implemented
   void operator=(const DREAM3DSettings&);  // Operator '=' Not Implemented
 };

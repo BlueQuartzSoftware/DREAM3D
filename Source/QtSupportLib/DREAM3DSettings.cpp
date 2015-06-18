@@ -154,16 +154,20 @@ QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue
     return defaultValue;
   }
 
-  if (m_Stack.top()->groupName == "WindowSettings")
+  if (m_Stack.top()->group[key].isArray())
   {
-    QByteArray byteArray8Bit = m_Stack.top()->group.value(key).toString().toLocal8Bit();
-    QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
-    return byteArray;
+    QJsonArray jsonArray = m_Stack.top()->group[key].toArray();
+    QString value = jsonArray.at(Value).toString();
+    QString typeName = jsonArray.at(Type).toString();
+    if (typeName == "QByteArray")
+    {
+      QByteArray byteArray8Bit = value.toLocal8Bit();
+      QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
+      return byteArray;
+    }
   }
-  else
-  {
-    return m_Stack.top()->group.value(key).toVariant();
-  }
+  
+  return m_Stack.top()->group.value(key).toVariant();
 }
 
 // -----------------------------------------------------------------------------
@@ -209,12 +213,26 @@ void DREAM3DSettings::setValue(const QString &key, const QVariant &value)
   {
     QByteArray byteArray = value.toByteArray().toBase64();
     QString str = QString::fromLocal8Bit(byteArray);
-    m_Stack.top()->group.insert(key, str);
+    QJsonArray jsonArray;
+    jsonArray.insert(Value, str);
+    jsonArray.insert(Type, value.typeName());
+    m_Stack.top()->group.insert(key, jsonArray);
   }
   else
   {
     QJsonValue val = QJsonValue::fromVariant(value);
-    m_Stack.top()->group.insert(key, val);
+
+    if (QString::fromStdString(std::string(value.typeName())) == "QString")
+    {
+      QJsonArray jsonArray;
+      jsonArray.insert(Value, val);
+      jsonArray.insert(Type, value.typeName());
+      m_Stack.top()->group.insert(key, jsonArray);
+    }
+    else
+    {
+      m_Stack.top()->group.insert(key, val);
+    }
   }
 
   // If this is the root, write to the file
