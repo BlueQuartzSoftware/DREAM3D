@@ -85,7 +85,7 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
     void on_detailsBtn_clicked();
     void on_addPluginBtn_pressed();
     void on_removePluginBtn_pressed();
-    void on_pluginsTable_cellClicked(int row, int column);
+    void on_pluginsTable_currentItemChanged(QTableWidgetItem* current, QTableWidgetItem* previous);
     void displayDetailsWindow(QTableWidgetItem* item);
     void setLoadPreferencesFlag(int state);
     void togglePluginState(int state);
