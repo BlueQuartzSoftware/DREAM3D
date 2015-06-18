@@ -122,7 +122,7 @@ void AddBadData::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> cDims(1, 1);
-  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -184,7 +184,7 @@ void  AddBadData::add_noise()
         }
       }
     }
-    if (m_PoissonNoise == true && m_GBEuclideanDistances[i] >= 1)
+    if (m_PoissonNoise == true)
     {
       random = static_cast<float>( rg.genrand_res53() );
       if (random < m_PoissonVolFraction)
