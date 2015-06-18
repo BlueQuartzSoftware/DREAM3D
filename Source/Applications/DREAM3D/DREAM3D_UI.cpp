@@ -527,11 +527,25 @@ void DREAM3D_UI::readSettings()
   prefs.beginGroup("DockWidgetSettings");
 
   // Read dock widget settings
+  prefs.beginGroup("Bookmarks Dock Widget");
   bookmarksDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Prebuilts Dock Widget");
   prebuiltPipelinesDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter List Dock Widget");
   filterListDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter Library Dock Widget");
   filterLibraryDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Issues Dock Widget");
   issuesDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
 
   prefs.endGroup();
 
@@ -606,11 +620,25 @@ void DREAM3D_UI::writeSettings()
   prefs.beginGroup("DockWidgetSettings");
 
   // Write dock widget settings
+  prefs.beginGroup("Bookmarks Dock Widget");
   bookmarksDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Prebuilts Dock Widget");
   prebuiltPipelinesDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter List Dock Widget");
   filterListDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter Library Dock Widget");
   filterLibraryDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Issues Dock Widget");
   issuesDockWidget->writeSettings(prefs);
+  prefs.endGroup();
 
   prefs.endGroup();
 

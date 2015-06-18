@@ -36,9 +36,18 @@ padding-left: 5px;
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
-     <number>-1</number>
+     <number>6</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -47,17 +56,26 @@ padding-left: 5px;
        <bool>false</bool>
       </property>
       <property name="rowCount">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="columnCount">
        <number>3</number>
       </property>
-      <row/>
-      <row/>
-      <row/>
-      <column/>
-      <column/>
-      <column/>
+      <column>
+       <property name="text">
+        <string>Filter</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Description</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Code</string>
+       </property>
+      </column>
      </widget>
     </item>
    </layout>
