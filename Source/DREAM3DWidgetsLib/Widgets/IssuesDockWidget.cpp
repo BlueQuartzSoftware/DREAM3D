@@ -234,6 +234,9 @@ QLabel* IssuesDockWidget::createHyperlinkLabel(PipelineMessage msg)
 void IssuesDockWidget::writeSettings(DREAM3DSettings& prefs)
 {
   prefs.setValue(objectName(), isHidden());
+
+  QByteArray headerState = errorTableWidget->horizontalHeader()->saveState();
+  prefs.setValue("Horizontal Header State", headerState);
 }
 
 // -----------------------------------------------------------------------------
@@ -245,4 +248,7 @@ void IssuesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
 
   bool b = prefs.value(objectName(), false).toBool();
   setHidden(b);
+
+  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray()).toByteArray();
+  bool didRestore = errorTableWidget->horizontalHeader()->restoreState(headerState);
 }
