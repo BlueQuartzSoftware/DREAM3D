@@ -147,6 +147,37 @@ void DREAM3DSettings::endGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QStringList DREAM3DSettings::childGroups()
+{
+  QStringList list;
+  QJsonObject obj = m_Stack.top()->group;
+
+  QStringList keyList = obj.keys();
+
+  for (int i = 0; i < keyList.size(); i++)
+  {
+    if (obj.value(keyList[i]).isObject())
+    {
+      list.append(keyList[i]);
+    }
+  }
+
+  return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DSettings::remove(const QString &key)
+{
+  QJsonObject obj = m_Stack.top()->group;
+
+  obj.remove(key);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue)
 {
   if (m_Stack.top()->group.contains(key) == false)

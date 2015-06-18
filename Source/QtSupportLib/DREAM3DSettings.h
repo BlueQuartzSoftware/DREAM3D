@@ -79,6 +79,10 @@ public:
   bool beginGroup(const QString &prefix);
   void endGroup();
 
+  QStringList childGroups();
+
+  void remove(const QString &key);
+
   QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
   QJsonObject value(const QString &key, const QJsonObject &defaultObject = QJsonObject());
   QStringList value(const QString &key, const QStringList &defaultList = QStringList());
