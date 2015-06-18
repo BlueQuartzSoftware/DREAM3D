@@ -1,5 +1,5 @@
 Scale Volume {#scalevolume}
-==============================
+=============
 
 ## Group (Subgroup) ##
 Core Filters (Spatial)

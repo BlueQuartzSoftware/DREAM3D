@@ -1,5 +1,5 @@
 Write DREAM3D Data File {#datacontainerwriter}
-======
+=============
 
 ## Group (Subgroup) ##
 IO Filters (Output)

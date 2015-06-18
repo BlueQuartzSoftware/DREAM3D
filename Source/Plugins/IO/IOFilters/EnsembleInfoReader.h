@@ -34,24 +34,16 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
 #ifndef _EnsembleInfoReader_H_
 #define _EnsembleInfoReader_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
- * @class EnsembleInfoReader EnsembleInfoReader.h DREAM3DLib/IO/EnsembleInfoReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @brief The EnsembleInfoReader class. See [Filter documentation](@ref dxreader) for details.
  */
 class  EnsembleInfoReader : public FileReader
 {
@@ -62,8 +54,10 @@ class  EnsembleInfoReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(EnsembleInfoReader, FileReader)
 
     virtual ~EnsembleInfoReader();
+
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
@@ -96,37 +90,46 @@ class  EnsembleInfoReader : public FileReader
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
 
   protected:
     EnsembleInfoReader();
 
-    virtual int readHeader();
-    virtual int readFile();
+    /**
+     * @brief readHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t readHeader();
 
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t readFile();
+
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
     void dataCheck();
+
+    /**
+     * @brief updateEnsembleInstancePointers Updates raw ensemble pointers
+     */
     void updateEnsembleInstancePointers();
-		void ensembleLookup(QStringList values);
+
+    /**
+     * @brief ensembleLookup Assings the crystal structure and phase type enumerations
+     * based on the incoming file
+     * @param values QStringList of incoming file declarations
+     */
+    void ensembleLookup(QStringList values);
 
   private:
-		DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-		DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
-		int m_ptype;
-		int m_crystruct;
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+
+    uint32_t m_ptype;
+    uint32_t m_crystruct;
 
     EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented
     void operator=(const EnsembleInfoReader&); //Not Implemented
-
 };
 
-#endif //_EnsembleInfoReader_h_
-
-
-
-
-
-
+#endif /* _EnsembleInfoReader_h_ */

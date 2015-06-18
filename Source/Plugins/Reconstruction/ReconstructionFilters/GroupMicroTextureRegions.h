@@ -132,12 +132,6 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual void execute();
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     GroupMicroTextureRegions();
 

@@ -61,13 +61,47 @@ class DREAM3DLib_EXPORT FileReader : public AbstractFilter
      */
     virtual void execute();
 
+  signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
+    void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
+    void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
+    void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
+    void preflightExecuted();
+
   protected:
     FileReader();
 
-    virtual int readHeader();
+    /**
+     * @brief readHeader Reads the header of the input file
+     * @return Integer error value
+     */
+    virtual int32_t readHeader();
 
-    virtual int readFile();
+    /**
+     * @brief readFile Reads the contents of the input file
+     * @return Integer error value
+     */
+    virtual int32_t readFile();
 
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     virtual void dataCheck();
 
   private:

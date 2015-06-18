@@ -37,20 +37,13 @@
 #ifndef _AbaqusHexahedronWriter_H_
 #define _AbaqusHexahedronWriter_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
- * @class AbaqusHexahedronWriter AbaqusHexahedronWriter.h IO/IOFilters/AbaqusHexahedronWriter.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The AbaqusHexahedronWriter class. See [Filter documentation](@ref abaqushexahedronwriter) for details.
  */
 class AbaqusHexahedronWriter : public AbstractFilter
 {
@@ -175,22 +168,69 @@ class AbaqusHexahedronWriter : public AbstractFilter
     void dataCheck();
 
   private:
-    /* Your private class instance variables go here. You can use several preprocessor macros to help
-     * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
-     * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
-     */
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
+    /**
+     * @brief writeNodes Writes the _nodes.inp file
+     * @param fileNames QList of output file names
+     * @param cDims Dimensions of incoming volume (points)
+     * @param origin Origin of volume
+     * @param spacing Resolution of volume
+     * @return Integer error value
+     */
+    int32_t writeNodes(const QList<QString>& fileNames, size_t* cDims, float* origin, float* spacing);
+
+    /**
+     * @brief writeElems Writes the _elems.inp file
+     * @param fileNames QList of output file names
+     * @param cDims Dimensions of incoming volume (points)
+     * @param pDims Dimensions of incoming volume (elements)
+     * @return Integer error value
+     */
+    int32_t writeElems(const QList<QString>& fileNames, size_t* cDims, size_t* pDims);
+
+    /**
+     * @brief writeSects Writes the _sects.inp file
+     * @param file Output file name
+     * @param totalPoints Total points of incoming volume
+     * @return Integer error value
+     */
+    int32_t writeSects(const QString& file, size_t totalPoints);
+
+    /**
+     * @brief writeElset Writes the _elset.inp file
+     * @param fileNames QList of output file names
+     * @param totalPoints Total points of incoming volume
+     * @return Integer error value
+     */
+    int32_t writeElset(const QList<QString>& fileNames, size_t totalPoints);
+
+    /**
+     * @brief writeMaster Writes the master file
+     * @param file Output file name
+     * @return Integer error value
+     */
+    int32_t writeMaster(const QString& file);
+
+    /**
+     * @brief getNodeIds Returns a vector of node Ids for a given
+     * set of dimensional indices
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param pDims Dimensions of incoming volume
+     * @return  Vector of node Ids
+     */
+    std::vector<int64_t> getNodeIds(size_t x, size_t y, size_t z, size_t* pDims);
+
+    /**
+     * @brief deleteFile Removes written files
+     * @param fileNames QList of output file names
+     */
+    void deleteFile(const QList<QString>& fileNames);
 
     AbaqusHexahedronWriter(const AbaqusHexahedronWriter&); // Copy Constructor Not Implemented
     void operator=(const AbaqusHexahedronWriter&); // Operator '=' Not Implemented
-
-    int writeNodes(const QList<QString>& fileNames, size_t* cDims, float* origin, float* spacing);
-    int writeElems(const QList<QString>& fileNames, size_t* cDims, size_t* pDims);
-    int writeSects(const QString& file, size_t elem);
-    int writeElset(const QList<QString>& fileNames, size_t totalPoints);
-    int writeMaster(const QString& file);
-    std::vector<int> getNodeIds(size_t index, size_t x, size_t y, size_t z, size_t* pDims);
-    void deleteFile(const QList<QString>& fileNames);
 };
 
 #endif /* _AbaqusHexahedronWriter_H_ */

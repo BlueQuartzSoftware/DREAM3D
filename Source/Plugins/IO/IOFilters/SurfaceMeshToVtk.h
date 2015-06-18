@@ -67,7 +67,9 @@ class  SurfaceMeshToVtk : public AbstractFilter
     Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
+
+    DREAM3D_FILTER_PARAMETER(bool, WriteConformalMesh)
+    Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -153,5 +155,3 @@ class  SurfaceMeshToVtk : public AbstractFilter
 };
 
 #endif /* _SurfaceMeshToVtk_H_ */
-
-

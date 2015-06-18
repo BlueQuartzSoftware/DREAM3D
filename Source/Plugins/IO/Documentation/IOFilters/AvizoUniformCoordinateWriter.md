@@ -2,7 +2,7 @@ Avizo Uniform Coordinate Writer {#avizouniformcoordinatewriter}
 ===========
 
 ## Group (Subgroup) ##
-I/O Filters (Output)
+IO (Output)
 
 ## Description ##
 

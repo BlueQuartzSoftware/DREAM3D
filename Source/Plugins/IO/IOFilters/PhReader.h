@@ -38,33 +38,21 @@
 #ifndef _PhReader_H_
 #define _PhReader_H_
 
-#include <QtCore/QObject>
-#include <stdio.h>
-#include <QtCore/QString>
-#include <QtCore/QScopedPointer>
-#include <vector>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 // our PIMPL private class
 class PhReaderPrivate;
 
 /**
- * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @brief The PhReader class
  */
 class  PhReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
     Q_DECLARE_PRIVATE(PhReader)
-
 
   public:
     DREAM3D_SHARED_POINTERS(PhReader)
@@ -72,15 +60,19 @@ class  PhReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(PhReader, FileReader)
 
     virtual ~PhReader();
+
     DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
@@ -112,26 +104,37 @@ class  PhReader : public FileReader
     virtual void preflight();
     virtual void execute();
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
+    DREAM3D_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
     DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
   public slots:
-    void flushCache();
-
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
+      /**
+       * @brief flushCache Clears the input file cache
+       */
+      void flushCache();
 
   protected:
     PhReader();
 
-    virtual int readHeader();
-    virtual int readFile();
+    /**
+     * @brief readHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t readHeader();
 
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t readFile();
+
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
     void dataCheck();
+
+    /**
+     * @brief updateCellInstancePointers Updates raw cell pointers
+     */
     void updateCellInstancePointers();
 
   private:
@@ -146,12 +149,4 @@ class  PhReader : public FileReader
 
 };
 
-#endif //_PHReader_h_
-
-
-
-
-
-
-
-
+#endif /* _PHReader_h_ */

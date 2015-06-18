@@ -36,18 +36,13 @@
 
 #include "FeatureDataCSVWriter.h"
 
-
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
@@ -77,12 +72,9 @@ FeatureDataCSVWriter::~FeatureDataCSVWriter()
 void FeatureDataCSVWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Output File", "FeatureDataFile", FilterParameterWidgetType::OutputFileWidget, getFeatureDataFile(), FilterParameter::Parameter, "", "*.csv", "Comma Separated Data"));
   parameters.push_back(FilterParameter::New("Write Neighbor Data", "WriteNeighborListData", FilterParameterWidgetType::BooleanWidget, getWriteNeighborListData(), FilterParameter::Parameter));
-
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, ""));
-
+  parameters.push_back(FilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -119,12 +111,11 @@ void FeatureDataCSVWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), 80000);
-  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -301);
 
   if (getFeatureDataFile().isEmpty() == true)
   {
-    QString ss = QObject::tr(": The output file must be set before executing this filter.");
+    QString ss = QObject::tr("The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
@@ -133,12 +124,12 @@ void FeatureDataCSVWriter::dataCheck()
   QDir parentPath(fi.path());
   if (parentPath.exists() == false)
   {
-    QString ss = QObject::tr("The directory path for the output file does not exist.");
+    QString ss = QObject::tr("The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
   if (fi.suffix().compare("") == 0)
   {
-    setFeatureDataFile(getFeatureDataFile().append(".dx"));
+    setFeatureDataFile(getFeatureDataFile().append(".csv"));
   }
 }
 
@@ -160,8 +151,7 @@ void FeatureDataCSVWriter::preflight()
 // -----------------------------------------------------------------------------
 void FeatureDataCSVWriter::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -177,11 +167,10 @@ void FeatureDataCSVWriter::execute()
     return;
   }
 
-
   QFile file(getFeatureDataFile());
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
-    QString ss = QObject::tr("Feature Data CSV Output file could not be opened: %1").arg(getFeatureDataFile());
+    QString ss = QObject::tr("Output file could not be opened: %1").arg(getFeatureDataFile());
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -198,17 +187,17 @@ void FeatureDataCSVWriter::execute()
 
   std::vector<IDataArray::Pointer> data;
 
-  //For checking if an array is a neighborlist
-  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::CreateArray(0, "Junk NeighborList", false);
+  // For checking if an array is a neighborlist
+  NeighborList<int32_t>::Pointer neighborlistPtr = NeighborList<int32_t>::CreateArray(0, "_INTERNAL_USE_ONLY_JunkNeighborList", false);
 
   // Print the FeatureIds Header before the rest of the headers
   outFile << DREAM3D::FeatureData::FeatureID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = cellFeatureAttrMat->getAttributeArray(*iter);
-    if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+    if (p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->getNumberOfComponents() == 1)
       {
@@ -216,7 +205,7 @@ void FeatureDataCSVWriter::execute()
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for(int k = 0; k < p->getNumberOfComponents(); ++k)
+        for (int32_t k = 0; k < p->getNumberOfComponents(); ++k)
         {
           outFile << m_Delimiter << (*iter) << "_" << k;
         }
@@ -232,13 +221,12 @@ void FeatureDataCSVWriter::execute()
 
   float threshold = 0.0f;
 
-  // Skip the first feature
-  for(size_t i = 1; i < numTuples; ++i)
+  // Skip feature 0
+  for (size_t i = 1; i < numTuples; ++i)
   {
     if (((float)i / numTuples) * 100.0f > threshold)
     {
-
-      QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
+      QString ss = QObject::tr("Writing Feature Data || %1% Complete").arg(((float)i / numTuples) * 100.0f);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
@@ -250,7 +238,7 @@ void FeatureDataCSVWriter::execute()
     // Print the feature id
     outFile << i;
     // Print a row of data
-    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    for (std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
     {
       outFile << m_Delimiter;
       (*p)->printTuple(outFile, i, m_Delimiter);
@@ -258,21 +246,20 @@ void FeatureDataCSVWriter::execute()
     outFile << "\n";
   }
 
-  if(m_WriteNeighborListData == true)
+  if (m_WriteNeighborListData == true)
   {
     // Print the FeatureIds Header before the rest of the headers
     // Loop throught the list and print the rest of the headers, ignoring those we don't want
-    for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
       IDataArray::Pointer p = cellFeatureAttrMat->getAttributeArray(*iter);
-      if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
+      if (p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
         outFile << DREAM3D::FeatureData::FeatureID << m_Delimiter << DREAM3D::FeatureData::NumNeighbors << m_Delimiter << (*iter) << "\n";
         numTuples = p->getNumberOfTuples();
-        //    float threshold = 0.0f;
 
-        // Skip the first feature
+        // Skip feature 0
         for(size_t i = 1; i < numTuples; ++i)
         {
           // Print the feature id
@@ -289,9 +276,7 @@ void FeatureDataCSVWriter::execute()
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "FeatureDataCSVWriter Completed");
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -316,13 +301,11 @@ AbstractFilter::Pointer FeatureDataCSVWriter::newFilterInstance(bool copyFilterP
 const QString FeatureDataCSVWriter::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -330,10 +313,8 @@ const QString FeatureDataCSVWriter::getGroupName()
 const QString FeatureDataCSVWriter::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getHumanLabel()
 { return "Write Feature Data as CSV File"; }
-

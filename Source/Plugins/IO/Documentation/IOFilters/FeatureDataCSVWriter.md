@@ -1,16 +1,15 @@
 Write Feature Data as CSV File {#featuredatacsvwriter}
-======
+=============
 
 ## Group (Subgroup) ##
-I/O Filters (Output)
-
+IO (Output)
 
 ## Description ##
-This Filter writes the **Feature** data, using a filename input by the user, to an output file in *CSV* format. Every array in the **Feature** map is written as a column of data in the csv file.  The user can choose to write the neighbor data. Neighbor data are data arrays that are associated with the neighbors of a **Feature**, such as: list of neighbors, list of misorientations, list of shared surface areas, etc. These blocks of info are written after the scalar data arrays.  Since the number of neighbors is variable for each **Feature**, the data is written as follows (for each **Feature**): Id, number of neighbors, value1, value2,...valueN.
+This Filter writes the data associated with each **Feature** to a file name specified by the user in *CSV* format. Every array in the **Feature** map is written as a column of data in the *CSV* file.  The user can choose to also write the neighbor data. Neighbor data are data arrays that are associated with the neighbors of a **Feature**, such as: list of neighbors, list of misorientations, list of shared surface areas, etc. These blocks of info are written after the scalar data arrays.  Since the number of neighbors is variable for each **Feature**, the data is written as follows (for each **Feature**): Id, number of neighbors, value1, value2,...valueN.
 
 
 ### Example Output ###
-The csv file:     
+The *CSV* file:     
 	 
 	2352														
     Feature_ID	Active	AvgEulerAngles_0	AvgEulerAngles_1	AvgEulerAngles_2	AvgQuats_0	AvgQuats_1	AvgQuats_2	AvgQuats_3	EquivalentDiameters	NumCells	NumNeighbors	ParentIds	Phases	Volumes
@@ -22,7 +21,7 @@ The csv file:
     6	1	-1.303	0.552201	1.37898	0.062097	-0.26544	0.03654	0.961432	1.03357	37	3	1026	1	0.578125
     7	1	0.978054	0.717843	-0.86783	0.21198	0.280091	0.051574	0.934855	0.984745	32	6	576	1	0.5
 
-The csv file with Write Neighbor Data checked:
+The *CSV* file with Write Neighbor Data checked:
 
     2352														
     Feature_ID	Active	AvgEulerAngles_0	AvgEulerAngles_1	AvgEulerAngles_2	AvgQuats_0	AvgQuats_1	AvgQuats_2	AvgQuats_3	EquivalentDiameters	NumCells	NumNeighbors	ParentIds	Phases	Volumes
@@ -40,8 +39,8 @@ The csv file with Write Neighbor Data checked:
 
 | Name | Type |Description |
 |------|------|------|
-| Output File | File Path |Select a file with extension .csv |
-| Write Neighbor Data | Boolean | |
+| Output File | File Path | Output .csv file path |
+| Write Neighbor Data | Boolean | Whether to write the **Feature** neighbor data |
 
 ## Required Geometry ##
 Not Applicable
@@ -51,7 +50,6 @@ None
 
 ## Created Arrays ##
 None
-
 
 ## License & Copyright ##
 

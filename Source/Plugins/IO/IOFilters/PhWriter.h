@@ -37,21 +37,13 @@
 #ifndef _PhWriter_H_
 #define _PhWriter_H_
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileWriter.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
- * @class PhWriter PhWriter.h DREAM3DLib/IOFilters/PhWriter.h
- * @brief This class writes a "Ph" file from the Feature Generator Data but is templated
- * so that possibly other classes can use this writing method. This code was adapted
- * from code supplied by S. Sintay and J. Tucker.
- *
- * @date Jun 7, 2011
- * @version 1.0
+ * @brief The PhWriter class. See [Filter documentation](@ref phwriter) for details.
  */
 class  PhWriter : public FileWriter
 {
@@ -106,28 +98,19 @@ class  PhWriter : public FileWriter
     */
     virtual void preflight();
 
-
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     PhWriter();
 
-    virtual int writeHeader();
-
-    virtual int writeFile();
+    /**
+     * @brief writeHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeHeader();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief writeFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeFile();
+
     void dataCheck();
 
   private:
@@ -137,8 +120,4 @@ class  PhWriter : public FileWriter
     void operator=(const PhWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* PHWRITER_HPP_ */
-
-
-
-
+#endif /* PhWriter_H_ */

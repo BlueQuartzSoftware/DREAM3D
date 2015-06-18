@@ -37,21 +37,12 @@
 #ifndef _ExportData_H_
 #define _ExportData_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 
 /**
- * @class ExportData ExportData.h /FilterCategoryFilters/ExportData.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The ExportData class. See [Filter documentation](@ref exportdata) for details.
  */
 class ExportData : public AbstractFilter
 {
@@ -63,8 +54,8 @@ class ExportData : public AbstractFilter
 
     virtual ~ExportData();
 
-	DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
-	Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+    Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
@@ -141,17 +132,14 @@ class ExportData : public AbstractFilter
   protected:
     ExportData();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
+    /**
+     * @brief lookupDelimeter Returns the char representation for the
+     * selected delimiter
+     * @return Char for delimiter
+     */
     char lookupDelimeter();
 
     QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
@@ -161,5 +149,3 @@ class ExportData : public AbstractFilter
 };
 
 #endif /* _ExportData_H_ */
-
-

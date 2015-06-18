@@ -2,27 +2,21 @@ Write SPParks File (Feature Ids) {#spparkswriter}
 ============
 
 ## Group (Subgroup) ##
-
-I/O Filters (Output)
-
+IO (Output)
 
 ## Description ##
-
 This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
 
 + The "Values" section is a pair of numbers where the first number is the site ID and the second
  number is the actual value of the **Feature** Id at that site.
 + LINE 4 evidently must be what is shown in the example file.
 + LINE 3 is the total number of **Cells**.
-+ LINES 5,6 and 7 are the Dimensions of the volume. 
++ LINES 5, 6 and 7 are the dimensions of the volume. 
 
+More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html "SPParks Web Site")
 
- More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html "SPParks Web Site")
+## Example Output ##
 
- Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.
-
-**Start Example Partial File**
-~~~~~~~~~~~~~~~~~~~~~~~~~
     [LINE 1] -
     [LINE 2] 3 dimension
     [LINE 3] 8000000 sites
@@ -40,14 +34,13 @@ This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Car
     5 509
     6 509
     7 509
-    .....
-~~~~~~~~~~~~~~~~~~~~~~~~~
+    …..
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------|------|
-| Output File | File Path | Create a file with extension .spparks |
+| Output File | File Path | Output .spparks file path |
 
 ## Required Geometry ##
 Image / Rectilinear Grid
@@ -56,10 +49,9 @@ Image / Rectilinear Grid
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (int) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Arrays ##
-
 None
 
 ## License & Copyright ##

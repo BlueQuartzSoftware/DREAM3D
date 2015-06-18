@@ -36,17 +36,9 @@
 
 #include "PhWriter.h"
 
-
-#include <fstream>
-
-#include <iomanip>
-#include <QtCore/QMap>
-#include <QtCore/QString>
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QtDebug>
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
@@ -54,14 +46,12 @@
 
 #include "IO/IOConstants.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 PhWriter::PhWriter() :
   FileWriter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -81,11 +71,8 @@ PhWriter::~PhWriter()
 void PhWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.ph", "CMU Feature Growth"));
-
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -117,24 +104,39 @@ void PhWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  if(getOutputFile().isEmpty() == true)
-  {
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+  if (getOutputFile().isEmpty() == true)
+  {
+    QString ss = QObject::tr("The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0) { return; }
+  QFileInfo fi(getOutputFile());
 
-  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
+  QDir parentPath = fi.path();
+  if (parentPath.exists() == false)
+  {
+    QString ss = QObject::tr("The directory path for the output file does not exist");
+    notifyWarningMessage(getHumanLabel(), ss, -1);
+  }
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(getErrorCondition() < 0) { return; }
+
+  size_t volTuples = image->getNumberOfElements();
+
+  if (volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples() )
+  {
+    setErrorCondition(-10200);
+    QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match.").arg(m_FeatureIdsPtr.lock()->getName()).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+                                                                                                notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +155,7 @@ void PhWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PhWriter::writeHeader()
+int32_t PhWriter::writeHeader()
 {
   return 0;
 }
@@ -161,13 +163,15 @@ int PhWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PhWriter::writeFile()
+int32_t PhWriter::writeFile()
 {
+  setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -180,13 +184,13 @@ int PhWriter::writeFile()
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
   };
-  int64_t totalpoints = dims[0] * dims[1] * dims[2];
+  size_t totalpoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(getOutputFile());
   QDir parentPath(fi.path());
-  if(!parentPath.mkpath("."))
+  if (!parentPath.mkpath("."))
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
@@ -197,30 +201,31 @@ int PhWriter::writeFile()
 
   std::ofstream outfile;
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
-  if(!outfile)
+  if (!outfile)
   {
-    qDebug() << "Failed to open: " << getOutputFile() ;
-    return -1;
+    QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
   }
 
-  //int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   // Find the unique number of features
-  QMap<int, bool> used;
-  for (int i = 0; i < totalpoints; ++i)
+  QMap<int32_t, bool> used;
+  for (size_t i = 0; i < totalpoints; ++i)
   {
     used[m_FeatureIds[i]] = true;
   }
 
-  int features = 0;
-  typedef QMap<int, bool>::iterator iterator;
+  int32_t features = 0;
+  typedef QMap<int32_t, bool>::iterator iterator;
   for (iterator i = used.begin(); i != used.end(); i++)
   {
-    if(i.value() == true)
+    if (i.value() == true)
     {
       features++;
     }
   }
-  //qDebug()<<features<< " " << used.size() ;
+
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
@@ -230,7 +235,7 @@ int PhWriter::writeFile()
   outfile << "\'DREAM3\'              52.00  1.000  1.0       " << features << "\n";
   outfile << " 0.000 0.000 0.000          0        \n"; // << features << endl;
 
-  for (int k = 0; k < totalpoints; k++)
+  for (size_t k = 0; k < totalpoints; k++)
   {
     outfile << m_FeatureIds[k] << '\n';
   }
@@ -239,7 +244,9 @@ int PhWriter::writeFile()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Writing Ph File Complete");
   return 0;
-}// -----------------------------------------------------------------------------
+}
+
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters)
@@ -258,13 +265,11 @@ AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters)
 const QString PhWriter::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhWriter::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -272,10 +277,8 @@ const QString PhWriter::getGroupName()
 const QString PhWriter::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhWriter::getHumanLabel()
 { return "Write Ph File (Feature Ids)"; }
-

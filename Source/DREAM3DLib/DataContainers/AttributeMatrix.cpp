@@ -176,7 +176,6 @@ int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer 
   {
     qDebug() << "AttributeMatrix::Name: " << getName() << "  dataArray::name:  " << data->getName() << " Type: " << data->getTypeAsString();
     qDebug() << "getNumTuples(): " << getNumTuples() << "  data->getNumberOfTuples(): " << data->getNumberOfTuples();
-
   }
   Q_ASSERT(getNumTuples() == data->getNumberOfTuples());
 
@@ -454,7 +453,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if(classType.compare("StringDataArray") == 0)
   {
     dPtr = H5DataArrayReader::ReadStringDataArray(gid, name, preflight);
-	if (preflight == true)
+  if (preflight == true)
     {
       dPtr->resize(getNumTuples());
     }
@@ -466,7 +465,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if(classType.compare("NeighborList<T>") == 0)
   {
     dPtr = H5DataArrayReader::ReadNeighborListData(gid, name, preflight);
-	if (preflight == true)
+  if (preflight == true)
     {
       dPtr->resize(getNumTuples());
     }
@@ -477,7 +476,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
     statsData->setName(DREAM3D::EnsembleData::Statistics);
     statsData->readH5Data(gid);
     dPtr = statsData;
-	if (preflight == true)
+  if (preflight == true)
     {
       dPtr->resize(getNumTuples());
     }

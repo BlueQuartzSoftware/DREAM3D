@@ -1,5 +1,5 @@
 Create Feature Array From Cell Array {#createfeaturearrayfromelementarray}
-==============================
+=============
 
 ## Group (Subgroup) ##
 

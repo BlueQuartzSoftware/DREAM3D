@@ -37,33 +37,23 @@
 #ifndef _DxReader_H_
 #define _DxReader_H_
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QDateTime>
-#include <vector>
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 // our PIMPL private class
 class DxReaderPrivate;
 
 /**
- * @class DxReader DxReader.h DREAM3DLib/IO/DxReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @brief The DxReader class. See [Filter documentation](@ref dxreader) for details.
  */
-class  DxReader : public FileReader
+class DxReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-  Q_DECLARE_PRIVATE(DxReader)
+    Q_DECLARE_PRIVATE(DxReader)
 
   public:
     DREAM3D_SHARED_POINTERS(DxReader)
@@ -71,15 +61,19 @@ class  DxReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader)
 
     virtual ~DxReader();
+
     DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
@@ -96,41 +90,43 @@ class  DxReader : public FileReader
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
     virtual void execute();
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, Dims)
+    DREAM3D_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
     DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
-  public slots:
-  void flushCache();
-
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
+    public slots:
+      /**
+       * @brief flushCache Clears the input file cache
+       */
+      void flushCache();
 
   protected:
     DxReader();
 
-    virtual int readHeader();
-    virtual int readFile();
+    /**
+     * @brief readHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t readHeader();
 
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t readFile();
+
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
     void dataCheck();
+
+    /**
+     * @brief updateCellInstancePointers Updates raw cell pointers
+     */
     void updateCellInstancePointers();
 
   private:
@@ -145,7 +141,4 @@ class  DxReader : public FileReader
 
 };
 
-#endif /* DXREADER_H_ */
-
-
-
+#endif /* DxReader_H_ */

@@ -59,16 +59,42 @@ class DREAM3DLib_EXPORT FileWriter : public AbstractFilter
     virtual void execute();
 
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     FileWriter();
 
-    virtual int writeHeader();
-    virtual int writeFile();
+    /**
+     * @brief writeHeader Writes the header of the output file
+     * @return Integer error value
+     */
+    virtual int32_t writeHeader();
+
+    /**
+     * @brief writeFile Writes the contents of the output file
+     * @return Integer error value
+     */
+    virtual int32_t writeFile();
 
   private:
     FileWriter(const FileWriter&); // Copy Constructor Not Implemented

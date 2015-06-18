@@ -1,17 +1,13 @@
 Read Ensemble Info File {#ensembleinforeader}
-======
+=============
+
 ## Group (Subgroup) ##
-IO Filters (Input)
+IO (Input)
 
 ## Description ##
-This filter reads in information about the Crystal Structure and Phases of
- all the **Features** that are contained in a **Cell** based volume. These
- values are needed to allow the calculation of statistics on the volume.
- The format of that file is a simple text file with the extension .ini or .txt.
- The first group in the file  is the name [EnsembleInfo] in square brackets with the key Number_Phases=number of phases that are contained in the volume and subsequent groups in
- the file list the __Phase Number__, __Crystal Structure__ and __Phase Type__.
- The proper values for the crystal structure and phase type come from internal
- constants within DREAM3D and are listed here:
+This Filter reads in information about the crystal structure and phase types of all the **Features** that are contained in a **Cell** based volume. 
+These values are needed to allow the calculation of statistics on the volume, if they have not already been provided by some other means. 
+The format of the input file is a simple ASCII text file with the extension .ini or .txt. The first group in the file is the name [EnsembleInfo] in square brackets with the key Number_Phases=*number of phases* that are contained in the volume. Subsequent groups in the file list the __Phase Number__, __Crystal Structure__ and __Phase Type__. The proper values for the crystal structure and phase type come from internal constants within DREAM.3D and are listed here:
 
 **Crystal Structure**
 
@@ -41,11 +37,10 @@ This filter reads in information about the Crystal Structure and Phases of
 | BoundaryPhase | 4 |
 | UnknownPhaseType | 999 |
 
-## Example ##
+## Example Input ##
 
-__Phase numbering starts at One (1). Phase Zero (0) is reserved for internal use in DREAM3D.__
-For example if you have a structure that has 2 phases that consist of a Cubic Primary phase and a Hexagonal Matrix phase the file would be the following:
-
+__Phase numbering starts at One (1). Phase Zero (0) is reserved for internal use in DREAM.3D__
+For example, if you have a structure that has 2 phases that consist of a Cubic Primary phase and a Hexagonal Matrix phase the file would be the following:
 
 	[EnsembleInfo]
 	Number_Phases=2
@@ -63,21 +58,20 @@ For example if you have a structure that has 2 phases that consist of a Cubic Pr
 
 | Name | Type | Description |
 |------|------|-------------|
-| Input Ensemble Info File | File Path | Read in the Crystal Structures and Phase Types |
+| Input Ensemble Info File | File Path | Input file location |
 | Cell Ensemble Attribute Matrix | String | Name for created attribute matrix |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-
 None
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimension | Description |
 |------|--------------|-------------|---------|--------------|
-| Ensemble | CrystalStructures | Integer [See above for values] | (1)  | |
-| Ensemble | PhaseTypes        | Integer [See above for values] | (1) | |
+| Ensemble | CrystalStructures | UInt | (1)  | Enumeration representing the crystal structure for each phase |
+| Ensemble | PhaseTypes        | UInt | (1) | Enumeration representing the type for each phase |
 
 
 ## License & Copyright ##

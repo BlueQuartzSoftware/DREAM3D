@@ -33,24 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _GBCDTriangleDumper_H_
 #define _GBCDTriangleDumper_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class GBCDTriangleDumper GBCDTriangleDumper.h DREAM3DLib/SurfaceMeshFilters/GBCDTriangleDumper.h
- * @brief This filter calculates the centroid of each triangle in the surface mesh.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
- * @version 1.0
+ * @brief The GBCDTriangleDumper class. See [Filter documentation](@ref gbcdtriangledumper) for details.
  */
 class GBCDTriangleDumper : public AbstractFilter
 {
@@ -65,11 +57,6 @@ class GBCDTriangleDumper : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
@@ -122,8 +109,6 @@ class GBCDTriangleDumper : public AbstractFilter
     */
     virtual void preflight();
 
-    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
-
   signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
@@ -133,14 +118,6 @@ class GBCDTriangleDumper : public AbstractFilter
   protected:
     GBCDTriangleDumper();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheckSurfaceMesh();
     void dataCheckVoxel();
 
@@ -150,14 +127,8 @@ class GBCDTriangleDumper : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
 
-
     GBCDTriangleDumper(const GBCDTriangleDumper&); // Copy Constructor Not Implemented
     void operator=(const GBCDTriangleDumper&); // Operator '=' Not Implemented
 };
 
 #endif /* _GBCDTriangleDumper_H_ */
-
-
-
-
-

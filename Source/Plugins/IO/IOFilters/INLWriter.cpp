@@ -36,29 +36,17 @@
 
 #include "INLWriter.h"
 
-#include <fstream>
-
-#include <QtCore/QtDebug>
 #include <QtCore/QDateTime>
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-
-#include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
+#include "EbsdLib/TSL/AngConstants.h"
 
 #include "IO/IOConstants.h"
 
@@ -73,13 +61,9 @@ INLWriter::INLWriter() :
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_NumFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
   m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   setupFilterParameters();
@@ -101,7 +85,7 @@ void INLWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.txt", "INL Format"));
   parameters.push_back(SeparatorFilterParameter::New("Required Cell Information", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(SeparatorFilterParameter::New("Required Ensemble Information", FilterParameter::RequiredArray));
@@ -152,43 +136,58 @@ void INLWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0 || NULL == dc.get()) { return; }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  if(getOutputFile().isEmpty() == true)
+  if (getOutputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+  if (parentPath.exists() == false)
+  {
+    QString ss = QObject::tr("The directory path for the output file does not exist");
+    notifyWarningMessage(getHumanLabel(), ss, -1);
+  }
+
+  QVector<DataArrayPath> cellDataArrayPaths;
+  QVector<DataArrayPath> ensembleDataArrayPaths;
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getFeatureIdsArrayPath()); }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getCellPhasesArrayPath()); }
 
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getCrystalStructuresArrayPath()); }
 
-  m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getNumFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getNumFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getNumFeaturesArrayPath()); }
 
-  m_MaterialNamePtr = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this,  getMaterialNameArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_MaterialNamePtr = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this,  getMaterialNameArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getMaterialNameArrayPath()); }
 
-  dims[0] = 3;
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 3;
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getCellEulerAnglesArrayPath()); }
 
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, cellDataArrayPaths);
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, ensembleDataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -207,7 +206,7 @@ void INLWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int INLWriter::writeHeader()
+int32_t INLWriter::writeHeader()
 {
   return 0;
 }
@@ -219,7 +218,6 @@ uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
 {
   switch(symmetry)
   {
-
     case Ebsd::CrystalStructure::Cubic_High:
       return Ebsd::Ang::PhaseSymmetry::Cubic;
     case Ebsd::CrystalStructure::Cubic_Low:
@@ -246,37 +244,35 @@ uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
       return Ebsd::Ang::PhaseSymmetry::Trigonal;
     default:
       return Ebsd::CrystalStructure::UnknownCrystalStructure;
-
   }
   return Ebsd::CrystalStructure::UnknownCrystalStructure;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int INLWriter::writeFile()
+int32_t INLWriter::writeFile()
 {
+  setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-  int err = 0;
-  size_t dims[3] =
-  { 0, 0, 0 };
+  int32_t err = 0;
+  size_t dims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
-
-  float res[3];
+  float res[3] = { 0.0f, 0.0f, 0.0f };
   m->getGeometryAs<ImageGeom>()->getResolution(res);
-
-  float origin[3];
+  float origin[3] = { 0.0f, 0.0f, 0.0f };
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(getOutputFile());
   QDir dir(fi.path());
-  if(!dir.mkpath("."))
+  if (!dir.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(fi.path());
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -285,9 +281,9 @@ int INLWriter::writeFile()
   }
 
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
-  if(NULL == f)
+  if (NULL == f)
   {
-    QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
+    QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
@@ -308,13 +304,12 @@ int INLWriter::writeFile()
   fprintf(f, "# Y_MAX: %f\r\n", origin[1] + (dims[1]*res[1]));
   fprintf(f, "# Z_MAX: %f\r\n", origin[2] + (dims[2]*res[2]));
   fprintf(f, "#\r\n");
-  fprintf(f, "# X_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[0]));
-  fprintf(f, "# Y_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[1]));
-  fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
+  fprintf(f, "# X_DIM: %llu\r\n", static_cast<uint64_t>(dims[0]));
+  fprintf(f, "# Y_DIM: %llu\r\n", static_cast<uint64_t>(dims[1]));
+  fprintf(f, "# Z_DIM: %llu\r\n", static_cast<uint64_t>(dims[2]));
   fprintf(f, "#\r\n");
 
   StringDataArray* materialNames = m_MaterialNamePtr.lock().get();
-
 
 #if 0
   -------------------------------------------- -
@@ -337,7 +332,7 @@ int INLWriter::writeFile()
 
   uint32_t symmetry = 0;
   int32_t count = static_cast<int32_t>(materialNames->getNumberOfTuples());
-  for(int32_t i = 1; i < count; ++i)
+  for (int32_t i = 1; i < count; ++i)
   {
     QString matName = materialNames->getValue(i);
     fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
@@ -348,8 +343,8 @@ int INLWriter::writeFile()
     fprintf(f, "#\r\n");
   }
 
-  QSet<int32_t> uniqueFeatureIds;
-  for(int64_t i = 0; i < totalPoints; ++i)
+  std::set<int32_t> uniqueFeatureIds;
+  for (size_t i = 0; i < totalPoints; ++i)
   {
     uniqueFeatureIds.insert(m_FeatureIds[i]);
   }
@@ -362,20 +357,15 @@ int INLWriter::writeFile()
   //  fprintf(f, "# Column 7: Feature ID\r\n");
   //  fprintf(f, "# Column 8: Phase ID\r\n");
 
-
   fprintf(f, "# phi1 PHI phi2 x y z FeatureId PhaseId Symmetry\r\n");
 
-  float phi1, phi, phi2;
-  float xPos, yPos, zPos;
-  int32_t featureId;
-  int32_t phaseId;
-
-  // unsigned char rgba[4] = {0,0,0,255};
-  //float refDir[3] = {0.0f, 0.0f, 1.0f};
-
+  float phi1 = 0.0f, phi = 0.0f, phi2 = 0.0f;
+  float xPos = 0.0f, yPos = 0.0f, zPos = 0.0f;
+  int32_t featureId = 0;
+  int32_t phaseId = 0;
 
   size_t index = 0;
-  for(size_t z = 0; z < dims[2]; ++z)
+  for (size_t z = 0; z < dims[2]; ++z)
   {
     for (size_t y = 0; y < dims[1]; ++y)
     {
@@ -390,15 +380,14 @@ int INLWriter::writeFile()
         zPos = origin[2] + (z * res[2]);
         featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
-        // rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
         symmetry = m_CrystalStructures[phaseId];
-        if(phaseId > 0)
+        if (phaseId > 0)
         {
-          if(symmetry == Ebsd::CrystalStructure::Cubic_High)
+          if (symmetry == Ebsd::CrystalStructure::Cubic_High)
           {
             symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
           }
-          else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
+          else if (symmetry == Ebsd::CrystalStructure::Hexagonal_High)
           {
             symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
           }
@@ -411,7 +400,6 @@ int INLWriter::writeFile()
         {
           symmetry = Ebsd::Ang::PhaseSymmetry::UnknownSymmetry;
         }
-
 
         fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n", phi1, phi, phi2, xPos, yPos, zPos, featureId, phaseId, symmetry);
       }
@@ -443,13 +431,11 @@ AbstractFilter::Pointer INLWriter::newFilterInstance(bool copyFilterParameters)
 const QString INLWriter::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString INLWriter::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -457,10 +443,8 @@ const QString INLWriter::getGroupName()
 const QString INLWriter::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString INLWriter::getHumanLabel()
 { return "Write INL File"; }
-

@@ -1,15 +1,13 @@
 Write Ph File (Feature Ids) {#phwriter}
-======
+=============
 
 ## Group (Subgroup) ##
-I/O Filters (Output)
-
+IO (Output)
 
 ## Description ##
-This Filter writes to a data file in a format used by Carnegie Mellon University.  See the [PhReader](PhReader.html "") filter description for example data format. Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. 
+This Filter writes a custom data file used by the Materials Science Department at Carnegie Mellon University.  See the [PhReader](PhReader.html "") Filter description for example data format.
 
 ### Example Output ###
-**Example File (Partial)**
 
          189     201     117
     'DREAM3'              52.00  1.000  1.0       2353
@@ -38,7 +36,7 @@ This Filter writes to a data file in a format used by Carnegie Mellon University
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | File Path | Create a file with extension .ph |
+| Output File | File Path | Output .ph file path |
 
 ## Required Geometry ##
 Image / Rectilinear Grid
@@ -46,7 +44,7 @@ Image / Rectilinear Grid
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (int) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Arrays ##
 None

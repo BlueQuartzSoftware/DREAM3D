@@ -23,23 +23,14 @@ set(_PublicFilters
   FeatureInfoReader
   GBCDTriangleDumper
   INLWriter
-  LammpsFileWriter
   LosAlamosFFTWriter
-  NodesTrianglesToStl
-  NodesTrianglesToVtk
   PhReader
   PhWriter
-  ReadStlToSurfaceMesh
   SPParksTextReader
   SPParksWriter
-  SurfaceMeshToNodesTrianglesEdges
-  SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
-  SurfaceMeshToVtk
-  VASPReader
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
-  VtkRectilinearGridWriter
   VtkStructuredPointsReader
 )
 
@@ -60,8 +51,17 @@ endforeach()
 set(_PrivateFilters
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
+  EddyCurrentDataReader
   GoldfeatherReader
-  V4DataContainerReader
+  LammpsFileWriter
+  NodesTrianglesToStl
+  NodesTrianglesToVtk
+  ReadStlToSurfaceMesh
+  SurfaceMeshToNonconformalVtk
+  SurfaceMeshToNodesTrianglesEdges
+  SurfaceMeshToVtk
+  VASPReader
+  VtkRectilinearGridWriter
   YSChoiAbaqusReader
 )
 

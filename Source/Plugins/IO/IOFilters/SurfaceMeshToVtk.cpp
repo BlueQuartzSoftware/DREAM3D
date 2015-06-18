@@ -85,7 +85,7 @@ void SurfaceMeshToVtk::setupFilterParameters()
 
   parameters.push_back(FileSystemFilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), FilterParameter::Parameter));
-
+  parameters.push_back(FilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", FilterParameterWidgetType::BooleanWidget, getWriteConformalMesh(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, ""));
 
@@ -102,6 +102,7 @@ void SurfaceMeshToVtk::readFilterParameters(AbstractFilterParametersReader* read
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
   setOutputVtkFile( reader->readString( "OutputVtkFile", getOutputVtkFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
+  setWriteConformalMesh( reader->readValue("WriteConformalMesh", getWriteConformalMesh() ) );
   reader->closeFilterGroup();
 }
 
@@ -291,13 +292,14 @@ void SurfaceMeshToVtk::execute()
   }
 
   int tData[4];
+  int triangleCount = numTriangles;
   //  int tn1, tn2, tn3;
   if (false == m_WriteConformalMesh)
   {
-    numTriangles = numTriangles * 2;
+    triangleCount = numTriangles * 2;
   }
   // Write the POLYGONS
-  fprintf(vtkFile, "\nPOLYGONS %lld %lld\n", (long long int)numTriangles, (long long int)(numTriangles * 4));
+  fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int j = 0; j < numTriangles; j++)
   {
     //  Triangle& t = triangles[j];
@@ -376,7 +378,6 @@ void writePointScalarData(DataContainer::Pointer dc, const QString& vertexAttrib
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
       }
-
     }
   }
 }
@@ -442,15 +443,16 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 
   TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
   qint64 numNodes = triangleGeom->getNumberOfVertices();
+  int64_t numberWrittenumNodes = 0;
 
   // Write the Node Type Data to the file
   for (int i = 0; i < numNodes; i++)
   {
-    if (m_SurfaceMeshNodeType[i] > 0) { ++numNodes; }
+    if (m_SurfaceMeshNodeType[i] > 0) { ++numberWrittenumNodes; }
   }
   // This is the section header
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %lld\n", numNodes);
+  fprintf(vtkFile, "POINT_DATA %lld\n", numberWrittenumNodes);
 
 
   fprintf(vtkFile, "SCALARS Node_Type char 1\n");

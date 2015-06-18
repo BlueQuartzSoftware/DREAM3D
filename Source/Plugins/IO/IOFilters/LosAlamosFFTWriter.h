@@ -37,21 +37,14 @@
 #ifndef _LosAlamosFFTWriter_H_
 #define _LosAlamosFFTWriter_H_
 
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileWriter.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 /**
- * @class LosAlamosFFTWriter LosAlamosFFTWriter.h DREAM3DLib/IOFilters/LosAlamosFFTWriter.h
- * @brief Writes out an Text file according to Ricardo Lebenson's FFT simulation software.
- *
- * @date Nov 13, 2012
- * @version 1.0
+ * @brief The LosAlamosFFTWriter class. See [Filter documentation](@ref losalamosfftwriter) for details.
  */
 class  LosAlamosFFTWriter : public FileWriter
 {
@@ -60,7 +53,6 @@ class  LosAlamosFFTWriter : public FileWriter
     DREAM3D_SHARED_POINTERS(LosAlamosFFTWriter)
     DREAM3D_STATIC_NEW_MACRO(LosAlamosFFTWriter)
     DREAM3D_TYPE_MACRO_SUPER(LosAlamosFFTWriter, FileWriter)
-
 
     virtual ~LosAlamosFFTWriter();
 
@@ -94,24 +86,23 @@ class  LosAlamosFFTWriter : public FileWriter
 
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     LosAlamosFFTWriter();
 
-    virtual int writeHeader();
-    virtual int writeFile();
+    /**
+     * @brief writeHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeHeader();
+
+    /**
+     * @brief writeFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeFile();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    //unsigned int* m_CrystalStructures;
-    //StringDataArray::Pointer m_MaterialNames;
 
     void dataCheck();
 
@@ -120,7 +111,3 @@ class  LosAlamosFFTWriter : public FileWriter
 };
 
 #endif /* _LosAlamosFFTWriter_H_ */
-
-
-
-

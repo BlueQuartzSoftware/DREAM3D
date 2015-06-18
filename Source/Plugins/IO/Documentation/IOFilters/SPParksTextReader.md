@@ -1,25 +1,22 @@
-SPParks Text Reader {#spparkstextreader}
-=====
+Read SPParks Text File {#spparkstextreader}
+=============
 
 ## Group (Subgroup) ##
-I/O Filters (Input)
-
+IO (Input)
 
 ## Description ##
-This Filter reads from a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
+This Filter reads from a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/). The information in the file defines an **Image** geometry with a set of **Feature** Ids.
 
-+ The "Values" section is a pair of numbers where the first number is the site ID and the second
++ The "Values" section is a pair of numbers where the first number is the site Id and the second
  number is the actual value of the **Feature** Id at that site.
 + LINE 4 evidently must be what is shown in the example file.
 + LINE 3 is the total number of **Cells**.
-+ LINES 5,6 and 7 are the Dimensions of the volume. 
++ LINES 5, 6 and 7 are the dimensions of the volume. 
 
-
- More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html "SPParks Web Site")
-
+More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html "SPParks Web Site")
  
-**Start Example Partial File**
-~~~~~~~~~~~~~~~~~~~~~~~~~
+## Example Input ##
+
     [LINE 1] -
     [LINE 2] 3 dimension
     [LINE 3] 8000000 sites
@@ -37,33 +34,29 @@ This Filter reads from a data file in a format used by [SPPARKS Kinetic Monte Ca
     5 509
     6 509
     7 509
-    .....
-~~~~~~~~~~~~~~~~~~~~~~~~~
+    …..
+
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Input File | File Path | .spparks file|
-| Origin (XYZ) | int | The location in space coordinates of the (0,0,0) voxel |
-| Resolution (XYZ) | int | X, Y, Z Resolution of the data |
-| One Based Arrays | Boolean | Origin starts at (1,1,1) |
-| Volume Data Container | String | Output data container, DataContainer |
-| Cell Attribute Matrix | String | Output attribute matrix, CellData |
-| FeatureIds | String | Output feature ids, Site Type |
+| Input File | File Path | Input .dump file path |
+| Origin | Float (x3) | The location in space of the (0, 0, 0) voxel |
+| Resolution | Float (x3) | Vector of resolution values (dx, dy, dz) |
+| One Based Arrays | Boolean | Whether the origin starts at (1, 1, 1) |
+| Data Container | String | Created **Data Container** name |
+| Cell Attribute Matrix | String | Created **Cell Attribute Matrix** name |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Not Applicable
 
 ## Required Arrays ##
 None
 
-
 ## Created Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds (Site Type) | Ids (int) that specify to which **Feature** each **Cell** belongs. | (1) | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## License & Copyright ##
 

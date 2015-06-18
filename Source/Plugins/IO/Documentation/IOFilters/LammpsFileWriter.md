@@ -2,7 +2,7 @@ Lammps File Writer{#lammpsfilewriter}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+IO (Input)
 
 ## Description ##
 

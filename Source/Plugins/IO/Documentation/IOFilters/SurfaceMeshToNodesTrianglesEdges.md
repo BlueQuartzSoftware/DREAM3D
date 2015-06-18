@@ -2,7 +2,7 @@ Write Nodes/Triangles/Edges from Surface Mesh {#surfacemeshtonodestrianglesedges
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+IO (Output)
 
 ## Description ##
 

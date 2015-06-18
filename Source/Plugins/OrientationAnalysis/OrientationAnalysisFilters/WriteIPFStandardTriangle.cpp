@@ -257,12 +257,10 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
   fontHeight = metrics.height();
   painter.drawText( pImageWidth - (fontWidth * 1.25), pImageHeight - fontHeight, label);
 
-
   label = QString("[001]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   painter.drawText( 10, pImageHeight - fontHeight, label);
-
 
   label = QString("Cubic m-3m");
   fontWidth = metrics.width(label);
@@ -271,7 +269,6 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 
   return pImage;
 }
-
 
 // -----------------------------------------------------------------------------
 //

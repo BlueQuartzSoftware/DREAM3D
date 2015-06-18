@@ -37,20 +37,12 @@
 #ifndef _AbaqusSurfaceMeshWriter_H_
 #define _AbaqusSurfaceMeshWriter_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 /**
- * @class AbaqusSurfaceMeshWriter AbaqusSurfaceMeshWriter.h IOFilters/Code/IOFiltersFilters/AbaqusSurfaceMeshWriter.h
- * @brief This filter will create an Abaqus Input file that is a Surface Mesh using S3 element types
- * @author
- * @date
- * @version 1.0
+ * @brief The AbaqusSurfaceMeshWriter class. See [Filter documentation](@ref abaqussurfacemeshwriter) for details.
  */
 class  AbaqusSurfaceMeshWriter : public AbstractFilter
 {
@@ -62,15 +54,9 @@ class  AbaqusSurfaceMeshWriter : public AbstractFilter
 
     virtual ~AbaqusSurfaceMeshWriter();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
@@ -123,34 +109,44 @@ class  AbaqusSurfaceMeshWriter : public AbstractFilter
   protected:
     AbaqusSurfaceMeshWriter();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
-    int writeHeader(FILE* f, int64_t nodeCount, int64_t triCount, int featureCount);
-    int writeNodes(FILE* f);
-    int writeTriangles(FILE* f);
-    int writeFeatures(FILE* f);
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+
+    /**
+     * @brief writeHeader Writes the header of the .inp file
+     * @param f Output file
+     * @param nodeCount Number of nodes
+     * @param triCount Number of triangles
+     * @param featureCount Number of Features
+     * @return Integer error value
+     */
+    int32_t writeHeader(FILE* f, int64_t nodeCount, int64_t triCount, int featureCount);
+
+    /**
+     * @brief writeNodes Writes the nodes to the .inp file
+     * @param f Output file
+     * @return Integer error value
+     */
+    int32_t writeNodes(FILE* f);
+
+    /**
+     * @brief writeTriangles Writes the triangles to the .inp file
+     * @param f Output file
+     * @return Integer error value
+     */
+    int32_t writeTriangles(FILE* f);
+
+    /**
+     * @brief writeFeatures Writes the Features to the .inp file
+     * @param f Output file
+     * @return Integer error value
+     */
+    int32_t writeFeatures(FILE* f);
 
     AbaqusSurfaceMeshWriter(const AbaqusSurfaceMeshWriter&); // Copy Constructor Not Implemented
     void operator=(const AbaqusSurfaceMeshWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* _AbaqusSurfaceMeshWriter_H_ */
-
-
-
-
-
-
-
-

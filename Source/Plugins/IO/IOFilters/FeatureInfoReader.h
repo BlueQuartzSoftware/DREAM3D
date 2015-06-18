@@ -34,25 +34,16 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
 #ifndef _FeatureInfoReader_H_
 #define _FeatureInfoReader_H_
 
-#include <QtCore/QString>
-#include <vector>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
- * @class FeatureInfoReader FeatureInfoReader.h DREAM3DLib/IO/FeatureInfoReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @brief The FeatureInfoReader class. See [Filter documentation](@ref featureinforeader) for details.
  */
 class  FeatureInfoReader : public FileReader
 {
@@ -63,16 +54,20 @@ class  FeatureInfoReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(FeatureInfoReader, FileReader)
 
     virtual ~FeatureInfoReader();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     /* Input Parameters */
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
     DREAM3D_FILTER_PARAMETER(bool, CreateCellLevelArrays)
     Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays)
+
     DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
     Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
@@ -112,23 +107,32 @@ class  FeatureInfoReader : public FileReader
 
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     FeatureInfoReader();
 
-    virtual int readHeader();
-    virtual int readFile();
+    /**
+     * @brief readHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t readHeader();
 
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t readFile();
+
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
     void dataCheck();
+
+    /**
+     * @brief updateFeatureInstancePointers Updates raw feature pointers
+     */
     void updateFeatureInstancePointers();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
@@ -136,15 +140,6 @@ class  FeatureInfoReader : public FileReader
 
     FeatureInfoReader(const FeatureInfoReader&); //Not Implemented
     void operator=(const FeatureInfoReader&); //Not Implemented
-
 };
 
-#endif //_FeatureInfoReader_h_
-
-
-
-
-
-
-
-
+#endif /* _FeatureInfoReader_h_ */

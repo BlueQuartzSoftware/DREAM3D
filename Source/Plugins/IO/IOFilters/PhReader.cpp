@@ -34,24 +34,16 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
 #include "PhReader.h"
-
-#include <stdio.h>
-
-#include <QtCore/QtDebug>
-#include <fstream>
-#include <sstream>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-
 
 #include "IO/IOConstants.h"
 
@@ -67,8 +59,7 @@ class PhReaderPrivate
     Q_DECLARE_PUBLIC(PhReader)
     PhReader* const q_ptr;
     PhReaderPrivate(PhReader* ptr);
-
-    QVector<int> m_Dims;
+    QVector<size_t> m_Dims;
     QString m_InputFile_Cache;
     QDateTime m_LastRead;
 };
@@ -82,7 +73,6 @@ PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
   m_InputFile_Cache(""),
   m_LastRead()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -98,17 +88,18 @@ PhReader::PhReader() :
   d_ptr(new PhReaderPrivate(this)),
   m_FeatureIds(NULL)
 {
-  m_Origin.x = 0.0;
-  m_Origin.y = 0.0;
-  m_Origin.z = 0.0;
+  m_Origin.x = 0.0f;
+  m_Origin.y = 0.0f;
+  m_Origin.z = 0.0f;
 
-  m_Resolution.x = 1.0;
-  m_Resolution.y = 1.0;
-  m_Resolution.z = 1.0;
+  m_Resolution.x = 1.0f;
+  m_Resolution.y = 1.0f;
+  m_Resolution.z = 1.0f;
 
   m_Dims[0] = 0;
   m_Dims[1] = 0;
   m_Dims[2] = 0;
+
   setupFilterParameters();
 }
 
@@ -123,7 +114,7 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QVector<int>, Dims)
+DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QVector<size_t>, Dims)
 DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QString, InputFile_Cache)
 DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QDateTime, LastRead)
 
@@ -133,15 +124,12 @@ DREAM3D_PIMPL_PROPERTY_DEF(PhReader, QDateTime, LastRead)
 void PhReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.ph", "CMU Grain Growth"));
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, "XYZ"));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, "XYZ"));
-
-  parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));
-
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -194,7 +182,7 @@ void PhReader::updateCellInstancePointers()
 void PhReader::flushCache()
 {
   setInputFile_Cache("");
-  QVector<int> v;
+  QVector<size_t> v;
   v.push_back(0);
   v.push_back(0);
   v.push_back(0);
@@ -207,13 +195,15 @@ void PhReader::flushCache()
 // -----------------------------------------------------------------------------
 void PhReader::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
+
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   m->setGeometry(image);
@@ -221,7 +211,7 @@ void PhReader::dataCheck()
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("The input file must be set").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -232,9 +222,9 @@ void PhReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<size_t> dims(1, 1);
+  QVector<size_t> cDims(1, 1);
   tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -250,7 +240,7 @@ void PhReader::dataCheck()
       // We are reading from the cache, so set the FileWasRead flag to false
       m_FileWasRead = false;
 
-      QVector<int> v = getDims();
+      QVector<size_t> v = getDims();
       m->getGeometryAs<ImageGeom>()->setDimensions(v[0], v[1], v[2]);
     }
     else
@@ -263,16 +253,17 @@ void PhReader::dataCheck()
       if (m_InStream == NULL)
       {
         setErrorCondition(-48802);
-        notifyErrorMessage(getHumanLabel(), "Error opening input file", getErrorCondition());
+        QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
-      int error = readHeader();
+      int32_t error = readHeader();
       fclose(m_InStream);
       m_InStream = NULL;
       if (error < 0)
       {
         setErrorCondition(error);
-        QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
+        QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
         notifyErrorMessage(getHumanLabel(), ss, -48010);
       }
 
@@ -301,21 +292,22 @@ void PhReader::preflight()
 // -----------------------------------------------------------------------------
 void PhReader::execute()
 {
-  int err = 0;
-
+  int32_t err = 0;
+  setErrorCondition(err);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   m_InStream = fopen(getInputFile().toLatin1().data(), "r");
-  if(m_InStream == NULL)
+  if (m_InStream == NULL)
   {
     setErrorCondition(-48030);
-    notifyErrorMessage(getHumanLabel(), "Error opening input file", getErrorCondition());
+    QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   err = readHeader();
-  if(err < 0)
+  if (err < 0)
   {
     fclose(m_InStream);
     m_InStream = NULL;
@@ -333,19 +325,19 @@ void PhReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PhReader::readHeader()
+int32_t PhReader::readHeader()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
-  int nx = 0;
-  int ny = 0;
-  int nz = 0;
+  size_t nx = 0;
+  size_t ny = 0;
+  size_t nz = 0;
 
   // Read Line #1 which has the dimensions
-  fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
+  fscanf(m_InStream, "%ld %ld %ld\n", &nx, &ny, &nz);
 
   // Set the values into the cache, so that they can be used later
-  QVector<int> v;
+  QVector<size_t> v;
   v.push_back(nx);
   v.push_back(ny);
   v.push_back(nz);
@@ -366,7 +358,7 @@ int PhReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  PhReader::readFile()
+int32_t PhReader::readFile()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
@@ -379,7 +371,7 @@ int  PhReader::readFile()
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
-  for(size_t n = 0; n < totalPoints; ++n)
+  for (size_t n = 0; n < totalPoints; ++n)
   {
     if (fscanf(m_InStream, "%d", m_FeatureIds + n) == 0)
     {
@@ -418,13 +410,11 @@ AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters)
 const QString PhReader::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhReader::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -432,10 +422,8 @@ const QString PhReader::getGroupName()
 const QString PhReader::getSubGroupName()
 { return DREAM3D::FilterSubGroups::InputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhReader::getHumanLabel()
 { return "Read Ph File (Feature Ids)"; }
-

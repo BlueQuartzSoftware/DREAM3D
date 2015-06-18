@@ -2,7 +2,7 @@ Avizo Rectilinear Coordinate Writer {#avizorectilinearcoordinatewriter}
 ======
 
 ## Group (Subgroup) ##
-I/O Filters (Output)
+IO (Output)
 
 ## Description ##
 

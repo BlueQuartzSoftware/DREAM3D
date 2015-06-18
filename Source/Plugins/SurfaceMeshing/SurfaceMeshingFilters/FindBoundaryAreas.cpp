@@ -147,20 +147,20 @@ void FindBoundaryAreas::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  //get number of face features
-  int64_t numFaces = m_SurfaceMeshTriangleAreasPtr.lock()->getNumberOfTuples();
+  // get number of face features
+  size_t numFaces = m_SurfaceMeshTriangleAreasPtr.lock()->getNumberOfTuples();
   size_t numFeatures = m_SurfaceMeshBoundaryAreasPtr.lock()->getNumberOfTuples();
 
-  //initialize all areas as 0
-  for(size_t i = 0; i < numFeatures; i++)
+  // initialize all areas as 0
+  for (size_t i = 0; i < numFeatures; i++)
   {
     m_SurfaceMeshBoundaryAreas[i] = 0.0;
   }
 
-  //loop over faces accumulating area
-  for(int64_t i = 0; i < numFaces; i++)
+  // loop over faces accumulating area
+  for (size_t i = 0; i < numFaces; i++)
   {
-    m_SurfaceMeshBoundaryAreas[ m_SurfaceMeshFeatureFaceIds[i] ] += m_SurfaceMeshTriangleAreas[i];
+    m_SurfaceMeshBoundaryAreas[m_SurfaceMeshFeatureFaceIds[i]] += m_SurfaceMeshTriangleAreas[i];
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -185,21 +185,17 @@ AbstractFilter::Pointer FindBoundaryAreas::newFilterInstance(bool copyFilterPara
 const QString FindBoundaryAreas::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryAreas::getGroupName()
 { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryAreas::getSubGroupName()
-// { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
-{ return "temp"; }
-
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
 
 // -----------------------------------------------------------------------------
 //

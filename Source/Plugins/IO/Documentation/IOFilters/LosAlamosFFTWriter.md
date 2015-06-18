@@ -1,21 +1,17 @@
 Los Alamos FFT Writer {#losalamosfftwriter}
-=====
+=============
 
 ## Group (Subgroup) ##
-I/O Filters (Output)
-
+IO (Output)
 
 ## Description ##
-This filter writes out a file that is appropriate to use as an input into Ricardo Lebensohn's FFT 3D simulation codes[1].
+This Filter writes out **CellData** from an **Image** geometry to a file that is appropriate to use as an input into Ricardo Lebensohn's FFT 3D simulation codes<sup>[1]</sup>. 
 
-The format of the file is an ASCII text file with the following space delimited features
+The format of the file is an ASCII text file with the following space delimited information:
 
 	Phi1   Phi   Phi2  X  Y   Z  Feature_ID   Phase_ID
 
-The Euler Angles are in Degrees.
-X, Y, Z are integer indices into the Voxel volume
-Feature ID & Phase ID are the integer values for the feature and phase **Starting at One (1)**.
-
+The Euler angles are in degrees. X, Y, Z are integer indices into the **Image** geometry. Feature ID & Phase ID are the integer values for the feature and phase **Starting at One (1)**.
 
 [1] Lebensohn, R.A., 2001. N-site modeling of a 3D viscoplastic polycrystal using Fast Fourier Transform. Acta mater. 49, 2723-2737.
 
@@ -44,26 +40,22 @@ The output file:
 	…..  
 
 ## Parameters ##
-
 | Name             | Type | Description |
 |------------------|------|-------------|
-| Output File |  File Path  |
+| Output File | File Path | Output .txt file path |
 
 
 ## Required Geometry ##
 Image / Rectilinear Grid
 
 ## Required Arrays ##
-
 | Type | Default Name | Type | Componenet Dimensions | Description |
 |------|--------------------|-------------|---------|
-| Cell | FeaturesIds (ints) that specify to which **Feature** each **Cell** belongs. | Int | (1) |Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | CellEulerAngles | Float | (3) |These are the angles used to determine the colors. Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
-| Cell | CellPhases | Int | (1) |  These are used to determine which ensemble the **Cell** belongs to. Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-
+| Cell | FeaturesIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| Cell | EulerAngles | Float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
+| Cell | Phases | Int | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
 
 ## Created Arrays ##
-
 None
 
 

@@ -131,13 +131,7 @@ class FindGBCD : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
-
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
+    int GBCDIndex(float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
 
   protected:
     FindGBCD();

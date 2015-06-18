@@ -36,20 +36,15 @@
 
 #include "DxWriter.h"
 
-#include <QtCore/QtDebug>
-#include <fstream>
-
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
-#include "IO/IOConstants.h"
-
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
+#include "IO/IOConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -58,7 +53,6 @@ DxWriter::DxWriter() :
   FileWriter(),
   m_AddSurfaceLayer(false),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -69,7 +63,6 @@ DxWriter::DxWriter() :
 // -----------------------------------------------------------------------------
 DxWriter::~DxWriter()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -78,12 +71,9 @@ DxWriter::~DxWriter()
 void DxWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.dx", "Open DX Visualization"));
   parameters.push_back(FilterParameter::New("Add Surface Layer", "AddSurfaceLayer", FilterParameterWidgetType::BooleanWidget, getAddSurfaceLayer(), FilterParameter::Parameter));
-
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -120,23 +110,21 @@ void DxWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0 || NULL == dc.get()) { return; }
-
-  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   if (getOutputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr( ": The output file must be set before executing this filter.");
+    QString ss = QObject::tr("The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
   }
+
   QFileInfo fi(getOutputFile());
+
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    QString ss = QObject::tr( "The directory path for the output file does not exist.");
+    QString ss = QObject::tr("The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
@@ -145,10 +133,21 @@ void DxWriter::dataCheck()
     setOutputFile(getOutputFile().append(".dx"));
   }
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(getErrorCondition() < 0) { return; }
+
+  size_t volTuples = image->getNumberOfElements();
+
+  if (volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples() )
+  {
+    setErrorCondition(-10200);
+    QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match.").arg(m_FeatureIdsPtr.lock()->getName()).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+                                                                                                notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -167,7 +166,7 @@ void DxWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DxWriter::writeHeader()
+int32_t DxWriter::writeHeader()
 {
   return 0;
 }
@@ -175,14 +174,15 @@ int DxWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DxWriter::writeFile()
+int32_t DxWriter::writeFile()
 {
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  int err = 0;
+  int32_t err = 0;
   size_t udims[3] =
   { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -193,7 +193,6 @@ int DxWriter::writeFile()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-  // qDebug() << "Write Dx Feature File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] ;
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -212,10 +211,10 @@ int DxWriter::writeFile()
   QFile file(getOutputFile());
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
-    QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getOutputFile());
+    QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return -100;
+    return getErrorCondition();
   }
 
   QTextStream out(&file);
@@ -227,7 +226,7 @@ int DxWriter::writeFile()
   DimType posYDim = fileYDim + 1;
   DimType posZDim = fileZDim + 1;
 
-  if(m_AddSurfaceLayer)
+  if (m_AddSurfaceLayer)
   {
     fileXDim = dims[0] + 2;
     fileYDim = dims[1] + 2;
@@ -237,7 +236,8 @@ int DxWriter::writeFile()
     posYDim = fileYDim + 1;
     posZDim = fileZDim + 1;
   }
-  //Write the header
+
+  // Write the header
   out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
   out << "origin 0 0 0" << "\n";
   out << "delta  1 0 0" << "\n";
@@ -250,12 +250,12 @@ int DxWriter::writeFile()
 
   // Add a complete layer of surface voxels
   size_t rnIndex = 1;
-  if(m_AddSurfaceLayer)
+  if (m_AddSurfaceLayer)
   {
-    for (int i = 0; i < (fileXDim * fileYDim); ++i)
+    for (DimType i = 0; i < (fileXDim * fileYDim); ++i)
     {
       out << "-3 ";
-      if(rnIndex == 20)
+      if (rnIndex == 20)
       {
         rnIndex = 0;
         out << "\n";
@@ -264,13 +264,13 @@ int DxWriter::writeFile()
     }
   }
 
-  int index = 0;
+  DimType index = 0;
   for (DimType z = 0; z < dims[2]; ++z)
   {
     // Add a leading surface Row for this plane if needed
-    if(m_AddSurfaceLayer)
+    if (m_AddSurfaceLayer)
     {
-      for (int i = 0; i < fileXDim; ++i)
+      for (DimType i = 0; i < fileXDim; ++i)
       {
         out << "-4 ";
       }
@@ -279,14 +279,14 @@ int DxWriter::writeFile()
     for (DimType y = 0; y < dims[1]; ++y)
     {
       // write leading surface voxel for this row
-      if(m_AddSurfaceLayer)
+      if (m_AddSurfaceLayer)
       {
         out << "-5 ";
       }
       // Write the actual voxel data
       for (DimType x = 0; x < dims[0]; ++x)
       {
-        if(m_FeatureIds[index] == 0)
+        if (m_FeatureIds[index] == 0)
         {
           out << "0" << " ";
         }
@@ -297,16 +297,16 @@ int DxWriter::writeFile()
         ++index;
       }
       // write trailing surface voxel for this row
-      if(m_AddSurfaceLayer)
+      if (m_AddSurfaceLayer)
       {
         out << "-6 ";
       }
       out << "\n";
     }
     // Add a trailing surface Row for this plane if needed
-    if(m_AddSurfaceLayer)
+    if (m_AddSurfaceLayer)
     {
-      for (int i = 0; i < fileXDim; ++i)
+      for (DimType i = 0; i < fileXDim; ++i)
       {
         out << "-7 ";
       }
@@ -315,13 +315,13 @@ int DxWriter::writeFile()
   }
 
   // Add a complete layer of surface voxels
-  if(m_AddSurfaceLayer)
+  if (m_AddSurfaceLayer)
   {
     rnIndex = 1;
-    for (int i = 0; i < (fileXDim * fileYDim); ++i)
+    for (DimType i = 0; i < (fileXDim * fileYDim); ++i)
     {
       out << "-8 ";
-      if(rnIndex == 20)
+      if (rnIndex == 20)
       {
         out << "\n";
         rnIndex = 0;
@@ -362,6 +362,7 @@ int DxWriter::writeFile()
   notifyStatusMessage(getHumanLabel(), "Complete");
   return err;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -381,13 +382,11 @@ AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters)
 const QString DxWriter::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DxWriter::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -395,10 +394,8 @@ const QString DxWriter::getGroupName()
 const QString DxWriter::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString DxWriter::getHumanLabel()
 { return "Write Dx File (Feature Ids)"; }
-

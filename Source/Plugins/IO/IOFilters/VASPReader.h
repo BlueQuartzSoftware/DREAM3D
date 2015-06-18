@@ -99,12 +99,6 @@ class  VASPReader : public FileReader
     virtual void preflight();
     virtual void execute();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     VASPReader();
 

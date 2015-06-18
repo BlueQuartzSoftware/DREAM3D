@@ -33,26 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _SPParksWriter_H_
 #define _SPParksWriter_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileWriter.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class SPParksWriter SPParksWriter.h DREAM3DLib/IOFilters/SPParksWriter.h
- * @brief This filter writes a .spparks file for input into http://spparks.sandia.gov/ SPParks Simulator
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date March 16, 2013
- * @version 1.0
+ * @brief The SPParksWriter class. See [Filter documentation](@ref dxreader) for details.
  */
-class  SPParksWriter : public FileWriter
+class SPParksWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -105,36 +98,20 @@ class  SPParksWriter : public FileWriter
     */
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     SPParksWriter();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
     /**
-     * @brief writeHeader Writes any Header to the file
-     * @return
+     * @brief writeHeader Reimplemented from @see FileReader class
      */
-    virtual int writeHeader();
+    virtual int32_t writeHeader();
 
     /**
-     * @brief writeFile Writes the actual data to the file.
-     * @return
+     * @brief writeFile Reimplemented from @see FileReader class
      */
-    virtual int writeFile();
+    virtual int32_t writeFile();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
@@ -144,7 +121,3 @@ class  SPParksWriter : public FileWriter
 };
 
 #endif /* _SPParksWriter_H_ */
-
-
-
-

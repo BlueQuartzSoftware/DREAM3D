@@ -1,19 +1,18 @@
 Read Feature Info File {#featureinforeader}
-======
+=============
+
 ## Group (Subgroup) ##
-IO Filters (Input)
+IO (Input)
 
 ## Description ##
-This filter reads information about the **Features** that are in the sample. The
- basic format of the file is the number of **Features** on the first line of the file followed by
- columnar formatted data listing: **Feature** Id, PhaseID, Euler Angle 1, Euler Angle 2 and Euler Angle 3.
- *If you do not have Euler Angle data for each **Feature** then substituting Zero (0.0) is fine.<br/>
+This Filter reads information about an existing set of **Feature** into the a new **Feature Attribute Matrix**. The basic format of the file is the number of **Features** on the first line of the file followed by columnar formatted data listing the **Feature** Id, **Ensemble**  Id, Euler Angle 1, Euler Angle 2 and Euler Angle 3. Currently, only the **Ensemble** Id and Euler angle information can be read using this Filter.
 
-__**Feature** Ids start from One (1) and Phase Ids start from One (1).
-DREAM3D uses **Feature** Id Zero(0) internally which has several ramifications which the user needs to understand. Statistics
-will _NOT_ be calculated for any **Cell** or feature data with a value of Zero (0). If your segmented data numbering
-starts with Zero (0) then the user needs to find a way to renumber **Feature**=0 to another value. Max + 1 typically.__
-For example if you have a file with 123 **Features** and 2 phases then the file would be similar to the following: 
+*If you do not have Euler Angle data for each **Feature** then substituting Zero (0.0) is fine.*
+
+**Feature** and **Ensemble** Ids start from One (1) in DREAM.3D. DREAM.3D uses the Zero (0) index internally which has several ramifications that the user needs to understand. Statistics will _NOT_ be calculated for any **Feature** or **Ensemble** with an Id value of Zero (0). If your segmented data numbering starts with Zero (0), then the user needs to find a way to renumber **Feature**=0 to another value, typically the max Id + 1. For example, if you have a file with 123 **Features** and 2 **Ensembles** then the file would be similar to the following: 
+
+## Example Input ##
+For example, if you have a file with 123 **Features** and 2 **Ensembles** then the file would be similar to the following:
 
     123
     1   2  1.2  0.4  0.8
@@ -22,41 +21,28 @@ For example if you have a file with 123 **Features** and 2 phases then the file 
     121 1 0.3  0.5  0.9
     123 2 1.0  1.1  0.03
 
-__Note the arrays that are being created__. <br>
-If the option to _Create Cell Level Arrays_ is selected then any existing
- arrays will be OVER WRITTEN with new data derived from the feature data being written. In plain if the user uses this filter
- to read in Phase and Euler Angle data for their data set and the _Create Cell Level Arrays_ is __ON/True__ then
- any existing EulerAngles and Phase Arrays at the Cell level will be over written with data derived from these new Feature
- level arrays. If you have the _Create Cell Level Arrays_ set to __OFF/False__ then those cell level arrays will
- not be created.
-
-
 ## Parameters ##
-
 | Name | Type | Description |
 |------|------|-------------|
-| Input Feature Info File | File Path |  |
-| Create Cell Level Arrays | Boolean | existing arrays overwritten  |
-| Renumber Features | Boolean | Randomly shuffle the FeatureIds  |
+| Input Feature Info File | File Path | Input file path |
+| Create Cell Level Arrays | Boolean | Whether to create **Element** level arrays for the imported data |
+| Renumber Features | Boolean | Randomly shuffle the Feature Ids  |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (int) that specify to which **Feature** each **Cell** belongs.| (1) | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Element** belongs |
 
 ## Created Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------|
-| Cell | CellEulerAngles | Float | (3)  |Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z). Only created if boolean is checked |
-| Cell | CellPhases | Int | (1) | Phase Id (int) specifying the phase of the **Cell**. Only created if boolean is checked |
-| Feature | FeatureEulerAngles | Float | (3) | Three (3) angles (floats) defining the orientation of each **Feature** in Bunge convention (Z-X-Z) |
+| Element | EulerAngles | Float | (3)  | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z). Only created if _Create Cell Level Arrays_ is checked |
+| Element | Phases | Int | (1) | Phase Id specifying the phase of the **Element**. Only created if _Create Cell Level Arrays_ is checked |
+| Feature | FeatureEulerAngles | Float | (3) | Three angles defining the orientation of each **Feature** in Bunge convention (Z-X-Z) |
 | Feature | FeaturePhases | Int | (1) | Phase Id (int) specifying the phase of the **Feature** |
-
 
 ## License & Copyright ##
 

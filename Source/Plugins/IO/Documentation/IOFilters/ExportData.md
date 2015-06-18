@@ -1,22 +1,11 @@
 Export Data {#exportdata}
-=====
+=============
 
 ## Group (Subgroup) ##
-
-IO Filters (Output)
-
+IO (Output)
 
 ## Description ##
-
-This filter writes an array to a file as ASCII representations. The file extension and the
-maximum tuples per line are entered. The file delimiter is selected from an enumerated
-list of values. The maximum number of tuples are selected by the user. For example,
-if an array has only 1 component (like a simple scalar array) and the user selects
-"1" for the Maximum Tuples/Line then only a single vale will appear on each line.
-If the user selects an array that has 3 components (an array of 3D coordinates representing
-X, Y, Z locations in space) and the user selected 1 Tuple Per Line, then the file
-will actually contain 3 values per line (the X, Y, Z Value). If that same user
-selected 3 tuples per line then 9 values would be printed per line. More than one array to export may be selected at a time. All arrays may be selected with the Select/Deselect All checkbox.
+This Filter writes an array to a file as ASCII representations. The user may select the file extension and the maximum number of tuples printed per line. The user may also select the file delimiter from an enumerated list of values.  For example, if an array has only 1 component (a simple scalar array) and the user selects "1" for the _Maximum Tuples Per Line_ parameter then only a single vale will appear on each line. If the user selects an array that has 3 components (an array of 3D coordinates representing X, Y, Z locations in space) and the user selected 1 tuple per line, then the file will actually contain 3 values per line (the X, Y, Z values). If that same user selected 3 tuples per line then 9 values would be printed per line, and so on. More than one array to export may be selected at a time. All arrays may be selected or deselected at once with the _Select/Deselect All_ checkbox.  Each exported array is written as a separate file.  All file names will match the array name.
 
 
 ### Example Output ###
@@ -45,7 +34,6 @@ EulerAngles.txt (three components) with 1 tuple/line, space delimited:
 	….. 
 
 ### Delimiter ###
-
 Choice of delimiter is as follows:
 
     , (comma)
@@ -55,24 +43,23 @@ Choice of delimiter is as follows:
     \t (tab)
 
 ## Parameters ##
-
 | Name             | Type | Description |
 |------------------|------|------------|
-| Output Path | File Path | Create the file |
-| File Extension | String | |
-| Maximum Tuples Per Line | Int | Must be greater than 0 |
-| Delimiter | Enumeration | The delimeter separating the data|
-| Select/Deselect All | Boolean | Selection of all the arrays |
-
+| Output Path | File Path | Output file path |
+| File Extension | String | File extension for output file(s) |
+| Maximum Tuples Per Line | Int | Number of tuples to print on each line |
+| Delimiter | Enumeration | The delimeter separating the data |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any numeric | None | Any numeric | Any | One or more arrays can be selected |
+| Any | None | Any | Any | Output arrays to be written as ASCII representations |
+
+## Created Arrays ##
+None
 
 ## License & Copyright ##
 

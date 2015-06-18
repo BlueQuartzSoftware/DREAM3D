@@ -100,6 +100,68 @@ namespace TemplateHelpers
     return;\
   }
 
+#define EXECUTE_TEMPLATE(observableObj, templateName, inputData, ...)\
+  if(templateName<int8_t>()(inputData))\
+  {\
+    templateName<int8_t> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<uint8_t>()(inputData) )\
+  {\
+    templateName<uint8_t> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<int16_t>()(inputData) )\
+  {\
+    templateName<int16_t> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<uint16_t>()(inputData) )\
+  {\
+    templateName<uint16_t> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<int32_t>()(inputData) )\
+  {\
+    templateName<int32_t> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<uint32_t>()(inputData) )\
+  {\
+    templateName<uint32_t> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<int64_t>()(inputData) )\
+  {\
+    templateName<int64_t> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<uint64_t>()(inputData) )\
+  {\
+    templateName<uint64_t> pimpl;\
+    pimpl.Execute( __VA_ARGS__);\
+  }\
+  else if(templateName<float>()(inputData) )\
+  {\
+    templateName<float> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<double>()(inputData) )\
+  {\
+    templateName<double> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else if(templateName<bool>()(inputData) )\
+  {\
+    templateName<bool> pimpl;\
+    pimpl.Execute(__VA_ARGS__);\
+  }\
+  else\
+  {\
+    observableObj->notifyErrorMessage(#templateName, "The input array was of unsupported type", TemplateHelpers::Errors::UnsupportedType);\
+    return;\
+  }
+
   /**
 * @brief Define from Error Codes
 */

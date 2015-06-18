@@ -37,21 +37,14 @@
 #ifndef _INLWriter_H_
 #define _INLWriter_H_
 
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileWriter.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 /**
- * @class INLWriter INLWriter.h DREAM3DLib/IOFilters/INLWriter.h
- * @brief Writes out an Text file according to Brad Fromm at INL.
- *
- * @date Nov 13, 2012
- * @version 1.0
+ * @brief The INLWriter class. See [Filter documentation](@ref inlwriter) for details.
  */
 class  INLWriter : public FileWriter
 {
@@ -60,7 +53,6 @@ class  INLWriter : public FileWriter
     DREAM3D_SHARED_POINTERS(INLWriter)
     DREAM3D_STATIC_NEW_MACRO(INLWriter)
     DREAM3D_TYPE_MACRO_SUPER(INLWriter, FileWriter)
-
 
     virtual ~INLWriter();
 
@@ -103,17 +95,18 @@ class  INLWriter : public FileWriter
 
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     INLWriter();
 
-    virtual int writeHeader();
-    virtual int writeFile();
+    /**
+     * @brief writeHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeHeader();
+
+    /**
+     * @brief writeFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeFile();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
@@ -131,8 +124,4 @@ class  INLWriter : public FileWriter
     void operator=(const INLWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _INLWRITER_H_ */
-
-
-
-
+#endif /* _INLWriter_H_ */

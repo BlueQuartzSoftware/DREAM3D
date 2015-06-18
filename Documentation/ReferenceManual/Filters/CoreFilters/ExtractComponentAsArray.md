@@ -1,5 +1,5 @@
 Extract Component As Array {#extractcomponentasarray}
-==============================
+=============
 
 ## Group (Subgroup) ##
 Core Filters (Memory/Management)

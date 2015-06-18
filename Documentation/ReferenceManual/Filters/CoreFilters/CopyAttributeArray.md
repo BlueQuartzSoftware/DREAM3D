@@ -1,5 +1,5 @@
 Copy Attribute Array {#copyattributearray}
-==============================
+=============
 
 ## Group (Subgroup) ##
 Core Filters (Memory/Management)

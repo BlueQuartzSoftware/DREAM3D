@@ -1,22 +1,20 @@
 Write Abaqus Surface Mesh {#abaqussurfacemeshwriter}
-=====
+=============
 
 # EXPERIMENTAL FILTER #
 
-
 ## Group (Subgroup) ##
-IOFilters (Output)
-
+IO (Output)
 
 ## Description ##
-This filter writes an Abaqus file that is a surface mesh using S3 Elements.
+This Filter writes an Abaqus file that is a surface mesh using S3 Elements.
 There are 3 Sections to this INP File: Nodes, Elements and Sets of Elements for each grain.
-This file represents a triangular based mesh. The element type selected is TRI_ELEMENT_TYPE "SFM3D3" for the triangles.
-This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus.
-We have selected to use a 'shell' element type currently. No boundary elements are written.
+This file represents a triangular based mesh with 'shell' elements. No boundary elements are written.
+The element type selected is TRI_ELEMENT_TYPE "SFM3D3" for the triangles.
 
-### Example Output ###
-The .inp output file:     
+**This file is an experimental output from DREAM.3D. The user is responsible for verifying all elements in Abaqus.**
+
+### Example Output ###     
 
 	*HEADING
     ** File Created with DREAM3D Version 5.2.1591.1744ded
@@ -39,7 +37,7 @@ The .inp output file:
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|--------------------|
-| Output File | File Path | |
+| Output File | File Path | Path to folder for the created file |
 
 ## Required Geometry ##
 Triangle
@@ -48,12 +46,10 @@ Triangle
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Triangle  | SurfaceMeshFaceLabels | Int | (2)   | The list of all triangles (faces) in the mesh. |
+| Triangle  | SurfaceMeshFaceLabels | Int | (2) | Specifies to which two **Features** each triangle belongs |
 
 ## Created Arrays ##
-
 None
-
 
 ## License & Copyright ##
 

@@ -36,16 +36,10 @@
 
 #include "SPParksWriter.h"
 
-#include <fstream>
-#include <sstream>
-
 #include <QtCore/QDateTime>
-#include <QtCore/QtDebug>
-#include <QtCore/QDateTime>
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
@@ -53,7 +47,6 @@
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 
 #include "IO/IOConstants.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -72,7 +65,6 @@ SPParksWriter::SPParksWriter() :
 // -----------------------------------------------------------------------------
 SPParksWriter::~SPParksWriter()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -81,13 +73,13 @@ SPParksWriter::~SPParksWriter()
 void SPParksWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.spparks", "SPParks Sites File"));
-
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -117,14 +109,10 @@ void SPParksWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0) { return; }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -145,33 +133,27 @@ void SPParksWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SPParksWriter::writeHeader()
+int32_t SPParksWriter::writeHeader()
 {
+  setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
+  size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
-  int64_t totalpoints = dims[0] * dims[1] * dims[2];
+
+  size_t totalpoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   std::ofstream outfile;
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
-  if(!outfile)
+  if (!outfile)
   {
-    qDebug() << "Failed to open: " << getOutputFile() ;
-    return -1;
+    QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
   }
 
   outfile << "-" << "\n";
@@ -191,33 +173,27 @@ int SPParksWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SPParksWriter::writeFile()
+int32_t SPParksWriter::writeFile()
 {
+  setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
-  int64_t totalpoints = dims[0] * dims[1] * dims[2];
+
+  size_t totalpoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   std::ofstream outfile;
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary | std::ios_base::app);
-  if(!outfile)
+  if (!outfile)
   {
-    qDebug() << "Failed to open: " << getOutputFile() ;
-    return -1;
+    QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
   }
 
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
@@ -226,8 +202,7 @@ int SPParksWriter::writeFile()
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
 
-
-  int increment = totalpoints * .01;
+  int64_t increment = static_cast<int64_t>(totalpoints * 0.01f);
   size_t count = 0;
   QString buf;
   QTextStream ss(&buf);
@@ -235,7 +210,7 @@ int SPParksWriter::writeFile()
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
   outfile.rdbuf()->pubsetbuf(buffer, 4096);
-  for (int k = 0; k < totalpoints; k++)
+  for (size_t k = 0; k < totalpoints; k++)
   {
     if (count % increment == 0)
     {
@@ -246,7 +221,7 @@ int SPParksWriter::writeFile()
         ss << getMessagePrefix() << " " << static_cast<int>((float)(k) / (float)(totalpoints) * 100) << " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
-        ss << " Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
+        ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
         notifyStatusMessage(getHumanLabel(),  buf );
         millis = QDateTime::currentMSecsSinceEpoch();
       }
@@ -259,7 +234,7 @@ int SPParksWriter::writeFile()
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Writing Ph File Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
 
@@ -282,13 +257,11 @@ AbstractFilter::Pointer SPParksWriter::newFilterInstance(bool copyFilterParamete
 const QString SPParksWriter::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksWriter::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -296,10 +269,8 @@ const QString SPParksWriter::getGroupName()
 const QString SPParksWriter::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksWriter::getHumanLabel()
-{ return "Write SPParks Sites (FeatureIds)"; }
-
+{ return "Write SPParks Sites (Feature Ids)"; }

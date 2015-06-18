@@ -1,20 +1,14 @@
 Write Dx File (Feature Ids) {#dxwriter}
-======
+=============
 
 ## Group (Subgroup) ##
-I/O Filters (Output)
-
+IO (Output)
 
 ## Description ##
-
 This Filter writes to a Dx file. The file format is that used by the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
-For an example format, see the DXReader filter descriptions. Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.
-
-_See: www.opendx.org for more information._
-
 
 ### Example Output ###
-The dx file:     
+The .dx file:     
 
 	object 1 class gridpositions counts 118 202 190
 	origin 0 0 0
@@ -28,7 +22,7 @@ The dx file:
 	1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 	…..
 	
-The dx file with surface layer:     
+The .dx file with a surface layer:     
 
 	object 1 class gridpositions counts 120 204 192
 	origin 0 0 0
@@ -42,12 +36,13 @@ The dx file with surface layer:
 	-3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3  
 	…..
 	
+_See: [the opendx site](http://www.opendx.org)_ for more information.
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | File Path | Create a file with extension .dx |
-| Add Surface Layer | Boolean | This adds and "extra layer" of **Cells** around the outside of the structure and assigns them a *FeatureId* of *-3*. |
+| Output File | File Path | Output .dx file path |
+| Add Surface Layer | Boolean | Adds an extra layer of **Cells** around the outside of the structure and assigns them a *FeatureId* of *-3* |
 
 ## Required Geometry ##
 Image / Rectilinear Grid
@@ -55,7 +50,7 @@ Image / Rectilinear Grid
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Ids (Int) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Arrays ##
 None

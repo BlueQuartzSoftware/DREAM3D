@@ -36,15 +36,9 @@
 
 #include "LosAlamosFFTWriter.h"
 
-#include <QtCore/QtDebug>
-#include <fstream>
-
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
-#include "EbsdLib/TSL/AngConstants.h"
-
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
@@ -61,11 +55,8 @@ LosAlamosFFTWriter::LosAlamosFFTWriter() :
   m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
@@ -76,7 +67,6 @@ LosAlamosFFTWriter::LosAlamosFFTWriter() :
 // -----------------------------------------------------------------------------
 LosAlamosFFTWriter::~LosAlamosFFTWriter()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -85,13 +75,10 @@ LosAlamosFFTWriter::~LosAlamosFFTWriter()
 void LosAlamosFFTWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.txt", "FFT Format"));
-
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
-
   setFilterParameters(parameters);
 }
 
@@ -130,30 +117,43 @@ void LosAlamosFFTWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0 || NULL == dc.get()) { return; }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
-
-  if(getOutputFile().isEmpty() == true)
+  if (getOutputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+  if (parentPath.exists() == false)
+  {
+    QString ss = QObject::tr("The directory path for the output file does not exist");
+    notifyWarningMessage(getHumanLabel(), ss, -1);
+  }
+
+  QVector<DataArrayPath> dataArrayPaths;
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 3;
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+
+  cDims[0] = 3;
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellEulerAnglesArrayPath()); }
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
 
 // -----------------------------------------------------------------------------
@@ -172,7 +172,7 @@ void LosAlamosFFTWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LosAlamosFFTWriter::writeHeader()
+int32_t LosAlamosFFTWriter::writeHeader()
 {
   return 0;
 }
@@ -180,30 +180,28 @@ int LosAlamosFFTWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LosAlamosFFTWriter::writeFile()
+int32_t LosAlamosFFTWriter::writeFile()
 {
+  setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
-  int err = 0;
-  size_t dims[3] =
-  { 0, 0, 0 };
+  int32_t err = 0;
+  size_t dims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
-
-  float res[3];
+  float res[3] = { 0.0f, 0.0f, 0.0f };
   m->getGeometryAs<ImageGeom>()->getResolution(res);
-
-  float origin[3];
+  float origin[3] = { 0.0f, 0.0f, 0.0f };
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(getOutputFile());
   QDir parentPath(fi.path());
-  if(!parentPath.mkpath("."))
+  if (!parentPath.mkpath("."))
   {
-
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
@@ -211,20 +209,20 @@ int LosAlamosFFTWriter::writeFile()
   }
 
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
-  if(NULL == f)
+  if (NULL == f)
   {
-    QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
+    QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
 
-  float phi1, phi, phi2;
-  int32_t featureId;
-  int32_t phaseId;
+  float phi1 = 0.0f, phi = 0.0f, phi2 = 0.0f;
+  int32_t featureId = 0;
+  int32_t phaseId = 0;
 
   size_t index = 0;
-  for(size_t z = 0; z < dims[2]; ++z)
+  for (size_t z = 0; z < dims[2]; ++z)
   {
     for (size_t y = 0; y < dims[1]; ++y)
     {
@@ -234,10 +232,8 @@ int LosAlamosFFTWriter::writeFile()
         phi1 = m_CellEulerAngles[index * 3] * 180.0 * DREAM3D::Constants::k_1OverPi;
         phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * DREAM3D::Constants::k_1OverPi;
         phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * DREAM3D::Constants::k_1OverPi;
-
         featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
-
         fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n", phi1, phi, phi2, x + 1, y + 1, z + 1, featureId, phaseId);
       }
     }
@@ -268,13 +264,11 @@ AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterPar
 const QString LosAlamosFFTWriter::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LosAlamosFFTWriter::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -282,10 +276,8 @@ const QString LosAlamosFFTWriter::getGroupName()
 const QString LosAlamosFFTWriter::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LosAlamosFFTWriter::getHumanLabel()
 { return "Write Los Alamos FFT File"; }
-

@@ -33,28 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _SPParksTextReader_H_
 #define _SPParksTextReader_H_
 
-#include <QtCore/QString>
 #include <QtCore/QFile>
 
-#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/HKL/DataParser.hpp"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-
 
 /**
- * @class SPParksTextReader SPParksTextReader.h SPParksTextReader.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The SPParksTextReader class. See [Filter documentation](@ref spparkstextreader) for details.
  */
 class SPParksTextReader : public FileReader
 {
@@ -67,11 +60,9 @@ class SPParksTextReader : public FileReader
 
     virtual ~SPParksTextReader();
 
-    /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
-     * or other instance variables
-     */
     DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
@@ -80,6 +71,7 @@ class SPParksTextReader : public FileReader
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
@@ -154,62 +146,54 @@ class SPParksTextReader : public FileReader
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-  signals:
-    /**
-     * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
-     * pushed from a user facing control such as the FilterParameter Widget
-     * @param filter The filter to push the values into
-     */
-    void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged This signal can be emitted when any of the filter parameters are changed internally.
-     */
-    void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before the dataCheck() is called. This can change if needed.
-     */
-    void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after the dataCheck() is called. Typically. This can change if needed.
-     */
-    void preflightExecuted();
-
   protected:
     SPParksTextReader();
 
-
     /**
-     * @brief readHeader
-     * @return
+     * @brief readHeader Reimplemented from @see FileReader class
      */
-    virtual int readHeader();
+    virtual int32_t readHeader();
 
     /**
-     * @brief readFile
-     * @return
+     * @brief readFile Reimplemented from @see FileReader class
      */
-    virtual int readFile();
+    virtual int32_t readFile();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of arrays in the data container
-    */
+     * @brief readFile Reimplemented from @see FileReader class
+     */
     void dataCheck();
 
     /**
-     * @brief updateCellInstancePointers
+     * @brief updateCellInstancePointers Updates raw cell pointers
      */
     void updateCellInstancePointers();
 
+    /**
+     * @brief getPointerType Returns the enumeration type of the incoming data
+     * @param featureName Name of incoming data
+     * @return Enumeration type
+     */
     Ebsd::NumType getPointerType(const QString& featureName);
-    int getTypeSize(const QString& featureName);
-    void parseDataLine(QByteArray& line, QVector<size_t> dims, int xCol, int yCol, int zCol);
 
+    /**
+     * @brief getTypeSize Returns the size in bytes of the incoming data
+     * @param featureName Name of incoming data
+     * @return Integer number of bytes
+     */
+    int32_t getTypeSize(const QString& featureName);
+
+    /**
+     * @brief parseDataLine Reads a line of data from the .dump file
+     * @param line Line of data to read
+     * @param dims Dimensional offset
+     * @param xCol X coordinate
+     * @param yCol Y coordinate
+     * @param zCol Z coordinate
+     */
+    void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol);
 
   private:
-    //  DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     size_t m_Dims[3];
     QFile m_InStream;
     QMap<QString, DataParser::Pointer> m_NamePointerMap;

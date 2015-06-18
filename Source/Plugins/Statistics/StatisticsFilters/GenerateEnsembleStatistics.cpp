@@ -485,19 +485,19 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
-    notifyWarningMessage(getHumanLabel(), "The Size distribution needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The size distribution needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
   }
   if (m_AspectRatioDistributionFitType != DREAM3D::DistributionType::Beta)
   {
-    notifyWarningMessage(getHumanLabel(), "The Aspect Ratio distribution needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The aspect ratio distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
   }
   if (m_Omega3DistributionFitType != DREAM3D::DistributionType::Beta)
   {
-    notifyWarningMessage(getHumanLabel(), "The Omega3 distribution needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The Omega3 distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
   }
   if (m_NeighborhoodDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
-    notifyWarningMessage(getHumanLabel(), "The Neighborhood distribution type needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+    notifyWarningMessage(getHumanLabel(), "The neighborhood distribution type needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
   }
 }
 

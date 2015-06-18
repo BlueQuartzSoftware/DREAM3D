@@ -3,7 +3,7 @@ Goldfeather Reader {#goldfeatherreader}
 [TOC]
 
 ## Group (Subgroup) ##
-IO Filters (Input)
+IO (Input)
 
 ## Description ##
 

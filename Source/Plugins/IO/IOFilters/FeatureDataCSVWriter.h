@@ -37,23 +37,12 @@
 #ifndef _FeatureDataCSVWriter_H_
 #define _FeatureDataCSVWriter_H_
 
-#include <vector>
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
 
 /**
- * @class FeatureDataCSVWriter FeatureDataCSVWriter.h DREAM3DLib/GenericFilters/FeatureDataCSVWriter.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FeatureDataCSVWriter class. See [Filter documentation](@ref featuredatacsvwriter) for details.
  */
 class  FeatureDataCSVWriter : public AbstractFilter
 {
@@ -64,13 +53,16 @@ class  FeatureDataCSVWriter : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FeatureDataCSVWriter, AbstractFilter)
 
     virtual ~FeatureDataCSVWriter();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureDataFile)
     Q_PROPERTY(QString FeatureDataFile READ getFeatureDataFile WRITE setFeatureDataFile)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteNeighborListData)
     Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData)
+
     DREAM3D_INSTANCE_PROPERTY(char, Delimiter)
 
     virtual const QString getCompiledLibraryName();
@@ -116,5 +108,3 @@ class  FeatureDataCSVWriter : public AbstractFilter
 };
 
 #endif /* FeatureDataCSVWriter_H_ */
-
-

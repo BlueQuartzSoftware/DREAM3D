@@ -36,15 +36,13 @@
 #include "GBCDTriangleDumper.h"
 
 #include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 
 #include "IO/IOConstants.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -56,13 +54,9 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
-  m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceAreas(NULL),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceNormals(NULL),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL)
 {
   setupFilterParameters();
@@ -81,14 +75,11 @@ GBCDTriangleDumper::~GBCDTriangleDumper()
 void GBCDTriangleDumper::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.ph", "CMU Feature Growth"));
-
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceAreas", "SurfaceMeshFaceAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("FeatureEulerAngles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
-
+  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Feature Euler Angles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -131,44 +122,36 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
 
   if(getOutputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("The output file must be set").arg(ClassName());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  QVector<IDataArray::Pointer> dataArrays;
 
-  TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0) { return; }
+  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceAreasArrayPath().getDataContainerName());
 
-  // We MUST have Nodes
-  if (NULL == triangles->getVertices().get())
-  {
-    setErrorCondition(-386);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
-  }
-  // We MUST have Triangles defined also.
-  if (NULL == triangles->getTriangles().get())
-  {
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
-  }
-  else
-  {
-    QVector<size_t> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    dims[0] = 3;
-    m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    dims[0] = 1;
-    m_SurfaceMeshFaceAreasPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceAreasArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
+  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
+
+  QVector<size_t> cDims(1, 2);
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
+
+  cDims[0] = 3;
+  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceNormalsPtr.lock()); }
+
+  cDims[0] = 1;
+  m_SurfaceMeshFaceAreasPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceAreasArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceAreasPtr.lock()); }
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
 
 // -----------------------------------------------------------------------------
@@ -178,8 +161,8 @@ void GBCDTriangleDumper::dataCheckVoxel()
 {
   setErrorCondition(0);
 
-  QVector<size_t> dims(1, 3);
-  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 3);
+  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -203,26 +186,21 @@ void GBCDTriangleDumper::preflight()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::execute()
 {
-  int err = 0;
-
-  setErrorCondition(err);
-
+  setErrorCondition(0);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
+  if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-
-  setErrorCondition(0);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
-
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   int64_t numTri = triangleGeom->getNumberOfTris();
 
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if (NULL == f)
   {
+    QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
     setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "Could not open Output file for writing.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -232,22 +210,22 @@ void GBCDTriangleDumper::execute()
   fprintf(f, "# Column 7-9:    triangle normal\n");
   fprintf(f, "# Column 8:      surface area\n");
 
-  int gid0 = 0; // Feature id 0
-  int gid1 = 0; // Feature id 1
+  int32_t gid0 = 0; // Feature id 0
+  int32_t gid1 = 0; // Feature id 1
   float* euAng0 = NULL;
   float* euAng1 = NULL;
   double* tNorm = NULL;
-  for(int64_t t = 0; t < numTri; ++t)
+  for (int64_t t = 0; t < numTri; ++t)
   {
     // Get the Feature Ids for the triangle
     gid0 = m_SurfaceMeshFaceLabels[t * 2];
     gid1 = m_SurfaceMeshFaceLabels[t * 2 + 1];
 
-    if(gid0 < 0)
+    if (gid0 < 0)
     {
       continue;
     }
-    if(gid1 < 0)
+    if (gid1 < 0)
     {
       continue;
     }
@@ -269,7 +247,6 @@ void GBCDTriangleDumper::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -289,24 +266,20 @@ AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterPar
 const QString GBCDTriangleDumper::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GBCDTriangleDumper::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GBCDTriangleDumper::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
-
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GBCDTriangleDumper::getHumanLabel()
 { return "Write GBCD Triangles File"; }
-

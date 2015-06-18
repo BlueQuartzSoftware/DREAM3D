@@ -114,6 +114,10 @@ class ChangeResolution : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     void dataCheck();
+
+    /**
+     * @brief updateFeatureInstancePointers Updates raw cell pointers
+     */
     void updateCellInstancePointers();
 
     ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented

@@ -158,12 +158,6 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     virtual void tbbTaskProgress();
 #endif
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     FeatureFaceCurvatureFilter();
 

@@ -37,22 +37,15 @@
 #ifndef _DxWriter_H_
 #define _DxWriter_H_
 
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileWriter.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
- * @class DxWriter DxWriter.h DREAM3DLib/IOFilters/DxWriter.h
- * @brief Writes out a Dx file.
- *
- * @date Aug 10, 2012
- * @version 1.0
+ * @brief The DxWriter class. See [Filter documentation](@ref dxreader) for details.
  */
-class  DxWriter : public FileWriter
+class DxWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -89,17 +82,18 @@ class  DxWriter : public FileWriter
 
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     DxWriter();
 
-    virtual int writeHeader();
-    virtual int writeFile();
+    /**
+     * @brief writeHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeHeader();
+
+    /**
+     * @brief writeFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t writeFile();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
@@ -110,6 +104,4 @@ class  DxWriter : public FileWriter
     void operator=(const DxWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* DXGRAINIDWRITER_H_ */
-
-
+#endif /* DxWriter_H_ */

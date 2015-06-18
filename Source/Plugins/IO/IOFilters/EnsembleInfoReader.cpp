@@ -34,17 +34,12 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
 #include "EnsembleInfoReader.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 
-#include "EbsdLib/EbsdConstants.h"
-
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
@@ -65,7 +60,7 @@ EnsembleInfoReader::EnsembleInfoReader() :
   m_CrystalStructures(NULL),
   m_PhaseTypes(NULL),
   m_ptype(999),
-    m_crystruct(999)
+  m_crystruct(999)
 {
   setupFilterParameters();
 }
@@ -84,16 +79,11 @@ EnsembleInfoReader::~EnsembleInfoReader()
 void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   parameters.push_back(FileSystemFilterParameter::New("Input Ensemble Info File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.ini *.txt"));
-
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray, ""));
-
-
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, getCrystalStructuresArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("PhaseTypes", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), FilterParameter::CreatedArray, ""));
-
+  parameters.push_back(FilterParameter::New("Phase Types", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 
@@ -134,46 +124,42 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     m_CrystalStructuresPtr.lock()->initializeWithValue(Ebsd::CrystalStructure::UnknownCrystalStructure);
 
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
     m_PhaseTypesPtr.lock()->initializeWithValue(DREAM3D::PhaseType::UnknownPhaseType);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0) { return; }
+
+  DataArrayPath tempPath;
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
-    QString ss = QObject::tr("The input file does not exist.");
+    QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
   QString ext = fi.suffix();
   if (ext != "ini" && ext != "txt")
   {
@@ -182,13 +168,21 @@ void EnsembleInfoReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<size_t> dims(1, 1);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
+  QVector<size_t> tDims(1, 0);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  if(getErrorCondition() < 0) { return; }
+
+  QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
-  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName() );
-  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, DREAM3D::PhaseType::UnknownPhaseType, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -209,7 +203,7 @@ void EnsembleInfoReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EnsembleInfoReader::readHeader()
+int32_t EnsembleInfoReader::readHeader()
 {
   return 0;
 }
@@ -217,16 +211,16 @@ int EnsembleInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EnsembleInfoReader::readFile()
+int32_t EnsembleInfoReader::readFile()
 {
+  setErrorCondition(0);
   dataCheck();
+  if(getErrorCondition() < 0) { return getErrorCondition(); }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer cellensembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
-  QFileInfo fi(getInputFile());
-
-  int numphases = 0;
+  int32_t numphases = 0;
 
   QSettings settings(getInputFile(), QSettings::IniFormat); // The .ini or .txt input file
   settings.beginGroup("EnsembleInfo");
@@ -235,7 +229,7 @@ int EnsembleInfoReader::readFile()
 
   if (0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
-    QString ss = QObject::tr("Check the group name EnsembleInfo or Number_Phases");
+    QString ss = QObject::tr("Check the group name EnsembleInfo and that Number_Phases > 0");
     setErrorCondition(-10003);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
@@ -245,27 +239,26 @@ int EnsembleInfoReader::readFile()
   std::vector<bool> visited(numphases + 1, false);
   visited[0] = true; //this is DREAM3D's internal, which is always visited.
 
-
   QVector<size_t> tDims(1, numphases + 1);
   cellensembleAttrMat->resizeAttributeArrays(tDims);
   updateEnsembleInstancePointers();
-  for(qint32 index = 1; index < numphases + 1; index++)
+  for (int32_t index = 1; index < numphases + 1; index++)
   {
     QString group = QString::number(index);
     settings.beginGroup(group);
 
     QString xtalString = settings.value(DREAM3D::StringConstants::CrystalStructure, "MissingCrystalStructure").toString();
     QString phaseTypeString = settings.value(DREAM3D::StringConstants::PhaseType, "MissingPhaseType").toString();
-    // Checl to make sure the user has something for each of the Crystal Structure and Phase Type
-    if(xtalString.compare("MissingCrystalStructure") == 0)
+    // Check to make sure the user has something for each of the Crystal Structure and Phase Type
+    if (xtalString.compare("MissingCrystalStructure") == 0)
     {
-      QString ss = QObject::tr("Missing crystal structure name for phase '%1'").arg(group);
+      QString ss = QObject::tr("Missing crystal structure for phase '%1'").arg(group);
       setErrorCondition(-10008);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
 
-    if(phaseTypeString.compare("MissingPhaseType") == 0)
+    if (phaseTypeString.compare("MissingPhaseType") == 0)
     {
       QString ss = QObject::tr("Missing phase type for phase '%1'").arg(group);
       setErrorCondition(-10009);
@@ -315,12 +308,11 @@ int EnsembleInfoReader::readFile()
   {
     if(visited[i] == false)
     {
-      QString ss = QObject::tr("Phase '%1' did not have entries in the file. Did you number the phases starting at 1 and did not skip any phases?").arg(i); // The phase type name read from the file was not found in the lookup table
+      QString ss = QObject::tr("Phase '%1' did not have entries in the file. Phase numbering must start at 1 and no phases may be skipped").arg(i); // The phase type name read from the file was not found in the lookup table
       setErrorCondition(-10005);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
-
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -397,49 +389,39 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
 }
 
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters)
-    {
-      EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
-      if (true == copyFilterParameters)
-      {
-        copyFilterParameterInstanceVariables(filter.get());
-      }
-      return filter;
-    }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters)
+{
+  EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
+  if (true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    const QString EnsembleInfoReader::getCompiledLibraryName()
-    {
-      return IOConstants::IOBaseName;
-    }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EnsembleInfoReader::getCompiledLibraryName()
+{ return IOConstants::IOBaseName;}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EnsembleInfoReader::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    const QString EnsembleInfoReader::getGroupName()
-    {
-      return DREAM3D::FilterGroups::IOFilters;
-    }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EnsembleInfoReader::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::InputFilters; }
 
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    const QString EnsembleInfoReader::getSubGroupName()
-    {
-      return DREAM3D::FilterSubGroups::InputFilters;
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    const QString EnsembleInfoReader::getHumanLabel()
-    {
-      return "Read Ensemble Info File";
-    }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EnsembleInfoReader::getHumanLabel()
+{ return "Read Ensemble Info File"; }

@@ -59,7 +59,7 @@ FileWriter::~FileWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FileWriter::writeHeader()
+int32_t FileWriter::writeHeader()
 {
   setErrorCondition(-1);
   notifyErrorMessage(getHumanLabel(), "FileWriter should be subclassed and functionality implemented there", -1);
@@ -69,7 +69,7 @@ int FileWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FileWriter::writeFile()
+int32_t FileWriter::writeFile()
 {
   setErrorCondition(-1);
   notifyErrorMessage(getHumanLabel(), "FileWriter should be subclassed and functionality implemented there", -1);
@@ -96,7 +96,7 @@ void FileWriter::execute()
     return;
   }
 
-  int err = writeHeader();
+  int32_t err = writeHeader();
   if (err < 0)
   {
     QString ss = QObject::tr("Error writing the header portion of the file");
