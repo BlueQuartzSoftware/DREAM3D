@@ -642,6 +642,13 @@ herr_t H5Lite::readVectorOfStringDataset(hid_t loc_id,
   */
     hid_t sid = H5Dget_space(did);
     int ndims = H5Sget_simple_extent_dims(sid, dims, NULL);
+    if(ndims != 1)
+    {
+      CloseH5S(sid, err, retErr);
+      CloseH5T(tid, err, retErr);
+      std::cout << "H5Lite.cpp::readVectorOfStringDataset(" << __LINE__ << ") Number of dims should be 1 but it was " << ndims << ". Returning early. Is your data file correct?" << std::endl;
+      return -2;
+    }
     std::vector<char*> rdata(dims[0]);
     for (int i = 0; i < dims[0]; i++)
     {
@@ -655,17 +662,26 @@ herr_t H5Lite::readVectorOfStringDataset(hid_t loc_id,
     herr_t status = H5Tset_size(memtype, H5T_VARIABLE);
 
     /*
-  * Read the data.
-  */
+    * Read the data.
+    */
     status = H5Dread(did, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(rdata.front()));
-
+    if(status < 0)
+    {
+      status = H5Dvlen_reclaim(memtype, sid, H5P_DEFAULT, &(rdata.front()));
+      CloseH5S(sid, err, retErr);
+      CloseH5T(tid, err, retErr);
+      CloseH5T(memtype, err, retErr);
+      std::cout << "H5Lite.cpp::readVectorOfStringDataset(" << __LINE__ << ") Error reading Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
+      return -3;
+    }
     /*
-  * copy the data into the vector of strings
-  */
+    * copy the data into the vector of strings
+    */
+    data.resize(dims[0]);
     for (int i = 0; i < dims[0]; i++) {
       // printf("%s[%d]: %s\n", "VlenStrings", i, rdata[i].p);
       std::string str = std::string(rdata[i]);
-      data.push_back(str);
+      data[i] = str;
     }
     /*
     * Close and release resources.  Note that H5Dvlen_reclaim works
