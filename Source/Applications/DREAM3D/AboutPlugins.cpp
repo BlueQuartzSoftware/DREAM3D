@@ -365,7 +365,8 @@ void AboutPlugins::addPlugin(QString pluginPath)
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_removePluginBtn_pressed()
 {
-  QTableWidgetItem* nameItem = pluginsTable->item(pluginsTable->currentRow(), NAME_INDEX);
+  int currentRow = pluginsTable->currentRow();
+  QTableWidgetItem* nameItem = pluginsTable->item(currentRow, NAME_INDEX);
 
   if (NULL != nameItem)
   {
@@ -381,6 +382,23 @@ void AboutPlugins::on_removePluginBtn_pressed()
     if (answer == QMessageBox::Yes)
     {
       deletePlugin(nameItem);
+      QTableWidgetItem* newSelection = pluginsTable->item(currentRow, NAME_INDEX);
+      if (NULL != newSelection)
+      {
+        // Select the row that is next after the one that was just deleted
+        pluginsTable->setCurrentItem(newSelection);
+        pluginsTable->setFocus();
+        on_pluginsTable_cellClicked(currentRow, NAME_INDEX);
+      }
+      else
+      {
+        // We are at the end, so select the previous row
+        currentRow--;
+        newSelection = pluginsTable->item(currentRow, NAME_INDEX);
+        pluginsTable->setCurrentItem(newSelection);
+        pluginsTable->setFocus();
+        on_pluginsTable_cellClicked(currentRow, NAME_INDEX);
+      }
       m_loadPreferencesDidChange = true;
     }
   }
