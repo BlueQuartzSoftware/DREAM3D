@@ -250,5 +250,5 @@ void IssuesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
   setHidden(b);
 
   QByteArray headerState = prefs.value("Horizontal Header State", QByteArray()).toByteArray();
-  bool didRestore = errorTableWidget->horizontalHeader()->restoreState(headerState);
+  errorTableWidget->horizontalHeader()->restoreState(headerState);
 }
