@@ -222,7 +222,7 @@ void FilterParameterWidget::fadeWidget(QWidget* widget, bool in)
   {
     effect = new QGraphicsOpacityEffect(this);
     effect->setOpacityMask(alphaGradient);
-    this->setGraphicsEffect(effect);
+    //this->setGraphicsEffect(effect);
   }
 
   if(!animation)
