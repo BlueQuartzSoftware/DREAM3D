@@ -34,49 +34,30 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3Dv5Wizard.h"
+#ifndef _DREAM3Dv6Wizard_H_
+#define _DREAM3Dv6Wizard_H_
 
-#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QWizard>
+
+//-- UIC generated Header
+#include <ui_DREAM3Dv6Wizard.h>
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DREAM3Dv5Wizard::DREAM3Dv5Wizard(QWidget* parent, Qt::WindowFlags flags) :
-QWizard(parent, flags)
+class DREAM3Dv6Wizard : public QWizard, private Ui::DREAM3Dv6Wizard
 {
-  setupUi(this);
+  Q_OBJECT
 
-  setupGui();
-}
+public:
+  DREAM3Dv6Wizard(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  virtual ~DREAM3Dv6Wizard();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DREAM3Dv5Wizard::~DREAM3Dv5Wizard()
-{
+  void setupGui();
 
-}
+  bool isBookmarkBtnChecked();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3Dv5Wizard::setupGui()
-{
-#if defined (Q_OS_MAC)
-  setWizardStyle(QWizard::MacStyle);
-#else
-  setWizardStyle(QWizard::ModernStyle);
-#endif
-}
+  DREAM3Dv6Wizard(const DREAM3Dv6Wizard&); // Copy Constructor Not Implemented
+  void operator=(const DREAM3Dv6Wizard&); // Operator '=' Not Implemented
+};
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool DREAM3Dv5Wizard::isBookmarkBtnChecked()
-{
-  return bookmarkRadioBtn->isChecked();
-}
-
-
+#endif /* DREAM3Dv6Wizard_H_ */
 

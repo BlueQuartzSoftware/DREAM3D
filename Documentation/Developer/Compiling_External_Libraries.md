@@ -1,4 +1,4 @@
-Compiling DREAM3D {#compilingexternallibraries}
+Compiling External Libraries {#compilingexternallibraries}
 ========
 
 # Preliminaries #
@@ -7,9 +7,9 @@ A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The foll
 
 | Compiler Version | Notes |  
 |  ------	| ------	|  
-| Visual Studio 2013 Pro & Express SP1 | 64 Bit builds |  
+| Visual Studio 2013 Pro, Express or Community SP4 | 64 Bit builds |  
 | Xcode 5.1.1 (OS X Version 10.8 & 10.9) | 64 bit Intel Only |  
-| GCC 4.7.x (Ubuntu 12.04) | 64 Bit Intel Only |  
+| GCC 4.7.x or Clang (Ubuntu 14.04) | 64 Bit Intel Only |  
 
 ## Note for MinGW/MSys/Cygwin ##
 
@@ -23,19 +23,19 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 |  Package   | Minimum Version | Download Location |  
 |  ------	| ------	| ------	|  
 | Git | 1.97.x | [http://www.git-scm.com](http://www.git-scm.com) |  
-| CMake | 3.1.3 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
-| Doxygen | 1.8.9 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
-| HDF5 | 1.8.14 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
-| Boost | 1.57.0 | [http://www.boost.org](http://www.boost.org) |  
+| CMake | 3.2.3 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
+| Doxygen | 1.8.9.1 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
+| HDF5 | 1.8.15 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
+| Boost | 1.58.0 | [http://www.boost.org](http://www.boost.org) |  
 | Eigen | 3.2.4 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |  
-| Intel Threading Building Blocks | tbb42_20141204oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |  
-| Qt 5.4.x | 5.4.1 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. |
-| Qwt | 6.1.2 | Obtain from source forge |  
+| Intel Threading Building Blocks | tbb42_20150424oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |  
+| Qt 5.4.x | 5.4.1 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.4.1 at the minimum. Qt 5.4.0 is **known** to produce bad compiled code for 64 bit builds. |
+| Qwt | 6.1.2 | Obtain from source forge. This is the first version to be compatible with Qt 5.4.x |  
 
 
 # DREAM3D SDK Availability #
 
-The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries (Except Qt 5 and ITK), CMake and Doxygen as a single installer. Please send an email to _dream3d@bluequartz.net_ to request this installer.
+The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. Please see the DREAM.3D website for more details on the current location of this download.
 
 
 # Setting Up the Environment #
@@ -52,42 +52,102 @@ Our **DREAM3D\_SDK** is located at
 
 With this environment setup proceed to download and install Git, CMake and Doxygen into the **DREAM3D\_SDK** directory. Then proceed to download, build and install the rest of the dependent libraries.
 
-# Notes for Building Libraries #
+# CMake 3.2.3 #
+
+[CMake Download Link](http://www.cmake.org/download/)
+
+Download CMake for your system. Unpack and drop the folder into the **DREAM3D\_SDK** folder.
+
+## Linux Notes ##
+
+The default packages are usually not new enough from the package maintainers and you will need to download the prebuilt binaries for linux.
+
+
+# DOxygen 1.8.9.1 #
+
+[Doxygen Download Link](http://www.stack.nl/~dimitri/doxygen/download.html)
+
+Download Doxygen for your system. Unpack and drop the folder into the **DREAM3D\_SDK** folder.
+
+## OS X Notes ##
+	
+On OS X systems the Doxygen.app should be placed into /Applications instead of the **DREAM3D\_SDK** folder.
+
+## Linux Notes ##
+
+Use distributions package manager (apt-get on Ubuntu or yum on Red Hat systems) to install Oxygen.
+
+
 
 # Building HDF5 #
 
-+ _BUILD_SHARED_LIBS_ = ON
-+ _HDF5_ENABLE_DEPRECATED_SYMBOLS_ = ON
-+ _HDF5_USE_16_API_DEFAULT_ = ON
-+ Export the "HDF5_INSTALL" environment variable to make configuring DREAM3D with CMake easier.
+[HDF5 Download link](http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.15-patch1.tar.gz)
 
-## OS X Special Notes ##
+Extract the archive to your **Workspace** location. Then using a terminal (for Linux & OS X) or CMake-GUI (for Windows) configure HDF5 to build using your system tools.
+
+## Windows Notes ##
+
+Use CMake to configure HDF5 for building with Visual Studio. The developer should select the _Visual Studio 12 2013 Win64_ generator type when configuring the build. This will build both Debug and Release from the same Visual Studio solution.
+
+## OS X & Linux Notes ##
+
+Use the following sequence of Terminal commands to configure and build both a Debug and Release version of HDF5 1.8.15
+
+
+	[user] $ tar -xvzf hdf5-1.8.15-patch1.tar.gz
+	[user] $ cd hdf5-1.8.15-patch1 && mkdir Debug && cd Debug
+	[user] $ cmake -DCMAKE_BUILD_TYPE=Debug  -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/Users/Shared/DREAM3D_SDK/hdf5-1.8.15-Debug ../
+	[user] $ make -j
+	[user] $ make install
+	[user] $ cd ../
+	[user] $ mkdir Release && cd Release
+	[user] $ cmake -DCMAKE_BUILD_TYPE=Release  -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=/Users/Shared/DREAM3D_SDK/hdf5-1.8.15-Release ../
+	[user] $ make -j
+	[user] $ make install
 
 With the introduction of proper CMakeConfig support into HDF5 1.8.14 there now exists the need to build and install Debug and Release libraries into separate installation locations. The **recommended** way to now build HDF5 on OS X is to add a "-Debug" or "-Release" to the CMAKE_INSTALL_PREFIX for each build (depending on the CMAKE_BUILD_TYPE variable).
 
-+ CMAKE_INSTALL_PREFIX=/opt/DREAM3D_SDK/hdf5-1.8.14-Debug  (For Debug build)
-+ CMAKE_INSTALL_PREFIX=/opt/DREAM3D_SDK/hdf5-1.8.14-Release  (For Release Build)
-
 **This setup becomes critically important when the "ImageProcessing" plugin or ITK in general is used in DREAM3D. This ensures that a consistent HDF5 library is linked into the plugin and DREAM3D.**
 
-# Building Boost #
+# Building Boost 1.58.0 #
 
-In order to build boost 1.57.0 one needs to use the "b2" command.
+[http://sourceforge.net/projects/boost/files/boost/1.58.0/](http://sourceforge.net/projects/boost/files/boost/1.58.0/)
+Windows developers should select the *.zip file and OS X users should select the .tar.gz file.
 
-	Download the boost-1.57.0.zip file for windows.
+## Windows Notes ##
+
+	Download the boost-1.58.0.zip file for windows.
 	Decompress and open up a Visual Studio x64 command prompt.
-	CD into the boost-1.57.0 directory.
+	CD into the boost-1.58.0 directory.
 	./bootstrap
 	C:\Users\mjackson\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 variant=debug,release link=static threading=multi address-model=64 install
-	
-That should build and install the complete boost library set with Debug and Release libraries with static linking.
+
+## OS X Notes ##
+
+	[user] $ tar -xvzf boost_1_58_0.tar.gz
+	[user] $ cd boost_1_58_0
+	[user] $ ./bootstrap.sh 
+	[user] $ ./b2 --prefix=/Users/Shared/DREAM3D_SDK/boost-1.58.0 --build-dir=Build variant=release link=shared threading=multi install
+	[user] $ 
 
 
+## Linux Notes ##
+
+The distribution of boost with most modern Linux distributions is usually good enough for our needs. Just use what ever version your distribution has.
 
 # Building Eigen #
 
++ [http://eigen.tuxfamily.org/index.php?title=Main_Page](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 + The project is configured with CMake and there is actually no compiling to do for Eigen. Just configure and then execute the "install" target for your IDE or makefiles.
 + Export the "EIGEN_INSTALL" environment variable.
+
+## Notes ##
+
+	[user] $ tar -xvzf eigen-eigen*.tar.gz
+	[user] $ cd eigen-eigen-bdd17ee3b1b3
+	[user] $ mkdir Build && cd Build
+	[user] $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/Users/Shared/DREAM3D_SDK/eigen-3.2.5 ../
+	[user] $ make install
 
 ## Windows with Visual Studio and Ninja ##
 
@@ -103,25 +163,31 @@ Repeat the process for a Debug build.
 
 # Threading Building Blocks #
 
+## Windows Notes ##
+Download [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) TBB precompiled binaries for Visual Studio. Extract the .zip file into the DREAM3D_SDK directory. You should end up with the path DREAM3D_SDK/tbb43_20150424oss/ if you did this correctly.
+
+## OS X Notes ##
+
+Within the DREAM3D/Support/Scripts/OSX_Build_Scripts directory is a shell script called "Build_TBB.sh". This script should be used to build TBB for OS X.
+	
+## Linux Notes ##
+
 + Download TBB from [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download)
 + Install into the **_DREAM3D\_SDK** location.
-+ There is a script in the DREAM3D/Support/Scripts to build TBB on OS X due to rpath issues and the prebuilt binaries for OS X.
 
 
-# Qt 5.4.1 #
-Download Qt from [http://www.qt.io](http://www.qt.io). One can usually download and install the "Qt SDK" which will have everything you need. 
+# Qt 5.4.x #
+Download Qt from [http://www.qt.io](http://www.qt.io). One can usually download and install the "Qt SDK" which will have everything you need.
+
+Install Qt into C:/DREAM3D_SDK/Qt5.4.1 (Windows) /Users/Shared/DREAM3D_SDK/Qt5.4.1 (OS X) or /opt/DREAM3D_SDK/Qt5.4.1 (Linux).
 
 **Windows Visual Studio Users** The Qt-Project provides pre-built binaries for Qt for Visual Studio (VS) BUT they are ONLY 64 bit and they are ONLY for Visual Studio 2013 and ONLY for a specific version of Visual Studio 2013. If your version of Visual Studio does NOT match theirs, down to the exact security patches and service packs you **will** get errors due to mismatched "manifests", C/C++ runtime DLL issues and a few other things. 
-
-## Building Qt 5.4.x on Windows ##
-
-Don't. Download the prebuilt binaries from qt.io
 
 # Building Qwt #
 
 Build Qwt 6.1.2 which is the first version to be compatible with Qt 5.4.1
 
-+ Download version 6.1.2 for Qt 5.4 compatibility
++ Download version [Qwt 6.1.2](http://sourceforge.net/projects/qwt/files/latest/download) for Qt 5.4 compatibility 
 + Modify the following files:
 
 ## Edit qwt-6.1.2/src/src.pro ##
@@ -147,7 +213,7 @@ replace the following line:
 
 with this (OS X):
 
-	QWT_INSTALL_PREFIX    = /Users/Shared/Toolkits/qwt-$$QWT_VERSION
+	QWT_INSTALL_PREFIX    = /Users/Shared/DREAM3D_SDK/qwt-$$QWT_VERSION
 
 or this (Windows):
 
@@ -172,3 +238,42 @@ For Windows it is (From a Visual Studio X64 command prompt)
 	nmake install
 
 
+# Create DREAM3D_SDK.cmake Configuration File #
+
+The develop now needs to create a basic cmake file that describes the locations of all the various libraries that are needed by DREAM.3D that the developer either just installed or compiled. The contents of the file should be as follows with the appropriately adjusted paths for your operating system. Note the file can technically go any where you want. DREAM.3D developers typically keep the file in the DREAM3D_SDK folder.
+
+
+	#--------------------------------------------------------------------------------------------------
+	# These settings are specific to DREAM3D. DREAM3D needs these variables to
+	# configure properly.
+	set(CMAKE_CXX_FLAGS "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas")
+	set(BUILD_TYPE ${CMAKE_BUILD_TYPE})
+	if("${BUILD_TYPE}" STREQUAL "")
+	    set(BUILD_TYPE "Release" CACHE STRING "" FORCE)
+	endif()
+	message(STATUS "The Current Build type being used is ${BUILD_TYPE}")
+	set(BUILD_SHARED_LIBS ON CACHE BOOL "")
+	set(DREAM3D_SDK_ROOT "/Users/Shared/DREAM3D_SDK")
+	set(DREAM3D_DATA_DIR ${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH "")
+	set(Qt5_DIR "${DREAM3D_SDK_ROOT}/Qt5.4.1/5.4/clang_64/lib/cmake/Qt5" CACHE PATH "")
+	set(QWT_INSTALL "${DREAM3D_SDK_ROOT}/qwt-6.1.2" CACHE PATH "")
+	#--------------------------------------------------------------------------------------------------
+	# Eigen Library
+	set(EIGEN_INSTALL "${DREAM3D_SDK_ROOT}/Eigen-3.2.2" CACHE PATH "")
+	set(BOOST_ROOT "${DREAM3D_SDK_ROOT}/boost-1.58.0" CACHE PATH "")
+	#--------------------------------------------------------------------------------------------------
+	# Intel Threading Building Blocks Library
+	set(DREAM3D_USE_MULTITHREADED_ALGOS ON CACHE BOOL "")
+	set(TBB_INSTALL_DIR  "${DREAM3D_SDK_ROOT}/tbb43_20150424oss" CACHE PATH "")
+	set(TBB_ARCH_TYPE "intel64" CACHE STRING "")
+	#--------------------------------------------------------------------------------------------------
+	# HDF5 Library
+	set(HDF5_INSTALL "${DREAM3D_SDK_ROOT}/hdf5-1.8.14-${BUILD_TYPE}")
+	set(HDF5_DIR "${DREAM3D_SDK_ROOT}/hdf5-1.8.14-${BUILD_TYPE}/share/cmake/hdf5")
+	#--------------------------------------------------------------------------------------------------
+	# Update CMake Module Path with additional paths in order to better find the libraries.
+	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ITK_DIR} ${Qt5_DIR} ${HDF5_INSTALL})
+
+
+
+At this point the developer should be ready to compile DREAM3D. Please see the next document for those instructions.

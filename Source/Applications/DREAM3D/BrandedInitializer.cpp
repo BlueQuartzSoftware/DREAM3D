@@ -386,7 +386,7 @@ void BrandedInitializer::initializeGlobalMenu()
   m_ActionNew->setShortcut((QKeySequence(Qt::CTRL + Qt::Key_N)));
   m_ActionOpen = new QAction("Open...", this);
   m_ActionOpen->setObjectName(QStringLiteral("m_ActionOpen"));
-  m_ActionNew->setShortcut((QKeySequence(Qt::CTRL + Qt::Key_O)));
+  m_ActionOpen->setShortcut((QKeySequence(Qt::CTRL + Qt::Key_O)));
   m_ActionClearRecentFiles = new QAction("Clear Recent Files", this);
   m_ActionClearRecentFiles->setObjectName(QStringLiteral("m_ActionClearRecentFiles"));
   m_ActionExit = new QAction("Exit DREAM3D", this);

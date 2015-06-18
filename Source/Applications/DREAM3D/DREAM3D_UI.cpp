@@ -80,7 +80,7 @@
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 #include "Applications/DREAM3D/AboutDREAM3D.h"
 #include "Applications/DREAM3D/AboutPlugins.h"
-#include "Applications/DREAM3D/DREAM3Dv5Wizard.h"
+#include "Applications/DREAM3D/DREAM3Dv6Wizard.h"
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
 
@@ -189,7 +189,7 @@ void DREAM3D_UI::checkFirstRun()
   if (firstRun == true)
   {
     // This is the first run of DREAM3D v6.0, so we need to show the v6.0 wizard
-    DREAM3Dv5Wizard* wizard = new DREAM3Dv5Wizard(this, Qt::WindowTitleHint);
+    DREAM3Dv6Wizard* wizard = new DREAM3Dv6Wizard(this, Qt::WindowTitleHint);
     wizard->exec();
 
     bool value = wizard->isBookmarkBtnChecked();
@@ -527,11 +527,25 @@ void DREAM3D_UI::readSettings()
   prefs.beginGroup("DockWidgetSettings");
 
   // Read dock widget settings
+  prefs.beginGroup("Bookmarks Dock Widget");
   bookmarksDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Prebuilts Dock Widget");
   prebuiltPipelinesDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter List Dock Widget");
   filterListDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter Library Dock Widget");
   filterLibraryDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Issues Dock Widget");
   issuesDockWidget->readSettings(this, prefs);
+  prefs.endGroup();
 
   prefs.endGroup();
 
@@ -606,11 +620,25 @@ void DREAM3D_UI::writeSettings()
   prefs.beginGroup("DockWidgetSettings");
 
   // Write dock widget settings
+  prefs.beginGroup("Bookmarks Dock Widget");
   bookmarksDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Prebuilts Dock Widget");
   prebuiltPipelinesDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter List Dock Widget");
   filterListDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter Library Dock Widget");
   filterLibraryDockWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Issues Dock Widget");
   issuesDockWidget->writeSettings(prefs);
+  prefs.endGroup();
 
   prefs.endGroup();
 

@@ -13,7 +13,11 @@ A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The foll
 
 ## Note for MinGW/MSys/Cygwin ##
 
-Due to incompatibilities of HDF5 and these environments we can not support compiling DREAM3D using these environments. Visual Studio Express is Free for anyone to use and has no restrictions on the software produced and its distribution.
+# Installing Dependent Libraries ##
+
+
+
+Due to incompatibilities of HDF5 and these environments we can not support compiling DREAM3D using these environments. Visual Studio Community is **Free** for anyone to use and has no restrictions on the software produced and its distribution.
 
 
 # Building DREAM3D #
@@ -49,10 +53,10 @@ Once the source code is cloned onto your local hard drive and all the external l
 	set(DREAM3D_USE_MULTITHREADED_ALGOS ON CACHE BOOL "")
 	set(TBB_ARCH_TYPE "intel64" CACHE STRING "")
 	set(ITK_DIR "${DREAM3D_SDK_ROOT}/ITK-4.7.1-${BUILD_TYPE}")
-	set(HDF5_INSTALL "${DREAM3D_SDK_ROOT}/hdf5-1.8.14-${BUILD_TYPE}")
+	set(HDF5_INSTALL "${DREAM3D_SDK_ROOT}/hdf5-1.8.15-${BUILD_TYPE}")
+	set(HDF5_DIR "${DREAM3D_SDK_ROOT}/hdf5-1.8.15-${BUILD_TYPE}/share/cmake")
+	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ITK_DIR} ${Qt5_DIR} ${HDF5_DIR})
 
-	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ITK_DIR} ${Qt5_DIR} ${HDF5_INSTALL})
-	set(DREAM3D_EXTRA_PLUGINS "ImageProcessing")
 	#--------------------------------------------------------------------------------------------------
 
 	#--------------------------------------------------------------------------------------------------

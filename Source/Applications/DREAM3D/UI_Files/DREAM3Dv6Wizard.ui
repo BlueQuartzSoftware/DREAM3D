@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DREAM3Dv5Wizard</class>
- <widget class="QWizard" name="DREAM3Dv5Wizard">
+ <class>DREAM3Dv6Wizard</class>
+ <widget class="QWizard" name="DREAM3Dv6Wizard">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -37,7 +37,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>DREAM3D v5.2</string>
+   <string>DREAM3D v6.0</string>
   </property>
   <property name="wizardStyle">
    <enum>QWizard::MacStyle</enum>
@@ -79,7 +79,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; color:#c90000;&quot;&gt;WARNING: &lt;/span&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Version 5 does not support the Version 4 DREAM3D file format. See Release Notes for more information.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; color:#c90000;&quot;&gt;WARNING: &lt;/span&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Version 6 does not support the Version 4 DREAM3D file format. See Release Notes for more information.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -190,7 +190,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Version 4 Favorites -&gt; Version 5 Bookmarks</string>
+       <string>Version 4 Favorites -&gt; Version 6 Bookmarks</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -230,7 +230,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; color:#c90000;&quot;&gt;WARNING: &lt;/span&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Version 4 pipelines may not function correctly in Version 5. You may need to manually update your Version 4 pipelines.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; color:#c90000;&quot;&gt;WARNING: &lt;/span&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Version 4 pipelines may not function correctly in Version 6. You may need to manually update your Version 4 pipelines.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -248,7 +248,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Version 5 does not support Version 4 favorites.  Would you like to bookmark your Version 4 favorites to the new Version 5 bookmarks window?</string>
+       <string>Version 6 does not support Version 4 favorites.  Would you like to bookmark your Version 4 favorites to the new Version 6 bookmarks window?</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
