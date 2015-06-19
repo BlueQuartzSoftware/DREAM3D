@@ -50,11 +50,6 @@
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToContents</enum>
      </property>
-     <item>
-      <property name="text">
-       <string>VolumeDataContainer</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item>
@@ -71,11 +66,6 @@
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToContents</enum>
      </property>
-     <item>
-      <property name="text">
-       <string>CellFeatureData</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item>
@@ -92,11 +82,6 @@
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToContents</enum>
      </property>
-     <item>
-      <property name="text">
-       <string>Dictionary Euler Angles</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item>
