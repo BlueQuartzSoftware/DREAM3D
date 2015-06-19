@@ -130,7 +130,7 @@ void TriangleAreaFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }

@@ -353,10 +353,10 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("TiDwellFatigueCrystallographicAnalysis") != 0)
-//    {
-//      return false;
-//    }
+    //    if (fi.baseName().compare("TiDwellFatigueCrystallographicAnalysis") != 0)
+    //    {
+    //      return false;
+    //    }
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -443,10 +443,10 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//        if (fi.baseName().compare("CropVolume") != 0)
-//        {
-//          return false;
-//        }
+    //        if (fi.baseName().compare("CropVolume") != 0)
+    //        {
+    //          return false;
+    //        }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
@@ -694,10 +694,10 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = D3DTools::GetDREAM3DPluginDir();
 
-//  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageIO" <<
-//          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
-//          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
-//          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
+  //  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageIO" <<
+  //          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
+  //          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
+  //          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -754,11 +754,11 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
   QString contents;
   {
     // Read the Source File
-//    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("AddOrientationNoise") != 0)
-//    {
-//      return false;
-//    }
+    //    QFileInfo fi(cppFile);
+    //    if (fi.baseName().compare("AddOrientationNoise") != 0)
+    //    {
+    //      return false;
+    //    }
 
     QFile source(file);
     source.open(QFile::ReadOnly);
@@ -802,7 +802,7 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
     index++;
   }
 
-// qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
+  // qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
 
   int lineIndex = 0;
   QMapIterator<QString, int> iter(lineToInclude);
@@ -834,10 +834,10 @@ void ReplaceLicenseText(QString absPath)
   {
     // Read the Source File
     QFileInfo fi(absPath);
-//    if (fi.baseName().compare("AddFavoriteWidget") != 0)
-//    {
-//      return;
-//    }
+    //    if (fi.baseName().compare("AddFavoriteWidget") != 0)
+    //    {
+    //      return;
+    //    }
 
     QFile source(absPath);
     source.open(QFile::ReadOnly);
@@ -891,8 +891,8 @@ void ReplaceLicenseText(QString absPath)
       out << "* list of conditions and the following disclaimer in the documentation and/or\n";
       out << "* other materials provided with the distribution.\n";
       out << "*\n";
-      out << "* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its \n";
-      out << "* contributors may be used to endorse or promote products derived from this software \n";
+      out << "* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its\n";
+      out << "* contributors may be used to endorse or promote products derived from this software\n";
       out << "* without specific prior written permission.\n";
       out << "*\n";
       out << "* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n";
@@ -1000,6 +1000,44 @@ void GenerateFilterParametersCode()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenerateMarkDownDocs()
+{
+  FilterManager* fm = FilterManager::Instance();
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  // Loop on each filter
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+
+    const QMetaObject* metaObject = filter->metaObject();
+//    QStringList methods;
+//    for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+//      qDebug() << metaObject->method(i).methodSignature();
+
+    std::cout << filter->getHumanLabel().toStdString() << "  {#" << filter->getNameOfClass().toLower().toStdString() << "}" << std::endl;
+    std::cout << "## Group (Subgroup) ##" << std::endl;
+    std::cout << filter->getGroupName().toStdString() << "(" << filter->getSubGroupName().toStdString() << ")" << std::endl;
+
+
+    std::cout << "## Filter Parameters ##" << std::endl;
+    std::cout << "| Property Name | Property Type |" << std::endl;
+    std::cout << "| ------------- | ------------- |" << std::endl;
+    for(int i = metaObject->propertyOffset(); i < metaObject->propertyCount(); ++i)
+    {
+      std::cout << "| " << metaObject->property(i).name() << " | " << metaObject->property(i).typeName() << " |" << std::endl;
+    }
+
+
+  }
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1024,6 +1062,7 @@ int main(int argc, char* argv[])
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
 
+  //GenerateMarkDownDocs();
   //GenerateFilterParametersCode();
   //ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
 

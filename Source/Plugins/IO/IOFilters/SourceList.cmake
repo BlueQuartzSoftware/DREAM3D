@@ -15,8 +15,6 @@ START_FILTER_GROUP(${IO_BINARY_DIR} "${_filterGroupName}" "IO")
 set(_PublicFilters
   AbaqusHexahedronWriter
   AbaqusSurfaceMeshWriter
-  AvizoRectilinearCoordinateWriter
-  AvizoUniformCoordinateWriter
   DxReader
   DxWriter
   EddyCurrentDataReader
@@ -25,7 +23,6 @@ set(_PublicFilters
   FeatureDataCSVWriter
   FeatureInfoReader
   GBCDTriangleDumper
-  GoldfeatherReader
   INLWriter
   LammpsFileWriter
   LosAlamosFFTWriter
@@ -45,7 +42,6 @@ set(_PublicFilters
   VisualizeGBCDPoleFigure
   VtkRectilinearGridWriter
   VtkStructuredPointsReader
-  YSChoiAbaqusReader
 )
 
 
@@ -63,7 +59,11 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-    V4DataContainerReader
+  AvizoRectilinearCoordinateWriter
+  AvizoUniformCoordinateWriter
+  GoldfeatherReader
+  V4DataContainerReader
+  YSChoiAbaqusReader
 )
 
 #-----------------

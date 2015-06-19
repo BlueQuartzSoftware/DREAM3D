@@ -79,6 +79,10 @@ public:
   bool beginGroup(const QString &prefix);
   void endGroup();
 
+  QStringList childGroups();
+
+  void remove(const QString &key);
+
   QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
   QJsonObject value(const QString &key, const QJsonObject &defaultObject = QJsonObject());
   QStringList value(const QString &key, const QStringList &defaultList = QStringList());
@@ -94,6 +98,12 @@ private:
   void openFile();
   void closeFile();
   void writeToFile();
+
+  enum MultiValueLabels
+  {
+    Value,
+    Type
+  };
 
   DREAM3DSettings(const DREAM3DSettings&);    // Copy Constructor Not Implemented
   void operator=(const DREAM3DSettings&);  // Operator '=' Not Implemented

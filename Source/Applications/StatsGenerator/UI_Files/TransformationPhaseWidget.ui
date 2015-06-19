@@ -14,7 +14,16 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
     <number>4</number>
    </property>
    <item>
@@ -394,20 +403,20 @@ font-size: 12px;
          <item row="1" column="5">
           <widget class="QLabel" name="label_9">
            <property name="text">
-            <string/>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;x&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;(μ + max * σ)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="pixmap">
-            <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/MaxCutOff_Eqn.png</pixmap>
+            <pixmap>:/MaxCutOff_Eqn.png</pixmap>
            </property>
           </widget>
          </item>
          <item row="0" column="5">
           <widget class="QLabel" name="label_10">
            <property name="text">
-            <string/>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;x&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;(μ + min * σ)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="pixmap">
-            <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/MinCutOff_Eqn.png</pixmap>
+            <pixmap>:/MinCutOff_Eqn.png</pixmap>
            </property>
           </widget>
          </item>
@@ -458,7 +467,16 @@ font-size: 12px;
        <string>Omega 3 Distributions</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
@@ -471,7 +489,16 @@ font-size: 12px;
        <string>Shape Distributions</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
@@ -484,12 +511,21 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>38</height>
+            <width>769</width>
+            <height>568</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>4</number>
+           </property>
+           <property name="topMargin">
+            <number>4</number>
+           </property>
+           <property name="rightMargin">
+            <number>4</number>
+           </property>
+           <property name="bottomMargin">
             <number>4</number>
            </property>
            <item>
@@ -549,9 +585,6 @@ font-size: 12px;
    <header location="global">SGAxisODFWidget.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

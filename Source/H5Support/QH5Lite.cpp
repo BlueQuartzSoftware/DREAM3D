@@ -275,7 +275,13 @@ herr_t QH5Lite::readVectorOfStringDataset(hid_t loc_id,
   */
     hid_t sid = H5Dget_space(did);
     int ndims = H5Sget_simple_extent_dims(sid, dims, NULL);
-    Q_ASSERT_X(ndims == 1, "", "");
+    if(ndims != 1)
+    {
+      CloseH5S(sid, err, retErr);
+      CloseH5T(tid, err, retErr);
+      std::cout << "H5Lite.cpp::readVectorOfStringDataset(" << __LINE__ << ") Number of dims should be 1 but it was " << ndims << ". Returning early. Is your data file correct?" << std::endl;
+      return -2;
+    }
     std::vector<char*> rdata(dims[0]);
     for (int i = 0; i < dims[0]; i++)
     {
@@ -292,7 +298,15 @@ herr_t QH5Lite::readVectorOfStringDataset(hid_t loc_id,
   * Read the data.
   */
     status = H5Dread(did, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(rdata.front()));
-
+    if(status < 0)
+    {
+      status = H5Dvlen_reclaim(memtype, sid, H5P_DEFAULT, &(rdata.front()));
+      CloseH5S(sid, err, retErr);
+      CloseH5T(tid, err, retErr);
+      CloseH5T(memtype, err, retErr);
+      std::cout << "H5Lite.cpp::readVectorOfStringDataset(" << __LINE__ << ") Error reading Dataset at loc_id (" << loc_id << ") with object name (" << dsetName.toStdString() << ")" << std::endl;
+      return -3;
+    }
     data.resize(dims[0]);
     /*
   * copy the data into the vector of strings

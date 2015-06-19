@@ -452,18 +452,21 @@ bool DREAM3D_UI::savePipelineAs()
   // Cache the last directory
   m_OpenDialogLastDirectory = fi.path();
 
-  QMessageBox bookmarkMsgBox;
-  bookmarkMsgBox.setWindowTitle("Pipeline Saved");
-  bookmarkMsgBox.setText("The pipeline has been saved.");
-  bookmarkMsgBox.setInformativeText("Would you also like to bookmark this pipeline?");
-  bookmarkMsgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-  bookmarkMsgBox.setDefaultButton(QMessageBox::Yes);
-  int ret = bookmarkMsgBox.exec();
+  QMessageBox* bookmarkMsgBox = new QMessageBox(this);
+  bookmarkMsgBox->setWindowTitle("Pipeline Saved");
+  bookmarkMsgBox->setText("The pipeline has been saved.");
+  bookmarkMsgBox->setInformativeText("Would you also like to bookmark this pipeline?");
+  bookmarkMsgBox->setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  bookmarkMsgBox->setDefaultButton(QMessageBox::Yes);
+  int ret = bookmarkMsgBox->exec();
 
   if (ret == QMessageBox::Yes)
   {
     emit bookmarkNeedsToBeAdded(filePath, QModelIndex());
   }
+
+  delete bookmarkMsgBox;
+  bookmarkMsgBox = NULL;
 
   return true;
 }

@@ -111,9 +111,6 @@ opacity: 255;\
   bookmarksTreeView->setStyleSheet(css);
 
   connect(bookmarksTreeView, SIGNAL(itemWasDropped(QModelIndex, QString&, QIcon, QString, bool, bool, bool)), this, SLOT(addTreeItem(QModelIndex, QString&, QIcon, QString, bool, bool, bool)));
-
-  // Resize the bookmarks widget header to contents
-  bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 // -----------------------------------------------------------------------------
@@ -141,29 +138,6 @@ QDir BookmarksDockWidget::findV4FavoritesDirectory()
   QDir pipelinesDir = QDir(favPath);
   return pipelinesDir;
 }
-
-//// -----------------------------------------------------------------------------
-////
-//// -----------------------------------------------------------------------------
-//void BookmarksDockWidget::convertPipelines(QString newDirectory)
-//{
-//  QDir pipelinesDir = findPipelinesDirectory();
-//
-//  FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
-//  QString iconFileName(":/text.png");
-//  bool allowEditing = true;
-//  QStringList fileExtension;
-//  fileExtension.append("*.txt");
-//  fileExtension.append("*.ini");
-//  fileExtension.append("*.json");
-//
-//  // Now block signals and load up all the pipelines in the folder
-//  bookmarksTreeView->blockSignals(true);
-//  //addPipelinesRecursively(pipelinesDir, bookmarksTreeView->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
-//  // Sort the Favorite Tree by name(?)
-//  bookmarksTreeView->sortByColumn(Name, Qt::AscendingOrder);
-//  bookmarksTreeView->blockSignals(false);
-//}
 
 // -----------------------------------------------------------------------------
 //
@@ -713,7 +687,7 @@ void BookmarksDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs
   bool b = prefs.value(objectName(), false).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("BookmarksHeaderState", QByteArray()).toByteArray();
+  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray()).toByteArray();
   bookmarksTreeView->header()->restoreState(headerState);
 
   QString path = prefs.fileName();
@@ -746,7 +720,7 @@ void BookmarksDockWidget::writeSettings(DREAM3DSettings& prefs)
 {
   prefs.setValue(objectName(), isHidden());
 
-  prefs.setValue("BookmarksHeaderState", bookmarksTreeView->header()->saveState());
+  prefs.setValue("Horizontal Header State", bookmarksTreeView->header()->saveState());
 
   QJsonObject modelObj = bookmarksTreeView->toJsonObject();
 

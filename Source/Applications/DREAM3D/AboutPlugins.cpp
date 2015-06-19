@@ -43,6 +43,8 @@
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
+#include "QtSupportLib/DREAM3DSettings.h"
+
 #include "PluginDetails.h"
 #include "AboutPlugins.h"
 
@@ -270,17 +272,17 @@ void AboutPlugins::on_detailsBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AboutPlugins::on_pluginsTable_cellClicked(int row, int column)
+void AboutPlugins::on_pluginsTable_currentItemChanged(QTableWidgetItem* current, QTableWidgetItem* previous)
 {
-  if (pluginsTable->item(row, STATUS_INDEX)->text() == NOT_FOUND_STRING)
+  if (NULL != current && current->text() == NOT_FOUND_STRING)
   {
     detailsBtn->setDisabled(true);
-	removePluginBtn->setVisible(true);
+	  removePluginBtn->setVisible(true);
   }
   else
   {
     detailsBtn->setEnabled(true);
-	removePluginBtn->setVisible(false);
+	  removePluginBtn->setVisible(false);
   }
 }
 
@@ -365,7 +367,8 @@ void AboutPlugins::addPlugin(QString pluginPath)
 // -----------------------------------------------------------------------------
 void AboutPlugins::on_removePluginBtn_pressed()
 {
-  QTableWidgetItem* nameItem = pluginsTable->item(pluginsTable->currentRow(), NAME_INDEX);
+  int currentRow = pluginsTable->currentRow();
+  QTableWidgetItem* nameItem = pluginsTable->item(currentRow, NAME_INDEX);
 
   if (NULL != nameItem)
   {
@@ -381,6 +384,21 @@ void AboutPlugins::on_removePluginBtn_pressed()
     if (answer == QMessageBox::Yes)
     {
       deletePlugin(nameItem);
+      QTableWidgetItem* newSelection = pluginsTable->item(currentRow, NAME_INDEX);
+      if (NULL != newSelection)
+      {
+        // Select the row that is next after the one that was just deleted
+        pluginsTable->setCurrentItem(newSelection);
+        pluginsTable->setFocus();
+      }
+      else
+      {
+        // We are at the end, so select the previous row
+        currentRow--;
+        newSelection = pluginsTable->item(currentRow, NAME_INDEX);
+        pluginsTable->setCurrentItem(newSelection);
+        pluginsTable->setFocus();
+      }
       m_loadPreferencesDidChange = true;
     }
   }
@@ -392,20 +410,10 @@ void AboutPlugins::on_removePluginBtn_pressed()
 void AboutPlugins::deletePlugin(QTableWidgetItem* nameItem)
 {
   QString pluginName = nameItem->text();
-
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QString filePath;
-
-  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-
-  filePath = prefs.fileName();
+  DREAM3DSettings prefs;
 
   // Remove plugin from cache
-  prefs.beginGroup("PluginPreferences");
+  prefs.beginGroup("Plugin Preferences");
   prefs.remove(pluginName);
   prefs.endGroup();
 
@@ -418,18 +426,9 @@ void AboutPlugins::deletePlugin(QTableWidgetItem* nameItem)
 // -----------------------------------------------------------------------------
 void AboutPlugins::writePluginCache()
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QString filePath;
+  DREAM3DSettings prefs;
 
-  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-
-  filePath = prefs.fileName();
-
-  prefs.beginGroup("PluginPreferences");
+  prefs.beginGroup("Plugin Preferences");
 
   QList<PluginProxy::Pointer> proxies = getPluginCheckBoxSettingsFromGUI();
 
@@ -440,8 +439,8 @@ void AboutPlugins::writePluginCache()
     bool enabled = (*proxyIter)->getEnabled();
 
   prefs.beginGroup(pluginName);
-  prefs.setValue(QString::number(PATH_INDEX), filePath);
-  prefs.setValue(QString::number(ENABLED_INDEX), enabled);
+  prefs.setValue("Plugin Path", filePath);
+  prefs.setValue("Enabled", enabled);
   prefs.endGroup();
   }
 
@@ -453,20 +452,11 @@ void AboutPlugins::writePluginCache()
 // -----------------------------------------------------------------------------
 void AboutPlugins::readCheckState(QCheckBox* checkBox, QString pluginName)
 {
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QString filePath;
+  DREAM3DSettings prefs;
 
-  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-
-  filePath = prefs.fileName();
-
-  prefs.beginGroup("PluginPreferences");
+  prefs.beginGroup("Plugin Preferences");
   prefs.beginGroup(pluginName);
-  checkBox->setChecked(prefs.value(QString::number(ENABLED_INDEX), true).toBool());
+  checkBox->setChecked(prefs.value("Enabled", true).toBool());
   prefs.endGroup();
   prefs.endGroup();
 }
@@ -550,18 +540,9 @@ QList<PluginProxy::Pointer> AboutPlugins::readPluginCache()
 {
   QList<PluginProxy::Pointer> proxyList;
 
-#if defined (Q_OS_MAC)
-  QSettings::Format format = QSettings::NativeFormat;
-#else
-  QSettings::Format format = QSettings::IniFormat;
-#endif
-  QString filePath;
+  DREAM3DSettings prefs;
 
-  QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-
-  filePath = prefs.fileName();
-
-  prefs.beginGroup("PluginPreferences");
+  prefs.beginGroup("Plugin Preferences");
   QStringList pluginNameList = prefs.childGroups();
 
   for (QStringList::iterator iter = pluginNameList.begin(); iter != pluginNameList.end(); iter++)
@@ -571,8 +552,8 @@ QList<PluginProxy::Pointer> AboutPlugins::readPluginCache()
 
     prefs.beginGroup(pluginName);
     proxy->setPluginName(pluginName);
-    proxy->setFilePath(prefs.value(QString::number(PATH_INDEX)).toString());
-    proxy->setEnabled(prefs.value(QString::number(ENABLED_INDEX)).toBool());
+    proxy->setFilePath(prefs.value("Plugin Path", "").toString());
+    proxy->setEnabled(prefs.value("Enabled", true).toBool());
     prefs.endGroup();
 
     proxyList.push_back(proxy);
