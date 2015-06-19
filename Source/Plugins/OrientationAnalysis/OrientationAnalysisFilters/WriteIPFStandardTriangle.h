@@ -57,9 +57,6 @@ class WriteIPFStandardTriangle : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(int, ImageFormat)
-    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
-
     DREAM3D_FILTER_PARAMETER(int, ImageSize)
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 

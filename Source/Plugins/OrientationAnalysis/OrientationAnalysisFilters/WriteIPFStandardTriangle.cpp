@@ -56,7 +56,6 @@
 WriteIPFStandardTriangle::WriteIPFStandardTriangle() :
   AbstractFilter(),
   m_OutputFile(""),
-  m_ImageFormat(2),
   m_ImageSize(512)
 {
   setupFilterParameters();
@@ -76,20 +75,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter));
-  {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Image Format");
-    parameter->setPropertyName("ImageFormat");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    QVector<QString> choices;
-    choices.push_back("tif");
-    choices.push_back("bmp");
-    choices.push_back("png");
-    parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "*.tif *.bmp *.png", "*.tif *.bmp *.png", "Image"));
   parameters.push_back(FilterParameter::New("Image Size (Square)", "ImageSize", FilterParameterWidgetType::IntWidget, getImageSize(), FilterParameter::Parameter, "Pixels"));
 
   setFilterParameters(parameters);
@@ -102,7 +88,6 @@ void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   setOutputFile( reader->readString("OutputFile", getOutputFile()));
-  setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   reader->closeFilterGroup();
 }
@@ -115,7 +100,6 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -131,21 +115,42 @@ void WriteIPFStandardTriangle::dataCheck()
   QString ss;
   if (getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( "The output file must be set");
+    ss = QObject::tr( "The output file must be set.");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    return;
   }
+
   QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();
+  QString ext = fi.completeSuffix();
+
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist");
+    ss = QObject::tr( "The directory path for the output file does not exist.");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
+
+  if (ext.isEmpty())
+  {
+    ss = QObject::tr("The output file does not have an extension.");
+    notifyErrorMessage(getHumanLabel(), ss, -1003);
+    setErrorCondition(-1004);
+    return;
+  }
+  else if (ext != "tif" && ext != "bmp" && ext != "png")
+  {
+    ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file.");
+    notifyErrorMessage(getHumanLabel(), ss, -1004);
+    setErrorCondition(-1004);
+    return;
+  }
+
   if (m_ImageSize <= 0)
   {
     setErrorCondition(-1005);
-    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive.", getErrorCondition());
+    return;
   }
 }
 
