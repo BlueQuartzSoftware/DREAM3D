@@ -222,7 +222,9 @@ void ComparisonSelectionWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if(dataContainerList->findText(dc.name) == -1 )
     {
+      int index = dataContainerList->currentIndex();
       dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 
@@ -260,44 +262,46 @@ void ComparisonSelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false)
-  {
-    dataContainerList->addItem(dcName);
-  } // the string was not found so just set it to the first index
-  else
-  {
-    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
-    dataContainerList->setCurrentIndex(dcIndex);
-    populateAttributeMatrixList();
-  }
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
+  dataContainerList->setCurrentIndex(dcIndex);
+  populateAttributeMatrixList();
+
+  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
 
-  int amIndex = attributeMatrixList->findText(amName);
-  if(amIndex < 0 && amName.isEmpty() == false)
+  if (dcIndex < 0)
   {
-    attributeMatrixList->addItem(amName);
-  } // The name of the attributeMatrix was not found so just set the first one
+    attributeMatrixList->setCurrentIndex(-1);
+    m_ComparisonSelectionTableModel->setTableData(ComparisonInputs());
+  }
   else
   {
-    if(amIndex < 0) { amIndex = 0; }
+    int amIndex = attributeMatrixList->findText(amName);
+
     // Set the selected index in the Attribute Matrix
     attributeMatrixList->setCurrentIndex(amIndex);
-    // Now based on that AttributeMatrix get a list the AttributeArrays
-    QStringList possibleArrays = generateAttributeArrayList();
-    // Push that list into the Table Model
-    m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
-    // Now that we have an updated list of names we need to Set the ItemDelegate for the table.
-    QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
-    comparisonSelectionTableView->setItemDelegate(aid);
 
+    if (amIndex < 0)
+    {
+      m_ComparisonSelectionTableModel->setTableData(ComparisonInputs());
+    }
+    else
+    {
+      // Now based on that AttributeMatrix get a list the AttributeArrays
+      QStringList possibleArrays = generateAttributeArrayList();
+      // Push that list into the Table Model
+      m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
+      // Now that we have an updated list of names we need to Set the ItemDelegate for the table.
+      QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
+      comparisonSelectionTableView->setItemDelegate(aid);
 
-    // Now set the table data directly.
-    m_ComparisonSelectionTableModel->setTableData(comps);
+      // Now set the table data directly.
+      m_ComparisonSelectionTableModel->setTableData(comps);
+    }
   }
+
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
 
@@ -472,12 +476,11 @@ void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int ind
 {
   populateAttributeMatrixList();
 
-  // Select the first AttributeMatrix in the list
-  if(attributeMatrixList->count() > 0)
+  // Do not select an attribute matrix from the list
+  if (attributeMatrixList->count() > 0)
   {
-    on_attributeMatrixList_currentIndexChanged(0);
+    attributeMatrixList->setCurrentIndex(-1);
   }
-
 }
 
 

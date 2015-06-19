@@ -163,7 +163,9 @@ void DataContainerSelectionWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if(dataContainerList->findText(dc.name) == -1 )
     {
+      int index = dataContainerList->currentIndex();
       dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 

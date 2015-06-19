@@ -165,7 +165,10 @@ void PhaseTypeSelectionWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if(dataContainerList->findText(dc.name) == -1 )
     {
+      // Retain the original current index when adding the item
+      int index = dataContainerList->currentIndex();
       dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 
@@ -208,29 +211,26 @@ void PhaseTypeSelectionWidget::populateComboBoxes()
 
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
-  int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false)
-  {
-    dataContainerList->addItem(dcName);
-  } // the string was not found so just set it to the first index
-  else
-  {
-    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
-    dataContainerList->setCurrentIndex(dcIndex);
-    populateAttributeMatrixList();
-  }
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
+  int dcIndex = dataContainerList->findText(dcName);
+  dataContainerList->setCurrentIndex(dcIndex);
+  populateAttributeMatrixList();
+
+  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
-  int amIndex = attributeMatrixList->findText(amName);
-  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
+
+  if (dcIndex < 0)
+  {
+    attributeMatrixList->setCurrentIndex(-1);
+  }
   else
   {
-    if(amIndex < 0) { amIndex = 0; }
+    int amIndex = attributeMatrixList->findText(amName);
     attributeMatrixList->setCurrentIndex(amIndex);
   }
+
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
 }
@@ -306,16 +306,13 @@ void PhaseTypeSelectionWidget::setSelectedPath(QString dcName, QString attrMatNa
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-
-  //  std::cout << "void PhaseTypeSelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
   populateAttributeMatrixList();
 
-  // Select the first AttributeMatrix in the list
+  // Do not select an attribute matrix from the list
   if(attributeMatrixList->count() > 0)
   {
-    on_attributeMatrixList_currentIndexChanged(0);
+    attributeMatrixList->setCurrentIndex(-1);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -456,9 +453,7 @@ void PhaseTypeSelectionWidget::beforePreflight()
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);
 
-  // Reset all the combo box widgets to have the default selection of the first index in the list
   populateComboBoxes();
-  //updatePhaseComboBoxes();
 
   dataContainerList->blockSignals(false);
   attributeMatrixList->blockSignals(false);

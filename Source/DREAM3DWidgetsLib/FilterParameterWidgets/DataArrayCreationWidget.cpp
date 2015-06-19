@@ -179,7 +179,9 @@ void DataArrayCreationWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if(dataContainerList->findText(dc.name) == -1 )
     {
+      int index = dataContainerList->currentIndex();
       dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 
@@ -212,38 +214,35 @@ void DataArrayCreationWidget::populateComboBoxes()
 
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
-  int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false)
-  {
-    dataContainerList->addItem(dcName);
-  } // the string was not found so just set it to the first index
-  else
-  {
-    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
-    dataContainerList->setCurrentIndex(dcIndex);
-    populateAttributeMatrixList();
-  }
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
+  int dcIndex = dataContainerList->findText(dcName);
+  dataContainerList->setCurrentIndex(dcIndex);
+  populateAttributeMatrixList();
+
+  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
-  int amIndex = attributeMatrixList->findText(amName);
-  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
+
+  if (dcIndex < 0)
+  {
+    attributeMatrixList->setCurrentIndex(-1);
+  }
   else
   {
-    if(amIndex < 0) { amIndex = 0; }
+    int amIndex = attributeMatrixList->findText(amName);
     attributeMatrixList->setCurrentIndex(amIndex);
-
   }
+
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
 
   if(!dataArrayName->signalsBlocked()) { didBlock = true; }
   dataArrayName->blockSignals(true);
+
   dataArrayName->setText(daName);
 
-  if(didBlock) { dataArrayName->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
+  if(didBlock) { dataArrayName->blockSignals(false); didBlock = false; }
 
 }
 
@@ -331,16 +330,13 @@ void DataArrayCreationWidget::setSelectedPath(QString dcName, QString attrMatNam
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-
-  //  std::cout << "void DataArrayCreationWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
   populateAttributeMatrixList();
 
-  // Select the first AttributeMatrix in the list
-  if(attributeMatrixList->count() > 0)
+  // Do not select an attribute matrix from the list
+  if (attributeMatrixList->count() > 0)
   {
-    on_attributeMatrixList_currentIndexChanged(0);
+    attributeMatrixList->setCurrentIndex(-1);
   }
-
 }
 
 // -----------------------------------------------------------------------------

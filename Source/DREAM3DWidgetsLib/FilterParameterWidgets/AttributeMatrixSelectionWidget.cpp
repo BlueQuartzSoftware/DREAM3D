@@ -159,7 +159,9 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if(dataContainerList->findText(dc.name) == -1 )
     {
+      int index = dataContainerList->currentIndex();
       dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 
@@ -203,27 +205,25 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false)
-  {
-    dataContainerList->addItem(dcName);
-  }
-  else
-  {
-    dataContainerList->setCurrentIndex(dcIndex);
-    populateAttributeMatrixList();
-  }
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
+  dataContainerList->setCurrentIndex(dcIndex);
+  populateAttributeMatrixList();
+
+  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
-  int amIndex = attributeMatrixList->findText(amName);
-  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
+
+  if (dcIndex < 0)
+  {
+    attributeMatrixList->setCurrentIndex(-1);
+  }
   else
   {
-    if(amIndex < 0) { amIndex = 0; }
+    int amIndex = attributeMatrixList->findText(amName);
     attributeMatrixList->setCurrentIndex(amIndex);
   }
+
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
 }
@@ -299,16 +299,13 @@ void AttributeMatrixSelectionWidget::setSelectedPath(QString dcName, QString att
 // -----------------------------------------------------------------------------
 void AttributeMatrixSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-
-  //  std::cout << "void AttributeMatrixSelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
   populateAttributeMatrixList();
 
-  // Select the first AttributeMatrix in the list
-  if(attributeMatrixList->count() > 0)
+  // Do not select an attribute matrix from the list
+  if (attributeMatrixList->count() > 0)
   {
-    on_attributeMatrixList_currentIndexChanged(0);
+    attributeMatrixList->setCurrentIndex(-1);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -351,7 +348,6 @@ void AttributeMatrixSelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 void AttributeMatrixSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-  // std::cout << "void AttributeMatrixSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;

@@ -193,7 +193,9 @@ void DataArraySelectionWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if(dataContainerList->findText(dc.name) == -1 )
     {
+      int index = dataContainerList->currentIndex();
       dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 
@@ -237,47 +239,54 @@ void DataArraySelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0)
-  {
-    dataContainerList->setCurrentIndex(dcIndex);
-    attributeMatrixList->setCurrentIndex(dcIndex);
-    attributeArrayList->setCurrentIndex(dcIndex);
-  }
-  else
-  {
-    dataContainerList->setCurrentIndex(dcIndex);
-    populateAttributeMatrixList();
-  }
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
-  if(dcIndex < 0) { return; }
 
+  dataContainerList->setCurrentIndex(dcIndex);
+  populateAttributeMatrixList();
+
+  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
-  int amIndex = attributeMatrixList->findText(amName);
-  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); }
+
+  int amIndex = -1;
+  if (dcIndex < 0)
+  {
+    attributeMatrixList->setCurrentIndex(-1);
+    attributeArrayList->setCurrentIndex(-1);
+  }
   else
   {
+    amIndex = attributeMatrixList->findText(amName);
     attributeMatrixList->setCurrentIndex(amIndex);
     populateAttributeArrayList();
   }
+
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
 
   if(!attributeArrayList->signalsBlocked()) { didBlock = true; }
   attributeArrayList->blockSignals(true);
-  int daIndex = attributeArrayList->findText(daName);
 
-  // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
-  if(daIndex < 0)
+  if (amIndex < 0)
   {
-    QVariant var = getFilterParameter()->getDefaultValue();
-    DataArrayPath path = var.value<DataArrayPath>();
-    daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
-    daIndex = attributeArrayList->findText(daName);
+    attributeArrayList->setCurrentIndex(-1);
+  }
+  else
+  {
+    int daIndex = attributeArrayList->findText(daName);
+
+    // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
+    if (daIndex < 0)
+    {
+      QVariant var = getFilterParameter()->getDefaultValue();
+      DataArrayPath path = var.value<DataArrayPath>();
+      daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
+      daIndex = attributeArrayList->findText(daName);
+    }
+
+    attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we should
   }
 
-  attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we should
   if(didBlock) { attributeArrayList->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
 
 }
@@ -340,17 +349,12 @@ void DataArraySelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-
-  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)";
   populateAttributeMatrixList();
 
-  // Select the first AttributeMatrix in the list
-  if(attributeMatrixList->count() > 0)
+  // Do not select an attribute matrix from the list
+  if (attributeMatrixList->count() > 0)
   {
-    // Blank the attribute array choice, because we don't want to choose for them
     attributeMatrixList->setCurrentIndex(-1);
-
-    on_attributeMatrixList_currentIndexChanged(0);
   }
 }
 
@@ -360,11 +364,13 @@ void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int inde
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
   populateAttributeArrayList();
 
-  // Blank the attribute array choice, because we don't want to choose for them
-  attributeArrayList->setCurrentIndex(-1);
+  // Do not select an attribute array from the list
+  if (attributeArrayList->count() > 0)
+  {
+    attributeArrayList->setCurrentIndex(-1);
+  }
 
   m_DidCausePreflight = true;
   emit parametersChanged();

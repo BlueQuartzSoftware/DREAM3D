@@ -151,19 +151,10 @@ void MultiDataArraySelectionWidget::setupGui()
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::populateComboBoxes()
 {
-  //qDebug() << "-----------------------------------------------";
-  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::populateComboBoxes()";
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if (NULL == dca.get()) { return; }
-
-
-  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel();
-  // Grab what is currently selected
-  QString curDcName = dataContainerList->currentText();
-  QString curAmName = attributeMatrixList->currentText();
-  //qDebug() << "Current ComboBox Value: " << curDcName << "::" << curAmName << "::" << curDaName;
 
   // Check to see if we have any DataContainers to actually populate drop downs with.
   if (dca->getDataContainers().size() == 0)
@@ -172,6 +163,11 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
     attributeMatrixList->clear();
     return;
   }
+
+  // Grab what is currently selected
+  QString curDcName = dataContainerList->currentText();
+  QString curAmName = attributeMatrixList->currentText();
+
   // Cache the DataContainerArray Structure for our use during all the selections
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
@@ -184,7 +180,9 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if (dataContainerList->findText(dc.name) == -1)
     {
+      int index = dataContainerList->currentIndex();
       dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 
@@ -236,29 +234,29 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
 
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
+
   int dcIndex = dataContainerList->findText(dcName);
   dataContainerList->setCurrentIndex(dcIndex);
-  if (dcIndex < 0)
-  {
-    attributeMatrixList->setCurrentIndex(dcIndex);
-  }
-  else
-  {
-    populateAttributeMatrixList();
-  }
-  if (didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
-  if (dcIndex < 0) { return; }
 
+  populateAttributeMatrixList();
+
+  if (didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
   if (!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
-  int amIndex = attributeMatrixList->findText(amName);
-  if (amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); }
+
+  if (dcIndex < 0)
+  {
+    attributeMatrixList->setCurrentIndex(-1);
+    attributeArraysWidget->clear();
+  }
   else
   {
+    int amIndex = attributeMatrixList->findText(amName);
     attributeMatrixList->setCurrentIndex(amIndex);
     populateAttributeArrayList(selectedPaths);
   }
+
   if (didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
   updateSelectAllCheckbox();
@@ -328,16 +326,13 @@ void MultiDataArraySelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 void MultiDataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-
-  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " MultiDataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)";
   populateAttributeMatrixList();
 
-  // Select the first AttributeMatrix in the list
+  // Do not select an attribute matrix from the list
   if (attributeMatrixList->count() > 0)
   {
-    on_attributeMatrixList_currentIndexChanged(0);
+    attributeMatrixList->setCurrentIndex(-1);
   }
-
 }
 
 
