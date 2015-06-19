@@ -274,7 +274,8 @@ void ComparisonSelectionWidget::populateComboBoxes()
   if (dcIndex < 0)
   {
     attributeMatrixList->setCurrentIndex(-1);
-    m_ComparisonSelectionTableModel->setTableData(ComparisonInputs());
+    ComparisonInputs ci;
+    m_ComparisonSelectionTableModel->setTableData(ci);
   }
   else
   {
@@ -285,7 +286,8 @@ void ComparisonSelectionWidget::populateComboBoxes()
 
     if (amIndex < 0)
     {
-      m_ComparisonSelectionTableModel->setTableData(ComparisonInputs());
+      ComparisonInputs ci;
+      m_ComparisonSelectionTableModel->setTableData(ci);
     }
     else
     {
