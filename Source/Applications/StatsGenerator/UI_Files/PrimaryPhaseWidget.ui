@@ -404,8 +404,8 @@ font-size: 12px;
           <widget class="QLabel" name="label_9">
            <property name="maximumSize">
             <size>
-             <width>111</width>
-             <height>23</height>
+             <width>16777215</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -420,8 +420,8 @@ font-size: 12px;
           <widget class="QLabel" name="label_10">
            <property name="maximumSize">
             <size>
-             <width>111</width>
-             <height>23</height>
+             <width>1431324</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -526,8 +526,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>75</width>
-            <height>38</height>
+            <width>769</width>
+            <height>568</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
