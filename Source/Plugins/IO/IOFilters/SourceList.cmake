@@ -17,7 +17,6 @@ set(_PublicFilters
   AbaqusSurfaceMeshWriter
   DxReader
   DxWriter
-  EddyCurrentDataReader
   EnsembleInfoReader
   ExportData
   FeatureDataCSVWriter
