@@ -31,10 +31,18 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="dataContainerList"/>
+    <widget class="QComboBox" name="dataContainerList">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+    </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="attributeMatrixList"/>
+    <widget class="QComboBox" name="attributeMatrixList">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QListWidget" name="phaseListWidget"/>
