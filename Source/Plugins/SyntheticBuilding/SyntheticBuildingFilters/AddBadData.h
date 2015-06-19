@@ -107,7 +107,7 @@ class AddBadData : public AbstractFilter
     void add_noise();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, GBEuclideanDistances)
 
     void dataCheck();
 
