@@ -11,7 +11,16 @@
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <item>
@@ -22,10 +31,18 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="dataContainerList"/>
+    <widget class="QComboBox" name="dataContainerList">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+    </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="attributeMatrixList"/>
+    <widget class="QComboBox" name="attributeMatrixList">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <spacer name="horizontalSpacer">
