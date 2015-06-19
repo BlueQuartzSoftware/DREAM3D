@@ -587,7 +587,7 @@ void MultiDataArraySelectionWidget::updateSelectAllCheckbox()
     attributeMatrixList->setDisabled(true);
     selectCheckBox->blockSignals(false);
   }
-  else if (checkedStateCount == attributeArraysWidget->count())
+  else if (checkedStateCount == attributeArraysWidget->count() && attributeArraysWidget->count() > 0)
   {
     selectCheckBox->blockSignals(true);
     selectCheckBox->setCheckState(Qt::Checked);
