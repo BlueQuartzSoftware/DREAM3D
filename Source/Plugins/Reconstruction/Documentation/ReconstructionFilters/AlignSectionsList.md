@@ -12,26 +12,24 @@ The format of the file is as follows:
     slice_number xshift yshift 
     slice_number xshift yshift
     etc...
+**Note**: the slices must be ordered from teh bottom of the sample to the top of the sample (i.e. the first line of shifts should be the second slice relative to the first, then the next line is the third slice relative to the second, and so on...)
 **Note**: the file must be either space or tab delimited.
 
-**Note**: some/many of the other alignment filters write out a **txt** file with their calculated shifts in it; so
-the user could manually modify those values, and then use them in this filter if the shifts in the other filter were deemed unsatisfactory.  The format of the output file from other filters is slightly different that the input format of this filter, so some editing would be needed.
+**Note**: some/many of the other alignment filters have the option to write out a **txt** file with their calculated shifts in it; so the user could manually modify those values, and then use them in this filter if the shifts in the other filter were deemed unsatisfactory.  The format of the output file from other filters is slightly different that the input format of this filter, so some editing would be needed.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Input File | File Path | Path to the file containgint eh shifts to apply to the sections |
 
-| Name | Type |
-|------|------|
-| Input File | File Path |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
 None
-
 
 ## License & Copyright ##
 
