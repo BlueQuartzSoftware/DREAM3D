@@ -181,21 +181,24 @@ class Texture
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
-      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      if(remainingweight > 0)
       {
-        random1 = rg.genrand_res53();
-        random2 = rg.genrand_res53();
-        random3 = rg.genrand_res53();
-        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
-        ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
+        for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+        {
+          random1 = rg.genrand_res53();
+          random2 = rg.genrand_res53();
+          random3 = rg.genrand_res53();
+          ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
+          ea2 = acos(2.0 * (random2 - 0.5));
+          ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
 
-        FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(4);
-        OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
-        rod = ops.getODFFZRod(rod);
-        bin = ops.getOdfBin(rod);
-        odf[bin]++;
+          FOrientArrayType eu(ea1, ea2, ea3);
+          FOrientArrayType rod(4);
+          OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+          rod = ops.getODFFZRod(rod);
+          bin = ops.getOdfBin(rod);
+          odf[bin]++;
+        }
       }
       if(normalize == true)
       {
@@ -313,20 +316,23 @@ class Texture
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
-      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      if(remainingweight > 0)
       {
-        random1 = rg.genrand_res53();
-        random2 = rg.genrand_res53();
-        random3 = rg.genrand_res53();
-        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
-        ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(4);
-        OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
-        rod = ops.getODFFZRod(rod);
-        bin = ops.getOdfBin(rod);
-        odf[bin]++;
+        for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+        {
+          random1 = rg.genrand_res53();
+          random2 = rg.genrand_res53();
+          random3 = rg.genrand_res53();
+          ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
+          ea2 = acos(2.0 * (random2 - 0.5));
+          ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
+          FOrientArrayType eu(ea1, ea2, ea3);
+          FOrientArrayType rod(4);
+          OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+          rod = ops.getODFFZRod(rod);
+          bin = ops.getOdfBin(rod);
+          odf[bin]++;
+        }
       }
       if(normalize == true)
       {
@@ -443,20 +449,23 @@ class Texture
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
-      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      if(remainingweight > 0)
       {
-        random1 = rg.genrand_res53();
-        random2 = rg.genrand_res53();
-        random3 = rg.genrand_res53();
-        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
-        ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(4);
-        OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
-        rod = ops.getODFFZRod(rod);
-        bin = ops.getOdfBin(rod);
-        odf[bin]++;
+        for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+        {
+          random1 = rg.genrand_res53();
+          random2 = rg.genrand_res53();
+          random3 = rg.genrand_res53();
+          ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
+          ea2 = acos(2.0 * (random2 - 0.5));
+          ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
+          FOrientArrayType eu(ea1, ea2, ea3);
+          FOrientArrayType rod(4);
+          OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+          rod = ops.getODFFZRod(rod);
+          bin = ops.getOdfBin(rod);
+          odf[bin]++;
+        }
       }
       if (normalize == true)
       {
