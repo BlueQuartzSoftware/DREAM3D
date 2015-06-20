@@ -2,7 +2,7 @@ Bad Data Orientation Correlation {#baddataneighbororientationcheck}
 =============
 
 ## Group (Subgroup) ##
-OrientationAnalysis Filters (Cleanup)
+Orientation Analysis (Cleanup)
 
 ## Description ##
 This Filter compares the orientations of *bad* **Cells** with their neighbor **Cells**.  If the misorientation is below a user defined tolerance for a user defined number of neighbor **Cells** , then the *bad* **Cell** will be changed to a *good* **Cell**.
@@ -26,11 +26,10 @@ Image / Rectilinear Grid
 | Cell | Quats | Float | (4) | Specifies the orientation of the **Cell** in quaternion representation |
 | Cell | GoodVoxels | Boolean | (1) | Used to define **Cells** as *good* or *bad*  |
 | Cell | Phases | Int | (1) | Specifies the **Ensemble** of the **Cell** |
-| Ensemble | CrystalStructures | Int | (1) | Specifies the crystal structure of each Ensemble using an enumeration defined by DREAM3D (Hexagonal_High=0, Cubic_High=1, Hexagonal_Low=2, Cubic_Low=3, Triclinic=4, Monoclinic=5, Orthorhombic=6, Tetragonal_Low=7, Tetragonal_High=8, Trigonal_Low=9, Trigonal_High=10, Unknown=999) |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
 
 ## Created Arrays ##
 None
-
 
 ## License & Copyright ##
 

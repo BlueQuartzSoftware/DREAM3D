@@ -337,8 +337,7 @@ void ConvertHexGridToSquareGrid::execute()
       }
       else if (reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
       {
-
-        QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);
+        QString ss = QObject::tr("Ang file is already a square grid: %1").arg(ebsdFName);
         setErrorCondition(-55000);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
@@ -364,7 +363,7 @@ void ConvertHexGridToSquareGrid::execute()
 
         if (newEbsdFName.compare(ebsdFName) == 0)
         {
-          QString msg = QObject::tr("New Ang File is the same as the old Ang file. Overwriting is NOT allowed.");
+          QString msg = QObject::tr("New ang file is the same as the old ang file. Overwriting is NOT allowed");
           setErrorCondition(-201);
           notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
           return;
@@ -374,7 +373,7 @@ void ConvertHexGridToSquareGrid::execute()
         QFile outFile(newEbsdFName);
         if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
         {
-          QString msg = QObject::tr("Ang Square Output file could not be opened for writing: %1").arg(newEbsdFName);
+          QString msg = QObject::tr("Ang square output file could not be opened for writing: %1").arg(newEbsdFName);
           setErrorCondition(-200);
           notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
           return;
@@ -448,16 +447,17 @@ void ConvertHexGridToSquareGrid::execute()
     }
     else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-      qDebug() << "Ctf files are not on a hexagonal grid and do not need to be converted." << "\n";
+      QString ss = QObject::tr("Ctf files are not on a hexagonal grid and do not need to be converted");
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
     else
     {
       err = -1;
-
       QString ss = QObject::tr("The file extension was not detected correctly");
       setErrorCondition(-1);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
       return;
     }
   }
