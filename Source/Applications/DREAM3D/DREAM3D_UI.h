@@ -138,7 +138,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void writeSettings();
 
     /**
-    * @brief Checks if this the first run of DREAM3D v5.2
+    * @brief Checks if this the first run of DREAM3D
     * and if so, displays an informative dialog box.
     */
     void checkFirstRun();

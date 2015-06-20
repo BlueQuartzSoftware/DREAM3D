@@ -100,7 +100,7 @@ set(DOCUMENTATION_SOURCE_FILES
 include(${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
 #---- Set some LATEX Varaibles
-set(LATEX_TITLE "DREAM.3D v5\\\\[0.45cm]User Manual and Filter Reference")
+set(LATEX_TITLE "DREAM.3D v6.0\\\\[0.45cm]User Manual and Filter Reference")
 set(LATEX_AUTHOR "DREAM3D Development Team")
 
 
@@ -111,7 +111,7 @@ set(LATEX_EPS_FILES
 
 
 if(DOX_GENERATE_LATEX)
-  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D_v5_User_Manual"
+  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D_v6_User_Manual"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX"
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}_LATEX"
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"

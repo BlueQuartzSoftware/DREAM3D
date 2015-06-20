@@ -177,7 +177,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   }
   QApplication::instance()->processEvents();
 
-  // Check if this is the first run of DREAM3D v5.2
+  // Check if this is the first run of DREAM3D
   this->MainWindow->checkFirstRun();
 
   // Register the DREAM3D window with the application
