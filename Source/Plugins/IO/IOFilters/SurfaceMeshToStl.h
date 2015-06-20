@@ -37,24 +37,14 @@
 #ifndef _SurfaceMeshToStl_H_
 #define _SurfaceMeshToStl_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class SurfaceMeshToStl SurfaceMeshToStl.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToStl.h
- * @brief This filter creates an STL file for each Feature ID, or Region ID that is encountered in
- * the volume.
- * @author
- * @date
- * @version 1.0
+ * @brief The SurfaceMeshToStl class. See [Filter documentation](@ref surfacemeshtostl) for details.
  */
-class  SurfaceMeshToStl : public AbstractFilter
+class SurfaceMeshToStl : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -67,16 +57,13 @@ class  SurfaceMeshToStl : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory)
     Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix)
     Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
+
     DREAM3D_FILTER_PARAMETER(bool, GroupByPhase)
     Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
@@ -132,28 +119,31 @@ class  SurfaceMeshToStl : public AbstractFilter
   protected:
     SurfaceMeshToStl();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
     void dataCheck();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFacePhases)
 
-    int writeHeader(FILE* f, const QString& header, int triCount);
-    int writeNumTrianglesToFile(const QString& filename, int triCount);
+    /**
+     * @brief writeHeader Writes the header of the STL file
+     * @param f File instance pointer
+     * @param header Header to write to file
+     * @param triCount Number of triangles
+     * @return Integer error value
+     */
+    int32_t writeHeader(FILE* f, const QString& header, int32_t triCount);
+
+    /**
+     * @brief writeNumTrianglesToFile Writes the number of triangles to the STL file
+     * @param filename Name of the output file
+     * @param triCount Number of triangles
+     * @return Integer error value
+     */
+    int32_t writeNumTrianglesToFile(const QString& filename, int32_t triCount);
 
     SurfaceMeshToStl(const SurfaceMeshToStl&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToStl&); // Operator '=' Not Implemented
 };
 
 #endif /* _SurfaceMeshToStl_H_ */
-
-
-

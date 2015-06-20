@@ -1,21 +1,13 @@
-Vtk Structured Points Reader  {#vtkstructuredpointsreader}
-======
+VTK Structured Points Reader  {#vtkstructuredpointsreader}
+============
 
 ## Group (Subgroup) ##
-I/O Filters (Input)
+IO (Input)
 
 ## Description ##
+This Filter reads an _STRUCTURED POINTS_ type of 3D array from a legacy .vtk file. The currently supported VTK dataset attribute types are SCALARS and VECTORS. Other dataset attributes will not be read correctly and may cause issues when running the Filter. The VTK data must be _POINT DATA_ and/or _CELL DATA_ and can be either binary or ASCII. The Filter will create a new **Data Container** with an **Image** Geometry along with the necessary types of **Attribute Matrix** depending on what type of data is being read.
 
-This filter reads an STRUCTURED_POINTS type of 3D array from a legacy .vtk file. The
-currently supported vtk dataset attribute types are SCALARS and VECTORS. More will
-come eventually. The vtk data must be POINT_DATA and CELL_DATA
-
-The reader should be able to handle both Binary and ASCII data.
-
-The filter will create a new DataContainer with a Structured Points Geometry and will
-then create a new AttributeMatrix inside the new Data Container.
-
-### Sample File ###
+### Example Input ###
 
     # vtk DataFile Version 2.0
     GrainIds Stored in Vtk File
@@ -37,17 +29,15 @@ then create a new AttributeMatrix inside the new Data Container.
 
 
 ## Parameters ##
-
 | Name | Type | Description |
 |------|------|-------------|
-| Input Vtk File | File Path | |
-| Read Point Data | Boolean | |
-| Read Cell Data | Boolean |  |
-| PointData Data Container | String | |
-| Vertex Attribute Matrix | String | |
-| CellData Data Container | String | |
-| Cell Attribute Matrix | String | |
-
+| Input VVTK File | File Path | Input .vtk file path |
+| Read Point Data | Boolean | Whether the read point data from the .vtk file |
+| Read Cell Data | Boolean | Whether the read point data from the .vtk file |
+| Point Data Data Container | String | Created **Data Container** name. Only needed if _Read Point Data_ is checked |
+| Vertex Attribute Matrix | String | Created **Vertex Attribute Matrix** name. Only needed if _Read Point Data_ is checked |
+| Cell Data Data Container | String | Created **Data Container** name. Only needed if _Read Cell Data_ is checked |
+| Cell Attribute Matrix | String | Created **Cell Attribute Matrix** name. Only needed if _Read Cell Data_ is checked |
 
 ## Required Geometry ##
 Not Applicable
@@ -55,10 +45,8 @@ Not Applicable
 ## Required Arrays ##
 None
 
-
 ## Created Arrays ##
 None
-
 
 ## License & Copyright ##
 

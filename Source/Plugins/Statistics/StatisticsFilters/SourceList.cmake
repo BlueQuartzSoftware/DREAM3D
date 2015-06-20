@@ -24,6 +24,7 @@ set(_PublicFilters
   FindSurfaceAreaToVolume
   FindVolFractions
   FitFeatureData
+  GenerateEnsembleStatistics
 )
 
 #--------------
@@ -46,7 +47,6 @@ set(_PrivateFilters
   FindFeatureHistogram
   FindSaltykovSizes
   FitCorrelatedFeatureData
-  GenerateEnsembleStatistics
   QuiltCellData
 )
 

@@ -33,29 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _VisualizeGBCDPoleFigure_H_
 #define _VisualizeGBCDPoleFigure_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
-
-typedef float real;
-
 /**
- * @class VisualizeGBCDPoleFigure VisualizeGBCDPoleFigure.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCDPoleFigure.h
- * @brief This filter calculates the centroid of each triangle in the surface mesh.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
- * @version 1.0
+ * @brief The VisualizeGBCDPoleFigure class. See [Filter documentation](@ref visualizegbcdpolefigure) for details.
  */
 class VisualizeGBCDPoleFigure : public AbstractFilter
 {
@@ -69,20 +58,13 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+
     DREAM3D_FILTER_PARAMETER(unsigned int, CrystalStructure)
     Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure)
 
     DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
     Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-    // Local Instance variables
-    // DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
     Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
@@ -135,44 +117,37 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
   protected:
     VisualizeGBCDPoleFigure();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
-    void dataCheckSurfaceMesh();
+    void dataCheck();
 
+    /**
+     * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
+     * @param xstl1_norm1 Incoming normal
+     * @param sqCoord Computed square coordinate
+     * @return Boolean value for whether coordinate lies in the norther hemisphere
+     */
     bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
   private:
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, GBCD)
 
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+
     /**
-     * @brief This function writes a set of Axis coordinates to that are needed
-     * for a Rectilinear Grid based data set.
-     * @param f The "C" FILE* pointer to the file being written to.
-     * @param axis The name of the Axis that is being written
+     * @brief writeCoords Writes a set of Axis coordinates to that are needed
+     * for a Rectilinear Grid based data set to a VTK file
+     * @param f File instance pointer
+     * @param axis The name of the axis that is being written
      * @param type The type of primitive being written (float, int, ...)
      * @param npoints The total number of points in the array
      * @param min The minimum value of the axis
      * @param max The maximum value of the axis
      * @param step The step value between each point on the axis.
-     * @return
+     * @return Integer error value
      */
-    int writeCoords(FILE* f, const char* axis, const char* type, qint64 npoints, float min, float step);
-
+    int32_t writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
 
     VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCDPoleFigure&); // Operator '=' Not Implemented
 };
 
 #endif /* _VisualizeGBCDPoleFigure_H_ */
-
-
-
-

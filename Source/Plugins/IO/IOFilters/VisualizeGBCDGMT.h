@@ -33,29 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _VisualizeGBCDGMT_H_
 #define _VisualizeGBCDGMT_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
-
-typedef float real;
-
 /**
- * @class VisualizeGBCDGMT VisualizeGBCDGMT.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCDGMT.h
- * @brief This filter calculates the centroid of each triangle in the surface mesh.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
- * @version 1.0
+ * @brief The VisualizeGBCDGMT class. See [Filter documentation](@ref visualizegbcdgmt) for details.
  */
 class VisualizeGBCDGMT : public AbstractFilter
 {
@@ -76,11 +65,6 @@ class VisualizeGBCDGMT : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
     Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
     Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
@@ -133,31 +117,24 @@ class VisualizeGBCDGMT : public AbstractFilter
   protected:
     VisualizeGBCDGMT();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
-    void dataCheckSurfaceMesh();
+    void dataCheck();
 
+    /**
+     * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
+     * @param xstl1_norm1 Incoming normal
+     * @param sqCoord Computed square coordinate
+     * @return Boolean value for whether coordinate lies in the norther hemisphere
+     */
     bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
   private:
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-
-    QVector<float> gmtValues;
-
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, GBCD)
+
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<float> gmtValues;
 
     VisualizeGBCDGMT(const VisualizeGBCDGMT&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCDGMT&); // Operator '=' Not Implemented
 };
 
 #endif /* _VisualizeGBCDGMT_H_ */
-
-
-
-

@@ -167,9 +167,9 @@ int TestPhWriter()
 
     // Use the helper class CreateDataContainer to generate a valid DataContainer
     CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
-    createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize2);
-    createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize2);
-    createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize2);
+    createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
+    createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
+    createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
     pipeline->pushBack(createVolumeDC);
 
     // Generate some "Feature Ids" inside that DataContainer
@@ -410,9 +410,9 @@ int TestPhReaderCache()
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
-    DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize2);
-    DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize2);
-    DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize2);
+    DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
+    DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
+    DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
     // Check that the filter read from the file again, since we changed file names
     bool prop = phReader->property("FileWasRead").toBool();
@@ -459,9 +459,9 @@ int TestPhReaderCache()
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
-    DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize2);
-    DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize2);
-    DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize2);
+    DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
+    DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
+    DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
     // Check that the filter read from the file again, since we changed the contents of the file outside the program
     bool prop = phReader->property("FileWasRead").toBool();
@@ -501,9 +501,9 @@ int TestPhReaderCache()
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
-    DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize2);
-    DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize2);
-    DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize2);
+    DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
+    DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
+    DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
     // Check that the filter read from the file again, since we flushed the cache
     bool prop = phReader->property("FileWasRead").toBool();

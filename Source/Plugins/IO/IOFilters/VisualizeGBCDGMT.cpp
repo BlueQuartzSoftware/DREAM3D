@@ -33,30 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #include "VisualizeGBCDGMT.h"
 
-#include <cmath>
-#include <algorithm>
-#include <limits>
-
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 #include "IO/IOConstants.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -66,7 +57,6 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
   m_GBCDArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
-  m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
   m_MisorientationRotation.angle = 0.0f;
@@ -75,6 +65,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   m_MisorientationRotation.l = 0.0f;
 
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+
   setupFilterParameters();
 }
 
@@ -115,12 +106,9 @@ void VisualizeGBCDGMT::setupFilterParameters()
     option->setCategory(FilterParameter::Parameter);
     parameters.push_back(option);
   }
-  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Parameter));
-  parameters.push_back(FileSystemFilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.dat", "DAT File"));
-
-
+  parameters.push_back(FilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Parameter));
+  parameters.push_back(FileSystemFilterParameter::New("Output GMT File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.dat", "DAT File"));
   parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), FilterParameter::RequiredArray, ""));
-
   setFilterParameters(parameters);
 }
 
@@ -155,31 +143,31 @@ int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCDGMT::dataCheckSurfaceMesh()
+void VisualizeGBCDGMT::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getGBCDArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
 
-  if(getCrystalStructure() == Ebsd::CrystalStructure::UnknownCrystalStructure)
+  if (getCrystalStructure() == Ebsd::CrystalStructure::UnknownCrystalStructure)
   {
-    QString ss = QObject::tr("%1 needs a valid crystal structure set.").arg(ClassName());
+    QString ss = QObject::tr("A valid crystal structure must be set").arg(ClassName());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-381);
   }
 
   if (getOutputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr( ": The output file must be set before executing this filter.");
+    QString ss = QObject::tr( "The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
   }
+
   QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    QString ss = QObject::tr( "The directory path for the output file does not exist.");
+    QString ss = QObject::tr( "The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
@@ -190,46 +178,22 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
 
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString fName = fi.baseName();
-  if(fName.endsWith("_1") == false)
+  if (fName.endsWith("_1") == false)
   {
     fName = fName + "_1";
     QString absPath = fi.absolutePath() + "/" + fName + ".dat";
     setOutputFile(absPath);
   }
 
-  TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getGBCDArrayPath());
   if(getErrorCondition() < 0) { return; }
 
-  // We MUST have Nodes
-  if (NULL == triangles->getVertices().get())
+  if (NULL != tmpGBCDPtr.get())
   {
-    setErrorCondition(-386);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
-  }
-  // We MUST have Triangles defined also.
-  if (NULL == triangles->getTriangles().get())
-  {
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
-  }
-  else
-  {
-    //pull down GBCD as iData to get the component dimensions.
-    IDataArray::Pointer iDataArray = getDataContainerArray()->getAttributeMatrix(getGBCDArrayPath())->getAttributeArray(DREAM3D::EnsembleData::GBCD);
-    if (NULL == iDataArray.get())
-    {
-      setErrorCondition(-387);
-      notifyErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
-    }
-    else
-    {
-      //get the component dimensions to use to pull down the GBCD array normally (not sure if this is all really necessary)
-      QVector<size_t> dims = iDataArray->getComponentDimensions();
-      iDataArray->NullPointer();
-      m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    }
+    QVector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
+    m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -241,7 +205,7 @@ void VisualizeGBCDGMT::preflight()
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
-  dataCheckSurfaceMesh();
+  dataCheck();
   emit preflightExecuted();
   setInPreflight(false);
 }
@@ -251,22 +215,18 @@ void VisualizeGBCDGMT::preflight()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
-
-  dataCheckSurfaceMesh();
+  setErrorCondition(0);
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getGBCDArrayPath().getDataContainerName());
-
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(getOutputFile());
 
   QDir dir(fi.path());
-  if(!dir.mkpath("."))
+  if (!dir.mkpath("."))
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
@@ -278,7 +238,7 @@ void VisualizeGBCDGMT::execute()
   QFile file(getOutputFile());
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
-    QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getOutputFile());
+    QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -294,10 +254,10 @@ void VisualizeGBCDGMT::execute()
   gbcdSizesArray->initializeWithZeros();
 
   float* gbcdDeltas = gbcdDeltasArray->getPointer(0);
-  int* gbcdSizes = gbcdSizesArray->getPointer(0);
+  int32_t* gbcdSizes = gbcdSizesArray->getPointer(0);
   float* gbcdLimits = gbcdLimitsArray->getPointer(0);
 
-  //Original Ranges from Dave R.
+  // Original Ranges from Dave R.
   //m_GBCDlimits[0] = 0.0f;
   //m_GBCDlimits[1] = cosf(1.0f*m_pi);
   //m_GBCDlimits[2] = 0.0f;
@@ -309,19 +269,19 @@ void VisualizeGBCDGMT::execute()
   //m_GBCDlimits[8] = 2.0f*m_pi;
   //m_GBCDlimits[9] = cosf(0.0f);
 
-  //Greg's Ranges
+  // Greg R. Ranges
   gbcdLimits[0] = 0.0f;
   gbcdLimits[1] = 0.0f;
   gbcdLimits[2] = 0.0f;
-  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0f);
-  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[3] = -sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[4] = -sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
   gbcdLimits[5] = DREAM3D::Constants::k_Pi / 2.0f;
   gbcdLimits[6] = 1.0f;
   gbcdLimits[7] = DREAM3D::Constants::k_Pi / 2.0f;
-  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0f);
-  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[8] = sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[9] = sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
 
-  //get num components of GBCD
+  // get num components of GBCD
   QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
 
   gbcdSizes[0] = cDims[0];
@@ -336,66 +296,64 @@ void VisualizeGBCDGMT::execute()
   gbcdDeltas[3] = (gbcdLimits[8] - gbcdLimits[3]) / float(gbcdSizes[3]);
   gbcdDeltas[4] = (gbcdLimits[9] - gbcdLimits[4]) / float(gbcdSizes[4]);
 
-  float vec[3];
-  float vec2[3];
-  float rotNormal[3];
-  float rotNormal2[3];
-  float sqCoord[2];
-  float dg[3][3];
-  float dgt[3][3];
-  float dg1[3][3];
-  float dg2[3][3];
-  float sym1[3][3];
-  float sym2[3][3];
-  float sym2t[3][3];
-  float mis_euler1[3];
+  float vec[3] = { 0.0f, 0.0f, 0.0f };
+  float vec2[3] = { 0.0f, 0.0f, 0.0f };
+  float rotNormal[3] = { 0.0f, 0.0f, 0.0f };
+  float rotNormal2[3] = { 0.0f, 0.0f, 0.0f };
+  float sqCoord[2] = { 0.0f, 0.0f };
+  float dg[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float dgt[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float dg1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float dg2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float sym1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float sym2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float sym2t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float mis_euler1[3] = { 0.0f, 0.0f, 0.0f };
 
   float misAngle = m_MisorientationRotation.angle * DREAM3D::Constants::k_PiOver180;
-  //convert axis angle to matrix representation of misorientation
+  // convert axis angle to matrix representation of misorientation
   FOrientArrayType om(9);
   FOrientTransformsType::ax2om(FOrientArrayType(m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, misAngle), om);
   om.toGMatrix(dg);
 
-
-  //take inverse of misorientation variable to use for switching symmetry
+  // take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
 
   // Get our SpaceGroupOps pointer for the selected crystal structure
   SpaceGroupOps::Pointer orientOps = m_OrientationOps[m_CrystalStructure];
 
-  //get number of symmetry operators
-  int n_sym = orientOps->getNumSymOps();
+  // get number of symmetry operators
+  int32_t n_sym = orientOps->getNumSymOps();
 
-  int thetaPoints = 120;
-  int phiPoints = 30;
-  //int zpoints = 1;
+  int32_t thetaPoints = 120;
+  int32_t phiPoints = 30;
   float thetaRes = 360.0f / float(thetaPoints);
   float phiRes = 90.0f / float(phiPoints);
-  float theta, phi;
-  float thetaRad, phiRad;
+  float theta = 0.0f, phi = 0.0f;
+  float thetaRad = 0.0f, phiRad = 0.0f;
   float degToRad = DREAM3D::Constants::k_PiOver180;
-  float sum = 0;
-  int count = 0;
-  bool nhCheck;
-  int hemisphere;
+  float sum = 0.0f;
+  int32_t count = 0;
+  bool nhCheck = false;
+  int32_t hemisphere = 0;
 
-  int shift1 = gbcdSizes[0];
-  int shift2 = gbcdSizes[0] * gbcdSizes[1];
-  int shift3 = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2];
-  int shift4 = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2] * gbcdSizes[3];
+  int32_t shift1 = gbcdSizes[0];
+  int32_t shift2 = gbcdSizes[0] * gbcdSizes[1];
+  int32_t shift3 = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2];
+  int32_t shift4 = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2] * gbcdSizes[3];
 
   std::vector<float> gmtValues;
 
-  for (int64_t k = 0; k < phiPoints + 1; k++)
+  for (int32_t k = 0; k < phiPoints + 1; k++)
   {
-    for (int64_t l = 0; l < thetaPoints + 1; l++)
+    for (int32_t l = 0; l < thetaPoints + 1; l++)
     {
-      //get (x,y) for stereographic projection pixel
+      // get (x,y) for stereographic projection pixel
       theta = float(l) * thetaRes;
       phi = float(k) * phiRes;
       thetaRad = theta * degToRad;
       phiRad = phi * degToRad;
-      sum = 0;
+      sum = 0.0f;
       count = 0;
       vec[0] = sinf(phiRad) * cosf(thetaRad);
       vec[1] = sinf(phiRad) * sinf(thetaRad);
@@ -403,72 +361,70 @@ void VisualizeGBCDGMT::execute()
       MatrixMath::Multiply3x3with3x1(dgt, vec, vec2);
 
       // Loop over all the symetry operators in the given cystal symmetry
-      for(int i = 0; i < n_sym; i++)
+      for (int32_t i = 0; i < n_sym; i++)
       {
-        //get symmetry operator1
+        // get symmetry operator1
         orientOps->getMatSymOp(i, sym1);
-        for(int j = 0; j < n_sym; j++)
+        for (int32_t j = 0; j < n_sym; j++)
         {
-          //get symmetry operator2
+          // get symmetry operator2
           orientOps->getMatSymOp(j, sym2);
           MatrixMath::Transpose3x3(sym2, sym2t);
-          //calculate symmetric misorientation
+          // calculate symmetric misorientation
           MatrixMath::Multiply3x3with3x3(dg, sym2t, dg1);
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
-          //convert to euler angle
+          // convert to euler angle
           FOrientArrayType mEuler(mis_euler1, 3);
           FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
-          if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
+          if (mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
-            //find bins in GBCD
-            int location1 = int((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
-            int location2 = int((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
-            int location3 = int((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
-            //find symmetric poles using the first symmetry operator
+            // find bins in GBCD
+            int32_t location1 = int32_t((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
+            int32_t location2 = int32_t((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
+            int32_t location3 = int32_t((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
+            // find symmetric poles using the first symmetry operator
             MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
-            //            if(rotNormal[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal, -1);
-            //get coordinates in square projection of crystal normal parallel to boundary normal
+            // get coordinates in square projection of crystal normal parallel to boundary normal
             nhCheck = getSquareCoord(rotNormal, sqCoord);
-            //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-            int location4 = int((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
-            int location5 = int((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
-            if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
+            // Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
+            int32_t location4 = int32_t((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
+            int32_t location5 = int32_t((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
+            if (location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
                 location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if(nhCheck == false) { hemisphere = 1; }
+              if (nhCheck == false) { hemisphere = 1; }
               sum += m_GBCD[2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
               count++;
             }
           }
 
-          //again in second crystal reference frame
-          //calculate symmetric misorientation
+          // again in second crystal reference frame
+          // calculate symmetric misorientation
           MatrixMath::Multiply3x3with3x3(dgt, sym2, dg1);
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
-          //convert to euler angle
+          // convert to euler angle
           FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
-          if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
+          if (mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
-            //find bins in GBCD
-            int location1 = int((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
-            int location2 = int((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
-            int location3 = int((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
-            //find symmetric poles using the first symmetry operator
+            // find bins in GBCD
+            int32_t location1 = int32_t((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
+            int32_t location2 = int32_t((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
+            int32_t location3 = int32_t((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
+            // find symmetric poles using the first symmetry operator
             MatrixMath::Multiply3x3with3x1(sym1, vec2, rotNormal2);
-            //            if(rotNormal2[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal2, -1);
-            //get coordinates in square projection of crystal normal parallel to boundary normal
+            // get coordinates in square projection of crystal normal parallel to boundary normal
             nhCheck = getSquareCoord(rotNormal2, sqCoord);
-            //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-            int location4 = int((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
-            int location5 = int((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
-            if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
+            // Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
+            int32_t location4 = int32_t((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
+            int32_t location5 = int32_t((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
+            if (location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
                 location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if(nhCheck == false) { hemisphere = 1; }
+              if (nhCheck == false) { hemisphere = 1; }
               sum += m_GBCD[2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
               count++;
             }
@@ -476,16 +432,17 @@ void VisualizeGBCDGMT::execute()
         }
       }
       gmtValues.push_back(theta);
-      gmtValues.push_back((90 - phi));
+      gmtValues.push_back((90.0f - phi));
       gmtValues.push_back(sum / float(count));
     }
   }
 
   FILE* f = NULL;
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
-  if(NULL == f)
+  if (NULL == f)
   {
-    QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
+    QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
+    setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -494,7 +451,7 @@ void VisualizeGBCDGMT::execute()
   fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
   size_t size = gmtValues.size() / 3;
 
-  for(size_t i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     fprintf(f, "%f %f %f\n", gmtValues[3 * i], gmtValues[3 * i + 1], gmtValues[3 * i + 2]);
   }
@@ -511,20 +468,20 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 {
   bool nhCheck = false;
   float adjust = 1.0;
-  if(xstl1_norm1[2] >= 0.0)
+  if (xstl1_norm1[2] >= 0.0)
   {
     adjust = -1.0;
     nhCheck = true;
   }
-  if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
+  if (fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
   {
-    sqCoord[0] = (xstl1_norm1[0] / fabs(xstl1_norm1[0])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0);
-    sqCoord[1] = (xstl1_norm1[0] / fabs(xstl1_norm1[0])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0 / DREAM3D::Constants::k_SqrtPi) * atan(xstl1_norm1[1] / xstl1_norm1[0]));
+    sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
+    sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
   }
   else
   {
-    sqCoord[0] = (xstl1_norm1[1] / fabs(xstl1_norm1[1])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0 / DREAM3D::Constants::k_SqrtPi) * atan(xstl1_norm1[0] / xstl1_norm1[1]));
-    sqCoord[1] = (xstl1_norm1[1] / fabs(xstl1_norm1[1])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0);
+    sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
+    sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
   }
   return nhCheck;
 }
@@ -547,13 +504,11 @@ AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParam
 const QString VisualizeGBCDGMT::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -561,10 +516,8 @@ const QString VisualizeGBCDGMT::getGroupName()
 const QString VisualizeGBCDGMT::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getHumanLabel()
 { return "Write GMT Pole Figure Data (GBCD Data)"; }
-

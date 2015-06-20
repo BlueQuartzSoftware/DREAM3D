@@ -1,8 +1,6 @@
 Write Abaqus Surface Mesh {#abaqussurfacemeshwriter}
 =============
 
-# EXPERIMENTAL FILTER #
-
 ## Group (Subgroup) ##
 IO (Output)
 
@@ -46,7 +44,7 @@ Triangle
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Triangle  | SurfaceMeshFaceLabels | Int | (2) | Specifies to which two **Features** each triangle belongs |
+| Face | SurfaceMeshFaceLabels | Int | (2) | Specifies to which two **Features** each triangle belongs |
 
 ## Created Arrays ##
 None

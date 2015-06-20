@@ -83,6 +83,7 @@ DxReader::DxReader() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FileWasRead(false),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   d_ptr(new DxReaderPrivate(this)),
   m_FeatureIds(NULL)
 {
@@ -194,6 +195,7 @@ void DxReader::dataCheck()
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
   QVector<size_t> tDims(3, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }

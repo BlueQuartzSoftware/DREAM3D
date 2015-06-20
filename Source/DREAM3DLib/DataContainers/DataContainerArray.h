@@ -602,7 +602,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       QString ss;
       for (int32_t i = 0; i < dataArrays.size(); i++)
       {
-        if (NULL == dataArrays.at(0).get() && NULL != filter)
+        if (NULL == dataArrays.at(i).get() && NULL != filter)
         {
           filter->setErrorCondition(-10100);
           ss = QObject::tr("DataContainerArray::validateNumberOfTuples Error at line %1. The DataArray object was not available").arg(__LINE__);

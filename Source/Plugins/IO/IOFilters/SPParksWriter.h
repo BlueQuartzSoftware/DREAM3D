@@ -43,7 +43,7 @@
 #include "DREAM3DLib/CoreFilters/FileWriter.h"
 
 /**
- * @brief The SPParksWriter class. See [Filter documentation](@ref dxreader) for details.
+ * @brief The SPParksWriter class. See [Filter documentation](@ref spparkswriter) for details.
  */
 class SPParksWriter : public FileWriter
 {

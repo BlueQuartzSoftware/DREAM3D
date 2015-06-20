@@ -37,24 +37,12 @@
 #ifndef _VtkStructuredPointsReader_H_
 #define _VtkStructuredPointsReader_H_
 
-#include <string.h> // needed for the ::memcpy function below
-
-#include <istream>
-
-#include <QtCore/QString>
-#include <QtCore/QtEndian>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-
 
 /**
- * @brief The VtkStructuredPointsReader class
- * @author
- * @version
+ * @brief The VtkStructuredPointsReader class. See [Filter documentation](@ref visualizegbcdgmt) for details.
  */
 class  VtkStructuredPointsReader : public AbstractFilter
 {
@@ -197,6 +185,4 @@ class  VtkStructuredPointsReader : public AbstractFilter
     void operator=(const VtkStructuredPointsReader&); // Operator '=' Not Implemented
 };
 
-#endif /* VTKRECTILINEARGRIDREADER_H_ */
-
-
+#endif /* VtkStructuredPointsReader_H_ */
