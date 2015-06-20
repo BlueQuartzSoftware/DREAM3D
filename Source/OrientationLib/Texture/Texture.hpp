@@ -181,7 +181,7 @@ class Texture
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
-      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      for (float i = 0.0f; i < remainingweight; i++)
       {
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
@@ -313,7 +313,7 @@ class Texture
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
-      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      for (float i = 0.0f; i < remainingweight; i++)
       {
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
@@ -443,7 +443,7 @@ class Texture
       }
       float random1, random2, random3;
       float ea1, ea2, ea3;
-      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
+      for (float i = 0.0; i < remainingweight; i++)
       {
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
