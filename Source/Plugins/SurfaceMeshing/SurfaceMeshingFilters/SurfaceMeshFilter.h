@@ -57,8 +57,6 @@ class SurfaceMeshFilter : public AbstractFilter
 
     virtual ~SurfaceMeshFilter();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-
   signals:
     /**
      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
