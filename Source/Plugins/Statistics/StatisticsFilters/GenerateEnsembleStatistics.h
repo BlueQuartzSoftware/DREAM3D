@@ -43,10 +43,7 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
@@ -70,17 +67,6 @@ class GenerateEnsembleStatistics : public AbstractFilter
     Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(UInt32Vector_t, PhaseTypeData)
-//  private:
-//      UInt32Vector_t m_PhaseTypeData;
-//  public:
-//    void setPhaseTypeData(UInt32Vector_t value) {
-//      m_PhaseTypeData = value;
-//      std::cout << "@@@ GenerateEnsembleStatistics::setPhaseTypeData(...)-> d.size()=" << m_PhaseTypeData.d.size() << std::endl;
-//    }
-//    UInt32Vector_t getPhaseTypeData() {
-//      std::cout << "@@@ GenerateEnsembleStatistics::getPhaseTypeData()-> d.size()=" << m_PhaseTypeData.d.size() << std::endl;
-//      return m_PhaseTypeData;
-//    }
 
     Q_PROPERTY(UInt32Vector_t PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
 
@@ -123,11 +109,13 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
     Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
-    Q_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
+    // These filter parameters are tied to RDF data, but the filter that can calculate them (FindFeatureClustering)
+    // is not slated for public release yet, so turning these off for now
+    //DREAM3D_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
+    //Q_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
-    Q_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
+    //DREAM3D_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
+    //Q_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
@@ -264,14 +252,46 @@ class GenerateEnsembleStatistics : public AbstractFilter
      */
     void dataCheck();
 
+    /**
+     * @brief gatherSizeStats Consolidates Feature size statistics
+     */
     void gatherSizeStats();
+
+    /**
+     * @brief gatherAspectRatioStats Consolidates Feature aspect ratio statistics
+     */
     void gatherAspectRatioStats();
+
+    /**
+     * @brief gatherOmega3Stats Consolidates Feature Omega3 statistics
+     */
     void gatherOmega3Stats();
+
+    /**
+     * @brief gatherNeighborhoodStats Consolidates Feature neighborhood statistics
+     */
     void gatherNeighborhoodStats();
+
+    /**
+     * @brief gatherMDFStats Consolidates Feature MDF statistics
+     */
     void gatherMDFStats();
+
+    /**
+     * @brief gatherODFStats Consolidates Feature ODF statistics
+     */
     void gatherODFStats();
+
+    /**
+     * @brief gatherAxisODFStats Consolidates Feature axis ODF statistics
+     */
     void gatherAxisODFStats();
-    void gatherRadialDistFunc();
+
+    //void gatherRadialDistFunc();
+
+    /**
+     * @brief calculatePPTBoundaryFrac Consolidates Feature precipitate boundary fraction statistics
+     */
     void calculatePPTBoundaryFrac();
 
   private:
@@ -282,16 +302,14 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    DEFINE_DATAARRAY_VARIABLE(float, RadialDistFunc)
-    DEFINE_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
+    //DEFINE_DATAARRAY_VARIABLE(float, RadialDistFunc)
+    //DEFINE_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
     DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
     DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
     DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
     DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
-
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 

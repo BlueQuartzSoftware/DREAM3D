@@ -2,7 +2,7 @@ Generate Ensemble Statistics {#generateensemblestatistics}
 ==========
 
 ## Group (Subgroup) ##
-Statistics Filters (Ensemble)
+Statistics (Ensemble)
 
 ## Description ##
 This filter will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can choose which types of attributes to fit (morphological and/or crystallographic) and what distribution to use when fitting them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.  The **Ensemble** array will be an array of *Statistics Objects* that are defined structures within *DREAM.3D*.  The *Statistics Objects* are used when building synthetic structures in DREAM.3D.  There are other filters for fitting a distribution to an individual array, but this filter is intended to be used to populate the *Statistics Objects* needed to build synthetic structures.  
