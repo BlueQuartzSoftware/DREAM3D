@@ -20,17 +20,17 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 
 # External Dependencies (Recommended Order of Installation) #
 
-|  Package   | Minimum Version | Download Location |  
-|  ------	| ------	| ------	|  
-| Git | 1.97.x | [http://www.git-scm.com](http://www.git-scm.com) |  
+|  Package   | Minimum Version | Download Location |
+|  ------	| ------	| ------	|
+| Git | 1.97.x | [http://www.git-scm.com](http://www.git-scm.com) |
 | CMake | 3.2.3 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
-| Doxygen | 1.8.9.1 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
-| HDF5 | 1.8.15 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
-| Boost | 1.58.0 | [http://www.boost.org](http://www.boost.org) |  
-| Eigen | 3.2.4 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |  
-| Intel Threading Building Blocks | tbb42_20150424oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |  
+| Doxygen | 1.8.9.1 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |
+| HDF5 | 1.8.15 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |
+| Boost | 1.58.0 | [http://www.boost.org](http://www.boost.org) |
+| Eigen | 3.2.4 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |
+| Intel Threading Building Blocks | tbb42_20150424oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |
 | Qt 5.4.x | 5.4.1 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.4.1 at the minimum. Qt 5.4.0 is **known** to produce bad compiled code for 64 bit builds. |
-| Qwt | 6.1.2 | Obtain from source forge. This is the first version to be compatible with Qt 5.4.x |  
+| Qwt | 6.1.2 | Obtain from source forge. This is the first version to be compatible with Qt 5.4.x |
 
 
 # DREAM3D SDK Availability #
@@ -111,7 +111,8 @@ With the introduction of proper CMakeConfig support into HDF5 1.8.14 there now e
 
 # Building Boost 1.58.0 #
 
-[http://sourceforge.net/projects/boost/files/boost/1.58.0/](http://sourceforge.net/projects/boost/files/boost/1.58.0/)
+[http://sourceforge.net/projects/boost/files/boost/1.58.0/ ]( http://sourceforge.net/projects/boost/files/boost/1.58.0/ )
+
 Windows developers should select the *.zip file and OS X users should select the .tar.gz file.
 
 ## Windows Notes ##
