@@ -265,7 +265,6 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
-  m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
   m_Mask(NULL),
   m_FeaturePhases(NULL),
   m_SlabId(NULL),

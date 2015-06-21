@@ -107,7 +107,10 @@ class ReadMicData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-
+    DREAM3D_INSTANCE_PROPERTY(QString, CellEulerAnglesArrayName)
+    DREAM3D_INSTANCE_PROPERTY(QString, CellPhasesArrayName)
+    DREAM3D_INSTANCE_PROPERTY(QString, CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_PROPERTY(QString, LatticeConstantsArrayName)
 
     /**
   * @brief This returns the group that the filter belonds to. You can select
@@ -217,10 +220,10 @@ class ReadMicData : public AbstractFilter
   private:
     QScopedPointer<ReadMicDataPrivate> const d_ptr;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     ReadMicData(const ReadMicData&); // Copy Constructor Not Implemented
     void operator=(const ReadMicData&); // Operator '=' Not Implemented

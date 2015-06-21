@@ -172,25 +172,25 @@ class TesselateFarFieldGrains : public AbstractFilter
     int32_t* m_Neighbors;
 
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, Mask)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
     int8_t*  m_BoundaryCells;
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SlabId)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ElasticStrains)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisLengths)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Omega3s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SlabId)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, ElasticStrains)
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
+    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
 
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     // All other private variables
     ShapeOps::Pointer m_EllipsoidOps;
