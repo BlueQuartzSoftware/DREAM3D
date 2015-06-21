@@ -83,54 +83,88 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual ~AbstractFilter();
 
-    // ------------------------------
-    // These should be implemented by the subclass
-    // ------------------------------
+    /**
+     * @brief getGroupName Returns the group name for the filter, which determines its
+     * top level sorting in the GUI
+     * @return Group name
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Returns the subgroup name for the filter, which determines its
+     * second level sorting in the GUI
+     * @return Subgroup name
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Returns the human label for the filter, which determines its
+     * primary labeling inthe GUI
+     * @return Human lable
+     */
     virtual const QString getHumanLabel();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+     */
     virtual const QString getBrandingString();
+
+    /**
+     * @brief getCompiledLibraryName Returns the library name for the filter, which is the
+     * actual C++ library in which the filter resides; this is usually the filter's parent
+     * plugin
+     * @return Compiled library name
+     */
     virtual const QString getCompiledLibraryName();
 
+    /**
+     * @brief generateHtmlSummary Generates a brief HTML summary of the filter
+     * @return HTML summary
+     */
     virtual const QString generateHtmlSummary();
 
     /**
-     * @brief setupFilterParameters
+     * @brief setupFilterParameters Instantiates the filter parameters that are allowed
+     * to be modified by the user
      */
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    * @param index The index the filter is in the pipeline that is being written
+    * @brief writeFilterParameters Writes the filter parameters to a file
+    * @param writer Writer that is used to write the parameters to a file
+    * @param index Index the filter is in the pipeline that is being written
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
+    * @brief readFilterParameters Reads the filter parameters from a file
+    * @param reader Reader that is used to read the parameters from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-     * @brief This method should be fully implemented in subclasses.
+     * @brief execute Implements the main functionality of the filter
      */
     virtual void execute();
 
     /**
-     * @brief preflight
+     * @brief preflight Communicates with the GUI to request user settings for the filter and
+     * run any necessary sanity checks before execution
      */
     virtual void preflight();
 
     /**
-    * @brief This method returns an instance of the filter's plugin
-    */
+     * @brief getPluginInstance Returns an instance of the filter's plugin
+     * @return
+     */
     IDREAM3DPlugin* getPluginInstance();
 
     /**
-     * @brief newFilterInstance
-     * @param copyFilterParameters
-     * @return
+     * @brief newFilterInstance Instantiates a new instance of the filter
+     * @param copyFilterParameters Whether to copy current filter parameters to the new instance
+     * @return Shared pointer to the new filter instance
      */
     virtual Pointer newFilterInstance(bool copyFilterParameters);
 
