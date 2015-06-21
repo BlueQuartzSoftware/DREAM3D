@@ -83,9 +83,6 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SineParamsArrayPath)
     Q_PROPERTY(DataArrayPath SineParamsArrayPath READ getSineParamsArrayPath WRITE setSineParamsArrayPath)
 
-    //DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
-    //Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
-
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
     DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
@@ -100,35 +97,62 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
-    virtual const QString getCompiledLibraryName();
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName();
-    virtual const QString getSubGroupName();
-    virtual const QString getHumanLabel();
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
-
-    virtual void setupFilterParameters();
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getHumanLabel();
+
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
-
-
   protected:
     SineParamsSegmentFeatures();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
     virtual int64_t getSeed(int32_t gnum);
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
@@ -163,7 +187,9 @@ class SineParamsSegmentFeatures : public SegmentFeatures
      */
     void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
 
-    void dataCheck();
+    /**
+     * @brief updateFeatureInstancePointers Updates raw Feature pointers
+     */
     void updateFeatureInstancePointers();
 
     bool missingGoodVoxels;

@@ -84,43 +84,53 @@ class GenerateFaceSchuhMisorientationColoring : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFaceSchuhMisorientationColorsArrayName)
     Q_PROPERTY(QString SurfaceMeshFaceSchuhMisorientationColorsArrayName READ getSurfaceMeshFaceSchuhMisorientationColorsArrayName WRITE setSurfaceMeshFaceSchuhMisorientationColorsArrayName)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
 
     /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
     /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
 
     /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
+    * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
 
@@ -128,14 +138,13 @@ class GenerateFaceSchuhMisorientationColoring : public SurfaceMeshFilter
     GenerateFaceSchuhMisorientationColoring();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief dataCheckSurfaceMesh Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheckSurfaceMesh();
+
+    /**
+     * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheckVoxel();
 
   private:

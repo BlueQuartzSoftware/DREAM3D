@@ -74,32 +74,86 @@ class MinNeighbors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NumNeighborsArrayPath)
     Q_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
 
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     MinNeighbors();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
     /**
      * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any Features
@@ -121,8 +175,6 @@ class MinNeighbors : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
-
-    void dataCheck();
 
     MinNeighbors(const MinNeighbors&); // Copy Constructor Not Implemented
     void operator=(const MinNeighbors&); // Operator '=' Not Implemented

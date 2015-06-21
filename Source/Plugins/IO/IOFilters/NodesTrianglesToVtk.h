@@ -54,7 +54,7 @@
  * @date
  * @version 1.0
  */
-class  NodesTrianglesToVtk : public AbstractFilter
+class NodesTrianglesToVtk : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -66,86 +66,105 @@ class  NodesTrianglesToVtk : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, NodesFile)
     Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
+
     DREAM3D_FILTER_PARAMETER(QString, TrianglesFile)
     Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputVtkFile)
     Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteConformalMesh)
     Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
 
     /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
 
     /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
     /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
 
     /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
+    * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
 
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     NodesTrianglesToVtk();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
-
 
     int writeBinaryCellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
     int writeASCIICellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
 
     int writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
     int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
-
 
   private:
     int8_t*  m_NodeKind;
@@ -154,9 +173,4 @@ class  NodesTrianglesToVtk : public AbstractFilter
     void operator=(const NodesTrianglesToVtk&); // Operator '=' Not Implemented
 };
 
-#endif /* CMUSmoothingToVtk_H_ */
-
-
-
-
-
+#endif /* NodesTrianglesToVtk_H_ */

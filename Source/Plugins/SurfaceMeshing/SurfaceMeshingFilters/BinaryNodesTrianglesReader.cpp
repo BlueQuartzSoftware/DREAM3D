@@ -358,6 +358,3 @@ int BinaryNodesTrianglesReader::read()
 
   return getErrorCondition();
 }
-
-
-

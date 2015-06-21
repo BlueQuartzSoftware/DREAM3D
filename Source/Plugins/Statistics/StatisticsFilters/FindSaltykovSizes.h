@@ -45,7 +45,6 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-
 /**
  * @class FindSaltykovSizes FindSaltykovSizes.h DREAM3DLib/GenericFilters/FindSaltykovSizes.h
  * @brief
@@ -69,40 +68,87 @@ class FindSaltykovSizes : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SaltykovEquivalentDiametersArrayPath)
     Q_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
     /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
      */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
 
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     FindSaltykovSizes();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
+
     void find_saltykov_sizes();
     int do_saltykov(std::vector<int> nA, float Dmax, int k);
     int forward_difference(int fx, int f1, int f0, int x1, int x0);
@@ -112,8 +158,6 @@ class FindSaltykovSizes : public AbstractFilter
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
-
-    void dataCheck();
 
     FindSaltykovSizes(const FindSaltykovSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSaltykovSizes&); // Operator '=' Not Implemented

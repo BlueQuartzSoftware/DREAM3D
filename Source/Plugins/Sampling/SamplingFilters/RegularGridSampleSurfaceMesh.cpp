@@ -260,5 +260,11 @@ const QString RegularGridSampleSurfaceMesh::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QString RegularGridSampleSurfaceMesh::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getHumanLabel()
 { return "Sample Surface Mesh on Regular Grid"; }

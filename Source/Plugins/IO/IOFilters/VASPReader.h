@@ -54,7 +54,7 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class  VASPReader : public FileReader
+class VASPReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -63,8 +63,10 @@ class  VASPReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(VASPReader, FileReader)
 
     virtual ~VASPReader();
+
     DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
@@ -77,35 +79,74 @@ class  VASPReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, AtomTypesArrayName)
     Q_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
-    virtual void setupFilterParameters();
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    virtual void preflight();
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
+    virtual void preflight();
 
   protected:
     VASPReader();
 
-    virtual int readHeader();
-    virtual int readFile();
+    /**
+     * @brief readHeader Reimplemented from @see FileReader class
+     */
+    virtual int32_t readHeader();
 
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
+    virtual int32_t readFile();
+
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
     void dataCheck();
+
     void updateVertexInstancePointers();
 
   private:
@@ -122,9 +163,4 @@ class  VASPReader : public FileReader
     void operator=(const VASPReader&); // Operator '=' Not Implemented
 };
 
-#endif /* VASPREADER_H_ */
-
-
-
-
-
+#endif /* VASPReader_H_ */

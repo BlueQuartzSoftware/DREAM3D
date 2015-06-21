@@ -50,13 +50,13 @@
 
 typedef struct
 {
-  float m_Volumes;
-  float m_EquivalentDiameters;
-  float m_AxisLengths[3];
-  float m_AxisEulerAngles[3];
-  float m_Omega3s;
-  int m_FeaturePhases;
-  int m_Neighborhoods;
+    float m_Volumes;
+    float m_EquivalentDiameters;
+    float m_AxisLengths[3];
+    float m_AxisEulerAngles[3];
+    float m_Omega3s;
+    int m_FeaturePhases;
+    int m_Neighborhoods;
 } Precip_t;
 
 /**
@@ -139,40 +139,86 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
-    virtual void setupFilterParameters();
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
 
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     InsertPrecipitatePhases();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
     /**
      * @brief place_precipitates Organizes the placement of precipitates into the packing volume while ensuring
@@ -226,20 +272,20 @@ class InsertPrecipitatePhases : public AbstractFilter
      */
     float check_sizedisterror(Precip_t* precip);
 
-  /**
-  * @brief update_exclusionZones Updates the exclusion owners pointer based on the associated incoming Ids
-  * @param gadd Index used to determine which precipitate to add
-  * @param gremove Index used to determine which precipitate to remove
-  * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
-  */
-  void update_exclusionZones(size_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
+    /**
+     * @brief update_exclusionZones Updates the exclusion owners pointer based on the associated incoming Ids
+     * @param gadd Index used to determine which precipitate to add
+     * @param gremove Index used to determine which precipitate to remove
+     * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
+     */
+    void update_exclusionZones(size_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
 
-  /**
-  * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
-  * @param gNum Index used to determine which precipitate to add
-  * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
-  */
-  bool check_for_overlap(size_t gNum, Int32ArrayType::Pointer exlusionZonesPtr);
+    /**
+     * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
+     * @param gNum Index used to determine which precipitate to add
+     * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
+     */
+    bool check_for_overlap(size_t gNum, Int32ArrayType::Pointer exlusionZonesPtr);
 
     /**
      * @brief update_availablepoints Updates the maps used to associate packing points with an "available" state
@@ -345,7 +391,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<float> precipitatephasefractions;
 
   private:
-
     int32_t m_FirstPrecipitateFeature;
     uint64_t Seed;
     float m_SizeX;
@@ -417,8 +462,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     float m_rdfMin;
     float m_StepSize;
     int32_t m_numRDFbins;
-
-    void dataCheck();
 
     /**
      * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a

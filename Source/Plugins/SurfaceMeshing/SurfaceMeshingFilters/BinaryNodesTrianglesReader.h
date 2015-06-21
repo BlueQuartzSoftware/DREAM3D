@@ -62,6 +62,7 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(BinaryNodesTrianglesReader, SurfaceMeshFilter)
 
     virtual ~BinaryNodesTrianglesReader();
+
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
@@ -69,49 +70,31 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypesArrayName)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
 
     /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "Read Binary Nodes & Triangles Files"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
 
     /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
+    * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
 
@@ -119,15 +102,12 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     BinaryNodesTrianglesReader();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
+
     void updateVertexInstancePointers();
+
     void updateFaceInstancePointers();
 
     int read();
@@ -141,4 +121,3 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
 };
 
 #endif /* _BinaryNodesTrianglesReader_H_ */
-

@@ -90,29 +90,63 @@ class MergeTwins : public GroupFeatures
     DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
 
   protected:
     MergeTwins();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
     /**
      * @brief getSeed Reimplemented from @see GroupFeatures class
@@ -143,7 +177,9 @@ class MergeTwins : public GroupFeatures
 
     float axisTolerance;
 
-    void dataCheck();
+    /**
+     * @brief updateFeatureInstancePointers Updates raw Feature pointers
+     */
     void updateFeatureInstancePointers();
 
     MergeTwins(const MergeTwins&); // Copy Constructor Not Implemented

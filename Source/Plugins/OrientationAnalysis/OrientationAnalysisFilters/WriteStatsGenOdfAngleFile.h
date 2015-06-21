@@ -61,8 +61,6 @@ class WriteStatsGenOdfAngleFile : public AbstractFilter
 
     virtual ~WriteStatsGenOdfAngleFile();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
@@ -81,75 +79,90 @@ class WriteStatsGenOdfAngleFile : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
 
     /**
-     * @brief getSubGroupName This returns the subgroup within the main group for this filter.
-     * @return
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getSubGroupName();
 
     /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
     /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
 
     /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
+    * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
 
-
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     WriteStatsGenOdfAngleFile();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
 
     int determineOutputLineCount(int64_t totalPoints, int32_t phase);
-    int writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase);
 
+    int writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase);
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
@@ -162,10 +175,3 @@ class WriteStatsGenOdfAngleFile : public AbstractFilter
 };
 
 #endif /* _WriteStatsGenOdfAngleFile_H_ */
-
-
-
-
-
-
-

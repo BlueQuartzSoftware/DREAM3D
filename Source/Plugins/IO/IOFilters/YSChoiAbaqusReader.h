@@ -56,19 +56,23 @@ class  YSChoiAbaqusReader : public FileReader
     DREAM3D_STATIC_NEW_MACRO(YSChoiAbaqusReader)
     DREAM3D_TYPE_MACRO_SUPER(YSChoiAbaqusReader, FileReader)
 
-
     virtual ~YSChoiAbaqusReader();
+
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
     DREAM3D_FILTER_PARAMETER(QString, InputFeatureInfoFile)
     Q_PROPERTY(QString InputFeatureInfoFile READ getInputFeatureInfoFile WRITE setInputFeatureInfoFile)
 
@@ -93,27 +97,63 @@ class  YSChoiAbaqusReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
     Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    virtual void preflight();
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
+    virtual void preflight();
 
   protected:
     YSChoiAbaqusReader();
 
+    /**
+     * @brief readFile Reimplemented from @see FileReader class
+     */
+    void dataCheck();
 
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
@@ -122,18 +162,16 @@ class  YSChoiAbaqusReader : public FileReader
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-
     DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    void dataCheck();
     void updateCellInstancePointers();
+
     void updateFeatureInstancePointers();
+
     void updateEnsembleInstancePointers();
 
     YSChoiAbaqusReader(const YSChoiAbaqusReader&); // Copy Constructor Not Implemented
     void operator=(const YSChoiAbaqusReader&); // Operator '=' Not Implemented
 };
 
-#endif /* YSCHOIABAQUSREADER_H_ */
-
-
+#endif /* YSChoiAbaqusReader_H_ */

@@ -65,25 +65,63 @@ class AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName();
-    virtual const QString getSubGroupName();
-    virtual const QString getHumanLabel();
-
-
-    virtual void setupFilterParameters();
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getHumanLabel();
+
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
+    /**
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
 
   protected:
     AlignSectionsFeatureCentroid();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
     /**
      * @brief find_shifts Reimplemented from @see AlignSections class
@@ -92,8 +130,6 @@ class AlignSectionsFeatureCentroid : public AlignSections
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
-
-    void dataCheck();
 
     AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsFeatureCentroid&); // Operator '=' Not Implemented

@@ -68,30 +68,54 @@ class AlignSections : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
     Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
 
   signals:
@@ -121,6 +145,11 @@ class AlignSections : public AbstractFilter
     AlignSections();
 
     /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
+
+    /**
      * @brief find_shifts Determines the x and y shifts to register a stacked 3D volume
      * @param xshifts Vector of integer shifts in x direction
      * @param yshifts Vector of integer shifts in y direction
@@ -128,7 +157,6 @@ class AlignSections : public AbstractFilter
     virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
   private:
-    void dataCheck();
 
     AlignSections(const AlignSections&); // Copy Constructor Not Implemented
     void operator=(const AlignSections&); // Operator '=' Not Implemented

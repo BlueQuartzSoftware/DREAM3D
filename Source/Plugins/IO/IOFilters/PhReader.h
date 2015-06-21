@@ -47,13 +47,12 @@
 class PhReaderPrivate;
 
 /**
- * @brief The PhReader class
+ * @brief The PhReader class. See [Filter documentation](@ref phreader) for details.
  */
-class  PhReader : public FileReader
+class PhReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
     Q_DECLARE_PRIVATE(PhReader)
-
   public:
     DREAM3D_SHARED_POINTERS(PhReader)
     DREAM3D_STATIC_NEW_MACRO(PhReader)
@@ -82,31 +81,59 @@ class  PhReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    virtual const QString getCompiledLibraryName();
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName();
-    virtual const QString getSubGroupName();
-    virtual const QString getHumanLabel();
-
-    virtual void setupFilterParameters();
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
-    virtual void preflight();
-    virtual void execute();
-
     DREAM3D_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
     DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
     DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getHumanLabel();
+
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
+    /**
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
+    virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
+    virtual void preflight();
 
   public slots:
       /**
@@ -146,7 +173,6 @@ class  PhReader : public FileReader
 
     PhReader(const PhReader&); //Not Implemented
     void operator=(const PhReader&); //Not Implemented
-
 };
 
 #endif /* _PHReader_h_ */

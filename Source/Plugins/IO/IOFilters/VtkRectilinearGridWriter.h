@@ -64,7 +64,7 @@
  * @date Jun 13, 2011
  * @version 1.0
  */
-class  VtkRectilinearGridWriter : public AbstractFilter
+class VtkRectilinearGridWriter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -80,36 +80,58 @@ class  VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
 
-    virtual void preflight();
-
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
-    virtual void setupFilterParameters();
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
 
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
+    virtual void preflight();
     /**
         * @brief This function writes a set of Axis coordinates to that are needed
         * for a Rectilinear Grid based data set.
@@ -164,7 +186,6 @@ class  VtkRectilinearGridWriter : public AbstractFilter
       }
       return err;
     }
-
 
     /**
      * @brief WriteDataArrayToFile
@@ -229,18 +250,36 @@ class  VtkRectilinearGridWriter : public AbstractFilter
       return err;
     }
 
-
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     VtkRectilinearGridWriter();
 
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
-
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
@@ -251,6 +290,4 @@ class  VtkRectilinearGridWriter : public AbstractFilter
     int write(const QString& file);
 };
 
-#endif /* VTKRECTILINEARGRIDWRITER_H_ */
-
-
+#endif /* VtkRectilinearGridWriter_H_ */

@@ -59,24 +59,63 @@ class AlignSectionsList : public AlignSections
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName();
-    virtual const QString getSubGroupName();
-    virtual const QString getHumanLabel();
-
-    virtual void setupFilterParameters();
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getSubGroupName();
+
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getHumanLabel();
+
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
+    /**
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
     virtual void preflight();
 
   protected:
     AlignSectionsList();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
     /**
      * @brief find_shifts Reimplemented from @see AlignSections class
@@ -84,8 +123,6 @@ class AlignSectionsList : public AlignSections
     virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
   private:
-    void dataCheck();
-
     AlignSectionsList(const AlignSectionsList&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsList&); // Operator '=' Not Implemented
 };

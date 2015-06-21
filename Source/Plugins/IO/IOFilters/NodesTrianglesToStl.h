@@ -54,89 +54,108 @@
  * @date Jul 17, 2012
  * @version 1.0
  */
-class  NodesTrianglesToStl : public AbstractFilter
+class NodesTrianglesToStl : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(NodesTrianglesToStl);
-    DREAM3D_STATIC_NEW_MACRO(NodesTrianglesToStl);
-    DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToStl, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(NodesTrianglesToStl)
+    DREAM3D_STATIC_NEW_MACRO(NodesTrianglesToStl)
+    DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToStl, AbstractFilter)
 
     virtual ~NodesTrianglesToStl();
 
-    DREAM3D_FILTER_PARAMETER(QString, NodesFile);
+    DREAM3D_FILTER_PARAMETER(QString, NodesFile)
     Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
-    DREAM3D_FILTER_PARAMETER(QString, TrianglesFile);
+
+    DREAM3D_FILTER_PARAMETER(QString, TrianglesFile)
     Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
-    DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory);
+
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory)
     Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
-    DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix);
+
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix)
     Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
     /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getGroupName();
+
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getSubGroupName();
 
     /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getHumanLabel();
 
     /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
 
     /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
+    * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
 
   signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
     void preflightExecuted();
 
   protected:
     NodesTrianglesToStl();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
-
 
     int writeBinaryCellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
     int writeASCIICellData(const QString& TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh);
@@ -144,9 +163,7 @@ class  NodesTrianglesToStl : public AbstractFilter
     int writeBinaryPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
     int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
 
-
   private:
-
     int writeHeader(FILE* f, const QString& header, int triCount);
     int writeNumTrianglesToFile(const QString& filename, int triCount);
 
@@ -154,8 +171,4 @@ class  NodesTrianglesToStl : public AbstractFilter
     void operator=(const NodesTrianglesToStl&); // Operator '=' Not Implemented
 };
 
-#endif /* CMUNodesTrianglesToStl_H_ */
-
-
-
-
+#endif /* NodesTrianglesToStl_H_ */
