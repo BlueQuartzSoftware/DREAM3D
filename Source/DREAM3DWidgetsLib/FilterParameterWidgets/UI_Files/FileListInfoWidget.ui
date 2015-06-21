@@ -346,7 +346,7 @@ font-size: 11px;
 }</string>
        </property>
        <property name="text">
-        <string>Generated Input Filename:</string>
+        <string>Generated Input File Name:</string>
        </property>
       </widget>
      </item>
