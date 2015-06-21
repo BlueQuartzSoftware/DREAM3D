@@ -267,4 +267,4 @@ const QString RegularGridSampleSurfaceMesh::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getHumanLabel()
-{ return "Sample Surface Mesh on Regular Grid"; }
+{ return "Sample Triangle Geometry on Regular Grid"; }

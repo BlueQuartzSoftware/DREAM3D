@@ -298,6 +298,7 @@ void SampleSurfaceMesh::execute()
 
   // generate the list of sampling points from subclass
   VertexGeom::Pointer points = generate_points();
+  if(getErrorCondition() < 0 || NULL == points.get()) { return; }
   int64_t numPoints = points->getNumberOfVertices();
 
   // create array to hold which polyhedron (feature) each point falls in
@@ -359,4 +360,4 @@ const QString SampleSurfaceMesh::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getHumanLabel()
-{ return "Sample Surface Mesh"; }
+{ return "Sample Triangle Geometry"; }

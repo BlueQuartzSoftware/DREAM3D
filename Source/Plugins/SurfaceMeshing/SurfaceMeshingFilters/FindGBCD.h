@@ -37,15 +37,10 @@
 #define _FindGBCD_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -141,8 +136,6 @@ class FindGBCD : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-    int GBCDIndex(float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
-
   protected:
     FindGBCD();
 
@@ -156,7 +149,12 @@ class FindGBCD : public SurfaceMeshFilter
      */
     void dataCheckVoxel();
 
-    void sizeGBCD(int faceChunkSize, int numMisoReps);
+    /**
+     * @brief sizeGBCD Determines the sizing for the GBCD arrays
+     * @param faceChunkSize Number of triangles per chunk
+     * @param numMisoReps Dimensionality for bins
+     */
+    void sizeGBCD(size_t faceChunkSize, size_t numMisoReps);
 
   private:
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
@@ -165,7 +163,6 @@ class FindGBCD : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-
     DEFINE_DATAARRAY_VARIABLE(double, GBCD)
 
     FloatArrayType::Pointer m_GbcdDeltasArray;

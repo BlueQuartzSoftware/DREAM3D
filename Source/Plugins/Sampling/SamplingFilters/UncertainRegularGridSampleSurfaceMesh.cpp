@@ -270,4 +270,4 @@ const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString UncertainRegularGridSampleSurfaceMesh::getHumanLabel()
-{ return "Sample Surface Mesh on Uncertain Regular Grid"; }
+{ return "Sample Triangle Geometry on Uncertain Regular Grid"; }

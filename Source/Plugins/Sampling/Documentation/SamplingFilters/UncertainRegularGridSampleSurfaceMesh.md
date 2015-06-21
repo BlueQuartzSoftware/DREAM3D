@@ -1,11 +1,11 @@
-Sample Surface Mesh on Uncertain Regular Grid {#uncertainregulargridsamplesurfacemesh}
+Sample Triangle Geometry on Uncertain Regular Grid {#uncertainregulargridsamplesurfacemesh}
 =============
 
 ## Group (Subgroup) ##
-Sampling Filters (Resolution)
+Sampling (Resolution)
 
 ## Description ##
-This Filter 'samples' a triangulated surface mesh on a rectilinear grid, but with "uncertainty" in the absolute position of the **Cells**.  The "uncertainty" is meant to simulate the possible positioning error in a sampling probe.  The user can specify the number of **Cells** along the X, Y, and Z directions in addition to the resolution in each direction to define a rectilinear grid.  The sampling, with "uncertainty", is then performed by the following steps:
+This Filter "samples" a triangulated surface mesh on a rectilinear grid, but with "uncertainty" in the absolute position of the **Cells**.  The "uncertainty" is meant to simulate the possible positioning error in a sampling probe.  The user can specify the number of **Cells** along the X, Y, and Z directions in addition to the resolution in each direction to define a rectilinear grid.  The sampling, with "uncertainty", is then performed by the following steps:
 
 1. Determine the bounding box and **Triangle** list of each **Feature** by scanning all **Triangles** and noting the **Features** on either side of the **Triangle**.
 2. For each **Cell** in the rectilinear grid, perturb the location of the **Cell** by generating a three random numbers between [-1,1] and multiplying them by the three "uncertainty values (one for each direction).

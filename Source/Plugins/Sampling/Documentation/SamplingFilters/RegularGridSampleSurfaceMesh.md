@@ -1,11 +1,11 @@
-Sample Surface Mesh on Regular Grid {#regulargridsamplesurfacemesh}
+Sample Triangle Geometry on Regular Grid {#regulargridsamplesurfacemesh}
 =============
 
 ## Group (Subgroup) ##
-Sampling Filters (Resolution)
+Sampling (Resolution)
 
 ## Description ##
-This Filter 'samples' a triangulated surface mesh on a rectilinear grid.  The user can specify the number of **Cells** along the X, Y, and Z directions in addition to the resolution in each direction to define a rectilinear grid.  The sampling is then performed by the following steps:
+This Filter "samples" a triangulated surface mesh on a rectilinear grid.  The user can specify the number of **Cells** along the X, Y, and Z directions in addition to the resolution in each direction to define a rectilinear grid.  The sampling is then performed by the following steps:
 
 1. Determine the bounding box and **Triangle** list of each **Feature** by scanning all **Triangles** and noting the **Features** on either side of the **Triangle**.
 2. For each **Cell** in the rectilinear grid, determine which bounding box(es) they fall in (*Note:* the bounding box of multiple **Features** can overlap).

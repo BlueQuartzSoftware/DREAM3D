@@ -36,12 +36,9 @@
 
 #include "SampleSurfaceMeshSpecifiedPoints.h"
 
-#include <fstream>
-#include <sstream>
-
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
 #include "Sampling/SamplingConstants.h"
@@ -71,10 +68,8 @@ SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints()
 void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(FileSystemFilterParameter::New("Specified Points File Path", "InputFilePath", FilterParameterWidgetType::InputFileWidget, getInputFilePath(), FilterParameter::Parameter, "", "*.raw *.bin"));
-  parameters.push_back(FileSystemFilterParameter::New("Sampled Values File Path", "OutputFilePath", FilterParameterWidgetType::OutputFileWidget, getOutputFilePath(), FilterParameter::Parameter, ""));
-
-  // Set the filter parameters after creating them
+  parameters.push_back(FileSystemFilterParameter::New("Specified Points File Path", "InputFilePath", FilterParameterWidgetType::InputFileWidget, getInputFilePath(), FilterParameter::Parameter, "", "*.raw, *.bin"));
+  parameters.push_back(FileSystemFilterParameter::New("Sampled Values File Path", "OutputFilePath", FilterParameterWidgetType::OutputFileWidget, getOutputFilePath(), FilterParameter::Parameter, "", "*.txt"));
   setFilterParameters(parameters);
 }
 
@@ -110,9 +105,7 @@ void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
   setErrorCondition(0);
   if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -121,38 +114,36 @@ void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 {
   setErrorCondition(0);
+
   DataArrayPath tempPath;
 
   if (true == m_InputFilePath.isEmpty())
   {
-    QString ss = QObject::tr("The Input file name must be set before executing this filter.");
+    QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
   if (true == m_OutputFilePath.isEmpty())
   {
-    QString ss = QObject::tr("The Output file name must be set before executing this filter.");
+    QString ss = QObject::tr("The output file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
-  if (getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0 || NULL == v.get()) { return; }
 
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(1, DREAM3D::Geometry::VertexGeometry);
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix<AbstractFilter>(this, "SpecifiedPointsData", tDims, DREAM3D::AttributeMatrixType::Vertex);
-  if (getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
+  v->createNonPrereqAttributeMatrix<AbstractFilter>(this, "SpecifiedPointsData", tDims, DREAM3D::AttributeMatrixType::Vertex);
 
   QVector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -180,8 +171,16 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
   std::ifstream inFile;
   inFile.open(m_InputFilePath.toLatin1().data());
 
-  //get the number of points in the specified points file
+  // get the number of points in the specified points file
   inFile >> m_NumPoints;
+
+  if (m_NumPoints <= 0)
+  {
+    QString ss = QObject::tr("Number of points to sample (%1) must be positive").arg(m_NumPoints);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return VertexGeom::NullPointer();
+  }
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer("SpecifiedPoints");
   VertexGeom::Pointer points = VertexGeom::CreateGeometry(m_NumPoints, "Points");
@@ -220,14 +219,10 @@ void SampleSurfaceMeshSpecifiedPoints::assign_points(Int32ArrayType::Pointer iAr
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::execute()
 {
-
-  dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
-  /* Place all your code to execute your filter here. */
   SampleSurfaceMesh::execute();
 
   std::ofstream outFile;
@@ -235,12 +230,6 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
   for (int64_t i = 0; i < m_NumPoints; i++)
   {
     outFile << m_FeatureIds[i] << std::endl;
-  }
-
-
-  if (getCancel() == true)
-  {
-    return;
   }
 
   /* Let the GUI know we are done with this filter */
@@ -252,25 +241,10 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer SampleSurfaceMeshSpecifiedPoints::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   SampleSurfaceMeshSpecifiedPoints::Pointer filter = SampleSurfaceMeshSpecifiedPoints::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }
@@ -279,17 +253,13 @@ AbstractFilter::Pointer SampleSurfaceMeshSpecifiedPoints::newFilterInstance(bool
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getCompiledLibraryName()
-{
-  return SamplingConstants::SamplingBaseName;
-}
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getGroupName()
-{
-  return DREAM3D::FilterGroups::SamplingFilters;
-}
+{ return DREAM3D::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
@@ -301,6 +271,4 @@ const QString SampleSurfaceMeshSpecifiedPoints::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getHumanLabel()
-{
-  return "Sample Surface Mesh at Specified Points";
-}
+{ return "Sample Triangle Geometry at Specified Points"; }

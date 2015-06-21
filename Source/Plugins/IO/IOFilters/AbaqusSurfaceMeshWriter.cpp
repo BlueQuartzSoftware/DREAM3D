@@ -395,4 +395,4 @@ const QString AbaqusSurfaceMeshWriter::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusSurfaceMeshWriter::getHumanLabel()
-{ return "Write Abaqus SurfaceMesh"; }
+{ return "Write Abaqus Surface Mesh"; }

@@ -202,8 +202,6 @@ void LaplacianSmoothing::execute()
 // -----------------------------------------------------------------------------
 int32_t LaplacianSmoothing::generateLambdaArray()
 {
-  notifyStatusMessage(getHumanLabel(), "Generating Lambda values");
-
   size_t numNodes = m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples();
 
   DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Lambda_Array");
@@ -258,7 +256,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   if (err < 0)
   {
     setErrorCondition(-557);
-    notifyErrorMessage(getHumanLabel(), "Error generating the Lambda Array", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error generating the lambda array", getErrorCondition());
     return err;
   }
 
@@ -274,14 +272,12 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   if (err < 0)
   {
     setErrorCondition(-560);
-    notifyErrorMessage(getHumanLabel(), "Error retrieving the SharedEdgeList", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error retrieving the shared edge list", getErrorCondition());
     return getErrorCondition();
   }
 
   int64_t* uedges = surfaceMesh->getEdgePointer(0);
   int64_t nedges = surfaceMesh->getNumberOfEdges();
-
-  notifyStatusMessage(getHumanLabel(), "Starting to Smooth Vertices");
 
   DataArray<int32_t>::Pointer numConnections = DataArray<int32_t>::CreateArray(nvert, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_NumberConnections_Array");
   numConnections->initializeWithZeros();

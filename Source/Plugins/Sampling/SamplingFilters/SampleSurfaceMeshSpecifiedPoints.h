@@ -44,7 +44,7 @@
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
- * @brief The SampleSurfaceMeshSpecifiedPoints class
+ * @brief The SampleSurfaceMeshSpecifiedPoints class. See [Filter documentation](@ref samplesurfacemeshspecifiedpoints) for details.
  */
 class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
@@ -136,11 +136,10 @@ class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     // number of specified points
-    int64_t  m_NumPoints;
+    int64_t m_NumPoints;
 
     /**
-     * @brief updateVertexInstancePointers Resets the raw pointers that belong to a
-     * Vertex Attribute Matrix
+     * @brief updateVertexInstancePointers Updates raw Vertex pointers
      */
     void updateVertexInstancePointers();
 

@@ -1,4 +1,4 @@
-Find GBCD {#findgbcd}
+Find Grain Boundary Character Distribution {#findgbcd}
 ======
 
 ## Group (Subgroup) ##
