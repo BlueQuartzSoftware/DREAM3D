@@ -15,7 +15,7 @@ This Filter is useful since most DREAM.3D routines for analyzing Ebsd data requi
 
 -----
 
-The use of this Filter is similar to the use of the [Import Orientation File(s) to H5Ebsd](EbsdToH5Ebsd.html "") Filter.  Please consult that Filter's documentation for a detailed description of the various user interface elements.  Note that unlike the [Import Orientation File(s) to H5Ebsd](EbsdToH5Ebsd.html "") Filter, this Filter does require either the _Stacking Order_ or the _Reference Frame_ to be modified.
+The use of this Filter is similar to the use of the [Import Orientation File(s) to H5Ebsd](EbsdToH5Ebsd.html "") Filter.  Please consult that Filter's documentation for a detailed description of the various user interface elements.  Note that unlike the [Import Orientation File(s) to H5Ebsd](EbsdToH5Ebsd.html "") Filter, this Filter does not require either the _Stacking Order_ or the _Reference Frame_ to be modified.
 
 
 ## Parameters ##
